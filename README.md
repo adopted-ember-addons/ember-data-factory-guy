@@ -1,8 +1,18 @@
+To Use with Rails project or project with sprockets:
+
+  In Gemfile:
+
+  $ gem 'ember-data-fixture-factory'
+
+  then: bundle install
+
+
+
 Add fixtures to the store using the:
 
-  DS.FixtureAdapter,
-  DS.RestAdapter or
-  DS.ActiveModelAdapter
+  * DS.FixtureAdapter
+  * DS.RestAdapter
+  * DS.ActiveModelAdapter
 
 ```
   user = DS.Model.extend
