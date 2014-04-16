@@ -1,9 +1,5 @@
 FixtureFactoryHelperMixin = Em.Mixin.create({
 
-  store: function(){
-    this.get('container').lookup('store:main');
-  }.property('container'),
-
   setup: function(app) {
     this.set('container', app.__container__);
     return this;
@@ -11,7 +7,7 @@ FixtureFactoryHelperMixin = Em.Mixin.create({
 
   useFixtureAdapter: function(app) {
     app.ApplicationAdapter = DS.FixtureAdapter;
-    this.get('store').adapterFor('application').simulateRemoteResponse = false;
+    this.getStore().adapterFor('application').simulateRemoteResponse = false;
   },
 
   find: function(type, id) {

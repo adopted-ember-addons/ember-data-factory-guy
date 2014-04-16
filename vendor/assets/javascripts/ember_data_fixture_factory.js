@@ -214,7 +214,7 @@ FixtureFactoryHelperMixin = Em.Mixin.create({
 
   useFixtureAdapter: function(app) {
     app.ApplicationAdapter = DS.FixtureAdapter;
-    this.get('store').adapterFor('application').simulateRemoteResponse = false;
+    this.getStore().adapterFor('application').simulateRemoteResponse = false;
   },
 
   find: function(type, id) {

@@ -1,11 +1,12 @@
 To Use with Rails project or project with sprockets:
 
-  In Gemfile:
+In Gemfile:
 
-  $ gem 'ember-data-fixture-factory'
+```
+$ gem 'ember-data-fixture-factory'
+```
 
-  then: bundle install
-
+then: bundle install
 
 
 Add fixtures to the store using the:
