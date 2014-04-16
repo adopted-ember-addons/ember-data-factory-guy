@@ -151,6 +151,7 @@ DS.Store.reopen({
       return FixtureFactory.pushFixture(modelType, fixture);
     } else {
       var model = this.push(modelName, fixture);
+      this.setBelongsToRestAssociation(modelType, modelName, model)
       return model;
     }
   },
@@ -185,6 +186,33 @@ DS.Store.reopen({
   },
 
   /**
+   * Trying to set the belongsTo association for the rest type models
+   * with a hasMany association
+   *
+   * For example if a client hasMany projects, then set the client
+   * on each project that the client hasMany of, so that the project
+   * now has the belongsTo client association setup
+   *
+   * @param modelType
+   * @param modelName
+   * @param parent model to check for hasMany
+   */
+  setBelongsToRestAssociation: function (modelType, modelName, parent) {
+    var relationShips = Ember.get(modelType, 'relationshipNames');
+
+    if (relationShips.hasMany) {
+      relationShips.hasMany.forEach(function (name) {
+        var children = parent.get(name);
+        if (children.get('length') > 0) {
+          children.forEach(function(child) {
+            child.set(modelName, parent)
+          })
+        }
+      })
+    }
+  },
+
+  /**
     Adding a pushPayload for FixtureAdapter, but using the original with
      other adapters that support pushPayload.
 
@@ -202,10 +230,6 @@ DS.Store.reopen({
   }
 })
 FixtureFactoryHelperMixin = Em.Mixin.create({
-
-  store: function(){
-    this.get('container').lookup('store:main');
-  }.property('container'),
 
   setup: function(app) {
     this.set('container', app.__container__);

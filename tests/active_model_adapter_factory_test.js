@@ -19,6 +19,13 @@ test("supports hasMany associations to fixtures", function() {
   equal(user.get('projects.length'),2, "changes hasMany records")
 })
 
+test("when hasMany associations used, belongTo parent is assigned", function() {
+  var p1 = store.makeFixture('project');
+  var user = store.makeFixture('user', {projects: [p1.id]})
+
+  equal(!!p1.get('user'), true , "has parent")
+})
+
 
 module('DS.Store with ActiveModelAdapter', {
   setup: function() {
