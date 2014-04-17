@@ -14,7 +14,6 @@ module('FactoryGuy with DS.FixtureAdapter', {
 
 test("#build creates default json for model", function() {
   var json = FactoryGuy.build('user');
-  console.log(json)
   deepEqual(json, {id: 1, name: 'User1'});
 });
 
@@ -49,10 +48,11 @@ test("#build similar model type ids are created sequentially", function() {
 
 test("#pushFixture adds fixture to Fixture array on model", function() {
   var fixtureJson = FactoryGuy.build('user');
-  FactoryGuy.pushFixture(store.modelFor('user'), fixtureJson);
+  FactoryGuy.pushFixture(User, fixtureJson);
   equal(User.FIXTURES.length, 1);
+
   var fixtureJson2 = FactoryGuy.build('user');
-  FactoryGuy.pushFixture(store.modelFor('user'), fixtureJson2);
+  FactoryGuy.pushFixture(User, fixtureJson2);
   equal(User.FIXTURES.length, 2);
 });
 
@@ -80,14 +80,17 @@ module('DS.Store with DS.FixtureAdapter', {
 
 
 test("#make builds and pushes fixture into the store", function() {
-  store.makeFixture('user');
+  var json = store.makeFixture('user');
   equal(User.FIXTURES.length, 1);
+  equal(User.FIXTURES[0], json);
 });
 
 
 asyncTest("#makeFixture sets hasMany associations on fixtures", function() {
   var p1 = store.makeFixture('project');
-  store.makeFixture('project'); // this project not added
+  // second project not added on purpose to make sure only one is
+  // assigned in has many and has the belongsTo user association set
+  store.makeFixture('project');
   var user = store.makeFixture('user', {projects: [p1.id]})
 
   store.find('user', 1).then ( function(user) {

@@ -17,7 +17,6 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuyHelperMixin,{
 
     if (adapter.toString().match('Fixture')) {
       adapter.simulateRemoteResponse = false;
-      adapter.latency = 0;
     }
     return this;
   }
