@@ -2,7 +2,7 @@ DS.Store.reopen({
 
   usingFixtureAdapter: function() {
     var adapter = this.adapterFor('application');
-    return adapter.toString().match('Fixture') || adapter.simulateRemoteResponse;
+    return adapter.toString().match('Fixture') || adapter.simulateRemoteResponse != undefined;
   },
 
   /**
