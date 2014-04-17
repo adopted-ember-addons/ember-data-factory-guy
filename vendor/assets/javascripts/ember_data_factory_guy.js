@@ -132,6 +132,12 @@ FactoryGuy = Ember.Object.reopenClass({
   }
 })
 DS.Store.reopen({
+
+  usingFixtureAdapter: function() {
+    var adapter = this.adapterFor('application');
+    return adapter.toString().match('Fixture') || adapter.simulateRemoteResponse;
+  },
+
   /**
     Make new fixture and save to store. If the store is using FixtureAdapter,
     will push to FIXTURE array, otherwise will use push method on adapter.
@@ -145,8 +151,7 @@ DS.Store.reopen({
     var fixture = FactoryGuy.build(name, options);
     var modelType = this.modelFor(modelName);
 
-    var adapter = this.adapterFor('application');
-    if (adapter.toString().match('Fixture')) {
+    if (this.usingFixtureAdapter()) {
       this.setBelongsToFixturesAssociation(modelType, modelName, fixture);
       return FactoryGuy.pushFixture(modelType, fixture);
     } else {
