@@ -8,17 +8,17 @@ DS.Store.reopen({
     @returns {*}
    */
   makeFixture: function (name, options) {
-    var modelName = FixtureFactory.lookupModelForName(name);
-    var fixture = FixtureFactory.build(name, options);
+    var modelName = FactoryGuy.lookupModelForName(name);
+    var fixture = FactoryGuy.build(name, options);
     var modelType = this.modelFor(modelName);
 
     var adapter = this.adapterFor('application');
     if (adapter.toString().match('Fixture')) {
       this.setBelongsToFixturesAssociation(modelType, modelName, fixture);
-      return FixtureFactory.pushFixture(modelType, fixture);
+      return FactoryGuy.pushFixture(modelType, fixture);
     } else {
       var model = this.push(modelName, fixture);
-      this.setBelongsToRestAssociation(modelType, modelName, model)
+      this.setBelongsToRestAssociation(modelType, modelName, model);
       return model;
     }
   },
@@ -38,14 +38,14 @@ DS.Store.reopen({
     var store = this;
     var adapter = this.adapterFor('application');
     var relationShips = Ember.get(modelType, 'relationshipNames');
-
     if (relationShips.hasMany) {
-      relationShips.hasMany.forEach(function (name) {
-        var hasManyModel = store.modelFor(Em.String.singularize(name));
-        var hasManyfixtures = adapter.fixturesForType(hasManyModel);
-        if (hasManyfixtures) {
-          hasManyfixtures.forEach(function(fixture) {
-            fixture[modelName] = parentFixture.id
+      relationShips.hasMany.forEach(function (relationship) {
+        var hasManyModel = store.modelFor(Em.String.singularize(relationship));
+        if (parentFixture[relationship]) {
+          parentFixture[relationship].forEach(function(id) {
+            var hasManyfixtures = adapter.fixturesForType(hasManyModel);
+            var fixture = adapter.findFixtureById(hasManyfixtures, id);
+            fixture[modelName] = parentFixture.id;
           })
         }
       })
@@ -90,9 +90,9 @@ DS.Store.reopen({
     var adapter = this.adapterFor('application');
     if (adapter.toString().match('Fixture')) {
       var model = this.modelFor(modelName);
-      FixtureFactory.pushFixture(model, payload);
+      FactoryGuy.pushFixture(model, payload);
     } else {
-      this._super(type, payload)
+      this._super(type, payload);
     }
   }
-})
+});

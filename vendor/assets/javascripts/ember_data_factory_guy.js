@@ -105,8 +105,7 @@ FactoryGuy = Ember.Object.reopenClass({
   },
 
   /**
-    Clear model instances from FIXTURES array,
-    and from store cache.
+    Clear model instances from FIXTURES array, and from store cache.
     Reset the id sequence for the models back to zero.
    */
   resetModels: function (store) {
@@ -118,10 +117,11 @@ FactoryGuy = Ember.Object.reopenClass({
   },
 
   /**
-    Push fixture to model's FIXTURES array
+    Push fixture to model's FIXTURES array.
+    Used when store's adapter is a DS.FixtureAdapter.
 
-    @param model
-    @param fixture
+    @param modelClass DS.Model type
+    @param fixture the fixture to add
    */
   pushFixture: function (modelClass, fixture) {
     if (!modelClass['FIXTURES']) {
@@ -151,7 +151,7 @@ DS.Store.reopen({
       return FactoryGuy.pushFixture(modelType, fixture);
     } else {
       var model = this.push(modelName, fixture);
-      this.setBelongsToRestAssociation(modelType, modelName, model)
+      this.setBelongsToRestAssociation(modelType, modelName, model);
       return model;
     }
   },
@@ -171,14 +171,14 @@ DS.Store.reopen({
     var store = this;
     var adapter = this.adapterFor('application');
     var relationShips = Ember.get(modelType, 'relationshipNames');
-
     if (relationShips.hasMany) {
-      relationShips.hasMany.forEach(function (name) {
-        var hasManyModel = store.modelFor(Em.String.singularize(name));
-        var hasManyfixtures = adapter.fixturesForType(hasManyModel);
-        if (hasManyfixtures) {
-          hasManyfixtures.forEach(function(fixture) {
-            fixture[modelName] = parentFixture.id
+      relationShips.hasMany.forEach(function (relationship) {
+        var hasManyModel = store.modelFor(Em.String.singularize(relationship));
+        if (parentFixture[relationship]) {
+          parentFixture[relationship].forEach(function(id) {
+            var hasManyfixtures = adapter.fixturesForType(hasManyModel);
+            var fixture = adapter.findFixtureById(hasManyfixtures, id);
+            fixture[modelName] = parentFixture.id;
           })
         }
       })
@@ -225,10 +225,10 @@ DS.Store.reopen({
       var model = this.modelFor(modelName);
       FactoryGuy.pushFixture(model, payload);
     } else {
-      this._super(type, payload)
+      this._super(type, payload);
     }
   }
-})
+});
 FactoryGuyHelperMixin = Em.Mixin.create({
 
   setup: function(app) {

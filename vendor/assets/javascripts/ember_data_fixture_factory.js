@@ -1,4 +1,4 @@
-FixtureFactory = Ember.Object.reopenClass({
+FactoryGuy = Ember.Object.reopenClass({
   fixtureStore: {},
   fixtureLookup: {},
   modelIds: {},
@@ -10,7 +10,7 @@ FixtureFactory = Ember.Object.reopenClass({
         name: DS.attr('string'),
      })
 
-     FixtureFactory.define('user', {
+     FactoryGuy.define('user', {
         default: {
           name: "Fred"
         },
@@ -27,7 +27,7 @@ FixtureFactory = Ember.Object.reopenClass({
 
      And to get those fixtures you would call them this way:
 
-      FixtureFactory.build('user') or FixtureFactory.build('bob')
+      FactoryGuy.build('user') or FactoryGuy.build('bob')
 
     @param model the model to define
     @param config your default and specific fixtures
@@ -83,8 +83,8 @@ FixtureFactory = Ember.Object.reopenClass({
   /**
     Build fixtures for model or specific fixture name. For example:
 
-      FixtureFactory.build('user') for User model
-      FixtureFactory.build('bob') for User model with bob attributes
+      FactoryGuy.build('user') for User model
+      FactoryGuy.build('bob') for User model with bob attributes
 
     @param name fixture name
     @param opts options that will override default fixture values
@@ -141,14 +141,14 @@ DS.Store.reopen({
     @returns {*}
    */
   makeFixture: function (name, options) {
-    var modelName = FixtureFactory.lookupModelForName(name);
-    var fixture = FixtureFactory.build(name, options);
+    var modelName = FactoryGuy.lookupModelForName(name);
+    var fixture = FactoryGuy.build(name, options);
     var modelType = this.modelFor(modelName);
 
     var adapter = this.adapterFor('application');
     if (adapter.toString().match('Fixture')) {
       this.setBelongsToFixturesAssociation(modelType, modelName, fixture);
-      return FixtureFactory.pushFixture(modelType, fixture);
+      return FactoryGuy.pushFixture(modelType, fixture);
     } else {
       var model = this.push(modelName, fixture);
       this.setBelongsToRestAssociation(modelType, modelName, model)
@@ -223,13 +223,13 @@ DS.Store.reopen({
     var adapter = this.adapterFor('application');
     if (adapter.toString().match('Fixture')) {
       var model = this.modelFor(modelName);
-      FixtureFactory.pushFixture(model, payload);
+      FactoryGuy.pushFixture(model, payload);
     } else {
       this._super(type, payload)
     }
   }
 })
-FixtureFactoryHelperMixin = Em.Mixin.create({
+FactoryGuyHelperMixin = Em.Mixin.create({
 
   setup: function(app) {
     this.set('container', app.__container__);
@@ -285,7 +285,7 @@ FixtureFactoryHelperMixin = Em.Mixin.create({
    * @param opts fixture options
    */
   handleCreate: function (name, opts) {
-    var model = FixtureFactory.lookupModelForName(name);
+    var model = FactoryGuy.lookupModelForName(name);
     this.stubEndpointForHttpRequest(
       "/" + Em.String.pluralize(model),
       this.buildAjaxResponse(name, opts),
@@ -294,8 +294,8 @@ FixtureFactoryHelperMixin = Em.Mixin.create({
   },
 
   buildAjaxResponse: function (name, opts) {
-    var fixture = FixtureFactory.build(name, opts);
-    var model = FixtureFactory.lookupModelForName(name);
+    var fixture = FactoryGuy.build(name, opts);
+    var model = FactoryGuy.lookupModelForName(name);
     var hash = {};
     hash[model] = fixture;
     return hash;
@@ -315,7 +315,7 @@ FixtureFactoryHelperMixin = Em.Mixin.create({
   },
 
   teardown: function () {
-    FixtureFactory.resetModels(this.getStore());
+    FactoryGuy.resetModels(this.getStore());
   }
 
 })

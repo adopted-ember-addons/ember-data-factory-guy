@@ -1,4 +1,4 @@
-TestHelper = Ember.Object.createWithMixins(FixtureFactoryHelperMixin,{
+TestHelper = Ember.Object.createWithMixins(FactoryGuyHelperMixin,{
 
   /**
    * Setup with type of adapter

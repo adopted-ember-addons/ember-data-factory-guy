@@ -1,4 +1,4 @@
-FixtureFactoryHelperMixin = Em.Mixin.create({
+FactoryGuyHelperMixin = Em.Mixin.create({
 
   setup: function(app) {
     this.set('container', app.__container__);
@@ -54,7 +54,7 @@ FixtureFactoryHelperMixin = Em.Mixin.create({
    * @param opts fixture options
    */
   handleCreate: function (name, opts) {
-    var model = FixtureFactory.lookupModelForName(name);
+    var model = FactoryGuy.lookupModelForName(name);
     this.stubEndpointForHttpRequest(
       "/" + Em.String.pluralize(model),
       this.buildAjaxResponse(name, opts),
@@ -63,8 +63,8 @@ FixtureFactoryHelperMixin = Em.Mixin.create({
   },
 
   buildAjaxResponse: function (name, opts) {
-    var fixture = FixtureFactory.build(name, opts);
-    var model = FixtureFactory.lookupModelForName(name);
+    var fixture = FactoryGuy.build(name, opts);
+    var model = FactoryGuy.lookupModelForName(name);
     var hash = {};
     hash[model] = fixture;
     return hash;
@@ -84,7 +84,7 @@ FixtureFactoryHelperMixin = Em.Mixin.create({
   },
 
   teardown: function () {
-    FixtureFactory.resetModels(this.getStore());
+    FactoryGuy.resetModels(this.getStore());
   }
 
 })

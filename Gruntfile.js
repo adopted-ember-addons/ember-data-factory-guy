@@ -6,13 +6,13 @@ module.exports = function(grunt) {
 
     concat: {
       dist: {
-        src: ['src/fixture_factory.js', 'src/store.js', 'src/helper_mixin.js'],
-        dest: "dist/ember-data-fixture-factory.js"
+        src: ['src/factory_guy.js', 'src/store.js', 'src/factory_guy_helper_mixin.js'],
+        dest: "dist/ember-data-factory-guy.js"
       },
       gem: {
         files: {
-          "vendor/assets/javascripts/ember_data_fixture_factory.js": ['src/fixture_factory.js', 'src/store.js', 'src/helper_mixin.js'],
-          "vendor/assets/javascripts/fixture_factory_has_many.js": ['src/has_many.js']
+          "vendor/assets/javascripts/ember_data_factory_guy.js": ['src/factory_guy.js', 'src/store.js', 'src/factory_guy_helper_mixin.js'],
+          "vendor/assets/javascripts/factory_guy_has_many.js": ['src/has_many.js']
         }
       },
       test: {
@@ -25,8 +25,8 @@ module.exports = function(grunt) {
       options: { mangle: false, compress: false },
 
       dist: {
-        src: ['dist/ember-data-fixture-factory.js'],
-        dest: 'dist/ember-data-fixture-factory.min.js'
+        src: ['dist/ember-data-factory-guy.js'],
+        dest: 'dist/ember-data-factory-guy.min.js'
       }
     },
 

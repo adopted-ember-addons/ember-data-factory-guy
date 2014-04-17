@@ -1,3 +1,3 @@
-FixtureFactory.define('project', {
+FactoryGuy.define('project', {
   default: {title: 'Project'}
 });

@@ -1,7 +1,7 @@
 var testHelper;
 var store;
 
-module('FixtureFactory with RestAdapter', {
+module('FactoryGuy with RestAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.RESTAdapter);
     store = testHelper.getStore();

@@ -1,4 +1,4 @@
-FixtureFactory = Ember.Object.reopenClass({
+FactoryGuy = Ember.Object.reopenClass({
   fixtureStore: {},
   fixtureLookup: {},
   modelIds: {},
@@ -10,7 +10,7 @@ FixtureFactory = Ember.Object.reopenClass({
         name: DS.attr('string'),
      })
 
-     FixtureFactory.define('user', {
+     FactoryGuy.define('user', {
         default: {
           name: "Fred"
         },
@@ -27,7 +27,7 @@ FixtureFactory = Ember.Object.reopenClass({
 
      And to get those fixtures you would call them this way:
 
-      FixtureFactory.build('user') or FixtureFactory.build('bob')
+      FactoryGuy.build('user') or FactoryGuy.build('bob')
 
     @param model the model to define
     @param config your default and specific fixtures
@@ -83,8 +83,8 @@ FixtureFactory = Ember.Object.reopenClass({
   /**
     Build fixtures for model or specific fixture name. For example:
 
-      FixtureFactory.build('user') for User model
-      FixtureFactory.build('bob') for User model with bob attributes
+      FactoryGuy.build('user') for User model
+      FactoryGuy.build('bob') for User model with bob attributes
 
     @param name fixture name
     @param opts options that will override default fixture values
@@ -105,8 +105,7 @@ FixtureFactory = Ember.Object.reopenClass({
   },
 
   /**
-    Clear model instances from FIXTURES array,
-    and from store cache.
+    Clear model instances from FIXTURES array, and from store cache.
     Reset the id sequence for the models back to zero.
    */
   resetModels: function (store) {
@@ -118,10 +117,11 @@ FixtureFactory = Ember.Object.reopenClass({
   },
 
   /**
-    Push fixture to model's FIXTURES array
+    Push fixture to model's FIXTURES array.
+    Used when store's adapter is a DS.FixtureAdapter.
 
-    @param model
-    @param fixture
+    @param modelClass DS.Model type
+    @param fixture the fixture to add
    */
   pushFixture: function (modelClass, fixture) {
     if (!modelClass['FIXTURES']) {

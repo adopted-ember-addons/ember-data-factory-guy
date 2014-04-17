@@ -1,12 +1,12 @@
 {
-  "name": "ember-data-fixture-factory",
+  "name": "ember-data-factory-guy",
   "version": "0.0.1",
   "authors": [
-    "Opak Alex <opak.alexandr@gmail.com>",
-    "Daniel Sudol <dansudol@yahoo.com>"
+    "Daniel Sudol <dansudol@yahoo.com>",
+    "Opak Alex <opak.alexandr@gmail.com>"
   ],
-  "description": "Factory for testing Ember application",
-  "main": "dist/ember-data-fixture-factory.js",
+  "description": "Factory for testing Ember application using Ember Data",
+  "main": "dist/ember-data-factory-guy.js",
   "keywords": [
     "Factory",
     "Ember",

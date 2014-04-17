@@ -1,7 +1,7 @@
 var testHelper;
 var store;
 
-module('FixtureFactory with ActiveModelAdapter', {
+module('FactoryGuy with ActiveModelAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.ActiveModelAdapter);
     store = testHelper.getStore();

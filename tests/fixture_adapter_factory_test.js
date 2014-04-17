@@ -1,7 +1,7 @@
 var testHelper;
 var store;
 
-module('FixtureFactory with DS.FixtureAdapter', {
+module('FactoryGuy with DS.FixtureAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.FixtureAdapter);
     store = testHelper.getStore();
@@ -11,51 +11,51 @@ module('FixtureFactory with DS.FixtureAdapter', {
   }
 });
 
-test("creates info for model", function() {
-  var fixtureJson1, fixtureJson2, fixtureJson3;
-  fixtureJson1 = FixtureFactory.build('admin', {name: 'bob'});
-  fixtureJson2 = FixtureFactory.build('admin', {name: 'bob'});
-  fixtureJson3 = FixtureFactory.build('user');
-  equal(fixtureJson1.name, 'bob', 'basic');
-  equal(fixtureJson2.id, 2, 'ids are sequential');
-  equal(fixtureJson3.name, 'User1', 'default values');
+
+test("#build creates default json for model", function() {
+  var json = FactoryGuy.build('user');
+  console.log(json)
+  deepEqual(json, {id: 1, name: 'User1'});
 });
 
-test("pushFixture adds fixture to Fixture array on model", function() {
-  var fixtureJson = FixtureFactory.build('user');
-  FixtureFactory.pushFixture(store.modelFor('user'), fixtureJson);
+
+test("#build can override default model attributes", function() {
+  var json = FactoryGuy.build('user',{name: 'bob'});
+  deepEqual(json, {id: 1, name: 'bob'});
+});
+
+
+test("#build can have named model definition with custom attributes", function() {
+  var json = FactoryGuy.build('admin')
+  deepEqual(json, {id: 1, name: 'Admin'});
+});
+
+
+test("#build can override named model attributes", function() {
+  var json = FactoryGuy.build('admin', {name: 'AdminGuy'})
+  deepEqual(json, {id: 1, name: 'AdminGuy'});
+});
+
+
+test("#build similar model type ids are created sequentially", function() {
+  var user1 = FactoryGuy.build('user');
+  var user2 = FactoryGuy.build('user');
+  var project = FactoryGuy.build('project');
+  equal(user1.id, 1);
+  equal(user2.id, 2);
+  equal(project.id, 1);
+});
+
+
+test("#pushFixture adds fixture to Fixture array on model", function() {
+  var fixtureJson = FactoryGuy.build('user');
+  FactoryGuy.pushFixture(store.modelFor('user'), fixtureJson);
   equal(User.FIXTURES.length, 1);
-  var fixtureJson2 = FixtureFactory.build('user');
-  FixtureFactory.pushFixture(store.modelFor('user'), fixtureJson2);
+  var fixtureJson2 = FactoryGuy.build('user');
+  FactoryGuy.pushFixture(store.modelFor('user'), fixtureJson2);
   equal(User.FIXTURES.length, 2);
 });
 
-asyncTest("modify fixture modifies fixture in the store", function() {
-  var project1 = store.makeFixture('project');
-  var project2 = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [project1.id, project2.id]});
-
-  store.find('user', user.id).then(function(user) {
-    user.get('projects').then(function(projects) {
-      equal(user.get('name'), 'User1');
-      equal(user.get('projects').toArray().length, 2);
-      start();
-    });
-  });
-});
-
-asyncTest("can add hasMany associations to fixtures", function() {
-  var p1 = store.makeFixture('project');
-  var p2 = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [p1.id, p2.id]})
-
-  store.find('user', 1).then ( function(user) {
-    user.get('projects').then( function() {
-      equal(user.get('projects.length'),2, "changes hasMany records")
-      start();
-    })
-  })
-})
 
 asyncTest( "can change fixture attributes after creation", function() {
   var user = store.makeFixture('user');
@@ -78,9 +78,23 @@ module('DS.Store with DS.FixtureAdapter', {
   }
 });
 
+
 test("#make builds and pushes fixture into the store", function() {
   store.makeFixture('user');
   equal(User.FIXTURES.length, 1);
 });
 
 
+asyncTest("#makeFixture sets hasMany associations on fixtures", function() {
+  var p1 = store.makeFixture('project');
+  store.makeFixture('project'); // this project not added
+  var user = store.makeFixture('user', {projects: [p1.id]})
+
+  store.find('user', 1).then ( function(user) {
+    user.get('projects').then( function(projects) {
+      equal(projects.get('length'), 1, "adds hasMany records");
+      equal(projects.get('firstObject.user.id'), 1, "sets belongsTo record");
+      start();
+    })
+  })
+})

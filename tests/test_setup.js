@@ -1,19 +1,19 @@
-FixtureFactory.define('project', {
+FactoryGuy.define('project', {
   default: {title: 'Project'}
 });
-FixtureFactory.define('user', {
-
+FactoryGuy.define('user', {
+ // default values for 'user' attributes
   default: {
     name: 'User1'
   },
-
+  // named 'user' type with custom attributes
   admin: {
     name: 'Admin'
   }
-
 });
 Project = DS.Model.extend({
-  title: DS.attr('string')
+  title: DS.attr('string'),
+  user: DS.belongsTo('user')
 })
 
 User = DS.Model.extend({
