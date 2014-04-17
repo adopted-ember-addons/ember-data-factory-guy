@@ -92,8 +92,7 @@ DS.Store.reopen({
     @param payload
    */
   pushPayload: function (type, payload) {
-    var adapter = this.adapterFor('application');
-    if (adapter.toString().match('Fixture')) {
+    if (this.usingFixtureAdapter()) {
       var model = this.modelFor(modelName);
       FactoryGuy.pushFixture(model, payload);
     } else {
