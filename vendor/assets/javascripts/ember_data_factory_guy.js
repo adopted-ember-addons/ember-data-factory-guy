@@ -109,10 +109,11 @@ FactoryGuy = Ember.Object.reopenClass({
     Reset the id sequence for the models back to zero.
    */
   resetModels: function (store) {
-    for (model in this.fixtureStore) {
-      store.modelFor(model).FIXTURES = [];
-      store.unloadAll(model);
-      this.modelIds[model] = 0;
+    for (model in store.typeMaps()) {
+      var type = model.type
+      store.modelFor(type).FIXTURES = [];
+      store.unloadAll(type);
+      this.modelIds[type] = 0;
     }
   },
 
@@ -233,6 +234,24 @@ DS.Store.reopen({
     }
   }
 });
+
+
+DS.FixtureAdapter.reopen({
+
+  /**
+    @method createRecord
+    @param {DS.Store} store
+    @param {subclass of DS.Model} type
+    @param {DS.Model} record
+    @return {Promise} promise
+  */
+  createRecord: function(store, type, record) {
+    console.log('custom createRecord', record+'', record);
+    return this._super(store, type, record);
+  }
+
+})
+
 
 FactoryGuyHelperMixin = Em.Mixin.create({
 
