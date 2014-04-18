@@ -21,7 +21,7 @@ asyncTest("creates records in the store", function() {
   });
 });
 
-test("#resetModels clears the store of models, clears the FIXTURES arrays for each model and resets the model ids", function() {
+test("#resetModels clears the store of models, and resets the model ids", function() {
   var project = store.makeFixture('project');
   var user = store.makeFixture('user', {projects: [project.id]});
 
@@ -29,6 +29,8 @@ test("#resetModels clears the store of models, clears the FIXTURES arrays for ea
 
   equal(store.all('user').get('content.length'),0)
   equal(store.all('project').get('content.length'),0)
+
+  deepEqual(FactoryGuy.modelIds, {});
 });
 
 test("supports hasMany associations", function() {

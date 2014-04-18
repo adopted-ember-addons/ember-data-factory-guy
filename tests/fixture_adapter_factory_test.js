@@ -77,10 +77,10 @@ test("#resetModels clears the store of models, clears the FIXTURES arrays for ea
   equal(User.FIXTURES.length, 0);
   equal(Project.FIXTURES.length, 0);
 
-  deepEqual(FactoryGuy.modelIds, {});
-
   equal(store.all('user').get('content.length'),0)
   equal(store.all('project').get('content.length'),0)
+
+  deepEqual(FactoryGuy.modelIds, {});
 });
 
 
