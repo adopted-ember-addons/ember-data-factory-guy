@@ -75,7 +75,7 @@ FactoryGuy = Ember.Object.reopenClass({
     Generate next id for model
    */
   generateId: function (model) {
-    var lastId = this.modelIds[model];
+    var lastId = this.modelIds[model] || 0;
     this.modelIds[model] = lastId + 1;
     return this.modelIds[model];
   },
@@ -109,12 +109,23 @@ FactoryGuy = Ember.Object.reopenClass({
     Reset the id sequence for the models back to zero.
    */
   resetModels: function (store) {
-    for (model in store.typeMaps()) {
-      var type = model.type
-      store.modelFor(type).FIXTURES = [];
-      store.unloadAll(type);
-      this.modelIds[type] = 0;
+    var typeMaps = store.typeMaps;
+    if (store.usingFixtureAdapter()) {
+      for (modelType in this.fixtureStore) {
+        var modelClass = store.modelFor(modelType);
+        modelClass.FIXTURES = [];
+        this.modelIds[modelType] = 0;
+        store.unloadAll(modelType);
+      }
+    } else {
+      for (model in typeMaps) {
+        var type = store.modelFor(typeMaps[model].type.typeKey);
+        store.unloadAll(type);
+        this.modelIds[type] = 0;
+      }
     }
+
+    this.modelIds = {}
   },
 
   /**
@@ -156,8 +167,12 @@ DS.Store.reopen({
       this.setBelongsToFixturesAssociation(modelType, modelName, fixture);
       return FactoryGuy.pushFixture(modelType, fixture);
     } else {
-      var model = this.push(modelName, fixture);
-      this.setBelongsToRestAssociation(modelType, modelName, model);
+      var self = this;
+      var model;
+      Em.run( function() {
+        model = self.push(modelName, fixture);
+        self.setBelongsToRestAssociation(modelType, modelName, model);
+      });
       return model;
     }
   },

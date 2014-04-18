@@ -68,6 +68,22 @@ asyncTest( "can change fixture attributes after creation", function() {
 });
 
 
+test("#resetModels clears the store of models, clears the FIXTURES arrays for each model and resets the model ids", function() {
+  var project = store.makeFixture('project');
+  var user = store.makeFixture('user', {projects: [project.id]});
+
+  FactoryGuy.resetModels(store);
+
+  equal(User.FIXTURES.length, 0);
+  equal(Project.FIXTURES.length, 0);
+
+  deepEqual(FactoryGuy.modelIds, {});
+
+  equal(store.all('user').get('content.length'),0)
+  equal(store.all('project').get('content.length'),0)
+});
+
+
 module('DS.Store with DS.FixtureAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.FixtureAdapter);

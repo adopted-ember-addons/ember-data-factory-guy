@@ -12,7 +12,7 @@ module('DS.Store#make with ActiveModelAdapter', {
 });
 
 
-asyncTest("builds and creates record", function() {
+asyncTest("creates records in the store", function() {
   var user = store.makeFixture('user');
 
   store.find('user', user.id).then ( function(store_user) {
@@ -21,6 +21,15 @@ asyncTest("builds and creates record", function() {
   });
 });
 
+test("#resetModels clears the store of models, clears the FIXTURES arrays for each model and resets the model ids", function() {
+  var project = store.makeFixture('project');
+  var user = store.makeFixture('user', {projects: [project.id]});
+
+  FactoryGuy.resetModels(store);
+
+  equal(store.all('user').get('content.length'),0)
+  equal(store.all('project').get('content.length'),0)
+});
 
 test("supports hasMany associations", function() {
   var p1 = store.makeFixture('project');

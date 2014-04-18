@@ -22,8 +22,12 @@ DS.Store.reopen({
       this.setBelongsToFixturesAssociation(modelType, modelName, fixture);
       return FactoryGuy.pushFixture(modelType, fixture);
     } else {
-      var model = this.push(modelName, fixture);
-      this.setBelongsToRestAssociation(modelType, modelName, model);
+      var self = this;
+      var model;
+      Em.run( function() {
+        model = self.push(modelName, fixture);
+        self.setBelongsToRestAssociation(modelType, modelName, model);
+      });
       return model;
     }
   },
@@ -100,3 +104,21 @@ DS.Store.reopen({
     }
   }
 });
+
+
+DS.FixtureAdapter.reopen({
+
+  /**
+    @method createRecord
+    @param {DS.Store} store
+    @param {subclass of DS.Model} type
+    @param {DS.Model} record
+    @return {Promise} promise
+  */
+  createRecord: function(store, type, record) {
+    console.log('custom createRecord', record+'', record);
+    return this._super(store, type, record);
+  }
+
+})
+
