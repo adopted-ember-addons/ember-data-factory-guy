@@ -109,10 +109,11 @@ FactoryGuy = Ember.Object.reopenClass({
     Reset the id sequence for the models back to zero.
    */
   resetModels: function (store) {
-    for (model in this.fixtureStore) {
-      store.modelFor(model).FIXTURES = [];
-      store.unloadAll(model);
-      this.modelIds[model] = 0;
+    for (model in store.typeMaps()) {
+      var type = model.type
+      store.modelFor(type).FIXTURES = [];
+      store.unloadAll(type);
+      this.modelIds[type] = 0;
     }
   },
 
