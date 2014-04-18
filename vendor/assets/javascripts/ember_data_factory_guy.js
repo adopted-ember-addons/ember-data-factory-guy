@@ -135,7 +135,7 @@ DS.Store.reopen({
 
   usingFixtureAdapter: function() {
     var adapter = this.adapterFor('application');
-    return adapter.toString().match('Fixture') || adapter.simulateRemoteResponse;
+    return adapter instanceof DS.FixtureAdapter
   },
 
   /**
@@ -225,8 +225,7 @@ DS.Store.reopen({
     @param payload
    */
   pushPayload: function (type, payload) {
-    var adapter = this.adapterFor('application');
-    if (adapter.toString().match('Fixture')) {
+    if (this.usingFixtureAdapter()) {
       var model = this.modelFor(modelName);
       FactoryGuy.pushFixture(model, payload);
     } else {
@@ -234,6 +233,7 @@ DS.Store.reopen({
     }
   }
 });
+
 FactoryGuyHelperMixin = Em.Mixin.create({
 
   setup: function(app) {

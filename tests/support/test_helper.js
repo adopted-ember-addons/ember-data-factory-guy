@@ -8,7 +8,6 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuyHelperMixin,{
   setup: function(adapter) {
     var container = new Ember.Container();
     this.set('container', container);
-    this.set('adapter', adapter);
 
     container.register("model:user", User);
     container.register("model:project", Project);

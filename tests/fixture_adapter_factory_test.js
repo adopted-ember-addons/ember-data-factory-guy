@@ -89,7 +89,7 @@ test("#make builds and pushes fixture into the store", function() {
 asyncTest("#makeFixture sets hasMany associations on fixtures", function() {
   var p1 = store.makeFixture('project');
   // second project not added on purpose to make sure only one is
-  // assigned in has many and has the belongsTo user association set
+  // assigned in hasMany
   store.makeFixture('project');
   var user = store.makeFixture('user', {projects: [p1.id]})
 
