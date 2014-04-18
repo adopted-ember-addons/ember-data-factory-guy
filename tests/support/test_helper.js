@@ -14,7 +14,7 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuyHelperMixin,{
     container.register("store:main", DS.Store.extend({adapter: adapter}));
     container.register('transform:string', DS.StringTransform);
 
-    if (adapter.toString().match('Fixture')) {
+    if (adapter instanceof DS.FixtureAdapter) {
       adapter.simulateRemoteResponse = false;
     }
     return this;
