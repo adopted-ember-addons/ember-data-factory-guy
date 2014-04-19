@@ -1,4 +1,4 @@
-var testHelper;
+window.testHelper;
 var store;
 
 module('FactoryGuy with DS.FixtureAdapter', {
@@ -57,7 +57,7 @@ test("#pushFixture adds fixture to Fixture array on model", function() {
 });
 
 
-asyncTest( "can change fixture attributes after creation", function() {
+asyncTest("can change fixture attributes after creation", function() {
   var user = store.makeFixture('user');
   user.name = "new name";
 
@@ -95,7 +95,7 @@ module('DS.Store with DS.FixtureAdapter', {
 });
 
 
-test("#make builds and pushes fixture into the store", function() {
+test("#makeFixture builds and pushes fixture into the store", function() {
   var json = store.makeFixture('user');
   equal(User.FIXTURES.length, 1);
   equal(User.FIXTURES[0], json);
@@ -115,5 +115,20 @@ asyncTest("#makeFixture sets hasMany associations on fixtures", function() {
       equal(projects.get('firstObject.user.id'), 1, "sets belongsTo record");
       start();
     })
+  })
+})
+
+asyncTest("#createRecord adds belongsTo associations to hasMany array", function() {
+  var user = store.makeFixture('user');
+
+  store.find('user', user.id).then(function(user){
+
+    var projectJson = {title:'project', user: user};
+
+    store.createRecord('project', projectJson).save()
+      .then( function() {
+        equal(user.get('projects.length'), 1);
+        start();
+      });
   })
 })

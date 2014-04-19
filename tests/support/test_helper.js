@@ -12,6 +12,7 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuyHelperMixin,{
     container.register("model:user", User);
     container.register("model:project", Project);
     container.register("store:main", DS.Store.extend({adapter: adapter}));
+    container.register("serializer:-default", DS.RESTSerializer);
     container.register('transform:string', DS.StringTransform);
 
     if (adapter instanceof DS.FixtureAdapter) {

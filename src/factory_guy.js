@@ -111,20 +111,17 @@ FactoryGuy = Ember.Object.reopenClass({
   resetModels: function (store) {
     var typeMaps = store.typeMaps;
     if (store.usingFixtureAdapter()) {
-      for (modelType in this.fixtureStore) {
-        var modelClass = store.modelFor(modelType);
-        modelClass.FIXTURES = [];
-        this.modelIds[modelType] = 0;
+      for (typeKey in this.fixtureStore) {
+        var modelType = store.modelFor(typeKey);
+        modelType.FIXTURES = [];
         store.unloadAll(modelType);
       }
     } else {
       for (model in typeMaps) {
-        var type = store.modelFor(typeMaps[model].type.typeKey);
-        store.unloadAll(type);
-        this.modelIds[type] = 0;
+//        console.log(typeMaps[model].type)
+        store.unloadAll(typeMaps[model].type);
       }
     }
-
     this.modelIds = {}
   },
 

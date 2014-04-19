@@ -1,7 +1,7 @@
 var testHelper;
 var store;
 
-module('DS.Store#make with RestAdapter', {
+module('FactoryGuy with DS.RESTAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.RESTAdapter);
     store = testHelper.getStore();
@@ -12,23 +12,20 @@ module('DS.Store#make with RestAdapter', {
 });
 
 
-test("supports hasMany associations", function() {
-  var p1 = store.makeFixture('project');
-  var p2 = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [p1.id, p2.id]})
+test("#resetModels clears the store of models, and resets the model ids", function() {
+  var project = store.makeFixture('project');
+  var user = store.makeFixture('user', {projects: [project.id]});
 
-  equal(user.get('projects.length'), 2);
-})
+  FactoryGuy.resetModels(store);
+
+  equal(store.all('user').get('content.length'),0)
+  equal(store.all('project').get('content.length'),0)
+
+  deepEqual(FactoryGuy.modelIds, {});
+});
 
 
-test("when hasMany associations used, belongTo parent is assigned", function() {
-  var p1 = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [p1.id]})
-
-  deepEqual(p1.get('user').toJSON(), user.toJSON());
-})
-
-module('DS.Store with ActiveModelAdapter', {
+module('DS.Store#makeFixture with RestAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.RESTAdapter);
     store = testHelper.getStore();
@@ -38,7 +35,7 @@ module('DS.Store with ActiveModelAdapter', {
   }
 });
 
-asyncTest("#make builds and creates record", function() {
+asyncTest("creates records in the store", function() {
   var user = store.makeFixture('user');
 
   store.find('user', user.id).then ( function(store_user) {
@@ -47,4 +44,18 @@ asyncTest("#make builds and creates record", function() {
   });
 });
 
+test("supports hasMany associations", function() {
+  var p1 = store.makeFixture('project');
+  var p2 = store.makeFixture('project');
+  var user = store.makeFixture('user', {projects: [p1.id, p2.id]})
 
+  equal(user.get('projects.length'), 2);
+});
+
+
+test("when hasMany associations assigned, belongTo parent is assigned", function() {
+  var p1 = store.makeFixture('project');
+  var user = store.makeFixture('user', {projects: [p1.id]})
+
+  deepEqual(p1.get('user').toJSON(), user.toJSON());
+});

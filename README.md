@@ -112,7 +112,7 @@ Add fixtures to the store using the:
   var user = store.makeFixture('user', projects: [project.id]);
 
   user.get('projects.length') == 1;
-  user.get('projects.get('user') == user;
+  user.get('projects.firstObject.user') == user;
 
 
 ```

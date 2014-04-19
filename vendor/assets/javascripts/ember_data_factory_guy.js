@@ -111,20 +111,17 @@ FactoryGuy = Ember.Object.reopenClass({
   resetModels: function (store) {
     var typeMaps = store.typeMaps;
     if (store.usingFixtureAdapter()) {
-      for (modelType in this.fixtureStore) {
-        var modelClass = store.modelFor(modelType);
-        modelClass.FIXTURES = [];
-        this.modelIds[modelType] = 0;
+      for (typeKey in this.fixtureStore) {
+        var modelType = store.modelFor(typeKey);
+        modelType.FIXTURES = [];
         store.unloadAll(modelType);
       }
     } else {
       for (model in typeMaps) {
-        var type = store.modelFor(typeMaps[model].type.typeKey);
-        store.unloadAll(type);
-        this.modelIds[type] = 0;
+//        console.log(typeMaps[model].type)
+        store.unloadAll(typeMaps[model].type);
       }
     }
-
     this.modelIds = {}
   },
 
@@ -254,6 +251,10 @@ DS.Store.reopen({
 DS.FixtureAdapter.reopen({
 
   /**
+    Overriding createRecord in FixtureAdapter to add the record
+     created to the hashMany records for all of the records that
+     this one belongsTo.
+
     @method createRecord
     @param {DS.Store} store
     @param {subclass of DS.Model} type
@@ -261,8 +262,18 @@ DS.FixtureAdapter.reopen({
     @return {Promise} promise
   */
   createRecord: function(store, type, record) {
-    console.log('custom createRecord', record+'', record);
-    return this._super(store, type, record);
+    var promise = this._super(store, type, record);
+    promise.then( function() {
+      var hasManyName = Ember.String.pluralize(type.typeKey);
+      var relationShips = Ember.get(type, 'relationshipNames');
+      if (relationShips.belongsTo) {
+        relationShips.belongsTo.forEach(function (relationship) {
+          var belongsToRecord = record.get(relationship);
+          belongsToRecord.get(hasManyName).addObject(record);
+        })
+      }
+    })
+    return promise;
   }
 
 })

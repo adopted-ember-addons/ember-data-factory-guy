@@ -109,6 +109,10 @@ DS.Store.reopen({
 DS.FixtureAdapter.reopen({
 
   /**
+    Overriding createRecord in FixtureAdapter to add the record
+     created to the hashMany records for all of the records that
+     this one belongsTo.
+
     @method createRecord
     @param {DS.Store} store
     @param {subclass of DS.Model} type
@@ -116,8 +120,18 @@ DS.FixtureAdapter.reopen({
     @return {Promise} promise
   */
   createRecord: function(store, type, record) {
-    console.log('custom createRecord', record+'', record);
-    return this._super(store, type, record);
+    var promise = this._super(store, type, record);
+    promise.then( function() {
+      var hasManyName = Ember.String.pluralize(type.typeKey);
+      var relationShips = Ember.get(type, 'relationshipNames');
+      if (relationShips.belongsTo) {
+        relationShips.belongsTo.forEach(function (relationship) {
+          var belongsToRecord = record.get(relationship);
+          belongsToRecord.get(hasManyName).addObject(record);
+        })
+      }
+    })
+    return promise;
   }
 
 })
