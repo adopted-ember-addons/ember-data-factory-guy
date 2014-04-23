@@ -30,7 +30,7 @@ FactoryGuy = Ember.Object.reopenClass({
       FactoryGuy.build('user') or FactoryGuy.build('bob')
 
     @param model the model to define
-    @param config your default and specific fixtures
+    @param config your default and named fixtures
    */
   define: function (model, config) {
     var info = this.getModelInfo(model);
@@ -118,7 +118,6 @@ FactoryGuy = Ember.Object.reopenClass({
       }
     } else {
       for (model in typeMaps) {
-//        console.log(typeMaps[model].type)
         store.unloadAll(typeMaps[model].type);
       }
     }

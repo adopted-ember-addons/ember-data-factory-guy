@@ -30,7 +30,7 @@ FactoryGuy = Ember.Object.reopenClass({
       FactoryGuy.build('user') or FactoryGuy.build('bob')
 
     @param model the model to define
-    @param config your default and specific fixtures
+    @param config your default and named fixtures
    */
   define: function (model, config) {
     var info = this.getModelInfo(model);
@@ -118,7 +118,6 @@ FactoryGuy = Ember.Object.reopenClass({
       }
     } else {
       for (model in typeMaps) {
-//        console.log(typeMaps[model].type)
         store.unloadAll(typeMaps[model].type);
       }
     }
@@ -263,14 +262,18 @@ DS.FixtureAdapter.reopen({
   */
   createRecord: function(store, type, record) {
     var promise = this._super(store, type, record);
+
     promise.then( function() {
       var hasManyName = Ember.String.pluralize(type.typeKey);
       var relationShips = Ember.get(type, 'relationshipNames');
       if (relationShips.belongsTo) {
-        relationShips.belongsTo.forEach(function (relationship) {
-          var belongsToRecord = record.get(relationship);
-          belongsToRecord.get(hasManyName).addObject(record);
-        })
+//        console.log('record',record+'', type.typeKey, hasManyName);
+//        relationShips.belongsTo.forEach(function (relationship) {
+//          console.log(relationship, record.get(relationship)+'')
+//          var belongsToRecord = record.get(relationship);
+//          console.log(relationshipForType)
+//          belongsToRecord.get(hasManyName).addObject(record);
+//        })
       }
     })
     return promise;
@@ -351,10 +354,9 @@ FactoryGuyHelperMixin = Em.Mixin.create({
     return hash;
   },
 
-  handleUpdate: function (model) {
-    var root = Em.String.pluralize(model.rootForType());
+  handleUpdate: function (root, id) {
     this.stubEndpointForHttpRequest(
-      "/" + root + "/" + model.get('id'), {}, {type: 'PUT'}
+      "/" + Em.String.pluralize(root) + "/" + id, {}, {type: 'PUT'}
     )
   },
 

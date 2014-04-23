@@ -70,10 +70,9 @@ FactoryGuyHelperMixin = Em.Mixin.create({
     return hash;
   },
 
-  handleUpdate: function (model) {
-    var root = Em.String.pluralize(model.rootForType());
+  handleUpdate: function (root, id) {
     this.stubEndpointForHttpRequest(
-      "/" + root + "/" + model.get('id'), {}, {type: 'PUT'}
+      "/" + Em.String.pluralize(root) + "/" + id, {}, {type: 'PUT'}
     )
   },
 
