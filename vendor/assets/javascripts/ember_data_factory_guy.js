@@ -100,7 +100,9 @@ FactoryGuy = Ember.Object.reopenClass({
     var modelAttributes = modelInfo[name] || {};
     var defaultModelAttributes = modelInfo.default;
     var fixture = $.extend({}, defaultModelAttributes, modelAttributes, opts);
-    fixture.id = this.generateId(model);
+    if(!fixture.id){
+      fixture.id = this.generateId(model);
+    }
     return fixture;
   },
 
@@ -139,6 +141,7 @@ FactoryGuy = Ember.Object.reopenClass({
     return fixture;
   }
 })
+
 DS.Store.reopen({
 
   usingFixtureAdapter: function() {

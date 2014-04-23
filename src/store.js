@@ -121,14 +121,18 @@ DS.FixtureAdapter.reopen({
   */
   createRecord: function(store, type, record) {
     var promise = this._super(store, type, record);
+
     promise.then( function() {
       var hasManyName = Ember.String.pluralize(type.typeKey);
       var relationShips = Ember.get(type, 'relationshipNames');
       if (relationShips.belongsTo) {
-        relationShips.belongsTo.forEach(function (relationship) {
-          var belongsToRecord = record.get(relationship);
-          belongsToRecord.get(hasManyName).addObject(record);
-        })
+//        console.log('record',record+'', type.typeKey, hasManyName);
+//        relationShips.belongsTo.forEach(function (relationship) {
+//          console.log(relationship, record.get(relationship)+'')
+//          var belongsToRecord = record.get(relationship);
+//          console.log(relationshipForType)
+//          belongsToRecord.get(hasManyName).addObject(record);
+//        })
       }
     })
     return promise;
