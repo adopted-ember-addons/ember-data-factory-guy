@@ -61,7 +61,7 @@
 
     return Ember.computed('data', function(key) {
       var adapter = this.store.adapterFor('application');
-      if (adapter.toString().match('Fixture')) {
+      if (adapter instanceof DS.FixtureAdapter) {
         var relationship = this._relationships[key],
             promiseLabel = "DS: Async hasMany " + this + " : " + key;
 
