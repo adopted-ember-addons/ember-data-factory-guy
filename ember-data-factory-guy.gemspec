@@ -1,13 +1,13 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |s|
   s.name        = "ember-data-factory-guy"
-  s.version     = "0.1"
+  s.version     = "0.1.1"
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["daniel sudol", "alex opak"]
-  s.email       = ["dansudol@yahoo.com"]
-  s.homepage    = "http://rubygems.org/gems/ember-data-factory-guy"
-  s.summary     = "Create Fixtures for Ember Data"
-  s.description = "Create Fixtures for Ember Data"
+  s.authors     = ["Daniel Sudol", "Alex Opak"]
+  s.email       = ["dansudol@yahoo.com", "opak.alexandr@gmail.com"]
+  s.homepage    = "https://github.com/danielspaniel/ember-data-factory-guy"
+  s.summary     = "Easily create Fixtures for Ember Data"
+  s.description = "Easily create Fixtures for Ember Data"
   s.license     = "MIT"
 
   s.required_rubygems_version = ">= 1.3.6"
