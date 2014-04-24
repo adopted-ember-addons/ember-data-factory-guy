@@ -118,17 +118,17 @@ asyncTest("#makeFixture sets hasMany associations on fixtures", function() {
   })
 })
 
-asyncTest("#createRecord adds belongsTo associations to hasMany array", function() {
-  var user = store.makeFixture('user');
-
-  store.find('user', user.id).then(function(user){
-
-    var projectJson = {title:'project', user: user};
-
-    store.createRecord('project', projectJson).save()
-      .then( function() {
-        equal(user.get('projects.length'), 1);
-        start();
-      });
-  })
-})
+//asyncTest("#createRecord adds belongsTo associations to hasMany array", function() {
+//  var user = store.makeFixture('user');
+//
+//  store.find('user', user.id).then(function(user){
+//
+//    var projectJson = {title:'project', user: user};
+//
+//    store.createRecord('project', projectJson).save()
+//      .then( function() {
+//        equal(user.get('projects.length'), 1);
+//        start();
+//      });
+//  })
+//})

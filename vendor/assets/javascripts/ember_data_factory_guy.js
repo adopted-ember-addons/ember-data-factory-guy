@@ -266,10 +266,10 @@ DS.FixtureAdapter.reopen({
   createRecord: function(store, type, record) {
     var promise = this._super(store, type, record);
 
-    promise.then( function() {
-      var hasManyName = Ember.String.pluralize(type.typeKey);
-      var relationShips = Ember.get(type, 'relationshipNames');
-      if (relationShips.belongsTo) {
+//    promise.then( function() {
+//      var hasManyName = Ember.String.pluralize(type.typeKey);
+//      var relationShips = Ember.get(type, 'relationshipNames');
+//      if (relationShips.belongsTo) {
 //        console.log('record',record+'', type.typeKey, hasManyName);
 //        relationShips.belongsTo.forEach(function (relationship) {
 //          console.log(relationship, record.get(relationship)+'')
@@ -277,8 +277,8 @@ DS.FixtureAdapter.reopen({
 //          console.log(relationshipForType)
 //          belongsToRecord.get(hasManyName).addObject(record);
 //        })
-      }
-    })
+//      }
+//    })
     return promise;
   }
 
