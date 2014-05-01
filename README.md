@@ -17,6 +17,16 @@ then:
 $ bundle install
 ```
 
+# Using as bower
+Add to bower file:
+```json
+  "ember-data-factory-guy": "git@github.com:danielspaniel/ember-data-factory-guy.git#master"
+```
+then:
+```
+$ bower install
+```
+
 # How this works
 
 Add fixtures to the store using the:
