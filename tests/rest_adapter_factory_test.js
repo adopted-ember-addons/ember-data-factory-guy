@@ -35,6 +35,13 @@ module('DS.Store#makeFixture with RestAdapter', {
   }
 });
 
+
+test("creates DS.Model instances", function() {
+  var user = store.makeFixture('user');
+  equal(user instanceof DS.Model, true);
+});
+
+
 asyncTest("creates records in the store", function() {
   var user = store.makeFixture('user');
 

@@ -146,7 +146,7 @@ can be used in your tests to make it easier to access the store and make fixture
 
 // Let's say you have a helper for your tests named TestHelper declared in a file.
 
-TestHelper = Ember.Object.createWithMixins(FactoryGuyHelperMixin);
+TestHelper = Ember.Object.createWithMixins(FactoryGuyTestHelper);
 
 
 // Then in your tests you can use it like so:
@@ -163,12 +163,24 @@ module('User Model', {
   }
 });
 
-// To be even more concise in tests
-var make = function(name, opts) { return testHelper.make(name, opts) }
+// You could at this point, make fixtures with testHelper.make('user'), but
+// to be even more concise in tests you could add this method to your tests
+var make = function(name, opts) { return testHelper.make(name, opts); }
 
-test("make a user", function() {
+
+test("make a user using fixture adapter", function() {
+  // useFixtureAdapter method is built into FactoryGuyTestHelper, and usually
+  // this would be called in the setup function
+  testHelper.useFixtureAdapter();
   var json = make('user');
   equal(User.FIXTURES.length, 1);
+});
+
+// assuming your default adapter is ActiveModelAdapter or RESTAdapter
+test("make a user using your applications default adapter", function() {
+  var user = make('user');
+  equal(store.all('user').get('content.length'), 1)
+  equal(user instanceof DS.Model, true);
 });
 
 

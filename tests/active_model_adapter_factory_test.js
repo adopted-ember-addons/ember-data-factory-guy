@@ -36,6 +36,12 @@ module('DS.Store#makeFixture with ActiveModelAdapter', {
 });
 
 
+test("creates DS.Model instances", function() {
+  var user = store.makeFixture('user');
+  equal(user instanceof DS.Model, true);
+});
+
+
 asyncTest("creates records in the store", function() {
   var user = store.makeFixture('user');
 
@@ -60,4 +66,3 @@ test("when hasMany associations assigned, belongTo parent is assigned", function
 
   deepEqual(p1.get('user').toJSON(), user.toJSON());
 })
-
