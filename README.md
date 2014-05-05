@@ -146,7 +146,7 @@ can be used in your tests to make it easier to access the store and make fixture
 
 // Let's say you have a helper for your tests named TestHelper declared in a file.
 
-TestHelper = Ember.Object.createWithMixins(FactoryGuyTestHelper);
+TestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin);
 
 
 // Then in your tests you can use it like so:
@@ -169,7 +169,7 @@ var make = function(name, opts) { return testHelper.make(name, opts); }
 
 
 test("make a user using fixture adapter", function() {
-  // useFixtureAdapter method is built into FactoryGuyTestHelper, and usually
+  // useFixtureAdapter method is built into FactoryGuyTestMixin, and usually
   // this would be called in the setup function
   testHelper.useFixtureAdapter();
   var json = make('user');

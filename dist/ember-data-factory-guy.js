@@ -286,7 +286,7 @@ DS.FixtureAdapter.reopen({
 })
 
 
-FactoryGuyTestHelper = Em.Mixin.create({
+FactoryGuyTestMixin = Em.Mixin.create({
 
   // Pass in the app root, which typically is App.
   setup: function(app) {

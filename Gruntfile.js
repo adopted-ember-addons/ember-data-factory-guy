@@ -6,12 +6,12 @@ module.exports = function(grunt) {
 
     concat: {
       dist: {
-        src: ['src/factory_guy.js', 'src/store.js', 'src/factory_guy_helper_mixin.js'],
+        src: ['src/factory_guy.js', 'src/store.js', 'src/factory_guy_test_mixin.js'],
         dest: "dist/ember-data-factory-guy.js"
       },
       gem: {
         files: {
-          "vendor/assets/javascripts/ember_data_factory_guy.js": ['src/factory_guy.js', 'src/store.js', 'src/factory_guy_helper_mixin.js'],
+          "vendor/assets/javascripts/ember_data_factory_guy.js": ['src/factory_guy.js', 'src/store.js', 'src/factory_guy_test_mixin.js'],
           "vendor/assets/javascripts/factory_guy_has_many.js": ['src/has_many.js']
         }
       },
