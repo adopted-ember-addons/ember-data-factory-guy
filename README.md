@@ -157,21 +157,19 @@ var testHelper, store;
 module('User Model', {
   setup: function() {
     testHelper = TestHelper.setup(App);
-    store = testHelper.getStore();
   },
   teardown: function() {
     Em.run(function() { testHelper.teardown(); });
   }
 });
 
+// To be even more concise in tests
+var make = function(name, opts) { return testHelper.make(name, opts) }
 
 test("make a user", function() {
-  var json = store.makeFixture('user');
+  var json = make('user');
   equal(User.FIXTURES.length, 1);
-  equal(User.FIXTURES[0], json);
 });
 
-// This example is a slightly modified version of what exists in 'fixture_adapter_factory_test.js'
-// found in the tests directory of this repo.
 
 ```
