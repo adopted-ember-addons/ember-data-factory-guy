@@ -1,13 +1,6 @@
 Ember Data Factory Guy [![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy)
 =================
 
-# Using with bower
-
-```
-bower install ember-data-factory-guy
-```
-
-
 # Using as Gem
 
 To Use with in Rails project or project with sprockets:
@@ -22,6 +15,18 @@ then:
 
 ```
 $ bundle install
+```
+
+# Using as bower
+
+Add to bower file:
+```json
+  "ember-data-factory-guy": "git@github.com:danielspaniel/ember-data-factory-guy.git#master"
+```
+
+then:
+```
+$ bower install
 ```
 
 # How this works
