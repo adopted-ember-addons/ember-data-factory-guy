@@ -17,11 +17,15 @@ then:
 $ bundle install
 ```
 
-# Using as bower
+# Using as bower component
 
-Add to bower file:
+Add as one of your dependencies in bower.json file:
 ```json
-  "ember-data-factory-guy": "git@github.com:danielspaniel/ember-data-factory-guy.git#master"
+  "dependencies": {
+    "foo-dependency": "latest",
+    "other-foo-dependency": "latest",
+    "ember-data-factory-guy": "latest"
+  }
 ```
 
 then:
