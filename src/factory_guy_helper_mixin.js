@@ -1,5 +1,6 @@
 FactoryGuyHelperMixin = Em.Mixin.create({
 
+  // Pass in the app root, which typically is App.
   setup: function(app) {
     this.set('container', app.__container__);
     return this;

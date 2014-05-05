@@ -9,8 +9,8 @@ DS.Store.reopen({
     Make new fixture and save to store. If the store is using FixtureAdapter,
     will push to FIXTURE array, otherwise will use push method on adapter.
 
-    @param name
-    @param options
+    @param name name of fixture
+    @param options fixture options
     @returns {*}
    */
   makeFixture: function (name, options) {
@@ -19,31 +19,32 @@ DS.Store.reopen({
     var modelType = this.modelFor(modelName);
 
     if (this.usingFixtureAdapter()) {
-      this.setBelongsToFixturesAssociation(modelType, modelName, fixture);
+      this.setBelongsToFixturesAdapter(modelType, modelName, fixture);
       return FactoryGuy.pushFixture(modelType, fixture);
     } else {
       var self = this;
       var model;
       Em.run( function() {
         model = self.push(modelName, fixture);
-        self.setBelongsToRestAssociation(modelType, modelName, model);
+        self.setBelongsToRESTAdapter(modelType, modelName, model);
       });
       return model;
     }
   },
 
   /**
-    Trying to set the belongsTo association for FixtureAdapter,
+    Set the belongsTo association for FixtureAdapter,
       with models that have a hasMany association.
 
-    For example if a client hasMany projects, then set the client.id
-    on each project that the client hasMany of, so that the project
-    now has the belongsTo client association setup.
+    For example if a user hasMany projects, then set the user.id
+    on each project that the user hasMany of, so that the project
+    now has the belongsTo user association setup.
 
-    @param name
-    @param model
+    @param modelType model type like App.User
+    @param modelName model name like 'user'
+    @param parentFixture parent to assign as belongTo
    */
-  setBelongsToFixturesAssociation: function (modelType, modelName, parentFixture) {
+  setBelongsToFixturesAdapter: function (modelType, modelName, parentFixture) {
     var store = this;
     var adapter = this.adapterFor('application');
     var relationShips = Ember.get(modelType, 'relationshipNames');
@@ -62,18 +63,18 @@ DS.Store.reopen({
   },
 
   /**
-   * Trying to set the belongsTo association for the rest type models
-   * with a hasMany association
-   *
-   * For example if a client hasMany projects, then set the client
-   * on each project that the client hasMany of, so that the project
-   * now has the belongsTo client association setup
-   *
-   * @param modelType
-   * @param modelName
-   * @param parent model to check for hasMany
+    Set the belongsTo association for the REST type models
+      with a hasMany association
+
+    For example if a user hasMany projects, then set the user
+    on each project that the user hasMany of, so that the project
+    now has the belongsTo user association setup
+
+    @param modelType model type like 'App.User'
+    @param modelName model name like 'user'
+    @param parent model to check for hasMany
    */
-  setBelongsToRestAssociation: function (modelType, modelName, parent) {
+  setBelongsToRESTAdapter: function (modelType, modelName, parent) {
     var relationShips = Ember.get(modelType, 'relationshipNames');
 
     if (relationShips.hasMany) {

@@ -1,6 +1,6 @@
 {
   "name": "ember-data-factory-guy",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "authors": [
     "Daniel Sudol <dansudol@yahoo.com>",
     "Opak Alex <opak.alexandr@gmail.com>"
@@ -20,7 +20,6 @@
     "jquery": "1.10.2",
     "ember": "~1.6.0",
     "ember-data": "~1.0.0-beta.7",
-    "emblem.js": "*",
     "chance": "latest",
     "qunit": "latest"
   },

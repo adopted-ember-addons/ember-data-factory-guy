@@ -1,7 +1,7 @@
 TestHelper = Ember.Object.createWithMixins(FactoryGuyHelperMixin,{
 
   /**
-   * Setup with type of adapter
+   * Setup with type of adapter instead of application root.
    *
    * @param adapter DS.FixtureAdapter or DS.ActiveModelSerializer or whatever
    */

@@ -1,6 +1,13 @@
 Ember Data Factory Guy [![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy)
 =================
 
+# Using with bower
+
+```
+bower install ember-data-factory-guy
+```
+
+
 # Using as Gem
 
 To Use with in Rails project or project with sprockets:
@@ -117,5 +124,45 @@ Add fixtures to the store using the:
   user.get('projects.length') == 1;
   user.get('projects.firstObject.user') == user;
 
+
+```
+
+Extra Goodies
+=============
+
+The code bundled in dist/ember-data-factory-guy.js includes a mixin named FactoryGuyTestMixin which
+can be used in your tests to make it easier to access the store and make fixtures.
+
+```javascript
+
+// Let's say you have a helper for your tests named TestHelper declared in a file.
+
+TestHelper = Ember.Object.createWithMixins(FactoryGuyHelperMixin);
+
+
+// Then in your tests you can use it like so:
+
+
+var testHelper, store;
+
+module('User Model', {
+  setup: function() {
+    testHelper = TestHelper.setup(App);
+    store = testHelper.getStore();
+  },
+  teardown: function() {
+    Em.run(function() { testHelper.teardown(); });
+  }
+});
+
+
+test("make a user", function() {
+  var json = store.makeFixture('user');
+  equal(User.FIXTURES.length, 1);
+  equal(User.FIXTURES[0], json);
+});
+
+// This example is a slightly modified version of what exists in 'fixture_adapter_factory_test.js'
+// found in the tests directory of this repo.
 
 ```
