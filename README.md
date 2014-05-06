@@ -58,13 +58,14 @@ but BEFORE you require your models.
   // Model definitions
 
   User = DS.Model.extend({
-    name:     DS.attr 'string',
-    type:     DS.attr 'string',
-    projects: DS.hasMany 'project'
+    name:     DS.attr('string'),
+    type:     DS.attr('string'),
+    projects: DS.hasMany('project')
   })
 
   Project = DS.Model.extend({
-    title: DS.attr 'string'
+    title:  DS.attr('string')
+    user:   DS.belongsTo('user')
   })
 
   ////////////////////////////////////////////
@@ -77,12 +78,13 @@ but BEFORE you require your models.
       }
    },
 
-   // default values for 'user' attributes
+   // default 'user' attributes
     default: {
       type: 'normal',
       // use the 'userName' sequence for this attribute
       name: FactoryGuy.generate('userName')
     },
+
     // named 'user' type with custom attributes
     admin: {
       type: 'superuser',
@@ -91,13 +93,16 @@ but BEFORE you require your models.
   });
 
   FactoryGuy.define('project', {
-    default: {title: 'Project'}
+    default: {
+      title: 'Project'
+    }
   });
 
   //////////////////////////////////////////////////////////////////
   //            ** Make one fixture at time **
   // building json with FactoryGuy.build
   //
+
   var userJson = FactoryGuy.build('user') // {id: 1, name: 'User1', type: 'normal'}
   // note the sequence used in the name attribute
   var user2Json = FactoryGuy.build('user') // {id: 2, name: 'User2', type: 'normal'}
@@ -108,26 +113,29 @@ but BEFORE you require your models.
   //            ** Make a list of fixtures **
   // building json with FactoryGuy.buildList
   //
+
   var userJson = FactoryGuy.buildList('user',2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
 
   //////////////////////////////////////////////////////////////////
-  // store.makeFixture method creates model in the store
-  // store.makeList method creates list of models in the store
   //
-  // with DS.Fixture adapter
-  //  makeFixture returns json
-  //  makeList returns json
+  //  with store using =>    DS.Fixture adapter
   //
+  //  store.makeFixture => creates model in the store and returns json
+  //  store.makeList    => creates list of models in the store and returns json
+  //
+
   store.makeFixture('user'); //  user.FIXTURES = {id: 1, name: 'User1', type: 'normal'}
   store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = {id: 2, name: 'bob', type: 'normal'}
   store.makeFixture('admin'); //  user.FIXTURES = {id: 3, name: 'Admin', type: 'superuser'}
-  store.makeFixture('admin', name: 'My name'); //  user.FIXTURES = {id: 4, name: 'My name', type: 'normal'}
+  store.makeFixture('admin', name: 'Fred'); //  user.FIXTURES = {id: 4, name: 'Fred', type: 'superuser'}
 
 
-  // Use store.find to get the model instance
-  store.makeFixture('user');
-  store.find('user', 1).then(function(user) {
-    user.get('name') == 'My name';
+  // Use store.find to get the model instance ( Remember this is the Fixture adapter, if
+  // you use the ActiveModelAdapter or RESTAdapter the record is returned so you don't
+  // have to then go and find it
+  var userJson = store.makeFixture('user');
+  store.find('user', userJson.id).then(function(user) {
+    user.toJSON() ( has all the same key/values as ) userJson;
   });
 
   // and to setup associations ...
@@ -147,21 +155,24 @@ but BEFORE you require your models.
     });
   });
 
+
   //////////////////////////////////////////////////////////////////
-  // store.makeFixture method creates model and adds it to store
-  // store.makeList methods creates list of models and ads each to the store
   //
-  // with DS.ActiveModelAdapter/DS.RestAdapter
+  //  with store using =>  DS.ActiveModelAdapter/DS.RestAdapter
   //
-  // returns a model instances so you can synchronously
-  // start asking for data, as soon as you get the model
+  //  store.makeFixture => creates model in the store and returns model instance
+  //  store.makeList    => creates list of models in the store and returns model instance
   //
+  //  *NOTE*  since you are now getting a model instances, you can synchronously
+  //   start asking for data from the model
+  //
+
   var user = store.makeFixture('user'); //  user.toJSON() = {id: 1, name: 'User1', type: 'normal'}
   // note that the user name is a sequence
   var user = store.makeFixture('user'); //  user.toJSON() = {id: 2, name: 'User2', type: 'normal'}
   var user = store.makeFixture('user', {name: 'bob'}); //  user.toJSON() = {id: 3, name: 'bob', type: 'normal'}
   var user = store.makeFixture('admin'); //  user.toJSON() = {id: 4, name: 'Admin', type: 'superuser'}
-  var user = store.makeFixture('admin', name: 'Nother Admin'); //  user.toJSON() = {id: 5, name: 'Nother Admin', type: 'superuser'}
+  var user = store.makeFixture('admin', name: 'Fred'); //  user.toJSON() = {id: 5, name: 'Fred', type: 'superuser'}
 
   // and to setup associations ...
 
