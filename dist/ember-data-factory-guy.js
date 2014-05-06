@@ -113,7 +113,7 @@ ModelDefinition = function (model, config) {
   // initialize
   parseConfig(config);
 }
-FactoryGuy = Ember.Object.reopenClass({
+FactoryGuy = {
   modelDefinitions: {},
 
   /**
@@ -280,7 +280,7 @@ FactoryGuy = Ember.Object.reopenClass({
     modelClass['FIXTURES'].push(fixture);
     return fixture;
   }
-})
+}
 DS.Store.reopen({
 
   usingFixtureAdapter: function() {

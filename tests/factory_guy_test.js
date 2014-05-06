@@ -45,8 +45,9 @@ test("Using sequences in definitions", function() {
   deepEqual(json, {id: 2, name: 'person #2', type: 'person type #1'}, 'in named attributes');
 
   throws( function() {
-    FactoryGuy.build('bro')
-    }, MissingSequenceError,
+      FactoryGuy.build('bro')
+    },
+    MissingSequenceError,
     "throws error when sequence name not found"
   )
 });

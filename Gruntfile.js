@@ -21,6 +21,8 @@ module.exports = function(grunt) {
       gem: {
         files: {
           "vendor/assets/javascripts/ember_data_factory_guy.js": [
+            'src/sequence.js',
+            'src/model_definition.js',
             'src/factory_guy.js',
             'src/store.js',
             'src/factory_guy_test_mixin.js'],
