@@ -1,5 +1,4 @@
-window.testHelper;
-var store;
+var testHelper, store;
 
 module('FactoryGuy with DS.FixtureAdapter', {
   setup: function() {
@@ -9,40 +8,6 @@ module('FactoryGuy with DS.FixtureAdapter', {
   teardown: function() {
     Em.run(function() { testHelper.teardown(); });
   }
-});
-
-
-test("#build creates default json for model", function() {
-  var json = FactoryGuy.build('user');
-  deepEqual(json, {id: 1, name: 'User1'});
-});
-
-
-test("#build can override default model attributes", function() {
-  var json = FactoryGuy.build('user',{name: 'bob'});
-  deepEqual(json, {id: 1, name: 'bob'});
-});
-
-
-test("#build can have named model definition with custom attributes", function() {
-  var json = FactoryGuy.build('admin')
-  deepEqual(json, {id: 1, name: 'Admin'});
-});
-
-
-test("#build can override named model attributes", function() {
-  var json = FactoryGuy.build('admin', {name: 'AdminGuy'})
-  deepEqual(json, {id: 1, name: 'AdminGuy'});
-});
-
-
-test("#build similar model type ids are created sequentially", function() {
-  var user1 = FactoryGuy.build('user');
-  var user2 = FactoryGuy.build('user');
-  var project = FactoryGuy.build('project');
-  equal(user1.id, 1);
-  equal(user2.id, 2);
-  equal(project.id, 1);
 });
 
 
@@ -68,19 +33,28 @@ asyncTest("can change fixture attributes after creation", function() {
 });
 
 
-test("#resetModels clears the store of models, clears the FIXTURES arrays for each model and resets the model ids", function() {
+test("#resetModels clears the store of models, clears the FIXTURES arrays for each model and resets the model definition", function() {
   var project = store.makeFixture('project');
   var user = store.makeFixture('user', {projects: [project.id]});
+
+  for (model in FactoryGuy.modelDefinitions) {
+    var definition = FactoryGuy.modelDefinitions[model];
+    sinon.spy(definition, 'reset');
+  }
 
   FactoryGuy.resetModels(store);
 
   equal(User.FIXTURES.length, 0);
   equal(Project.FIXTURES.length, 0);
 
-  equal(store.all('user').get('content.length'),0)
-  equal(store.all('project').get('content.length'),0)
+  equal(store.all('user').get('content.length'), 0)
+  equal(store.all('project').get('content.length'), 0)
 
-  deepEqual(FactoryGuy.modelIds, {});
+  for (model in FactoryGuy.modelDefinitions) {
+    var definition = FactoryGuy.modelDefinitions[model];
+    ok(definition.reset.calledOnce);
+    definition.reset.restore();
+  }
 });
 
 

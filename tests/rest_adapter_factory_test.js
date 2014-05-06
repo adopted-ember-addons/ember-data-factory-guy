@@ -1,5 +1,4 @@
-var testHelper;
-var store;
+var testHelper, store;
 
 module('FactoryGuy with DS.RESTAdapter', {
   setup: function() {
@@ -12,16 +11,25 @@ module('FactoryGuy with DS.RESTAdapter', {
 });
 
 
-test("#resetModels clears the store of models, and resets the model ids", function() {
+test("#resetModels clears the store of models, and resets the model definition", function() {
   var project = store.makeFixture('project');
   var user = store.makeFixture('user', {projects: [project.id]});
+
+  for (model in FactoryGuy.modelDefinitions) {
+    var definition = FactoryGuy.modelDefinitions[model];
+    sinon.spy(definition, 'reset');
+  }
 
   FactoryGuy.resetModels(store);
 
   equal(store.all('user').get('content.length'),0)
   equal(store.all('project').get('content.length'),0)
 
-  deepEqual(FactoryGuy.modelIds, {});
+  for (model in FactoryGuy.modelDefinitions) {
+    var definition = FactoryGuy.modelDefinitions[model];
+    ok(definition.reset.calledOnce);
+    definition.reset.restore();
+  }
 });
 
 
@@ -40,7 +48,6 @@ test("creates DS.Model instances", function() {
   var user = store.makeFixture('user');
   equal(user instanceof DS.Model, true);
 });
-
 
 asyncTest("creates records in the store", function() {
   var user = store.makeFixture('user');

@@ -1,3 +1,5 @@
 FactoryGuy.define('project', {
-  default: {title: 'Project'}
+  default: {
+    title: 'Project'
+  }
 });

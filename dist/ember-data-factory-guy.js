@@ -1,137 +1,277 @@
+Sequence = function (fn) {
+  var index = 1;
+  var fn = fn;
+
+  this.next = function () {
+    return fn.call(this, index++);
+  }
+
+  this.reset = function () {
+    index = 1;
+  }
+}
+
+function MissingSequenceError(message) {
+  this.toString = function() { return message }
+}
+
+ModelDefinition = function (model, config) {
+  var sequences = {};
+  var defaultAttributes = {};
+  var namedModels = {};
+  var modelId = 1;
+  this.model = model;
+
+  /**
+   @param name model name like 'user' or named type like 'admin'
+   @return boolean true if name is this definitions model or this definition
+           contains a named model with that name
+   */
+  this.matchesName = function (name) {
+    return model == name || namedModels[name];
+  }
+
+  this.merge = function (config) {
+  }
+
+  /**
+    @param sequenceName
+    @returns output of sequence function
+   */
+  this.generate = function (sequenceName) {
+    if (!sequences[sequenceName]) {
+      throw new MissingSequenceError("Can not find that sequence named ["+sequenceName+"] in '"+ model+"' definition")
+    }
+    return sequences[sequenceName].next();
+  }
+
+  this.build = function (name, opts) {
+    var modelAttributes = namedModels[name] || {};
+    var fixture = $.extend({}, defaultAttributes, modelAttributes, opts);
+    for (attr in fixture) {
+      if (typeof fixture[attr] == 'function') {
+        fixture[attr] = fixture[attr].call(this)
+      }
+    }
+    if (!fixture.id) {
+      fixture.id = modelId++;
+    }
+    return fixture;
+  }
+
+  /**
+    Build a list of fixtures
+
+    @param name model name or named model type
+    @param number of fixtures to build
+    @param opts attribute options
+    @returns array of fixtures
+   */
+  this.buildList = function (name, number, opts) {
+    var arr = [];
+    for (var i = 0; i < number; i++) {
+      arr.push(this.build(name, opts))
+    }
+    return arr;
+  }
+
+  this.reset = function () {
+    modelId = 1;
+  }
+
+  var parseDefault = function (object) {
+    if (!object) {
+      return
+    }
+    defaultAttributes = object;
+  }
+
+  var parseSequences = function (object) {
+    if (!object) {
+      return
+    }
+    for (sequenceName in object) {
+      var sequenceFn = object[sequenceName];
+      if (typeof sequenceFn != 'function') {
+        throw new Error('Problem with [' + sequenceName + '] sequence definition. Sequences must be functions')
+      }
+      object[sequenceName] = new Sequence(sequenceFn);
+    }
+    sequences = object;
+  }
+
+  var parseConfig = function (config) {
+    parseSequences(config.sequences);
+    delete config.sequences;
+
+    parseDefault(config.default);
+    delete config.default;
+
+    namedModels = config;
+  }
+
+  // initialize
+  parseConfig(config);
+}
 FactoryGuy = Ember.Object.reopenClass({
-  fixtureStore: {},
-  fixtureLookup: {},
-  modelIds: {},
+  modelDefinitions: {},
 
   /**
    ```javascript
 
-     User = DS.Model.extend({
-        name: DS.attr('string'),
-     })
+   Person = DS.Model.extend({
+     type: DS.attr('string'),
+     name: DS.attr('string')
+   })
 
-     FactoryGuy.define('user', {
-        default: {
-          name: "Fred"
-        },
+   FactoryGuy.define('person', {
+     sequences: {
+       personName: function(num) {
+         return 'person #' + num;
+       },
+       personType: function(num) {
+         return 'person type #' + num;
+       }
+     },
+     default: {
+       type: 'normal',
+       name: FactoryGuy.generate('personName')
+     },
+     dude: {
+       type: FactoryGuy.generate('personType')
+     },
+   });
 
-        bob: {
-          name: "Bob"
-        }
-     });
+   ```
 
-    ```
+   For the Person model, you can define fixtures like 'dude' or just use 'person'
+   and get default values.
 
-     For the User model, you can define fixtures like 'bob' or just use 'user'
-     and get default values.
+   And to get those fixtures you would call them this way:
 
-     And to get those fixtures you would call them this way:
+   FactoryGuy.build('person') or FactoryGuy.build('dude')
 
-      FactoryGuy.build('user') or FactoryGuy.build('bob')
-
-    @param model the model to define
-    @param config your default and named fixtures
+   @param model the model to define
+   @param config your model definition object
    */
   define: function (model, config) {
-    var info = this.getModelInfo(model);
-    for (key in config) {
-      var value = config[key];
-      info[key] = value;
-      if (key != 'default') {
-        this.fixtureLookup[key] = model;
-      }
+    if (this.modelDefinitions[model]) {
+      this.modelDefinitions[model].merge(config);
+    } else {
+      this.modelDefinitions[model] = new ModelDefinition(model, config);
     }
-    // setup id
-    this.modelIds[model] = 0;
   },
+
+  generate: function (sequenceName) {
+    return function () {
+      return this.generate(sequenceName);
+    }
+  },
+
 
   /**
 
-    @param model
-   */
-  getModelInfo: function (model) {
-    if (!this.fixtureStore[model]) {
-      this.fixtureStore[model] = {};
-    }
-    return this.fixtureStore[model];
-  },
-
-  /**
-
-    @param name fixture name
-    @returns model associated with fixture name
+   @param name fixture name could be model name like 'user'
+   or specific user like 'admin'
+   @returns model associated with fixture name
    */
   lookupModelForName: function (name) {
-    var model = this.fixtureLookup[name];
-    if (!model) {
-      if (this.fixtureStore[name]) {
-        model = name;
+    for (model in this.modelDefinitions) {
+      var definition = this.modelDefinitions[model];
+      if (definition.matchesName(name)) {
+        return definition.model;
       }
     }
-    return model;
   },
 
   /**
-    Generate next id for model
+
+   @param name fixture name could be model name like 'user'
+   or specific user like 'admin'
+   @returns definition associated with model
    */
-  generateId: function (model) {
-    var lastId = this.modelIds[model] || 0;
-    this.modelIds[model] = lastId + 1;
-    return this.modelIds[model];
+  lookupDefinitionForName: function (name) {
+    for (model in this.modelDefinitions) {
+      var definition = this.modelDefinitions[model];
+      if (definition.matchesName(name)) {
+        return definition;
+      }
+    }
   },
 
+
   /**
-    Build fixtures for model or specific fixture name. For example:
+   Build fixtures for model or specific fixture name. For example:
 
-      FactoryGuy.build('user') for User model
-      FactoryGuy.build('bob') for User model with bob attributes
+   FactoryGuy.build('user') for User model
+   FactoryGuy.build('bob') for User model with bob attributes
 
-    @param name fixture name
-    @param opts options that will override default fixture values
-    @returns {*}
+   @param name fixture name
+   @param opts options that will override default fixture values
+   @returns {*}
    */
   build: function (name, opts) {
-    var model = this.lookupModelForName(name);
-    if (!model) {
-      throw new Error("can't find that factory named [" + name + "]");
+    var definition = this.lookupDefinitionForName(name);
+    if (!definition) {
+      throw new Error("Can't find that factory named [" + name + "]");
     }
-
-    var modelInfo = this.fixtureStore[model];
-    var modelAttributes = modelInfo[name] || {};
-    var defaultModelAttributes = modelInfo.default;
-    var fixture = $.extend({}, defaultModelAttributes, modelAttributes, opts);
-    if(!fixture.id){
-      fixture.id = this.generateId(model);
-    }
-    return fixture;
+    return definition.build(name, opts);
   },
 
   /**
-    Clear model instances from FIXTURES array, and from store cache.
-    Reset the id sequence for the models back to zero.
+   Build list of fixtures for model or specific fixture name. For example:
+
+   FactoryGuy.buildList('user', 2) for 2 User models
+   FactoryGuy.build('bob', 2) for 2 User model with bob attributes
+
+   @param name fixture name
+   @param number number of fixtures to create
+   @param opts options that will override default fixture values
+   @returns list of fixtures
+   */
+  buildList: function (name, number, opts) {
+    var definition = this.lookupDefinitionForName(name);
+    if (!definition) {
+      throw new Error("Can't find that factory named [" + name + "]");
+    }
+    return definition.buildList(name, number, opts);
+  },
+
+  /**
+   Clear model instances from FIXTURES array, and from store cache.
+   Reset the id sequence for the models back to zero.
    */
   resetModels: function (store) {
     var typeMaps = store.typeMaps;
-    if (store.usingFixtureAdapter()) {
-      for (typeKey in this.fixtureStore) {
-        var modelType = store.modelFor(typeKey);
-        modelType.FIXTURES = [];
+    for (model in this.modelDefinitions) {
+      var definition = this.modelDefinitions[model];
+      definition.reset();
+      try {
+        var modelType = store.modelFor(definition.model);
+        if (store.usingFixtureAdapter()) {
+          modelType.FIXTURES = [];
+        }
         store.unloadAll(modelType);
+      } catch (e) {
       }
-    } else {
-      for (model in typeMaps) {
-        store.unloadAll(typeMaps[model].type);
-      }
+//    } else {
+//      for (model in typeMaps) {
+//        store.unloadAll(typeMaps[model].type);
+//      }
+//    }
+
+//    for (model in this.modelDefinitions) {
+//      this.modelDefinitions[model].reset();
     }
-    this.modelIds = {}
   },
 
   /**
-    Push fixture to model's FIXTURES array.
-    Used when store's adapter is a DS.FixtureAdapter.
+   Push fixture to model's FIXTURES array.
+   Used when store's adapter is a DS.FixtureAdapter.
 
-    @param modelClass DS.Model type
-    @param fixture the fixture to add
+   @param modelClass DS.Model type
+   @param fixture the fixture to add
+   @returns json fixture data
    */
   pushFixture: function (modelClass, fixture) {
     if (!modelClass['FIXTURES']) {
@@ -141,7 +281,6 @@ FactoryGuy = Ember.Object.reopenClass({
     return fixture;
   }
 })
-
 DS.Store.reopen({
 
   usingFixtureAdapter: function() {
@@ -155,7 +294,7 @@ DS.Store.reopen({
 
     @param name name of fixture
     @param options fixture options
-    @returns {*}
+    @returns json or record
    */
   makeFixture: function (name, options) {
     var modelName = FactoryGuy.lookupModelForName(name);
@@ -174,6 +313,22 @@ DS.Store.reopen({
       });
       return model;
     }
+  },
+
+  /**
+    Make a list of Fixtures
+
+    @param name name of fixture
+    @param number number of fixtures
+    @param options fixture options
+    @returns list of json fixtures or records depending on the adapter type
+  */
+  makeList: function (name, number, options) {
+    var arr = [];
+    for (var i = 0; i < number; i++) {
+      arr.push(this.makeFixture(name, options))
+    }
+    return arr;
   },
 
   /**

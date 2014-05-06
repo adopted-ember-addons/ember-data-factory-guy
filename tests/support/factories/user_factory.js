@@ -1,5 +1,5 @@
 FactoryGuy.define('user', {
- // default values for 'user' attributes
+  // default values for 'user' attributes
   default: {
     name: 'User1'
   },

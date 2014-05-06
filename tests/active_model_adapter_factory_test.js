@@ -1,5 +1,4 @@
-var testHelper;
-var store;
+var testHelper, store;
 
 module('FactoryGuy with ActiveModelAdapter', {
   setup: function() {
@@ -12,16 +11,25 @@ module('FactoryGuy with ActiveModelAdapter', {
 });
 
 
-test("#resetModels clears the store of models, and resets the model ids", function() {
+test("#resetModels clears the store of models, and resets the model definition", function() {
   var project = store.makeFixture('project');
   var user = store.makeFixture('user', {projects: [project.id]});
+
+  for (model in FactoryGuy.modelDefinitions) {
+    var definition = FactoryGuy.modelDefinitions[model];
+    sinon.spy(definition, 'reset');
+  }
 
   FactoryGuy.resetModels(store);
 
   equal(store.all('user').get('content.length'),0)
   equal(store.all('project').get('content.length'),0)
 
-  deepEqual(FactoryGuy.modelIds, {});
+  for (model in FactoryGuy.modelDefinitions) {
+    var definition = FactoryGuy.modelDefinitions[model];
+    ok(definition.reset.calledOnce);
+    definition.reset.restore();
+  }
 });
 
 
@@ -36,13 +44,13 @@ module('DS.Store#makeFixture with ActiveModelAdapter', {
 });
 
 
-test("creates DS.Model instances", function() {
+test("creates DS.Model instance", function() {
   var user = store.makeFixture('user');
   equal(user instanceof DS.Model, true);
 });
 
 
-asyncTest("creates records in the store", function() {
+asyncTest("creates record in the store", function() {
   var user = store.makeFixture('user');
 
   store.find('user', user.id).then ( function(store_user) {
@@ -66,3 +74,30 @@ test("when hasMany associations assigned, belongTo parent is assigned", function
 
   deepEqual(p1.get('user').toJSON(), user.toJSON());
 })
+
+
+module('DS.Store#makeList with ActiveModelAdapter', {
+  setup: function() {
+    testHelper = TestHelper.setup(DS.ActiveModelAdapter);
+    store = testHelper.getStore();
+  },
+  teardown: function() {
+    Em.run(function() { testHelper.teardown(); });
+  }
+});
+
+
+test("creates list of DS.Model instances", function() {
+  var users = store.makeList('user', 2);
+  equal(users.length, 2);
+  equal(users[0] instanceof DS.Model, true);
+});
+
+
+test("creates records in the store", function() {
+  var users = store.makeList('user', 2);
+
+  var storeUsers = store.all('user').get('content');
+  deepEqual(storeUsers[0].toJSON(), users[0].toJSON());
+  deepEqual(storeUsers[1].toJSON(), users[1].toJSON());
+});

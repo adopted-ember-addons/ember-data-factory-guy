@@ -11,7 +11,7 @@ DS.Store.reopen({
 
     @param name name of fixture
     @param options fixture options
-    @returns {*}
+    @returns json or record
    */
   makeFixture: function (name, options) {
     var modelName = FactoryGuy.lookupModelForName(name);
@@ -30,6 +30,22 @@ DS.Store.reopen({
       });
       return model;
     }
+  },
+
+  /**
+    Make a list of Fixtures
+
+    @param name name of fixture
+    @param number number of fixtures
+    @param options fixture options
+    @returns list of json fixtures or records depending on the adapter type
+  */
+  makeList: function (name, number, options) {
+    var arr = [];
+    for (var i = 0; i < number; i++) {
+      arr.push(this.makeFixture(name, options))
+    }
+    return arr;
   },
 
   /**

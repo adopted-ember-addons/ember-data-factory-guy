@@ -41,6 +41,16 @@ Add fixtures to the store using the:
   * DS.RestAdapter
   * DS.ActiveModelAdapter
 
+NOTE: The benefit of using FactoryGuy is that you can run your tests with the
+default adapter that you store normally uses. In other words: You do not have
+to use the DS.FixtureAdapter.  But if you do choose to use the Fixture adapter,
+which does not run any faster, and does not handle associations as elegantly ( if at all ),
+you may run into problems with accessing associations.
+If you do get these errors try requiring the factory_guy_has_many.js file
+( located in dist dir and vendor dir ) AFTER you require ember-data,
+but BEFORE you require your models.
+
+
 ```javascript
 
   ////////////////////////////////////////////
@@ -48,6 +58,7 @@ Add fixtures to the store using the:
 
   User = DS.Model.extend({
     name:     DS.attr 'string',
+    type:     DS.attr 'string',
     projects: DS.hasMany 'project'
   })
 
@@ -56,15 +67,23 @@ Add fixtures to the store using the:
   })
 
   ////////////////////////////////////////////
-  // Fixture definitions for models
-
+  // FactoryGuy definitions for models
   FactoryGuy.define('user', {
+    // sequences to be used in attributes definition
+    sequences: {
+      userName: function(num) {
+        return 'User' + num;
+      }
+   },
+
    // default values for 'user' attributes
     default: {
-      name: 'User1'
+      type: 'normal'
+      name: FactoryGuy.generate('userName'),
     },
     // named 'user' type with custom attributes
     admin: {
+      type: 'superuser'
       name: 'Admin'
     }
   });
@@ -74,23 +93,34 @@ Add fixtures to the store using the:
   });
 
   //////////////////////////////////////////////////////////////////
-  //
+  //            ** Make one fixture at time **
   // building json with FactoryGuy.build
   //
-  var userJson = FactoryGuy.build('user') // {id: 1, name: 'User1'}
-  var customUserJson = FactoryGuy.build('user', name: 'bob') // {id: 2, name: 'bob'}
-  var namedUserJson = FactoryGuy.build('admin') // {id: 3, name: 'Admin'}
+  var userJson = FactoryGuy.build('user') // {id: 1, name: 'User1', type: 'normal'}
+  // note the sequence used in the name attribute
+  var user2Json = FactoryGuy.build('user') // {id: 2, name: 'User2', type: 'normal'}
+  var customUserJson = FactoryGuy.build('user', name: 'bob') // {id: 3, name: 'bob', type: 'normal'}
+  var namedUserJson = FactoryGuy.build('admin') // {id: 4, name: 'Admin', type: 'superuser'}
+
+  //////////////////////////////////////////////////////////////////
+  //            ** Make a list of fixtures **
+  // building json with FactoryGuy.buildList
+  //
+  var userJson = FactoryGuy.buildList('user',2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
 
   //////////////////////////////////////////////////////////////////
   // store.makeFixture method creates model in the store
+  // store.makeList method creates list of models in the store
   //
   // with DS.Fixture adapter
   //  makeFixture returns json
+  //  makeList returns json
   //
-  store.makeFixture('user'); //  user.FIXTURES = {id: 1, name: 'User1'}
-  store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = {id: 2, name: 'bob'}
-  store.makeFixture('admin'); //  user.FIXTURES = {id: 3, name: 'Admin'}
-  store.makeFixture('admin', name: 'My name'); //  user.FIXTURES = {id: 4, name: 'My name'}
+  store.makeFixture('user'); //  user.FIXTURES = {id: 1, name: 'User1', type: 'normal'}
+  store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = {id: 2, name: 'bob', type: 'normal'}
+  store.makeFixture('admin'); //  user.FIXTURES = {id: 3, name: 'Admin', type: 'superuser'}
+  store.makeFixture('admin', name: 'My name'); //  user.FIXTURES = {id: 4, name: 'My name', type: 'normal'}
+
 
   // Use store.find to get the model instance
   store.makeFixture('user');
@@ -101,6 +131,9 @@ Add fixtures to the store using the:
   // and to setup associations ...
   var project = store.makeFixture('project');
   var user = store.makeFixture('user', projects: [project.id]);
+
+  // and for lists
+  var users = store.makeList('user', 2, projects: [project.id]);
 
   // with fixture adapter all associations are treated as async, so it's
   // a bit clunky to get this associated data. When using DS.FixtureAdapter
@@ -114,16 +147,18 @@ Add fixtures to the store using the:
 
   //////////////////////////////////////////////////////////////////
   // store.makeFixture method creates model and adds it to store
+  // store.makeList methods creates list of models and ads each to the store
   //
   // with DS.ActiveModelAdapter/DS.RestAdapter
   //
   // returns a model instances so you can synchronously
   // start asking for data, as soon as you get the model
   //
-  var user = store.makeFixture('user');
-  var user = store.makeFixture('user', {name: 'bob'}); //  user.toJSON() = {id: 2, name: 'bob'}
-  var user = store.makeFixture('admin'); //  user.toJSON() = {id: 3, name: 'Admin'}
-  var user = store.makeFixture('admin', name: 'My name'); //  user.toJSON() = {id: 4, name: 'My name'}
+  var user = store.makeFixture('user'); //  user.toJSON() = {id: 1, name: 'User1', type: 'normal'}
+  var user = store.makeFixture('user'); //  user.toJSON() = {id: 2, name: 'User2', type: 'normal'}
+  var user = store.makeFixture('user', {name: 'bob'}); //  user.toJSON() = {id: 3, name: 'bob', type: 'normal'}
+  var user = store.makeFixture('admin'); //  user.toJSON() = {id: 4, name: 'Admin', type: 'superuser'}
+  var user = store.makeFixture('admin', name: 'Nother Admin'); //  user.toJSON() = {id: 5, name: 'Nother Admin', type: 'superuser'}
 
   // and to setup associations ...
 
@@ -133,6 +168,8 @@ Add fixtures to the store using the:
   user.get('projects.length') == 1;
   user.get('projects.firstObject.user') == user;
 
+  // and to create lists
+  var users = store.makeList('user');
 
 ```
 
