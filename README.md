@@ -17,6 +17,13 @@ then:
 $ bundle install
 ```
 
+then:
+
+```javascript
+// require the 'ember_data_factory_guy' javascript file in your test helper
+//= require ember_data_factory_guy
+```
+
 # Using as bower component
 
 Add as one of your dependencies in bower.json file:
