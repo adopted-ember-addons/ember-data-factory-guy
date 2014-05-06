@@ -42,11 +42,12 @@ Add fixtures to the store using the:
   * DS.ActiveModelAdapter
 
 NOTE: The benefit of using FactoryGuy is that you can run your tests with the
-default adapter that you store normally uses. In other words: You do not have
-to use the DS.FixtureAdapter.  But if you do choose to use the Fixture adapter,
-which does not run any faster, and does not handle associations as elegantly ( if at all ),
+default adapter that your application's store normally uses. In other words:
+You do not have to use the DS.FixtureAdapter.  But if you do choose to use the Fixture adapter,
+which does not run any faster, and does not handle associations as elegantly
+( and in some cases not at all ),
 you may run into problems with accessing associations.
-If you do get these errors try requiring the factory_guy_has_many.js file
+If you do get these types of errors try requiring the factory_guy_has_many.js file
 ( located in dist dir and vendor dir ) AFTER you require ember-data,
 but BEFORE you require your models.
 
@@ -78,12 +79,13 @@ but BEFORE you require your models.
 
    // default values for 'user' attributes
     default: {
-      type: 'normal'
-      name: FactoryGuy.generate('userName'),
+      type: 'normal',
+      // use the 'userName' sequence for this attribute
+      name: FactoryGuy.generate('userName')
     },
     // named 'user' type with custom attributes
     admin: {
-      type: 'superuser'
+      type: 'superuser',
       name: 'Admin'
     }
   });
@@ -155,6 +157,7 @@ but BEFORE you require your models.
   // start asking for data, as soon as you get the model
   //
   var user = store.makeFixture('user'); //  user.toJSON() = {id: 1, name: 'User1', type: 'normal'}
+  // note that the user name is a sequence
   var user = store.makeFixture('user'); //  user.toJSON() = {id: 2, name: 'User2', type: 'normal'}
   var user = store.makeFixture('user', {name: 'bob'}); //  user.toJSON() = {id: 3, name: 'bob', type: 'normal'}
   var user = store.makeFixture('admin'); //  user.toJSON() = {id: 4, name: 'Admin', type: 'superuser'}
@@ -169,7 +172,7 @@ but BEFORE you require your models.
   user.get('projects.firstObject.user') == user;
 
   // and to create lists
-  var users = store.makeList('user');
+  var users = store.makeList('user', 3);
 
 ```
 
