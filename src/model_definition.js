@@ -58,8 +58,12 @@ ModelDefinition = function (model, config) {
     return arr;
   }
 
+  // Set the modelId back to 1, and reset the sequences
   this.reset = function () {
     modelId = 1;
+    for (name in sequences) {
+      sequences[name].reset();
+    }
   }
 
   var parseDefault = function (object) {
