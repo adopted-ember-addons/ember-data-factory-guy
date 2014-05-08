@@ -1,3 +1,10 @@
+/**
+ A ModelDefinition encapsulates a model's definition
+
+ @param model
+ @param config
+ @constructor
+ */
 ModelDefinition = function (model, config) {
   var sequences = {};
   var defaultAttributes = {};
@@ -6,36 +13,50 @@ ModelDefinition = function (model, config) {
   this.model = model;
 
   /**
-   @param name model name like 'user' or named type like 'admin'
-   @return boolean true if name is this definitions model or this definition
-           contains a named model with that name
+   @param {String} name model name like 'user' or named type like 'admin'
+   @returns {Boolean} true if name is this definitions model or this definition
+   contains a named model with that name
    */
   this.matchesName = function (name) {
     return model == name || namedModels[name];
   }
 
+  // TODO
   this.merge = function (config) {
   }
 
   /**
-    @param sequenceName
-    @returns output of sequence function
+   Call the next method on the named sequence function
+
+   @param {String} sequenceName
+   @returns {String} output of sequence function
    */
   this.generate = function (sequenceName) {
-    if (!sequences[sequenceName]) {
-      throw new MissingSequenceError("Can not find that sequence named ["+sequenceName+"] in '"+ model+"' definition")
+    var sequence = sequences[sequenceName];
+    if (!sequence) {
+      throw new MissingSequenceError("Can not find that sequence named [" + sequenceName + "] in '" + model + "' definition")
     }
-    return sequences[sequenceName].next();
+    return sequence.next();
   }
 
+  /**
+   Build a fixture by name
+
+   @param {String} name fixture name
+   @param {Object} opts attributes to override
+   @returns {Object} json
+   */
   this.build = function (name, opts) {
     var modelAttributes = namedModels[name] || {};
+    // merge default, modelAttributes and opts to get the rough fixture
     var fixture = $.extend({}, defaultAttributes, modelAttributes, opts);
-    for (attr in fixture) {
-      if (typeof fixture[attr] == 'function') {
-        fixture[attr] = fixture[attr].call(this)
+    // convert attributes that are functions to strings
+    for (attribute in fixture) {
+      if (typeof fixture[attribute] == 'function') {
+        fixture[attribute] = fixture[attribute].call(this, fixture);
       }
     }
+    // set the id, unless it was already set in opts
     if (!fixture.id) {
       fixture.id = modelId++;
     }
@@ -43,12 +64,12 @@ ModelDefinition = function (model, config) {
   }
 
   /**
-    Build a list of fixtures
+   Build a list of fixtures
 
-    @param name model name or named model type
-    @param number of fixtures to build
-    @param opts attribute options
-    @returns array of fixtures
+   @param name model name or named model type
+   @param number of fixtures to build
+   @param opts attribute options
+   @returns array of fixtures
    */
   this.buildList = function (name, number, opts) {
     var arr = [];

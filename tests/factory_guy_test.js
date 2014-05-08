@@ -17,6 +17,8 @@ module('FactoryGuy', {
 
 
 test("Using sequences in definitions", function() {
+  delete FactoryGuy.modelDefinitions['person']
+
   FactoryGuy.define('person', {
     sequences: {
       personName: function(num) {
@@ -50,6 +52,31 @@ test("Using sequences in definitions", function() {
     MissingSequenceError,
     "throws error when sequence name not found"
   )
+
+});
+
+
+test("Referring to other attributes in attribute definition", function() {
+  delete FactoryGuy.modelDefinitions['person']
+
+  FactoryGuy.define('person', {
+    default: {
+      name: 'Bob',
+      type: 'normal'
+    },
+    funny_person: {
+      type: function(fixture) { return 'funny ' + fixture.name }
+    },
+    missing_person: {
+      type: function(fixture) { return 'level ' + fixture.brain_size }
+    }
+  });
+
+  var json = FactoryGuy.build('funny_person');
+  deepEqual(json, {id: 1, name: 'Bob', type: 'funny Bob'}, 'works when attribute exists');
+
+  var json = FactoryGuy.build('missing_person');
+  deepEqual(json, {id: 2, name: 'Bob', type: 'level undefined'}, 'still works when attribute does not exists');
 });
 
 
