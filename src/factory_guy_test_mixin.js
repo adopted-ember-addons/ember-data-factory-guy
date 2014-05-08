@@ -11,6 +11,13 @@ FactoryGuyTestMixin = Em.Mixin.create({
     this.getStore().adapterFor('application').simulateRemoteResponse = false;
   },
 
+  /**
+    Proxy to store's find method
+
+   @param {String or subclass of DS.Model} type
+   @param {Object|String|Integer|null} id
+   @return {Promise} promise
+   */
   find: function(type, id) {
     return this.getStore().find(type, id);
   },
@@ -31,6 +38,13 @@ FactoryGuyTestMixin = Em.Mixin.create({
     return this.getStore().push(type, hash);
   },
 
+  /**
+    Using mockjax to stub an http request.
+
+    @param {String} url request url
+    @param {Object} json response
+    @param {Object} options ajax request options
+   */
   stubEndpointForHttpRequest: function (url, json, options) {
     options = options || {};
     var request = {
@@ -49,21 +63,27 @@ FactoryGuyTestMixin = Em.Mixin.create({
   },
 
   /**
-   * Handling ajax POST for a model
-   *
-   * @param name of the fixture ( or model ) to create
-   * @param opts fixture options
+    Handling ajax POST ( create record ) for a model
+
+    @param {String} name of the fixture ( or model ) to create
+    @param {Object} opts fixture options
    */
   handleCreate: function (name, opts) {
     var model = FactoryGuy.lookupModelForName(name);
     this.stubEndpointForHttpRequest(
       "/" + Em.String.pluralize(model),
-      this.buildAjaxResponse(name, opts),
+      this.buildAjaxCreateResponse(name, opts),
       {type: 'POST'}
     )
   },
 
-  buildAjaxResponse: function (name, opts) {
+  /**
+    Build the json used for creating record
+
+    @param {String} name of the fixture ( or model ) to create
+    @param {Object} opts fixture options
+¬  */
+  buildAjaxCreateResponse: function (name, opts) {
     var fixture = FactoryGuy.build(name, opts);
     var model = FactoryGuy.lookupModelForName(name);
     var hash = {};
@@ -86,5 +106,4 @@ FactoryGuyTestMixin = Em.Mixin.create({
   teardown: function () {
     FactoryGuy.resetModels(this.getStore());
   }
-
 })
