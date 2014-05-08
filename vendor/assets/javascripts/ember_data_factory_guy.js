@@ -1,6 +1,5 @@
 Sequence = function (fn) {
   var index = 1;
-  var fn = fn;
 
   this.next = function () {
     return fn.call(this, index++);
@@ -9,12 +8,19 @@ Sequence = function (fn) {
   this.reset = function () {
     index = 1;
   }
-}
+};
 
 function MissingSequenceError(message) {
   this.toString = function() { return message }
-}
+};
 
+/**
+ A ModelDefinition encapsulates a model's definition
+
+ @param model
+ @param config
+ @constructor
+ */
 ModelDefinition = function (model, config) {
   var sequences = {};
   var defaultAttributes = {};
@@ -23,36 +29,50 @@ ModelDefinition = function (model, config) {
   this.model = model;
 
   /**
-   @param name model name like 'user' or named type like 'admin'
-   @return boolean true if name is this definitions model or this definition
-           contains a named model with that name
+   @param {String} name model name like 'user' or named type like 'admin'
+   @returns {Boolean} true if name is this definitions model or this definition
+   contains a named model with that name
    */
   this.matchesName = function (name) {
     return model == name || namedModels[name];
   }
 
+  // TODO
   this.merge = function (config) {
   }
 
   /**
-    @param sequenceName
-    @returns output of sequence function
+   Call the next method on the named sequence function
+
+   @param {String} sequenceName
+   @returns {String} output of sequence function
    */
   this.generate = function (sequenceName) {
-    if (!sequences[sequenceName]) {
-      throw new MissingSequenceError("Can not find that sequence named ["+sequenceName+"] in '"+ model+"' definition")
+    var sequence = sequences[sequenceName];
+    if (!sequence) {
+      throw new MissingSequenceError("Can not find that sequence named [" + sequenceName + "] in '" + model + "' definition")
     }
-    return sequences[sequenceName].next();
+    return sequence.next();
   }
 
+  /**
+   Build a fixture by name
+
+   @param {String} name fixture name
+   @param {Object} opts attributes to override
+   @returns {Object} json
+   */
   this.build = function (name, opts) {
     var modelAttributes = namedModels[name] || {};
+    // merge default, modelAttributes and opts to get the rough fixture
     var fixture = $.extend({}, defaultAttributes, modelAttributes, opts);
-    for (attr in fixture) {
-      if (typeof fixture[attr] == 'function') {
-        fixture[attr] = fixture[attr].call(this)
+    // convert attributes that are functions to strings
+    for (attribute in fixture) {
+      if (typeof fixture[attribute] == 'function') {
+        fixture[attribute] = fixture[attribute].call(this, fixture);
       }
     }
+    // set the id, unless it was already set in opts
     if (!fixture.id) {
       fixture.id = modelId++;
     }
@@ -60,12 +80,12 @@ ModelDefinition = function (model, config) {
   }
 
   /**
-    Build a list of fixtures
+   Build a list of fixtures
 
-    @param name model name or named model type
-    @param number of fixtures to build
-    @param opts attribute options
-    @returns array of fixtures
+   @param name model name or named model type
+   @param number of fixtures to build
+   @param opts attribute options
+   @returns array of fixtures
    */
   this.buildList = function (name, number, opts) {
     var arr = [];
@@ -75,8 +95,12 @@ ModelDefinition = function (model, config) {
     return arr;
   }
 
+  // Set the modelId back to 1, and reset the sequences
   this.reset = function () {
     modelId = 1;
+    for (name in sequences) {
+      sequences[name].reset();
+    }
   }
 
   var parseDefault = function (object) {
@@ -144,12 +168,12 @@ FactoryGuy = {
 
    ```
 
-   For the Person model, you can define fixtures like 'dude' or just use 'person'
-   and get default values.
+   For the Person model, you can define named fixtures like 'dude' or
+   just use 'person' and get default values.
 
    And to get those fixtures you would call them this way:
 
-   FactoryGuy.build('person') or FactoryGuy.build('dude')
+   FactoryGuy.build('dude') or FactoryGuy.build('person')
 
    @param model the model to define
    @param config your model definition object
@@ -162,18 +186,41 @@ FactoryGuy = {
     }
   },
 
+  /**
+   Used in model definitions to declare use of a sequence. For example:
+
+   ```
+
+   FactoryGuy.define('person', {
+     sequences: {
+       personName: function(num) {
+         return 'person #' + num;
+       }
+     },
+     default: {
+       name: FactoryGuy.generate('personName')
+     }
+   });
+
+   ```
+
+   @param   {String} sequenceName
+   @returns {Function} wrapper function that is called by the model
+            definition containing the sequence
+   */
   generate: function (sequenceName) {
     return function () {
       return this.generate(sequenceName);
     }
   },
 
-
   /**
+    Given a name like 'person' or 'dude' determine what model this name
+    refers to. In this case it's 'person' for each one.
 
-   @param name fixture name could be model name like 'user'
-   or specific user like 'admin'
-   @returns model associated with fixture name
+   @param {String} name a fixture name could be model name like 'person'
+          or a named person in model definition like 'dude'
+   @returns {String} model name associated with fixture name
    */
   lookupModelForName: function (name) {
     for (model in this.modelDefinitions) {
@@ -186,9 +233,9 @@ FactoryGuy = {
 
   /**
 
-   @param name fixture name could be model name like 'user'
-   or specific user like 'admin'
-   @returns definition associated with model
+   @param {String} name a fixture name could be model name like 'person'
+          or a named person in model definition like 'dude'
+   @returns {ModelDefinition} definition associated with model
    */
   lookupDefinitionForName: function (name) {
     for (model in this.modelDefinitions) {
@@ -206,9 +253,9 @@ FactoryGuy = {
    FactoryGuy.build('user') for User model
    FactoryGuy.build('bob') for User model with bob attributes
 
-   @param name fixture name
-   @param opts options that will override default fixture values
-   @returns {*}
+   @param {String} name fixture name
+   @param {Object} opts options that will override default fixture values
+   @returns {Object} json fixture
    */
   build: function (name, opts) {
     var definition = this.lookupDefinitionForName(name);
@@ -224,10 +271,10 @@ FactoryGuy = {
    FactoryGuy.buildList('user', 2) for 2 User models
    FactoryGuy.build('bob', 2) for 2 User model with bob attributes
 
-   @param name fixture name
-   @param number number of fixtures to create
-   @param opts options that will override default fixture values
-   @returns list of fixtures
+   @param {String} name fixture name
+   @param {Number} number number of fixtures to create
+   @param {Object} opts options that will override default fixture values
+   @returns {Array} list of fixtures
    */
   buildList: function (name, number, opts) {
     var definition = this.lookupDefinitionForName(name);
@@ -238,9 +285,11 @@ FactoryGuy = {
   },
 
   /**
+   TODO: This is kind of problematic right now .. needs work
+
    Clear model instances from FIXTURES array, and from store cache.
    Reset the id sequence for the models back to zero.
-   */
+  */
   resetModels: function (store) {
     var typeMaps = store.typeMaps;
     for (model in this.modelDefinitions) {
@@ -259,9 +308,6 @@ FactoryGuy = {
 //        store.unloadAll(typeMaps[model].type);
 //      }
 //    }
-
-//    for (model in this.modelDefinitions) {
-//      this.modelDefinitions[model].reset();
     }
   },
 
@@ -269,9 +315,9 @@ FactoryGuy = {
    Push fixture to model's FIXTURES array.
    Used when store's adapter is a DS.FixtureAdapter.
 
-   @param modelClass DS.Model type
-   @param fixture the fixture to add
-   @returns json fixture data
+   @param {DS.Model} modelClass
+   @param {Object} fixture the fixture to add
+   @returns {Object} json fixture data
    */
   pushFixture: function (modelClass, fixture) {
     if (!modelClass['FIXTURES']) {
@@ -279,22 +325,34 @@ FactoryGuy = {
     }
     modelClass['FIXTURES'].push(fixture);
     return fixture;
-  }
-}
-DS.Store.reopen({
-
-  usingFixtureAdapter: function() {
-    var adapter = this.adapterFor('application');
-    return adapter instanceof DS.FixtureAdapter
   },
 
   /**
-    Make new fixture and save to store. If the store is using FixtureAdapter,
-    will push to FIXTURE array, otherwise will use push method on adapter.
+   Clears all model definitions
+  */
+  clear: function (opts) {
+    if (!opts) {
+      this.modelDefinitions = {};
+      return;
+    }
+  }
+}
+DS.Store.reopen({
+  /**
+   @returns {Boolean} true if store's adapter is DS.FixtureAdapter
+   */
+  usingFixtureAdapter: function () {
+    var adapter = this.adapterFor('application');
+    return adapter instanceof DS.FixtureAdapter;
+  },
 
-    @param name name of fixture
-    @param options fixture options
-    @returns json or record
+  /**
+   Make new fixture and save to store. If the store is using FixtureAdapter,
+   will push to FIXTURE array, otherwise will use push method on adapter.
+
+   @param {String} name name of fixture
+   @param {Object} options fixture options
+   @returns {Object|DS.Model} json or record depending on the adapter type
    */
   makeFixture: function (name, options) {
     var modelName = FactoryGuy.lookupModelForName(name);
@@ -307,7 +365,7 @@ DS.Store.reopen({
     } else {
       var self = this;
       var model;
-      Em.run( function() {
+      Em.run(function () {
         model = self.push(modelName, fixture);
         self.setBelongsToRESTAdapter(modelType, modelName, model);
       });
@@ -316,13 +374,13 @@ DS.Store.reopen({
   },
 
   /**
-    Make a list of Fixtures
+   Make a list of Fixtures
 
-    @param name name of fixture
-    @param number number of fixtures
-    @param options fixture options
-    @returns list of json fixtures or records depending on the adapter type
-  */
+   @param {String} name name of fixture
+   @param {Number} number number to create
+   @param {Object} options fixture options
+   @returns {Array} list of json fixtures or records depending on the adapter type
+   */
   makeList: function (name, number, options) {
     var arr = [];
     for (var i = 0; i < number; i++) {
@@ -332,16 +390,16 @@ DS.Store.reopen({
   },
 
   /**
-    Set the belongsTo association for FixtureAdapter,
-      with models that have a hasMany association.
+   Set the belongsTo association for FixtureAdapter,
+   with models that have a hasMany association.
 
-    For example if a user hasMany projects, then set the user.id
-    on each project that the user hasMany of, so that the project
-    now has the belongsTo user association setup.
+   For example if a user hasMany projects, then set the user.id
+   on each project that the user hasMany of, so that the project
+   now has the belongsTo user association setup.
 
-    @param modelType model type like App.User
-    @param modelName model name like 'user'
-    @param parentFixture parent to assign as belongTo
+   @param {String} modelType model type like App.User
+   @param {String} modelName model name like 'user'
+   @param {Object} parentFixture parent to assign as belongTo
    */
   setBelongsToFixturesAdapter: function (modelType, modelName, parentFixture) {
     var store = this;
@@ -351,7 +409,7 @@ DS.Store.reopen({
       relationShips.hasMany.forEach(function (relationship) {
         var hasManyModel = store.modelFor(Em.String.singularize(relationship));
         if (parentFixture[relationship]) {
-          parentFixture[relationship].forEach(function(id) {
+          parentFixture[relationship].forEach(function (id) {
             var hasManyfixtures = adapter.fixturesForType(hasManyModel);
             var fixture = adapter.findFixtureById(hasManyfixtures, id);
             fixture[modelName] = parentFixture.id;
@@ -362,38 +420,59 @@ DS.Store.reopen({
   },
 
   /**
-    Set the belongsTo association for the REST type models
-      with a hasMany association
+   For the REST type models:
 
-    For example if a user hasMany projects, then set the user
-    on each project that the user hasMany of, so that the project
-    now has the belongsTo user association setup
+   Set the belongsTo association with a hasMany association
 
-    @param modelType model type like 'App.User'
-    @param modelName model name like 'user'
-    @param parent model to check for hasMany
+   Set this model in the parent hasMany array this model belongsTo
+
+   For example if a user hasMany projects, then set the user
+   on each project that the user hasMany of, so that the project
+   now has the belongsTo user association setup
+
+   @param {DS.Model} modelType model type like 'User'
+   @param {String} modelName model name like 'user'
+   @param {DS.Model} model
    */
-  setBelongsToRESTAdapter: function (modelType, modelName, parent) {
-    var relationShips = Ember.get(modelType, 'relationshipNames');
+  setBelongsToRESTAdapter: function (modelType, modelName, model) {
+    var self = this;
+    Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
+      if (relationship.kind == 'hasMany') {
+        var children = model.get(name) || [];
+        children.forEach(function (child) {
+          child.set(modelName, model)
+        })
+      }
 
-    if (relationShips.hasMany) {
-      relationShips.hasMany.forEach(function (name) {
-        var children = parent.get(name);
-        if (children.get('length') > 0) {
-          children.forEach(function(child) {
-            child.set(modelName, parent)
-          })
+      if (relationship.kind == 'belongsTo') {
+        var belongsToRecord = model.get(name);
+        if (belongsToRecord) {
+          var hasManyName = self.findHasManyRelationshipName(belongsToRecord, model)
+          belongsToRecord.get(hasManyName).addObject(model);
         }
-      })
-    }
+      }
+    })
+  },
+
+  findHasManyRelationshipName: function (belongToModel, childModel) {
+    var relationshipName;
+    Ember.get(belongToModel.constructor, 'relationshipsByName').forEach(
+      function (name, relationship) {
+        if (relationship.kind == 'hasMany' &&
+          relationship.type == childModel.constructor) {
+          relationshipName = relationship.key;
+        }
+      }
+    )
+    return relationshipName;
   },
 
   /**
-    Adding a pushPayload for FixtureAdapter, but using the original with
-     other adapters that support pushPayload.
+   Adding a pushPayload for FixtureAdapter, but using the original with
+   other adapters that support pushPayload.
 
-    @param type
-    @param payload
+   @param {String} type
+   @param {Object} payload
    */
   pushPayload: function (type, payload) {
     if (this.usingFixtureAdapter()) {
@@ -409,38 +488,63 @@ DS.Store.reopen({
 DS.FixtureAdapter.reopen({
 
   /**
-    Overriding createRecord in FixtureAdapter to add the record
-     created to the hashMany records for all of the records that
-     this one belongsTo.
+   Overriding createRecord to add the record created to the
+   hashMany records for all of the records that this record belongsTo.
 
-    @method createRecord
-    @param {DS.Store} store
-    @param {subclass of DS.Model} type
-    @param {DS.Model} record
-    @return {Promise} promise
-  */
-  createRecord: function(store, type, record) {
+   For example:
+
+   If models are defined like so:
+
+   User = DS.Model.extend({
+       projects: DS.hasMany('project')
+     })
+
+   Project = DS.Model.extend({
+       user: DS.belongsTo('user')
+     })
+
+   and you create a project record with a user defined:
+    store.createRecord('project', {user: user})
+
+   this method will take the new project created and add it to the user's 'projects'
+   hasMany array.
+
+   And a full code example:
+
+   var userJson = store.makeFixture('user');
+
+   store.find('user', userJson.id).then(function(user) {
+       store.createRecord('project', {user: user}).save()
+         .then( function(project) {
+           // user.get('projects.length') == 1;
+       })
+     })
+
+   @method createRecord
+   @param {DS.Store} store
+   @param {subclass of DS.Model} type
+   @param {DS.Model} record
+   @return {Promise} promise
+   */
+  createRecord: function (store, type, record) {
     var promise = this._super(store, type, record);
 
-//    promise.then( function() {
-//      var hasManyName = Ember.String.pluralize(type.typeKey);
-//      var relationShips = Ember.get(type, 'relationshipNames');
-//      if (relationShips.belongsTo) {
-//        console.log('record',record+'', type.typeKey, hasManyName);
-//        relationShips.belongsTo.forEach(function (relationship) {
-//          console.log(relationship, record.get(relationship)+'')
-//          var belongsToRecord = record.get(relationship);
-//          console.log(relationshipForType)
-//          belongsToRecord.get(hasManyName).addObject(record);
-//        })
-//      }
-//    })
+    promise.then(function () {
+      var relationShips = Ember.get(type, 'relationshipNames');
+      if (relationShips.belongsTo) {
+        relationShips.belongsTo.forEach(function (relationship) {
+          var belongsToRecord = record.get(relationship);
+          if (belongsToRecord) {
+            var hasManyName = store.findHasManyRelationshipName(belongsToRecord, record);
+            belongsToRecord.get(hasManyName).addObject(record);
+          }
+        })
+      }
+    });
+
     return promise;
   }
-
 })
-
-
 FactoryGuyTestMixin = Em.Mixin.create({
 
   // Pass in the app root, which typically is App.
@@ -454,6 +558,13 @@ FactoryGuyTestMixin = Em.Mixin.create({
     this.getStore().adapterFor('application').simulateRemoteResponse = false;
   },
 
+  /**
+    Proxy to store's find method
+
+   @param {String or subclass of DS.Model} type
+   @param {Object|String|Integer|null} id
+   @return {Promise} promise
+   */
   find: function(type, id) {
     return this.getStore().find(type, id);
   },
@@ -474,6 +585,13 @@ FactoryGuyTestMixin = Em.Mixin.create({
     return this.getStore().push(type, hash);
   },
 
+  /**
+    Using mockjax to stub an http request.
+
+    @param {String} url request url
+    @param {Object} json response
+    @param {Object} options ajax request options
+   */
   stubEndpointForHttpRequest: function (url, json, options) {
     options = options || {};
     var request = {
@@ -492,21 +610,27 @@ FactoryGuyTestMixin = Em.Mixin.create({
   },
 
   /**
-   * Handling ajax POST for a model
-   *
-   * @param name of the fixture ( or model ) to create
-   * @param opts fixture options
+    Handling ajax POST ( create record ) for a model
+
+    @param {String} name of the fixture ( or model ) to create
+    @param {Object} opts fixture options
    */
   handleCreate: function (name, opts) {
     var model = FactoryGuy.lookupModelForName(name);
     this.stubEndpointForHttpRequest(
       "/" + Em.String.pluralize(model),
-      this.buildAjaxResponse(name, opts),
+      this.buildAjaxCreateResponse(name, opts),
       {type: 'POST'}
     )
   },
 
-  buildAjaxResponse: function (name, opts) {
+  /**
+    Build the json used for creating record
+
+    @param {String} name of the fixture ( or model ) to create
+    @param {Object} opts fixture options
+¬  */
+  buildAjaxCreateResponse: function (name, opts) {
     var fixture = FactoryGuy.build(name, opts);
     var model = FactoryGuy.lookupModelForName(name);
     var hash = {};
@@ -529,5 +653,4 @@ FactoryGuyTestMixin = Em.Mixin.create({
   teardown: function () {
     FactoryGuy.resetModels(this.getStore());
   }
-
 })
