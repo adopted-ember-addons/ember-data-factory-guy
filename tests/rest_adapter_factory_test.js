@@ -73,3 +73,37 @@ test("when hasMany associations assigned, belongTo parent is assigned", function
 
   deepEqual(p1.get('user').toJSON(), user.toJSON());
 });
+
+test("when belongTo parent is assigned, parent adds to hasMany records", function() {
+  var user = store.makeFixture('user');
+  var project = store.makeFixture('project', {user: user});
+
+  equal(user.get('projects.length'), 1);
+});
+
+
+module('DS.Store#makeList with ActiveModelAdapter', {
+  setup: function() {
+    testHelper = TestHelper.setup(DS.RESTAdapter);
+    store = testHelper.getStore();
+  },
+  teardown: function() {
+    Em.run(function() { testHelper.teardown(); });
+  }
+});
+
+
+test("creates list of DS.Model instances", function() {
+  var users = store.makeList('user', 2);
+  equal(users.length, 2);
+  equal(users[0] instanceof DS.Model, true);
+});
+
+
+test("creates records in the store", function() {
+  var users = store.makeList('user', 2);
+
+  var storeUsers = store.all('user').get('content');
+  deepEqual(storeUsers[0].toJSON(), users[0].toJSON());
+  deepEqual(storeUsers[1].toJSON(), users[1].toJSON());
+});

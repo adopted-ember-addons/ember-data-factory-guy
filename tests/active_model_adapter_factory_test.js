@@ -65,7 +65,7 @@ test("supports hasMany associations", function() {
   var user = store.makeFixture('user', {projects: [p1.id, p2.id]})
 
   equal(user.get('projects.length'), 2);
-})
+});
 
 
 test("when hasMany associations assigned, belongTo parent is assigned", function() {
@@ -73,7 +73,14 @@ test("when hasMany associations assigned, belongTo parent is assigned", function
   var user = store.makeFixture('user', {projects: [p1.id]})
 
   deepEqual(p1.get('user').toJSON(), user.toJSON());
-})
+});
+
+test("when belongTo parent is assigned, parent adds to hasMany records", function() {
+  var user = store.makeFixture('user');
+  var project = store.makeFixture('project', {user: user});
+
+  equal(user.get('projects.length'), 1);
+});
 
 
 module('DS.Store#makeList with ActiveModelAdapter', {
