@@ -69,7 +69,7 @@ module('DS.Store with DS.FixtureAdapter', {
 });
 
 
-test("#makeFixture builds and pushes fixture into the store", function() {
+test("#makeFixture builds and pushes fixture into the models FIXTURE array", function() {
   var json = store.makeFixture('user');
   equal(User.FIXTURES.length, 1);
   equal(User.FIXTURES[0], json);
@@ -92,17 +92,17 @@ asyncTest("#makeFixture sets hasMany associations on fixtures", function() {
   })
 })
 
-//asyncTest("#createRecord adds belongsTo associations to hasMany array", function() {
-//  var user = store.makeFixture('user');
-//
-//  store.find('user', user.id).then(function(user){
-//
-//    var projectJson = {title:'project', user: user};
-//
-//    store.createRecord('project', projectJson).save()
-//      .then( function() {
-//        equal(user.get('projects.length'), 1);
-//        start();
-//      });
-//  })
-//})
+asyncTest("#createRecord adds belongsTo associations to hasMany array", function() {
+  var user = store.makeFixture('user');
+
+  store.find('user', user.id).then(function(user) {
+
+    var projectJson = {title:'project', user: user};
+
+    store.createRecord('project', projectJson).save()
+      .then( function() {
+        equal(user.get('projects.length'), 1);
+        start();
+      });
+  })
+})

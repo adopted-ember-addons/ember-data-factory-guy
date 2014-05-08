@@ -131,10 +131,10 @@ but BEFORE you require your models.
   //  store.makeList    => creates list of models in the store and returns json
   //
 
-  store.makeFixture('user'); //  user.FIXTURES = {id: 1, name: 'User1', type: 'normal'}
-  store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = {id: 2, name: 'bob', type: 'normal'}
-  store.makeFixture('admin'); //  user.FIXTURES = {id: 3, name: 'Admin', type: 'superuser'}
-  store.makeFixture('admin', name: 'Fred'); //  user.FIXTURES = {id: 4, name: 'Fred', type: 'superuser'}
+  store.makeFixture('user'); //  user.FIXTURES = [{id: 1, name: 'User1', type: 'normal'}]
+  store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', type: 'normal'}]
+  store.makeFixture('admin'); //  user.FIXTURES = [{id: 3, name: 'Admin', type: 'superuser'}]
+  store.makeFixture('admin', name: 'Fred'); //  user.FIXTURES = [{id: 4, name: 'Fred', type: 'superuser'}]
 
 
   // Use store.find to get the model instance ( Remember this is the Fixture adapter, if
@@ -232,12 +232,13 @@ test("make a user using fixture adapter", function() {
   testHelper.useFixtureAdapter();
   var json = make('user');
   equal(User.FIXTURES.length, 1);
+  equal(User.FIXTURES[0], json);
 });
 
 // assuming your default adapter is ActiveModelAdapter or RESTAdapter
 test("make a user using your applications default adapter", function() {
   var user = make('user');
-  equal(store.all('user').get('content.length'), 1)
+  equal(store.all('user').get('content.length'), 1);
   equal(user instanceof DS.Model, true);
 });
 

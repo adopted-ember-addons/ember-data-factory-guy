@@ -1,17 +1,19 @@
 DS.Store.reopen({
-
-  usingFixtureAdapter: function() {
+  /**
+   @returns {Boolean} true if store's adapter is DS.FixtureAdapter
+   */
+  usingFixtureAdapter: function () {
     var adapter = this.adapterFor('application');
-    return adapter instanceof DS.FixtureAdapter
+    return adapter instanceof DS.FixtureAdapter;
   },
 
   /**
-    Make new fixture and save to store. If the store is using FixtureAdapter,
-    will push to FIXTURE array, otherwise will use push method on adapter.
+   Make new fixture and save to store. If the store is using FixtureAdapter,
+   will push to FIXTURE array, otherwise will use push method on adapter.
 
-    @param name name of fixture
-    @param options fixture options
-    @returns json or record
+   @param {String} name name of fixture
+   @param {Object} options fixture options
+   @returns {Object|DS.Model} json or record depending on the adapter type
    */
   makeFixture: function (name, options) {
     var modelName = FactoryGuy.lookupModelForName(name);
@@ -24,7 +26,7 @@ DS.Store.reopen({
     } else {
       var self = this;
       var model;
-      Em.run( function() {
+      Em.run(function () {
         model = self.push(modelName, fixture);
         self.setBelongsToRESTAdapter(modelType, modelName, model);
       });
@@ -33,13 +35,13 @@ DS.Store.reopen({
   },
 
   /**
-    Make a list of Fixtures
+   Make a list of Fixtures
 
-    @param name name of fixture
-    @param number number of fixtures
-    @param options fixture options
-    @returns list of json fixtures or records depending on the adapter type
-  */
+   @param {String} name name of fixture
+   @param {Number} number number to create
+   @param {Object} options fixture options
+   @returns {Array} list of json fixtures or records depending on the adapter type
+   */
   makeList: function (name, number, options) {
     var arr = [];
     for (var i = 0; i < number; i++) {
@@ -49,16 +51,16 @@ DS.Store.reopen({
   },
 
   /**
-    Set the belongsTo association for FixtureAdapter,
-      with models that have a hasMany association.
+   Set the belongsTo association for FixtureAdapter,
+   with models that have a hasMany association.
 
-    For example if a user hasMany projects, then set the user.id
-    on each project that the user hasMany of, so that the project
-    now has the belongsTo user association setup.
+   For example if a user hasMany projects, then set the user.id
+   on each project that the user hasMany of, so that the project
+   now has the belongsTo user association setup.
 
-    @param modelType model type like App.User
-    @param modelName model name like 'user'
-    @param parentFixture parent to assign as belongTo
+   @param {String} modelType model type like App.User
+   @param {String} modelName model name like 'user'
+   @param {Object} parentFixture parent to assign as belongTo
    */
   setBelongsToFixturesAdapter: function (modelType, modelName, parentFixture) {
     var store = this;
@@ -68,7 +70,7 @@ DS.Store.reopen({
       relationShips.hasMany.forEach(function (relationship) {
         var hasManyModel = store.modelFor(Em.String.singularize(relationship));
         if (parentFixture[relationship]) {
-          parentFixture[relationship].forEach(function(id) {
+          parentFixture[relationship].forEach(function (id) {
             var hasManyfixtures = adapter.fixturesForType(hasManyModel);
             var fixture = adapter.findFixtureById(hasManyfixtures, id);
             fixture[modelName] = parentFixture.id;
@@ -79,38 +81,59 @@ DS.Store.reopen({
   },
 
   /**
-    Set the belongsTo association for the REST type models
-      with a hasMany association
+   For the REST type models:
 
-    For example if a user hasMany projects, then set the user
-    on each project that the user hasMany of, so that the project
-    now has the belongsTo user association setup
+   Set the belongsTo association with a hasMany association
 
-    @param modelType model type like 'App.User'
-    @param modelName model name like 'user'
-    @param parent model to check for hasMany
+   Set this model in the parent hasMany array this model belongsTo
+
+   For example if a user hasMany projects, then set the user
+   on each project that the user hasMany of, so that the project
+   now has the belongsTo user association setup
+
+   @param {DS.Model} modelType model type like 'User'
+   @param {String} modelName model name like 'user'
+   @param {DS.Model} model
    */
-  setBelongsToRESTAdapter: function (modelType, modelName, parent) {
-    var relationShips = Ember.get(modelType, 'relationshipNames');
+  setBelongsToRESTAdapter: function (modelType, modelName, model) {
+    var self = this;
+    Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
+      if (relationship.kind == 'hasMany') {
+        var children = model.get(name) || [];
+        children.forEach(function (child) {
+          child.set(modelName, model)
+        })
+      }
 
-    if (relationShips.hasMany) {
-      relationShips.hasMany.forEach(function (name) {
-        var children = parent.get(name);
-        if (children.get('length') > 0) {
-          children.forEach(function(child) {
-            child.set(modelName, parent)
-          })
+      if (relationship.kind == 'belongsTo') {
+        var belongsToRecord = model.get(name);
+        if (belongsToRecord) {
+          var hasManyName = self.findHasManyRelationshipName(belongsToRecord, model)
+          belongsToRecord.get(hasManyName).addObject(model);
         }
-      })
-    }
+      }
+    })
+  },
+
+  findHasManyRelationshipName: function (belongToModel, childModel) {
+    var relationshipName;
+    Ember.get(belongToModel.constructor, 'relationshipsByName').forEach(
+      function (name, relationship) {
+        if (relationship.kind == 'hasMany' &&
+          relationship.type == childModel.constructor) {
+          relationshipName = relationship.key;
+        }
+      }
+    )
+    return relationshipName;
   },
 
   /**
-    Adding a pushPayload for FixtureAdapter, but using the original with
-     other adapters that support pushPayload.
+   Adding a pushPayload for FixtureAdapter, but using the original with
+   other adapters that support pushPayload.
 
-    @param type
-    @param payload
+   @param {String} type
+   @param {Object} payload
    */
   pushPayload: function (type, payload) {
     if (this.usingFixtureAdapter()) {
@@ -126,34 +149,60 @@ DS.Store.reopen({
 DS.FixtureAdapter.reopen({
 
   /**
-    Overriding createRecord in FixtureAdapter to add the record
-     created to the hashMany records for all of the records that
-     this one belongsTo.
+   Overriding createRecord to add the record created to the
+   hashMany records for all of the records that this record belongsTo.
 
-    @method createRecord
-    @param {DS.Store} store
-    @param {subclass of DS.Model} type
-    @param {DS.Model} record
-    @return {Promise} promise
-  */
-  createRecord: function(store, type, record) {
+   For example:
+
+   If models are defined like so:
+
+   User = DS.Model.extend({
+       projects: DS.hasMany('project')
+     })
+
+   Project = DS.Model.extend({
+       user: DS.belongsTo('user')
+     })
+
+   and you create a project record with a user defined:
+    store.createRecord('project', {user: user})
+
+   this method will take the new project created and add it to the user's 'projects'
+   hasMany array.
+
+   And a full code example:
+
+   var userJson = store.makeFixture('user');
+
+   store.find('user', userJson.id).then(function(user) {
+       store.createRecord('project', {user: user}).save()
+         .then( function(project) {
+           // user.get('projects.length') == 1;
+       })
+     })
+
+   @method createRecord
+   @param {DS.Store} store
+   @param {subclass of DS.Model} type
+   @param {DS.Model} record
+   @return {Promise} promise
+   */
+  createRecord: function (store, type, record) {
     var promise = this._super(store, type, record);
 
-//    promise.then( function() {
-//      var hasManyName = Ember.String.pluralize(type.typeKey);
-//      var relationShips = Ember.get(type, 'relationshipNames');
-//      if (relationShips.belongsTo) {
-//        console.log('record',record+'', type.typeKey, hasManyName);
-//        relationShips.belongsTo.forEach(function (relationship) {
-//          console.log(relationship, record.get(relationship)+'')
-//          var belongsToRecord = record.get(relationship);
-//          console.log(relationshipForType)
-//          belongsToRecord.get(hasManyName).addObject(record);
-//        })
-//      }
-//    })
+    promise.then(function () {
+      var relationShips = Ember.get(type, 'relationshipNames');
+      if (relationShips.belongsTo) {
+        relationShips.belongsTo.forEach(function (relationship) {
+          var belongsToRecord = record.get(relationship);
+          if (belongsToRecord) {
+            var hasManyName = store.findHasManyRelationshipName(belongsToRecord, record);
+            belongsToRecord.get(hasManyName).addObject(record);
+          }
+        })
+      }
+    });
+
     return promise;
   }
-
 })
-
