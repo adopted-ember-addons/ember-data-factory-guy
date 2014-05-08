@@ -29,12 +29,12 @@ FactoryGuy = {
 
    ```
 
-   For the Person model, you can define fixtures like 'dude' or just use 'person'
-   and get default values.
+   For the Person model, you can define named fixtures like 'dude' or
+   just use 'person' and get default values.
 
    And to get those fixtures you would call them this way:
 
-   FactoryGuy.build('person') or FactoryGuy.build('dude')
+   FactoryGuy.build('dude') or FactoryGuy.build('person')
 
    @param model the model to define
    @param config your model definition object
@@ -47,18 +47,41 @@ FactoryGuy = {
     }
   },
 
+  /**
+   Used in model definitions to declare use of a sequence. For example:
+
+   ```
+
+   FactoryGuy.define('person', {
+     sequences: {
+       personName: function(num) {
+         return 'person #' + num;
+       }
+     },
+     default: {
+       name: FactoryGuy.generate('personName')
+     }
+   });
+
+   ```
+
+   @param   {String} sequenceName
+   @returns {Function} wrapper function that is called by the model
+            definition containing the sequence
+   */
   generate: function (sequenceName) {
     return function () {
       return this.generate(sequenceName);
     }
   },
 
-
   /**
+    Given a name like 'person' or 'dude' determine what model this name
+    refers to. In this case it's 'person' for each one.
 
-   @param name fixture name could be model name like 'user'
-   or specific user like 'admin'
-   @returns model associated with fixture name
+   @param {String} name a fixture name could be model name like 'person'
+          or a named person in model definition like 'dude'
+   @returns {String} model name associated with fixture name
    */
   lookupModelForName: function (name) {
     for (model in this.modelDefinitions) {
@@ -71,9 +94,9 @@ FactoryGuy = {
 
   /**
 
-   @param name fixture name could be model name like 'user'
-   or specific user like 'admin'
-   @returns definition associated with model
+   @param {String} name a fixture name could be model name like 'person'
+          or a named person in model definition like 'dude'
+   @returns {ModelDefinition} definition associated with model
    */
   lookupDefinitionForName: function (name) {
     for (model in this.modelDefinitions) {
@@ -91,9 +114,9 @@ FactoryGuy = {
    FactoryGuy.build('user') for User model
    FactoryGuy.build('bob') for User model with bob attributes
 
-   @param name fixture name
-   @param opts options that will override default fixture values
-   @returns {*}
+   @param {String} name fixture name
+   @param {Object} opts options that will override default fixture values
+   @returns {Object} json fixture
    */
   build: function (name, opts) {
     var definition = this.lookupDefinitionForName(name);
@@ -109,10 +132,10 @@ FactoryGuy = {
    FactoryGuy.buildList('user', 2) for 2 User models
    FactoryGuy.build('bob', 2) for 2 User model with bob attributes
 
-   @param name fixture name
-   @param number number of fixtures to create
-   @param opts options that will override default fixture values
-   @returns list of fixtures
+   @param {String} name fixture name
+   @param {Number} number number of fixtures to create
+   @param {Object} opts options that will override default fixture values
+   @returns {Array} list of fixtures
    */
   buildList: function (name, number, opts) {
     var definition = this.lookupDefinitionForName(name);
@@ -123,9 +146,11 @@ FactoryGuy = {
   },
 
   /**
+   TODO: This is kind of problematic right now .. needs work
+
    Clear model instances from FIXTURES array, and from store cache.
    Reset the id sequence for the models back to zero.
-   */
+  */
   resetModels: function (store) {
     var typeMaps = store.typeMaps;
     for (model in this.modelDefinitions) {
@@ -144,9 +169,6 @@ FactoryGuy = {
 //        store.unloadAll(typeMaps[model].type);
 //      }
 //    }
-
-//    for (model in this.modelDefinitions) {
-//      this.modelDefinitions[model].reset();
     }
   },
 
@@ -154,9 +176,9 @@ FactoryGuy = {
    Push fixture to model's FIXTURES array.
    Used when store's adapter is a DS.FixtureAdapter.
 
-   @param modelClass DS.Model type
-   @param fixture the fixture to add
-   @returns json fixture data
+   @param {DS.Model} modelClass
+   @param {Object} fixture the fixture to add
+   @returns {Object} json fixture data
    */
   pushFixture: function (modelClass, fixture) {
     if (!modelClass['FIXTURES']) {
@@ -164,5 +186,15 @@ FactoryGuy = {
     }
     modelClass['FIXTURES'].push(fixture);
     return fixture;
+  },
+
+  /**
+   Clears all model definitions
+  */
+  clear: function (opts) {
+    if (!opts) {
+      this.modelDefinitions = {};
+      return;
+    }
   }
 }
