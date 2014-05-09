@@ -147,10 +147,10 @@ but BEFORE you require your models.
 
   // and to setup associations ...
   var project = store.makeFixture('project');
-  var user = store.makeFixture('user', projects: [project.id]);
+  var user = store.makeFixture('user', projects: [project]);
 
   // and for lists
-  var users = store.makeList('user', 2, projects: [project.id]);
+  var users = store.makeList('user', 2, projects: [project]);
 
   // with fixture adapter all associations are treated as async, so it's
   // a bit clunky to get this associated data. When using DS.FixtureAdapter
@@ -184,7 +184,7 @@ but BEFORE you require your models.
   // and to setup associations ...
 
   var project = store.makeFixture('project');
-  var user = store.makeFixture('user', projects: [project.id]);
+  var user = store.makeFixture('user', projects: [project]);
 
   user.get('projects.length') == 1;
   user.get('projects.firstObject.user') == user;
