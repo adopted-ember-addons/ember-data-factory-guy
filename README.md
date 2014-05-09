@@ -215,6 +215,7 @@ var testHelper, store;
 module('User Model', {
   setup: function() {
     testHelper = TestHelper.setup(App);
+    store = testHelper.getStore();
   },
   teardown: function() {
     Em.run(function() { testHelper.teardown(); });
