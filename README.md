@@ -52,8 +52,10 @@ NOTE: The benefit of using FactoryGuy is that you can run your tests with the
 default adapter that your application's store normally uses. In other words:
 You do not have to use the DS.FixtureAdapter.  But if you do choose to use the Fixture adapter,
 which does not run any faster, and does not handle associations as elegantly
-( and in some cases not at all ),
-you may run into problems with accessing associations.
+( and in some cases not at all ), you may run into problems with accessing associations.
+
+Error: Assertion Failed: You looked up the 'projects' relationship on '<User:ember379:1>' but some of the associated records were not loaded. Either make sure they are all loaded together with the parent record, or specify that the relationship is async (`DS.hasMany({ async: true })`)
+
 If you do get these types of errors try requiring the factory_guy_has_many.js file
 ( located in dist dir and vendor dir ) AFTER you require ember-data,
 but BEFORE you require your models.
