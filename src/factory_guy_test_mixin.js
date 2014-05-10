@@ -12,7 +12,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
   },
 
   /**
-    Proxy to store's find method
+   Proxy to store's find method
 
    @param {String or subclass of DS.Model} type
    @param {Object|String|Integer|null} id
@@ -91,12 +91,24 @@ FactoryGuyTestMixin = Em.Mixin.create({
     return hash;
   },
 
+  /**
+    Handling ajax PUT ( update record ) for a model type
+
+    @param {String} root modelType like 'user' for User
+    @param {String} id id of record to update
+   */
   handleUpdate: function (root, id) {
     this.stubEndpointForHttpRequest(
       "/" + Em.String.pluralize(root) + "/" + id, {}, {type: 'PUT'}
     )
   },
 
+  /**
+    Handling ajax DELETE ( delete record ) for a model type
+
+    @param {String} root modelType like 'user' for User
+    @param {String} id id of record to update
+   */
   handleDelete: function (root, id) {
     this.stubEndpointForHttpRequest(
       "/" + Em.String.pluralize(root) + "/" + id, {}, {type: 'DELETE'}

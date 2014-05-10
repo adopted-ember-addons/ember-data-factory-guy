@@ -76,23 +76,38 @@ test("#makeFixture builds and pushes fixture into the models FIXTURE array", fun
 });
 
 
-asyncTest("#makeFixture sets hasMany associations on fixtures", function() {
+asyncTest("#makeFixture sets belongsTo on hasMany associations", function() {
   var p1 = store.makeFixture('project');
   // second project not added on purpose to make sure only one is
   // assigned in hasMany
   store.makeFixture('project');
   var user = store.makeFixture('user', {projects: [p1.id]})
 
-  store.find('user', 1).then ( function(user) {
+  store.find('user', 1).then( function(user) {
     user.get('projects').then( function(projects) {
       equal(projects.get('length'), 1, "adds hasMany records");
-      equal(projects.get('firstObject.user.id'), 1, "sets belongsTo record");
+      equal(projects.get('firstObject.user.id'), user.id, "sets belongsTo record");
       start();
     })
   })
 })
 
-asyncTest("#createRecord adds belongsTo associations to hasMany array", function() {
+
+asyncTest("#makeFixture adds record to hasMany association array for which it belongsTo", function() {
+  var userJson = store.makeFixture('user');
+  var projectJson = store.makeFixture('project', {user: userJson.id});
+
+  store.find('user', userJson.id).then( function(user) {
+    user.get('projects').then( function(projects) {
+      equal(projects.get('length'), 1, "adds hasMany records");
+      equal(projects.get('firstObject.user.id'), user.id, "sets belongsTo record");
+      start();
+    })
+  })
+})
+
+
+asyncTest("#createRecord adds belongsTo association to records it hasMany of", function() {
   var user = store.makeFixture('user');
 
   store.find('user', user.id).then(function(user) {

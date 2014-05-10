@@ -401,22 +401,33 @@ DS.Store.reopen({
    @param {String} modelName model name like 'user'
    @param {Object} parentFixture parent to assign as belongTo
    */
-  setBelongsToFixturesAdapter: function (modelType, modelName, parentFixture) {
-    var store = this;
+  setBelongsToFixturesAdapter: function(modelType, modelName, fixture) {
+    var self = this;
     var adapter = this.adapterFor('application');
-    var relationShips = Ember.get(modelType, 'relationshipNames');
-    if (relationShips.hasMany) {
-      relationShips.hasMany.forEach(function (relationship) {
-        var hasManyModel = store.modelFor(Em.String.singularize(relationship));
-        if (parentFixture[relationship]) {
-          parentFixture[relationship].forEach(function (id) {
-            var hasManyfixtures = adapter.fixturesForType(hasManyModel);
+    Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
+      if (relationship.kind == 'hasMany') {
+        if (fixture[relationship.key]) {
+          fixture[relationship.key].forEach(function(id) {
+            var hasManyfixtures = adapter.fixturesForType(relationship.type);
             var fixture = adapter.findFixtureById(hasManyfixtures, id);
-            fixture[modelName] = parentFixture.id;
+            fixture[modelName] = fixture.id;
           })
         }
-      })
-    }
+      }
+
+      if (relationship.kind == 'belongsTo') {
+        var belongsToRecord = fixture[relationship.key];
+        if (belongsToRecord) {
+          var hasManyName = self.findHasManyRelationshipName2(relationship.type, relationship.parentType);
+          var belongsToFixtures = adapter.fixturesForType(relationship.type);
+          var belongsTofixture = adapter.findFixtureById(belongsToFixtures, fixture[relationship.key]);
+          if (!belongsTofixture[hasManyName]) {
+            belongsTofixture[hasManyName] = []
+          }
+          belongsTofixture[hasManyName].push(fixture.id);
+        }
+      }
+    })
   },
 
   /**
@@ -454,6 +465,18 @@ DS.Store.reopen({
     })
   },
 
+  findHasManyRelationshipName2: function (belongToModel, childModel) {
+    var relationshipName;
+    Ember.get(belongToModel, 'relationshipsByName').forEach(
+      function (name, relationship) {
+        if (relationship.kind == 'hasMany' &&
+          relationship.type == childModel) {
+          relationshipName = relationship.key;
+        }
+      }
+    )
+    return relationshipName;
+  },
   findHasManyRelationshipName: function (belongToModel, childModel) {
     var relationshipName;
     Ember.get(belongToModel.constructor, 'relationshipsByName').forEach(
@@ -559,7 +582,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
   },
 
   /**
-    Proxy to store's find method
+   Proxy to store's find method
 
    @param {String or subclass of DS.Model} type
    @param {Object|String|Integer|null} id
@@ -638,12 +661,24 @@ FactoryGuyTestMixin = Em.Mixin.create({
     return hash;
   },
 
+  /**
+    Handling ajax PUT ( update record ) for a model type
+
+    @param {String} root modelType like 'user' for User
+    @param {String} id id of record to update
+   */
   handleUpdate: function (root, id) {
     this.stubEndpointForHttpRequest(
       "/" + Em.String.pluralize(root) + "/" + id, {}, {type: 'PUT'}
     )
   },
 
+  /**
+    Handling ajax DELETE ( delete record ) for a model type
+
+    @param {String} root modelType like 'user' for User
+    @param {String} id id of record to update
+   */
   handleDelete: function (root, id) {
     this.stubEndpointForHttpRequest(
       "/" + Em.String.pluralize(root) + "/" + id, {}, {type: 'DELETE'}

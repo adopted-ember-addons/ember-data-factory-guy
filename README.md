@@ -134,7 +134,7 @@ but BEFORE you require your models.
   store.makeFixture('user'); //  user.FIXTURES = [{id: 1, name: 'User1', type: 'normal'}]
   store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', type: 'normal'}]
   store.makeFixture('admin'); //  user.FIXTURES = [{id: 3, name: 'Admin', type: 'superuser'}]
-  store.makeFixture('admin', name: 'Fred'); //  user.FIXTURES = [{id: 4, name: 'Fred', type: 'superuser'}]
+  store.makeFixture('admin', {name: 'Fred'}); //  user.FIXTURES = [{id: 4, name: 'Fred', type: 'superuser'}]
 
 
   // Use store.find to get the model instance ( Remember this is the Fixture adapter, if
@@ -146,15 +146,17 @@ but BEFORE you require your models.
   });
 
   // and to setup associations ...
-  var project = store.makeFixture('project');
-  var user = store.makeFixture('user', projects: [project]);
+  var projectJson = store.makeFixture('project');
+  var userJson = store.makeFixture('user', projects: [project.id]);
+  // OR
+  var userJson = store.makeFixture('user');
+  var projectJson = store.makeFixture('project', user: userJson.id);
 
-  // and for lists
-  var users = store.makeList('user', 2, projects: [project]);
-
-  // with fixture adapter all associations are treated as async, so it's
+  // will give you the same result, but with fixture adapter all associations
+  // are treated as async ( by factory_guy_has_many.js fix ), so it's
   // a bit clunky to get this associated data. When using DS.FixtureAdapter
-  // in view specs though, this clunk is dealt with for you.
+  // in view specs though, this clunk is dealt with for you. But remember,
+  // you don't have to use the Fixture adapter.
   store.find('user', 1).then(function(user) {
     user.get('name') == 'My name';
     user.get('projects').then(function(projects) {
@@ -162,6 +164,8 @@ but BEFORE you require your models.
     });
   });
 
+  // and for lists
+  var users = store.makeList('user', 2, projects: [project.id]);
 
   //////////////////////////////////////////////////////////////////
   //
@@ -185,11 +189,15 @@ but BEFORE you require your models.
 
   var project = store.makeFixture('project');
   var user = store.makeFixture('user', projects: [project]);
+  //  OR
+  var user = store.makeFixture('user');
+  var project = store.makeFixture('project', user: user);
 
+  // will get you the same results
   user.get('projects.length') == 1;
   user.get('projects.firstObject.user') == user;
 
-  // and to create lists
+  // and to create lists ( of 3 users in this case )
   var users = store.makeList('user', 3);
 
 ```
@@ -245,3 +253,9 @@ test("make a user using your applications default adapter", function() {
 
 
 ```
+
+
+Further Extra Goodies
+=====================
+
+mockjax
