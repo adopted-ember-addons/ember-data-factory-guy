@@ -119,3 +119,17 @@ test("#buildList creates list of fixtures", function() {
   deepEqual(userList[0], {id: 1, name: 'User1'});
   deepEqual(userList[1], {id: 2, name: 'User1'});
 });
+
+
+test("#lookupDefinitionForName", function() {
+  equal(!!FactoryGuy.lookupDefinitionForName('person'), true, 'finds definition if its the same as model name');
+  equal(!!FactoryGuy.lookupDefinitionForName('funny_person'), true, 'finds definition if its a named fixture');
+  equal(!!FactoryGuy.lookupDefinitionForName('fake'), false, "return nothing if can't find definition");
+});
+
+
+test("#lookupModelForName", function() {
+  equal(FactoryGuy.lookupModelForName('person'), 'person', "finds model if its the same as model name");
+  equal(FactoryGuy.lookupModelForName('funny_person'), 'person', "finds model if it's definition has this named fixture");
+  equal(FactoryGuy.lookupModelForName('fake'), undefined, "return nothing if can't find definition");
+});

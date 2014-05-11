@@ -301,7 +301,7 @@ module('User View', {
   setup: function() {
     viewHelper = ViewTestHelper.setup(App); // set up helper
     var user = viewHelper.make('user'); // create a user in the store
-    visit('/users/'+user.id); // visit the route for the user
+    visit('/users/'+user.id); // visit the users route
   },
   teardown: function() {
     Em.run(function() { viewHelper.teardown(); });
@@ -319,8 +319,8 @@ test("Creates new project", function() {
     viewHelper.handleCreate('project', {name: newProjectName})
 
     /**
-     Let's say that clicking this div, triggers action in the view to create project record
-     and looks something like this:
+     Let's say that clicking this '.add-project .link', triggers action in the view to
+     create project record and looks something like this:
 
         actions: {
           addProject: function (user) {

@@ -84,12 +84,8 @@ FactoryGuy = {
    @returns {String} model name associated with fixture name
    */
   lookupModelForName: function (name) {
-    for (model in this.modelDefinitions) {
-      var definition = this.modelDefinitions[model];
-      if (definition.matchesName(name)) {
-        return definition.model;
-      }
-    }
+    var definition = this.lookupDefinitionForName(name);
+    if (definition) { return definition.model; }
   },
 
   /**
