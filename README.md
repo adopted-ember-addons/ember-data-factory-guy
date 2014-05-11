@@ -291,7 +291,7 @@ var viewHelper, store;
 module('User View', {
   setup: function() {
     viewHelper = ViewTestHelper.setup(App); // set up helper
-    var user = viewHelper.make('user); // create a user in the store
+    var user = viewHelper.make('user'); // create a user in the store
     visit('/users/'+user.id); // visit the route for the user
   },
   teardown: function() {
