@@ -205,7 +205,7 @@ but BEFORE you require your models.
 
 ```
 
-Extra Goodies
+Testing models, controllers, views ( in isolation )
 =============
 
 The code bundled in dist/ember-data-factory-guy.js includes a mixin named FactoryGuyTestMixin which
@@ -258,18 +258,20 @@ test("make a user using your applications default adapter", function() {
 ```
 
 
-Further Extra Goodies
+Integration Tests
 =====================
 
 Since it is recommended to use your normal adapter ( which is usually a subclass of RESTAdapter, )
 FactoryGuyTestMixin assumes you will want to use that adapter to test your models or views.
 
-To do that you will still have to deal with ember data trying to find, create, update or delete records.
+To do that you will still have to deal with ember data trying to create, update or delete records.
 
-If you put models in the store with FactoryGuy, the find will succeed and return the model.
+If you put models into the store ( with store#makeFixture ), the http GET call does not need to be mocked,
+since that model is already in the store.
 
 But what if you want to handle create, update or delete?
-FactoryGuy assumes you want to mock that ajax call with the mockjax library.
+FactoryGuy assumes you want to mock ajax calls with the mockjax library,
+and you will need to download and include that library to use the following feature.
 
 Here is a sample of what you could do in a view test:
 
@@ -283,10 +285,15 @@ ViewTestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin,{
     $.mockjaxSettings.logging = false;   // mockjax settings
     $.mockjaxSettings.responseTime = 0;  // mockjax settings
     return this._super(app); // still call the base setup from FactoryGuyTestMixin
+  },
+  // override teardown to clear mockjax declarations
+  teardown: function() {
+    $.mockjaxClear();
+    this._super();
   }
 }
 
-var viewHelper, store;
+var viewHelper;
 
 module('User View', {
   setup: function() {
@@ -301,7 +308,7 @@ module('User View', {
 
 test("Creates new project", function() {
   andThen(function() {
-    var newProjectName  = "New User Name"
+    var newProjectName  = "Gonzo Project"
 
     click('.add-div div:contains(New Project)')
     fillIn('.add-project input', newProjectName)
@@ -309,10 +316,27 @@ test("Creates new project", function() {
     // Check out the FactoryGuyTestMixin to see what is going on here
     viewHelper.handleCreate('project', {name: newProjectName})
 
+    /**
+     Let's say that clicking this div, triggers action in the view to create project record
+     and looks something like this:
+
+        actions: {
+          addProject: function (user) {
+            this.get('controller.store')
+            .createRecord('project', {
+              name: this.$('.add-project input').val(),
+              user: user
+            })
+            .save()
+          }
+
+    */
     click('.add-project .link')
 
-    var newProjectLink = find('.project:contains('+newProjectName+')')
-    equal(newProjectLink[0] != undefined, true)
+    var newProjectDiv = find('.project:contains('+newProjectName+')')
+    equal(newProjectDiv[0] != undefined, true)
   })
 })
+
+
 ```
