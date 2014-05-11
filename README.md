@@ -205,7 +205,7 @@ but BEFORE you require your models.
 
 ```
 
-Testing models, controllers, views ( in isolation )
+Testing models, controllers, views
 =============
 
 The code bundled in dist/ember-data-factory-guy.js includes a mixin named FactoryGuyTestMixin which
@@ -262,7 +262,7 @@ Integration Tests
 =====================
 
 Since it is recommended to use your normal adapter ( which is usually a subclass of RESTAdapter, )
-FactoryGuyTestMixin assumes you will want to use that adapter to test your models or views.
+FactoryGuyTestMixin assumes you will want to use that adapter to do your integration tests.
 
 To do that you will still have to deal with ember data trying to create, update or delete records.
 
