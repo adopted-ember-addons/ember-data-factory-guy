@@ -273,6 +273,8 @@ FactoryGuy assumes you want to mock that ajax call with the mockjax library.
 
 Here is a sample of what you could do in a view test:
 
+```javascript
+
 // create a view test helper using the FactoryGuyTestMixin
 ViewTestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin,{
   // override setup to do a few extra things for view tests
@@ -313,3 +315,4 @@ test("Creates new project", function() {
     equal(newProjectLink[0] != undefined, true)
   })
 })
+```
