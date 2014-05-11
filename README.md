@@ -307,7 +307,7 @@ test("Creates new project", function() {
     fillIn('.add-project input', newProjectName)
     // This is the special sauce that makes this project really hum.
     // Check out the FactoryGuyTestMixin to see what is going on here
-    viewHelper.handleCreate('project', name: newProjectName)
+    viewHelper.handleCreate('project', {name: newProjectName})
 
     click('.add-project .link')
 
