@@ -49,6 +49,14 @@ module.exports = function(grunt) {
 
     qunit: {
       all: ['tests/*.html']
+    },
+
+    bump: {
+      options: {
+        files: ['package.json', 'bower.json', 'ember-data-factory-guy.gemspec'],
+        commitFiles: ["-a"],
+        push: false
+      }
     }
   });
 

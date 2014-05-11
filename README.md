@@ -141,15 +141,15 @@ but BEFORE you require your models.
 
   // Use store.find to get the model instance ( Remember this is the Fixture adapter, if
   // you use the ActiveModelAdapter or RESTAdapter the record is returned so you don't
-  // have to then go and find it
+  // have to then go and find it )
   var userJson = store.makeFixture('user');
   store.find('user', userJson.id).then(function(user) {
-    user.toJSON() ( has all the same key/values as ) userJson;
+    user.toJSON() ( pretty much equals ) userJson;
   });
 
   // and to setup associations ...
   var projectJson = store.makeFixture('project');
-  var userJson = store.makeFixture('user', projects: [project.id]);
+  var userJson = store.makeFixture('user', projects: [projectJson.id]);
   // OR
   var userJson = store.makeFixture('user');
   var projectJson = store.makeFixture('project', user: userJson.id);
@@ -160,7 +160,7 @@ but BEFORE you require your models.
   // in view specs though, this clunk is dealt with for you. But remember,
   // you don't have to use the Fixture adapter.
   store.find('user', 1).then(function(user) {
-    user.get('name') == 'My name';
+    user.toJSON() (pretty much equals) userJson;
     user.get('projects').then(function(projects) {
       projects.length == 1;
     });
@@ -185,7 +185,7 @@ but BEFORE you require your models.
   var user = store.makeFixture('user'); //  user.toJSON() = {id: 2, name: 'User2', type: 'normal'}
   var user = store.makeFixture('user', {name: 'bob'}); //  user.toJSON() = {id: 3, name: 'bob', type: 'normal'}
   var user = store.makeFixture('admin'); //  user.toJSON() = {id: 4, name: 'Admin', type: 'superuser'}
-  var user = store.makeFixture('admin', name: 'Fred'); //  user.toJSON() = {id: 5, name: 'Fred', type: 'superuser'}
+  var user = store.makeFixture('admin', {name: 'Fred'}); //  user.toJSON() = {id: 5, name: 'Fred', type: 'superuser'}
 
   // and to setup associations ...
 
@@ -195,7 +195,8 @@ but BEFORE you require your models.
   var user = store.makeFixture('user');
   var project = store.makeFixture('project', user: user);
 
-  // will get you the same results
+  // will get you the same results, since FactoryGuy makes sure the associates
+  // are created in both directions
   user.get('projects.length') == 1;
   user.get('projects.firstObject.user') == user;
 
@@ -260,4 +261,56 @@ test("make a user using your applications default adapter", function() {
 Further Extra Goodies
 =====================
 
-mockjax
+Since it is recommended to use your normal adapter ( which is usually a subclass of RESTAdapter, )
+FactoryGuyTestMixin assumes you will want to use that adapter to test your models or views.
+
+To do that you will still have to deal with ember data trying to find, create, update or delete records.
+
+If you put models in the store with FactoryGuy, the find will succeed and return the model.
+
+But what if you want to handle create, update or delete?
+
+Here is a sample of what you could do in a view test:
+
+ViewTestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin,{
+
+  setup: function (app, opts) {
+    app.reset();
+    $.mockjaxSettings.logging = false;
+    $.mockjaxSettings.responseTime = 0;
+    this._super(app);
+    return this;
+  }
+}
+
+
+var viewHelper, store;
+
+module('User View', {
+  setup: function() {
+    viewHelper = ViewTestHelper.setup(App);
+    var user = viewHelper.make('user);
+    visit('/users/'+user.id);
+  },
+  teardown: function() {
+    Em.run(function() { viewHelper.teardown(); });
+  }
+});
+
+test("Creates new project", function() {
+  andThen(function() {
+    newProjectName  = "New User Name"
+
+    click('.add-div div:contains(New Project)')
+    fillIn('.add-project input', newProjectName)
+
+    viewHelper.handleCreate('project', name: newProjectName)
+
+    click('.add-project .link')
+
+    projectLink = getProjectTreeElem(projectSelector(newProjectName))
+    equal(projectLink[0] != undefined, true)
+  })
+})
+
+
