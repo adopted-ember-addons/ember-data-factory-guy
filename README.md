@@ -115,7 +115,7 @@ but BEFORE you require your models.
   var userJson = FactoryGuy.build('user') // {id: 1, name: 'User1', type: 'normal'}
   // note the sequence used in the name attribute
   var user2Json = FactoryGuy.build('user') // {id: 2, name: 'User2', type: 'normal'}
-  var customUserJson = FactoryGuy.build('user', name: 'bob') // {id: 3, name: 'bob', type: 'normal'}
+  var customUserJson = FactoryGuy.build('user', {name: 'bob'}) // {id: 3, name: 'bob', type: 'normal'}
   var namedUserJson = FactoryGuy.build('admin') // {id: 4, name: 'Admin', type: 'superuser'}
 
   //////////////////////////////////////////////////////////////////
@@ -123,7 +123,7 @@ but BEFORE you require your models.
   // building json with FactoryGuy.buildList
   //
 
-  var userJson = FactoryGuy.buildList('user',2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
+  var userJson = FactoryGuy.buildList('user', 2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
 
   //////////////////////////////////////////////////////////////////
   //
@@ -149,10 +149,10 @@ but BEFORE you require your models.
 
   // and to setup associations ...
   var projectJson = store.makeFixture('project');
-  var userJson = store.makeFixture('user', projects: [projectJson.id]);
+  var userJson = store.makeFixture('user', {projects: [projectJson.id]});
   // OR
   var userJson = store.makeFixture('user');
-  var projectJson = store.makeFixture('project', user: userJson.id);
+  var projectJson = store.makeFixture('project', {user: userJson.id});
 
   // will give you the same result, but with fixture adapter all associations
   // are treated as async ( by factory_guy_has_many.js fix ), so it's
@@ -167,7 +167,7 @@ but BEFORE you require your models.
   });
 
   // and for lists
-  var users = store.makeList('user', 2, projects: [project.id]);
+  var users = store.makeList('user', 2, {projects: [project.id]});
 
   //////////////////////////////////////////////////////////////////
   //
@@ -190,10 +190,10 @@ but BEFORE you require your models.
   // and to setup associations ...
 
   var project = store.makeFixture('project');
-  var user = store.makeFixture('user', projects: [project]);
+  var user = store.makeFixture('user', {projects: [project]});
   //  OR
   var user = store.makeFixture('user');
-  var project = store.makeFixture('project', user: user);
+  var project = store.makeFixture('project', {user: user});
 
   // will get you the same results, since FactoryGuy makes sure the associates
   // are created in both directions
@@ -269,28 +269,28 @@ To do that you will still have to deal with ember data trying to find, create, u
 If you put models in the store with FactoryGuy, the find will succeed and return the model.
 
 But what if you want to handle create, update or delete?
+FactoryGuy assumes you want to mock that ajax call with the mockjax library.
 
 Here is a sample of what you could do in a view test:
 
+// create a view test helper using the FactoryGuyTestMixin
 ViewTestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin,{
-
+  // override setup to do a few extra things for view tests
   setup: function (app, opts) {
-    app.reset();
-    $.mockjaxSettings.logging = false;
-    $.mockjaxSettings.responseTime = 0;
-    this._super(app);
-    return this;
+    app.reset();  // reset ember app before test
+    $.mockjaxSettings.logging = false;   // mockjax settings
+    $.mockjaxSettings.responseTime = 0;  // mockjax settings
+    return this._super(app); // still call the base setup from FactoryGuyTestMixin
   }
 }
-
 
 var viewHelper, store;
 
 module('User View', {
   setup: function() {
-    viewHelper = ViewTestHelper.setup(App);
-    var user = viewHelper.make('user);
-    visit('/users/'+user.id);
+    viewHelper = ViewTestHelper.setup(App); // set up helper
+    var user = viewHelper.make('user); // create a user in the store
+    visit('/users/'+user.id); // visit the route for the user
   },
   teardown: function() {
     Em.run(function() { viewHelper.teardown(); });
@@ -299,18 +299,17 @@ module('User View', {
 
 test("Creates new project", function() {
   andThen(function() {
-    newProjectName  = "New User Name"
+    var newProjectName  = "New User Name"
 
     click('.add-div div:contains(New Project)')
     fillIn('.add-project input', newProjectName)
-
+    // This is the special sauce that makes this project really hum.
+    // Check out the FactoryGuyTestMixin to see what is going on here
     viewHelper.handleCreate('project', name: newProjectName)
 
     click('.add-project .link')
 
-    projectLink = getProjectTreeElem(projectSelector(newProjectName))
-    equal(projectLink[0] != undefined, true)
+    var newProjectLink = find('.project:contains('+newProjectName+')')
+    equal(newProjectLink[0] != undefined, true)
   })
 })
-
-
