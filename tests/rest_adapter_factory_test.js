@@ -13,7 +13,7 @@ module('FactoryGuy with DS.RESTAdapter', {
 
 test("#resetModels clears the store of models, and resets the model definition", function() {
   var project = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [project.id]});
+  var user = store.makeFixture('user', {projects: [project]});
 
   for (model in FactoryGuy.modelDefinitions) {
     var definition = FactoryGuy.modelDefinitions[model];
@@ -61,7 +61,7 @@ asyncTest("creates records in the store", function() {
 test("supports hasMany associations", function() {
   var p1 = store.makeFixture('project');
   var p2 = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [p1.id, p2.id]})
+  var user = store.makeFixture('user', {projects: [p1, p2]})
 
   equal(user.get('projects.length'), 2);
 });
@@ -69,7 +69,7 @@ test("supports hasMany associations", function() {
 
 test("when hasMany associations assigned, belongTo parent is assigned", function() {
   var p1 = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [p1.id]})
+  var user = store.makeFixture('user', {projects: [p1]})
 
   deepEqual(p1.get('user').toJSON(), user.toJSON());
 });
@@ -82,7 +82,7 @@ test("when belongTo parent is assigned, parent adds to hasMany records", functio
 });
 
 
-module('DS.Store#makeList with ActiveModelAdapter', {
+module('DS.Store#makeList with DS.RESTAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.RESTAdapter);
     store = testHelper.getStore();

@@ -1,6 +1,6 @@
 var container;
 
-module('DS.Store#usingFixtureAdapter', {
+module('DS.Store', {
   setup: function() {
     container = new Ember.Container();
   },
