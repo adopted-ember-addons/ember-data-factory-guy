@@ -112,18 +112,19 @@ but BEFORE you require your models.
   // building json with FactoryGuy.build
   //
 
-  var userJson = FactoryGuy.build('user') // {id: 1, name: 'User1', type: 'normal'}
+  FactoryGuy.build('user') // {id: 1, name: 'User1', type: 'normal'}
   // note the sequence used in the name attribute
-  var user2Json = FactoryGuy.build('user') // {id: 2, name: 'User2', type: 'normal'}
-  var customUserJson = FactoryGuy.build('user', {name: 'bob'}) // {id: 3, name: 'bob', type: 'normal'}
-  var namedUserJson = FactoryGuy.build('admin') // {id: 4, name: 'Admin', type: 'superuser'}
+  FactoryGuy.build('user') // {id: 2, name: 'User2', type: 'normal'}
+  FactoryGuy.build('user', {name: 'bob'}) // {id: 3, name: 'bob', type: 'normal'}
+  FactoryGuy.build('admin') // {id: 4, name: 'Admin', type: 'superuser'}
 
   //////////////////////////////////////////////////////////////////
   //            ** Make a list of fixtures **
   // building json with FactoryGuy.buildList
   //
 
-  var userJson = FactoryGuy.buildList('user', 2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
+  FactoryGuy.buildList('user', 2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
+
 
   //////////////////////////////////////////////////////////////////
   //
@@ -133,7 +134,7 @@ but BEFORE you require your models.
   //  store.makeList    => creates list of models in the store and returns json
   //
 
-  store.makeFixture('user'); //  user.FIXTURES = [{id: 1, name: 'User1', type: 'normal'}]
+  store.makeFixture('user'); // user.FIXTURES = [{id: 1, name: 'User1', type: 'normal'}]
   store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', type: 'normal'}]
   store.makeFixture('admin'); //  user.FIXTURES = [{id: 3, name: 'Admin', type: 'superuser'}]
   store.makeFixture('admin', {name: 'Fred'}); //  user.FIXTURES = [{id: 4, name: 'Fred', type: 'superuser'}]
@@ -144,7 +145,7 @@ but BEFORE you require your models.
   // have to then go and find it )
   var userJson = store.makeFixture('user');
   store.find('user', userJson.id).then(function(user) {
-    user.toJSON() ( pretty much equals ) userJson;
+     user.toJSON() ( pretty much equals ) userJson;
   });
 
   // and to setup associations ...
@@ -167,7 +168,8 @@ but BEFORE you require your models.
   });
 
   // and for lists
-  var users = store.makeList('user', 2, {projects: [project.id]});
+  store.makeList('user', 2, {projects: [project.id]});
+
 
   //////////////////////////////////////////////////////////////////
   //
