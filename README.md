@@ -115,7 +115,7 @@ but BEFORE you require your models.
   var userJson = FactoryGuy.build('user') // {id: 1, name: 'User1', type: 'normal'}
   // note the sequence used in the name attribute
   var user2Json = FactoryGuy.build('user') // {id: 2, name: 'User2', type: 'normal'}
-  var customUserJson = FactoryGuy.build('user', name: 'bob') // {id: 3, name: 'bob', type: 'normal'}
+  var customUserJson = FactoryGuy.build('user', {name: 'bob'}) // {id: 3, name: 'bob', type: 'normal'}
   var namedUserJson = FactoryGuy.build('admin') // {id: 4, name: 'Admin', type: 'superuser'}
 
   //////////////////////////////////////////////////////////////////
@@ -123,7 +123,7 @@ but BEFORE you require your models.
   // building json with FactoryGuy.buildList
   //
 
-  var userJson = FactoryGuy.buildList('user',2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
+  var userJson = FactoryGuy.buildList('user', 2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
 
   //////////////////////////////////////////////////////////////////
   //
@@ -144,15 +144,15 @@ but BEFORE you require your models.
   // have to then go and find it
   var userJson = store.makeFixture('user');
   store.find('user', userJson.id).then(function(user) {
-    user.toJSON() ( has all the same key/values as ) userJson;
+    user.toJSON(); // ( has all the same key/values as ) userJson;
   });
 
   // and to setup associations ...
   var projectJson = store.makeFixture('project');
-  var userJson = store.makeFixture('user', projects: [project.id]);
+  var userJson = store.makeFixture('user', {projects: [project.id]});
   // OR
   var userJson = store.makeFixture('user');
-  var projectJson = store.makeFixture('project', user: userJson.id);
+  var projectJson = store.makeFixture('project', {user: userJson.id});
 
   // will give you the same result, but with fixture adapter all associations
   // are treated as async ( by factory_guy_has_many.js fix ), so it's
@@ -167,7 +167,7 @@ but BEFORE you require your models.
   });
 
   // and for lists
-  var users = store.makeList('user', 2, projects: [project.id]);
+  var users = store.makeList('user', 2, {projects: [project.id]});
 
   //////////////////////////////////////////////////////////////////
   //
@@ -185,15 +185,15 @@ but BEFORE you require your models.
   var user = store.makeFixture('user'); //  user.toJSON() = {id: 2, name: 'User2', type: 'normal'}
   var user = store.makeFixture('user', {name: 'bob'}); //  user.toJSON() = {id: 3, name: 'bob', type: 'normal'}
   var user = store.makeFixture('admin'); //  user.toJSON() = {id: 4, name: 'Admin', type: 'superuser'}
-  var user = store.makeFixture('admin', name: 'Fred'); //  user.toJSON() = {id: 5, name: 'Fred', type: 'superuser'}
+  var user = store.makeFixture('admin', {name: 'Fred'}); //  user.toJSON() = {id: 5, name: 'Fred', type: 'superuser'}
 
   // and to setup associations ...
 
   var project = store.makeFixture('project');
-  var user = store.makeFixture('user', projects: [project]);
+  var user = store.makeFixture('user', {projects: [project]});
   //  OR
   var user = store.makeFixture('user');
-  var project = store.makeFixture('project', user: user);
+  var project = store.makeFixture('project', {user: user});
 
   // will get you the same results
   user.get('projects.length') == 1;
