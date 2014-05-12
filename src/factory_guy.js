@@ -36,8 +36,8 @@ FactoryGuy = {
 
    FactoryGuy.build('dude') or FactoryGuy.build('person')
 
-   @param model the model to define
-   @param config your model definition object
+   @param {String} model the model to define
+   @param {Object} config hash describing model definition
    */
   define: function (model, config) {
     if (this.modelDefinitions[model]) {
@@ -81,7 +81,7 @@ FactoryGuy = {
 
    @param {String} name a fixture name could be model name like 'person'
           or a named person in model definition like 'dude'
-   @returns {String} model name associated with fixture name
+   @returns {String} model name associated with fixture name or undefined if not found
    */
   lookupModelForName: function (name) {
     var definition = this.lookupDefinitionForName(name);
@@ -92,7 +92,7 @@ FactoryGuy = {
 
    @param {String} name a fixture name could be model name like 'person'
           or a named person in model definition like 'dude'
-   @returns {ModelDefinition} definition associated with model
+   @returns {ModelDefinition} ModelDefinition associated with model or undefined if not found
    */
   lookupDefinitionForName: function (name) {
     for (model in this.modelDefinitions) {
@@ -110,8 +110,8 @@ FactoryGuy = {
    FactoryGuy.build('user') for User model
    FactoryGuy.build('bob') for User model with bob attributes
 
-   @param {String} name fixture name
-   @param {Object} opts options that will override default fixture values
+   @param {String} name Fixture name
+   @param {Object} opts Options that will override default fixture values
    @returns {Object} json fixture
    */
   build: function (name, opts) {
@@ -190,7 +190,6 @@ FactoryGuy = {
   clear: function (opts) {
     if (!opts) {
       this.modelDefinitions = {};
-      return;
     }
   }
 }

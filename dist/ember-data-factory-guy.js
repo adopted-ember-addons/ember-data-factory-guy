@@ -175,8 +175,8 @@ FactoryGuy = {
 
    FactoryGuy.build('dude') or FactoryGuy.build('person')
 
-   @param model the model to define
-   @param config your model definition object
+   @param {String} model The model to define
+   @param {Object} config Model definition object
    */
   define: function (model, config) {
     if (this.modelDefinitions[model]) {
@@ -220,7 +220,7 @@ FactoryGuy = {
 
    @param {String} name a fixture name could be model name like 'person'
           or a named person in model definition like 'dude'
-   @returns {String} model name associated with fixture name
+   @returns {String} model name associated with fixture name or undefined if not found
    */
   lookupModelForName: function (name) {
     var definition = this.lookupDefinitionForName(name);
@@ -229,9 +229,9 @@ FactoryGuy = {
 
   /**
 
-   @param {String} name a fixture name could be model name like 'person'
+   @param {String} name A fixture name could be model name like 'person'
           or a named person in model definition like 'dude'
-   @returns {ModelDefinition} definition associated with model
+   @returns {ModelDefinition} ModelDefinition associated with model or undefined if not found
    */
   lookupDefinitionForName: function (name) {
     for (model in this.modelDefinitions) {
@@ -249,8 +249,8 @@ FactoryGuy = {
    FactoryGuy.build('user') for User model
    FactoryGuy.build('bob') for User model with bob attributes
 
-   @param {String} name fixture name
-   @param {Object} opts options that will override default fixture values
+   @param {String} name Fixture name
+   @param {Object} opts Options that will override default fixture values
    @returns {Object} json fixture
    */
   build: function (name, opts) {
@@ -329,7 +329,6 @@ FactoryGuy = {
   clear: function (opts) {
     if (!opts) {
       this.modelDefinitions = {};
-      return;
     }
   }
 }
@@ -414,7 +413,7 @@ DS.Store.reopen({
       if (relationship.kind == 'belongsTo') {
         var belongsToRecord = fixture[relationship.key];
         if (belongsToRecord) {
-          var hasManyName = self.findHasManyRelationshipName2(relationship.type, relationship.parentType);
+          var hasManyName = self.findHasManyRelationshipName(relationship.type, relationship.parentType);
           var belongsToFixtures = adapter.fixturesForType(relationship.type);
           var belongsTofixture = adapter.findFixtureById(belongsToFixtures, fixture[relationship.key]);
           if (!belongsTofixture[hasManyName]) {
@@ -454,31 +453,22 @@ DS.Store.reopen({
       if (relationship.kind == 'belongsTo') {
         var belongsToRecord = model.get(name);
         if (belongsToRecord) {
-          var hasManyName = self.findHasManyRelationshipName(belongsToRecord, model)
+          var hasManyName = self.findHasManyRelationshipName(
+            belongsToRecord.constructor,
+            model.constructor
+          )
           belongsToRecord.get(hasManyName).addObject(model);
         }
       }
     })
   },
 
-  findHasManyRelationshipName2: function (belongToModel, childModel) {
+  findHasManyRelationshipName: function (belongToModelType, childModelType) {
     var relationshipName;
-    Ember.get(belongToModel, 'relationshipsByName').forEach(
+    Ember.get(belongToModelType, 'relationshipsByName').forEach(
       function (name, relationship) {
         if (relationship.kind == 'hasMany' &&
-          relationship.type == childModel) {
-          relationshipName = relationship.key;
-        }
-      }
-    )
-    return relationshipName;
-  },
-  findHasManyRelationshipName: function (belongToModel, childModel) {
-    var relationshipName;
-    Ember.get(belongToModel.constructor, 'relationshipsByName').forEach(
-      function (name, relationship) {
-        if (relationship.kind == 'hasMany' &&
-          relationship.type == childModel.constructor) {
+          relationship.type == childModelType) {
           relationshipName = relationship.key;
         }
       }
@@ -554,7 +544,10 @@ DS.FixtureAdapter.reopen({
         relationShips.belongsTo.forEach(function (relationship) {
           var belongsToRecord = record.get(relationship);
           if (belongsToRecord) {
-            var hasManyName = store.findHasManyRelationshipName(belongsToRecord, record);
+            var hasManyName = store.findHasManyRelationshipName(
+              belongsToRecord.constructor,
+              record.constructor
+            );
             belongsToRecord.get(hasManyName).addObject(record);
           }
         })

@@ -100,7 +100,7 @@ but BEFORE you require your models.
       name: 'Admin'
     }
     // using a function for an attribute that refers to other attributes
-    funny_type: {
+    funny_user: {
       type: function(f) { return 'funny '  + f.name }
     }
   });
@@ -123,7 +123,7 @@ but BEFORE you require your models.
   FactoryGuy.build('admin') // {id: 4, name: 'Admin', type: 'superuser'}
   // note the type attribute was built from a function which depends on the name
   // and the name is still a generated attribute from a sequence function
-  FactoryGuy.build('funny_type') // {id: 5, name: 'User3', type: 'funny User3'}
+  FactoryGuy.build('funny_user') // {id: 5, name: 'User3', type: 'funny User3'}
 
   //////////////////////////////////////////////////////////////////
   //            ** Make a list of fixtures **
