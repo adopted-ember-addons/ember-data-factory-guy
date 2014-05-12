@@ -44,9 +44,9 @@ $ bower install
 
 Add fixtures to the store using the:
 
-  * DS.FixtureAdapter
   * DS.RestAdapter
   * DS.ActiveModelAdapter
+  * DS.FixtureAdapter
 
 NOTE: The benefit of using FactoryGuy is that you can run your tests with the
 default adapter that your application's store normally uses. In other words:
@@ -99,6 +99,10 @@ but BEFORE you require your models.
       type: 'superuser',
       name: 'Admin'
     }
+    // using a function for an attribute that refers to other attributes
+    funny_type: {
+      type: function(f) { return 'funny '  + f.name }
+    }
   });
 
   FactoryGuy.define('project', {
@@ -117,6 +121,9 @@ but BEFORE you require your models.
   FactoryGuy.build('user') // {id: 2, name: 'User2', type: 'normal'}
   FactoryGuy.build('user', {name: 'bob'}) // {id: 3, name: 'bob', type: 'normal'}
   FactoryGuy.build('admin') // {id: 4, name: 'Admin', type: 'superuser'}
+  // note the type attribute was built from a function which depends on the name
+  // and the name is still a generated attribute from a sequence function
+  FactoryGuy.build('funny_type') // {id: 5, name: 'User3', type: 'funny User3'}
 
   //////////////////////////////////////////////////////////////////
   //            ** Make a list of fixtures **

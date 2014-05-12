@@ -65,10 +65,10 @@ test("Referring to other attributes in attribute definition", function() {
       type: 'normal'
     },
     funny_person: {
-      type: function(fixture) { return 'funny ' + fixture.name }
+      type: function(f) { return 'funny ' + f.name }
     },
     missing_person: {
-      type: function(fixture) { return 'level ' + fixture.brain_size }
+      type: function(f) { return 'level ' + f.brain_size }
     }
   });
 
