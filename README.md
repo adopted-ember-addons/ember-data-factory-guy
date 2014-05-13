@@ -76,6 +76,7 @@ Let's say you have a few models like these:
   })
 ```
 
+
 ### Defining a Fixture Factory for a Model
 
 ```javascript
@@ -116,6 +117,7 @@ Let's say you have a few models like these:
 
 ```
 
+
 ### Building Json
 
 ```javascript
@@ -141,7 +143,9 @@ Let's say you have a few models like these:
   FactoryGuy.buildList('user', 2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
 ```
 
+
 ###Adding records to store
+
 #####DS.Fixture adapter
 
 ```javascript
@@ -188,6 +192,7 @@ Let's say you have a few models like these:
   store.makeList('user', 2, {projects: [project.id]});
 ```
 
+
 #####DS.ActiveModelAdapter/DS.RestAdapter
 
 ```javascript
@@ -225,7 +230,9 @@ Let's say you have a few models like these:
 
 ```
 
+
 ###Testing models, controllers, views
+
 
 This section assumes you are testing the ( controllers and views ) in isolation.
 
