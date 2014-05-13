@@ -141,12 +141,10 @@ Let's say you have a few models like these:
   FactoryGuy.buildList('user', 2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
 ```
 
-<h3>Adding records to store</h3> <h5>(DS.Fixture adapter)</h5>
+<h3>Adding records to store</h3> <h5>=>DS.Fixture adapter</h5>
 
 ```javascript
   //////////////////////////////////////////////////////////////////
-  //
-  //  with store using =>    DS.Fixture adapter
   //
   //  store.makeFixture => creates model in the store and returns json
   //  store.makeList    => creates list of models in the store and returns json
@@ -193,8 +191,6 @@ Let's say you have a few models like these:
 
 ```javascript
   //////////////////////////////////////////////////////////////////
-  //
-  //  with store using =>  DS.ActiveModelAdapter/DS.RestAdapter
   //
   //  store.makeFixture => creates model in the store and returns model instance
   //  store.makeList    => creates list of models in the store and returns model instance
