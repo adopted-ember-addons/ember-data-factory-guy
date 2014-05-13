@@ -121,15 +121,15 @@ test("#buildList creates list of fixtures", function() {
 });
 
 
-test("#lookupDefinitionForName", function() {
-  equal(!!FactoryGuy.lookupDefinitionForName('person'), true, 'finds definition if its the same as model name');
-  equal(!!FactoryGuy.lookupDefinitionForName('funny_person'), true, 'finds definition if its a named fixture');
-  equal(!!FactoryGuy.lookupDefinitionForName('fake'), false, "return nothing if can't find definition");
+test("#lookupDefinitionForFixtureName", function() {
+  equal(!!FactoryGuy.lookupDefinitionForFixtureName('person'), true, 'finds definition if its the same as model name');
+  equal(!!FactoryGuy.lookupDefinitionForFixtureName('funny_person'), true, 'finds definition if its a named fixture');
+  equal(!!FactoryGuy.lookupDefinitionForFixtureName('fake'), false, "return nothing if can't find definition");
 });
 
 
-test("#lookupModelForName", function() {
-  equal(FactoryGuy.lookupModelForName('person'), 'person', "finds model if its the same as model name");
-  equal(FactoryGuy.lookupModelForName('funny_person'), 'person', "finds model if it's definition has this named fixture");
-  equal(FactoryGuy.lookupModelForName('fake'), undefined, "return nothing if can't find definition");
+test("#lookupModelForFixtureName", function() {
+  equal(FactoryGuy.lookupModelForFixtureName('person'), 'person', "finds model if its the same as model name");
+  equal(FactoryGuy.lookupModelForFixtureName('funny_person'), 'person', "finds model if it's definition has this named fixture");
+  equal(FactoryGuy.lookupModelForFixtureName('fake'), undefined, "return nothing if can't find definition");
 });

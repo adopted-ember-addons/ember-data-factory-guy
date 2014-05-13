@@ -16,7 +16,7 @@ DS.Store.reopen({
    @returns {Object|DS.Model} json or record depending on the adapter type
    */
   makeFixture: function (name, options) {
-    var modelName = FactoryGuy.lookupModelForName(name);
+    var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var fixture = FactoryGuy.build(name, options);
     var modelType = this.modelFor(modelName);
 

@@ -176,7 +176,7 @@ FactoryGuy = {
    FactoryGuy.build('dude') or FactoryGuy.build('person')
 
    @param {String} model the model to define
-   @param {Object} config hash describing model definition
+   @param {Object} config your model definition
    */
   define: function (model, config) {
     if (this.modelDefinitions[model]) {
@@ -215,15 +215,15 @@ FactoryGuy = {
   },
 
   /**
-    Given a name like 'person' or 'dude' determine what model this name
+    Given a fixture name like 'person' or 'dude' determine what model this name
     refers to. In this case it's 'person' for each one.
 
    @param {String} name a fixture name could be model name like 'person'
           or a named person in model definition like 'dude'
    @returns {String} model name associated with fixture name or undefined if not found
    */
-  lookupModelForName: function (name) {
-    var definition = this.lookupDefinitionForName(name);
+  lookupModelForFixtureName: function (name) {
+    var definition = this.lookupDefinitionForFixtureName(name);
     if (definition) { return definition.model; }
   },
 
@@ -233,7 +233,7 @@ FactoryGuy = {
           or a named person in model definition like 'dude'
    @returns {ModelDefinition} ModelDefinition associated with model or undefined if not found
    */
-  lookupDefinitionForName: function (name) {
+  lookupDefinitionForFixtureName: function (name) {
     for (model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
       if (definition.matchesName(name)) {
@@ -254,7 +254,7 @@ FactoryGuy = {
    @returns {Object} json fixture
    */
   build: function (name, opts) {
-    var definition = this.lookupDefinitionForName(name);
+    var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
       throw new Error("Can't find that factory named [" + name + "]");
     }
@@ -273,7 +273,7 @@ FactoryGuy = {
    @returns {Array} list of fixtures
    */
   buildList: function (name, number, opts) {
-    var definition = this.lookupDefinitionForName(name);
+    var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
       throw new Error("Can't find that factory named [" + name + "]");
     }
@@ -350,7 +350,7 @@ DS.Store.reopen({
    @returns {Object|DS.Model} json or record depending on the adapter type
    */
   makeFixture: function (name, options) {
-    var modelName = FactoryGuy.lookupModelForName(name);
+    var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var fixture = FactoryGuy.build(name, options);
     var modelType = this.modelFor(modelName);
 
@@ -651,7 +651,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
     @param {Object} opts fixture options
    */
   handleCreate: function (name, opts) {
-    var model = FactoryGuy.lookupModelForName(name);
+    var model = FactoryGuy.lookupModelForFixtureName(name);
     this.stubEndpointForHttpRequest(
       "/" + Em.String.pluralize(model),
       this.buildAjaxCreateResponse(name, opts),
@@ -667,7 +667,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
 ¬  */
   buildAjaxCreateResponse: function (name, opts) {
     var fixture = FactoryGuy.build(name, opts);
-    var model = FactoryGuy.lookupModelForName(name);
+    var model = FactoryGuy.lookupModelForFixtureName(name);
     var hash = {};
     hash[model] = fixture;
     return hash;

@@ -69,7 +69,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
     @param {Object} opts fixture options
    */
   handleCreate: function (name, opts) {
-    var model = FactoryGuy.lookupModelForName(name);
+    var model = FactoryGuy.lookupModelForFixtureName(name);
     this.stubEndpointForHttpRequest(
       "/" + Em.String.pluralize(model),
       this.buildAjaxCreateResponse(name, opts),
@@ -85,7 +85,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
 ¬  */
   buildAjaxCreateResponse: function (name, opts) {
     var fixture = FactoryGuy.build(name, opts);
-    var model = FactoryGuy.lookupModelForName(name);
+    var model = FactoryGuy.lookupModelForFixtureName(name);
     var hash = {};
     hash[model] = fixture;
     return hash;
