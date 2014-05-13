@@ -76,7 +76,7 @@ Let's say you have a few models like these:
   })
 ```
 
-## Defining a Fixture Factory for a Model
+### Defining a Fixture Factory for a Model
 
 ```javascript
   ////////////////////////////////////////////
@@ -116,7 +116,7 @@ Let's say you have a few models like these:
 
 ```
 
-## Building Json
+### Building Json
 
 ```javascript
   //////////////////////////////////////////////////////////////////
@@ -141,7 +141,7 @@ Let's say you have a few models like these:
   FactoryGuy.buildList('user', 2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
 ```
 
-## Adding records to store ## ### ( DS.Fixture adapter ) ###
+<h3>Adding records to store</h3> <h5> ( DS.Fixture adapter ) </h5>
 
 ```javascript
   //////////////////////////////////////////////////////////////////
@@ -189,7 +189,7 @@ Let's say you have a few models like these:
   store.makeList('user', 2, {projects: [project.id]});
 ```
 
-## Adding records to store ## ### ( DS.ActiveModelAdapter/DS.RestAdapter ) ###
+<h3>Adding records to store</h3> <h5>( DS.ActiveModelAdapter/DS.RestAdapter )</h5>
 
 ```javascript
   //////////////////////////////////////////////////////////////////
@@ -228,7 +228,7 @@ Let's say you have a few models like these:
 
 ```
 
-## Testing models, controllers, views ## ###( in isolation ) ###
+<h3>Testing models, controllers, views</h3> <h5>( in isolation )<h5>
 
 The code bundled in dist/ember-data-factory-guy.js includes a mixin named FactoryGuyTestMixin which
 can be used in your tests to make it easier to access the store and make fixtures.
@@ -279,7 +279,7 @@ test("make a user using your applications default adapter", function() {
 ```
 
 
-## Integration Tests ##
+<h3>Integration Tests</h3>
 
 Since it is recommended to use your normal adapter ( which is usually a subclass of RESTAdapter, )
 FactoryGuyTestMixin assumes you will want to use that adapter to do your integration tests.
