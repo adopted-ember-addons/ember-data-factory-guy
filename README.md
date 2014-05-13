@@ -141,7 +141,7 @@ Let's say you have a few models like these:
   FactoryGuy.buildList('user', 2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
 ```
 
-<h3>Adding records to store</h3> <h5> ( DS.Fixture adapter ) </h5>
+<h3>Adding records to store</h3> <h5>(DS.Fixture adapter)</h5>
 
 ```javascript
   //////////////////////////////////////////////////////////////////
@@ -228,7 +228,7 @@ Let's say you have a few models like these:
 
 ```
 
-<h3>Testing models, controllers, views</h3> <h5>( in isolation )<h5>
+<h3>Testing models, controllers, views</h3> <h5>( in isolation )</h5>
 
 The code bundled in dist/ember-data-factory-guy.js includes a mixin named FactoryGuyTestMixin which
 can be used in your tests to make it easier to access the store and make fixtures.
