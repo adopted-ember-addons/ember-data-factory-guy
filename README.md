@@ -146,7 +146,49 @@ Let's say you have a few models like these:
 
 ###Adding records to store
 
+#####DS.ActiveModelAdapter/DS.RestAdapter
+
+```javascript
+  //////////////////////////////////////////////////////////////////
+  //
+  //  store.makeFixture => creates model in the store and returns model instance
+  //  store.makeList    => creates list of models in the store and returns model instance
+  //
+  //  *NOTE*  since you are now getting a model instances, you can synchronously
+  //   start asking for data from the model
+  //
+
+  var user = store.makeFixture('user'); //  user.toJSON() = {id: 1, name: 'User1', type: 'normal'}
+  // note that the user name is a sequence
+  var user = store.makeFixture('user'); //  user.toJSON() = {id: 2, name: 'User2', type: 'normal'}
+  var user = store.makeFixture('user', {name: 'bob'}); //  user.toJSON() = {id: 3, name: 'bob', type: 'normal'}
+  var user = store.makeFixture('admin'); //  user.toJSON() = {id: 4, name: 'Admin', type: 'superuser'}
+  var user = store.makeFixture('admin', {name: 'Fred'}); //  user.toJSON() = {id: 5, name: 'Fred', type: 'superuser'}
+
+  // and to setup associations ...
+
+  var project = store.makeFixture('project');
+  var user = store.makeFixture('user', {projects: [project]});
+  //  OR
+  var user = store.makeFixture('user');
+  var project = store.makeFixture('project', {user: user});
+
+  // will get you the same results, since FactoryGuy makes sure the associates
+  // are created in both directions
+  user.get('projects.length') == 1;
+  user.get('projects.firstObject.user') == user;
+
+  // and to create lists ( of 3 users in this case )
+  var users = store.makeList('user', 3);
+
+```
+
 #####DS.Fixture adapter
+
+Technically when you call store.makeFixture with a store using the DS.FixtureAdapter,
+the fixture is actually added to the models FIXTURE array. It just seems to be added
+to the store because when you call store.find to get that record, the adapter looks
+in that FIXTURE array to find it and then puts it in the store.
 
 ```javascript
   //////////////////////////////////////////////////////////////////
@@ -191,45 +233,6 @@ Let's say you have a few models like these:
   // and for lists
   store.makeList('user', 2, {projects: [project.id]});
 ```
-
-
-#####DS.ActiveModelAdapter/DS.RestAdapter
-
-```javascript
-  //////////////////////////////////////////////////////////////////
-  //
-  //  store.makeFixture => creates model in the store and returns model instance
-  //  store.makeList    => creates list of models in the store and returns model instance
-  //
-  //  *NOTE*  since you are now getting a model instances, you can synchronously
-  //   start asking for data from the model
-  //
-
-  var user = store.makeFixture('user'); //  user.toJSON() = {id: 1, name: 'User1', type: 'normal'}
-  // note that the user name is a sequence
-  var user = store.makeFixture('user'); //  user.toJSON() = {id: 2, name: 'User2', type: 'normal'}
-  var user = store.makeFixture('user', {name: 'bob'}); //  user.toJSON() = {id: 3, name: 'bob', type: 'normal'}
-  var user = store.makeFixture('admin'); //  user.toJSON() = {id: 4, name: 'Admin', type: 'superuser'}
-  var user = store.makeFixture('admin', {name: 'Fred'}); //  user.toJSON() = {id: 5, name: 'Fred', type: 'superuser'}
-
-  // and to setup associations ...
-
-  var project = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [project]});
-  //  OR
-  var user = store.makeFixture('user');
-  var project = store.makeFixture('project', {user: user});
-
-  // will get you the same results, since FactoryGuy makes sure the associates
-  // are created in both directions
-  user.get('projects.length') == 1;
-  user.get('projects.firstObject.user') == user;
-
-  // and to create lists ( of 3 users in this case )
-  var users = store.makeList('user', 3);
-
-```
-
 
 ###Testing models, controllers, views
 
