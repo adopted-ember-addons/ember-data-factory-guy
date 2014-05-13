@@ -60,11 +60,9 @@ If you do get these types of errors try requiring the factory_guy_has_many.js fi
 ( located in dist dir and vendor dir ) AFTER you require ember-data,
 but BEFORE you require your models.
 
+Let's say you have a few models like these:
 
 ```javascript
-
-  ////////////////////////////////////////////
-  // Model definitions
 
   User = DS.Model.extend({
     name:     DS.attr('string'),
@@ -76,9 +74,14 @@ but BEFORE you require your models.
     title:  DS.attr('string')
     user:   DS.belongsTo('user')
   })
+```
 
+## Defining a Fixture Factory for a Model
+
+```javascript
   ////////////////////////////////////////////
   // FactoryGuy definitions for models
+
   FactoryGuy.define('user', {
     // sequences to be used in attributes definition
     sequences: {
@@ -111,8 +114,13 @@ but BEFORE you require your models.
     }
   });
 
+```
+
+## Building Json
+
+```javascript
   //////////////////////////////////////////////////////////////////
-  //            ** Make one fixture at time **
+  //
   // building json with FactoryGuy.build
   //
 
@@ -126,13 +134,16 @@ but BEFORE you require your models.
   FactoryGuy.build('funny_user') // {id: 5, name: 'User3', type: 'funny User3'}
 
   //////////////////////////////////////////////////////////////////
-  //            ** Make a list of fixtures **
+  //
   // building json with FactoryGuy.buildList
   //
 
   FactoryGuy.buildList('user', 2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
+```
 
+## Adding records to store ## ### ( DS.Fixture adapter ) ###
 
+```javascript
   //////////////////////////////////////////////////////////////////
   //
   //  with store using =>    DS.Fixture adapter
@@ -176,8 +187,11 @@ but BEFORE you require your models.
 
   // and for lists
   store.makeList('user', 2, {projects: [project.id]});
+```
 
+## Adding records to store ## ### ( DS.ActiveModelAdapter/DS.RestAdapter ) ###
 
+```javascript
   //////////////////////////////////////////////////////////////////
   //
   //  with store using =>  DS.ActiveModelAdapter/DS.RestAdapter
@@ -214,8 +228,7 @@ but BEFORE you require your models.
 
 ```
 
-Testing models, controllers, views
-=============
+## Testing models, controllers, views ## ###( in isolation ) ###
 
 The code bundled in dist/ember-data-factory-guy.js includes a mixin named FactoryGuyTestMixin which
 can be used in your tests to make it easier to access the store and make fixtures.
@@ -228,7 +241,6 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin);
 
 
 // Then in your tests you can use it like so:
-
 
 var testHelper, store;
 
@@ -267,8 +279,7 @@ test("make a user using your applications default adapter", function() {
 ```
 
 
-Integration Tests
-=====================
+## Integration Tests ##
 
 Since it is recommended to use your normal adapter ( which is usually a subclass of RESTAdapter, )
 FactoryGuyTestMixin assumes you will want to use that adapter to do your integration tests.
@@ -346,6 +357,5 @@ test("Creates new project", function() {
     equal(newProjectDiv[0] != undefined, true)
   })
 })
-
 
 ```
