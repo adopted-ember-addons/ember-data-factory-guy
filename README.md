@@ -154,16 +154,17 @@ Let's say you have a few models like these:
   //  store.makeFixture => creates model in the store and returns model instance
   //  store.makeList    => creates list of models in the store and returns model instance
   //
-  //  *NOTE*  since you are now getting a model instances, you can synchronously
-  //   start asking for data from the model
+  //  *NOTE*  since you are getting a model instances, you can synchronously
+  //   start asking for data from the model, and its associations
   //
 
   var user = store.makeFixture('user'); //  user.toJSON() = {id: 1, name: 'User1', type: 'normal'}
   // note that the user name is a sequence
   var user = store.makeFixture('user'); //  user.toJSON() = {id: 2, name: 'User2', type: 'normal'}
-  var user = store.makeFixture('user', {name: 'bob'}); //  user.toJSON() = {id: 3, name: 'bob', type: 'normal'}
-  var user = store.makeFixture('admin'); //  user.toJSON() = {id: 4, name: 'Admin', type: 'superuser'}
-  var user = store.makeFixture('admin', {name: 'Fred'}); //  user.toJSON() = {id: 5, name: 'Fred', type: 'superuser'}
+  var user = store.makeFixture('funny_user'); //  user.toJSON() = {id: 3, name: 'User3', type: 'funny User3'}
+  var user = store.makeFixture('user', {name: 'bob'}); //  user.toJSON() = {id: 4, name: 'bob', type: 'normal'}
+  var user = store.makeFixture('admin'); //  user.toJSON() = {id: 5, name: 'Admin', type: 'superuser'}
+  var user = store.makeFixture('admin', {name: 'Fred'}); //  user.toJSON() = {id: 6, name: 'Fred', type: 'superuser'}
 
   // and to setup associations ...
 
@@ -173,7 +174,7 @@ Let's say you have a few models like these:
   var user = store.makeFixture('user');
   var project = store.makeFixture('project', {user: user});
 
-  // will get you the same results, since FactoryGuy makes sure the associates
+  // will get you the same results, since FactoryGuy makes sure the associations
   // are created in both directions
   user.get('projects.length') == 1;
   user.get('projects.firstObject.user') == user;
