@@ -461,7 +461,7 @@ DS.Store.reopen({
             FactoryGuy.pushFixture(relationship.type, belongsToRecord);
             fixture[relationship.key] = belongsToRecord.id;
           }
-          var hasManyName = self.findHasManyRelationshipName(relationship.type, relationship.parentType);
+          var hasManyName = self.findHasManyRelationshipNameForFixtureAdapter(relationship.type, relationship.parentType);
           var belongsToFixtures = adapter.fixturesForType(relationship.type);
           var belongsTofixture = adapter.findFixtureById(belongsToFixtures, fixture[relationship.key]);
           if (!belongsTofixture[hasManyName]) {
@@ -538,7 +538,7 @@ DS.Store.reopen({
         if (belongsToRecord) {
           var hasManyName = self.findHasManyRelationshipName(
             belongsToRecord.constructor,
-            model.constructor
+            model
           )
           belongsToRecord.get(hasManyName).addObject(model);
         }
@@ -546,12 +546,25 @@ DS.Store.reopen({
     })
   },
 
-  findHasManyRelationshipName: function (belongToModelType, childModelType) {
+  findHasManyRelationshipName: function (belongToModelType, childModel) {
     var relationshipName;
     Ember.get(belongToModelType, 'relationshipsByName').forEach(
       function (name, relationship) {
         if (relationship.kind == 'hasMany' &&
-          relationship.type == childModelType) {
+          childModel instanceof relationship.type) {
+          relationshipName = relationship.key;
+        }
+      }
+    )
+    return relationshipName;
+  },
+
+  findHasManyRelationshipNameForFixtureAdapter: function (belongToModelType, childModelType) {
+    var relationshipName;
+    Ember.get(belongToModelType, 'relationshipsByName').forEach(
+      function (name, relationship) {
+        if (relationship.kind == 'hasMany' &&
+          childModelType == relationship.type) {
           relationshipName = relationship.key;
         }
       }
@@ -629,7 +642,7 @@ DS.FixtureAdapter.reopen({
           if (belongsToRecord) {
             var hasManyName = store.findHasManyRelationshipName(
               belongsToRecord.constructor,
-              record.constructor
+              record
             );
             belongsToRecord.get(hasManyName).addObject(record);
           }

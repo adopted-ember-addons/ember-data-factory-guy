@@ -67,13 +67,24 @@ test("supports hasMany associations", function() {
 });
 
 
-test("supports hasMany polymorphic associations", function() {
+test("when polymorphic hasMany associations are assigned, belongTo parent is assigned", function() {
   var sh = store.makeFixture('big_hat');
   var bh = store.makeFixture('small_hat');
   var user = store.makeFixture('user', {hats: [sh, bh]})
   equal(user.get('hats.length'), 2);
   ok(user.get('hats.firstObject') instanceof BigHat)
   ok(user.get('hats.lastObject') instanceof SmallHat)
+  // sets the belongTo user association
+  ok(sh.get('user') == user)
+  ok(bh.get('user') == user)
+});
+
+
+test("when belongTo parent is assigned, parent adds to polymorphic hasMany records", function() {
+  var user = store.makeFixture('user');
+  store.makeFixture('big_hat', {user: user});
+  equal(user.get('hats.length'), 1);
+  ok(user.get('hats.firstObject') instanceof BigHat)
 });
 
 

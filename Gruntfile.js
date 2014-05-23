@@ -53,7 +53,7 @@ module.exports = function(grunt) {
 
     bump: {
       options: {
-        files: ['package.json', 'bower.json', 'ember-data-factory-guy.gemspec'],
+        files: ['package.json', 'bower.json'],
         commitFiles: ["-a"],
         push: false
       }
