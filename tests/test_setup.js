@@ -1,6 +1,27 @@
+FactoryGuy.define('hat', {
+  default: {},
+  small_hat: {
+    type: 'small_hat'
+  },
+  big_hat: {
+    type: 'big_hat'
+  }
+})
 FactoryGuy.define('project', {
   default: {
     title: 'Project'
+  },
+  project_with_user: {
+    // user model with default attributes
+    user: {}
+  },
+  project_with_dude: {
+    // user model with custom attributes
+    user: {name: 'Dude'}
+  },
+  project_with_admin: {
+    // for named association, use this FactoryGuy.association helper method
+    user: FactoryGuy.association('admin')
   }
 });
 FactoryGuy.define('user', {
@@ -13,6 +34,15 @@ FactoryGuy.define('user', {
     name: 'Admin'
   }
 });
+Hat = DS.Model.extend({
+  type: DS.attr('string'),
+  user: DS.belongsTo('user')
+})
+
+BigHat = Hat.extend()
+SmallHat = Hat.extend()
+
+
 Project = DS.Model.extend({
   title: DS.attr('string'),
   user: DS.belongsTo('user')
@@ -20,7 +50,8 @@ Project = DS.Model.extend({
 
 User = DS.Model.extend({
   name:     DS.attr('string'),
-  projects: DS.hasMany('project')
+  projects: DS.hasMany('project'),
+  hats: DS.hasMany('hat', {polymorphic: true})
 })
 /**
  * Sinon.JS 1.6.0, 2013/02/18

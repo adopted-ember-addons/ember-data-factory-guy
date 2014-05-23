@@ -106,6 +106,29 @@ asyncTest("#makeFixture adds record to hasMany association array for which it be
   })
 })
 
+asyncTest("#makeFixture handles default belongsTo associations in fixture", function() {
+  var projectWithUser = store.makeFixture('project_with_user');
+  equal(User.FIXTURES.length, 1);
+
+  store.find('user', 1).then( function(user) {
+    user.get('projects').then( function(projects) {
+      equal(projects.get('length'), 1, "adds hasMany records");
+      equal(projects.get('firstObject.user.id'), 1, "sets belongsTo record");
+      start();
+    })
+  })
+  // TODO.. have to make belongsTo async for fixture adapter
+  // to get this to work
+//  store.find('project', projectWithUser.id).then( function(project) {
+//    console.log('a',project+'', project.id)
+//    console.log('b',project.get('user')+'', project.get('user').toJSON())
+//    project.get('user').then( function(user) {
+//      console.log('c',user.toJSON())
+//    })
+//    start();
+//  })
+})
+
 
 asyncTest("#createRecord adds belongsTo association to records it hasMany of", function() {
   var user = store.makeFixture('user');

@@ -24,11 +24,17 @@ DS.Store.reopen({
       this.setAssociationsForFixtureAdapter(modelType, modelName, fixture);
       return FactoryGuy.pushFixture(modelType, fixture);
     } else {
-      var self = this;
+      var store = this;
       var model;
       Em.run(function () {
-        model = self.push(modelName, fixture);
-        self.setAssociationsForRESTAdapter(modelType, modelName, model);
+        store.findEmbeddedBelongsToAssociationsForRESTAdapter(modelType, fixture);
+        if (fixture.type) {
+          // assuming its polymorphic if there is a type attribute
+          // is this too bold an assumption?
+          modelName = fixture.type
+        }
+        model = store.push(modelName, fixture);
+        store.setAssociationsForRESTAdapter(modelType, modelName, model);
       });
       return model;
     }
@@ -93,6 +99,10 @@ DS.Store.reopen({
       if (relationship.kind == 'belongsTo') {
         var belongsToRecord = fixture[relationship.key];
         if (belongsToRecord) {
+          if (typeof belongsToRecord == 'object') {
+            FactoryGuy.pushFixture(relationship.type, belongsToRecord);
+            fixture[relationship.key] = belongsToRecord.id;
+          }
           var hasManyName = self.findHasManyRelationshipName(relationship.type, relationship.parentType);
           var belongsToFixtures = adapter.fixturesForType(relationship.type);
           var belongsTofixture = adapter.findFixtureById(belongsToFixtures, fixture[relationship.key]);
@@ -100,6 +110,32 @@ DS.Store.reopen({
             belongsTofixture[hasManyName] = []
           }
           belongsTofixture[hasManyName].push(fixture.id);
+        }
+      }
+    })
+  },
+
+  /**
+   Before pushing the fixture to the store, do some preprocessing.
+
+   If its a belongs to association, and the fixture has an object there,
+    then push that model to the store and set the id of that new model
+    as the attribute value in the fixture
+
+   If it's a hasMany association, and its polymorphic, then convert the
+    attribute value to a polymorphic style
+
+   @param modelType
+   @param fixture
+   */
+  findEmbeddedBelongsToAssociationsForRESTAdapter: function (modelType, fixture) {
+    var store = this;
+    Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
+      if (relationship.kind == 'belongsTo') {
+        var belongsToRecord = fixture[relationship.key];
+        if (typeof belongsToRecord == 'object') {
+          belongsToRecord = store.push(relationship.type, belongsToRecord);
+          fixture[relationship.key] = belongsToRecord;
         }
       }
     })

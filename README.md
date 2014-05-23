@@ -1,7 +1,6 @@
-Ember Data Factory Guy [![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy)
-=================
+# Ember Data Factory Guy [![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy)
 
-# Using as Gem
+## Using as Gem
 
 To Use with in Rails project or project with sprockets:
 
@@ -24,7 +23,7 @@ then:
 //= require ember_data_factory_guy
 ```
 
-# Using as bower component
+## Using as bower component
 
 Add as one of your dependencies in bower.json file:
 ```json
@@ -40,7 +39,7 @@ then:
 $ bower install
 ```
 
-# How this works
+## How this works
 
 Add fixtures to the store using the:
 
@@ -67,13 +66,23 @@ Let's say you have a few models like these:
   User = DS.Model.extend({
     name:     DS.attr('string'),
     type:     DS.attr('string'),
-    projects: DS.hasMany('project')
-  })
+    projects: DS.hasMany('project'),
+    hats: DS.hasMany('hat', {polymorphic: true})
+  });
 
   Project = DS.Model.extend({
-    title:  DS.attr('string')
+    title:  DS.attr('string'),
     user:   DS.belongsTo('user')
-  })
+  });
+
+  Hat = DS.Model.extend({
+    type: DS.attr('string'),
+    user: DS.belongsTo('user')
+  });
+
+  BigHat = Hat.extend();
+  SmallHat = Hat.extend();
+
 ```
 
 
@@ -112,9 +121,33 @@ Let's say you have a few models like these:
   FactoryGuy.define('project', {
     default: {
       title: 'Project'
+    },
+    //
+    // define built in belongTo models
+    //
+    project_with_user: {
+      // user model with default attributes
+      user: {}
+    },
+    project_with_dude: {
+      // user model with custom attributes
+      user: {name: 'Dude'}
+    },
+    project_with_admin: {
+      // for named association, use this FactoryGuy.association helper method
+      user: FactoryGuy.association('admin')
     }
   });
 
+  FactoryGuy.define('hat', {
+    default: {},
+    small_hat: {
+      type: 'small_hat'
+    },
+    big_hat: {
+      type: 'big_hat'
+    }
+  })
 ```
 
 
@@ -135,6 +168,16 @@ Let's say you have a few models like these:
   // and the name is still a generated attribute from a sequence function
   FactoryGuy.build('funny_user') // {id: 5, name: 'User3', type: 'funny User3'}
 
+  // basic project
+  FactoryGuy.build('project') // {id: 1, title: 'Project'}
+
+  // project with a user
+  FactoryGuy.build('project_with_user') // {id: 1, title: 'Project', user: {id:6, name: 'User4', type: 'normal'}
+  // project with user that has custom attributes
+  FactoryGuy.build('project_with_dude') // {id: 2, title: 'Project', user: {id:7, name: 'Dude', type: 'normal'}
+  // project with user that has a named user
+  FactoryGuy.build('project_with_admin') // {id: 3, title: 'Project', user: {id:8, name: 'Admin', type: 'superuser'}
+
   //////////////////////////////////////////////////////////////////
   //
   // building json with FactoryGuy.buildList
@@ -148,43 +191,57 @@ Let's say you have a few models like these:
 
 #####DS.ActiveModelAdapter/DS.RestAdapter
 
+###### The Basics
+
+store.makeFixture => creates model in the store and returns model instance
+*NOTE* since you are getting a model instances, you can synchronously
+start asking for data from the model, and its associations
+
 ```javascript
-  //////////////////////////////////////////////////////////////////
-  //
-  //  store.makeFixture => creates model in the store and returns model instance
-  //  store.makeList    => creates list of models in the store and returns model instance
-  //
-  //  *NOTE*  since you are getting a model instances, you can synchronously
-  //   start asking for data from the model, and its associations
-  //
+var user = store.makeFixture('user'); // user.toJSON() = {id: 1, name: 'User1', type: 'normal'}
+// note that the user name is a sequence
+var user = store.makeFixture('user'); // user.toJSON() = {id: 2, name: 'User2', type: 'normal'}
+var user = store.makeFixture('funny_user'); // user.toJSON() = {id: 3, name: 'User3', type: 'funny User3'}
+var user = store.makeFixture('user', {name: 'bob'}); // user.toJSON() = {id: 4, name: 'bob', type: 'normal'}
+var user = store.makeFixture('admin'); // user.toJSON() = {id: 5, name: 'Admin', type: 'superuser'}
+var user = store.makeFixture('admin', {name: 'Fred'}); // user.toJSON() = {id: 6, name: 'Fred', type: 'superuser'}
+```
 
-  var user = store.makeFixture('user'); //  user.toJSON() = {id: 1, name: 'User1', type: 'normal'}
-  // note that the user name is a sequence
-  var user = store.makeFixture('user'); //  user.toJSON() = {id: 2, name: 'User2', type: 'normal'}
-  var user = store.makeFixture('funny_user'); //  user.toJSON() = {id: 3, name: 'User3', type: 'funny User3'}
-  var user = store.makeFixture('user', {name: 'bob'}); //  user.toJSON() = {id: 4, name: 'bob', type: 'normal'}
-  var user = store.makeFixture('admin'); //  user.toJSON() = {id: 5, name: 'Admin', type: 'superuser'}
-  var user = store.makeFixture('admin', {name: 'Fred'}); //  user.toJSON() = {id: 6, name: 'Fred', type: 'superuser'}
+###### associations
 
-  // and to setup associations ...
+``` javascript
+var project = store.makeFixture('project');
+var user = store.makeFixture('user', {projects: [project]});
+//  OR
+var user = store.makeFixture('user');
+var project = store.makeFixture('project', {user: user});
 
-  var project = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [project]});
-  //  OR
-  var user = store.makeFixture('user');
-  var project = store.makeFixture('project', {user: user});
+// will get you the same results, since FactoryGuy makes sure the associations
+// are created in both directions
+// user.get('projects.length') == 1;
+// user.get('projects.firstObject.user') == user;
+```
 
-  // will get you the same results, since FactoryGuy makes sure the associations
-  // are created in both directions
-  user.get('projects.length') == 1;
-  user.get('projects.firstObject.user') == user;
+###### polymorphic hasMany associations
 
-  // and to create lists ( of 3 users in this case )
-  var users = store.makeList('user', 3);
+```javascript
+var sh = store.makeFixture('big_hat');
+var bh = store.makeFixture('small_hat');
+var user = store.makeFixture('user', {hats: [sh, bh]})
+// user.get('hats.length') == 2;
+// (user.get('hats.firstObject') instanceof BigHat) == true
+// (user.get('hats.lastObject') instanceof SmallHat) == true
+```
 
+###### create lists
+
+```javascript
+var users = store.makeList('user', 3);
 ```
 
 #####DS.Fixture adapter
+
+store.makeFixture => creates model in the store and returns json
 
 Technically when you call store.makeFixture with a store using the DS.FixtureAdapter,
 the fixture is actually added to the models FIXTURE array. It just seems to be added
@@ -192,47 +249,42 @@ to the store because when you call store.find to get that record, the adapter lo
 in that FIXTURE array to find it and then puts it in the store.
 
 ```javascript
-  //////////////////////////////////////////////////////////////////
-  //
-  //  store.makeFixture => creates model in the store and returns json
-  //  store.makeList    => creates list of models in the store and returns json
-  //
 
-  store.makeFixture('user'); // user.FIXTURES = [{id: 1, name: 'User1', type: 'normal'}]
-  store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', type: 'normal'}]
-  store.makeFixture('admin'); //  user.FIXTURES = [{id: 3, name: 'Admin', type: 'superuser'}]
-  store.makeFixture('admin', {name: 'Fred'}); //  user.FIXTURES = [{id: 4, name: 'Fred', type: 'superuser'}]
+store.makeFixture('user'); // user.FIXTURES = [{id: 1, name: 'User1', type: 'normal'}]
+store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', type: 'normal'}]
+store.makeFixture('admin'); //  user.FIXTURES = [{id: 3, name: 'Admin', type: 'superuser'}]
+store.makeFixture('admin', {name: 'Fred'}); //  user.FIXTURES = [{id: 4, name: 'Fred', type: 'superuser'}]
 
 
-  // Use store.find to get the model instance ( Remember this is the Fixture adapter, if
-  // you use the ActiveModelAdapter or RESTAdapter the record is returned so you don't
-  // have to then go and find it )
-  var userJson = store.makeFixture('user');
-  store.find('user', userJson.id).then(function(user) {
-     user.toJSON() ( pretty much equals ) userJson;
+// Use store.find to get the model instance ( Remember this is the Fixture adapter, if
+// you use the ActiveModelAdapter or RESTAdapter the record is returned so you don't
+// have to then go and find it )
+var userJson = store.makeFixture('user');
+store.find('user', userJson.id).then(function(user) {
+   user.toJSON() ( pretty much equals ) userJson;
+});
+
+// and to setup associations ...
+var projectJson = store.makeFixture('project');
+var userJson = store.makeFixture('user', {projects: [projectJson.id]});
+// OR
+var userJson = store.makeFixture('user');
+var projectJson = store.makeFixture('project', {user: userJson.id});
+
+// will give you the same result, but with fixture adapter all associations
+// are treated as async ( by factory_guy_has_many.js fix ), so it's
+// a bit clunky to get this associated data. When using DS.FixtureAdapter
+// in view specs though, this clunk is dealt with for you. But remember,
+// you don't have to use the Fixture adapter.
+store.find('user', 1).then(function(user) {
+  user.toJSON() (pretty much equals) userJson;
+  user.get('projects').then(function(projects) {
+    projects.length == 1;
   });
+});
 
-  // and to setup associations ...
-  var projectJson = store.makeFixture('project');
-  var userJson = store.makeFixture('user', {projects: [projectJson.id]});
-  // OR
-  var userJson = store.makeFixture('user');
-  var projectJson = store.makeFixture('project', {user: userJson.id});
-
-  // will give you the same result, but with fixture adapter all associations
-  // are treated as async ( by factory_guy_has_many.js fix ), so it's
-  // a bit clunky to get this associated data. When using DS.FixtureAdapter
-  // in view specs though, this clunk is dealt with for you. But remember,
-  // you don't have to use the Fixture adapter.
-  store.find('user', 1).then(function(user) {
-    user.toJSON() (pretty much equals) userJson;
-    user.get('projects').then(function(projects) {
-      projects.length == 1;
-    });
-  });
-
-  // and for lists
-  store.makeList('user', 2, {projects: [project.id]});
+// and for lists
+store.makeList('user', 2, {projects: [project.id]});
 ```
 
 ###Testing models, controllers, views
@@ -369,3 +421,5 @@ test("Creates new project", function() {
 })
 
 ```
+
+

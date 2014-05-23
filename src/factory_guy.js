@@ -76,6 +76,31 @@ FactoryGuy = {
   },
 
   /**
+   Used in model definitions to define a belongsTo association attribute.
+   For example:
+
+    ```
+     FactoryGuy.define('project', {
+       default: {
+         title: 'Project'
+       },
+       project_with_admin: {
+         // for named association, use this FactoryGuy.association helper method
+         user: FactoryGuy.association('admin')
+       }
+
+    ```
+
+   @param   {String} fixture name
+   @returns {Function} wrapper function that will build the association json
+   */
+  association: function (fixtureName, opts) {
+    return function () {
+      return FactoryGuy.build(fixtureName, opts);
+    }
+  },
+
+  /**
     Given a fixture name like 'person' or 'dude' determine what model this name
     refers to. In this case it's 'person' for each one.
 
@@ -148,7 +173,6 @@ FactoryGuy = {
    Reset the id sequence for the models back to zero.
   */
   resetModels: function (store) {
-    var typeMaps = store.typeMaps;
     for (model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
       definition.reset();
@@ -160,11 +184,6 @@ FactoryGuy = {
         store.unloadAll(modelType);
       } catch (e) {
       }
-//    } else {
-//      for (model in typeMaps) {
-//        store.unloadAll(typeMaps[model].type);
-//      }
-//    }
     }
   },
 

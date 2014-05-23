@@ -67,12 +67,23 @@ test("supports hasMany associations", function() {
 });
 
 
+test("supports hasMany polymorphic associations", function() {
+  var sh = store.makeFixture('big_hat');
+  var bh = store.makeFixture('small_hat');
+  var user = store.makeFixture('user', {hats: [sh, bh]})
+  equal(user.get('hats.length'), 2);
+  ok(user.get('hats.firstObject') instanceof BigHat)
+  ok(user.get('hats.lastObject') instanceof SmallHat)
+});
+
+
 test("when hasMany associations assigned, belongTo parent is assigned", function() {
   var p1 = store.makeFixture('project');
   var user = store.makeFixture('user', {projects: [p1]})
 
   deepEqual(p1.get('user').toJSON(), user.toJSON());
 });
+
 
 test("when belongTo parent is assigned, parent adds to hasMany records", function() {
   var user = store.makeFixture('user');
@@ -81,6 +92,18 @@ test("when belongTo parent is assigned, parent adds to hasMany records", functio
   equal(user.get('projects.length'), 1);
 });
 
+
+test("belongsTo associations defined as attributes in fixture", function() {
+  var project = store.makeFixture('project_with_user');
+  equal(project.get('user') instanceof User, true)
+  deepEqual(project.get('user').toJSON(),{name: 'User1'})
+
+  var project = store.makeFixture('project_with_dude');
+  deepEqual(project.get('user').toJSON(),{name: 'Dude'})
+
+  var project = store.makeFixture('project_with_admin');
+  deepEqual(project.get('user').toJSON(),{name: 'Admin'})
+})
 
 module('DS.Store#makeList with DS.RESTAdapter', {
   setup: function() {

@@ -1,4 +1,5 @@
 User = DS.Model.extend({
   name:     DS.attr('string'),
-  projects: DS.hasMany('project')
+  projects: DS.hasMany('project'),
+  hats: DS.hasMany('hat', {polymorphic: true})
 })

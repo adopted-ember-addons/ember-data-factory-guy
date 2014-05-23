@@ -50,10 +50,15 @@ ModelDefinition = function (model, config) {
     var modelAttributes = namedModels[name] || {};
     // merge default, modelAttributes and opts to get the rough fixture
     var fixture = $.extend({}, defaultAttributes, modelAttributes, opts);
-    // convert attributes that are functions to strings
+    // deal with attributes that are functions or objects
     for (attribute in fixture) {
-      if (typeof fixture[attribute] == 'function') {
+      if (Ember.typeOf(fixture[attribute]) == 'function') {
+        // function might be a sequence of a named association
         fixture[attribute] = fixture[attribute].call(this, fixture);
+      } else if (Ember.typeOf(fixture[attribute]) == 'object') {
+        // if it's an object it's for a model association, so build the json
+        // for the association and replace the attribute with that json
+        fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute])
       }
     }
     // set the id, unless it was already set in opts

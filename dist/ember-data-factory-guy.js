@@ -66,10 +66,15 @@ ModelDefinition = function (model, config) {
     var modelAttributes = namedModels[name] || {};
     // merge default, modelAttributes and opts to get the rough fixture
     var fixture = $.extend({}, defaultAttributes, modelAttributes, opts);
-    // convert attributes that are functions to strings
+    // deal with attributes that are functions or objects
     for (attribute in fixture) {
-      if (typeof fixture[attribute] == 'function') {
+      if (Ember.typeOf(fixture[attribute]) == 'function') {
+        // function might be a sequence of a named association
         fixture[attribute] = fixture[attribute].call(this, fixture);
+      } else if (Ember.typeOf(fixture[attribute]) == 'object') {
+        // if it's an object it's for a model association, so build the json
+        // for the association and replace the attribute with that json
+        fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute])
       }
     }
     // set the id, unless it was already set in opts
@@ -215,6 +220,31 @@ FactoryGuy = {
   },
 
   /**
+   Used in model definitions to define a belongsTo association attribute.
+   For example:
+
+    ```
+     FactoryGuy.define('project', {
+       default: {
+         title: 'Project'
+       },
+       project_with_admin: {
+         // for named association, use this FactoryGuy.association helper method
+         user: FactoryGuy.association('admin')
+       }
+
+    ```
+
+   @param   {String} fixture name
+   @returns {Function} wrapper function that will build the association json
+   */
+  association: function (fixtureName, opts) {
+    return function () {
+      return FactoryGuy.build(fixtureName, opts);
+    }
+  },
+
+  /**
     Given a fixture name like 'person' or 'dude' determine what model this name
     refers to. In this case it's 'person' for each one.
 
@@ -287,7 +317,6 @@ FactoryGuy = {
    Reset the id sequence for the models back to zero.
   */
   resetModels: function (store) {
-    var typeMaps = store.typeMaps;
     for (model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
       definition.reset();
@@ -299,11 +328,6 @@ FactoryGuy = {
         store.unloadAll(modelType);
       } catch (e) {
       }
-//    } else {
-//      for (model in typeMaps) {
-//        store.unloadAll(typeMaps[model].type);
-//      }
-//    }
     }
   },
 
@@ -358,11 +382,17 @@ DS.Store.reopen({
       this.setAssociationsForFixtureAdapter(modelType, modelName, fixture);
       return FactoryGuy.pushFixture(modelType, fixture);
     } else {
-      var self = this;
+      var store = this;
       var model;
       Em.run(function () {
-        model = self.push(modelName, fixture);
-        self.setAssociationsForRESTAdapter(modelType, modelName, model);
+        store.findEmbeddedBelongsToAssociationsForRESTAdapter(modelType, fixture);
+        if (fixture.type) {
+          // assuming its polymorphic if there is a type attribute
+          // is this too bold an assumption?
+          modelName = fixture.type
+        }
+        model = store.push(modelName, fixture);
+        store.setAssociationsForRESTAdapter(modelType, modelName, model);
       });
       return model;
     }
@@ -427,6 +457,10 @@ DS.Store.reopen({
       if (relationship.kind == 'belongsTo') {
         var belongsToRecord = fixture[relationship.key];
         if (belongsToRecord) {
+          if (typeof belongsToRecord == 'object') {
+            FactoryGuy.pushFixture(relationship.type, belongsToRecord);
+            fixture[relationship.key] = belongsToRecord.id;
+          }
           var hasManyName = self.findHasManyRelationshipName(relationship.type, relationship.parentType);
           var belongsToFixtures = adapter.fixturesForType(relationship.type);
           var belongsTofixture = adapter.findFixtureById(belongsToFixtures, fixture[relationship.key]);
@@ -434,6 +468,32 @@ DS.Store.reopen({
             belongsTofixture[hasManyName] = []
           }
           belongsTofixture[hasManyName].push(fixture.id);
+        }
+      }
+    })
+  },
+
+  /**
+   Before pushing the fixture to the store, do some preprocessing.
+
+   If its a belongs to association, and the fixture has an object there,
+    then push that model to the store and set the id of that new model
+    as the attribute value in the fixture
+
+   If it's a hasMany association, and its polymorphic, then convert the
+    attribute value to a polymorphic style
+
+   @param modelType
+   @param fixture
+   */
+  findEmbeddedBelongsToAssociationsForRESTAdapter: function (modelType, fixture) {
+    var store = this;
+    Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
+      if (relationship.kind == 'belongsTo') {
+        var belongsToRecord = fixture[relationship.key];
+        if (typeof belongsToRecord == 'object') {
+          belongsToRecord = store.push(relationship.type, belongsToRecord);
+          fixture[relationship.key] = belongsToRecord;
         }
       }
     })
