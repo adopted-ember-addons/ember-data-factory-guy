@@ -210,9 +210,11 @@ var user = store.makeFixture('admin', {name: 'Fred'}); // user.toJSON() = {id: 6
 ###### associations
 
 ``` javascript
+// setting models on the hasMany association
 var project = store.makeFixture('project');
 var user = store.makeFixture('user', {projects: [project]});
 //  OR
+// setting a model on the belongsTo association
 var user = store.makeFixture('user');
 var project = store.makeFixture('project', {user: user});
 
@@ -225,12 +227,22 @@ var project = store.makeFixture('project', {user: user});
 ###### polymorphic hasMany associations
 
 ```javascript
+// setting polymorphic models on the (polymorphic) hasMany association
 var sh = store.makeFixture('big_hat');
 var bh = store.makeFixture('small_hat');
 var user = store.makeFixture('user', {hats: [sh, bh]})
 // user.get('hats.length') == 2;
 // (user.get('hats.firstObject') instanceof BigHat) == true
 // (user.get('hats.lastObject') instanceof SmallHat) == true
+
+// OR
+
+// setting belongTo association on polymorphic model
+var user = store.makeFixture('user');
+store.makeFixture('big_hat', {user: user});
+// user.get('hats.length') == 1;
+// (user.get('hats.firstObject') instanceof BigHat) == true
+
 ```
 
 ###### create lists
