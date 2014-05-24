@@ -1,9 +1,9 @@
 FactoryGuy.define('hat', {
   default: {},
   small_hat: {
-    type: 'small_hat'
+    type: 'SmallHat'
   },
   big_hat: {
-    type: 'big_hat'
+    type: 'BigHat'
   }
 })
