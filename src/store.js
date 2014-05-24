@@ -133,7 +133,7 @@ DS.Store.reopen({
     Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
       if (relationship.kind == 'belongsTo') {
         var belongsToRecord = fixture[relationship.key];
-        if (typeof belongsToRecord == 'object') {
+        if (Ember.typeOf(belongsToRecord) == 'object') {
           belongsToRecord = store.push(relationship.type, belongsToRecord);
           fixture[relationship.key] = belongsToRecord;
         }
@@ -182,7 +182,9 @@ DS.Store.reopen({
             belongsToRecord.constructor,
             model
           )
-          belongsToRecord.get(hasManyName).addObject(model);
+          if (hasManyName) {
+            belongsToRecord.get(hasManyName).addObject(model);
+          }
         }
       }
     })

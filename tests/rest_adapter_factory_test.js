@@ -68,23 +68,38 @@ test("supports hasMany associations", function() {
 
 
 test("when polymorphic hasMany associations are assigned, belongTo parent is assigned", function() {
-  var sh = store.makeFixture('big_hat');
-  var bh = store.makeFixture('small_hat');
-  var user = store.makeFixture('user', {hats: [sh, bh]})
+  var bh = store.makeFixture('big_hat');
+  var sh = store.makeFixture('small_hat');
+  var user = store.makeFixture('user', {hats: [bh, sh]})
+
   equal(user.get('hats.length'), 2);
   ok(user.get('hats.firstObject') instanceof BigHat)
   ok(user.get('hats.lastObject') instanceof SmallHat)
   // sets the belongTo user association
-  ok(sh.get('user') == user)
   ok(bh.get('user') == user)
+  ok(sh.get('user') == user)
 });
 
 
 test("when belongTo parent is assigned, parent adds to polymorphic hasMany records", function() {
   var user = store.makeFixture('user');
   store.makeFixture('big_hat', {user: user});
-  equal(user.get('hats.length'), 1);
+  store.makeFixture('small_hat', {user: user});
+
+  equal(user.get('hats.length'), 2);
   ok(user.get('hats.firstObject') instanceof BigHat)
+  ok(user.get('hats.lastObject') instanceof SmallHat)
+});
+
+
+test("when belongTo parent is assigned, parent adds to polymorphic hasMany records", function() {
+  var user = store.makeFixture('user');
+  store.makeFixture('big_hat', {user: user});
+  store.makeFixture('small_hat', {user: user});
+
+  equal(user.get('hats.length'), 2);
+  ok(user.get('hats.firstObject') instanceof BigHat)
+  ok(user.get('hats.lastObject') instanceof SmallHat)
 });
 
 
@@ -98,9 +113,10 @@ test("when hasMany associations assigned, belongTo parent is assigned", function
 
 test("when belongTo parent is assigned, parent adds to hasMany records", function() {
   var user = store.makeFixture('user');
-  var project = store.makeFixture('project', {user: user});
+  store.makeFixture('project', {user: user});
+  store.makeFixture('project', {user: user});
 
-  equal(user.get('projects.length'), 1);
+  equal(user.get('projects.length'), 2);
 });
 
 
