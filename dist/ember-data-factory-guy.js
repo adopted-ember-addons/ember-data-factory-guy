@@ -389,7 +389,7 @@ DS.Store.reopen({
         if (fixture.type) {
           // assuming its polymorphic if there is a type attribute
           // is this too bold an assumption?
-          modelName = fixture.type;
+          modelName = fixture.type.underscore();
         }
         model = store.push(modelName, fixture);
         store.setAssociationsForRESTAdapter(modelType, modelName, model);
