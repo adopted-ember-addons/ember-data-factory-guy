@@ -240,8 +240,13 @@ var user = store.makeFixture('user', {hats: [sh, bh]})
 // setting belongTo association on polymorphic model
 var user = store.makeFixture('user');
 store.makeFixture('big_hat', {user: user});
-// user.get('hats.length') == 1;
+store.makeFixture('small_hat', {user: user});
+
+// will get you the same results, since FactoryGuy makes sure the associations
+// are created in both directions, even for polymorphic associations.
+// user.get('hats.length') == 2;
 // (user.get('hats.firstObject') instanceof BigHat) == true
+// (user.get('hats.lastObject') instanceof SmallHat) == true
 
 ```
 
