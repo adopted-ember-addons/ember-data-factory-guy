@@ -207,7 +207,7 @@ var user = store.makeFixture('admin'); // user.toJSON() = {id: 5, name: 'Admin',
 var user = store.makeFixture('admin', {name: 'Fred'}); // user.toJSON() = {id: 6, name: 'Fred', type: 'superuser'}
 ```
 
-###### associations
+###### Associations
 
 ``` javascript
 // setting models on the hasMany association
@@ -224,7 +224,7 @@ var project = store.makeFixture('project', {user: user});
 // user.get('projects.firstObject.user') == user;
 ```
 
-###### polymorphic hasMany associations
+###### Polymorphic hasMany associations
 
 ```javascript
 // setting polymorphic models on the (polymorphic) hasMany association
@@ -240,12 +240,17 @@ var user = store.makeFixture('user', {hats: [sh, bh]})
 // setting belongTo association on polymorphic model
 var user = store.makeFixture('user');
 store.makeFixture('big_hat', {user: user});
-// user.get('hats.length') == 1;
+store.makeFixture('small_hat', {user: user});
+
+// will get you the same results, since FactoryGuy makes sure the associations
+// are created in both directions, even for polymorphic associations.
+// user.get('hats.length') == 2;
 // (user.get('hats.firstObject') instanceof BigHat) == true
+// (user.get('hats.lastObject') instanceof SmallHat) == true
 
 ```
 
-###### create lists
+###### Create lists
 
 ```javascript
 var users = store.makeList('user', 3);
