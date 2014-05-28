@@ -1,0 +1,2 @@
+FactoryGuy.define('profile', {});
+
