@@ -82,6 +82,30 @@ test("when polymorphic hasMany associations are assigned, belongTo parent is ass
   ok(sh.get('user') == user)
 });
 
+asyncTest("when async hasMany associations are assigned, async belongTo parent is assigned", function() {
+  var e1 = store.makeFixture('employee');
+  var e2 = store.makeFixture('employee');
+  var department = store.makeFixture('department', {employees: [e1, e2]})
+
+  equal(department.get('employees.length'), 2);
+  ok(department.get('employees.firstObject') instanceof Employee)
+  ok(department.get('employees.lastObject') instanceof Employee)
+
+  e1.get('department').then(function(employeeDepartment) {
+	ok(employeeDepartment == department);
+	start();
+  });
+});
+
+test("when belongsTo associations is assigned, belongTo parent is assigned", function() {
+  ok(false, "One-to-one relation is not working. Test is disabled as the other tests will hang.");
+  //var p1 = store.makeFixture('profile');
+  //var employee = store.makeFixture('employee', {profile: p1})
+
+  //equal(employee.get('profile'), p1);
+  //equal(p1.get('employee'), employee);
+});
+
 
 test("when belongTo parent is assigned, parent adds to polymorphic hasMany records", function() {
   var user = store.makeFixture('user');
@@ -93,6 +117,15 @@ test("when belongTo parent is assigned, parent adds to polymorphic hasMany recor
   ok(user.get('hats.lastObject') instanceof SmallHat)
 });
 
+test("when async belongTo parent is assigned, parent adds to async hasMany records", function() {
+  var department = store.makeFixture('department');
+  store.makeFixture('employee', {department: department});
+  store.makeFixture('employee', {department: department});
+
+  equal(department.get('employees.length'), 2);
+  ok(department.get('employees.firstObject') instanceof Employee)
+  ok(department.get('employees.lastObject') instanceof Employee)
+});
 
 test("when hasMany associations assigned, belongTo parent is assigned", function() {
   var p1 = store.makeFixture('project');

@@ -34,6 +34,11 @@ FactoryGuy.define('user', {
     name: 'Admin'
   }
 });
+
+FactoryGuy.define('department', {});
+FactoryGuy.define('employee', {});
+FactoryGuy.define('profile', {});
+
 Hat = DS.Model.extend({
   type: DS.attr('string'),
   user: DS.belongsTo('user'),
@@ -55,6 +60,21 @@ User = DS.Model.extend({
   projects: DS.hasMany('project'),
   hats: DS.hasMany('hat', {polymorphic: true})
 })
+
+Employee = DS.Model.extend({
+  department: DS.belongsTo('department', {async: true}),
+  profile: DS.belongsTo('profile')
+})
+
+Department = DS.Model.extend({
+  employees: DS.hasMany('employee', {async: true})
+})
+
+Profile = DS.Model.extend({
+  employee: DS.belongsTo('employee')
+})
+
+
 /**
  * Sinon.JS 1.6.0, 2013/02/18
  *
@@ -4342,3 +4362,4 @@ var sinon = (function () {
 
   return sinon;
 }.call(typeof window != 'undefined' && window || {}));
+
