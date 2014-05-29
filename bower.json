@@ -21,7 +21,8 @@
     "ember": "~1.6.0",
     "ember-data": "~1.0.0-beta.7",
     "chance": "latest",
-    "qunit": "latest"
+    "qunit": "latest",
+    "grunt-bump": "latest"
   },
 
   "ignore": [

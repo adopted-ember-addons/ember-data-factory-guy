@@ -107,7 +107,7 @@ test("when hasMany associations assigned, belongTo parent is assigned", function
   var project = store.makeFixture('project');
   var user = store.makeFixture('user', {projects: [project]})
 
-  deepEqual(project.get('user'), user);
+  deepEqual(project.get('user').toJSON(), user.toJSON());
 });
 
 
@@ -116,7 +116,7 @@ asyncTest("when asnyc hasMany associations assigned, belongTo parent is assigned
   var company = store.makeFixture('company', {users: [user]});
 
   user.get('company').then(function(c){
-    equal(c, company)
+    deepEqual(c.toJSON(), company.toJSON())
     start()
   })
 });
