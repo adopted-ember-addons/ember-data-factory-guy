@@ -1,3 +1,8 @@
+FactoryGuy.define('company', {
+  default: {
+    name: 'Silly corp'
+  }
+})
 FactoryGuy.define('hat', {
   default: {},
   small_hat: {
@@ -34,6 +39,11 @@ FactoryGuy.define('user', {
     name: 'Admin'
   }
 });
+Company = DS.Model.extend({
+  name: DS.attr('string'),
+  users: DS.hasMany('user', {async: true})
+})
+
 Hat = DS.Model.extend({
   type: DS.attr('string'),
   user: DS.belongsTo('user'),
@@ -52,6 +62,7 @@ Project = DS.Model.extend({
 
 User = DS.Model.extend({
   name:     DS.attr('string'),
+  company: DS.belongsTo('company', {async: true}),
   projects: DS.hasMany('project'),
   hats: DS.hasMany('hat', {polymorphic: true})
 })

@@ -104,32 +104,57 @@ test("when belongTo parent is assigned, parent adds to polymorphic hasMany recor
 
 
 test("when hasMany associations assigned, belongTo parent is assigned", function() {
-  var p1 = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [p1]})
+  var project = store.makeFixture('project');
+  var user = store.makeFixture('user', {projects: [project]})
 
-  deepEqual(p1.get('user').toJSON(), user.toJSON());
+  deepEqual(project.get('user'), user);
+});
+
+
+asyncTest("when asnyc hasMany associations assigned, belongTo parent is assigned", function() {
+  var user = store.makeFixture('user');
+  var company = store.makeFixture('company', {users: [user]});
+
+  user.get('company').then(function(c){
+    equal(c, company)
+    start()
+  })
 });
 
 
 test("when belongTo parent is assigned, parent adds to hasMany records", function() {
   var user = store.makeFixture('user');
-  store.makeFixture('project', {user: user});
-  store.makeFixture('project', {user: user});
+  var project1 = store.makeFixture('project', {user: user});
+  var project2 = store.makeFixture('project', {user: user});
 
   equal(user.get('projects.length'), 2);
+  equal(user.get('projects.firstObject'), project1)
+  equal(user.get('projects.lastObject'), project2)
+});
+
+
+asyncTest("when async belongsTo parent is assigned, parent adds to hasMany records", function() {
+  var company = store.makeFixture('company');
+  var user1 = store.makeFixture('user', {company: company});
+  var user2 = store.makeFixture('user', {company: company});
+
+  equal(company.get('users.length'), 2);
+  equal(company.get('users.firstObject'), user1)
+  equal(company.get('users.lastObject'), user2)
+  start()
 });
 
 
 test("belongsTo associations defined as attributes in fixture", function() {
   var project = store.makeFixture('project_with_user');
   equal(project.get('user') instanceof User, true)
-  deepEqual(project.get('user').toJSON(),{name: 'User1'})
+  deepEqual(project.get('user').toJSON(),{name: 'User1', company: null})
 
   var project = store.makeFixture('project_with_dude');
-  deepEqual(project.get('user').toJSON(),{name: 'Dude'})
+  deepEqual(project.get('user').toJSON(),{name: 'Dude', company: null})
 
   var project = store.makeFixture('project_with_admin');
-  deepEqual(project.get('user').toJSON(),{name: 'Admin'})
+  deepEqual(project.get('user').toJSON(),{name: 'Admin', company: null})
 })
 
 module('DS.Store#makeList with DS.RESTAdapter', {

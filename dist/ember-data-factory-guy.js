@@ -535,13 +535,23 @@ DS.Store.reopen({
 
       if (relationship.kind == 'belongsTo') {
         var belongsToRecord = model.get(name);
-        if (belongsToRecord) {
+        var setAssociation = function() {
           var hasManyName = self.findHasManyRelationshipName(
             belongsToRecord.constructor,
             model
           )
           if (hasManyName) {
             belongsToRecord.get(hasManyName).addObject(model);
+          }
+        }
+        if (belongsToRecord) {
+          if (belongsToRecord.then) {
+            belongsToRecord.then(function(record) {
+              belongsToRecord = record;
+              setAssociation();
+            })
+          } else {
+            setAssociation();
           }
         }
       }
