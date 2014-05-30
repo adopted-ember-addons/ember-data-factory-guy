@@ -44,28 +44,37 @@ module('DS.Store#makeFixture with ActiveModelAdapter', {
 });
 
 
-test("creates DS.Model instance", function() {
+test("creates DS.Model instances", function() {
   var user = store.makeFixture('user');
   equal(user instanceof DS.Model, true);
 });
 
 
-asyncTest("creates record in the store", function() {
+asyncTest("creates records in the store", function() {
   var user = store.makeFixture('user');
 
   store.find('user', user.id).then ( function(store_user) {
     deepEqual(store_user.toJSON(), user.toJSON());
-    start();
+    start()
   });
 });
 
+test("when hasMany associations assigned, belongTo parent is assigned", function() {
+  var project = store.makeFixture('project');
+  var user = store.makeFixture('user', {projects: [project]})
 
-test("supports hasMany associations", function() {
-  var p1 = store.makeFixture('project');
-  var p2 = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [p1, p2]})
+  deepEqual(project.get('user').toJSON(), user.toJSON());
+});
 
-  equal(user.get('projects.length'), 2);
+
+asyncTest("when asnyc hasMany associations assigned, belongTo parent is assigned", function() {
+  var user = store.makeFixture('user');
+  var company = store.makeFixture('company', {users: [user]});
+
+  user.get('company').then(function(c){
+    deepEqual(c.toJSON(), company.toJSON())
+    start();
+  })
 });
 
 
@@ -83,6 +92,17 @@ test("when polymorphic hasMany associations are assigned, belongTo parent is ass
 });
 
 
+test("when belongTo parent is assigned, parent adds to hasMany records", function() {
+  var user = store.makeFixture('user');
+  var project1 = store.makeFixture('project', {user: user});
+  var project2 = store.makeFixture('project', {user: user});
+
+  equal(user.get('projects.length'), 2);
+  deepEqual(user.get('projects.firstObject').toJSON(), project1.toJSON());
+  deepEqual(user.get('projects.lastObject').toJSON(), project2.toJSON());
+});
+
+
 test("when belongTo parent is assigned, parent adds to polymorphic hasMany records", function() {
   var user = store.makeFixture('user');
   store.makeFixture('big_hat', {user: user});
@@ -94,44 +114,14 @@ test("when belongTo parent is assigned, parent adds to polymorphic hasMany recor
 });
 
 
-test("when hasMany associations assigned, belongTo parent is assigned", function() {
-  var project = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [project]})
-
-  deepEqual(project.get('user'), user);
-});
-
-
-asyncTest("when asnyc hasMany associations assigned, belongTo parent is assigned", function() {
-  var user = store.makeFixture('user');
-  var company = store.makeFixture('company', {users: [user]});
-
-  user.get('company').then(function(c){
-    equal(c, company);
-    start();
-  })
-});
-
-
-test("when belongTo parent is assigned, parent adds to hasMany records", function() {
-  var user = store.makeFixture('user');
-  var project1 = store.makeFixture('project', {user: user});
-  var project2 = store.makeFixture('project', {user: user});
-
-  equal(user.get('projects.length'), 2);
-  equal(user.get('projects.firstObject'), project1);
-  equal(user.get('projects.lastObject'), project2);
-});
-
-
 asyncTest("when async belongsTo parent is assigned, parent adds to hasMany records", function() {
   var company = store.makeFixture('company');
   var user1 = store.makeFixture('user', {company: company});
   var user2 = store.makeFixture('user', {company: company});
 
   equal(company.get('users.length'), 2);
-  equal(company.get('users.firstObject'), user1);
-  equal(company.get('users.lastObject'), user2);
+  deepEqual(company.get('users.firstObject').toJSON(), user1.toJSON());
+  deepEqual(company.get('users.lastObject').toJSON(), user2.toJSON());
   start();
 });
 
@@ -146,7 +136,7 @@ test("belongsTo associations defined as attributes in fixture", function() {
 
   var project = store.makeFixture('project_with_admin');
   deepEqual(project.get('user').toJSON(),{name: 'Admin', company: null})
-})
+});
 
 
 module('DS.Store#makeList with ActiveModelAdapter', {

@@ -4,3 +4,4 @@ factory_guy_presentation/
 factory_guy_presents/
 stats/
 *.gem
+*.ruby*
