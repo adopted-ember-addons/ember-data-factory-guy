@@ -91,6 +91,14 @@ test("when polymorphic hasMany associations are assigned, belongTo parent is ass
   ok(sh.get('user') == user)
 });
 
+test("when belongsTo associations is assigned, belongTo parent is assigned", function() {
+  var p1 = store.makeFixture('profile');
+  var employee = store.makeFixture('employee', {profile: p1})
+
+  equal(employee.get('profile'), p1);
+  equal(p1.get('employee'), employee);
+});
+
 
 test("when belongTo parent is assigned, parent adds to hasMany records", function() {
   var user = store.makeFixture('user');
@@ -113,7 +121,6 @@ test("when belongTo parent is assigned, parent adds to polymorphic hasMany recor
   ok(user.get('hats.lastObject') instanceof SmallHat)
 });
 
-
 asyncTest("when async belongsTo parent is assigned, parent adds to hasMany records", function() {
   var company = store.makeFixture('company');
   var user1 = store.makeFixture('user', {company: company});
@@ -124,7 +131,6 @@ asyncTest("when async belongsTo parent is assigned, parent adds to hasMany recor
   deepEqual(company.get('users.lastObject').toJSON(), user2.toJSON());
   start();
 });
-
 
 test("belongsTo associations defined as attributes in fixture", function() {
   var project = store.makeFixture('project_with_user');
