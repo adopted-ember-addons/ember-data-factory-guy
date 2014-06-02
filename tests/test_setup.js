@@ -12,9 +12,17 @@ FactoryGuy.define('hat', {
     type: 'BigHat'
   }
 })
-FactoryGuy.define('project', {
+FactoryGuy.define('profile', {
   default: {
-    title: 'Project'
+    description: 'Text goes here'
+  }
+})
+FactoryGuy.define('project', {
+  sequences: {
+    title: function(num) {return 'Project' + num}
+  },
+  default: {
+    title: FactoryGuy.generate('title')
   },
   project_with_user: {
     // user model with default attributes
@@ -40,32 +48,40 @@ FactoryGuy.define('user', {
   }
 });
 Company = DS.Model.extend({
-  name: DS.attr('string'),
-  users: DS.hasMany('user', {async: true})
-})
+  name:    DS.attr('string'),
+  profile: DS.belongsTo('profile'),
+  users:   DS.hasMany('user', {async: true})
+});
 
 Hat = DS.Model.extend({
   type: DS.attr('string'),
   user: DS.belongsTo('user'),
-  hat: DS.belongsTo('hat', {inverse: 'hats',polymorphic: true}),
+  hat:  DS.belongsTo('hat', {inverse: 'hats', polymorphic: true}),
   hats: DS.hasMany('hat', {inverse: 'hat', polymorphic: true})
-})
+});
 
-BigHat = Hat.extend()
-SmallHat = Hat.extend()
+BigHat = Hat.extend();
+SmallHat = Hat.extend();
 
+
+Profile = DS.Model.extend({
+  description:  DS.attr('string'),
+  company:      DS.belongsTo('company')
+});
 
 Project = DS.Model.extend({
-  title: DS.attr('string'),
-  user: DS.belongsTo('user')
-})
+  title:    DS.attr('string'),
+  user:     DS.belongsTo('user'),
+  parent:   DS.belongsTo('project', {inverse: 'children'}),
+  children: DS.hasMany('project', {inverse: 'parent'})
+});
 
 User = DS.Model.extend({
   name:     DS.attr('string'),
-  company: DS.belongsTo('company', {async: true}),
+  company:  DS.belongsTo('company', {async: true}),
   projects: DS.hasMany('project'),
-  hats: DS.hasMany('hat', {polymorphic: true})
-})
+  hats:     DS.hasMany('hat', {polymorphic: true})
+});
 /**
  * Sinon.JS 1.6.0, 2013/02/18
  *

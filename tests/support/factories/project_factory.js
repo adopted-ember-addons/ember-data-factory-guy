@@ -1,6 +1,9 @@
 FactoryGuy.define('project', {
+  sequences: {
+    title: function(num) {return 'Project' + num}
+  },
   default: {
-    title: 'Project'
+    title: FactoryGuy.generate('title')
   },
   project_with_user: {
     // user model with default attributes

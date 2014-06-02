@@ -82,13 +82,13 @@ test("Referring to other attributes in attribute definition", function() {
 
 test("Using associations in attribute definition", function() {
   var json = FactoryGuy.build('project_with_user');
-  deepEqual(json, {id: 1, title: 'Project', user: {id: 1, name: 'User1'}}, 'creates default user for "user" belongsTo attribute');
+  deepEqual(json, {id: 1, title: 'Project1', user: {id: 1, name: 'User1'}}, 'creates default user for "user" belongsTo attribute');
 
   var json = FactoryGuy.build('project_with_dude');
-  deepEqual(json, {id: 2, title: 'Project', user: {id: 2, name: 'Dude'}}, 'creates user with optional attributes for "user" belongsTo attribute');
+  deepEqual(json, {id: 2, title: 'Project2', user: {id: 2, name: 'Dude'}}, 'creates user with optional attributes for "user" belongsTo attribute');
 
   var json = FactoryGuy.build('project_with_admin');
-  deepEqual(json, {id: 3, title: 'Project', user: {id: 3, name: 'Admin'}}, 'creates named user for "user" belongsTo attribute');
+  deepEqual(json, {id: 3, title: 'Project3', user: {id: 3, name: 'Admin'}}, 'creates named user for "user" belongsTo attribute');
 });
 
 

@@ -59,6 +59,7 @@ asyncTest("creates records in the store", function() {
   });
 });
 
+
 test("when hasMany associations assigned, belongTo parent is assigned", function() {
   var project = store.makeFixture('project');
   var user = store.makeFixture('user', {projects: [project]})
@@ -89,6 +90,13 @@ test("when polymorphic hasMany associations are assigned, belongTo parent is ass
   // sets the belongTo user association
   ok(bh.get('user') == user)
   ok(sh.get('user') == user)
+});
+
+
+test("when hasMany associations are assigned, belongsTo parent is assigned using inverse", function() {
+  var project = store.makeFixture('project');
+  var project2 = store.makeFixture('project', {children: [project]});
+  deepEqual(project.get('parent').toJSON(), project2.toJSON());
 });
 
 
@@ -123,6 +131,21 @@ asyncTest("when async belongsTo parent is assigned, parent adds to hasMany recor
   deepEqual(company.get('users.firstObject').toJSON(), user1.toJSON());
   deepEqual(company.get('users.lastObject').toJSON(), user2.toJSON());
   start();
+});
+
+
+test("when belongTo parent is assigned, parent adds to hasMany record using inverse", function() {
+  var project = store.makeFixture('project');
+  var project2 = store.makeFixture('project', {parent: project});
+  equal(project.get('children.length'), 1);
+  deepEqual(project.get('children.firstObject').toJSON(), project2.toJSON());
+});
+
+
+test("when belongTo parent is assigned, parent adds to belongsTo record", function() {
+  var company = store.makeFixture('company');
+  var profile = store.makeFixture('profile', {company: company});
+  deepEqual(company.get('profile').toJSON(), profile.toJSON());
 });
 
 

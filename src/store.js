@@ -169,42 +169,55 @@ DS.Store.reopen({
     var self = this;
     Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
       if (relationship.kind == 'hasMany') {
+        var belongsToName = modelName;
+        if (relationship.options && relationship.options.inverse) {
+          belongsToName = relationship.options.inverse;
+        }
         var children = model.get(name) || [];
         children.forEach(function (child) {
-          child.set(modelName, model)
+          child.set(belongsToName, model);
         })
       }
 
       if (relationship.kind == 'belongsTo') {
         var belongsToRecord = model.get(name);
-        var setAssociation = function() {
-          var hasManyName = self.findHasManyRelationshipName(
-            belongsToRecord.constructor,
-            model
-          )
-          if (hasManyName) {
-            belongsToRecord.get(hasManyName).addObject(model);
-          }
-        }
         if (belongsToRecord) {
+          var setAssociations = function() {
+            var hasManyName = self.findRelationshipName(
+              'hasMany',
+              belongsToRecord.constructor,
+              model
+            )
+            if (hasManyName) {
+              belongsToRecord.get(hasManyName).addObject(model);
+            }
+            var oneToOneName = self.findRelationshipName(
+              'belongsTo',
+              belongsToRecord.constructor,
+              model
+            )
+            if (oneToOneName) {
+              belongsToRecord.set(oneToOneName, model);
+            }
+          }
           if (belongsToRecord.then) {
             belongsToRecord.then(function(record) {
               belongsToRecord = record;
-              setAssociation();
+              setAssociations();
             })
           } else {
-            setAssociation();
+            setAssociations();
           }
         }
       }
     })
   },
 
-  findHasManyRelationshipName: function (belongToModelType, childModel) {
+  findRelationshipName: function (kind, belongToModelType, childModel) {
     var relationshipName;
     Ember.get(belongToModelType, 'relationshipsByName').forEach(
       function (name, relationship) {
-        if (relationship.kind == 'hasMany' &&
+        if (relationship.kind == kind &&
           childModel instanceof relationship.type) {
           relationshipName = relationship.key;
         }
@@ -294,7 +307,8 @@ DS.FixtureAdapter.reopen({
         relationShips.belongsTo.forEach(function (relationship) {
           var belongsToRecord = record.get(relationship);
           if (belongsToRecord) {
-            var hasManyName = store.findHasManyRelationshipName(
+            var hasManyName = store.findRelationshipName(
+              'hasMany',
               belongsToRecord.constructor,
               record
             );
