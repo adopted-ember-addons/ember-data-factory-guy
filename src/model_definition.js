@@ -26,13 +26,22 @@ ModelDefinition = function (model, config) {
   }
 
   /**
-   Call the next method on the named sequence function
+   Call the next method on the named sequence function. If the name
+   is a function, create the sequence with that function
 
-   @param {String} sequenceName
+   @param   {String} name previously declared sequence name or
+            an the random name generate for inline functions
+   @param   {Function} sequenceFn optional function to use as sequence
    @returns {String} output of sequence function
    */
-  this.generate = function (sequenceName) {
-    var sequence = sequences[sequenceName];
+  this.generate = function (name, sequenceFn) {
+    if (sequenceFn) {
+      if (!sequences[name]) {
+        // create and add that sequence function on the fly
+        sequences[name] = new Sequence(sequenceFn);
+      }
+    }
+    var sequence = sequences[name];
     if (!sequence) {
       throw new MissingSequenceError("Can not find that sequence named [" + sequenceName + "] in '" + model + "' definition")
     }

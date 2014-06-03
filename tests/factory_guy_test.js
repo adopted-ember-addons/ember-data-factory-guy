@@ -37,6 +37,9 @@ test("Using sequences in definitions", function() {
     },
     bro: {
       type: FactoryGuy.generate('broType')
+    },
+    dude_inline: {
+      type: FactoryGuy.generate(function(num) { return 'Dude #' + num})
     }
   });
 
@@ -53,6 +56,11 @@ test("Using sequences in definitions", function() {
     "throws error when sequence name not found"
   )
 
+  var json = FactoryGuy.build('dude_inline');
+  deepEqual(json, {id: 3, name: 'person #3', type: 'Dude #1'}, 'as inline sequence function #1');
+
+  var json = FactoryGuy.build('dude_inline');
+  deepEqual(json, {id: 4, name: 'person #4', type: 'Dude #2'}, 'as inline sequence function #2');
 });
 
 

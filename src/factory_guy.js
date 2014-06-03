@@ -65,13 +65,19 @@ FactoryGuy = {
 
    ```
 
-   @param   {String} sequenceName
+   @param   {String|Function} value previously declared sequence name or
+            an inline function to use as the sequence
    @returns {Function} wrapper function that is called by the model
             definition containing the sequence
    */
-  generate: function (sequenceName) {
+  generate: function (nameOrFunction) {
+    var sortaRandomName = Math.floor((1 + Math.random()) * 0x10000).toString(16) + Date.now()
     return function () {
-      return this.generate(sequenceName);
+      if (Em.typeOf(nameOrFunction) == "function") {
+        return this.generate(sortaRandomName, nameOrFunction);
+      } else {
+        return this.generate(nameOrFunction);
+      }
     }
   },
 
@@ -91,7 +97,8 @@ FactoryGuy = {
 
     ```
 
-   @param   {String} fixture name
+   @param   {String} fixtureName fixture name
+   @param   {Object} opts options
    @returns {Function} wrapper function that will build the association json
    */
   association: function (fixtureName, opts) {
