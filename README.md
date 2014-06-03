@@ -123,6 +123,12 @@ Let's say you have a few models like these:
       title: 'Project'
     },
     //
+    // declaring inline sequence
+    //
+    special_project: {
+      title: FactoryGuy.generate(function(num) { return 'Project #' + num})
+    },
+    //
     // define built in belongTo models
     //
     project_with_user: {
@@ -171,10 +177,13 @@ Let's say you have a few models like these:
   // basic project
   FactoryGuy.build('project') // {id: 1, title: 'Project'}
 
+  // note the inline sequence used in the title attribute
+  FactoryGuy.build('special_project') // {id: 2, title: 'Project #1'}
+
   // project with a user
-  FactoryGuy.build('project_with_user') // {id: 1, title: 'Project', user: {id:6, name: 'User4', type: 'normal'}
+  FactoryGuy.build('project_with_user') // {id: 3, title: 'Project', user: {id:6, name: 'User4', type: 'normal'}
   // project with user that has custom attributes
-  FactoryGuy.build('project_with_dude') // {id: 2, title: 'Project', user: {id:7, name: 'Dude', type: 'normal'}
+  FactoryGuy.build('project_with_dude') // {id: 4, title: 'Project', user: {id:7, name: 'Dude', type: 'normal'}
   // project with user that has a named user
   FactoryGuy.build('project_with_admin') // {id: 3, title: 'Project', user: {id:8, name: 'Admin', type: 'superuser'}
 
