@@ -196,7 +196,9 @@ DS.Store.reopen({
               belongsToRecord.constructor,
               model
             )
-            if (oneToOneName) {
+            // Guard against a situation where a model can belong to itself.
+            // Do not want to set the belongsTo on this case.
+            if (oneToOneName && !(belongsToRecord.constructor == model.constructor)) {
               belongsToRecord.set(oneToOneName, model);
             }
           }

@@ -146,6 +146,13 @@ test("when belongTo parent is assigned, parent adds to belongsTo record", functi
   var company = store.makeFixture('company');
   var profile = store.makeFixture('profile', {company: company});
   deepEqual(company.get('profile').toJSON(), profile.toJSON());
+
+  // but guard against a situation where a model can belong to itself
+  // and do not want to set the belongsTo on this case.
+  var hat1 = store.makeFixture('big_hat')
+  var hat2 = store.makeFixture('big_hat', {hat: hat1})
+  ok(hat1.get('hat') == null);
+  ok(hat2.get('hat') == hat1);
 });
 
 
