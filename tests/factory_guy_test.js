@@ -147,9 +147,9 @@ test("#lookupDefinitionForFixtureName", function() {
   equal(!!FactoryGuy.lookupDefinitionForFixtureName('fake'), false, "return nothing if can't find definition");
 });
 
-
 test("#lookupModelForFixtureName", function() {
   equal(FactoryGuy.lookupModelForFixtureName('person'), 'person', "finds model if its the same as model name");
   equal(FactoryGuy.lookupModelForFixtureName('funny_person'), 'person', "finds model if it's definition has this named fixture");
   equal(FactoryGuy.lookupModelForFixtureName('fake'), undefined, "return nothing if can't find definition");
 });
+

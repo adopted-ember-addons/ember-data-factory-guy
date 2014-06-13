@@ -70,11 +70,10 @@ FactoryGuyTestMixin = Em.Mixin.create({
    */
   handleCreate: function (name, opts) {
     var model = FactoryGuy.lookupModelForFixtureName(name);
-    this.stubEndpointForHttpRequest(
-      "/" + Em.String.pluralize(model),
-      this.buildAjaxCreateResponse(name, opts),
-      {type: 'POST'}
-    )
+    var responseJson = this.buildAjaxCreateResponse(name, opts);
+    var url = "/" + Em.String.pluralize(model);
+    this.stubEndpointForHttpRequest(url, responseJson, {type: 'POST'})
+    return responseJson;
   },
 
   /**

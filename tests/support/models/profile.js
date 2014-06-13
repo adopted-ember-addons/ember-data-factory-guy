@@ -1,4 +1,6 @@
 Profile = DS.Model.extend({
-  description:  DS.attr('string'),
-  company:      DS.belongsTo('company')
+  description:            DS.attr('string'),
+  camelCaseDescription:   DS.attr('string'),
+  snake_case_description: DS.attr('string'),
+  company:                DS.belongsTo('company')
 });

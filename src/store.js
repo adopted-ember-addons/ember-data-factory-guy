@@ -16,9 +16,10 @@ DS.Store.reopen({
    @returns {Object|DS.Model} json or record depending on the adapter type
    */
   makeFixture: function (name, options) {
+    var store = this;
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var fixture = FactoryGuy.build(name, options);
-    var modelType = this.modelFor(modelName);
+    var modelType = store.modelFor(modelName);
 
     if (this.usingFixtureAdapter()) {
       this.setAssociationsForFixtureAdapter(modelType, modelName, fixture);
@@ -32,6 +33,7 @@ DS.Store.reopen({
           // assuming its polymorphic if there is a type attribute
           // is this too bold an assumption?
           modelName = fixture.type.underscore();
+          modelType = store.modelFor(modelName);
         }
         model = store.push(modelName, fixture);
         store.setAssociationsForRESTAdapter(modelType, modelName, model);
@@ -169,12 +171,16 @@ DS.Store.reopen({
     var self = this;
     Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
       if (relationship.kind == 'hasMany') {
-        var belongsToName = modelName;
-        if (relationship.options && relationship.options.inverse) {
-          belongsToName = relationship.options.inverse;
-        }
         var children = model.get(name) || [];
         children.forEach(function (child) {
+          var belongsToName = self.findRelationshipName(
+            'belongsTo',
+            child.constructor,
+            model
+          );
+          if (relationship.options && relationship.options.inverse) {
+            belongsToName = relationship.options.inverse;
+          }
           child.set(belongsToName, model);
         })
       }

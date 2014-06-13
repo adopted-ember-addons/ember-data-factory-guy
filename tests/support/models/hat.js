@@ -5,6 +5,9 @@ Hat = DS.Model.extend({
   hats: DS.hasMany('hat', {inverse: 'hat', polymorphic: true})
 });
 
-BigHat = Hat.extend();
+BigHat = Hat.extend({
+  materials: DS.hasMany('soft_material')
+});
 SmallHat = Hat.extend();
+
 

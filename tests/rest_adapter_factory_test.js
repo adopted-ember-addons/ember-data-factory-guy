@@ -100,6 +100,13 @@ test("when hasMany associations are assigned, belongsTo parent is assigned using
 });
 
 
+test("when hasMany associations are assigned, belongsTo parent is assigned using actual belongsTo name", function() {
+  var silk = store.makeFixture('silk');
+  var bh = store.makeFixture('big_hat', {materials: [silk]});
+  ok(silk.get('hat') == bh)
+});
+
+
 test("when belongTo parent is assigned, parent adds to hasMany records", function() {
   var user = store.makeFixture('user');
   var project1 = store.makeFixture('project', {user: user});
@@ -139,6 +146,13 @@ test("when belongTo parent is assigned, parent adds to hasMany record using inve
   var project2 = store.makeFixture('project', {parent: project});
   equal(project.get('children.length'), 1);
   deepEqual(project.get('children.firstObject').toJSON(), project2.toJSON());
+});
+
+
+test("when belongTo parent is assigned, parent adds to hasMany record using actual hasMany name", function() {
+  var bh = store.makeFixture('big_hat');
+  var silk = store.makeFixture('silk', {hat: bh});
+  ok(bh.get('materials.firstObject') == silk)
 });
 
 

@@ -5,3 +5,4 @@ factory_guy_presents/
 stats/
 *.gem
 *.ruby*
+.idea/*
