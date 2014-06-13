@@ -24,13 +24,12 @@
     "type": "git",
     "url": ""
   },
-  "devDependencies": {
-    "0": "grunt-contrib-coffee",
-    "1": "grunt-contrib-concat",
-    "2": "grunt-contrib-uglify",
-    "3": "grunt-contrib-qunit",
-    "grunt-bump": "0.0.14"
-  },
+  "devDependencies": [
+    "grunt-contrib-coffee",
+    "grunt-contrib-concat",
+    "grunt-contrib-uglify",
+    "grunt-contrib-qunit"
+  ],
   "engines": {
     "node": ">=v0.10.1"
   }
