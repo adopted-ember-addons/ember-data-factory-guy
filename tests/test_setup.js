@@ -29,10 +29,12 @@ FactoryGuy.define('profile', {
 })
 FactoryGuy.define('project', {
   sequences: {
-    title: function(num) {return 'Project' + num}
+    title: function(num) {return 'Project' + num},
+	status: function(num) {return 'Status' + num}
   },
   default: {
-    title: FactoryGuy.generate('title')
+    title: FactoryGuy.generate('title'),
+	projectStatus: FactoryGuy.generate('status')
   },
   project_with_user: {
     // user model with default attributes
@@ -90,10 +92,11 @@ Profile = DS.Model.extend({
 });
 
 Project = DS.Model.extend({
-  title:    DS.attr('string'),
-  user:     DS.belongsTo('user'),
-  parent:   DS.belongsTo('project', {inverse: 'children'}),
-  children: DS.hasMany('project', {inverse: 'parent'})
+  title:         DS.attr('string'),
+  user:          DS.belongsTo('user'),
+  parent:        DS.belongsTo('project', {inverse: 'children'}),
+  children:      DS.hasMany('project', {inverse: 'parent'}),
+  projectStatus: DS.attr('string')
 });
 
 User = DS.Model.extend({

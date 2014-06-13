@@ -90,13 +90,13 @@ test("Referring to other attributes in attribute definition", function() {
 
 test("Using associations in attribute definition", function() {
   var json = FactoryGuy.build('project_with_user');
-  deepEqual(json, {id: 1, title: 'Project1', user: {id: 1, name: 'User1'}}, 'creates default user for "user" belongsTo attribute');
+  deepEqual(json, {id: 1, title: 'Project1', projectStatus: 'Status1', user: {id: 1, name: 'User1'}}, 'creates default user for "user" belongsTo attribute');
 
   var json = FactoryGuy.build('project_with_dude');
-  deepEqual(json, {id: 2, title: 'Project2', user: {id: 2, name: 'Dude'}}, 'creates user with optional attributes for "user" belongsTo attribute');
+  deepEqual(json, {id: 2, title: 'Project2', projectStatus: 'Status2', user: {id: 2, name: 'Dude'}}, 'creates user with optional attributes for "user" belongsTo attribute');
 
   var json = FactoryGuy.build('project_with_admin');
-  deepEqual(json, {id: 3, title: 'Project3', user: {id: 3, name: 'Admin'}}, 'creates named user for "user" belongsTo attribute');
+  deepEqual(json, {id: 3, title: 'Project3', projectStatus: 'Status3', user: {id: 3, name: 'Admin'}}, 'creates named user for "user" belongsTo attribute');
 });
 
 
@@ -105,6 +105,10 @@ test("#build creates default json for model", function() {
   deepEqual(json, {id: 1, name: 'User1'});
 });
 
+test("#build creates camel case json for model", function() {
+  var json = FactoryGuy.build('project');
+  deepEqual(json, {id: 1, title: 'Project1', projectStatus: 'Status1'});
+});
 
 test("#build can override default model attributes", function() {
   var json = FactoryGuy.build('user',{name: 'bob'});

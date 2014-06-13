@@ -247,4 +247,18 @@ asyncTest("#find with mockjax using FactoryGuy fixtures handles snake_case or ca
     ok(!!profile.get('camelCaseDescription'))
     start();
   });
+
+module('Building JSON with ActiveModelAdapter', {
+  setup: function() {
+    testHelper = TestHelper.setup(DS.ActiveModelAdapter);
+    store = testHelper.getStore();
+  },
+  teardown: function() {
+    Em.run(function() { testHelper.teardown(); });
+  }
+});
+
+test("#build creates snake case json for model", function() {
+  var json = FactoryGuy.build('project');
+  deepEqual(json, {id: 1, title: 'Project1', project_status: 'Status1'});
 });
