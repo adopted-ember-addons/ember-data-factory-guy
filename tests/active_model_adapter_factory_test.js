@@ -210,7 +210,19 @@ test("creates records in the store", function() {
 });
 
 
-asyncTest("#store.createRecord with FactoryGuy fixtures handles snake_case or camelCase attributes", function() {
+
+module('DS.Store with ActiveModelAdapter', {
+  setup: function() {
+    testHelper = TestHelper.setup(DS.ActiveModelAdapter);
+    store = testHelper.getStore();
+  },
+  teardown: function() {
+    Em.run(function() { testHelper.teardown(); });
+  }
+});
+
+
+asyncTest("#createRecord with FactoryGuy fixtures handles snake_case or camelCase attributes", function() {
   var json = testHelper.handleCreate('profile', {})
   // if you examine the json .. you'll see both attributes in there
   store.createRecord('profile').save().then(function(profile) {
@@ -218,6 +230,21 @@ asyncTest("#store.createRecord with FactoryGuy fixtures handles snake_case or ca
     ok(!!profile.get('snake_case_description'))
     ok(!!profile.get('camelCaseDescription'))
     start();
-  })
-})
+  });
+});
 
+
+asyncTest("#find with mockjax using FactoryGuy fixtures handles snake_case or camelCase attributes", function() {
+  var responseJson = testHelper.buildAjaxHttpResponse('profile');
+  var id = responseJson.profile.id
+  var url = "/profiles/" + id;
+  testHelper.stubEndpointForHttpRequest(url, responseJson)
+
+  // if you examine the json .. you'll see both attributes in there
+  store.find('profile', id).then(function(profile) {
+    // both types of attributes work just fine
+    ok(!!profile.get('snake_case_description'))
+    ok(!!profile.get('camelCaseDescription'))
+    start();
+  });
+});

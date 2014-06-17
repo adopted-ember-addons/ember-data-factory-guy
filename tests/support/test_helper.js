@@ -8,7 +8,6 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin,{
   setup: function(adapter) {
     $.mockjaxSettings.logging = false;
     $.mockjaxSettings.responseTime = 0;
-
     var container = new Ember.Container();
     this.set('container', container);
 

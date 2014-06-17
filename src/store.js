@@ -196,6 +196,7 @@ DS.Store.reopen({
             )
             if (hasManyName) {
               belongsToRecord.get(hasManyName).addObject(model);
+              return;
             }
             var oneToOneName = self.findRelationshipName(
               'belongsTo',
