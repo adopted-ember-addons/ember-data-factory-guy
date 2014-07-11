@@ -60,10 +60,15 @@ asyncTest("creates records in the store", function() {
 });
 
 
+test("handles camelCase attributes", function() {
+  var profile = store.makeFixture('profile', {camelCaseDescription: 'description'});
+  ok(!!profile.get('camelCaseDescription'))
+});
+
+
 test("when hasMany associations assigned, belongTo parent is assigned", function() {
   var project = store.makeFixture('project');
   var user = store.makeFixture('user', {projects: [project]})
-
   deepEqual(project.get('user').toJSON(), user.toJSON());
 });
 
@@ -222,28 +227,21 @@ module('DS.Store with ActiveModelAdapter', {
 });
 
 
-asyncTest("#createRecord with FactoryGuy fixtures handles snake_case or camelCase attributes", function() {
-  var json = testHelper.handleCreate('profile', {})
-  // if you examine the json .. you'll see both attributes in there
+asyncTest("#createRecord with mockjax handles model's camelCase attributes", function() {
+  testHelper.handleCreate('profile', {camelCaseDescription: 'description'})
+
   store.createRecord('profile').save().then(function(profile) {
-    // both types of attributes work just fine
-    ok(!!profile.get('snake_case_description'))
     ok(!!profile.get('camelCaseDescription'))
     start();
   });
 });
 
 
-asyncTest("#find with mockjax using FactoryGuy fixtures handles snake_case or camelCase attributes", function() {
-  var responseJson = testHelper.buildAjaxHttpResponse('profile');
+asyncTest("#find with mockjax handles camelCase attributes", function() {
+  var responseJson = testHelper.handleFind('profile', {camelCaseDescription: 'description'})
   var id = responseJson.profile.id
-  var url = "/profiles/" + id;
-  testHelper.stubEndpointForHttpRequest(url, responseJson)
 
-  // if you examine the json .. you'll see both attributes in there
   store.find('profile', id).then(function(profile) {
-    // both types of attributes work just fine
-    ok(!!profile.get('snake_case_description'))
     ok(!!profile.get('camelCaseDescription'))
     start();
   });

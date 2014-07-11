@@ -80,9 +80,9 @@ ModelDefinition = function (model, config) {
   /**
    Build a list of fixtures
 
-   @param name model name or named model type
-   @param number of fixtures to build
-   @param opts attribute options
+   @param {String} name model name or named model type
+   @param {Integer} number of fixtures to build
+   @param {Object} opts attribute options
    @returns array of fixtures
    */
   this.buildList = function (name, number, opts) {

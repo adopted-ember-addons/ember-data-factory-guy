@@ -22,9 +22,7 @@ FactoryGuy.define('soft_material', {
 })
 FactoryGuy.define('profile', {
   default: {
-    description: 'Text goes here',
-    camelCaseDescription: 'boyThisIsSilly',
-    snake_case_description: 'how_do_birds_find_worms'
+    description: 'Text goes here'
   }
 })
 FactoryGuy.define('project', {
@@ -102,6 +100,8 @@ User = DS.Model.extend({
   projects: DS.hasMany('project'),
   hats:     DS.hasMany('hat', {polymorphic: true})
 });
+
+
 /*!
  * MockJax - jQuery Plugin to Mock Ajax requests
  *
