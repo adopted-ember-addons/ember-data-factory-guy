@@ -134,6 +134,18 @@ test("when belongTo parent is assigned, parent adds to polymorphic hasMany recor
 });
 
 
+asyncTest("when async hasMany relationship is assigned, model relationship is synced on both sides", function() {
+  var property = store.makeFixture('property');
+  var user1 = store.makeFixture('user', {properties: [property]});
+  var user2 = store.makeFixture('user', {properties: [property]});
+
+  equal(property.get('owners.length'), 2);
+  deepEqual(property.get('owners.firstObject').toJSON(), user1.toJSON());
+  deepEqual(property.get('owners.lastObject').toJSON(), user2.toJSON());
+  start();
+});
+
+
 asyncTest("when async belongsTo parent is assigned, parent adds to hasMany records", function() {
   var company = store.makeFixture('company');
   var user1 = store.makeFixture('user', {company: company});
@@ -178,13 +190,13 @@ test("when belongTo parent is assigned, parent adds to belongsTo record", functi
 test("belongsTo associations defined as attributes in fixture", function() {
   var project = store.makeFixture('project_with_user');
   equal(project.get('user') instanceof User, true)
-  deepEqual(project.get('user').toJSON(),{name: 'User1', company: null})
+  deepEqual(project.get('user').toJSON(),{name: 'User1', company: null, properties: []})
 
   var project = store.makeFixture('project_with_dude');
-  deepEqual(project.get('user').toJSON(),{name: 'Dude', company: null})
+  deepEqual(project.get('user').toJSON(),{name: 'Dude', company: null, properties: []})
 
   var project = store.makeFixture('project_with_admin');
-  deepEqual(project.get('user').toJSON(),{name: 'Admin', company: null})
+  deepEqual(project.get('user').toJSON(),{name: 'Admin', company: null, properties: []})
 });
 
 
@@ -227,7 +239,7 @@ module('DS.Store with ActiveModelAdapter', {
 });
 
 
-asyncTest("#createRecord with mockjax handles model's camelCase attributes", function() {
+asyncTest("#createRecord (with mockjax) handles model's camelCase attributes", function() {
   testHelper.handleCreate('profile', {camelCaseDescription: 'description'})
 
   store.createRecord('profile').save().then(function(profile) {
@@ -237,7 +249,7 @@ asyncTest("#createRecord with mockjax handles model's camelCase attributes", fun
 });
 
 
-asyncTest("#find with mockjax handles camelCase attributes", function() {
+asyncTest("#find (with mockajax) handles model's camelCase attributes", function() {
   var responseJson = testHelper.handleFind('profile', {camelCaseDescription: 'description'})
   var id = responseJson.profile.id
 

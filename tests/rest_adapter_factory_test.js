@@ -129,10 +129,22 @@ test("when belongTo parent is assigned, parent adds to polymorphic hasMany recor
 });
 
 
+asyncTest("when async hasMany relationship is assigned, model relationship is synced on both sides", function() {
+  var property = store.makeFixture('property');
+  var user1 = store.makeFixture('user', {properties: [property]});
+  var user2 = store.makeFixture('user', {properties: [property]});
+
+  equal(property.get('owners.length'), 2);
+  deepEqual(property.get('owners.firstObject').toJSON(), user1.toJSON());
+  deepEqual(property.get('owners.lastObject').toJSON(), user2.toJSON());
+  start();
+});
+
+
 asyncTest("when async belongsTo parent is assigned, parent adds to hasMany records", function() {
-  var company = store.makeFixture('company');
-  var user1 = store.makeFixture('user', {company: company});
-  var user2 = store.makeFixture('user', {company: company});
+  var user1 = store.makeFixture('user');
+  var user2 = store.makeFixture('user');
+  var company = store.makeFixture('company', {users: [user1, user2]});
 
   equal(company.get('users.length'), 2);
   deepEqual(company.get('users.firstObject').toJSON(), user1.toJSON());
@@ -173,13 +185,13 @@ test("when belongTo parent is assigned, parent adds to belongsTo record", functi
 test("belongsTo associations defined as attributes in fixture", function() {
   var project = store.makeFixture('project_with_user');
   equal(project.get('user') instanceof User, true)
-  deepEqual(project.get('user').toJSON(),{name: 'User1', company: null})
+  deepEqual(project.get('user').toJSON(),{name: 'User1', company: null, properties: []})
 
   var project = store.makeFixture('project_with_dude');
-  deepEqual(project.get('user').toJSON(),{name: 'Dude', company: null})
+  deepEqual(project.get('user').toJSON(),{name: 'Dude', company: null, properties: []})
 
   var project = store.makeFixture('project_with_admin');
-  deepEqual(project.get('user').toJSON(),{name: 'Admin', company: null})
+  deepEqual(project.get('user').toJSON(),{name: 'Admin', company: null, properties: []})
 });
 
 

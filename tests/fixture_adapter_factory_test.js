@@ -138,9 +138,32 @@ asyncTest("#createRecord adds belongsTo association to records it hasMany of", f
     var projectJson = {title:'project', user: user};
 
     store.createRecord('project', projectJson).save()
-      .then( function() {
-        equal(user.get('projects.length'), 1);
+      .then( function(project) {
+        return Ember.RSVP.all([project.get('user'), user.get('projects')]);
+      }).then( function(promises) {
+        var projectUser = promises[0], projects = promises[1];
+        equal(projectUser.get('id'), user.get('id'));
+        equal(projects.get('length'), 1);
         start();
       });
+  })
+})
+
+asyncTest("#createRecord adds hasMany association to records it hasMany of ", function() {
+  var usersJson = store.makeList('user', 3);
+
+  Em.RSVP.all([store.find('user', usersJson[0].id),store.find('user', usersJson[1].id),store.find('user', usersJson[2].id)]).then(function(users) {
+
+    var propertyJson = {name:'beach front property'};
+
+    property = store.createRecord('property', propertyJson);
+    property.get('owners').then(function(owners){
+      owners.addObjects(users);
+    }).then( function() {
+      return property.get('owners');
+    }).then( function(users) {
+      equal(users.get('length'), usersJson.length);
+      start();
+    });
   })
 })
