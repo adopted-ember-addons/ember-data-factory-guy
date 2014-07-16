@@ -33,6 +33,13 @@ FactoryGuyTestMixin = Em.Mixin.create({
     return this.getStore().find(type, id);
   },
 
+  /**
+   Proxy to store's makeFixture method
+
+   @param {String} name name of fixture
+   @param {Object} options fixture options
+   @returns {Object|DS.Model} json or record depending on the adapter type
+   */
   make: function (name, opts) {
     return this.getStore().makeFixture(name, opts);
   },
@@ -74,9 +81,9 @@ FactoryGuyTestMixin = Em.Mixin.create({
   },
 
   /**
-   Build the json used for creating record
+   Build the json used for creating or finding a record.
 
-   @param {String} name of the fixture ( or model ) to create
+   @param {String} name of the fixture ( or model ) to create/find
    @param {Object} opts fixture options
    */
   buildAjaxHttpResponse: function (name, opts) {

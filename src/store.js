@@ -7,12 +7,6 @@ DS.Store.reopen({
     return adapter instanceof DS.FixtureAdapter;
   },
 
-  usingActiveModelSerializer: function () {
-    var adapter = this.adapterFor('application');
-    console.log('adapter.defaultSerializer', adapter.defaultSerializer)
-    return adapter.defaultSerializer == 'active-model';
-  },
-
   /**
    Make new fixture and save to store. If the store is using FixtureAdapter,
    will push to FIXTURE array, otherwise will use push method on adapter.

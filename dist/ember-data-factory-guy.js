@@ -381,11 +381,11 @@ DS.Store.reopen({
     return adapter instanceof DS.FixtureAdapter;
   },
 
-  usingActiveModelSerializer: function () {
-    var adapter = this.adapterFor('application');
-    console.log('adapter.defaultSerializer', adapter.defaultSerializer)
-    return adapter.defaultSerializer == 'active-model';
-  },
+//  usingActiveModelSerializer: function () {
+//    var adapter = this.adapterFor('application');
+//    console.log('adapter.defaultSerializer', adapter.defaultSerializer)
+//    return adapter.defaultSerializer == 'active-model';
+//  },
 
   /**
    Make new fixture and save to store. If the store is using FixtureAdapter,
@@ -632,26 +632,6 @@ DS.Store.reopen({
     return relationshipName;
   },
 
-//  /**
-//   Adding the ability to check the serializer and convert the json before
-//   it's pushed. For the ActiveModelSerializer, the attributes should be snake case,
-//   for example.
-//
-//   @method push
-//   @param {String or subclass of DS.Model} type
-//   @param {Object} data
-//   @return {DS.Model} the record that was created or updated.
-//  */
-//  push: function(type, data, _partial) {
-//    var type = this.modelFor(type);
-//    var serializer = this.serializerFor(type.typeKey);
-//    console.log('serializer',serializer, serializer+'')
-////    if (this.usingActiveModelSerializer()) {
-////      var model = this.modelFor(modelName);
-////      FactoryGuy.pushFixture(model, payload);
-////    }
-//    this._super(type, data, _partial);
-//  },
 
   /**
    Adding a pushPayload for FixtureAdapter, but using the original with
