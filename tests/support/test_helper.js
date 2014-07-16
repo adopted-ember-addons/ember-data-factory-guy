@@ -18,6 +18,7 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin,{
     container.register("model:user", User);
     container.register("model:profile", Profile);
     container.register("model:company", Company);
+    container.register("model:property", Property);
     container.register("model:project", Project);
     container.register("store:main", DS.Store.extend({adapter: adapter}));
     container.register("serializer:-default", DS.RESTSerializer);

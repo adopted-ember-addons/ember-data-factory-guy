@@ -552,10 +552,18 @@ DS.Store.reopen({
             child.constructor,
             model
           );
-          if (relationship.options && relationship.options.inverse) {
-            belongsToName = relationship.options.inverse;
+          var hasManyName = self.findRelationshipName(
+            'hasMany',
+            child.constructor,
+            model
+          );
+          var inverseName = (relationship.options && relationship.options.inverse)
+          if (belongsToName) {
+            child.set(belongsToName || inverseName, model);
+          } else if (hasManyName) {
+            relation = child.get(hasManyName || inverseName) || [];
+            relation.pushObject(model)
           }
-          child.set(belongsToName, model);
         })
       }
 
@@ -567,7 +575,7 @@ DS.Store.reopen({
               'hasMany',
               belongsToRecord.constructor,
               model
-            )
+            );
             if (hasManyName) {
               belongsToRecord.get(hasManyName).addObject(model);
               return;
@@ -576,7 +584,7 @@ DS.Store.reopen({
               'belongsTo',
               belongsToRecord.constructor,
               model
-            )
+            );
             // Guard against a situation where a model can belong to itself.
             // Do not want to set the belongsTo on this case.
             if (oneToOneName && !(belongsToRecord.constructor == model.constructor)) {
@@ -683,27 +691,47 @@ DS.FixtureAdapter.reopen({
    */
   createRecord: function (store, type, record) {
     var promise = this._super(store, type, record);
-
     promise.then(function () {
-      var relationShips = Ember.get(type, 'relationshipNames');
-      if (relationShips.belongsTo) {
-        relationShips.belongsTo.forEach(function (relationship) {
-          var belongsToRecord = record.get(relationship);
-          if (belongsToRecord) {
-            var hasManyName = store.findRelationshipName(
-              'hasMany',
-              belongsToRecord.constructor,
-              record
-            );
-            belongsToRecord.get(hasManyName).addObject(record);
-          }
-        })
-      }
+      Em.RSVP.Promise.resolve(Ember.get(type, 'relationshipNames')).then(function (relationShips){
+        if (relationShips.belongsTo) {
+          relationShips.belongsTo.forEach(function (relationship) {
+            Em.RSVP.Promise.resolve(record.get(relationship)).then(function(belongsToRecord){
+              if (belongsToRecord) {
+                var hasManyName = store.findRelationshipName(
+                  'hasMany',
+                  belongsToRecord.constructor,
+                  record
+                );
+                Ember.RSVP.resolve(belongsToRecord.get(hasManyName)).then (function(relationship){
+                  relationship.addObject(record);
+                });
+              }
+            });
+          });
+        }
+        if (relationShips.hasMany) {
+          relationShips.hasMany.forEach(function (relationship) {
+            Em.RSVP.Promise.resolve(record.get(relationship)).then(function(belongsToRecord){
+              if (belongsToRecord && belongsToRecord.get('length') > 0) {
+                var hasManyName = store.findRelationshipName(
+                  'hasMany',
+                  belongsToRecord.constructor,
+                  record
+                );
+                belongsToRecord.forEach(function (child){
+                  child.get(hasManyName).addObject(record)
+                });
+              }
+            });
+          })
+        }
+      });
     });
 
     return promise;
   }
 })
+
 FactoryGuyTestMixin = Em.Mixin.create({
 
   // Pass in the app root, which typically is App.

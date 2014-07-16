@@ -47,6 +47,11 @@ FactoryGuy.define('project', {
     user: FactoryGuy.association('admin')
   }
 });
+FactoryGuy.define('property', {
+  default: {
+    name: 'Silly property'
+  }
+})
 FactoryGuy.define('user', {
   // default values for 'user' attributes
   default: {
@@ -60,7 +65,7 @@ FactoryGuy.define('user', {
 Company = DS.Model.extend({
   name:    DS.attr('string'),
   profile: DS.belongsTo('profile'),
-  users:   DS.hasMany('user', {async: true})
+  users:   DS.hasMany('user', {async: true, inverse: 'company'})
 });
 
 Hat = DS.Model.extend({
@@ -96,10 +101,16 @@ Project = DS.Model.extend({
   children: DS.hasMany('project', {inverse: 'parent'})
 });
 
-User = DS.Model.extend({
+Property = DS.Model.extend({
   name:     DS.attr('string'),
   company:  DS.belongsTo('company', {async: true}),
-  projects: DS.hasMany('project'),
+  owners:  DS.hasMany('user', {async: true, inverse: 'properties'})
+});
+User = DS.Model.extend({
+  name:     DS.attr('string'),
+  company:  DS.belongsTo('company', {async: true, inverse: 'users'}),
+  properties:  DS.hasMany('property', {async: true, inverse: 'owners'}),
+  projects:   DS.hasMany('project'),
   hats:     DS.hasMany('hat', {polymorphic: true})
 });
 /*!

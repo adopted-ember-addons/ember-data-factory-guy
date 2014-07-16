@@ -6,3 +6,5 @@ stats/
 *.gem
 *.ruby*
 .idea/*
+*.iml
+.vagrant/*
