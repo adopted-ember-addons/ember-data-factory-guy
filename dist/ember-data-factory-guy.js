@@ -381,12 +381,6 @@ DS.Store.reopen({
     return adapter instanceof DS.FixtureAdapter;
   },
 
-//  usingActiveModelSerializer: function () {
-//    var adapter = this.adapterFor('application');
-//    console.log('adapter.defaultSerializer', adapter.defaultSerializer)
-//    return adapter.defaultSerializer == 'active-model';
-//  },
-
   /**
    Make new fixture and save to store. If the store is using FixtureAdapter,
    will push to FIXTURE array, otherwise will use push method on adapter.
@@ -560,11 +554,17 @@ DS.Store.reopen({
             child.constructor,
             model
           );
-          if (relationship.options && relationship.options.inverse) {
-            belongsToName = relationship.options.inverse;
-          }
+          var hasManyName = self.findRelationshipName(
+            'hasMany',
+            child.constructor,
+            model
+          );
+          var inverseName = (relationship.options && relationship.options.inverse)
           if (belongsToName) {
-            child.set(belongsToName, model);
+            child.set(belongsToName || inverseName, model);
+          } else if (hasManyName) {
+            relation = child.get(hasManyName || inverseName) || [];
+            relation.pushObject(model)
           }
         })
       }
@@ -577,7 +577,7 @@ DS.Store.reopen({
               'hasMany',
               belongsToRecord.constructor,
               model
-            )
+            );
             if (hasManyName) {
               belongsToRecord.get(hasManyName).addObject(model);
               return;
@@ -586,7 +586,7 @@ DS.Store.reopen({
               'belongsTo',
               belongsToRecord.constructor,
               model
-            )
+            );
             // Guard against a situation where a model can belong to itself.
             // Do not want to set the belongsTo on this case.
             if (oneToOneName && !(belongsToRecord.constructor == model.constructor)) {
@@ -694,27 +694,47 @@ DS.FixtureAdapter.reopen({
    */
   createRecord: function (store, type, record) {
     var promise = this._super(store, type, record);
-
     promise.then(function () {
-      var relationShips = Ember.get(type, 'relationshipNames');
-      if (relationShips.belongsTo) {
-        relationShips.belongsTo.forEach(function (relationship) {
-          var belongsToRecord = record.get(relationship);
-          if (belongsToRecord) {
-            var hasManyName = store.findRelationshipName(
-              'hasMany',
-              belongsToRecord.constructor,
-              record
-            );
-            belongsToRecord.get(hasManyName).addObject(record);
-          }
-        })
-      }
+      Em.RSVP.Promise.resolve(Ember.get(type, 'relationshipNames')).then(function (relationShips){
+        if (relationShips.belongsTo) {
+          relationShips.belongsTo.forEach(function (relationship) {
+            Em.RSVP.Promise.resolve(record.get(relationship)).then(function(belongsToRecord){
+              if (belongsToRecord) {
+                var hasManyName = store.findRelationshipName(
+                  'hasMany',
+                  belongsToRecord.constructor,
+                  record
+                );
+                Ember.RSVP.resolve(belongsToRecord.get(hasManyName)).then (function(relationship){
+                  relationship.addObject(record);
+                });
+              }
+            });
+          });
+        }
+        if (relationShips.hasMany) {
+          relationShips.hasMany.forEach(function (relationship) {
+            Em.RSVP.Promise.resolve(record.get(relationship)).then(function(belongsToRecord){
+              if (belongsToRecord && belongsToRecord.get('length') > 0) {
+                var hasManyName = store.findRelationshipName(
+                  'hasMany',
+                  belongsToRecord.constructor,
+                  record
+                );
+                belongsToRecord.forEach(function (child){
+                  child.get(hasManyName).addObject(record)
+                });
+              }
+            });
+          })
+        }
+      });
     });
 
     return promise;
   }
 })
+
 FactoryGuyTestMixin = Em.Mixin.create({
 
   // Pass in the app root, which typically is App.
@@ -750,6 +770,13 @@ FactoryGuyTestMixin = Em.Mixin.create({
     return this.getStore().find(type, id);
   },
 
+  /**
+   Proxy to store's makeFixture method
+
+   @param {String} name name of fixture
+   @param {Object} options fixture options
+   @returns {Object|DS.Model} json or record depending on the adapter type
+   */
   make: function (name, opts) {
     return this.getStore().makeFixture(name, opts);
   },
@@ -791,9 +818,9 @@ FactoryGuyTestMixin = Em.Mixin.create({
   },
 
   /**
-   Build the json used for creating record
+   Build the json used for creating or finding a record.
 
-   @param {String} name of the fixture ( or model ) to create
+   @param {String} name of the fixture ( or model ) to create/find
    @param {Object} opts fixture options
    */
   buildAjaxHttpResponse: function (name, opts) {
