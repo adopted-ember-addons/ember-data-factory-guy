@@ -149,6 +149,23 @@ asyncTest("#createRecord adds belongsTo association to records it hasMany of", f
   })
 })
 
+asyncTest("#createRecord can work for one-to-none associations", function() {
+  var user = store.makeFixture('user');
+
+  store.find('user', user.id).then(function(user) {
+
+    var smallCompanyJson = {name:'small company', owner: user};
+
+    store.createRecord('small_company', smallCompanyJson).save()
+      .then( function(smallCompany) {
+        return smallCompany.get('owner');
+      }).then( function(owner) {
+        equal(owner.get('id'), user.get('id'));
+        start();
+      });
+  })
+})
+
 asyncTest("#createRecord adds hasMany association to records it hasMany of ", function() {
   var usersJson = store.makeList('user', 3);
 

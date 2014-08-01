@@ -68,6 +68,11 @@ Company = DS.Model.extend({
   users:   DS.hasMany('user', {async: true, inverse: 'company'})
 });
 
+SmallCompany = Company.extend({
+  owner: DS.belongsTo('user', {async: true}),
+  projects: DS.hasMany('project', {async: true})
+});
+
 Hat = DS.Model.extend({
   type: DS.attr('string'),
   user: DS.belongsTo('user'),
