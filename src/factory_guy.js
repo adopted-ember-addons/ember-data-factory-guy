@@ -192,7 +192,7 @@ FactoryGuy = {
       opts  = args.pop();
     }
     var traits = args; // whatever is left are traits
-    console.log(name, number, traits+'', opts)
+
     var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
       throw new Error("Can't find that factory named [" + name + "]");

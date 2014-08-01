@@ -111,7 +111,7 @@ ModelDefinition = function (model, config) {
   this.buildList = function (name, number, traits, opts) {
     var arr = [];
     for (var i = 0; i < number; i++) {
-      arr.push(this.build(name, opts, traits))
+      arr.push(this.build(name, opts, traits));
     }
     return arr;
   }
@@ -367,7 +367,7 @@ FactoryGuy = {
       opts  = args.pop();
     }
     var traits = args; // whatever is left are traits
-    console.log(name, number, traits+'', opts)
+
     var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
       throw new Error("Can't find that factory named [" + name + "]");

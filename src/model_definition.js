@@ -119,11 +119,6 @@ ModelDefinition = function (model, config) {
     if (!object) {
       return
     }
-//    for (trait in object) {
-//      var trait = object[trait];
-//      if (Ember.typeOf(trait) == 'function') {}
-//      object[trait] = new Trait(trait);
-//    }
     traits = object;
   }
 
