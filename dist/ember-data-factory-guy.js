@@ -135,11 +135,6 @@ ModelDefinition = function (model, config) {
     if (!object) {
       return
     }
-//    for (trait in object) {
-//      var trait = object[trait];
-//      if (Ember.typeOf(trait) == 'function') {}
-//      object[trait] = new Trait(trait);
-//    }
     traits = object;
   }
 
@@ -754,9 +749,11 @@ DS.FixtureAdapter.reopen({
                   belongsToRecord.constructor,
                   record
                 );
-                Ember.RSVP.resolve(belongsToRecord.get(hasManyName)).then (function(relationship){
-                  relationship.addObject(record);
-                });
+                if (hasManyName) {
+                  Ember.RSVP.resolve(belongsToRecord.get(hasManyName)).then (function(relationship){
+                    relationship.addObject(record);
+                  });
+                }
               }
             });
           });
