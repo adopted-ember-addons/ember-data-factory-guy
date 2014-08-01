@@ -754,9 +754,11 @@ DS.FixtureAdapter.reopen({
                   belongsToRecord.constructor,
                   record
                 );
-                Ember.RSVP.resolve(belongsToRecord.get(hasManyName)).then (function(relationship){
-                  relationship.addObject(record);
-                });
+                if (hasManyName) {
+                  Ember.RSVP.resolve(belongsToRecord.get(hasManyName)).then (function(relationship){
+                    relationship.addObject(record);
+                  });
+                }
               }
             });
           });
