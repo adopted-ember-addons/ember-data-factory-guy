@@ -100,6 +100,30 @@ test("Using associations in attribute definition", function() {
 });
 
 
+test("#build with traits", function() {
+  var json = FactoryGuy.build('project', 'big');
+  deepEqual(json, {id: 1, title: 'Big Project'}, 'trait with model attributes');
+
+  var json = FactoryGuy.build('project', 'with_user');
+  deepEqual(json, {id: 2, title: 'Project1', user: {id: 1, name: 'User1'}}, 'trait with belongsTo attributes');
+
+  var json = FactoryGuy.build('project', 'big', 'with_user');
+  deepEqual(json, {id: 3, title: 'Big Project', user: {id: 2, name: 'User1'}}, 'more than one trait used together');
+
+  var json = FactoryGuy.build('project', 'big', 'with_user', {title: 'Crazy Project'});
+  deepEqual(json, {id: 4, title: 'Crazy Project', user: {id: 3, name: 'User1'}}, 'more than one trait used together with custom attributes');
+
+  var json = FactoryGuy.build('project', 'big', 'with_dude');
+  deepEqual(json, {id: 5, title: 'Big Project', user: {id: 4, name: 'Dude'}}, 'trait with custom belongsTo association object');
+
+  var json = FactoryGuy.build('project', 'with_admin');
+  deepEqual(json, {id: 6, title: 'Project2', user: {id: 5, name: 'Admin'}}, 'trait with attribute using FactoryGuy.association method');
+
+  var json = FactoryGuy.build('project', 'with_title_sequence');
+  deepEqual(json, {id: 7, title: 'Project3'}, 'trait with attribute using sequence');
+});
+
+
 test("#build creates default json for model", function() {
   var json = FactoryGuy.build('user');
   deepEqual(json, {id: 1, name: 'User1'});
@@ -138,6 +162,15 @@ test("#buildList creates list of fixtures", function() {
   var userList = FactoryGuy.buildList('user', 2);
   deepEqual(userList[0], {id: 1, name: 'User1'});
   deepEqual(userList[1], {id: 2, name: 'User1'});
+
+  var userList = FactoryGuy.buildList('user', 1, {name: 'Crazy'});
+  deepEqual(userList[0], {id: 3, name: 'Crazy'},'using custom attributes');
+
+  var projectList = FactoryGuy.buildList('project', 1, 'big');
+  deepEqual(projectList[0], {id: 1, title: 'Big Project'}, 'using traits');
+
+  var projectList = FactoryGuy.buildList('project', 1, 'big', {title: 'Really Big'});
+  deepEqual(projectList[0], {id: 2, title: 'Really Big'}, 'using traits and custom attributes');
 });
 
 

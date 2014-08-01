@@ -29,6 +29,13 @@ FactoryGuy.define('project', {
   sequences: {
     title: function(num) {return 'Project' + num}
   },
+  traits: {
+    big: { title: 'Big Project' },
+    with_title_sequence: { title: FactoryGuy.generate('title') },
+    with_user: { user: {} },
+    with_dude: { user: {name: 'Dude'} },
+    with_admin: { user: FactoryGuy.association('admin') }
+  },
   default: {
     title: FactoryGuy.generate('title')
   },

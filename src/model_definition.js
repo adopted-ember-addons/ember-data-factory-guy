@@ -7,6 +7,7 @@
  */
 ModelDefinition = function (model, config) {
   var sequences = {};
+  var traits = {};
   var defaultAttributes = {};
   var namedModels = {};
   var modelId = 1;
@@ -53,12 +54,17 @@ ModelDefinition = function (model, config) {
 
    @param {String} name fixture name
    @param {Object} opts attributes to override
+   @param {String} traits array of traits
    @returns {Object} json
    */
-  this.build = function (name, opts) {
+  this.build = function (name, opts, traitArgs) {
+    var traitsObj = {}
+    traitArgs.forEach(function(trait) {
+      $.extend(traitsObj, traits[trait]);
+    })
     var modelAttributes = namedModels[name] || {};
-    // merge default, modelAttributes and opts to get the rough fixture
-    var fixture = $.extend({}, defaultAttributes, modelAttributes, opts);
+    // merge default, modelAttributes, traits and opts to get the rough fixture
+    var fixture = $.extend({}, defaultAttributes, modelAttributes, traitsObj, opts);
     // deal with attributes that are functions or objects
     for (attribute in fixture) {
       if (Ember.typeOf(fixture[attribute]) == 'function') {
@@ -82,13 +88,14 @@ ModelDefinition = function (model, config) {
 
    @param {String} name model name or named model type
    @param {Integer} number of fixtures to build
+   @param {Array} array of traits to build with
    @param {Object} opts attribute options
    @returns array of fixtures
    */
-  this.buildList = function (name, number, opts) {
+  this.buildList = function (name, number, traits, opts) {
     var arr = [];
     for (var i = 0; i < number; i++) {
-      arr.push(this.build(name, opts))
+      arr.push(this.build(name, opts, traits));
     }
     return arr;
   }
@@ -108,13 +115,25 @@ ModelDefinition = function (model, config) {
     defaultAttributes = object;
   }
 
+  var parseTraits = function (object) {
+    if (!object) {
+      return
+    }
+//    for (trait in object) {
+//      var trait = object[trait];
+//      if (Ember.typeOf(trait) == 'function') {}
+//      object[trait] = new Trait(trait);
+//    }
+    traits = object;
+  }
+
   var parseSequences = function (object) {
     if (!object) {
       return
     }
     for (sequenceName in object) {
       var sequenceFn = object[sequenceName];
-      if (typeof sequenceFn != 'function') {
+      if (Ember.typeOf(sequenceFn) != 'function') {
         throw new Error('Problem with [' + sequenceName + '] sequence definition. Sequences must be functions')
       }
       object[sequenceName] = new Sequence(sequenceFn);
@@ -125,6 +144,9 @@ ModelDefinition = function (model, config) {
   var parseConfig = function (config) {
     parseSequences(config.sequences);
     delete config.sequences;
+
+    parseTraits(config.traits);
+    delete config.traits;
 
     parseDefault(config.default);
     delete config.default;

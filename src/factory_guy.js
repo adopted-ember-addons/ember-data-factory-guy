@@ -140,18 +140,32 @@ FactoryGuy = {
    Build fixtures for model or specific fixture name. For example:
 
    FactoryGuy.build('user') for User model
-   FactoryGuy.build('bob') for User model with bob attributes
+   FactoryGuy.build('bob') for a 'bob' User
+   FactoryGuy.build('bob', 'dude') for a 'bob' User with dude traits
+   FactoryGuy.build('bob', 'dude', 'funny') for a 'bob' User with dude and funny traits
+   FactoryGuy.build('bob', 'dude', name: 'wombat') for a 'bob' User with dude trait and custom attribute name of 'wombat'
 
    @param {String} name Fixture name
+   @param {String} trait trait name ( can be more than one )
    @param {Object} opts Options that will override default fixture values
    @returns {Object} json fixture
    */
-  build: function (name, opts) {
+  build: function () {
+    var args = Array.prototype.slice.call(arguments);
+    var opts = {}
+    var name = args.shift();
+    if (!name) {
+      throw new Error("Build needs a factory name to build");
+    }
+    if (Ember.typeOf(args[args.length-1]) == 'object') {
+      opts  = args.pop();
+    }
+    var traits = args; // whatever is left are traits
     var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
       throw new Error("Can't find that factory named [" + name + "]");
     }
-    return definition.build(name, opts);
+    return definition.build(name, opts, traits);
   },
 
   /**
@@ -162,15 +176,28 @@ FactoryGuy = {
 
    @param {String} name fixture name
    @param {Number} number number of fixtures to create
+   @param {String} trait (one or more)
    @param {Object} opts options that will override default fixture values
    @returns {Array} list of fixtures
    */
-  buildList: function (name, number, opts) {
+  buildList: function () {
+    var args = Array.prototype.slice.call(arguments);
+    var name = args.shift();
+    var number = args.shift();
+    if (!name || !number) {
+      throw new Error("buildList needs a name and a number ( at least ) to build with");
+    }
+    var opts = {}
+    if (Ember.typeOf(args[args.length-1]) == 'object') {
+      opts  = args.pop();
+    }
+    var traits = args; // whatever is left are traits
+    console.log(name, number, traits+'', opts)
     var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
       throw new Error("Can't find that factory named [" + name + "]");
     }
-    return definition.buildList(name, number, opts);
+    return definition.buildList(name, number, traits, opts);
   },
 
   /**

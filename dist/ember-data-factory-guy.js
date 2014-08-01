@@ -23,6 +23,7 @@ function MissingSequenceError(message) {
  */
 ModelDefinition = function (model, config) {
   var sequences = {};
+  var traits = {};
   var defaultAttributes = {};
   var namedModels = {};
   var modelId = 1;
@@ -69,12 +70,17 @@ ModelDefinition = function (model, config) {
 
    @param {String} name fixture name
    @param {Object} opts attributes to override
+   @param {String} traits array of traits
    @returns {Object} json
    */
-  this.build = function (name, opts) {
+  this.build = function (name, opts, traitArgs) {
+    var traitsObj = {}
+    traitArgs.forEach(function(trait) {
+      $.extend(traitsObj, traits[trait]);
+    })
     var modelAttributes = namedModels[name] || {};
-    // merge default, modelAttributes and opts to get the rough fixture
-    var fixture = $.extend({}, defaultAttributes, modelAttributes, opts);
+    // merge default, modelAttributes, traits and opts to get the rough fixture
+    var fixture = $.extend({}, defaultAttributes, modelAttributes, traitsObj, opts);
     // deal with attributes that are functions or objects
     for (attribute in fixture) {
       if (Ember.typeOf(fixture[attribute]) == 'function') {
@@ -98,13 +104,14 @@ ModelDefinition = function (model, config) {
 
    @param {String} name model name or named model type
    @param {Integer} number of fixtures to build
+   @param {Array} array of traits to build with
    @param {Object} opts attribute options
    @returns array of fixtures
    */
-  this.buildList = function (name, number, opts) {
+  this.buildList = function (name, number, traits, opts) {
     var arr = [];
     for (var i = 0; i < number; i++) {
-      arr.push(this.build(name, opts))
+      arr.push(this.build(name, opts, traits))
     }
     return arr;
   }
@@ -124,13 +131,25 @@ ModelDefinition = function (model, config) {
     defaultAttributes = object;
   }
 
+  var parseTraits = function (object) {
+    if (!object) {
+      return
+    }
+//    for (trait in object) {
+//      var trait = object[trait];
+//      if (Ember.typeOf(trait) == 'function') {}
+//      object[trait] = new Trait(trait);
+//    }
+    traits = object;
+  }
+
   var parseSequences = function (object) {
     if (!object) {
       return
     }
     for (sequenceName in object) {
       var sequenceFn = object[sequenceName];
-      if (typeof sequenceFn != 'function') {
+      if (Ember.typeOf(sequenceFn) != 'function') {
         throw new Error('Problem with [' + sequenceName + '] sequence definition. Sequences must be functions')
       }
       object[sequenceName] = new Sequence(sequenceFn);
@@ -141,6 +160,9 @@ ModelDefinition = function (model, config) {
   var parseConfig = function (config) {
     parseSequences(config.sequences);
     delete config.sequences;
+
+    parseTraits(config.traits);
+    delete config.traits;
 
     parseDefault(config.default);
     delete config.default;
@@ -293,18 +315,32 @@ FactoryGuy = {
    Build fixtures for model or specific fixture name. For example:
 
    FactoryGuy.build('user') for User model
-   FactoryGuy.build('bob') for User model with bob attributes
+   FactoryGuy.build('bob') for a 'bob' User
+   FactoryGuy.build('bob', 'dude') for a 'bob' User with dude traits
+   FactoryGuy.build('bob', 'dude', 'funny') for a 'bob' User with dude and funny traits
+   FactoryGuy.build('bob', 'dude', name: 'wombat') for a 'bob' User with dude trait and custom attribute name of 'wombat'
 
    @param {String} name Fixture name
+   @param {String} trait trait name ( can be more than one )
    @param {Object} opts Options that will override default fixture values
    @returns {Object} json fixture
    */
-  build: function (name, opts) {
+  build: function () {
+    var args = Array.prototype.slice.call(arguments);
+    var opts = {}
+    var name = args.shift();
+    if (!name) {
+      throw new Error("Build needs a factory name to build");
+    }
+    if (Ember.typeOf(args[args.length-1]) == 'object') {
+      opts  = args.pop();
+    }
+    var traits = args; // whatever is left are traits
     var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
       throw new Error("Can't find that factory named [" + name + "]");
     }
-    return definition.build(name, opts);
+    return definition.build(name, opts, traits);
   },
 
   /**
@@ -315,15 +351,28 @@ FactoryGuy = {
 
    @param {String} name fixture name
    @param {Number} number number of fixtures to create
+   @param {String} trait (one or more)
    @param {Object} opts options that will override default fixture values
    @returns {Array} list of fixtures
    */
-  buildList: function (name, number, opts) {
+  buildList: function () {
+    var args = Array.prototype.slice.call(arguments);
+    var name = args.shift();
+    var number = args.shift();
+    if (!name || !number) {
+      throw new Error("buildList needs a name and a number ( at least ) to build with");
+    }
+    var opts = {}
+    if (Ember.typeOf(args[args.length-1]) == 'object') {
+      opts  = args.pop();
+    }
+    var traits = args; // whatever is left are traits
+    console.log(name, number, traits+'', opts)
     var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
       throw new Error("Can't find that factory named [" + name + "]");
     }
-    return definition.buildList(name, number, opts);
+    return definition.buildList(name, number, traits, opts);
   },
 
   /**
