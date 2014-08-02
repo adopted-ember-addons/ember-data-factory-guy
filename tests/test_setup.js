@@ -1,4 +1,4 @@
-FactoryGuy.define('company', {
+FactoryGuy.define( 'company', {
   default: {
     name: 'Silly corp'
   }
@@ -25,7 +25,7 @@ FactoryGuy.define('profile', {
     description: 'Text goes here'
   }
 })
-FactoryGuy.define('project', {
+FactoryGuy.define( "project", {
   sequences: {
     title: function(num) {return 'Project' + num}
   },
@@ -50,6 +50,11 @@ FactoryGuy.define('project', {
   project_with_admin: {
     // for named association, use this FactoryGuy.association helper method
     user: FactoryGuy.association('admin')
+  },
+  project_with_parent: {
+    // refer to belongsTo association where the name of the association
+    // differs from the model name
+    parent: FactoryGuy.association('project')
   }
 });
 FactoryGuy.define('property', {
@@ -112,16 +117,16 @@ Project = DS.Model.extend({
 });
 
 Property = DS.Model.extend({
-  name:     DS.attr('string'),
-  company:  DS.belongsTo('company', {async: true}),
+  name:    DS.attr('string'),
+  company: DS.belongsTo('company', {async: true}),
   owners:  DS.hasMany('user', {async: true, inverse: 'properties'})
 });
 User = DS.Model.extend({
-  name:     DS.attr('string'),
-  company:  DS.belongsTo('company', {async: true, inverse: 'users'}),
-  properties:  DS.hasMany('property', {async: true, inverse: 'owners'}),
+  name:       DS.attr('string'),
+  company:    DS.belongsTo('company', {async: true, inverse: 'users'}),
+  properties: DS.hasMany('property', {async: true, inverse: 'owners'}),
   projects:   DS.hasMany('project'),
-  hats:     DS.hasMany('hat', {polymorphic: true})
+  hats:       DS.hasMany('hat', {polymorphic: true})
 });
 
 

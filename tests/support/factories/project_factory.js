@@ -1,4 +1,4 @@
-FactoryGuy.define('project', {
+FactoryGuy.define("project", {
   sequences: {
     title: function(num) {return 'Project' + num}
   },
@@ -23,5 +23,10 @@ FactoryGuy.define('project', {
   project_with_admin: {
     // for named association, use this FactoryGuy.association helper method
     user: FactoryGuy.association('admin')
+  },
+  project_with_parent: {
+    // refer to belongsTo association where the name of the association
+    // differs from the model name
+    parent: FactoryGuy.association('project')
   }
 });

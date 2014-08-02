@@ -1,4 +1,4 @@
-FactoryGuy.define('company', {
+FactoryGuy.define("company", {
   default: {
     name: 'Silly corp'
   }

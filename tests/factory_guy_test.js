@@ -97,6 +97,9 @@ test("Using associations in attribute definition", function() {
 
   var json = FactoryGuy.build('project_with_admin');
   deepEqual(json, {id: 3, title: 'Project3', user: {id: 3, name: 'Admin'}}, 'creates named user for "user" belongsTo attribute');
+
+  var json = FactoryGuy.build('project_with_parent');
+  deepEqual(json, {id: 5, title: 'Project4', parent: {id: 4, title: 'Project5'}}, 'belongsTo association name differs from model name');
 });
 
 
