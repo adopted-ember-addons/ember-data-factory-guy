@@ -90,20 +90,62 @@ FactoryGuy = {
        default: {
          title: 'Project'
        },
+
+       // setup named project with built in associated user
        project_with_admin: {
-         // for named association, use this FactoryGuy.association helper method
-         user: FactoryGuy.association('admin')
+         user: FactoryGuy.belongsTo('admin')
        }
 
+       // or use as a trait
+       traits: {
+         with_admin: {
+           user: FactoryGuy.belongsTo('admin')
+         }
+       }
+     })
     ```
 
    @param   {String} fixtureName fixture name
    @param   {Object} opts options
    @returns {Function} wrapper function that will build the association json
    */
-  association: function (fixtureName, opts) {
+  belongsTo: function (fixtureName, opts) {
     return function () {
       return FactoryGuy.build(fixtureName, opts);
+    }
+  },
+
+  /**
+   Used in model definitions to define a hasMany association attribute.
+   For example:
+
+   ```
+   FactoryGuy.define('user', {
+     default: {
+       name: 'Bob'
+     },
+
+     // define the named user type that will have projects
+     user_with_projects: { FactoryGuy.hasMany('project', 2) }
+
+     // or use as a trait
+     traits: {
+       with_projects: {
+         projects: FactoryGuy.hasMany('project', 2)
+       }
+     }
+   })
+
+    ```
+
+   @param   {String} fixtureName fixture name
+   @param   {Number} number of hasMany association items to build
+   @param   {Object} opts options
+   @returns {Function} wrapper function that will build the association json
+   */
+  hasMany: function (fixtureName, number, opts) {
+    return function () {
+      return FactoryGuy.buildList(fixtureName, number, opts);
     }
   },
 

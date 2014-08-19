@@ -34,7 +34,7 @@ FactoryGuy.define("project", {
     with_title_sequence: { title: FactoryGuy.generate('title') },
     with_user: { user: {} },
     with_dude: { user: {name: 'Dude'} },
-    with_admin: { user: FactoryGuy.association('admin') }
+    with_admin: { user: FactoryGuy.belongsTo('admin') }
   },
   default: {
     title: FactoryGuy.generate('title')
@@ -49,12 +49,12 @@ FactoryGuy.define("project", {
   },
   project_with_admin: {
     // for named association, use this FactoryGuy.association helper method
-    user: FactoryGuy.association('admin')
+    user: FactoryGuy.belongsTo('admin')
   },
   project_with_parent: {
     // refer to belongsTo association where the name of the association
     // differs from the model name
-    parent: FactoryGuy.association('project')
+    parent: FactoryGuy.belongsTo('project')
   }
 });
 FactoryGuy.define('property', {
@@ -70,6 +70,14 @@ FactoryGuy.define('user', {
   // named 'user' type with custom attributes
   admin: {
     name: 'Admin'
+  },
+  user_with_projects: {
+    projects: FactoryGuy.hasMany('project', 2)
+  },
+  traits: {
+    with_projects: {
+      projects: FactoryGuy.hasMany('project', 2)
+    }
   }
 });
 Company = DS.Model.extend({

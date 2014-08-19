@@ -88,18 +88,28 @@ test("Referring to other attributes in attribute definition", function() {
 });
 
 
-test("Using associations in attribute definition", function() {
+test("Using belongsTo associations in attribute definition", function() {
   var json = FactoryGuy.build('project_with_user');
-  deepEqual(json, {id: 1, title: 'Project1', user: {id: 1, name: 'User1'}}, 'creates default user for "user" belongsTo attribute');
+  deepEqual(json, {id: 1, title: 'Project1', user: {id: 1, name: 'User1'}}, 'creates default association');
 
   var json = FactoryGuy.build('project_with_dude');
-  deepEqual(json, {id: 2, title: 'Project2', user: {id: 2, name: 'Dude'}}, 'creates user with optional attributes for "user" belongsTo attribute');
+  deepEqual(json, {id: 2, title: 'Project2', user: {id: 2, name: 'Dude'}}, 'creates association with optional attributes');
 
   var json = FactoryGuy.build('project_with_admin');
-  deepEqual(json, {id: 3, title: 'Project3', user: {id: 3, name: 'Admin'}}, 'creates named user for "user" belongsTo attribute');
+  deepEqual(json, {id: 3, title: 'Project3', user: {id: 3, name: 'Admin'}}, 'creates association using named attribute');
 
   var json = FactoryGuy.build('project_with_parent');
   deepEqual(json, {id: 5, title: 'Project4', parent: {id: 4, title: 'Project5'}}, 'belongsTo association name differs from model name');
+});
+
+
+test("Using hasMany associations in attribute definition", function() {
+  var json = FactoryGuy.build('user_with_projects');
+  deepEqual(json, {
+    id: 1,
+    name: 'User1',
+    projects: [{id: 1, title: 'Project1'},{id: 2, title: 'Project2'}]
+  }, 'creates list of hasMany association items');
 });
 
 
@@ -124,6 +134,13 @@ test("#build with traits", function() {
 
   var json = FactoryGuy.build('project', 'with_title_sequence');
   deepEqual(json, {id: 7, title: 'Project3'}, 'trait with attribute using sequence');
+
+  var json = FactoryGuy.build('user', 'with_projects');
+  deepEqual(json, {
+    id: 6,
+    name: 'User1',
+    projects: [{id: 8, title: 'Project4'},{id: 9, title: 'Project5'}]
+  }, 'trait with hasMany association');
 });
 
 

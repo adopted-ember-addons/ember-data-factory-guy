@@ -195,6 +195,20 @@ test("belongsTo associations defined as attributes in fixture", function() {
 });
 
 
+test("hasMany associations defined as attributes in fixture", function() {
+  var user = store.makeFixture('user_with_projects');
+  equal(user.get('projects.length'), 2)
+  equal(user.get('projects.firstObject.user'), user)
+  equal(user.get('projects.lastObject.user'), user)
+})
+
+test("hasMany associations defined with traits", function() {
+  var user = store.makeFixture('user', 'with_projects');
+  equal(user.get('projects.length'), 2)
+  equal(user.get('projects.firstObject.user'), user)
+  equal(user.get('projects.lastObject.user'), user)
+})
+
 
 module('DS.Store#makeList with DS.RESTAdapter', {
   setup: function() {

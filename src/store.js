@@ -138,6 +138,19 @@ DS.Store.reopen({
           fixture[relationship.key] = belongsToRecord;
         }
       }
+      if (relationship.kind == 'hasMany') {
+        var hasManyRecords = fixture[relationship.key];
+        // if the records are objects and not instances they need to be converted to
+        // instances
+        if (Ember.typeOf(hasManyRecords) == 'array' && Ember.typeOf(hasManyRecords[0]) == 'object') {
+          var records = Em.A()
+          hasManyRecords.forEach(function(record) {
+            var record = store.push(relationship.type, record);
+            records.push(record);
+          })
+          fixture[relationship.key] = records;
+        }
+      }
     })
   },
 
