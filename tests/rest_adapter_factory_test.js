@@ -195,6 +195,7 @@ test("belongsTo associations defined as attributes in fixture", function() {
 });
 
 
+
 module('DS.Store#makeList with DS.RESTAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.RESTAdapter);

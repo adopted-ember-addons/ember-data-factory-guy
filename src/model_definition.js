@@ -54,7 +54,7 @@ ModelDefinition = function (model, config) {
 
    @param {String} name fixture name
    @param {Object} opts attributes to override
-   @param {String} traits array of traits
+   @param {String} traitArgs array of traits
    @returns {Object} json
    */
   this.build = function (name, opts, traitArgs) {

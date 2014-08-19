@@ -1,4 +1,4 @@
-FactoryGuy.define( 'company', {
+FactoryGuy.define("company", {
   default: {
     name: 'Silly corp'
   }
@@ -25,7 +25,7 @@ FactoryGuy.define('profile', {
     description: 'Text goes here'
   }
 })
-FactoryGuy.define( "project", {
+FactoryGuy.define("project", {
   sequences: {
     title: function(num) {return 'Project' + num}
   },

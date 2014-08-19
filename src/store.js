@@ -125,9 +125,6 @@ DS.Store.reopen({
     then push that model to the store and set the id of that new model
     as the attribute value in the fixture
 
-   If it's a hasMany association, and its polymorphic, then convert the
-    attribute value to a polymorphic style
-
    @param modelType
    @param fixture
    */

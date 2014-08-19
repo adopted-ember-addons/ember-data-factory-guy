@@ -113,6 +113,17 @@ FactoryGuyTestMixin = Em.Mixin.create({
   },
 
   /**
+   Build url for the mockjax call. Proxy to the adapters buildURL method.
+
+   @param {String} type model type name like 'user' for User model
+   @param {String} id
+   @return {String} url
+   */
+  buildURL: function (type, id) {
+    return this.getStore().adapterFor('application').buildURL(type, id);
+  },
+
+  /**
    Handling ajax GET ( find record ) for a model. You can mock
    failed find by passing in status of 500.
 
@@ -124,7 +135,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var responseJson = this.buildAjaxHttpResponse(name, opts);
     var id = responseJson[modelName].id
-    var url = "/" + Em.String.pluralize(modelName) + "/" + id;
+    var url = this.buildURL(modelName, id);
     this.stubEndpointForHttpRequest(
       url,
       responseJson,
@@ -144,7 +155,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
   handleCreate: function (name, opts, status) {
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var responseJson = this.buildAjaxHttpResponse(name, opts);
-    var url = "/" + Em.String.pluralize(modelName);
+    var url = this.buildURL(modelName);
     this.stubEndpointForHttpRequest(
       url,
       responseJson,
@@ -157,13 +168,13 @@ FactoryGuyTestMixin = Em.Mixin.create({
    Handling ajax PUT ( update record ) for a model type. You can mock
    failed update by passing in status of 500.
 
-   @param {String} root modelType like 'user' for User
+   @param {String} type model type like 'user' for User model
    @param {String} id id of record to update
    @param {Integer} status Optional HTTP status response code
    */
-  handleUpdate: function (root, id, status) {
+  handleUpdate: function (type, id, status) {
     this.stubEndpointForHttpRequest(
-        "/" + Em.String.pluralize(root) + "/" + id,
+      this.buildURL(type, id),
       {},
       {type: 'PUT', status: (status || 200)}
     )
@@ -173,13 +184,13 @@ FactoryGuyTestMixin = Em.Mixin.create({
    Handling ajax DELETE ( delete record ) for a model type. You can mock
    failed delete by passing in status of 500.
 
-   @param {String} root modelType like 'user' for User
+   @param {String} type model type like 'user' for User model
    @param {String} id id of record to update
    @param {Integer} status Optional HTTP status response code
    */
-  handleDelete: function (root, id, status) {
+  handleDelete: function (type, id, status) {
     this.stubEndpointForHttpRequest(
-        "/" + Em.String.pluralize(root) + "/" + id,
+      this.buildURL(type, id),
       {},
       {type: 'DELETE', status: (status || 200)}
     )

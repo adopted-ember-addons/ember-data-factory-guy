@@ -70,7 +70,7 @@ ModelDefinition = function (model, config) {
 
    @param {String} name fixture name
    @param {Object} opts attributes to override
-   @param {String} traits array of traits
+   @param {String} traitArgs array of traits
    @returns {Object} json
    */
   this.build = function (name, opts, traitArgs) {
@@ -543,9 +543,6 @@ DS.Store.reopen({
     then push that model to the store and set the id of that new model
     as the attribute value in the fixture
 
-   If it's a hasMany association, and its polymorphic, then convert the
-    attribute value to a polymorphic style
-
    @param modelType
    @param fixture
    */
@@ -896,6 +893,17 @@ FactoryGuyTestMixin = Em.Mixin.create({
   },
 
   /**
+   Build url for the mockjax call. Proxy to the adapters buildURL method.
+
+   @param {String} type model type name like 'user' for User model
+   @param {String} id
+   @return {String} url
+   */
+  buildURL: function (type, id) {
+    return this.getStore().adapterFor('application').buildURL(type, id);
+  },
+
+  /**
    Handling ajax GET ( find record ) for a model. You can mock
    failed find by passing in status of 500.
 
@@ -907,7 +915,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var responseJson = this.buildAjaxHttpResponse(name, opts);
     var id = responseJson[modelName].id
-    var url = "/" + Em.String.pluralize(modelName) + "/" + id;
+    var url = this.buildURL(modelName, id);
     this.stubEndpointForHttpRequest(
       url,
       responseJson,
@@ -927,7 +935,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
   handleCreate: function (name, opts, status) {
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var responseJson = this.buildAjaxHttpResponse(name, opts);
-    var url = "/" + Em.String.pluralize(modelName);
+    var url = this.buildURL(modelName);
     this.stubEndpointForHttpRequest(
       url,
       responseJson,
