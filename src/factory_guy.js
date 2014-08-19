@@ -115,6 +115,11 @@ FactoryGuy = {
     }
   },
 
+  association: function(fixtureName, opts) {
+    console.log('DEPRECATION Warning: use FactoryGuy.belongsTo instead')
+    return this.belongsTo(fixtureName, opts);
+  },
+
   /**
    Used in model definitions to define a hasMany association attribute.
    For example:

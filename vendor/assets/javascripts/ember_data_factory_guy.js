@@ -600,8 +600,8 @@ DS.Store.reopen({
       }
       if (relationship.kind == 'hasMany') {
         var hasManyRecords = fixture[relationship.key];
-        console.log(relationship.key, Ember.typeOf(hasManyRecords))
-        if (Ember.typeOf(hasManyRecords) == 'array') { console.log(Ember.typeOf(hasManyRecords[0])) }
+        // if the records are objects and not instances they need to be converted to
+        // instances
         if (Ember.typeOf(hasManyRecords) == 'array' && Ember.typeOf(hasManyRecords[0]) == 'object') {
           var records = Em.A()
           hasManyRecords.forEach(function(record) {
