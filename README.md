@@ -106,13 +106,16 @@ Let's say you have a few models like these:
       // use the 'userName' sequence for this attribute
       name: FactoryGuy.generate('userName')
     },
-
+    //
     // named 'user' type with custom attributes
+    //
     admin: {
       type: 'superuser',
       name: 'Admin'
     }
+    //
     // using a function for an attribute that refers to other attributes
+    //
     funny_user: {
       type: function(f) { return 'funny '  + f.name }
     }
@@ -140,9 +143,10 @@ Let's say you have a few models like these:
       user: {name: 'Dude'}
     },
     project_with_admin: {
-      // for named association, use this FactoryGuy.association helper method
-      user: FactoryGuy.association('admin')
+      // for named association, use the FactoryGuy.belongsTo helper method
+      user: FactoryGuy.belongsTo('admin')
     }
+
   });
 
   FactoryGuy.define('hat', {
