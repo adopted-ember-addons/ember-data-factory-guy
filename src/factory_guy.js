@@ -256,13 +256,16 @@ FactoryGuy = {
   resetModels: function (store) {
     for (model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
-      definition.reset();
+      if(!store.usingFixtureAdapter())
+        definition.reset();
       try {
         var modelType = store.modelFor(definition.model);
         if (store.usingFixtureAdapter()) {
           modelType.FIXTURES = [];
         }
-        store.unloadAll(modelType);
+        else{
+          store.unloadAll(modelType);
+        }
       } catch (e) {
       }
     }
