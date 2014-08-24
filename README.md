@@ -28,17 +28,18 @@ require the 'ember_data_factory_guy' javascript file in your test helper
 
 Add as one of your dependencies in bower.json file:
 
-    
-      "dependencies": {
-        "foo-dependency": "latest",
-        "other-foo-dependency": "latest",
-        "ember-data-factory-guy": "latest"
-      }
-
+```json    
+  "dependencies": {
+    "foo-dependency": "latest",
+    "other-foo-dependency": "latest",
+    "ember-data-factory-guy": "latest"
+  }
+```
 
 then:
-
+```
     $ bower install
+```
 
 ## How this works
 
@@ -63,26 +64,28 @@ but BEFORE you require your models.
 ## Setup 
 
 *In the following examples, assume the models look like this*
-    
-      User = DS.Model.extend({
-        name:     DS.attr('string'),
-        type:     DS.attr('string'),
-        projects: DS.hasMany('project'),
-        hats: DS.hasMany('hat', {polymorphic: true})
-      });
-    
-      Project = DS.Model.extend({
-        title:  DS.attr('string'),
-        user:   DS.belongsTo('user')
-      });
-    
-      Hat = DS.Model.extend({
-        type: DS.attr('string'),
-        user: DS.belongsTo('user')
-      });
-    
-      BigHat = Hat.extend();
-      SmallHat = Hat.extend();
+
+```javascript
+  User = DS.Model.extend({
+    name:     DS.attr('string'),
+    type:     DS.attr('string'),
+    projects: DS.hasMany('project'),
+    hats: DS.hasMany('hat', {polymorphic: true})
+  });
+
+  Project = DS.Model.extend({
+    title:  DS.attr('string'),
+    user:   DS.belongsTo('user')
+  });
+
+  Hat = DS.Model.extend({
+    type: DS.attr('string'),
+    user: DS.belongsTo('user')
+  });
+
+  BigHat = Hat.extend();
+  SmallHat = Hat.extend();
+```
 
 
 ### Defining Factories
@@ -92,18 +95,18 @@ but BEFORE you require your models.
 
 ```javascript
 
-      FactoryGuy.define('user', {
-        // Put default 'user' attributes in the default section
-        default: {
-          type: 'normal',
-          name: 'Dude'
-        },
-        // Create a named 'user' with custom attributes
-        admin: {
-          type: 'super',
-          name: 'Admin'
-        }
-      });
+  FactoryGuy.define('user', {
+    // Put default 'user' attributes in the default section
+    default: {
+      type: 'normal',
+      name: 'Dude'
+    },
+    // Create a named 'user' with custom attributes
+    admin: {
+      type: 'super',
+      name: 'Admin'
+    }
+  });
 
 ```
 
@@ -115,19 +118,19 @@ but BEFORE you require your models.
  
 ```javascript
   
-      // returns json   
-      var json = FactoryGuy.build('user'); 
-      json // => {id: 1, name: 'Dude', type: 'normal'}
-    
-      // returns a User instance that is loaded into your application's store   
-      var user = store.makeFixture('user');
-      user.toJSON() // => {id: 2, name: 'Dude', type: 'normal'}
-    
-      var json = FactoryGuy.build('admin'); 
-      json // => {id: 3, name: 'Admin', type: 'super'}
-    
-      var user = store.makeFixture('admin');
-      user.toJSON() // => {id: 4, name: 'Admin', type: 'super'}
+  // returns json   
+  var json = FactoryGuy.build('user'); 
+  json // => {id: 1, name: 'Dude', type: 'normal'}
+
+  // returns a User instance that is loaded into your application's store   
+  var user = store.makeFixture('user');
+  user.toJSON() // => {id: 2, name: 'Dude', type: 'normal'}
+
+  var json = FactoryGuy.build('admin'); 
+  json // => {id: 3, name: 'Admin', type: 'super'}
+
+  var user = store.makeFixture('admin');
+  user.toJSON() // => {id: 4, name: 'Admin', type: 'super'}
   
 ```
 
@@ -149,24 +152,24 @@ You can override the default attributes by passing in a hash
 
 ```javascript
 
-      FactoryGuy.define('user', {
-        sequences: {
-          userName: function(num) {
-            return 'User' + num;
-          }
-        },
-    
-        default: {
-          // use the 'userName' sequence for this attribute
-          name: FactoryGuy.generate('userName')
-        }
-      });
-    
-      var json = FactoryGuy.build('user'); 
-      json.name // => 'User1'
-    
-      var user = store.makeFixture('user');
-      user.get('name') // => 'User2'
+  FactoryGuy.define('user', {
+    sequences: {
+      userName: function(num) {
+        return 'User' + num;
+      }
+    },
+
+    default: {
+      // use the 'userName' sequence for this attribute
+      name: FactoryGuy.generate('userName')
+    }
+  });
+
+  var json = FactoryGuy.build('user'); 
+  json.name // => 'User1'
+
+  var user = store.makeFixture('user');
+  user.get('name') // => 'User2'
 
 ```
 
@@ -178,20 +181,20 @@ You can override the default attributes by passing in a hash
  
 ```javascript
 
-      FactoryGuy.define('user', {
-        traits: {
-          big: { name: 'Big Guy' }
-          friendly: { type: 'Friendly' }
-        }
-      });
-      
-      var json = FactoryGuy.build('user', 'big', 'friendly'); 
-      json.name // => 'Big Guy'
-      json.type // => 'Friendly'
-    
-      var user = store.makeFixture('user', 'big', 'friendly');
-      user.get('name') // => 'Big Guy'
-      user.get('type') // => 'Friendly'
+  FactoryGuy.define('user', {
+    traits: {
+      big: { name: 'Big Guy' }
+      friendly: { type: 'Friendly' }
+    }
+  });
+  
+  var json = FactoryGuy.build('user', 'big', 'friendly'); 
+  json.name // => 'Big Guy'
+  json.type // => 'Friendly'
+
+  var user = store.makeFixture('user', 'big', 'friendly');
+  user.get('name') // => 'Big Guy'
+  user.get('type') // => 'Friendly'
 
 ```
 
@@ -206,25 +209,27 @@ attributes will override any trait attributes or default attributes
 
 ```
 
-###### Associations
+### Associations
+
 - Can setup belongsTo or hasMany associations in factory definitions
 
-** belongsTo
+## belongsTo Associations
  
 ```javascript
-  
+  // Recall ( from above setup ) that there is a user belongsTo on the Project model
+  // Also, assume 'user' factory is same as from previous 'user' factory definition 
   FactoryGuy.define('project', {
 
     project_with_user: {
-      // user model with default attributes
+      // create user model with default attributes
       user: {}
     },
     project_with_dude: {
-      // user model with custom attributes
+      // create user model with custom attributes
       user: {name: 'Bob'}
     },
     project_with_admin: {
-      // for a named user model use the FactoryGuy.belongsTo helper method
+      // create a named user model with the FactoryGuy.belongsTo helper method
       user: FactoryGuy.belongsTo('admin')
     }
   });
@@ -235,9 +240,9 @@ attributes will override any trait attributes or default attributes
   var json = FactoryGuy.build('project_with_dude'); 
   json.user // => {id:1, name: 'Dude', type: 'Normal'}
 
-  var user = store.makeFixture('user', 'big', 'friendly');
-  user.get('name') // => 'Big Guy'
-  user.get('type') // => 'Friendly'
+  var project = store.makeFixture('project_with_admin');
+  project.get('user.name') // => 'Admin'
+  project.get('user.type') // => 'super'
 
 ```
 
@@ -253,13 +258,10 @@ attributes will override any trait attributes or default attributes
   });
   
   var user = store.makeFixture('project', 'with_user');
-  // or 
-  var user = store.makeFixture('project', 'with_admin');
-  // or whatever combination of other traits you need
   
 ```
 
-** hasMany
+## hasMany Associations
 
 
 ``` javascript
