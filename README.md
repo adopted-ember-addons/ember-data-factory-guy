@@ -213,7 +213,7 @@ attributes will override any trait attributes or default attributes
 
 - Can setup belongsTo or hasMany associations in factory definitions
 
-## belongsTo Associations
+#### belongsTo Associations
  
 ```javascript
   // Recall ( from above setup ) that there is a user belongsTo on the Project model
@@ -261,7 +261,7 @@ attributes will override any trait attributes or default attributes
   
 ```
 
-## hasMany Associations
+#### hasMany Associations
 
 
 ``` javascript
