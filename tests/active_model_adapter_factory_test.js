@@ -6,7 +6,7 @@ module('FactoryGuy with ActiveModelAdapter', {
     store = testHelper.getStore();
   },
   teardown: function() {
-    Em.run(function() { testHelper.teardown(); });
+    testHelper.teardown();
   }
 });
 

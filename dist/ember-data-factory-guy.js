@@ -426,20 +426,18 @@ FactoryGuy = {
   resetModels: function (store) {
     for (model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
-      if(!store.usingFixtureAdapter())
-        definition.reset();
+      definition.reset();
       try {
         var modelType = store.modelFor(definition.model);
         if (store.usingFixtureAdapter()) {
           modelType.FIXTURES = [];
         }
-        else{
-          store.unloadAll(modelType);
-        }
+        store.unloadAll(modelType);
       } catch (e) {
       }
     }
   },
+
 
   /**
    Push fixture to model's FIXTURES array.
@@ -997,10 +995,8 @@ FactoryGuyTestMixin = Em.Mixin.create({
    */
   handleCreate: function (name, opts, status) {
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    console.log(name, modelName)
     var responseJson = this.buildAjaxHttpResponse(name, opts);
     var url = this.buildURL(modelName);
-    console.log('url', url)
     this.stubEndpointForHttpRequest(
       url,
       responseJson,

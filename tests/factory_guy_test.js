@@ -11,7 +11,9 @@ module('FactoryGuy', {
     store = testHelper.getStore();
   },
   teardown: function() {
-    Em.run(function() { testHelper.teardown(); });
+    Em.run(function() {
+      testHelper.teardown();
+    });
   }
 });
 
