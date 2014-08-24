@@ -212,8 +212,11 @@ attributes will override any trait attributes or default attributes
 ### Associations
 
 - Can setup belongsTo or hasMany associations in factory definitions
+    - As inline attribute definition
+    - With traits
+- Can setup belongsTo or hasMany associations manually
 
-#### belongsTo Associations
+##### Setup belongsTo Associations in Factory Definition
  
 ```javascript
   // Recall ( from above setup ) that there is a user belongsTo on the Project model
@@ -261,7 +264,17 @@ attributes will override any trait attributes or default attributes
   
 ```
 
-#### hasMany Associations
+##### Setup belongsTo Associations manually
+
+```javascript
+    var user = store.makeFixture('user');
+    var project = store.makeFixture('project', {user: user});
+    
+    project.get('user').toJSON() // => {id:1, name: 'Dude', type: 'Normal'}
+```
+
+
+##### Setup hasMany Associations in Factory Definition
 
 
 ``` javascript
