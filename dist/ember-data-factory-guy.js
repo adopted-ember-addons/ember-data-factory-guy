@@ -994,8 +994,10 @@ FactoryGuyTestMixin = Em.Mixin.create({
    */
   handleCreate: function (name, opts, status) {
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
+    console.log(name, modelName)
     var responseJson = this.buildAjaxHttpResponse(name, opts);
     var url = this.buildURL(modelName);
+    console.log('url', url)
     this.stubEndpointForHttpRequest(
       url,
       responseJson,

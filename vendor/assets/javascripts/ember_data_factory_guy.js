@@ -285,6 +285,11 @@ FactoryGuy = {
     }
   },
 
+  association: function(fixtureName, opts) {
+    console.log('DEPRECATION Warning: use FactoryGuy.belongsTo instead')
+    return this.belongsTo(fixtureName, opts);
+  },
+
   /**
    Used in model definitions to define a hasMany association attribute.
    For example:
@@ -989,8 +994,10 @@ FactoryGuyTestMixin = Em.Mixin.create({
    */
   handleCreate: function (name, opts, status) {
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
+    console.log(name, modelName)
     var responseJson = this.buildAjaxHttpResponse(name, opts);
     var url = this.buildURL(modelName);
+    console.log('url', url)
     this.stubEndpointForHttpRequest(
       url,
       responseJson,
