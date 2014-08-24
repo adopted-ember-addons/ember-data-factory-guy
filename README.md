@@ -249,7 +249,7 @@ attributes will override any trait attributes or default attributes
 
 ```
 
-**You could also accomplish the above with traits:
+*You could also accomplish the above with traits:*
 
 ```javascript
   
@@ -268,14 +268,14 @@ attributes will override any trait attributes or default attributes
 ##### Setup belongsTo Associations manually
 
 ```javascript
-    var user = store.makeFixture('user');
-    var project = store.makeFixture('project', {user: user});
+  var user = store.makeFixture('user');
+  var project = store.makeFixture('project', {user: user});
     
-    project.get('user').toJSON() // => {id:1, name: 'Dude', type: 'Normal'}
+  project.get('user').toJSON() // => {id:1, name: 'Dude', type: 'Normal'}
 ```
 
 *Note that though you are setting the user belongsTo association on a project,
-  the reverse user hasMany projects association is being setup on user as well
+  the reverse user hasMany projects association is being setup on user as well*
 
 ```javascript
   user.get('projects.length') // => 1
@@ -326,7 +326,7 @@ attributes will override any trait attributes or default attributes
   
 ```
 
-*Note that though you are setting the projects hasMany association on a user,
+Note that though you are setting the projects hasMany association on a user,
   the reverse user belongsTo association is being setup on project as well
    
 ```
@@ -335,24 +335,8 @@ attributes will override any trait attributes or default attributes
   // the projects all get the user they belongTo assigned to them
   user.get('projects.firstObject.user') // => user
 ```
-// setting models on the hasMany association
-var project = store.makeFixture('project');
-var user = store.makeFixture('user', {projects: [project]});
-//  OR
-// setting a model on the belongsTo association
-var user = store.makeFixture('user');
-var project = store.makeFixture('project', {user: user});
 
-// will get you the same results, since FactoryGuy makes sure the associations
-// are created in both directions
-// user.get('projects.length') == 1;
-// user.get('projects.firstObject.user') == user;
 ```
-
-
-
-
-
   // note the sequence used in the name attribute
   FactoryGuy.build('user') // {id: 2, name: 'User2', type: 'normal'}
   FactoryGuy.build('user', {name: 'bob'}) // {id: 3, name: 'bob', type: 'normal'}
