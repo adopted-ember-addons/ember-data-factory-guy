@@ -261,6 +261,7 @@ attributes will override any trait attributes or default attributes
   });
   
   var user = store.makeFixture('project', 'with_user');
+  project.get('user').toJSON() // => {id:1, name: 'Dude', type: 'Normal'}
   
 ```
 
