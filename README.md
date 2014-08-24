@@ -294,7 +294,7 @@ attributes will override any trait attributes or default attributes
   
 ```
 
-*You could also accomplish the above with traits:
+*You could also accomplish the above with traits:*
 
 ```javascript
   
