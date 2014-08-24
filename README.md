@@ -255,7 +255,7 @@ attributes will override any trait attributes or default attributes
   
   FactoryGuy.define('project', {
     traits: {
-      with_user: { user: {}} },
+      with_user: { user: {} },
       with_admin: { user: FactoryGuy.belongsTo('admin') }
     }
   });
@@ -274,11 +274,67 @@ attributes will override any trait attributes or default attributes
     project.get('user').toJSON() // => {id:1, name: 'Dude', type: 'Normal'}
 ```
 
+*Note that though you are setting the user belongsTo association on a project,
+  the reverse user hasMany projects association is being setup on user as well
+
+```javascript
+  user.get('projects.length') // => 1
+```
+
 
 ##### Setup hasMany Associations in Factory Definition
 
-
 ``` javascript
+  FactoryGuy.define('user', {
+    user_with_projects: { FactoryGuy.hasMany('project', 2) }
+  });
+  
+  var user = store.makeFixture('user_with_projects');
+  user.get('projects.length') // => 2
+  
+```
+
+*You could also accomplish the above with traits:
+
+```javascript
+  
+  FactoryGuy.define('project', {
+    traits: {
+      with_projects: {
+        projects: FactoryGuy.hasMany('project', 2)
+      }
+    }
+  });
+  
+  var user = store.makeFixture('user', 'with_projects');
+  user.get('projects.length') // => 2
+  
+```
+
+##### Setup hasMany Associations manually
+
+```
+  var project1 = store.makeFixture('project');
+  var project2 = store.makeFixture('project');
+  var user = store.makeFixture('user', {projects: [project1,project2]});
+  user.get('projects.length') // => 2
+  
+  // or 
+  var projects = store.makeList('project', 2);
+  var user = store.makeFixture('user', {projects: projects});
+  user.get('projects.length') // => 2
+  
+```
+
+*Note that though you are setting the projects hasMany association on a user,
+  the reverse user belongsTo association is being setup on project as well
+   
+```
+  var projects = store.makeList('project', 2);
+  var user = store.makeFixture('user', {projects: projects});
+  // the projects all get the user they belongTo assigned to them
+  user.get('projects.firstObject.user') // => user
+```
 // setting models on the hasMany association
 var project = store.makeFixture('project');
 var user = store.makeFixture('user', {projects: [project]});
@@ -292,6 +348,8 @@ var project = store.makeFixture('project', {user: user});
 // user.get('projects.length') == 1;
 // user.get('projects.firstObject.user') == user;
 ```
+
+
 
 
 
@@ -447,13 +505,15 @@ store.makeFixture('small_hat', {user: user});
 
 ```javascript
 var users = store.makeList('user', 3);
+users.get('length') // => 3
+users.get('firstObject').toJSON() // => {id:1, name: 'Dude', type: 'Normal'}
 ```
 
 #####DS.Fixture adapter
 
-store.makeFixture => creates model in the store and returns json
+- store.makeFixture ... creates model in the store and returns json
 
-Technically when you call store.makeFixture with a store using the DS.FixtureAdapter,
+**Technically when you call store.makeFixture with a store using the DS.FixtureAdapter,
 the fixture is actually added to the models FIXTURE array. It just seems to be added
 to the store because when you call store.find to get that record, the adapter looks
 in that FIXTURE array to find it and then puts it in the store.
