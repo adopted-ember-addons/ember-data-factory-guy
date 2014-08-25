@@ -256,7 +256,7 @@ You can override the default attributes by passing in a hash
 ### Inline Functions
 
 - Declare a function for an attribute 
-  - Can refers to other attributes
+  - Can reference other attributes
 
 ```  
    
