@@ -527,7 +527,7 @@ test("make a user using your applications default adapter", function() {
 ###Integration Tests
 
 
-###### Using FactoryGuyTestMixin
+##### Using FactoryGuyTestMixin
 
 - Helper methods:
   - handleFind
