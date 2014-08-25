@@ -456,7 +456,7 @@ attributes will override any trait attributes or default attributes
 
 ##### Building json array 
 
-```
+```javascript
   var json = FactoryGuy.buildList('user', 2) 
   json.length // => 2 
   json[0] // => {id: 1, name: 'User1', type: 'normal'}
@@ -466,7 +466,7 @@ attributes will override any trait attributes or default attributes
 
 ##### Building model instances
 
-```
+```javascript
   var users = store.makeList('user', 2) 
   users.get('length') // => 2 
   users[0].toJSON() // => {id: 3, name: 'User3', type: 'normal'}
