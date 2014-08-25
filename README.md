@@ -387,8 +387,8 @@ attributes will override any trait attributes or default attributes
   project.get('user').toJSON() // => {id:1, name: 'Dude', type: 'Normal'}
 ```
 
-*Note that though you are setting the user belongsTo association on a project,
-  the reverse user hasMany projects association is being setup on user as well*
+*Note that though you are setting the 'user' belongsTo association on a project,
+  the reverse user hasMany 'projects' association is being setup on user as well*
 
 ```javascript
   user.get('projects.length') // => 1
@@ -427,7 +427,7 @@ attributes will override any trait attributes or default attributes
 
 ##### Setup hasMany associations manually
 
-```
+```javascript
   var project1 = store.makeFixture('project');
   var project2 = store.makeFixture('project');
   var user = store.makeFixture('user', {projects: [project1,project2]});
@@ -440,14 +440,11 @@ attributes will override any trait attributes or default attributes
   
 ```
 
-*Note that though you are setting the projects hasMany association on a user,
-  the reverse user belongsTo association is being setup on project as well*
+*Note that though you are setting the 'projects' hasMany association on a user,
+  the reverse 'user' belongsTo association is being setup on project as well*
    
-```
-  var projects = store.makeList('project', 2);
-  var user = store.makeFixture('user', {projects: projects});
-  // the projects all get the user they belongTo assigned to them
-  user.get('projects.firstObject.user') // => user
+```javascript
+  projects.get('firstObject.user')  // => user
 ```
 
 
