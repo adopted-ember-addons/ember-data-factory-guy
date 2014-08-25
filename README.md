@@ -41,15 +41,30 @@ then:
     $ bower install
 ```
 
-## How this works
+### How this works
 
-Add fixtures to the store using the:
+- Using DS.RestAdapter / DS.ActiveModelAdapter 
+  - Add record instances to the store
 
-  * DS.RestAdapter
-  * DS.ActiveModelAdapter
-  * DS.FixtureAdapter
+- Using DS.FixtureAdapter 
+  - Add fixtures to the store
+  
 
-NOTE: The benefit of using FactoryGuy is that you can run your tests with the
+##### DS.RestAdapter / DS.ActiveModelAdapter
+
+The preferred way to use this project is to use the default adapter for your project.
+*In other words, it is NOT recommended to use the DS.FixtureAdapter.*  
+
+When you call: store.makeFixture('user'), you create model in the store and this method 
+returns this model instance 
+
+*Since you are synchronously getting model instances, you can immediately start asking
+ for data from the model, and its associations, which is why it is faster to use
+ the REST/ActiveModel adapter than the FixtureAdapter*
+
+##### Using DS.FixtureAdapter
+ 
+The benefit of using FactoryGuy is that you can run your tests with the
 default adapter that your application's store normally uses. In other words:
 You do not have to use the DS.FixtureAdapter.  But if you do choose to use the Fixture adapter,
 which does not run any faster, and does not handle associations as elegantly
@@ -62,9 +77,9 @@ If you do get these types of errors try requiring the factory_guy_has_many.js fi
 but BEFORE you require your models.  
 
 
-## Setup 
+### Setup 
 
-*In the following examples, assume the models look like this*
+In the following examples, assume the models look like this:
 
 ```javascript
   User = DS.Model.extend({
@@ -461,100 +476,9 @@ attributes will override any trait attributes or default attributes
 ```
 
 
-###Adding records to store
-
-#####DS.ActiveModelAdapter/DS.RestAdapter
-
-###### The Basics
-
-store.makeFixture => creates model in the store and returns model instance
-*NOTE* since you are getting a model instances, you can synchronously
-start asking for data from the model, and its associations
-
-```javascript
-var user = store.makeFixture('user'); // user.toJSON() = {id: 1, name: 'User1', type: 'normal'}
-// note that the user name is a sequence
-var user = store.makeFixture('user'); // user.toJSON() = {id: 2, name: 'User2', type: 'normal'}
-var user = store.makeFixture('funny_user'); // user.toJSON() = {id: 3, name: 'User3', type: 'funny User3'}
-var user = store.makeFixture('user', {name: 'bob'}); // user.toJSON() = {id: 4, name: 'bob', type: 'normal'}
-var user = store.makeFixture('admin'); // user.toJSON() = {id: 5, name: 'Admin', type: 'superuser'}
-var user = store.makeFixture('admin', {name: 'Fred'}); // user.toJSON() = {id: 6, name: 'Fred', type: 'superuser'}
-```
 
 
-###### Polymorphic hasMany associations
-```javascript
-  ////////////////////////////////////////////
-  // FactoryGuy definitions for models
 
-  FactoryGuy.define('user', {
-    // sequences to be used in attributes definition
-    sequences: {
-      userName: function(num) {
-        return 'User' + num;
-      }
-    },
-
-   // default 'user' attributes
-    default: {
-      type: 'normal',
-      // use the 'userName' sequence for this attribute
-      name: FactoryGuy.generate('userName')
-    },
-    //
-    // named 'user' type with custom attributes
-    //
-    admin: {
-      type: 'superuser',
-      name: 'Admin'
-    }
-    //
-    // using a function for an attribute that refers to other attributes
-    //
-    funny_user: {
-      type: function(f) { return 'funny '  + f.name }
-    }
-  });
-
-  FactoryGuy.define('project', {
-    default: {
-      title: 'Project'
-    },
-    //
-    // declaring inline sequence
-    //
-    special_project: {
-      title: FactoryGuy.generate(function(num) { return 'Project #' + num})
-    },
-    //
-    // define built in belongTo models
-    //
-    project_with_user: {
-      // user model with default attributes
-      user: {}
-    },
-    project_with_dude: {
-      // user model with custom attributes
-      user: {name: 'Dude'}
-    },
-    project_with_admin: {
-      // for named association, use the FactoryGuy.belongsTo helper method
-      user: FactoryGuy.belongsTo('admin')
-    }
-
-  });
-
-```
-
-```
-
-###### Create lists
-
-```javascript
-var users = store.makeList('user', 3);
-users.get('length') // => 3
-users.get('firstObject').toJSON() // => {id:1, name: 'Dude', type: 'Normal'}
-```
 
 #####DS.Fixture adapter
 
@@ -604,13 +528,14 @@ store.find('user', 1).then(function(user) {
 store.makeList('user', 2, {projects: [project.id]});
 ```
 
-###Testing models, controllers, views
+
+###Testing models, controllers, views 
 
 
-This section assumes you are testing the ( controllers and views ) in isolation.
+- Assuming you are testing the model's, controllers and views .
+- Using FactoryGuyTestMixin to help with testing
 
-The code bundled in dist/ember-data-factory-guy.js includes a mixin named FactoryGuyTestMixin which
-can be used in your tests to make it easier to access the store and make fixtures.
+##### Using FactoryGuyTestMixin
 
 ```javascript
 
@@ -637,7 +562,6 @@ module('User Model', {
 // to be even more concise in tests you could add this method to your tests
 var make = function(name, opts) { return testHelper.make(name, opts); }
 
-
 test("make a user using fixture adapter", function() {
   // useFixtureAdapter method is built into FactoryGuyTestMixin, and usually
   // this would be called in the setup function
@@ -658,7 +582,10 @@ test("make a user using your applications default adapter", function() {
 ```
 
 
+
 ###Integration Tests
+
+- Using FactoryGuyTestMixin
 
 Since it is recommended to use your normal adapter ( which is usually a subclass of RESTAdapter, )
 FactoryGuyTestMixin assumes you will want to use that adapter to do your integration tests.
