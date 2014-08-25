@@ -486,12 +486,14 @@ attributes will override any trait attributes or default attributes
 
 ##### Using FactoryGuyTestMixin
 
+- Using FactoryGuyTestMixin helper methods:
+  - make
+  - teardown
+  
 ```javascript
 
-// Let's say you have a helper for your tests named TestHelper declared in a file.
-
+// Create a helper class using FactoryGuyTestMixin.
 TestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin);
-
 
 // Then in your tests you can use it like so:
 
@@ -511,15 +513,6 @@ module('User Model', {
 // to be even more concise in tests you could add this method to your tests
 var make = function(name, opts) { return testHelper.make(name, opts); }
 
-test("make a user using fixture adapter", function() {
-  // useFixtureAdapter method is built into FactoryGuyTestMixin, and usually
-  // this would be called in the setup function
-  testHelper.useFixtureAdapter();
-  var json = make('user');
-  equal(User.FIXTURES.length, 1);
-  equal(User.FIXTURES[0], json);
-});
-
 // assuming your default adapter is ActiveModelAdapter or RESTAdapter
 test("make a user using your applications default adapter", function() {
   var user = make('user');
@@ -531,10 +524,17 @@ test("make a user using your applications default adapter", function() {
 ```
 
 
-
 ###Integration Tests
 
-- Using FactoryGuyTestMixin
+
+###### Using FactoryGuyTestMixin
+
+- Helper methods:
+  - handleFind
+  - handleCreate
+  - handleUpdate
+  - handleDelete
+
 
 Since it is recommended to use your normal adapter ( which is usually a subclass of RESTAdapter, )
 FactoryGuyTestMixin assumes you will want to use that adapter to do your integration tests.
@@ -627,6 +627,7 @@ to the store because when you call store.find to get that record, the adapter lo
 in that FIXTURE array to find it and then puts it in the store.
 
 ```javascript
+
 
 store.makeFixture('user'); // user.FIXTURES = [{id: 1, name: 'User1', type: 'normal'}]
 store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', type: 'normal'}]
