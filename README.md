@@ -242,7 +242,11 @@ You can override the default attributes by passing in a hash
   - Can refers to other attributes
 
 ```  
+   
   FactoryGuy.define('user', {
+    // Assume that this definition includes the same sequences and default section
+    // from the user definition in: "Declaring sequences in sequences hash" section. 
+     
     funny_user: {
       type: function(f) { return 'funny '  + f.name }
     }
