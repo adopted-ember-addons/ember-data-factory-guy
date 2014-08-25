@@ -470,7 +470,7 @@ attributes will override any trait attributes or default attributes
   var users = store.makeList('user', 2) 
   users.get('length') // => 2 
   users[0].toJSON() // => {id: 3, name: 'User3', type: 'normal'}
-  json[1].toJSON() // => {id: 4, name: 'User4', type: 'normal'}
+  users[1].toJSON() // => {id: 4, name: 'User4', type: 'normal'}
 
 ```
 
