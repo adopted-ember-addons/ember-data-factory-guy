@@ -59,7 +59,8 @@ Error: Assertion Failed: You looked up the 'projects' relationship on '<User:emb
 
 If you do get these types of errors try requiring the factory_guy_has_many.js file
 ( located in dist dir and vendor dir ) AFTER you require ember-data,
-but BEFORE you require your models.
+but BEFORE you require your models.  
+
 
 ## Setup 
 
@@ -92,6 +93,8 @@ but BEFORE you require your models.
  - A factory has a name and a set of attributes.  
  - The name should match the model type name. So, for 'User' model, the name would be 'user' 
     
+
+##### Standard models
 
 ```javascript
 
@@ -146,7 +149,6 @@ rather than doing this:
 
 Since there are times that the latter can cause problems when 
 the store is looking up the correct model type name
-
 
 
 ### Using Factories
@@ -233,6 +235,31 @@ You can override the default attributes by passing in a hash
   project.get('title') // => 'Project 2'
 
 ```
+
+### Inline Functions
+
+- Declare a function for an attribute 
+  - Can refers to other attributes
+
+```  
+  FactoryGuy.define('user', {
+    funny_user: {
+      type: function(f) { return 'funny '  + f.name }
+    }
+  });
+
+  var json = FactoryGuy.build('funny_user');
+  json.name = 'User1'
+  json.type = 'funny User1'
+  
+  var user = store.makeFixture('funny_user');
+  user.get('name') // => 'User2'
+  user.get('type') // => 'funny User2'
+
+```
+
+*Note the type attribute was built from a function which depends on the name
+ and the name is a generated attribute from a sequence function*
 
 
 ### Traits
@@ -403,36 +430,30 @@ attributes will override any trait attributes or default attributes
 ```
 
 
+#### Building many models at once
 
+- FactoryGuy.buildList ... builds array of json
+- store.makeList ... loads the array instance into store
+
+
+##### Building json array 
 
 ```
-  // note the sequence used in the name attribute
-  FactoryGuy.build('user') // {id: 2, name: 'User2', type: 'normal'}
-  FactoryGuy.build('user', {name: 'bob'}) // {id: 3, name: 'bob', type: 'normal'}
-  FactoryGuy.build('admin') // {id: 4, name: 'Admin', type: 'superuser'}
-  // note the type attribute was built from a function which depends on the name
-  // and the name is still a generated attribute from a sequence function
-  FactoryGuy.build('funny_user') // {id: 5, name: 'User3', type: 'funny User3'}
+  var json = FactoryGuy.buildList('user', 2) 
+  json.length // => 2 
+  json[0] // => {id: 1, name: 'User1', type: 'normal'}
+  json[1] // => {id: 2, name: 'User2', type: 'normal'}
 
-  // basic project
-  FactoryGuy.build('project') // {id: 1, title: 'Project'}
+```
 
-  // note the inline sequence used in the title attribute
-  FactoryGuy.build('special_project') // {id: 2, title: 'Project #1'}
+##### Building model instances
 
-  // project with a user
-  FactoryGuy.build('project_with_user') // {id: 3, title: 'Project', user: {id:6, name: 'User4', type: 'normal'}
-  // project with user that has custom attributes
-  FactoryGuy.build('project_with_dude') // {id: 4, title: 'Project', user: {id:7, name: 'Dude', type: 'normal'}
-  // project with user that has a named user
-  FactoryGuy.build('project_with_admin') // {id: 3, title: 'Project', user: {id:8, name: 'Admin', type: 'superuser'}
+```
+  var users = store.makeList('user', 2) 
+  users.get('length') // => 2 
+  users[0].toJSON() // => {id: 3, name: 'User3', type: 'normal'}
+  json[1].toJSON() // => {id: 4, name: 'User4', type: 'normal'}
 
-  //////////////////////////////////////////////////////////////////
-  //
-  // building json with FactoryGuy.buildList
-  //
-
-  FactoryGuy.buildList('user', 2) // [ {id: 1, name: 'User1', type: 'normal'}, {id: 2, name: 'User2', type: 'normal'} ]
 ```
 
 
