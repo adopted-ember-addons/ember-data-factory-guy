@@ -529,12 +529,12 @@ test("make a user using your applications default adapter", function() {
 
 ##### Using FactoryGuyTestMixin
 
-- Helper methods:
+- Uses mockjax
+- Has helper methods
   - handleFind
   - handleCreate
   - handleUpdate
   - handleDelete
-
 
 Since it is recommended to use your normal adapter ( which is usually a subclass of RESTAdapter, )
 FactoryGuyTestMixin assumes you will want to use that adapter to do your integration tests.
