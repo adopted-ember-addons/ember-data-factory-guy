@@ -45,14 +45,16 @@ then:
 
 - Using DS.RestAdapter / DS.ActiveModelAdapter 
   - Add record instances to the store
-
+  - Faster, since models can be accessed synchronously  
 - Using DS.FixtureAdapter 
   - Add fixtures to the store
+  - Slower, since models are accessed asynchronously
   
 
 ##### DS.RestAdapter / DS.ActiveModelAdapter
 
-The preferred way to use this project is to use the default adapter for your project.
+The preferred way to use this project is to use the default adapter for your project, 
+which is usually going to be the RESTAdapter/ActiveModelAdapter.
 *In other words, it is NOT recommended to use the DS.FixtureAdapter.*  
 
 When you call: store.makeFixture('user'), you create model in the store and this method 
