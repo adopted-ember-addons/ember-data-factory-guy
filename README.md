@@ -7,13 +7,13 @@ To Use with in Rails project or project with sprockets:
 In Gemfile:
 
 ```ruby
-    gem 'ember-data-factory-guy', group: test
+gem 'ember-data-factory-guy', group: test
 ```
 
 then:
 
 ```
-    $ bundle install
+$ bundle install
 ```
 
 then:
@@ -21,7 +21,7 @@ then:
 require the 'ember_data_factory_guy' javascript file in your test helper
 
 ```
-    //= require ember_data_factory_guy
+//= require ember_data_factory_guy
 ```
 
 ## Using as bower component
@@ -109,6 +109,45 @@ but BEFORE you require your models.
   });
 
 ```
+
+
+##### Polymorphic models
+
+It is better to define each polymorphic model in it's own typed definition:
+
+```
+  FactoryGuy.define('small_hat', {
+    default: {
+      type: 'SmallHat'
+    }
+  })
+  
+  FactoryGuy.define('big_hat', {
+    default: {
+      type: 'BigHat'
+    }
+  })
+
+```
+
+rather than doing this:
+
+```
+  FactoryGuy.define('hat', {
+    default: {},
+    small_hat: {
+      type: 'SmallHat'
+    },
+    big_hat: {
+      type: 'BigHat'
+    }
+  })
+```
+
+Since there are times that the latter can cause problems when 
+the store is looking up the correct model type name
+
+
 
 ### Using Factories
  - FactoryGuy.build   ... building json  
@@ -290,6 +329,7 @@ attributes will override any trait attributes or default attributes
   
 ```
 
+
 ##### Setup belongsTo associations manually
 
 ```javascript
@@ -305,6 +345,7 @@ attributes will override any trait attributes or default attributes
 ```javascript
   user.get('projects.length') // => 1
 ```
+
 
 
 ##### Setup hasMany associations in Factory Definition
@@ -478,38 +519,7 @@ var user = store.makeFixture('admin', {name: 'Fred'}); // user.toJSON() = {id: 6
 
   });
 
-  FactoryGuy.define('hat', {
-    default: {},
-    small_hat: {
-      type: 'SmallHat'
-    },
-    big_hat: {
-      type: 'BigHat'
-    }
-  })
 ```
-
-```javascript
-// setting polymorphic models on the (polymorphic) hasMany association
-var sh = store.makeFixture('big_hat');
-var bh = store.makeFixture('small_hat');
-var user = store.makeFixture('user', {hats: [sh, bh]})
-// user.get('hats.length') == 2;
-// (user.get('hats.firstObject') instanceof BigHat) == true
-// (user.get('hats.lastObject') instanceof SmallHat) == true
-
-// OR
-
-// setting belongTo association on polymorphic model
-var user = store.makeFixture('user');
-store.makeFixture('big_hat', {user: user});
-store.makeFixture('small_hat', {user: user});
-
-// will get you the same results, since FactoryGuy makes sure the associations
-// are created in both directions, even for polymorphic associations.
-// user.get('hats.length') == 2;
-// (user.get('hats.firstObject') instanceof BigHat) == true
-// (user.get('hats.lastObject') instanceof SmallHat) == true
 
 ```
 
