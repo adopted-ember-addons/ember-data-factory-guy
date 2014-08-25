@@ -476,64 +476,11 @@ attributes will override any trait attributes or default attributes
 ```
 
 
-
-
-
-
-#####DS.Fixture adapter
-
-- store.makeFixture ... creates model in the store and returns json
-
-**Technically when you call store.makeFixture with a store using the DS.FixtureAdapter,
-the fixture is actually added to the models FIXTURE array. It just seems to be added
-to the store because when you call store.find to get that record, the adapter looks
-in that FIXTURE array to find it and then puts it in the store.
-
-```javascript
-
-store.makeFixture('user'); // user.FIXTURES = [{id: 1, name: 'User1', type: 'normal'}]
-store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', type: 'normal'}]
-store.makeFixture('admin'); //  user.FIXTURES = [{id: 3, name: 'Admin', type: 'superuser'}]
-store.makeFixture('admin', {name: 'Fred'}); //  user.FIXTURES = [{id: 4, name: 'Fred', type: 'superuser'}]
-
-
-// Use store.find to get the model instance ( Remember this is the Fixture adapter, if
-// you use the ActiveModelAdapter or RESTAdapter the record is returned so you don't
-// have to then go and find it )
-var userJson = store.makeFixture('user');
-store.find('user', userJson.id).then(function(user) {
-   user.toJSON() ( pretty much equals ) userJson;
-});
-
-// and to setup associations ...
-var projectJson = store.makeFixture('project');
-var userJson = store.makeFixture('user', {projects: [projectJson.id]});
-// OR
-var userJson = store.makeFixture('user');
-var projectJson = store.makeFixture('project', {user: userJson.id});
-
-// will give you the same result, but with fixture adapter all associations
-// are treated as async ( by factory_guy_has_many.js fix ), so it's
-// a bit clunky to get this associated data. When using DS.FixtureAdapter
-// in view specs though, this clunk is dealt with for you. But remember,
-// you don't have to use the Fixture adapter.
-store.find('user', 1).then(function(user) {
-  user.toJSON() (pretty much equals) userJson;
-  user.get('projects').then(function(projects) {
-    projects.length == 1;
-  });
-});
-
-// and for lists
-store.makeList('user', 2, {projects: [project.id]});
-```
-
-
 ###Testing models, controllers, views 
 
+- Testing the models, controllers and views in isolation
+- Use FactoryGuyTestMixin to help with testing
 
-- Assuming you are testing the model's, controllers and views .
-- Using FactoryGuyTestMixin to help with testing
 
 ##### Using FactoryGuyTestMixin
 
@@ -667,3 +614,47 @@ test("Creates new project", function() {
 ```
 
 
+### Using DS.Fixture adapter
+
+- Not recommended
+- store.makeFixture ... creates model in the store and returns json
+
+Technically when you call store.makeFixture with a store using the DS.FixtureAdapter,
+the fixture is actually added to the models FIXTURE array. It just seems to be added
+to the store because when you call store.find to get that record, the adapter looks
+in that FIXTURE array to find it and then puts it in the store.
+
+```javascript
+
+store.makeFixture('user'); // user.FIXTURES = [{id: 1, name: 'User1', type: 'normal'}]
+store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', type: 'normal'}]
+store.makeFixture('admin'); //  user.FIXTURES = [{id: 3, name: 'Admin', type: 'superuser'}]
+store.makeFixture('admin', {name: 'Fred'}); //  user.FIXTURES = [{id: 4, name: 'Fred', type: 'superuser'}]
+
+
+// Use store.find to get the model instance ( Remember this is the Fixture adapter, if
+// you use the ActiveModelAdapter or RESTAdapter the record is returned so you don't
+// have to then go and find it )
+var userJson = store.makeFixture('user');
+store.find('user', userJson.id).then(function(user) {
+   user.toJSON() ( pretty much equals ) userJson;
+});
+
+// and to setup associations ...
+var projectJson = store.makeFixture('project');
+var userJson = store.makeFixture('user', {projects: [projectJson.id]});
+// OR
+var userJson = store.makeFixture('user');
+var projectJson = store.makeFixture('project', {user: userJson.id});
+
+// will give you the same result, but with fixture adapter all associations
+// are treated as async ( by factory_guy_has_many.js fix ), so it's
+// a bit clunky to get this associated data. When using DS.FixtureAdapter
+// in view specs though, this clunk is dealt with for you. But remember,
+// you DON'T have to use the Fixture adapter.
+store.find('user', 1).then(function(user) {
+  user.toJSON() (pretty much equals) userJson;
+  user.get('projects').then(function(projects) {
+    projects.length == 1;
+  });
+});
