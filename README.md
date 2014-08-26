@@ -258,7 +258,7 @@ You can override the default attributes by passing in a hash
 - Declare a function for an attribute 
   - Can reference other attributes
 
-```  
+```javascript 
    
   FactoryGuy.define('user', {
     // Assume that this definition includes the same sequences and default section
