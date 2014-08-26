@@ -84,6 +84,7 @@ but BEFORE you require your models.
 In the following examples, assume the models look like this:
 
 ```javascript
+  // standard models
   User = DS.Model.extend({
     name:     DS.attr('string'),
     style:    DS.attr('string'),
@@ -95,12 +96,13 @@ In the following examples, assume the models look like this:
     title:  DS.attr('string'),
     user:   DS.belongsTo('user')
   });
-
+  
+  // polymorphic models 
   Hat = DS.Model.extend({
     type: DS.attr('string'),
     user: DS.belongsTo('user')
   });
-
+  
   BigHat = Hat.extend();
   SmallHat = Hat.extend();
 ```
