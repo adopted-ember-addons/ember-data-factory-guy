@@ -86,7 +86,7 @@ In the following examples, assume the models look like this:
 ```javascript
   User = DS.Model.extend({
     name:     DS.attr('string'),
-    type:     DS.attr('string'),
+    style:     DS.attr('string'),
     projects: DS.hasMany('project'),
     hats: DS.hasMany('hat', {polymorphic: true})
   });
@@ -118,12 +118,12 @@ In the following examples, assume the models look like this:
   FactoryGuy.define('user', {
     // Put default 'user' attributes in the default section
     default: {
-      type: 'normal',
+      style: 'normal',
       name: 'Dude'
     },
     // Create a named 'user' with custom attributes
     admin: {
-      type: 'super',
+      style: 'super',
       name: 'Admin'
     }
   });
@@ -178,17 +178,17 @@ the store is looking up the correct model type name
   
   // returns json   
   var json = FactoryGuy.build('user'); 
-  json // => {id: 1, name: 'Dude', type: 'normal'}
+  json // => {id: 1, name: 'Dude', style: 'normal'}
 
   // returns a User instance that is loaded into your application's store   
   var user = store.makeFixture('user');
-  user.toJSON() // => {id: 2, name: 'Dude', type: 'normal'}
+  user.toJSON() // => {id: 2, name: 'Dude', style: 'normal'}
 
   var json = FactoryGuy.build('admin'); 
-  json // => {id: 3, name: 'Admin', type: 'super'}
+  json // => {id: 3, name: 'Admin', style: 'super'}
 
   var user = store.makeFixture('admin');
-  user.toJSON() // => {id: 4, name: 'Admin', type: 'super'}
+  user.toJSON() // => {id: 4, name: 'Admin', style: 'super'}
   
 ```
 
@@ -265,21 +265,21 @@ You can override the default attributes by passing in a hash
     // from the user definition in: "Declaring sequences in sequences hash" section. 
      
     funny_user: {
-      type: function(f) { return 'funny '  + f.name }
+      style: function(f) { return 'funny '  + f.name }
     }
   });
 
   var json = FactoryGuy.build('funny_user');
   json.name = 'User1'
-  json.type = 'funny User1'
+  json.style = 'funny User1'
   
   var user = store.makeFixture('funny_user');
   user.get('name') // => 'User2'
-  user.get('type') // => 'funny User2'
+  user.get('style') // => 'funny User2'
 
 ```
 
-*Note the type attribute was built from a function which depends on the name
+*Note the style attribute was built from a function which depends on the name
  and the name is a generated attribute from a sequence function*
 
 
@@ -294,17 +294,17 @@ You can override the default attributes by passing in a hash
   FactoryGuy.define('user', {
     traits: {
       big: { name: 'Big Guy' }
-      friendly: { type: 'Friendly' }
+      friendly: { style: 'Friendly' }
     }
   });
   
   var json = FactoryGuy.build('user', 'big', 'friendly'); 
   json.name // => 'Big Guy'
-  json.type // => 'Friendly'
+  json.style // => 'Friendly'
 
   var user = store.makeFixture('user', 'big', 'friendly');
   user.get('name') // => 'Big Guy'
-  user.get('type') // => 'Friendly'
+  user.get('style') // => 'Friendly'
 
 ```
 
@@ -315,7 +315,7 @@ attributes will override any trait attributes or default attributes
 
   var user = store.makeFixture('user', 'big', 'friendly', {name: 'Dave'});
   user.get('name') // => 'Dave'
-  user.get('type') // => 'Friendly'
+  user.get('style') // => 'Friendly'
 
 ```
 
@@ -350,14 +350,14 @@ attributes will override any trait attributes or default attributes
   });
   
   var json = FactoryGuy.build('project_with_user'); 
-  json.user // => {id:1, name: 'Dude', type: 'Normal'}
+  json.user // => {id:1, name: 'Dude', style: 'normal'}
 
   var json = FactoryGuy.build('project_with_dude'); 
-  json.user // => {id:1, name: 'Dude', type: 'Normal'}
+  json.user // => {id:1, name: 'Dude', style: 'normal'}
 
   var project = store.makeFixture('project_with_admin');
   project.get('user.name') // => 'Admin'
-  project.get('user.type') // => 'super'
+  project.get('user.style') // => 'super'
 
 ```
 
@@ -373,7 +373,7 @@ attributes will override any trait attributes or default attributes
   });
   
   var user = store.makeFixture('project', 'with_user');
-  project.get('user').toJSON() // => {id:1, name: 'Dude', type: 'Normal'}
+  project.get('user').toJSON() // => {id:1, name: 'Dude', style: 'normal'}
   
 ```
 
@@ -384,7 +384,7 @@ attributes will override any trait attributes or default attributes
   var user = store.makeFixture('user');
   var project = store.makeFixture('project', {user: user});
     
-  project.get('user').toJSON() // => {id:1, name: 'Dude', type: 'Normal'}
+  project.get('user').toJSON() // => {id:1, name: 'Dude', style: 'normal'}
 ```
 
 *Note that though you are setting the 'user' belongsTo association on a project,
@@ -459,8 +459,8 @@ attributes will override any trait attributes or default attributes
 ```javascript
   var json = FactoryGuy.buildList('user', 2) 
   json.length // => 2 
-  json[0] // => {id: 1, name: 'User1', type: 'normal'}
-  json[1] // => {id: 2, name: 'User2', type: 'normal'}
+  json[0] // => {id: 1, name: 'User1', style: 'normal'}
+  json[1] // => {id: 2, name: 'User2', style: 'normal'}
 
 ```
 
@@ -469,8 +469,8 @@ attributes will override any trait attributes or default attributes
 ```javascript
   var users = store.makeList('user', 2) 
   users.get('length') // => 2 
-  users[0].toJSON() // => {id: 3, name: 'User3', type: 'normal'}
-  users[1].toJSON() // => {id: 4, name: 'User4', type: 'normal'}
+  users[0].toJSON() // => {id: 3, name: 'User3', style: 'normal'}
+  users[1].toJSON() // => {id: 4, name: 'User4', style: 'normal'}
 
 ```
 
@@ -626,10 +626,10 @@ in that FIXTURE array to find it and then puts it in the store.
 ```javascript
 
 
-store.makeFixture('user'); // user.FIXTURES = [{id: 1, name: 'User1', type: 'normal'}]
-store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', type: 'normal'}]
-store.makeFixture('admin'); //  user.FIXTURES = [{id: 3, name: 'Admin', type: 'superuser'}]
-store.makeFixture('admin', {name: 'Fred'}); //  user.FIXTURES = [{id: 4, name: 'Fred', type: 'superuser'}]
+store.makeFixture('user'); // user.FIXTURES = [{id: 1, name: 'User1', style: 'normal'}]
+store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', style: 'normal'}]
+store.makeFixture('admin'); //  user.FIXTURES = [{id: 3, name: 'Admin', style: 'super'}]
+store.makeFixture('admin', {name: 'Fred'}); //  user.FIXTURES = [{id: 4, name: 'Fred', style: 'super'}]
 
 
 // Use store.find to get the model instance ( Remember this is the Fixture adapter, if
