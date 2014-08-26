@@ -86,7 +86,7 @@ In the following examples, assume the models look like this:
 ```javascript
   User = DS.Model.extend({
     name:     DS.attr('string'),
-    style:     DS.attr('string'),
+    style:    DS.attr('string'),
     projects: DS.hasMany('project'),
     hats: DS.hasMany('hat', {polymorphic: true})
   });
