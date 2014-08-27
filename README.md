@@ -171,8 +171,10 @@ the store is looking up the correct model type name
 
 
 ### Using Factories
- - FactoryGuy.build   ... building json  
- - store.makeFixture  ... loading models into the store  
+ - FactoryGuy.build
+   - Builds json  
+ - store.makeFixture
+   - Loads model instance into the store  
  - Can override default attributes by passing in a hash
  - Can add attributes with traits ( see traits section )  
  
