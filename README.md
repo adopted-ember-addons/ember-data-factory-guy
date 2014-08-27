@@ -457,8 +457,10 @@ the reverse 'user' belongsTo association is being setup for you on the project
 
 #### Building many models at once
 
-- FactoryGuy.buildList ... builds array of json
-- store.makeList ... loads the array instance into store
+- FactoryGuy.buildList
+    - Builds an array of one or more json objects
+- store.makeList
+    - Loads one or more instances into store
 
 
 ##### Building json array 
