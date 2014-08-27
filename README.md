@@ -330,6 +330,7 @@ attributes will override any trait attributes or default attributes
     - As inline attribute definition
     - With traits
 - Can setup belongsTo or hasMany associations manually
+- The inverse association is being set up for you
 
 ##### Setup belongsTo associations in Factory Definition
  
@@ -392,7 +393,8 @@ attributes will override any trait attributes or default attributes
 ```
 
 *Note that though you are setting the 'user' belongsTo association on a project,
-  the reverse user hasMany 'projects' association is being setup on user as well*
+  the reverse user hasMany 'projects' association is being setup for you on the user 
+  ( for both manual and factory defined belongsTo associations ) as well *
 
 ```javascript
   user.get('projects.length') // => 1
@@ -445,7 +447,8 @@ attributes will override any trait attributes or default attributes
 ```
 
 *Note that though you are setting the 'projects' hasMany association on a user,
-  the reverse 'user' belongsTo association is being setup on project as well*
+  the reverse 'user' belongsTo association is being setup for you on the project 
+  ( for both manual and factory defined hasMany associations ) as well*
    
 ```javascript
   projects.get('firstObject.user')  // => user
