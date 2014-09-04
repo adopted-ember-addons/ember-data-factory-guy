@@ -822,11 +822,13 @@ DS.FixtureAdapter.reopen({
               if (belongsToRecord && belongsToRecord.get('length') > 0) {
                 var hasManyName = store.findRelationshipName(
                   'hasMany',
-                  belongsToRecord.constructor,
+                  belongsToRecord.get('firstObject').constructor,
                   record
                 );
                 belongsToRecord.forEach(function (child){
-                  child.get(hasManyName).addObject(record)
+                  Em.RSVP.resolve(child.get(hasManyName)).then( function(value) {
+                    value.addObjects(record);
+                  });
                 });
               }
             });

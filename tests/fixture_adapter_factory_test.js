@@ -173,7 +173,10 @@ asyncTest("#createRecord can work for one-to-none associations", function () {
 asyncTest("#createRecord adds hasMany association to records it hasMany of ", function () {
   var usersJson = store.makeList('user', 3);
 
-  Em.RSVP.all([store.find('user', usersJson[0].id), store.find('user', usersJson[1].id), store.find('user', usersJson[2].id)]).then(function (users) {
+  var user1Promise = store.find('user', usersJson[0].id)
+  var user2Promise = store.find('user', usersJson[1].id)
+  var user3Promise = store.find('user', usersJson[2].id)
+  Em.RSVP.all([user1Promise, user2Promise, user3Promise]).then(function (users) {
 
     var propertyJson = {name: 'beach front property'};
 
