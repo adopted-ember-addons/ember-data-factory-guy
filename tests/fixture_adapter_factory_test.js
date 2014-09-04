@@ -177,10 +177,11 @@ asyncTest("#createRecord adds hasMany association to records it hasMany of ", fu
 
     var propertyJson = {name: 'beach front property'};
 
-    property = store.createRecord('property', propertyJson);
+    var property = store.createRecord('property', propertyJson);
     property.get('owners').then(function (owners) {
       owners.addObjects(users);
-    }).then(function () {
+      return property.save();
+    }).then(function (property) {
       return property.get('owners');
     }).then(function (users) {
       equal(users.get('length'), usersJson.length);
