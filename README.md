@@ -1,4 +1,4 @@
-# Ember Data Factory Guy 
+# Ember Data Factory Guy  [![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy)
 
 ## Using as Gem
 
