@@ -37,7 +37,7 @@ asyncTest("can change fixture attributes after creation", function () {
 
 test("#resetModels clears the store of models, clears the FIXTURES arrays for each model and resets the model definition", function () {
   var project = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [project.id]});
+  var user = store.makeFixture('user', {projects: [project]});
 
   for (model in FactoryGuy.modelDefinitions) {
     var definition = FactoryGuy.modelDefinitions[model];
@@ -85,7 +85,7 @@ asyncTest("#makeFixture sets belongsTo on hasMany associations", function () {
   // second project not added on purpose to make sure only one is
   // assigned in hasMany
   store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [p1.id]})
+  var user = store.makeFixture('user', {projects: [p1]})
 
   store.find('user', 1).then(function (user) {
     user.get('projects').then(function (projects) {
@@ -99,7 +99,7 @@ asyncTest("#makeFixture sets belongsTo on hasMany associations", function () {
 
 asyncTest("#makeFixture adds record to hasMany association array for which it belongsTo", function () {
   var userJson = store.makeFixture('user');
-  var projectJson = store.makeFixture('project', {user: userJson.id});
+  var projectJson = store.makeFixture('project', {user: userJson});
 
   store.find('user', userJson.id).then(function (user) {
     user.get('projects').then(function (projects) {

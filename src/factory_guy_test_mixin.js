@@ -123,14 +123,23 @@ FactoryGuyTestMixin = Em.Mixin.create({
     return this.getStore().adapterFor('application').buildURL(type, id);
   },
 
-  /**
-   Handling ajax GET ( find record ) for a model. You can mock
-   failed find by passing in status of 500.
 
-   @param {String} name of the fixture ( or model ) to find
-   @param {Object} opts fixture options
-   @param {Integer} status Optional HTTP status response code
-   */
+  handleSideLoadFind: function (modelName, json) {
+    var responseJson = this.buildAjaxHttpResponse(name, opts);
+    var id = responseJson[modelName].id
+    var url = this.buildURL(modelName, id);
+
+  },
+
+
+  /**
+     Handling ajax GET ( find record ) for a model. You can mock
+     failed find by passing in status of 500.
+
+     @param {String} name of the fixture ( or model ) to find
+     @param {Object} opts fixture options
+     @param {Integer} status Optional HTTP status response code
+     */
   handleFind: function (name, opts, status) {
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var responseJson = this.buildAjaxHttpResponse(name, opts);

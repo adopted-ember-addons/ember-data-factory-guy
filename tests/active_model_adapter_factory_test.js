@@ -258,3 +258,4 @@ asyncTest("#find (with mockajax) handles model's camelCase attributes", function
     start();
   });
 });
+

@@ -536,7 +536,7 @@ DS.Store.reopen({
 
    ```js
    var projectJson = store.makeFixture('project');
-   var userJson = store.makeFixture('user', {projects: [projectJson.id]});
+   var userJson = store.makeFixture('user', {projects: [projectJson]});
    ```
 
    Or if you make a project with a user, then set this project in
@@ -544,7 +544,7 @@ DS.Store.reopen({
 
    ```js
    var userJson = store.makeFixture('user');
-   var projectJson = store.makeFixture('project', {user: userJson.id});
+   var projectJson = store.makeFixture('project', {user: userJson});
    ```
 
    @param {DS.Model} modelType model type like User
@@ -556,8 +556,17 @@ DS.Store.reopen({
     var adapter = this.adapterFor('application');
     Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
       if (relationship.kind == 'hasMany') {
-        if (fixture[relationship.key]) {
-          fixture[relationship.key].forEach(function(id) {
+        var hasManyRelation = fixture[relationship.key];
+        if (hasManyRelation) {
+          $.each(fixture[relationship.key], function(index,object) {
+            // used to require that the relationship was set by id,
+            // but now, you can set it as the json object, and this will
+            // normalize that back to the id
+            var id = object;
+            if (Ember.typeOf(object) == 'object') {
+              id = object.id;
+              hasManyRelation[index] = id;
+            }
             var hasManyfixtures = adapter.fixturesForType(relationship.type);
             var fixture = adapter.findFixtureById(hasManyfixtures, id);
             fixture[modelName] = fixture.id;
@@ -966,14 +975,23 @@ FactoryGuyTestMixin = Em.Mixin.create({
     return this.getStore().adapterFor('application').buildURL(type, id);
   },
 
-  /**
-   Handling ajax GET ( find record ) for a model. You can mock
-   failed find by passing in status of 500.
 
-   @param {String} name of the fixture ( or model ) to find
-   @param {Object} opts fixture options
-   @param {Integer} status Optional HTTP status response code
-   */
+  handleSideLoadFind: function (modelName, json) {
+    var responseJson = this.buildAjaxHttpResponse(name, opts);
+    var id = responseJson[modelName].id
+    var url = this.buildURL(modelName, id);
+
+  },
+
+
+  /**
+     Handling ajax GET ( find record ) for a model. You can mock
+     failed find by passing in status of 500.
+
+     @param {String} name of the fixture ( or model ) to find
+     @param {Object} opts fixture options
+     @param {Integer} status Optional HTTP status response code
+     */
   handleFind: function (name, opts, status) {
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var responseJson = this.buildAjaxHttpResponse(name, opts);
