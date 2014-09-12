@@ -495,7 +495,7 @@ DS.Store.reopen({
 
       var model;
       Em.run(function () {
-        store.findEmbeddedBelongsToAssociationsForRESTAdapter(modelType, fixture);
+        store.findEmbeddedAssociationsForRESTAdapter(modelType, fixture);
         if (fixture.type) {
           // assuming its polymorphic if there is a type attribute
           // is this too bold an assumption?
@@ -603,7 +603,7 @@ DS.Store.reopen({
    @param modelType
    @param fixture
    */
-  findEmbeddedBelongsToAssociationsForRESTAdapter: function (modelType, fixture) {
+  findEmbeddedAssociationsForRESTAdapter: function (modelType, fixture) {
     var store = this;
     Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
       if (relationship.kind == 'belongsTo') {
@@ -976,11 +976,18 @@ FactoryGuyTestMixin = Em.Mixin.create({
   },
 
 
-  handleSideLoadFind: function (modelName, json) {
-    var responseJson = this.buildAjaxHttpResponse(name, opts);
-    var id = responseJson[modelName].id
+  handleSideloadFind: function (modelName, json, sideload) {
+    var id = json.id
     var url = this.buildURL(modelName, id);
+    var responseJson = {};
+    responseJson[modelName] = json;
+    $.extend(responseJson, sideload)
 
+    this.stubEndpointForHttpRequest(
+      url,
+      responseJson,
+      {type: 'GET', status: (status || 200)}
+    )
   },
 
 

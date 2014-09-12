@@ -18,8 +18,8 @@
   "dependencies": {
     "handlebars": "~1.1.2",
     "jquery": "1.10.2",
-    "ember": "~1.6.0",
-    "ember-data": "~1.0.0-beta.7",
+    "ember": "1.7.0",
+    "ember-data": "1.0.0-beta.8",
     "chance": "latest",
     "qunit": "latest"
   },
