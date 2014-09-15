@@ -581,7 +581,6 @@ DS.Store.reopen({
             FactoryGuy.pushFixture(relationship.type, belongsToRecord);
             fixture[relationship.key] = belongsToRecord.id;
           }
-          console.log('belongsToRecord',belongsToRecord)
           var hasManyName = self.findHasManyRelationshipNameForFixtureAdapter(relationship.type, relationship.parentType);
           var belongsToFixtures = adapter.fixturesForType(relationship.type);
           var belongsTofixture = adapter.findFixtureById(belongsToFixtures, fixture[relationship.key]);

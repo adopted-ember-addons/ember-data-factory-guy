@@ -174,7 +174,6 @@ asyncTest("#createRecord adds hasMany association to records it hasMany of ", fu
     var propertyJson = {name: 'beach front property'};
 
     var property = store.createRecord('property', propertyJson);
-    console.log(property+'',property.get('owners'))
     var owners = property.get('owners')
     owners.manyArray.addObjects(users);
     equal(users.get('length'), usersJson.length);
