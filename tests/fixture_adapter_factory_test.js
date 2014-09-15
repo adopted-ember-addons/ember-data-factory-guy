@@ -88,11 +88,9 @@ asyncTest("#makeFixture sets belongsTo on hasMany associations", function () {
   var user = store.makeFixture('user', {projects: [p1]})
 
   store.find('user', 1).then(function (user) {
-    user.get('projects').then(function (projects) {
-      equal(projects.get('length'), 1, "adds hasMany records");
-      equal(projects.get('firstObject.user.id'), user.id, "sets belongsTo record");
-      start();
-    })
+    var projects = user.get('projects');
+    equal(projects.members.list.length, 1, "adds hasMany records");
+    start();
   })
 })
 
@@ -102,11 +100,10 @@ asyncTest("#makeFixture adds record to hasMany association array for which it be
   var projectJson = store.makeFixture('project', {user: userJson});
 
   store.find('user', userJson.id).then(function (user) {
-    user.get('projects').then(function (projects) {
-      equal(projects.get('length'), 1, "adds hasMany records");
-      equal(projects.get('firstObject.user.id'), user.id, "sets belongsTo record");
-      start();
-    })
+    var projects = user.get('projects');
+    equal(projects.members.list.length, 1, "adds hasMany records");
+    equal(projects.manyArray.get('firstObject.user'), user, "sets belongsTo record");
+    start();
   })
 })
 
@@ -115,11 +112,10 @@ asyncTest("#makeFixture handles default belongsTo associations in fixture", func
   equal(User.FIXTURES.length, 1);
 
   store.find('user', 1).then(function (user) {
-    user.get('projects').then(function (projects) {
-      equal(projects.get('length'), 1, "adds hasMany records");
-      equal(projects.get('firstObject.user.id'), 1, "sets belongsTo record");
-      start();
-    })
+    var projects = user.get('projects');
+    equal(projects.members.list.length, 1, "adds hasMany records");
+    equal(projects.manyArray.get('firstObject.user.id'), 1, "sets belongsTo record");
+    start();
   })
   // TODO.. have to make belongsTo async for fixture adapter
   // to get this to work
@@ -134,25 +130,24 @@ asyncTest("#makeFixture handles default belongsTo associations in fixture", func
 })
 
 
-// TODO this test is failing on ember-data-1.0.0.beta9  .. fix one day?
-//asyncTest("#createRecord adds belongsTo association to records it hasMany of", function () {
-//  var user = store.makeFixture('user');
-//
-//  store.find('user', user.id).then(function (user) {
-//
-//    var projectJson = {title: 'project', user: user};
-//
-//    store.createRecord('project', projectJson).save()
-//      .then(function (project) {
-//        return Ember.RSVP.all([project.get('user'), user.get('projects')]);
-//      }).then(function (promises) {
-//        var projectUser = promises[0], projects = promises[1];
-//        equal(projectUser.get('id'), user.get('id'));
-//        equal(projects.get('length'), 1);
-//        start();
-//      });
-//  })
-//})
+asyncTest("#createRecord adds belongsTo association to records it hasMany of", function () {
+  var user = store.makeFixture('user');
+
+  store.find('user', user.id).then(function (user) {
+
+    var projectJson = {title: 'project', user: user};
+
+    store.createRecord('project', projectJson).save()
+      .then(function (project) {
+        return Ember.RSVP.all([project.get('user'), user.get('projects')]);
+      }).then(function (promises) {
+        var projectUser = promises[0], projects = promises[1];
+        equal(projectUser, user);
+        equal(projects.members.list.length, 1);
+        start();
+      });
+  })
+})
 
 asyncTest("#createRecord can work for one-to-none associations", function () {
   var user = store.makeFixture('user');
@@ -179,14 +174,10 @@ asyncTest("#createRecord adds hasMany association to records it hasMany of ", fu
     var propertyJson = {name: 'beach front property'};
 
     var property = store.createRecord('property', propertyJson);
-    property.get('owners').then(function (owners) {
-      owners.addObjects(users);
-      return property.save();
-    }).then(function (property) {
-      return property.get('owners');
-    }).then(function (users) {
-      equal(users.get('length'), usersJson.length);
-      start();
-    });
+    console.log(property+'',property.get('owners'))
+    var owners = property.get('owners')
+    owners.manyArray.addObjects(users);
+    equal(users.get('length'), usersJson.length);
+    start();
   })
 })
