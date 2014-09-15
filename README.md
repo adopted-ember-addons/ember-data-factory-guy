@@ -1,9 +1,13 @@
 # Ember Data Factory Guy  [![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy)
 
-*NOTE* ember-data is changing the way they are doing relationships in 1.0.0-beta.9 and above 
+*NOTE*
+  
+ ember-data is changing the way they are doing relationships in 1.0.0-beta.10 and above 
  so, if you are using ember-data-1.0.0-beta.8 and earlier, then be sure to use version 0.6.4 
- of ember-data-factory-guy.  
- ember-data-factory-guy versions 7 and above will target the newer versions of ember ( 1.0.0-beta.9 and above. )
+ ( or below ) of ember-data-factory-guy.  
+ 
+ ember-data-factory-guy version 0.7.0 and above will work on the newer versions of ember-data ( 1.0.0-beta.10 and above. )
+
 
 ## Using as Gem
 
