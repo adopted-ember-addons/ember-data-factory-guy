@@ -19,6 +19,12 @@ In Gemfile:
 gem 'ember-data-factory-guy', group: test
 ```
 
+or for particular version:
+
+```ruby
+gem 'ember-data-factory-guy', '0.7.0', group: test
+```
+
 then:
 
 ```
@@ -42,6 +48,16 @@ Add as one of your dependencies in bower.json file:
     "foo-dependency": "latest",
     "other-foo-dependency": "latest",
     "ember-data-factory-guy": "latest"
+  }
+```
+
+or for particular version:
+
+```json
+  "dependencies": {
+    "foo-dependency": "latest",
+    "other-foo-dependency": "latest",
+    "ember-data-factory-guy": "0.7.0"
   }
 ```
 
