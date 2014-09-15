@@ -78,18 +78,19 @@
             // cache the promise so we can use it
             // when we come back and don't need to rebuild
             // the relationship.
-            set(rel, 'promise', resolver.promise);
-            return rel;
+//            set(rel, 'promise', resolver.promise);
+            return relationship;
+//            return rel;
           });
         }
-
-        var promise = relationship.get('promise').then(function() {
-          return relationship;
-        }, null, "DS: Async hasMany records received");
-
-        return DS.PromiseArray.create({
-          promise: promise
-        });
+        return relationship;
+//        var promise = relationship.get('promise').then(function() {
+//          return relationship;
+//        }, null, "DS: Async hasMany records received");
+//
+//        return DS.PromiseArray.create({
+//          promise: promise
+//        });
       }
 
       return buildRelationship(this, key, options, function(store, data) {

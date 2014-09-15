@@ -37,7 +37,7 @@ DS.Store.reopen({
           modelType = store.modelFor(modelName);
         }
         model = store.push(modelName, fixture);
-        store.setAssociationsForRESTAdapter(modelType, modelName, model);
+//        store.setAssociationsForRESTAdapter(modelType, modelName, model);
       });
       return model;
     }
@@ -115,6 +115,7 @@ DS.Store.reopen({
             FactoryGuy.pushFixture(relationship.type, belongsToRecord);
             fixture[relationship.key] = belongsToRecord.id;
           }
+          console.log('belongsToRecord',belongsToRecord)
           var hasManyName = self.findHasManyRelationshipNameForFixtureAdapter(relationship.type, relationship.parentType);
           var belongsToFixtures = adapter.fixturesForType(relationship.type);
           var belongsTofixture = adapter.findFixtureById(belongsToFixtures, fixture[relationship.key]);
@@ -163,94 +164,6 @@ DS.Store.reopen({
     })
   },
 
-  /**
-   For the REST type models:
-
-   For example if a user hasMany projects, then set the user
-   on each project that the user hasMany of, so that the project
-   now has the belongsTo user association setup. As in this scenario:
-
-   ```js
-   var project = store.makeFixture('project');
-   var user = store.makeFixture('user', {projects: [project]});
-   ```
-
-   Or if you make a user, then a project with that user, then set the project
-   in the users list of 'projects' it hasMany of. As in this scenario:
-
-   ```js
-   var user = store.makeFixture('user');
-   var project = store.makeFixture('project', {user: user});
-   ```
-
-   @param {DS.Model} modelType model type like 'User'
-   @param {String} modelName model name like 'user'
-   @param {DS.Model} model model to check for needed association assignments
-   */
-  setAssociationsForRESTAdapter: function (modelType, modelName, model) {
-    var self = this;
-
-    Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
-      if (relationship.kind == 'hasMany') {
-        var children = model.get(name) || [];
-        children.forEach(function (child) {
-          var belongsToName = self.findRelationshipName(
-            'belongsTo',
-            child.constructor,
-            model
-          );
-          var hasManyName = self.findRelationshipName(
-            'hasMany',
-            child.constructor,
-            model
-          );
-          var inverseName = (relationship.options && relationship.options.inverse)
-          if (belongsToName) {
-            child.set(belongsToName || inverseName, model);
-          } else if (hasManyName) {
-            relation = child.get(hasManyName || inverseName) || [];
-            relation.pushObject(model)
-          }
-        })
-      }
-
-      if (relationship.kind == 'belongsTo') {
-        var belongsToRecord = model.get(name);
-        if (belongsToRecord) {
-          var setAssociations = function() {
-            var hasManyName = self.findRelationshipName(
-              'hasMany',
-              belongsToRecord.constructor,
-              model
-            );
-            if (hasManyName) {
-              belongsToRecord.get(hasManyName).addObject(model);
-              return;
-            }
-            var oneToOneName = self.findRelationshipName(
-              'belongsTo',
-              belongsToRecord.constructor,
-              model
-            );
-            // Guard against a situation where a model can belong to itself.
-            // Do not want to set the belongsTo on this case.
-            if (oneToOneName && !(belongsToRecord.constructor == model.constructor)) {
-              belongsToRecord.set(oneToOneName, model);
-            }
-          }
-          if (belongsToRecord.then) {
-            belongsToRecord.then(function(record) {
-              belongsToRecord = record;
-              setAssociations();
-            })
-          } else {
-            setAssociations();
-          }
-        }
-      }
-    })
-  },
-
   findRelationshipName: function (kind, belongToModelType, childModel) {
     var relationshipName;
     Ember.get(belongToModelType, 'relationshipsByName').forEach(
@@ -294,92 +207,3 @@ DS.Store.reopen({
     }
   }
 });
-
-
-DS.FixtureAdapter.reopen({
-
-  /**
-   Overriding createRecord to add the record created to the
-   hashMany records for all of the records that this record belongsTo.
-
-   For example:
-
-   If models are defined like so:
-
-   User = DS.Model.extend({
-       projects: DS.hasMany('project')
-     })
-
-   Project = DS.Model.extend({
-       user: DS.belongsTo('user')
-     })
-
-   and you create a project record with a user defined:
-    store.createRecord('project', {user: user})
-
-   this method will take the new project created and add it to the user's 'projects'
-   hasMany array.
-
-   And a full code example:
-
-   var userJson = store.makeFixture('user');
-
-   store.find('user', userJson.id).then(function(user) {
-       store.createRecord('project', {user: user}).save()
-         .then( function(project) {
-           // user.get('projects.length') == 1;
-       })
-     })
-
-   @method createRecord
-   @param {DS.Store} store
-   @param {subclass of DS.Model} type
-   @param {DS.Model} record
-   @return {Promise} promise
-   */
-  createRecord: function (store, type, record) {
-    var promise = this._super(store, type, record);
-    promise.then(function () {
-      Em.RSVP.Promise.resolve(Ember.get(type, 'relationshipNames')).then(function (relationShips){
-        if (relationShips.belongsTo) {
-          relationShips.belongsTo.forEach(function (relationship) {
-            Em.RSVP.Promise.resolve(record.get(relationship)).then(function(belongsToRecord){
-              if (belongsToRecord) {
-                var hasManyName = store.findRelationshipName(
-                  'hasMany',
-                  belongsToRecord.constructor,
-                  record
-                );
-                if (hasManyName) {
-                  Ember.RSVP.resolve(belongsToRecord.get(hasManyName)).then (function(relationship){
-                    relationship.addObject(record);
-                  });
-                }
-              }
-            });
-          });
-        }
-        if (relationShips.hasMany) {
-          relationShips.hasMany.forEach(function (relationship) {
-            Em.RSVP.Promise.resolve(record.get(relationship)).then(function(belongsToRecord){
-              if (belongsToRecord && belongsToRecord.get('length') > 0) {
-                var hasManyName = store.findRelationshipName(
-                  'hasMany',
-                  belongsToRecord.get('firstObject').constructor,
-                  record
-                );
-                belongsToRecord.forEach(function (child){
-                  Em.RSVP.resolve(child.get(hasManyName)).then( function(value) {
-                    value.addObjects(record);
-                  });
-                });
-              }
-            });
-          })
-        }
-      });
-    });
-
-    return promise;
-  }
-})

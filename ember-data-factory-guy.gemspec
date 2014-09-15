@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |s|
   s.name        = "ember-data-factory-guy"
-  s.version     = "0.6.4"
+  s.version     = "0.7.0"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Daniel Sudol", "Alex Opak"]
   s.email       = ["dansudol@yahoo.com", "opak.alexandr@gmail.com"]
