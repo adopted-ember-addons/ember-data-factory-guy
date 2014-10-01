@@ -88,8 +88,10 @@ asyncTest("#makeFixture sets belongsTo on hasMany associations", function () {
   var user = store.makeFixture('user', {projects: [p1]})
 
   store.find('user', 1).then(function (user) {
-    var projects = user.get('projects');
-    equal(projects.members.list.length, 1, "adds hasMany records");
+//    var projects = user.get('projects');
+    console.log(user+'', user.toJSON())
+//    console.log(user+'', projects)
+//    equal(projects.length, 1, "adds hasMany records");
     start();
   })
 })
@@ -101,8 +103,8 @@ asyncTest("#makeFixture adds record to hasMany association array for which it be
 
   store.find('user', userJson.id).then(function (user) {
     var projects = user.get('projects');
-    equal(projects.members.list.length, 1, "adds hasMany records");
-    equal(projects.manyArray.get('firstObject.user'), user, "sets belongsTo record");
+    equal(projects.length, 1, "adds hasMany records");
+    equal(projects.get('firstObject.user'), user, "sets belongsTo record");
     start();
   })
 })
@@ -112,9 +114,10 @@ asyncTest("#makeFixture handles default belongsTo associations in fixture", func
   equal(User.FIXTURES.length, 1);
 
   store.find('user', 1).then(function (user) {
+    
     var projects = user.get('projects');
-    equal(projects.members.list.length, 1, "adds hasMany records");
-    equal(projects.manyArray.get('firstObject.user.id'), 1, "sets belongsTo record");
+    equal(projects.length, 1, "adds hasMany records");
+    equal(projects.get('firstObject.user.id'), 1, "sets belongsTo record");
     start();
   })
   // TODO.. have to make belongsTo async for fixture adapter
@@ -143,7 +146,7 @@ asyncTest("#createRecord adds belongsTo association to records it hasMany of", f
       }).then(function (promises) {
         var projectUser = promises[0], projects = promises[1];
         equal(projectUser, user);
-        equal(projects.members.list.length, 1);
+        equal(projects.length, 1);
         start();
       });
   })
@@ -175,7 +178,7 @@ asyncTest("#createRecord adds hasMany association to records it hasMany of ", fu
 
     var property = store.createRecord('property', propertyJson);
     var owners = property.get('owners')
-    owners.manyArray.addObjects(users);
+    owners.addObjects(users);
     equal(users.get('length'), usersJson.length);
     start();
   })
