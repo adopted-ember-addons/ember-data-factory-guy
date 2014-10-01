@@ -162,7 +162,8 @@ In the following examples, assume the models look like this:
 
 It is better to define each polymorphic model in it's own typed definition:
 
-```
+```javascript
+
   FactoryGuy.define('small_hat', {
     default: {
       type: 'SmallHat'
@@ -179,7 +180,8 @@ It is better to define each polymorphic model in it's own typed definition:
 
 rather than doing this:
 
-```
+```javascript
+  
   FactoryGuy.define('hat', {
     default: {},
     small_hat: {
@@ -189,6 +191,7 @@ rather than doing this:
       type: 'BigHat'
     }
   })
+  
 ```
 
 Since there are times that the latter can cause problems when 
