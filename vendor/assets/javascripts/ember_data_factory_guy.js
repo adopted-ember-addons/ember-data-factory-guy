@@ -941,7 +941,6 @@ FactoryGuyTestMixin = Em.Mixin.create({
   },
 
   teardown: function () {
-//    this.getStore().destroy();
     FactoryGuy.resetModels(this.getStore());
   }
 })

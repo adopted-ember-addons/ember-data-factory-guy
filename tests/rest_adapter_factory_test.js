@@ -93,18 +93,12 @@ test("when hasMany ( polymorphic ) associations are assigned, belongTo parent is
 });
 
 
-//test("when hasMany ( self referential polymorphic ) associations are assigned, belongsTo parent is assigned", function() {
-//  GroupSerializer = DS.RESTSerializer.extend({
-//    attrs: {
-//      versions: {embedded: 'always'}
-//    }
-//  });
-//
-//  var big_group = store.makeFixture('big_group');
-//  var group = store.makeFixture('group', {versions: [big_group]});
-//  ok(big_group.get('group') == group)
-//});
-//
+test("when hasMany ( self referential ) associations are assigned, belongsTo parent is assigned", function() {
+  var big_group = store.makeFixture('big_group');
+  var group = store.makeFixture('group', {versions: [big_group]});
+  ok(big_group.get('group') == group)
+});
+
 
 test("when hasMany associations are assigned, belongsTo parent is assigned using inverse", function() {
   var project = store.makeFixture('project');
@@ -119,6 +113,14 @@ test("when hasMany associations are assigned, belongsTo parent is assigned using
   var bh = store.makeFixture('big_hat', {materials: [silk]});
 
   ok(silk.get('hat') == bh)
+});
+
+
+test("when hasMany associations are assigned, belongsTo ( polymorphic ) parent is assigned", function() {
+  var fluff = store.makeFixture('fluffy_material');
+  var big_hat = store.makeFixture('big_hat', {fluffy_materials: [fluff]});
+
+  ok(fluff.get('hat') == big_hat)
 });
 
 
@@ -150,8 +152,8 @@ asyncTest("when hasMany ( async ) relationship is assigned, model relationship i
   var user2 = store.makeFixture('user', {properties: [property]});
 
   equal(property.get('owners.length'), 2);
-//  deepEqual(property.get('owners.firstObject'), user1);
-//  deepEqual(property.get('owners.lastObject'), user2);
+  ok(property.get('owners.firstObject') == user1);
+  ok(property.get('owners.lastObject') == user2);
   start();
 });
 
@@ -218,6 +220,7 @@ test("hasMany associations defined as attributes in fixture", function() {
   ok(user.get('projects.firstObject.user') == user)
   ok(user.get('projects.lastObject.user') == user)
 })
+
 
 test("hasMany associations defined with traits", function() {
   var user = store.makeFixture('user', 'with_projects');
