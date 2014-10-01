@@ -3,6 +3,35 @@ FactoryGuy.define("company", {
     name: 'Silly corp'
   }
 })
+FactoryGuy.define("group", {
+  sequences: {
+    name: function(num) {return 'Group' + num}
+  },
+  default: {
+    type: "Group",
+    name: FactoryGuy.generate('name')
+  }
+});
+
+FactoryGuy.define("big_group", {
+  sequences: {
+    name: function(num) {return 'Big Group' + num}
+  },
+  default: {
+    type: "BigGroup",
+    name: FactoryGuy.generate('name')
+  }
+})
+
+FactoryGuy.define("small_group", {
+  sequences: {
+    name: function(num) {return 'Small Group' + num}
+  },
+  default: {
+    type: "SmallGroup",
+    name: FactoryGuy.generate('name')
+  }
+})
 FactoryGuy.define('hat', {
   default: {},
   small_hat: {
@@ -18,6 +47,15 @@ FactoryGuy.define('soft_material', {
   },
   silk: {
     name: 'silk'
+  }
+})
+
+FactoryGuy.define('fluffy_material', {
+  default: {
+    name: 'fluffy material'
+  },
+  silk: {
+    name: 'fluff'
   }
 })
 FactoryGuy.define('profile', {
@@ -57,6 +95,17 @@ FactoryGuy.define("project", {
     parent: FactoryGuy.belongsTo('project')
   }
 });
+
+
+FactoryGuy.define("sub_project", {
+  sequences: {
+    title: function (num) { return 'SubProject' + num }
+  },
+  default: {
+    title: FactoryGuy.generate('title'),
+    type: "SubProject"
+  }
+});
 FactoryGuy.define('property', {
   default: {
     name: 'Silly property'
@@ -91,11 +140,25 @@ SmallCompany = Company.extend({
   projects: DS.hasMany('project', {async: true})
 });
 
+Group = DS.Model.extend({
+  versions: DS.hasMany('group')
+})
+
+BigGroup = Group.extend({
+  group: DS.belongsTo('group')
+})
+
+SmallGroup = Group.extend({
+  group: DS.belongsTo('group')
+})
+
+
 Hat = DS.Model.extend({
   type: DS.attr('string'),
   user: DS.belongsTo('user'),
   hat:  DS.belongsTo('hat', {inverse: 'hats', polymorphic: true}),
-  hats: DS.hasMany('hat', {inverse: 'hat', polymorphic: true})
+  hats: DS.hasMany('hat', {inverse: 'hat', polymorphic: true}),
+  fluffy_materials: DS.hasMany('fluffy_materials')
 });
 
 BigHat = Hat.extend({
@@ -108,6 +171,11 @@ SmallHat = Hat.extend();
 SoftMaterial = DS.Model.extend({
   name: DS.attr('string'),
   hat:  DS.belongsTo('big_hat')
+})
+
+FluffyMaterial = DS.Model.extend({
+  name: DS.attr('string'),
+  hat:  DS.belongsTo('hat', {polymorphic: true})
 })
 
 Profile = DS.Model.extend({
@@ -123,6 +191,11 @@ Project = DS.Model.extend({
   parent:   DS.belongsTo('project', {inverse: 'children'}),
   children: DS.hasMany('project', {inverse: 'parent'})
 });
+
+
+
+
+
 
 Property = DS.Model.extend({
   name:    DS.attr('string'),

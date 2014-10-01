@@ -4,3 +4,8 @@ Project = DS.Model.extend({
   parent:   DS.belongsTo('project', {inverse: 'children'}),
   children: DS.hasMany('project', {inverse: 'parent'})
 });
+
+
+
+
+

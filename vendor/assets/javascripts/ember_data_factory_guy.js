@@ -503,7 +503,7 @@ DS.Store.reopen({
           modelType = store.modelFor(modelName);
         }
         model = store.push(modelName, fixture);
-//        store.setAssociationsForRESTAdapter(modelType, modelName, model);
+        store.setAssociationsForRESTAdapter(modelType, modelName, model);
       });
       return model;
     }
@@ -551,14 +551,14 @@ DS.Store.reopen({
    @param {String} modelName model name like 'user'
    @param {Object} fixture to check for needed association assignments
    */
-  setAssociationsForFixtureAdapter: function(modelType, modelName, fixture) {
+  setAssociationsForFixtureAdapter: function (modelType, modelName, fixture) {
     var self = this;
     var adapter = this.adapterFor('application');
     Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
       if (relationship.kind == 'hasMany') {
         var hasManyRelation = fixture[relationship.key];
         if (hasManyRelation) {
-          $.each(fixture[relationship.key], function(index,object) {
+          $.each(fixture[relationship.key], function (index, object) {
             // used to require that the relationship was set by id,
             // but now, you can set it as the json object, and this will
             // normalize that back to the id
@@ -581,7 +581,6 @@ DS.Store.reopen({
             FactoryGuy.pushFixture(relationship.type, belongsToRecord);
             fixture[relationship.key] = belongsToRecord.id;
           }
-          console.log('belongsToRecord',belongsToRecord)
           var hasManyName = self.findHasManyRelationshipNameForFixtureAdapter(relationship.type, relationship.parentType);
           var belongsToFixtures = adapter.fixturesForType(relationship.type);
           var belongsTofixture = adapter.findFixtureById(belongsToFixtures, fixture[relationship.key]);
@@ -598,8 +597,8 @@ DS.Store.reopen({
    Before pushing the fixture to the store, do some preprocessing.
 
    If its a belongs to association, and the fixture has an object there,
-    then push that model to the store and set the id of that new model
-    as the attribute value in the fixture
+   then push that model to the store and set the id of that new model
+   as the attribute value in the fixture
 
    @param modelType
    @param fixture
@@ -618,17 +617,70 @@ DS.Store.reopen({
         var hasManyRecords = fixture[relationship.key];
         // if the records are objects and not instances they need to be converted to
         // instances
-        if (Ember.typeOf(hasManyRecords) == 'array' && Ember.typeOf(hasManyRecords[0]) == 'object') {
-          var records = Em.A()
-          hasManyRecords.forEach(function(record) {
-            var record = store.push(relationship.type, record);
-            records.push(record);
-          })
-          fixture[relationship.key] = records;
+        if (Ember.typeOf(hasManyRecords) == 'array') {
+          if (Ember.typeOf(hasManyRecords[0]) == 'object') {
+            var records = Em.A()
+            hasManyRecords.map(function (object) {
+              var record = store.push(relationship.type, object);
+              records.push(record);
+              return record;
+            })
+            fixture[relationship.key] = records;
+          }
         }
       }
     })
   },
+
+  /**
+   For the REST type models:
+
+   For example if a user hasMany projects, then set the user
+   on each project that the user hasMany of, so that the project
+   now has the belongsTo user association setup. As in this scenario:
+
+   ```js
+   var project = store.makeFixture('project');
+   var user = store.makeFixture('user', {projects: [project]});
+   ```
+
+   Or if you make a user, then a project with that user, then set the project
+   in the users list of 'projects' it hasMany of. As in this scenario:
+
+   ```js
+   var user = store.makeFixture('user');
+   var project = store.makeFixture('project', {user: user});
+   ```
+
+   NOTE:
+   As of ember-data-1.0.0-beta.10, this method is only needed because the belongsTo
+   is not assigned when there is a self referential polymorphic has many association.
+
+   @param {DS.Model} modelType model type like 'User'
+   @param {String} modelName model name like 'user'
+   @param {DS.Model} model model to check for needed association assignments
+   */
+  setAssociationsForRESTAdapter: function (modelType, modelName, model) {
+    var self = this;
+    Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
+      if (relationship.kind == 'hasMany') {
+        var children = model.get(name) || [];
+        children.forEach(function (child) {
+          var belongsToName = self.findRelationshipName(
+            'belongsTo',
+            child.constructor,
+            model
+          );
+          var inverseName = (relationship.options && relationship.options.inverse)
+          if (belongsToName || inverseName) {
+            child.set(belongsToName || inverseName, model);
+          }
+        })
+      }
+
+    })
+  },
+
 
   findRelationshipName: function (kind, belongToModelType, childModel) {
     var relationshipName;
@@ -889,6 +941,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
   },
 
   teardown: function () {
+//    this.getStore().destroy();
     FactoryGuy.resetModels(this.getStore());
   }
 })

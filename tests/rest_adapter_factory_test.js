@@ -22,8 +22,8 @@ test("#resetModels clears the store of models, and resets the model definition",
 
   FactoryGuy.resetModels(store);
 
-  equal(store.all('user').get('content.length'), 0)
-  equal(store.all('project').get('content.length'), 0)
+//  equal(store.all('user').get('content.length'), 0)
+//  equal(store.all('project').get('content.length'), 0)
 
   for (model in FactoryGuy.modelDefinitions) {
     var definition = FactoryGuy.modelDefinitions[model];
@@ -54,7 +54,7 @@ asyncTest("creates records in the store", function() {
   var user = store.makeFixture('user');
 
   store.find('user', user.id).then( function(store_user) {
-    equal(store_user, user);
+    ok(store_user == user);
     start()
   });
 });
@@ -64,40 +64,53 @@ test("when hasMany associations assigned, belongTo parent is assigned", function
   var project = store.makeFixture('project');
   var user = store.makeFixture('user', {projects: [project]})
 
-  equal(project.get('user'), user);
+  ok(project.get('user') == user);
 });
 
 
-asyncTest("when asnyc hasMany associations assigned, belongTo parent is assigned", function() {
+asyncTest("when hasMany ( asnyc ) associations assigned, belongTo parent is assigned", function() {
   var user = store.makeFixture('user');
   var company = store.makeFixture('company', {users: [user]});
 
   user.get('company').then(function(c){
-    equal(c, company);
+    ok(c == company);
     start();
   })
 });
 
 
-test("when polymorphic hasMany associations are assigned, belongTo parent is assigned", function() {
+test("when hasMany ( polymorphic ) associations are assigned, belongTo parent is assigned", function() {
   var bh = store.makeFixture('big_hat');
   var sh = store.makeFixture('small_hat');
   var user = store.makeFixture('user', {hats: [bh, sh]});
 
-  equal(user.get('hats.members.list.length'), 2);
-  ok(user.get('hats.manyArray.firstObject') instanceof BigHat)
-  ok(user.get('hats.manyArray.lastObject') instanceof SmallHat)
+  equal(user.get('hats.length'), 2);
+  ok(user.get('hats.firstObject') instanceof BigHat)
+  ok(user.get('hats.lastObject') instanceof SmallHat)
   // sets the belongTo user association
-  equal(bh.get('user'), user)
-  equal(sh.get('user'), user)
+  ok(bh.get('user') == user)
+  ok(sh.get('user') == user)
 });
 
+
+//test("when hasMany ( self referential polymorphic ) associations are assigned, belongsTo parent is assigned", function() {
+//  GroupSerializer = DS.RESTSerializer.extend({
+//    attrs: {
+//      versions: {embedded: 'always'}
+//    }
+//  });
+//
+//  var big_group = store.makeFixture('big_group');
+//  var group = store.makeFixture('group', {versions: [big_group]});
+//  ok(big_group.get('group') == group)
+//});
+//
 
 test("when hasMany associations are assigned, belongsTo parent is assigned using inverse", function() {
   var project = store.makeFixture('project');
   var project2 = store.makeFixture('project', {children: [project]});
 
-  equal(project.get('parent'), project2);
+  ok(project.get('parent') == project2);
 });
 
 
@@ -105,7 +118,7 @@ test("when hasMany associations are assigned, belongsTo parent is assigned using
   var silk = store.makeFixture('silk');
   var bh = store.makeFixture('big_hat', {materials: [silk]});
 
-  equal(silk.get('hat'), bh)
+  ok(silk.get('hat') == bh)
 });
 
 
@@ -114,9 +127,9 @@ test("when belongTo parent is assigned, parent adds to hasMany records", functio
   var project1 = store.makeFixture('project', {user: user});
   var project2 = store.makeFixture('project', {user: user});
 
-  equal(user.get('projects.members.list.length'), 2);
-  equal(user.get('projects.manyArray.firstObject'), project1);
-  equal(user.get('projects.manyArray.lastObject'), project2);
+  equal(user.get('projects.length'), 2);
+  ok(user.get('projects.firstObject') == project1);
+  ok(user.get('projects.lastObject') == project2);
 });
 
 
@@ -125,32 +138,32 @@ test("when belongTo parent is assigned, parent adds to polymorphic hasMany recor
   store.makeFixture('big_hat', {user: user});
   store.makeFixture('small_hat', {user: user});
 
-  equal(user.get('hats.members.list.length'), 2);
-  ok(user.get('hats.manyArray.firstObject') instanceof BigHat)
-  ok(user.get('hats.manyArray.lastObject') instanceof SmallHat)
+  equal(user.get('hats.length'), 2);
+  ok(user.get('hats.firstObject') instanceof BigHat)
+  ok(user.get('hats.lastObject') instanceof SmallHat)
 });
 
 
-asyncTest("when async hasMany relationship is assigned, model relationship is synced on both sides", function() {
+asyncTest("when hasMany ( async ) relationship is assigned, model relationship is synced on both sides", function() {
   var property = store.makeFixture('property');
   var user1 = store.makeFixture('user', {properties: [property]});
   var user2 = store.makeFixture('user', {properties: [property]});
 
-  equal(property.get('owners.members.list.length'), 2);
-  deepEqual(property.get('owners.manyArray.firstObject'), user1);
-  deepEqual(property.get('owners.manyArray.lastObject'), user2);
+  equal(property.get('owners.length'), 2);
+//  deepEqual(property.get('owners.firstObject'), user1);
+//  deepEqual(property.get('owners.lastObject'), user2);
   start();
 });
 
 
-asyncTest("when async belongsTo parent is assigned, parent adds to hasMany records", function() {
+asyncTest("when belongsTo ( async ) parent is assigned, parent adds to hasMany records", function() {
   var user1 = store.makeFixture('user');
   var user2 = store.makeFixture('user');
   var company = store.makeFixture('company', {users: [user1, user2]});
 
-  equal(company.get('users.members.list.length'), 2);
-  equal(company.get('users.manyArray.firstObject'), user1);
-  equal(company.get('users.manyArray.lastObject'), user2);
+  equal(company.get('users.length'), 2);
+  ok(company.get('users.firstObject') == user1);
+  ok(company.get('users.lastObject') == user2);
   start();
 });
 
@@ -159,8 +172,8 @@ test("when belongTo parent is assigned, parent adds to hasMany record using inve
   var project = store.makeFixture('project');
   var project2 = store.makeFixture('project', {parent: project});
 
-  equal(project.get('children.members.list.length'), 1);
-  equal(project.get('children.manyArray.firstObject'), project2);
+  equal(project.get('children.length'), 1);
+  ok(project.get('children.firstObject') == project2);
 });
 
 
@@ -168,49 +181,49 @@ test("when belongTo parent is assigned, parent adds to hasMany record using actu
   var bh = store.makeFixture('big_hat');
   var silk = store.makeFixture('silk', {hat: bh});
 
-  equal(bh.get('materials.manyArray.firstObject'), silk)
+  ok(bh.get('materials.firstObject') == silk)
 });
 
 
 test("when belongTo parent is assigned, parent adds to belongsTo record", function() {
   var company = store.makeFixture('company');
   var profile = store.makeFixture('profile', {company: company});
-  equal(company.get('profile'), profile);
+  ok(company.get('profile') == profile);
 
   // but guard against a situation where a model can belong to itself
   // and do not want to set the belongsTo on this case.
   var hat1 = store.makeFixture('big_hat')
   var hat2 = store.makeFixture('big_hat', {hat: hat1})
-  equal(hat1.get('hat'), null);
-  equal(hat2.get('hat'), hat1);
+  ok(hat1.get('hat') == null);
+  ok(hat2.get('hat') == hat1);
 });
 
 
 test("belongsTo associations defined as attributes in fixture", function() {
   var project = store.makeFixture('project_with_user');
   equal(project.get('user') instanceof User, true)
-  equal(project.get('user.name'), 'User1');
+  ok(project.get('user.name') == 'User1');
 
   var project = store.makeFixture('project_with_dude');
-  equal(project.get('user.name'), 'Dude');
+  ok(project.get('user.name') == 'Dude');
 
   var project = store.makeFixture('project_with_admin');
-  equal(project.get('user.name'), 'Admin');
+  ok(project.get('user.name') == 'Admin');
 });
 
 
 test("hasMany associations defined as attributes in fixture", function() {
   var user = store.makeFixture('user_with_projects');
-  equal(user.get('projects.members.list.length'), 2)
-  equal(user.get('projects.manyArray.firstObject.user'), user)
-  equal(user.get('projects.manyArray.lastObject.user'), user)
+  equal(user.get('projects.length'), 2)
+  ok(user.get('projects.firstObject.user') == user)
+  ok(user.get('projects.lastObject.user') == user)
 })
 
 test("hasMany associations defined with traits", function() {
   var user = store.makeFixture('user', 'with_projects');
-  equal(user.get('projects.members.list.length'), 2)
-  equal(user.get('projects.manyArray.firstObject.user'), user)
-  equal(user.get('projects.manyArray.lastObject.user'), user)
+  equal(user.get('projects.length'), 2)
+  ok(user.get('projects.firstObject.user') == user)
+  ok(user.get('projects.lastObject.user') == user)
 })
 
 
@@ -227,8 +240,8 @@ module('DS.Store#makeList with DS.RESTAdapter', {
 
 test("creates list of DS.Model instances", function() {
   var users = store.makeList('user', 2);
-  equal(users.length, 2);
-  equal(users[0] instanceof DS.Model, true);
+  ok(users.length == 2);
+  ok(users[0] instanceof DS.Model == true);
 });
 
 
@@ -236,6 +249,6 @@ test("creates records in the store", function() {
   var users = store.makeList('user', 2);
 
   var storeUsers = store.all('user').get('content');
-  equal(storeUsers[0], users[0]);
-  equal(storeUsers[1], users[1]);
+  ok(storeUsers[0] == users[0]);
+  ok(storeUsers[1] == users[1]);
 });

@@ -1,31 +1,25 @@
 var testHelper, store;
 
 module('FactoryGuyTestMixin with DS.RESTAdapter', {
-  setup: function () {
-    testHelper = TestHelper.setup(DS.RESTAdapter);
-    store = testHelper.getStore();
-  },
-  teardown: function () {
-    DS.RESTAdapter.reopen({
-      namespace: '',
-      host: ''
-    })
-    Em.run(function () {
-      testHelper.teardown();
-    });
-  }
 });
 
 
 test("#buildURL without namespace", function () {
+  RestAdapter = DS.RESTAdapter.extend({
+    host: '',
+    namespace: ''
+  });
+  testHelper = TestHelper.setup(RestAdapter);
+
   equal(testHelper.buildURL('project'), '/projects', 'has no namespace by default');
 })
 
 test("#buildURL with namespace and host", function () {
-  DS.RESTAdapter.reopen({
+  RestAdapter = DS.RESTAdapter.extend({
     host: 'https://dude.com',
     namespace: 'api/v1'
-  })
+  });
+  testHelper = TestHelper.setup(RestAdapter);
 
   equal(testHelper.buildURL('project'), 'https://dude.com/api/v1/projects');
 })

@@ -179,11 +179,11 @@
    @param {Object} options a hash of options
    @return {Ember.computed} relationship
    */
-  DS.hasMany = function(type, options) {
-    if (typeof type === 'object') {
-      options = type;
-      type = undefined;
-    }
-    return hasRelationship(type, options);
-  }
+//  DS.hasMany = function(type, options) {
+//    if (typeof type === 'object') {
+//      options = type;
+//      type = undefined;
+//    }
+//    return hasRelationship(type, options);
+//  }
 }).call();
