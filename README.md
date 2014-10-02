@@ -302,8 +302,8 @@ You can override the default attributes by passing in a hash
   });
 
   var json = FactoryGuy.build('funny_user');
-  json.name = 'User1'
-  json.style = 'funny User1'
+  json.name // => 'User1'
+  json.style // => 'funny User1'
   
   var user = store.makeFixture('funny_user');
   user.get('name') // => 'User2'
