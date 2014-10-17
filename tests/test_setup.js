@@ -210,7 +210,6 @@ User = DS.Model.extend({
   hats:       DS.hasMany('hat', {polymorphic: true})
 });
 
-
 /*!
  * MockJax - jQuery Plugin to Mock Ajax requests
  *

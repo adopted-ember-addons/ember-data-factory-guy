@@ -88,7 +88,7 @@ DS.Store.reopen({
   setAssociationsForFixtureAdapter: function (modelType, modelName, fixture) {
     var self = this;
     var adapter = this.adapterFor('application');
-    Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
+    Ember.get(modelType, 'relationshipsByName').forEach(function (relationship, name) {
       if (relationship.kind == 'hasMany') {
         var hasManyRelation = fixture[relationship.key];
         if (hasManyRelation) {
@@ -139,7 +139,7 @@ DS.Store.reopen({
    */
   findEmbeddedAssociationsForRESTAdapter: function (modelType, fixture) {
     var store = this;
-    Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
+    Ember.get(modelType, 'relationshipsByName').forEach(function (relationship, name) {
       if (relationship.kind == 'belongsTo') {
         var belongsToRecord = fixture[relationship.key];
         if (Ember.typeOf(belongsToRecord) == 'object') {
@@ -187,8 +187,9 @@ DS.Store.reopen({
    ```
 
    NOTE:
-   As of ember-data-1.0.0-beta.10, this method is only needed because the belongsTo
-   is not assigned when there is a self referential polymorphic has many association.
+   As of ember-data-1.0.0-beta.10 and ember-data-1.0.0-beta.12,
+   this method is only needed because the belongsTo is not assigned when
+   there is a self referential polymorphic has many association.
 
    @param {DS.Model} modelType model type like 'User'
    @param {String} modelName model name like 'user'
@@ -196,7 +197,7 @@ DS.Store.reopen({
    */
   setAssociationsForRESTAdapter: function (modelType, modelName, model) {
     var self = this;
-    Ember.get(modelType, 'relationshipsByName').forEach(function (name, relationship) {
+    Ember.get(modelType, 'relationshipsByName').forEach(function (relationship, name) {
       if (relationship.kind == 'hasMany') {
         var children = model.get(name) || [];
         children.forEach(function (child) {
@@ -205,9 +206,8 @@ DS.Store.reopen({
             child.constructor,
             model
           );
-          var inverseName = (relationship.options && relationship.options.inverse)
-          if (belongsToName || inverseName) {
-            child.set(belongsToName || inverseName, model);
+          if (belongsToName) {
+            child.set(belongsToName, model);
           }
         })
       }
@@ -219,7 +219,7 @@ DS.Store.reopen({
   findRelationshipName: function (kind, belongToModelType, childModel) {
     var relationshipName;
     Ember.get(belongToModelType, 'relationshipsByName').forEach(
-      function (name, relationship) {
+      function (relationship, name) {
         if (relationship.kind == kind &&
           childModel instanceof relationship.type) {
           relationshipName = relationship.key;
@@ -232,7 +232,7 @@ DS.Store.reopen({
   findHasManyRelationshipNameForFixtureAdapter: function (belongToModelType, childModelType) {
     var relationshipName;
     Ember.get(belongToModelType, 'relationshipsByName').forEach(
-      function (name, relationship) {
+      function (relationship, name) {
         if (relationship.kind == 'hasMany' &&
           childModelType == relationship.type) {
           relationshipName = relationship.key;

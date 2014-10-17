@@ -255,3 +255,25 @@ test("creates records in the store", function() {
   ok(storeUsers[0] == users[0]);
   ok(storeUsers[1] == users[1]);
 });
+
+//test("creates records in the store", function() {
+//  var lesson = store.makeFixture('lesson');
+//  var unit = store.makeFixture('unit');
+//  var unit = store.makeFixture('unit', {lesson: lesson});
+//  console.log('@@###',unit+'', unit.get('lesson')+'')
+
+//    var unit = FactoryGuy.build('unit_with_lesson')
+//    store.push('unit' , unit)
+//    console.log(store.modelFor('lesson')+'')
+//    var relationshipsByName = Ember.get(Lesson, 'relationshipsByName');
+//    console.log(relationshipsByName)
+
+//    var unit = store.makeFixture('unit_with_lesson');
+//    console.log('@@###',unit+'', unit.get('lesson')+'')
+
+//  console.log(FactoryGuy.build('unit_with_lesson'));
+//  unit.get('lesson').then(function(lesson) {
+//    ok(lesson instanceof Lesson == true)
+//  })
+
+//})
