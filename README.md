@@ -9,8 +9,8 @@ so, if you are using ember-data-1.0.0-beta.8 and earlier, then be sure to use ve
 - Versions:
   - 0.6.4  -> ember-data-1.0.0-beta.8 and under
   - 0.7.1  -> ember-data-1.0.0-beta.10
-  - 0.7.2  -> ember-data-1.0.0-beta.11
-  - 0.7.2  -> ember-data-1.0.0-beta.12
+  - 0.7.3  -> ember-data-1.0.0-beta.11
+  - 0.7.3  -> ember-data-1.0.0-beta.12
 
 **For versions ( 0.7.1 / 0.7.2 ), support for the fixture adapter is currently broken.**  
 
