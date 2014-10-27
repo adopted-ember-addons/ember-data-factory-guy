@@ -62,7 +62,7 @@ or for particular version:
   "dependencies": {
     "foo-dependency": "latest",
     "other-foo-dependency": "latest",
-    "ember-data-factory-guy": "0.7.0"
+    "ember-data-factory-guy": "0.7.3"
   }
 ```
 
