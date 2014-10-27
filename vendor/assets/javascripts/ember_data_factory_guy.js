@@ -432,8 +432,11 @@ FactoryGuy = {
         if (store.usingFixtureAdapter()) {
           modelType.FIXTURES = [];
         }
-        store.unloadAll(modelType);
+        Ember.run(function(){
+          store.unloadAll(modelType);
+        })
       } catch (e) {
+//        console.log(e)
       }
     }
   },
@@ -609,6 +612,7 @@ DS.Store.reopen({
       if (relationship.kind == 'belongsTo') {
         var belongsToRecord = fixture[relationship.key];
         if (Ember.typeOf(belongsToRecord) == 'object') {
+          store.findEmbeddedAssociationsForRESTAdapter(relationship.type, belongsToRecord);
           belongsToRecord = store.push(relationship.type, belongsToRecord);
           fixture[relationship.key] = belongsToRecord;
         }

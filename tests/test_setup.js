@@ -1,6 +1,19 @@
 FactoryGuy.define("company", {
   default: {
     name: 'Silly corp'
+  },
+  traits: {
+    with_projects: {
+      projects: FactoryGuy.hasMany('project', 2)
+    }
+  }
+
+})
+
+FactoryGuy.define("small_company", {
+  default: {
+    name: 'Small Corp',
+    projects: FactoryGuy.hasMany('project', 2)
   }
 })
 FactoryGuy.define("group", {
@@ -71,6 +84,7 @@ FactoryGuy.define("project", {
     big: { title: 'Big Project' },
     with_title_sequence: { title: FactoryGuy.generate('title') },
     with_user: { user: {} },
+    with_user_having_hats: { user: FactoryGuy.belongsTo('user', 'with_hats') },
     with_dude: { user: {name: 'Dude'} },
     with_admin: { user: FactoryGuy.belongsTo('admin') }
   },
@@ -126,18 +140,53 @@ FactoryGuy.define('user', {
   traits: {
     with_projects: {
       projects: FactoryGuy.hasMany('project', 2)
+    },
+    with_hats: {
+      hats: FactoryGuy.hasMany('big_hat', 2)
     }
   }
 });
+
+
+//Unit = DS.Model.extend({
+//  lesson: DS.belongsTo('lesson')
+//})
+//
+//Lesson = DS.Model.extend({
+//  steps: DS.hasMany('step')
+//})
+//
+//Step = DS.Model.extend({
+//  lesson: DS.belongsTo ('lesson')
+//})
+//
+//
+//FactoryGuy.define('unit', {
+//  default: {
+//    lesson: FactoryGuy.belongsTo('lesson')
+//  }
+//})
+//
+//FactoryGuy.define('lesson', {
+//  default: {
+//    steps: FactoryGuy.hasMany('step', 2)
+//  }
+//})
+//
+//FactoryGuy.define('step', {
+//  default: {}
+//})
+
 Company = DS.Model.extend({
   name:    DS.attr('string'),
   profile: DS.belongsTo('profile'),
-  users:   DS.hasMany('user', {async: true, inverse: 'company'})
+  users:   DS.hasMany('user', {async: true, inverse: 'company'}),
+  projects: DS.hasMany('project', {async: true})
 });
 
 SmallCompany = Company.extend({
   owner: DS.belongsTo('user', {async: true}),
-  projects: DS.hasMany('project', {async: true})
+  projects: DS.hasMany('project')
 });
 
 Group = DS.Model.extend({
@@ -204,7 +253,7 @@ Property = DS.Model.extend({
 });
 User = DS.Model.extend({
   name:       DS.attr('string'),
-  company:    DS.belongsTo('company', {async: true, inverse: 'users'}),
+  company:    DS.belongsTo('company', {async: true, inverse: 'users', polymorphic: true}),
   properties: DS.hasMany('property', {async: true, inverse: 'owners'}),
   projects:   DS.hasMany('project'),
   hats:       DS.hasMany('hat', {polymorphic: true})

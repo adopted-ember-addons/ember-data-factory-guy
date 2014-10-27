@@ -262,8 +262,11 @@ FactoryGuy = {
         if (store.usingFixtureAdapter()) {
           modelType.FIXTURES = [];
         }
-        store.unloadAll(modelType);
+        Ember.run(function(){
+          store.unloadAll(modelType);
+        })
       } catch (e) {
+//        console.log(e)
       }
     }
   },
