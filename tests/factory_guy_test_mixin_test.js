@@ -24,22 +24,98 @@ test("#buildURL with namespace and host", function () {
   equal(testHelper.buildURL('project'), 'https://dude.com/api/v1/projects');
 })
 
-//asyncTest("#handleFind handles associations", function() {
-//  var projectJSON = FactoryGuy.build('project');
-//  var userJSON = FactoryGuy.build('user', {projects: [projectJSON.id]});
-//  projectJSON.user = userJSON.id
+
+module('FactoryGuyTestMixin with DS.RESTAdapter', {
+  setup: function() {
+    testHelper = TestHelper.setup(DS.RESTAdapter);
+    store = testHelper.getStore();
+  },
+  teardown: function() {
+    Em.run(function() { testHelper.teardown(); });
+  }
+});
+
+
+asyncTest("#createManyRecords (with mockjax) handles creating many records", function() {
+  var responseJson = FactoryGuy.buildList('profile', 2)
+  testHelper.stubEndpointForHttpRequest( '/profiles', {profiles: responseJson})
+
+  store.find('profile').then(function(profiles) {
+    ok(profiles.get('length') == 2)
+    start()
+  })
+})
+
+//asyncTest("#createRecord (with mockjax) handles creating a record", function() {
 //
-//  testHelper.handleSideloadFind('user', userJSON, {projects: [projectJSON]})
+//})
+
+
+module('FactoryGuyTestMixin with DS.ActiveModelAdapter', {
+  setup: function() {
+    testHelper = TestHelper.setup(DS.ActiveModelAdapter);
+    store = testHelper.getStore();
+  },
+  teardown: function() {
+    testHelper.teardown();
+    Em.run(function() {
+      console.log('teardown')
+      testHelper.teardown();
+    });
+  }
+});
+
+
+//asyncTest("#createRecord (with mockjax) handles model's camelCase attributes", function() {
+//  testHelper.handleCreate('profile', {camelCaseDescription: 'description'})
 //
-//  store.find('user', userJSON.id).then(function(user) {
-//    console.log(user.toJSON())
-//    console.log(userJSON)
-////    console.log(user+'',user.get('projects.firstObject').toJSON())
-////    console.log(user.get('projects.firstObject.user')+'')
-////    ok(user.toJSON() == userJSON)
-//    ok(user instanceof User)
-//    ok(user.get('projects.firstObject.user') == user)
-////    deepEqual(user.get('projects.firstObject').toJSON(), project)
+//  store.createRecord('profile').save().then(function(profile) {
+//    ok(!!profile.get('camelCaseDescription'))
 //    start();
 //  });
 //});
+
+
+asyncTest("#handleFind (with mockajax) handles model's camelCase attributes", function() {
+  var responseJson = testHelper.handleFind('profile', 'goofy_description');
+  var id = responseJson.profile.id;
+
+  store.find('profile', id).then(function(profile) {
+    ok(true);
+    console.log('after ward', profile.get('description'))
+    start();
+  });
+});
+
+//asyncTest("#handleFind (with mockajax) handles model's camelCase attributes", function() {
+//  var responseJson = testHelper.handleFind('profile', {camelCaseDescription: 'description'});
+//  var id = responseJson.profile.id;
+//
+//  store.find('profile', id).then(function(profile) {
+//    ok(!!profile.get('camelCaseDescription'));
+//    start();
+//  });
+//});
+
+//asyncTest("#handleFindMany (with mockajax) handles returning many records", function() {
+//  testHelper.handleFindMany('profile', 2, {description: 'dude'});
+//
+//  store.find('profile').then(function(profiles) {
+//    ok(profiles.get('length') == 2);
+//    console.log('after ward', profiles.get('firstObject.description'))
+//    start();
+//  });
+//});
+
+//asyncTest("#handleFindMany (with mockajax) deals with traits in arguments", function() {
+//  testHelper.handleFindMany('profile', 2, 'goofy_description');
+//  Em.run(function(){
+//    store.find('profile').then(function(profiles) {
+//      console.log(profiles.get('firstObject.description'))
+//      console.log(profiles.get('lastObject.description'))
+//      ok(profiles.get('firstObject.description') == 'goofy');
+//      start();
+//    });
+//  });
+//});
+//

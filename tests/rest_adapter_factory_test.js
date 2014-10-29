@@ -22,8 +22,8 @@ test("#resetModels clears the store of models, and resets the model definition",
 
   FactoryGuy.resetModels(store);
 
-//  equal(store.all('user').get('content.length'), 0)
-//  equal(store.all('project').get('content.length'), 0)
+  equal(store.all('user').get('content.length'), 0)
+  equal(store.all('project').get('content.length'), 0)
 
   for (model in FactoryGuy.modelDefinitions) {
     var definition = FactoryGuy.modelDefinitions[model];
@@ -224,6 +224,16 @@ test("belongsTo associations defined as attributes in fixture", function() {
 });
 
 
+test("belongsTo with embedded hasMany associations", function() {
+  var project = store.makeFixture('project', 'with_user_having_hats');
+  var user = project.get('user');
+  var hats = user.get('hats');
+
+  ok(user.get('projects.firstObject') == project)
+  ok(hats.get('firstObject.user') == user)
+});
+
+
 test("hasMany associations defined as attributes in fixture", function() {
   var user = store.makeFixture('user_with_projects');
   equal(user.get('projects.length'), 2)
@@ -238,6 +248,7 @@ test("hasMany associations defined with traits", function() {
   ok(user.get('projects.firstObject.user') == user)
   ok(user.get('projects.lastObject.user') == user)
 })
+
 
 
 module('DS.Store#makeList with DS.RESTAdapter', {
@@ -265,3 +276,25 @@ test("creates records in the store", function() {
   ok(storeUsers[0] == users[0]);
   ok(storeUsers[1] == users[1]);
 });
+
+//test("creates records in the store", function() {
+//  var lesson = store.makeFixture('lesson');
+//  var unit = store.makeFixture('unit');
+//  var unit = store.makeFixture('unit', {lesson: lesson});
+//  console.log('@@###',unit+'', unit.get('lesson')+'')
+
+//    var unit = FactoryGuy.build('unit_with_lesson')
+//    store.push('unit' , unit)
+//    console.log(store.modelFor('lesson')+'')
+//    var relationshipsByName = Ember.get(Lesson, 'relationshipsByName');
+//    console.log(relationshipsByName)
+
+//    var unit = store.makeFixture('unit_with_lesson');
+//    console.log('@@###',unit+'', unit.get('lesson')+'')
+
+//  console.log(FactoryGuy.build('unit_with_lesson'));
+//  unit.get('lesson').then(function(lesson) {
+//    ok(lesson instanceof Lesson == true)
+//  })
+
+//})

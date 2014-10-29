@@ -22,8 +22,8 @@ test("#resetModels clears the store of models, and resets the model definition",
 
   FactoryGuy.resetModels(store);
 
-//  equal(store.all('user').get('content.length'),0)
-//  equal(store.all('project').get('content.length'),0)
+  equal(store.all('user').get('content.length'),0)
+  equal(store.all('project').get('content.length'),0)
 
   for (model in FactoryGuy.modelDefinitions) {
     var definition = FactoryGuy.modelDefinitions[model];
@@ -219,6 +219,31 @@ test("belongsTo associations defined as attributes in fixture", function() {
   ok(project.get('user.name') == 'Admin');
 });
 
+test("belongsTo with embedded hasMany associations", function() {
+  var project = store.makeFixture('project', 'with_user_having_hats');
+  var user = project.get('user');
+  var hats = user.get('hats');
+
+  ok(user.get('projects.firstObject') == project)
+  ok(hats.get('firstObject.user') == user)
+});
+
+
+test("hasMany associations defined as attributes in fixture", function() {
+  var user = store.makeFixture('user_with_projects');
+  equal(user.get('projects.length'), 2)
+  ok(user.get('projects.firstObject.user') == user)
+  ok(user.get('projects.lastObject.user') == user)
+})
+
+
+test("hasMany associations defined with traits", function() {
+  var user = store.makeFixture('user', 'with_projects');
+  equal(user.get('projects.length'), 2)
+  ok(user.get('projects.firstObject.user') == user)
+  ok(user.get('projects.lastObject.user') == user)
+})
+
 
 module('DS.Store#makeList with ActiveModelAdapter', {
   setup: function() {
@@ -235,47 +260,9 @@ test("creates list of DS.Model instances", function() {
   var users = store.makeList('user', 2);
   equal(users.length, 2);
   ok(users[0] instanceof DS.Model == true);
-});
-
-
-test("creates records in the store", function() {
-  var users = store.makeList('user', 2);
 
   var storeUsers = store.all('user').get('content');
   ok(storeUsers[0] == users[0]);
   ok(storeUsers[1] == users[1]);
-});
-
-
-
-module('DS.Store with ActiveModelAdapter', {
-  setup: function() {
-    testHelper = TestHelper.setup(DS.ActiveModelAdapter);
-    store = testHelper.getStore();
-  },
-  teardown: function() {
-    Em.run(function() { testHelper.teardown(); });
-  }
-});
-
-
-asyncTest("#createRecord (with mockjax) handles model's camelCase attributes", function() {
-  testHelper.handleCreate('profile', {camelCaseDescription: 'description'})
-
-  store.createRecord('profile').save().then(function(profile) {
-    ok(!!profile.get('camelCaseDescription'))
-    start();
-  });
-});
-
-
-asyncTest("#find (with mockajax) handles model's camelCase attributes", function() {
-  var responseJson = testHelper.handleFind('profile', {camelCaseDescription: 'description'})
-  var id = responseJson.profile.id
-
-  store.find('profile', id).then(function(profile) {
-    ok(!!profile.get('camelCaseDescription'))
-    start();
-  });
 });
 
