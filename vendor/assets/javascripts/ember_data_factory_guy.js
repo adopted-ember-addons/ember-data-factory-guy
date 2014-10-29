@@ -609,6 +609,7 @@ DS.Store.reopen({
       if (relationship.kind == 'belongsTo') {
         var belongsToRecord = fixture[relationship.key];
         if (Ember.typeOf(belongsToRecord) == 'object') {
+          store.findEmbeddedAssociationsForRESTAdapter(relationship.type, belongsToRecord);
           belongsToRecord = store.push(relationship.type, belongsToRecord);
           fixture[relationship.key] = belongsToRecord;
         }
@@ -677,7 +678,6 @@ DS.Store.reopen({
           }
         })
       }
-
     })
   },
 

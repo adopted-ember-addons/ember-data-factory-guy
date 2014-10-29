@@ -1,6 +1,19 @@
 FactoryGuy.define("company", {
   default: {
     name: 'Silly corp'
+  },
+  traits: {
+    with_projects: {
+      projects: FactoryGuy.hasMany('project', 2)
+    }
+  }
+
+})
+
+FactoryGuy.define("small_company", {
+  default: {
+    name: 'Small Corp',
+    projects: FactoryGuy.hasMany('project', 2)
   }
 })
 FactoryGuy.define("group", {
@@ -71,6 +84,7 @@ FactoryGuy.define("project", {
     big: { title: 'Big Project' },
     with_title_sequence: { title: FactoryGuy.generate('title') },
     with_user: { user: {} },
+    with_user_having_hats: { user: FactoryGuy.belongsTo('user', 'with_hats') },
     with_dude: { user: {name: 'Dude'} },
     with_admin: { user: FactoryGuy.belongsTo('admin') }
   },

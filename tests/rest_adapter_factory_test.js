@@ -68,6 +68,16 @@ test("when hasMany associations assigned, belongTo parent is assigned", function
 });
 
 
+test("when belongsTo has a hasMany associations in the definition", function() {
+  var project = store.makeFixture('project', 'with_user_having_hats');
+  var user = project.get('user');
+  var hats = user.get('hats');
+
+  ok(user.get('projects.firstObject') == project)
+  ok(hats.get('firstObject.user') == user)
+});
+
+
 asyncTest("when hasMany ( asnyc ) associations assigned, belongTo parent is assigned", function() {
   var user = store.makeFixture('user');
   var company = store.makeFixture('company', {users: [user]});
