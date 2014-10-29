@@ -328,9 +328,9 @@ FactoryGuy = {
     Given a fixture name like 'person' or 'dude' determine what model this name
     refers to. In this case it's 'person' for each one.
 
-   @param {String} name a fixture name could be model name like 'person'
+   @param {String} name  a fixture name could be model name like 'person'
           or a named person in model definition like 'dude'
-   @returns {String} model name associated with fixture name or undefined if not found
+   @returns {String} model  name associated with fixture name or undefined if not found
    */
   lookupModelForFixtureName: function (name) {
     var definition = this.lookupDefinitionForFixtureName(name);
@@ -360,11 +360,11 @@ FactoryGuy = {
    FactoryGuy.build('bob') for a 'bob' User
    FactoryGuy.build('bob', 'dude') for a 'bob' User with dude traits
    FactoryGuy.build('bob', 'dude', 'funny') for a 'bob' User with dude and funny traits
-   FactoryGuy.build('bob', 'dude', name: 'wombat') for a 'bob' User with dude trait and custom attribute name of 'wombat'
+   FactoryGuy.build('bob', 'dude', {name: 'wombat'}) for a 'bob' User with dude trait and custom attribute name of 'wombat'
 
-   @param {String} name Fixture name
-   @param {String} trait trait name ( can be more than one )
-   @param {Object} opts Options that will override default fixture values
+   @param {String} name  fixture name
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} opts  optional fixture options that will override default fixture values
    @returns {Object} json fixture
    */
   build: function () {
@@ -391,10 +391,10 @@ FactoryGuy = {
    FactoryGuy.buildList('user', 2) for 2 User models
    FactoryGuy.build('bob', 2) for 2 User model with bob attributes
 
-   @param {String} name fixture name
-   @param {Number} number number of fixtures to create
-   @param {String} trait (one or more)
-   @param {Object} opts options that will override default fixture values
+   @param {String} name  fixture name
+   @param {Number} number  number of fixtures to create
+   @param {String} trait  optional traits (one or more)
+   @param {Object} opts  optional fixture options that will override default fixture values
    @returns {Array} list of fixtures
    */
   buildList: function () {
@@ -816,10 +816,11 @@ FactoryGuyTestMixin = Em.Mixin.create({
    Build the json used for creating or finding a record.
 
    @param {String} name of the fixture ( or model ) to create/find
-   @param {Object} opts fixture options
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} opts optional fixture options
    */
-  buildAjaxHttpResponse: function (name, opts) {
-    var fixture = FactoryGuy.build(name, opts);
+  _buildAjaxHttpResponse: function (name, traits, opts) {
+    var fixture = FactoryGuy.build(name, traits, opts);
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     if (this.usingActiveModelSerializer(modelName)) {
       this.toSnakeCase(fixture);
@@ -827,6 +828,44 @@ FactoryGuyTestMixin = Em.Mixin.create({
     var hash = {};
     hash[modelName] = fixture;
     return hash;
+  },
+
+  /**
+   Build the json used for creating or finding many records.
+
+   @param {String} name of the fixture ( or model ) to create/find
+   @param {Number} number  number of fixtures to create
+   @param {String} trait  optional traits (one or more)
+   @param {Object} opts optional fixture options
+   */
+  _buildManyAjaxHttpResponse: function (name, number, traits, opts) {
+    var fixture = FactoryGuy.buildList(name, number, traits, opts);
+    var modelName = FactoryGuy.lookupModelForFixtureName(name);
+    if (this.usingActiveModelSerializer(modelName)) {
+      this.toSnakeCase(fixture);
+    }
+    var hash = {};
+    hash[modelName] = fixture;
+    return hash;
+  },
+
+  _collectArgs: function (args, fromMethod) {
+    var args = Array.prototype.slice.call(arguments);
+    var name = args.shift();
+    if (!name) {
+      throw new Error(fromMethod + " needs a factory name to build");
+    }
+    var succeed = true;
+    if (Ember.typeOf(args[args.length-1]) == 'boolean') {
+      succeed  = args.pop();
+    }
+    var opts = {}
+    if (Ember.typeOf(args[args.length-1]) == 'object') {
+      opts  = args.pop();
+    }
+    var traits = args; // whatever is left are traits
+
+    return {name: name, traits: traits, opts: opts, succeed: succeed}
   },
 
   /**
@@ -855,7 +894,6 @@ FactoryGuyTestMixin = Em.Mixin.create({
     return this.getStore().adapterFor('application').buildURL(type, id);
   },
 
-
   handleSideloadFind: function (modelName, json, sideload) {
     var id = json.id
     var url = this.buildURL(modelName, id);
@@ -873,74 +911,157 @@ FactoryGuyTestMixin = Em.Mixin.create({
 
   /**
      Handling ajax GET ( find record ) for a model. You can mock
-     failed find by passing in status of 500.
+     failed find by passing in success flag as false.
 
-     @param {String} name of the fixture ( or model ) to find
-     @param {Object} opts fixture options
-     @param {Integer} status Optional HTTP status response code
+     @param {String} name of the fixture to find
+     @param {String} trait optional traits ( one or more )
+     @param {Object} opts optional fixture options
+     @param {Boolean} succeed optional flag to indicate if the request
+        should succeed ( default is true )
      */
-  handleFind: function (name, opts, status) {
+  handleFind: function () {
+    var args = Array.prototype.slice.call(arguments);
+    var name = args.shift();
+    if (!name) {
+      throw new Error("handleFind needs a factory name to build");
+    }
+    var succeed = true;
+    if (Ember.typeOf(args[args.length-1]) == 'boolean') {
+      succeed  = args.pop();
+    }
+    var opts = {}
+    if (Ember.typeOf(args[args.length-1]) == 'object') {
+      opts  = args.pop();
+    }
+    var traits = args; // whatever is left are traits
+
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var responseJson = this.buildAjaxHttpResponse(name, opts);
+    var responseJson = this._buildAjaxHttpResponse(name, traits, opts);
     var id = responseJson[modelName].id
     var url = this.buildURL(modelName, id);
     this.stubEndpointForHttpRequest(
       url,
       responseJson,
-      {type: 'GET', status: (status || 200)}
+      {type: 'GET', status: (succeed ? 200 : 500)}
     )
+    return responseJson;
+  },
+
+  /**
+     Handling ajax GET for finding all records for a type of model.
+     You can mock failed find by passing in success argument as false.
+
+     @param {String} name of the fixture ( or model ) to find
+     @param {Number} number  number of fixtures to create
+     @param {String} trait  optional traits (one or more)
+     @param {Object} opts optional fixture options
+     @param {Boolean} succeed optional flag to indicate if the request
+        should succeed ( default is true )
+     @return {Object} json response
+   */
+  handleFindMany: function () {
+    var args = Array.prototype.slice.call(arguments);
+    var name = args.shift();
+    var number = args.shift();
+    if (!name || !number) {
+      throw new Error("handleFindMany needs a name and a number ( at least ) to build fixture with");
+    }
+    var succeed = true;
+    if (Ember.typeOf(args[args.length-1]) == 'boolean') {
+      succeed  = args.pop();
+    }
+    var opts = {}
+    if (Ember.typeOf(args[args.length-1]) == 'object') {
+      opts  = args.pop();
+    }
+    var traits = args; // whatever is left are traits
+
+    var modelName = FactoryGuy.lookupModelForFixtureName(name);
+    var responseJson = this._buildManyAjaxHttpResponse(name, number, traits, opts);
+    console.log('responseJson',responseJson.profile[0].description)
+
+    var url = this.buildURL(modelName);
+    this.stubEndpointForHttpRequest(
+      url,
+      responseJson,
+      {type: 'GET', status: (succeed ? 200 : 500)}
+    )
+
     return responseJson;
   },
 
   /**
    Handling ajax POST ( create record ) for a model. You can mock
-   failed create by passing in status of 500.
+   failed create by passing in success argument as false.
 
    @param {String} name of the fixture ( or model ) to create
-   @param {Object} opts fixture options
-   @param {Integer} status Optional HTTP status response code
+   @param {String} trait optional traits ( one or more )
+   @param {Object} opts optional fixture options
+   @param {Boolean} succeed optional flag to indicate if the request
+      should succeed ( default is true )
+   @return {Object} json response
    */
-  handleCreate: function (name, opts, status) {
+  handleCreate: function () {
+    var args = Array.prototype.slice.call(arguments);
+    var name = args.shift();
+    if (!name) {
+      throw new Error("handleCreate needs a factory name to build");
+    }
+    var succeed = true;
+    if (Ember.typeOf(args[args.length-1]) == 'boolean') {
+      succeed  = args.pop();
+    }
+    var opts = {}
+    if (Ember.typeOf(args[args.length-1]) == 'object') {
+      opts  = args.pop();
+    }
+    var traits = args; // whatever is left are traits
+
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var responseJson = this.buildAjaxHttpResponse(name, opts);
+    var responseJson = this._buildAjaxHttpResponse(name, traits, opts);
     var url = this.buildURL(modelName);
     this.stubEndpointForHttpRequest(
       url,
       responseJson,
-      {type: 'POST', status: (status || 200)}
+      {type: 'POST', status: (succeed ? 200 : 500)}
     )
+
     return responseJson;
   },
 
   /**
    Handling ajax PUT ( update record ) for a model type. You can mock
-   failed update by passing in status of 500.
+   failed update by passing in success argument as false.
 
    @param {String} type model type like 'user' for User model
    @param {String} id id of record to update
-   @param {Integer} status Optional HTTP status response code
+   @param {Boolean} succeed optional flag to indicate if the request
+      should succeed ( default is true )
    */
-  handleUpdate: function (type, id, status) {
+  handleUpdate: function (type, id, succeed) {
+    succeed = succeed || true
     this.stubEndpointForHttpRequest(
       this.buildURL(type, id),
       {},
-      {type: 'PUT', status: (status || 200)}
+      {type: 'PUT', status: (succeed ? 200 : 500)}
     )
   },
 
   /**
    Handling ajax DELETE ( delete record ) for a model type. You can mock
-   failed delete by passing in status of 500.
+   failed delete by passing in success argument as false.
 
    @param {String} type model type like 'user' for User model
    @param {String} id id of record to update
-   @param {Integer} status Optional HTTP status response code
+   @param {Boolean} succeed optional flag to indicate if the request
+      should succeed ( default is true )
    */
-  handleDelete: function (type, id, status) {
+  handleDelete: function (type, id, succeed) {
+    succeed = succeed || true
     this.stubEndpointForHttpRequest(
       this.buildURL(type, id),
       {},
-      {type: 'DELETE', status: (status || 200)}
+      {type: 'DELETE', status: (succeed ? 200 : 500)}
     )
   },
 

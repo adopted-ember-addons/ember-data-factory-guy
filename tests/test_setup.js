@@ -74,6 +74,11 @@ FactoryGuy.define('fluffy_material', {
 FactoryGuy.define('profile', {
   default: {
     description: 'Text goes here'
+  },
+  traits: {
+    goofy_description: {
+      description: 'goofy'
+    }
   }
 })
 FactoryGuy.define("project", {

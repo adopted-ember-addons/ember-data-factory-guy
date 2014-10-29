@@ -260,47 +260,9 @@ test("creates list of DS.Model instances", function() {
   var users = store.makeList('user', 2);
   equal(users.length, 2);
   ok(users[0] instanceof DS.Model == true);
-});
-
-
-test("creates records in the store", function() {
-  var users = store.makeList('user', 2);
 
   var storeUsers = store.all('user').get('content');
   ok(storeUsers[0] == users[0]);
   ok(storeUsers[1] == users[1]);
-});
-
-
-
-module('DS.Store with ActiveModelAdapter', {
-  setup: function() {
-    testHelper = TestHelper.setup(DS.ActiveModelAdapter);
-    store = testHelper.getStore();
-  },
-  teardown: function() {
-    Em.run(function() { testHelper.teardown(); });
-  }
-});
-
-
-asyncTest("#createRecord (with mockjax) handles model's camelCase attributes", function() {
-  testHelper.handleCreate('profile', {camelCaseDescription: 'description'})
-
-  store.createRecord('profile').save().then(function(profile) {
-    ok(!!profile.get('camelCaseDescription'))
-    start();
-  });
-});
-
-
-asyncTest("#find (with mockajax) handles model's camelCase attributes", function() {
-  var responseJson = testHelper.handleFind('profile', {camelCaseDescription: 'description'})
-  var id = responseJson.profile.id
-
-  store.find('profile', id).then(function(profile) {
-    ok(!!profile.get('camelCaseDescription'))
-    start();
-  });
 });
 

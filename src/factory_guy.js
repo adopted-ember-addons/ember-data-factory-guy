@@ -158,9 +158,9 @@ FactoryGuy = {
     Given a fixture name like 'person' or 'dude' determine what model this name
     refers to. In this case it's 'person' for each one.
 
-   @param {String} name a fixture name could be model name like 'person'
+   @param {String} name  a fixture name could be model name like 'person'
           or a named person in model definition like 'dude'
-   @returns {String} model name associated with fixture name or undefined if not found
+   @returns {String} model  name associated with fixture name or undefined if not found
    */
   lookupModelForFixtureName: function (name) {
     var definition = this.lookupDefinitionForFixtureName(name);
@@ -190,11 +190,11 @@ FactoryGuy = {
    FactoryGuy.build('bob') for a 'bob' User
    FactoryGuy.build('bob', 'dude') for a 'bob' User with dude traits
    FactoryGuy.build('bob', 'dude', 'funny') for a 'bob' User with dude and funny traits
-   FactoryGuy.build('bob', 'dude', name: 'wombat') for a 'bob' User with dude trait and custom attribute name of 'wombat'
+   FactoryGuy.build('bob', 'dude', {name: 'wombat'}) for a 'bob' User with dude trait and custom attribute name of 'wombat'
 
-   @param {String} name Fixture name
-   @param {String} trait trait name ( can be more than one )
-   @param {Object} opts Options that will override default fixture values
+   @param {String} name  fixture name
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} opts  optional fixture options that will override default fixture values
    @returns {Object} json fixture
    */
   build: function () {
@@ -221,10 +221,10 @@ FactoryGuy = {
    FactoryGuy.buildList('user', 2) for 2 User models
    FactoryGuy.build('bob', 2) for 2 User model with bob attributes
 
-   @param {String} name fixture name
-   @param {Number} number number of fixtures to create
-   @param {String} trait (one or more)
-   @param {Object} opts options that will override default fixture values
+   @param {String} name  fixture name
+   @param {Number} number  number of fixtures to create
+   @param {String} trait  optional traits (one or more)
+   @param {Object} opts  optional fixture options that will override default fixture values
    @returns {Array} list of fixtures
    */
   buildList: function () {
