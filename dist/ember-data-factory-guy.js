@@ -897,10 +897,10 @@ FactoryGuyTestMixin = Em.Mixin.create({
      Handling ajax GET ( find record ) for a model. You can mock
      failed find by passing in success flag as false.
 
-     @param {String} name of the fixture to find
-     @param {String} trait optional traits ( one or more )
-     @param {Object} opts optional fixture options
-     @param {Boolean} succeed optional flag to indicate if the request
+     @param {String} name  name of the fixture to find
+     @param {String} trait  optional traits ( one or more )
+     @param {Object} opts  optional fixture options
+     @param {Boolean} succeed  optional flag to indicate if the request
         should succeed ( default is true )
      */
   handleFind: function () {
@@ -937,11 +937,11 @@ FactoryGuyTestMixin = Em.Mixin.create({
      Handling ajax GET for finding all records for a type of model.
      You can mock failed find by passing in success argument as false.
 
-     @param {String} name of the fixture ( or model ) to find
+     @param {String} name  name of the fixture ( or model ) to find
      @param {Number} number  number of fixtures to create
      @param {String} trait  optional traits (one or more)
-     @param {Object} opts optional fixture options
-     @param {Boolean} succeed optional flag to indicate if the request
+     @param {Object} opts  optional fixture options
+     @param {Boolean} succeed  optional flag to indicate if the request
         should succeed ( default is true )
      @return {Object} json response
    */
@@ -980,10 +980,10 @@ FactoryGuyTestMixin = Em.Mixin.create({
    Handling ajax POST ( create record ) for a model. You can mock
    failed create by passing in success argument as false.
 
-   @param {String} name of the fixture ( or model ) to create
-   @param {String} trait optional traits ( one or more )
-   @param {Object} opts optional fixture options
-   @param {Boolean} succeed optional flag to indicate if the request
+   @param {String} name  name of the fixture ( or model ) to create
+   @param {String} trait  optional traits ( one or more )
+   @param {Object} opts  optional fixture options
+   @param {Boolean} succeed  optional flag to indicate if the request
       should succeed ( default is true )
    @return {Object} json response
    */
@@ -1021,9 +1021,9 @@ FactoryGuyTestMixin = Em.Mixin.create({
    Handling ajax PUT ( update record ) for a model type. You can mock
    failed update by passing in success argument as false.
 
-   @param {String} type model type like 'user' for User model
-   @param {String} id id of record to update
-   @param {Boolean} succeed optional flag to indicate if the request
+   @param {String} type  model type like 'user' for User model
+   @param {String} id  id of record to update
+   @param {Boolean} succeed  optional flag to indicate if the request
       should succeed ( default is true )
    */
   handleUpdate: function (type, id, succeed) {
@@ -1039,9 +1039,9 @@ FactoryGuyTestMixin = Em.Mixin.create({
    Handling ajax DELETE ( delete record ) for a model type. You can mock
    failed delete by passing in success argument as false.
 
-   @param {String} type model type like 'user' for User model
-   @param {String} id id of record to update
-   @param {Boolean} succeed optional flag to indicate if the request
+   @param {String} type  model type like 'user' for User model
+   @param {String} id  id of record to update
+   @param {Boolean} succeed  optional flag to indicate if the request
       should succeed ( default is true )
    */
   handleDelete: function (type, id, succeed) {

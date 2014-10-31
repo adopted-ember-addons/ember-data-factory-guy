@@ -26,7 +26,8 @@ module.exports = function(grunt) {
             'src/model_definition.js',
             'src/factory_guy.js',
             'src/store.js',
-            'src/factory_guy_test_mixin.js'],
+            'src/factory_guy_test_mixin.js',
+            'bower_components/jquery-mockjax/jquery.mockjax.js'],
           "vendor/assets/javascripts/factory_guy_has_many.js": ['src/has_many.js']
         }
       },
