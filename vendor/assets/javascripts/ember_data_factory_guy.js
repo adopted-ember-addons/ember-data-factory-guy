@@ -378,6 +378,7 @@ FactoryGuy = {
       opts  = args.pop();
     }
     var traits = args; // whatever is left are traits
+
     var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
       throw new Error("Can't find that factory named [" + name + "]");
@@ -478,16 +479,19 @@ DS.Store.reopen({
 
   /**
    Make new fixture and save to store. If the store is using FixtureAdapter,
-   will push to FIXTURE array, otherwise will use push method on adapter.
+   will push to FIXTURE array, otherwise will use push method on adapter to load
+   the record into the store
 
-   @param {String} name name of fixture
-   @param {Object} options fixture options
+   @param {String} name  fixture name
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} opts  optional fixture options that will override default fixture values
    @returns {Object|DS.Model} json or record depending on the adapter type
    */
-  makeFixture: function (name, options) {
+  makeFixture: function () {
     var store = this;
+    var fixture = FactoryGuy.build.apply(FactoryGuy,arguments);
+    var name = arguments[0];
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var fixture = FactoryGuy.build(name, options);
     var modelType = store.modelFor(modelName);
 
     if (this.usingFixtureAdapter()) {
@@ -524,10 +528,11 @@ DS.Store.reopen({
    @param {Object} options fixture options
    @returns {Array} list of json fixtures or records depending on the adapter type
    */
-  makeList: function (name, number, options) {
+  makeList: function () {
     var arr = [];
+    var number = arguments[1];
     for (var i = 0; i < number; i++) {
-      arr.push(this.makeFixture(name, options))
+      arr.push(this.makeFixture.apply(this,arguments));
     }
     return arr;
   },
@@ -878,60 +883,6 @@ FactoryGuyTestMixin = Em.Mixin.create({
     return this.getStore().adapterFor('application').buildURL(type, id);
   },
 
-  handleSideloadFind: function (modelName, json, sideload) {
-    var id = json.id
-    var url = this.buildURL(modelName, id);
-    var responseJson = {};
-    responseJson[modelName] = json;
-    $.extend(responseJson, sideload)
-
-    this.stubEndpointForHttpRequest(
-      url,
-      responseJson,
-      {type: 'GET', status: (status || 200)}
-    )
-  },
-
-
-  /**
-     Handling ajax GET ( find record ) for a model. You can mock
-     failed find by passing in success flag as false.
-
-     @param {String} name  name of the fixture to find
-     @param {String} trait  optional traits ( one or more )
-     @param {Object} opts  optional fixture options
-     @param {Boolean} succeed  optional flag to indicate if the request
-        should succeed ( default is true )
-     */
-  handleFind: function () {
-    var args = Array.prototype.slice.call(arguments);
-    var name = args.shift();
-    if (!name) {
-      throw new Error("handleFind needs a factory name to build");
-    }
-    var succeed = true;
-    if (Ember.typeOf(args[args.length-1]) == 'boolean') {
-      succeed  = args.pop();
-    }
-    var opts = {}
-    if (Ember.typeOf(args[args.length-1]) == 'object') {
-      opts  = args.pop();
-    }
-    var traits = args; // whatever is left are traits
-
-    var fixture = FactoryGuy.build(name, traits, opts);
-    var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var responseJson = this.buildAjaxHttpResponse(modelName, fixture);
-    var id = responseJson[modelName].id
-    var url = this.buildURL(modelName, id);
-
-    this.stubEndpointForHttpRequest(
-      url,
-      responseJson,
-      {type: 'GET', status: (succeed ? 200 : 500)}
-    )
-    return responseJson;
-  },
 
   /**
      Handling ajax GET for finding all records for a type of model.
@@ -941,39 +892,21 @@ FactoryGuyTestMixin = Em.Mixin.create({
      @param {Number} number  number of fixtures to create
      @param {String} trait  optional traits (one or more)
      @param {Object} opts  optional fixture options
-     @param {Boolean} succeed  optional flag to indicate if the request
-        should succeed ( default is true )
      @return {Object} json response
    */
   handleFindMany: function () {
-    var args = Array.prototype.slice.call(arguments);
-    var name = args.shift();
-    var number = args.shift();
-    if (!name || !number) {
-      throw new Error("handleFindMany needs a name and a number ( at least ) to build fixture with");
-    }
-    var succeed = true;
-    if (Ember.typeOf(args[args.length-1]) == 'boolean') {
-      succeed  = args.pop();
-    }
-    var opts = {}
-    if (Ember.typeOf(args[args.length-1]) == 'object') {
-      opts  = args.pop();
-    }
-    var traits = args; // whatever is left are traits
+    var store = this.getStore();
+    // make the records and load them in the store
+    store.makeList.apply(store,arguments);
 
-    var fixture = FactoryGuy.buildList(name, number, traits, opts);
+    var name = arguments[0];
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var responseJson = this.buildAjaxHttpResponse(modelName, fixture);
+    var responseJson = {};
+    responseJson[modelName]=[];
     var url = this.buildURL(modelName);
-
-    this.stubEndpointForHttpRequest(
-      url,
-      responseJson,
-      {type: 'GET', status: (succeed ? 200 : 500)}
-    )
-
-    return responseJson;
+    // mock the ajax call, but return nothing, since the records will be
+    // retrieved since they are already in the store
+    this.stubEndpointForHttpRequest(url, responseJson, {type: 'GET'})
   },
 
   /**
@@ -983,38 +916,31 @@ FactoryGuyTestMixin = Em.Mixin.create({
    @param {String} name  name of the fixture ( or model ) to create
    @param {String} trait  optional traits ( one or more )
    @param {Object} opts  optional fixture options
-   @param {Boolean} succeed  optional flag to indicate if the request
-      should succeed ( default is true )
    @return {Object} json response
    */
   handleCreate: function () {
     var args = Array.prototype.slice.call(arguments);
-    var name = args.shift();
-    if (!name) {
-      throw new Error("handleCreate needs a factory name to build");
-    }
+
     var succeed = true;
     if (Ember.typeOf(args[args.length-1]) == 'boolean') {
-      succeed  = args.pop();
+      succeed = args.pop();
     }
-    var opts = {}
-    if (Ember.typeOf(args[args.length-1]) == 'object') {
-      opts  = args.pop();
-    }
-    var traits = args; // whatever is left are traits
 
-    var fixture = FactoryGuy.build(name, traits, opts);
+    var name = args[0];
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var responseJson = this.buildAjaxHttpResponse(modelName, fixture);
     var url = this.buildURL(modelName);
+    var responseJson = {};
+    var httpOptions = {type: 'POST'}
 
-    this.stubEndpointForHttpRequest(
-      url,
-      responseJson,
-      {type: 'POST', status: (succeed ? 200 : 500)}
-    )
-
-    return responseJson;
+    if (succeed) {
+      var store = this.getStore();
+      // make the records and load them in the store
+      var model = store.makeFixture.apply(store,args);
+      responseJson[modelName]=model;
+    } else {
+      httpOptions.status = 500;
+    }
+    this.stubEndpointForHttpRequest(url, responseJson, httpOptions)
   },
 
   /**
@@ -1027,7 +953,8 @@ FactoryGuyTestMixin = Em.Mixin.create({
       should succeed ( default is true )
    */
   handleUpdate: function (type, id, succeed) {
-    succeed = succeed || true
+    succeed = succeed === undefined ? true : succeed;
+
     this.stubEndpointForHttpRequest(
       this.buildURL(type, id),
       {},
@@ -1045,7 +972,8 @@ FactoryGuyTestMixin = Em.Mixin.create({
       should succeed ( default is true )
    */
   handleDelete: function (type, id, succeed) {
-    succeed = succeed || true
+    succeed = succeed === undefined ? true : succeed;
+
     this.stubEndpointForHttpRequest(
       this.buildURL(type, id),
       {},

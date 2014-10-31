@@ -44,20 +44,31 @@ module('DS.Store#makeFixture with RestAdapter', {
 });
 
 
-test("creates DS.Model instances", function() {
-  var user = store.makeFixture('user');
-  equal(user instanceof DS.Model, true);
-});
-
-
 asyncTest("creates records in the store", function() {
   var user = store.makeFixture('user');
+  ok(user instanceof User);
 
-  store.find('user', user.id).then( function(store_user) {
+  store.find('user', user.id).then(function(store_user) {
     ok(store_user == user);
     start()
   });
 });
+
+test("makeFixture with fixture options", function() {
+  var profile = store.makeFixture('profile',  {description: 'dude'});
+  ok(profile.get('description') == 'dude');
+});
+
+test("makeFixture with traits", function() {
+  var profile = store.makeFixture('profile', 'goofy_description');
+  ok(profile.get('description') == 'goofy');
+});
+
+test("makeFixture with traits and fixture options ", function() {
+  var profile = store.makeFixture('profile', 'goofy_description', {description: 'dude'});
+  ok(profile.get('description') == 'dude');
+});
+
 
 
 test("when hasMany associations assigned, belongTo parent is assigned", function() {

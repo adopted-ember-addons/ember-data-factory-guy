@@ -7,12 +7,12 @@ so, if you are using ember-data-1.0.0-beta.8 and earlier, then be sure to use ve
 ( or below ) of ember-data-factory-guy.  
 
 - Versions:
-  - 0.6.4  -> ember-data-1.0.0-beta.8 and under
-  - 0.7.1  -> ember-data-1.0.0-beta.10
-  - 0.7.3  -> ember-data-1.0.0-beta.11
-  - 0.7.3  -> ember-data-1.0.0-beta.12
+  - 0.6.4   -> ember-data-1.0.0-beta.8 and under
+  - 0.7.1.1 -> ember-data-1.0.0-beta.10
+  - 0.7.4   -> ember-data-1.0.0-beta.11
+  - 0.7.4   -> ember-data-1.0.0-beta.12
 
-**For versions ( 0.7.1 -> 0.7.3 ), support for the fixture adapter is currently broken.**  
+**For versions ( 0.7.1 -> 0.7.4 ), support for the fixture adapter is currently broken.**  
 
 ## Using as Gem
 
@@ -517,7 +517,7 @@ the reverse 'user' belongsTo association is being setup for you on the project
 ```
 
 
-###Testing models, controllers, views 
+### Testing models, controllers, views 
 
 - Testing the models, controllers and views in isolation
 - Use FactoryGuyTestMixin to help with testing
@@ -563,17 +563,17 @@ test("make a user using your applications default adapter", function() {
 ```
 
 
-###Integration Tests
+### Integration Tests
 
 
-##### Using FactoryGuyTestMixin
+#### Using FactoryGuyTestMixin
 
 - Uses mockjax
 - Has helper methods
-  - handleFind
+  - handleFindMany
   - handleCreate
-  - handleUpdate
-  - handleDelete
+  - handleUpdate ( can mock success or failure )
+  - handleDelete ( can mock success or failure )
 
 Since it is recommended to use your normal adapter ( which is usually a subclass of RESTAdapter, )
 FactoryGuyTestMixin assumes you will want to use that adapter to do your integration tests.
@@ -584,8 +584,55 @@ If you put models into the store ( with store#makeFixture ), the http GET call d
 since that model is already in the store.
 
 But what if you want to handle create, update or delete?
+
 FactoryGuy assumes you want to mock ajax calls with the mockjax library,
-and you will need to download and include that library to use the following feature.
+and this is already bundled for you when you use the ember-data-factory-guy library.
+                
+
+##### handleUpdate
+
+*success case is the default*
+
+```javascript
+  var profile = store.makeFixture('profile');
+  testHelper.handleUpdate('profile', profile.id);
+
+  profile.set('description', 'good value');
+  profile.save() //=> will succeed
+````
+
+*mocking failed update*
+
+```javascript
+  var profile = store.makeFixture('profile');
+  testHelper.handleUpdate('profile', profile.id, false);
+
+  profile.set('description', 'bad value');
+  profile.save() //=> will fail
+````
+
+
+##### handleDelete
+
+*success case is the default*
+
+```javascript
+  var profile = store.makeFixture('profile');
+  testHelper.handleDelete('profile', profile.id);
+
+  profile.destroyRecord() // => will succeed
+````
+
+*mocking failed delete*
+
+```javascript
+  var profile = store.makeFixture('profile');
+  // set the succeed flag to 'false'
+  testHelper.handleDelete('profile', profile.id, false);
+
+  profile.destroyRecord() // => will fail
+````
+
 
 Here is a sample of what you could do in a view test:
 

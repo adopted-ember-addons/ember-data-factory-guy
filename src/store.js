@@ -9,16 +9,19 @@ DS.Store.reopen({
 
   /**
    Make new fixture and save to store. If the store is using FixtureAdapter,
-   will push to FIXTURE array, otherwise will use push method on adapter.
+   will push to FIXTURE array, otherwise will use push method on adapter to load
+   the record into the store
 
-   @param {String} name name of fixture
-   @param {Object} options fixture options
+   @param {String} name  fixture name
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} opts  optional fixture options that will override default fixture values
    @returns {Object|DS.Model} json or record depending on the adapter type
    */
-  makeFixture: function (name, options) {
+  makeFixture: function () {
     var store = this;
+    var fixture = FactoryGuy.build.apply(FactoryGuy,arguments);
+    var name = arguments[0];
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var fixture = FactoryGuy.build(name, options);
     var modelType = store.modelFor(modelName);
 
     if (this.usingFixtureAdapter()) {
@@ -55,10 +58,11 @@ DS.Store.reopen({
    @param {Object} options fixture options
    @returns {Array} list of json fixtures or records depending on the adapter type
    */
-  makeList: function (name, number, options) {
+  makeList: function () {
     var arr = [];
+    var number = arguments[1];
     for (var i = 0; i < number; i++) {
-      arr.push(this.makeFixture(name, options))
+      arr.push(this.makeFixture.apply(this,arguments));
     }
     return arr;
   },
