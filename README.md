@@ -589,6 +589,7 @@ FactoryGuy assumes you want to mock ajax calls with the mockjax library,
 and this is already bundled for you when you use the ember-data-factory-guy library.
                 
 
+
 ##### handleUpdate
 
 *success case is the default*
@@ -610,6 +611,7 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
   profile.set('description', 'bad value');
   profile.save() //=> will fail
 ````
+
 
 
 ##### handleDelete
