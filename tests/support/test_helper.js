@@ -15,7 +15,9 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin,{
       small_hat: SmallHat,
       big_hat: BigHat,
       soft_material: SoftMaterial,
+      softMaterial: SoftMaterial,
       fluffy_material: FluffyMaterial,
+      fluffyMaterial: FluffyMaterial,
       profile: Profile,
       user: User,
       company: Company,
@@ -24,7 +26,8 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin,{
       project: Project,
       group: Group,
       big_group: BigGroup,
-      small_group: SmallGroup
+      small_group: SmallGroup,
+      outfit: Outfit
     })
 
     if (adapter instanceof DS.FixtureAdapter) {

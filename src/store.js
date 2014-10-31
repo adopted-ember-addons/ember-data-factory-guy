@@ -25,22 +25,26 @@ DS.Store.reopen({
       this.setAssociationsForFixtureAdapter(modelType, modelName, fixture);
       return FactoryGuy.pushFixture(modelType, fixture);
     } else {
-      var store = this;
-
-      var model;
-      Em.run(function () {
-        store.findEmbeddedAssociationsForRESTAdapter(modelType, fixture);
-        if (fixture.type) {
-          // assuming its polymorphic if there is a type attribute
-          // is this too bold an assumption?
-          modelName = fixture.type.underscore();
-          modelType = store.modelFor(modelName);
-        }
-        model = store.push(modelName, fixture);
-        store.setAssociationsForRESTAdapter(modelType, modelName, model);
-      });
-      return model;
+      return store.makeModel(modelType, fixture)
     }
+  },
+
+  makeModel: function (modelType, fixture) {
+    var store = this,
+        modelName = store.modelFor(modelType).typeKey,
+        model;
+    Em.run(function () {
+      store.findEmbeddedAssociationsForRESTAdapter(modelType, fixture);
+      if (fixture.type) {
+        // assuming its polymorphic if there is a type attribute
+        // is this too bold an assumption?
+        modelName = fixture.type.underscore();
+        modelType = store.modelFor(modelName);
+      }
+      model = store.push(modelName, fixture);
+      store.setAssociationsForRESTAdapter(modelType, modelName, model);
+    });
+    return model;
   },
 
   /**
@@ -128,7 +132,8 @@ DS.Store.reopen({
   },
 
   /**
-   Before pushing the fixture to the store, do some preprocessing.
+   Before pushing the fixture to the store, do some preprocessing. Descend into the tree
+   of object data, and convert child objects to record instances recursively.
 
    If its a belongs to association, and the fixture has an object there,
    then push that model to the store and set the id of that new model
@@ -150,12 +155,11 @@ DS.Store.reopen({
       }
       if (relationship.kind == 'hasMany') {
         var hasManyRecords = fixture[relationship.key];
-        // if the records are objects and not instances they need to be converted to
-        // instances
         if (Ember.typeOf(hasManyRecords) == 'array') {
           if (Ember.typeOf(hasManyRecords[0]) == 'object') {
             var records = Em.A()
             hasManyRecords.map(function (object) {
+              store.findEmbeddedAssociationsForRESTAdapter(relationship.type, object);
               var record = store.push(relationship.type, object);
               records.push(record);
               return record;

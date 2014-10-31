@@ -494,22 +494,26 @@ DS.Store.reopen({
       this.setAssociationsForFixtureAdapter(modelType, modelName, fixture);
       return FactoryGuy.pushFixture(modelType, fixture);
     } else {
-      var store = this;
-
-      var model;
-      Em.run(function () {
-        store.findEmbeddedAssociationsForRESTAdapter(modelType, fixture);
-        if (fixture.type) {
-          // assuming its polymorphic if there is a type attribute
-          // is this too bold an assumption?
-          modelName = fixture.type.underscore();
-          modelType = store.modelFor(modelName);
-        }
-        model = store.push(modelName, fixture);
-        store.setAssociationsForRESTAdapter(modelType, modelName, model);
-      });
-      return model;
+      return store.makeModel(modelType, fixture)
     }
+  },
+
+  makeModel: function (modelType, fixture) {
+    var store = this,
+        modelName = store.modelFor(modelType).typeKey,
+        model;
+    Em.run(function () {
+      store.findEmbeddedAssociationsForRESTAdapter(modelType, fixture);
+      if (fixture.type) {
+        // assuming its polymorphic if there is a type attribute
+        // is this too bold an assumption?
+        modelName = fixture.type.underscore();
+        modelType = store.modelFor(modelName);
+      }
+      model = store.push(modelName, fixture);
+      store.setAssociationsForRESTAdapter(modelType, modelName, model);
+    });
+    return model;
   },
 
   /**
@@ -597,7 +601,8 @@ DS.Store.reopen({
   },
 
   /**
-   Before pushing the fixture to the store, do some preprocessing.
+   Before pushing the fixture to the store, do some preprocessing. Descend into the tree
+   of object data, and convert child objects to record instances recursively.
 
    If its a belongs to association, and the fixture has an object there,
    then push that model to the store and set the id of that new model
@@ -619,12 +624,11 @@ DS.Store.reopen({
       }
       if (relationship.kind == 'hasMany') {
         var hasManyRecords = fixture[relationship.key];
-        // if the records are objects and not instances they need to be converted to
-        // instances
         if (Ember.typeOf(hasManyRecords) == 'array') {
           if (Ember.typeOf(hasManyRecords[0]) == 'object') {
             var records = Em.A()
             hasManyRecords.map(function (object) {
+              store.findEmbeddedAssociationsForRESTAdapter(relationship.type, object);
               var record = store.push(relationship.type, object);
               records.push(record);
               return record;
@@ -811,16 +815,15 @@ FactoryGuyTestMixin = Em.Mixin.create({
     $.mockjax(request);
   },
 
+
   /**
    Build the json used for creating or finding a record.
 
-   @param {String} name of the fixture ( or model ) to create/find
-   @param {String} trait  optional trait names ( one or more )
-   @param {Object} opts optional fixture options
+   @param {String} modelName model name like 'user'
+   @param {String} fixture the fixture data
+   @return {Object} json response used for mocking a request
    */
-  _buildAjaxHttpResponse: function (name, traits, opts) {
-    var fixture = FactoryGuy.build(name, traits, opts);
-    var modelName = FactoryGuy.lookupModelForFixtureName(name);
+  buildAjaxHttpResponse: function (modelName, fixture) {
     if (this.usingActiveModelSerializer(modelName)) {
       this.toSnakeCase(fixture);
     }
@@ -829,24 +832,6 @@ FactoryGuyTestMixin = Em.Mixin.create({
     return hash;
   },
 
-  /**
-   Build the json used for creating or finding many records.
-
-   @param {String} name of the fixture ( or model ) to create/find
-   @param {Number} number  number of fixtures to create
-   @param {String} trait  optional traits (one or more)
-   @param {Object} opts optional fixture options
-   */
-  _buildManyAjaxHttpResponse: function (name, number, traits, opts) {
-    var fixture = FactoryGuy.buildList(name, number, traits, opts);
-    var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    if (this.usingActiveModelSerializer(modelName)) {
-      this.toSnakeCase(fixture);
-    }
-    var hash = {};
-    hash[modelName] = fixture;
-    return hash;
-  },
 
   _collectArgs: function (args, fromMethod) {
     var args = Array.prototype.slice.call(arguments);
@@ -934,10 +919,12 @@ FactoryGuyTestMixin = Em.Mixin.create({
     }
     var traits = args; // whatever is left are traits
 
+    var fixture = FactoryGuy.build(name, traits, opts);
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var responseJson = this._buildAjaxHttpResponse(name, traits, opts);
+    var responseJson = this.buildAjaxHttpResponse(modelName, fixture);
     var id = responseJson[modelName].id
     var url = this.buildURL(modelName, id);
+
     this.stubEndpointForHttpRequest(
       url,
       responseJson,
@@ -975,11 +962,11 @@ FactoryGuyTestMixin = Em.Mixin.create({
     }
     var traits = args; // whatever is left are traits
 
+    var fixture = FactoryGuy.buildList(name, number, traits, opts);
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var responseJson = this._buildManyAjaxHttpResponse(name, number, traits, opts);
-    console.log('responseJson',responseJson.profile[0].description)
-
+    var responseJson = this.buildAjaxHttpResponse(modelName, fixture);
     var url = this.buildURL(modelName);
+
     this.stubEndpointForHttpRequest(
       url,
       responseJson,
@@ -1016,9 +1003,11 @@ FactoryGuyTestMixin = Em.Mixin.create({
     }
     var traits = args; // whatever is left are traits
 
+    var fixture = FactoryGuy.build(name, traits, opts);
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var responseJson = this._buildAjaxHttpResponse(name, traits, opts);
+    var responseJson = this.buildAjaxHttpResponse(modelName, fixture);
     var url = this.buildURL(modelName);
+
     this.stubEndpointForHttpRequest(
       url,
       responseJson,
@@ -1067,4 +1056,4 @@ FactoryGuyTestMixin = Em.Mixin.create({
   teardown: function () {
     FactoryGuy.resetModels(this.getStore());
   }
-})
+});

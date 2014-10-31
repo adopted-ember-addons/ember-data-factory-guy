@@ -80,16 +80,15 @@ FactoryGuyTestMixin = Em.Mixin.create({
     $.mockjax(request);
   },
 
+
   /**
    Build the json used for creating or finding a record.
 
-   @param {String} name of the fixture ( or model ) to create/find
-   @param {String} trait  optional trait names ( one or more )
-   @param {Object} opts optional fixture options
+   @param {String} modelName model name like 'user'
+   @param {String} fixture the fixture data
+   @return {Object} json response used for mocking a request
    */
-  _buildAjaxHttpResponse: function (name, traits, opts) {
-    var fixture = FactoryGuy.build(name, traits, opts);
-    var modelName = FactoryGuy.lookupModelForFixtureName(name);
+  buildAjaxHttpResponse: function (modelName, fixture) {
     if (this.usingActiveModelSerializer(modelName)) {
       this.toSnakeCase(fixture);
     }
@@ -98,24 +97,6 @@ FactoryGuyTestMixin = Em.Mixin.create({
     return hash;
   },
 
-  /**
-   Build the json used for creating or finding many records.
-
-   @param {String} name of the fixture ( or model ) to create/find
-   @param {Number} number  number of fixtures to create
-   @param {String} trait  optional traits (one or more)
-   @param {Object} opts optional fixture options
-   */
-  _buildManyAjaxHttpResponse: function (name, number, traits, opts) {
-    var fixture = FactoryGuy.buildList(name, number, traits, opts);
-    var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    if (this.usingActiveModelSerializer(modelName)) {
-      this.toSnakeCase(fixture);
-    }
-    var hash = {};
-    hash[modelName] = fixture;
-    return hash;
-  },
 
   _collectArgs: function (args, fromMethod) {
     var args = Array.prototype.slice.call(arguments);
@@ -181,10 +162,10 @@ FactoryGuyTestMixin = Em.Mixin.create({
      Handling ajax GET ( find record ) for a model. You can mock
      failed find by passing in success flag as false.
 
-     @param {String} name of the fixture to find
-     @param {String} trait optional traits ( one or more )
-     @param {Object} opts optional fixture options
-     @param {Boolean} succeed optional flag to indicate if the request
+     @param {String} name  name of the fixture to find
+     @param {String} trait  optional traits ( one or more )
+     @param {Object} opts  optional fixture options
+     @param {Boolean} succeed  optional flag to indicate if the request
         should succeed ( default is true )
      */
   handleFind: function () {
@@ -203,10 +184,12 @@ FactoryGuyTestMixin = Em.Mixin.create({
     }
     var traits = args; // whatever is left are traits
 
+    var fixture = FactoryGuy.build(name, traits, opts);
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var responseJson = this._buildAjaxHttpResponse(name, traits, opts);
+    var responseJson = this.buildAjaxHttpResponse(modelName, fixture);
     var id = responseJson[modelName].id
     var url = this.buildURL(modelName, id);
+
     this.stubEndpointForHttpRequest(
       url,
       responseJson,
@@ -219,11 +202,11 @@ FactoryGuyTestMixin = Em.Mixin.create({
      Handling ajax GET for finding all records for a type of model.
      You can mock failed find by passing in success argument as false.
 
-     @param {String} name of the fixture ( or model ) to find
+     @param {String} name  name of the fixture ( or model ) to find
      @param {Number} number  number of fixtures to create
      @param {String} trait  optional traits (one or more)
-     @param {Object} opts optional fixture options
-     @param {Boolean} succeed optional flag to indicate if the request
+     @param {Object} opts  optional fixture options
+     @param {Boolean} succeed  optional flag to indicate if the request
         should succeed ( default is true )
      @return {Object} json response
    */
@@ -244,11 +227,11 @@ FactoryGuyTestMixin = Em.Mixin.create({
     }
     var traits = args; // whatever is left are traits
 
+    var fixture = FactoryGuy.buildList(name, number, traits, opts);
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var responseJson = this._buildManyAjaxHttpResponse(name, number, traits, opts);
-    console.log('responseJson',responseJson.profile[0].description)
-
+    var responseJson = this.buildAjaxHttpResponse(modelName, fixture);
     var url = this.buildURL(modelName);
+
     this.stubEndpointForHttpRequest(
       url,
       responseJson,
@@ -262,10 +245,10 @@ FactoryGuyTestMixin = Em.Mixin.create({
    Handling ajax POST ( create record ) for a model. You can mock
    failed create by passing in success argument as false.
 
-   @param {String} name of the fixture ( or model ) to create
-   @param {String} trait optional traits ( one or more )
-   @param {Object} opts optional fixture options
-   @param {Boolean} succeed optional flag to indicate if the request
+   @param {String} name  name of the fixture ( or model ) to create
+   @param {String} trait  optional traits ( one or more )
+   @param {Object} opts  optional fixture options
+   @param {Boolean} succeed  optional flag to indicate if the request
       should succeed ( default is true )
    @return {Object} json response
    */
@@ -285,9 +268,11 @@ FactoryGuyTestMixin = Em.Mixin.create({
     }
     var traits = args; // whatever is left are traits
 
+    var fixture = FactoryGuy.build(name, traits, opts);
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var responseJson = this._buildAjaxHttpResponse(name, traits, opts);
+    var responseJson = this.buildAjaxHttpResponse(modelName, fixture);
     var url = this.buildURL(modelName);
+
     this.stubEndpointForHttpRequest(
       url,
       responseJson,
@@ -301,9 +286,9 @@ FactoryGuyTestMixin = Em.Mixin.create({
    Handling ajax PUT ( update record ) for a model type. You can mock
    failed update by passing in success argument as false.
 
-   @param {String} type model type like 'user' for User model
-   @param {String} id id of record to update
-   @param {Boolean} succeed optional flag to indicate if the request
+   @param {String} type  model type like 'user' for User model
+   @param {String} id  id of record to update
+   @param {Boolean} succeed  optional flag to indicate if the request
       should succeed ( default is true )
    */
   handleUpdate: function (type, id, succeed) {
@@ -319,9 +304,9 @@ FactoryGuyTestMixin = Em.Mixin.create({
    Handling ajax DELETE ( delete record ) for a model type. You can mock
    failed delete by passing in success argument as false.
 
-   @param {String} type model type like 'user' for User model
-   @param {String} id id of record to update
-   @param {Boolean} succeed optional flag to indicate if the request
+   @param {String} type  model type like 'user' for User model
+   @param {String} id  id of record to update
+   @param {Boolean} succeed  optional flag to indicate if the request
       should succeed ( default is true )
    */
   handleDelete: function (type, id, succeed) {
@@ -336,4 +321,4 @@ FactoryGuyTestMixin = Em.Mixin.create({
   teardown: function () {
     FactoryGuy.resetModels(this.getStore());
   }
-})
+});

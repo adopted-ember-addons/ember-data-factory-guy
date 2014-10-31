@@ -52,6 +52,14 @@ FactoryGuy.define('hat', {
   },
   big_hat: {
     type: 'BigHat'
+  },
+  traits: {
+    belonging_to_user: {
+      user: FactoryGuy.belongsTo('user')
+    },
+    belonging_to_outfit: {
+      outfit: FactoryGuy.belongsTo('outfit')
+    }
   }
 })
 FactoryGuy.define('soft_material', {
@@ -71,6 +79,15 @@ FactoryGuy.define('fluffy_material', {
     name: 'fluff'
   }
 })
+FactoryGuy.define("outfit", {
+  sequences: {
+    name: function(num) {return 'Outfit' + num}
+  },
+  default: {
+    name: FactoryGuy.generate('name')
+  }
+});
+
 FactoryGuy.define('profile', {
   default: {
     description: 'Text goes here'
@@ -90,6 +107,8 @@ FactoryGuy.define("project", {
     with_title_sequence: { title: FactoryGuy.generate('title') },
     with_user: { user: {} },
     with_user_having_hats: { user: FactoryGuy.belongsTo('user', 'with_hats') },
+    with_user_having_hats_belonging_to_user: { user: FactoryGuy.belongsTo('user', 'with_hats_belonging_to_user') },
+    with_user_having_hats_belonging_to_outfit: { user: FactoryGuy.belongsTo('user', 'with_hats_belonging_to_outfit') },
     with_dude: { user: {name: 'Dude'} },
     with_admin: { user: FactoryGuy.belongsTo('admin') }
   },
@@ -131,9 +150,12 @@ FactoryGuy.define('property', {
   }
 })
 FactoryGuy.define('user', {
+  sequences: {
+    name: function(num) {return 'User' + num}
+  },
   // default values for 'user' attributes
   default: {
-    name: 'User1'
+    name: FactoryGuy.generate('name')
   },
   // named 'user' type with custom attributes
   admin: {
@@ -148,39 +170,50 @@ FactoryGuy.define('user', {
     },
     with_hats: {
       hats: FactoryGuy.hasMany('big_hat', 2)
+    },
+    with_hats_belonging_to_user: {
+      hats: FactoryGuy.hasMany('big_hat', 2, 'belonging_to_user')
+    },
+    with_hats_belonging_to_outfit: {
+      hats: FactoryGuy.hasMany('big_hat', 2, 'belonging_to_outfit')
     }
   }
 });
 
+Progress = DS.Model.extend({});
+Unit = DS.Model.extend({
+  lesson: DS.belongsTo('lesson')
+})
 
-//Unit = DS.Model.extend({
-//  lesson: DS.belongsTo('lesson')
-//})
-//
-//Lesson = DS.Model.extend({
-//  steps: DS.hasMany('step')
-//})
-//
-//Step = DS.Model.extend({
-//  lesson: DS.belongsTo ('lesson')
-//})
-//
-//
-//FactoryGuy.define('unit', {
-//  default: {
-//    lesson: FactoryGuy.belongsTo('lesson')
-//  }
-//})
-//
-//FactoryGuy.define('lesson', {
-//  default: {
-//    steps: FactoryGuy.hasMany('step', 2)
-//  }
-//})
-//
-//FactoryGuy.define('step', {
-//  default: {}
-//})
+Lesson = DS.Model.extend({
+  steps: DS.hasMany('step'),
+  progress: DS.belongsTo('progress')
+})
+
+Step = DS.Model.extend({
+  progress: DS.belongsTo('progress')
+})
+
+
+FactoryGuy.define( 'progress', {
+  default: {}
+});
+FactoryGuy.define( 'step', {
+  default: {
+    progress: FactoryGuy.belongsTo('progress')
+  }
+});
+FactoryGuy.define( 'lesson', {
+  default: {
+    steps: FactoryGuy.hasMany('step', 2),
+    progress: FactoryGuy.belongsTo('progress')
+  }
+});
+FactoryGuy.define( 'unit', {
+  default: {
+    lesson: FactoryGuy.belongsTo('lesson')
+  }
+});
 
 Company = DS.Model.extend({
   name:    DS.attr('string'),
@@ -210,6 +243,7 @@ SmallGroup = Group.extend({
 Hat = DS.Model.extend({
   type: DS.attr('string'),
   user: DS.belongsTo('user'),
+  outfit: DS.belongsTo('outfit'),
   hat:  DS.belongsTo('hat', {inverse: 'hats', polymorphic: true}),
   hats: DS.hasMany('hat', {inverse: 'hat', polymorphic: true}),
   fluffy_materials: DS.hasMany('fluffy_materials')
@@ -230,6 +264,11 @@ SoftMaterial = DS.Model.extend({
 FluffyMaterial = DS.Model.extend({
   name: DS.attr('string'),
   hat:  DS.belongsTo('hat', {polymorphic: true})
+})
+
+Outfit = DS.Model.extend({
+  name: DS.attr('string'),
+  hats: DS.hasMany('hat', {polymorphic: true})
 })
 
 Profile = DS.Model.extend({
@@ -263,6 +302,7 @@ User = DS.Model.extend({
   projects:   DS.hasMany('project'),
   hats:       DS.hasMany('hat', {polymorphic: true})
 });
+
 
 /*!
  * MockJax - jQuery Plugin to Mock Ajax requests

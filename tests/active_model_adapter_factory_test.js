@@ -219,14 +219,6 @@ test("belongsTo associations defined as attributes in fixture", function() {
   ok(project.get('user.name') == 'Admin');
 });
 
-test("belongsTo with embedded hasMany associations", function() {
-  var project = store.makeFixture('project', 'with_user_having_hats');
-  var user = project.get('user');
-  var hats = user.get('hats');
-
-  ok(user.get('projects.firstObject') == project)
-  ok(hats.get('firstObject.user') == user)
-});
 
 
 test("hasMany associations defined as attributes in fixture", function() {
@@ -243,6 +235,26 @@ test("hasMany associations defined with traits", function() {
   ok(user.get('projects.firstObject.user') == user)
   ok(user.get('projects.lastObject.user') == user)
 })
+
+
+test("with (nested json fixture) belongsTo has a hasMany association which has a belongsTo", function() {
+  var project = store.makeFixture('project', 'with_user_having_hats_belonging_to_outfit');
+  var user = project.get('user');
+  var hats = user.get('hats');
+  var firstHat = hats.get('firstObject');
+  var lastHat = hats.get('lastObject');
+
+  ok(user.get('projects.firstObject') == project)
+  ok(firstHat.get('user') == user)
+  ok(firstHat.get('outfit.id') == 1)
+  ok(firstHat.get('outfit.hats.length') == 1)
+  ok(firstHat.get('outfit.hats.firstObject') == firstHat)
+
+  ok(lastHat.get('user') == user)
+  ok(lastHat.get('outfit.id') == 2)
+  ok(lastHat.get('outfit.hats.length') == 1)
+  ok(lastHat.get('outfit.hats.firstObject') == lastHat)
+});
 
 
 module('DS.Store#makeList with ActiveModelAdapter', {

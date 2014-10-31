@@ -123,10 +123,10 @@ test("#build with traits", function() {
   deepEqual(json, {id: 2, title: 'Project1', user: {id: 1, name: 'User1'}}, 'trait with belongsTo attributes');
 
   var json = FactoryGuy.build('project', 'big', 'with_user');
-  deepEqual(json, {id: 3, title: 'Big Project', user: {id: 2, name: 'User1'}}, 'more than one trait used together');
+  deepEqual(json, {id: 3, title: 'Big Project', user: {id: 2, name: 'User2'}}, 'more than one trait used together');
 
   var json = FactoryGuy.build('project', 'big', 'with_user', {title: 'Crazy Project'});
-  deepEqual(json, {id: 4, title: 'Crazy Project', user: {id: 3, name: 'User1'}}, 'more than one trait used together with custom attributes');
+  deepEqual(json, {id: 4, title: 'Crazy Project', user: {id: 3, name: 'User3'}}, 'more than one trait used together with custom attributes');
 
   var json = FactoryGuy.build('project', 'big', 'with_dude');
   deepEqual(json, {id: 5, title: 'Big Project', user: {id: 4, name: 'Dude'}}, 'trait with custom belongsTo association object');
@@ -140,7 +140,7 @@ test("#build with traits", function() {
   var json = FactoryGuy.build('user', 'with_projects');
   deepEqual(json, {
     id: 6,
-    name: 'User1',
+    name: 'User4',
     projects: [{id: 8, title: 'Project4'},{id: 9, title: 'Project5'}]
   }, 'trait with hasMany association');
 });
@@ -183,7 +183,7 @@ test("#build similar model type ids are created sequentially", function() {
 test("#buildList creates list of fixtures", function() {
   var userList = FactoryGuy.buildList('user', 2);
   deepEqual(userList[0], {id: 1, name: 'User1'});
-  deepEqual(userList[1], {id: 2, name: 'User1'});
+  deepEqual(userList[1], {id: 2, name: 'User2'});
 
   var userList = FactoryGuy.buildList('user', 1, {name: 'Crazy'});
   deepEqual(userList[0], {id: 3, name: 'Crazy'},'using custom attributes');

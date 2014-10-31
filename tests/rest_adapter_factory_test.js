@@ -68,16 +68,6 @@ test("when hasMany associations assigned, belongTo parent is assigned", function
 });
 
 
-test("when belongsTo has a hasMany associations in the definition", function() {
-  var project = store.makeFixture('project', 'with_user_having_hats');
-  var user = project.get('user');
-  var hats = user.get('hats');
-
-  ok(user.get('projects.firstObject') == project)
-  ok(hats.get('firstObject.user') == user)
-});
-
-
 asyncTest("when hasMany ( asnyc ) associations assigned, belongTo parent is assigned", function() {
   var user = store.makeFixture('user');
   var company = store.makeFixture('company', {users: [user]});
@@ -224,15 +214,6 @@ test("belongsTo associations defined as attributes in fixture", function() {
 });
 
 
-test("belongsTo with embedded hasMany associations", function() {
-  var project = store.makeFixture('project', 'with_user_having_hats');
-  var user = project.get('user');
-  var hats = user.get('hats');
-
-  ok(user.get('projects.firstObject') == project)
-  ok(hats.get('firstObject.user') == user)
-});
-
 
 test("hasMany associations defined as attributes in fixture", function() {
   var user = store.makeFixture('user_with_projects');
@@ -249,6 +230,25 @@ test("hasMany associations defined with traits", function() {
   ok(user.get('projects.lastObject.user') == user)
 })
 
+
+test("with (nested json fixture) belongsTo has a hasMany association which has a belongsTo", function() {
+  var project = store.makeFixture('project', 'with_user_having_hats_belonging_to_outfit');
+  var user = project.get('user');
+  var hats = user.get('hats');
+  var firstHat = hats.get('firstObject');
+  var lastHat = hats.get('lastObject');
+
+  ok(user.get('projects.firstObject') == project)
+  ok(firstHat.get('user') == user)
+  ok(firstHat.get('outfit.id') == 1)
+  ok(firstHat.get('outfit.hats.length') == 1)
+  ok(firstHat.get('outfit.hats.firstObject') == firstHat)
+
+  ok(lastHat.get('user') == user)
+  ok(lastHat.get('outfit.id') == 2)
+  ok(lastHat.get('outfit.hats.length') == 1)
+  ok(lastHat.get('outfit.hats.firstObject') == lastHat)
+});
 
 
 module('DS.Store#makeList with DS.RESTAdapter', {
@@ -276,25 +276,3 @@ test("creates records in the store", function() {
   ok(storeUsers[0] == users[0]);
   ok(storeUsers[1] == users[1]);
 });
-
-//test("creates records in the store", function() {
-//  var lesson = store.makeFixture('lesson');
-//  var unit = store.makeFixture('unit');
-//  var unit = store.makeFixture('unit', {lesson: lesson});
-//  console.log('@@###',unit+'', unit.get('lesson')+'')
-
-//    var unit = FactoryGuy.build('unit_with_lesson')
-//    store.push('unit' , unit)
-//    console.log(store.modelFor('lesson')+'')
-//    var relationshipsByName = Ember.get(Lesson, 'relationshipsByName');
-//    console.log(relationshipsByName)
-
-//    var unit = store.makeFixture('unit_with_lesson');
-//    console.log('@@###',unit+'', unit.get('lesson')+'')
-
-//  console.log(FactoryGuy.build('unit_with_lesson'));
-//  unit.get('lesson').then(function(lesson) {
-//    ok(lesson instanceof Lesson == true)
-//  })
-
-//})
