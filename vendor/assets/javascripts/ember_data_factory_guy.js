@@ -839,7 +839,6 @@ FactoryGuyTestMixin = Em.Mixin.create({
      @param {Number} number  number of fixtures to create
      @param {String} trait  optional traits (one or more)
      @param {Object} opts  optional fixture options
-     @return {Object} json response
    */
   handleFindMany: function () {
     var store = this.getStore();
@@ -863,7 +862,8 @@ FactoryGuyTestMixin = Em.Mixin.create({
    @param {String} name  name of the fixture ( or model ) to create
    @param {String} trait  optional traits ( one or more )
    @param {Object} opts  optional fixture options
-   @return {Object} json response
+   @param {Boolean} succeed  optional flag to indicate if the request
+      should succeed ( default is true )
    */
   handleCreate: function () {
     var args = Array.prototype.slice.call(arguments);
@@ -881,8 +881,9 @@ FactoryGuyTestMixin = Em.Mixin.create({
 
     if (succeed) {
       var store = this.getStore();
-      // make the records and load them in the store
+      // make the record and load it in the store
       var model = store.makeFixture.apply(store,args);
+      // believe it or not .. this actually works
       responseJson[modelName]=model;
     } else {
       httpOptions.status = 500;
