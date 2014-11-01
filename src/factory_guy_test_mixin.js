@@ -36,12 +36,10 @@ FactoryGuyTestMixin = Em.Mixin.create({
   /**
    Proxy to store's makeFixture method
 
-   @param {String} name name of fixture
-   @param {Object} options fixture options
-   @returns {Object|DS.Model} json or record depending on the adapter type
    */
-  make: function (name, opts) {
-    return this.getStore().makeFixture(name, opts);
+  make: function () {
+    var store = this.getStore();
+    return store.makeFixture.apply(store, arguments);
   },
 
   getStore: function () {

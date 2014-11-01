@@ -606,6 +606,7 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
 
 ```javascript
   var profile = store.makeFixture('profile');
+  // set the succeed flag to 'false'
   testHelper.handleUpdate('profile', profile.id, false);
 
   profile.set('description', 'bad value');
