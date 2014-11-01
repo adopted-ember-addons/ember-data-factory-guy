@@ -583,11 +583,23 @@ To do that you will still have to deal with ember data trying to create, update 
 If you put models into the store ( with store#makeFixture ), the http GET call does not need to be mocked,
 since that model is already in the store.
 
-But what if you want to handle create, update or delete?
+But what if you want to handle create, update, and delete? Or even findAll records?
 
 FactoryGuy assumes you want to mock ajax calls with the mockjax library,
 and this is already bundled for you when you use the ember-data-factory-guy library.
                 
+
+
+##### handleFindMany
+  - for dealing with finding all records of a particular type
+
+```javascript
+    testHelper.handleFindMany('profile', 2);
+  
+    store.find('profile').then(function (profiles) {
+      profiles.get('length') //=> 2
+    });
+```
 
 
 ##### handleUpdate
@@ -602,7 +614,7 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
   profile.save() //=> will succeed
 ````
 
-*mocking failed update*
+*mocking a failed update*
 
 ```javascript
   var profile = store.makeFixture('profile');
@@ -626,7 +638,7 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
   profile.destroyRecord() // => will succeed
 ````
 
-*mocking failed delete*
+*mocking a failed delete*
 
 ```javascript
   var profile = store.makeFixture('profile');
