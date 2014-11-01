@@ -16,7 +16,7 @@ of ember-data-factory-guy.
 
 **Version 0.7.6 has many bug fixes that the earlier versions don't have, so hopefully you 
 can switch to newer version of ember-data and therefore the best ember-data-factory-guy version,
-but if not, send me bug report and I will try and go back and fix the older version you are using**  
+but if not, send me bug report and I will try and go back and fix the older version you are using.**  
 
 ## Using as Gem
 
