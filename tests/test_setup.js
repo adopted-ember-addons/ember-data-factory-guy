@@ -302,3 +302,4 @@ User = DS.Model.extend({
   projects:   DS.hasMany('project'),
   hats:       DS.hasMany('hat', {polymorphic: true})
 });
+
