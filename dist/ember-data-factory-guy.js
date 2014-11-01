@@ -820,57 +820,6 @@ FactoryGuyTestMixin = Em.Mixin.create({
 
 
   /**
-   Build the json used for creating or finding a record.
-
-   @param {String} modelName model name like 'user'
-   @param {String} fixture the fixture data
-   @return {Object} json response used for mocking a request
-   */
-  buildAjaxHttpResponse: function (modelName, fixture) {
-    if (this.usingActiveModelSerializer(modelName)) {
-      this.toSnakeCase(fixture);
-    }
-    var hash = {};
-    hash[modelName] = fixture;
-    return hash;
-  },
-
-
-  _collectArgs: function (args, fromMethod) {
-    var args = Array.prototype.slice.call(arguments);
-    var name = args.shift();
-    if (!name) {
-      throw new Error(fromMethod + " needs a factory name to build");
-    }
-    var succeed = true;
-    if (Ember.typeOf(args[args.length-1]) == 'boolean') {
-      succeed  = args.pop();
-    }
-    var opts = {}
-    if (Ember.typeOf(args[args.length-1]) == 'object') {
-      opts  = args.pop();
-    }
-    var traits = args; // whatever is left are traits
-
-    return {name: name, traits: traits, opts: opts, succeed: succeed}
-  },
-
-  /**
-   Convert Object's keys to snake case
-
-   @param {Object} fixture to convert
-   */
-  toSnakeCase: function (fixture) {
-    for (key in fixture) {
-      if (key != Em.String.decamelize(key)) {
-        var value = fixture[key];
-        delete fixture[key];
-        fixture[Em.String.decamelize(key)] = value
-      }
-    }
-  },
-
-  /**
    Build url for the mockjax call. Proxy to the adapters buildURL method.
 
    @param {String} type model type name like 'user' for User model
