@@ -981,8 +981,10 @@ FactoryGuyTestMixin = Em.Mixin.create({
 
   teardown: function () {
     FactoryGuy.resetModels(this.getStore());
+    $.mockjax.clear();
   }
 });
+
 /*!
  * MockJax - jQuery Plugin to Mock Ajax requests
  *

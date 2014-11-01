@@ -31,7 +31,6 @@ module('FactoryGuyTestMixin (using mockjax) with DS.RESTAdapter', {
   },
   teardown: function () {
     testHelper.teardown();
-    $.mockjaxClear();
   }
 });
 
@@ -100,7 +99,6 @@ module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
   },
   teardown: function () {
     testHelper.teardown();
-    $.mockjaxClear();
   }
 });
 

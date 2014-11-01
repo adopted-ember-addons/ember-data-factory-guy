@@ -650,9 +650,7 @@ ViewTestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin,{
     $.mockjaxSettings.responseTime = 0;  // mockjax settings
     return this._super(app); // still call the base setup from FactoryGuyTestMixin
   },
-  // override teardown to clear mockjax declarations
   teardown: function() {
-    $.mockjaxClear();
     this._super();
   }
 }
