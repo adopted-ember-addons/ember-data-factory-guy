@@ -141,8 +141,9 @@ FactoryGuyTestMixin = Em.Mixin.create({
 
     if (succeed) {
       var store = this.getStore();
-      // make the records and load them in the store
+      // make the record and load it in the store
       var model = store.makeFixture.apply(store,args);
+      // believe it or not .. this actually works
       responseJson[modelName]=model;
     } else {
       httpOptions.status = 500;
