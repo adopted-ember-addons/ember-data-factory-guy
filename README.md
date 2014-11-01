@@ -4,7 +4,7 @@
   
 ember-data is changing the way they are doing relationships in 1.0.0-beta.10 and above 
 so, if you are using ember-data-1.0.0-beta.8 and earlier, then be sure to use version 0.6.4 
-( or below ) of ember-data-factory-guy.  
+of ember-data-factory-guy.  
 
 - Versions:
   - 0.6.4   -> ember-data-1.0.0-beta.8 and under
@@ -13,6 +13,10 @@ so, if you are using ember-data-1.0.0-beta.8 and earlier, then be sure to use ve
   - 0.7.6   -> ember-data-1.0.0-beta.12
 
 **For versions ( 0.7.1 -> 0.7.6 ), support for the fixture adapter is currently broken.**  
+
+**version 0.7.6 has many bug fixes that the earlier versions don't have, so hopefully you 
+can switch to newer version of ember-data and therefore the best ember-data-factory-guy version,
+but if not, send me bug report and I will try and go back and fix the older version you are using**  
 
 ## Using as Gem
 
@@ -589,12 +593,11 @@ FactoryGuy assumes you want to mock ajax calls with the mockjax library,
 and this is already bundled for you when you use the ember-data-factory-guy library.
                 
 
-
 ##### handleFindMany
   - for dealing with finding all records of a particular type
 
 ```javascript
-    // can use traits and extra fixture options here as you would with store#makeFixture
+    // can use traits and extra fixture options here as you would with store#makeList
     testHelper.handleFindMany('profile', 2);
      
     store.find('profile').then(function (profiles) {
@@ -602,6 +605,13 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
     });
 ```
 
+##### handleCreate
+
+
+```javascript
+
+
+```
 
 ##### handleUpdate
 

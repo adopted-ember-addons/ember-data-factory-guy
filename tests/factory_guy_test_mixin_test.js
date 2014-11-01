@@ -105,7 +105,7 @@ module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
 
 /////// handleCreate //////////
 
-asyncTest("#handleCreate the basic", function() {
+  asyncTest("#handleCreate the basic", function() {
   testHelper.handleCreate('profile')
 
   store.createRecord('profile').save().then(function(profile) {
