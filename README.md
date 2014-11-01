@@ -570,7 +570,7 @@ test("make a user using your applications default adapter", function() {
 
 - Uses mockjax
 - Has helper methods
-  - handleFindMany
+  - handleFindMany 
   - handleCreate
   - handleUpdate ( can mock success or failure )
   - handleDelete ( can mock success or failure )
@@ -594,8 +594,9 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
   - for dealing with finding all records of a particular type
 
 ```javascript
+    // can use traits and extra fixture options here as you would with store#makeFixture
     testHelper.handleFindMany('profile', 2);
-  
+     
     store.find('profile').then(function (profiles) {
       profiles.get('length') //=> 2
     });
