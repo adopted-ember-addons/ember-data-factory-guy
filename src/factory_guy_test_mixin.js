@@ -243,5 +243,6 @@ FactoryGuyTestMixin = Em.Mixin.create({
 
   teardown: function () {
     FactoryGuy.resetModels(this.getStore());
+    $.mockjax.clear();
   }
 });
