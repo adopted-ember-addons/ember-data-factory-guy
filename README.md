@@ -287,10 +287,10 @@ You can override the default attributes by passing in a hash
   });
 
   var json = FactoryGuy.build('special_project'); 
-  json.title // => 'Project 1'
+  json.title // => 'Project #1'
 
   var project = store.makeFixture('special_project');
-  project.get('title') // => 'Project 2'
+  project.get('title') // => 'Project #2'
 
 ```
 
