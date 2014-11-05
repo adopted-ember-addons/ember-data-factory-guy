@@ -607,6 +607,7 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
 
 ##### handleCreate
 
+*success case is the default*
 
 ```javascript
   // set up the profile you want here 
@@ -617,6 +618,16 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
   store.createRecord('profile').save().then(function(profile) {
     profile.toJSON() //=> {id:1, description: "Moo", company: "1"}
   });
+
+```
+
+*mocking a failed create*
+
+```javascript
+  // set the succeed flag to 'false' 
+  testHelper.handleCreate('profile', false);
+  
+  store.createRecord('profile').save() //=> fails
 
 ```
 
