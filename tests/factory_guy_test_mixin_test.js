@@ -116,7 +116,7 @@ module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
 });
 
 asyncTest("#handleCreate with model that has camelCase attribute", function() {
-  testHelper.handleCreate('profile', {camelCaseDescription: 'description'})
+  testHelper.handleCreate('profile', 'with_company', {camelCaseDescription: 'description'})
 
   store.createRecord('profile').save().then(function(profile) {
     ok(profile.get('camelCaseDescription') == 'description')

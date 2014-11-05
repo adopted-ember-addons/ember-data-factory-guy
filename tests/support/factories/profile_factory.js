@@ -5,6 +5,9 @@ FactoryGuy.define('profile', {
   traits: {
     goofy_description: {
       description: 'goofy'
+    },
+    with_company: {
+      company: FactoryGuy.belongsTo('company')
     }
   }
 })
