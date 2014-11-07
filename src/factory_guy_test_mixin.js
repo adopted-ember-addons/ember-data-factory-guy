@@ -86,8 +86,9 @@ FactoryGuyTestMixin = Em.Mixin.create({
    @param {String} id
    @return {String} url
    */
-  buildURL: function (type, id) {
-    return this.getStore().adapterFor('application').buildURL(type, id);
+  buildURL: function (typeName, id) {
+    var type = this.getStore().modelFor(typeName);
+    return this.getStore().adapterFor(type).buildURL(type.typeKey, id);
   },
 
 
