@@ -31,7 +31,7 @@ gem 'ember-data-factory-guy', group: test
 or for particular version:
 
 ```ruby
-gem 'ember-data-factory-guy', '0.7.6', group: test
+gem 'ember-data-factory-guy', '0.7.7', group: test
 ```
 
 then:
@@ -66,7 +66,7 @@ or for particular version:
   "dependencies": {
     "foo-dependency": "latest",
     "other-foo-dependency": "latest",
-    "ember-data-factory-guy": "0.7.6"
+    "ember-data-factory-guy": "0.7.7"
   }
 ```
 
