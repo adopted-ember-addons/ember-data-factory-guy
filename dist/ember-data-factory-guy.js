@@ -822,7 +822,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
   /**
    Build url for the mockjax call. Proxy to the adapters buildURL method.
 
-   @param {String} type model type name like 'user' for User model
+   @param {String} typeName model type name like 'user' for User model
    @param {String} id
    @return {String} url
    */

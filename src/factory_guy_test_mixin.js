@@ -82,7 +82,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
   /**
    Build url for the mockjax call. Proxy to the adapters buildURL method.
 
-   @param {String} type model type name like 'user' for User model
+   @param {String} typeName model type name like 'user' for User model
    @param {String} id
    @return {String} url
    */
@@ -112,7 +112,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
     responseJson[modelName]=[];
     var url = this.buildURL(modelName);
     // mock the ajax call, but return nothing, since the records will be
-    // retrieved since they are already in the store
+    // retrieved from the store where they were just loaded above
     this.stubEndpointForHttpRequest(url, responseJson, {type: 'GET'})
   },
 
