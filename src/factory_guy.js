@@ -169,7 +169,7 @@ FactoryGuy = {
    @returns {ModelDefinition} ModelDefinition associated with model or undefined if not found
    */
   lookupDefinitionForFixtureName: function (name) {
-    for (model in this.modelDefinitions) {
+    for (var model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
       if (definition.matchesName(name)) {
         return definition;
@@ -246,7 +246,7 @@ FactoryGuy = {
    Reset the id sequence for the models back to zero.
   */
   resetModels: function (store) {
-    for (model in this.modelDefinitions) {
+    for (var model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
       definition.reset();
       try {

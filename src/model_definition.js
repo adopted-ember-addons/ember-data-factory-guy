@@ -62,7 +62,7 @@ ModelDefinition = function (model, config) {
     // merge default, modelAttributes, traits and opts to get the rough fixture
     var fixture = $.extend({}, defaultAttributes, modelAttributes, traitsObj, opts);
     // deal with attributes that are functions or objects
-    for (attribute in fixture) {
+    for (var attribute in fixture) {
       if (Ember.typeOf(fixture[attribute]) == 'function') {
         // function might be a sequence of a named association
         fixture[attribute] = fixture[attribute].call(this, fixture);
@@ -97,7 +97,7 @@ ModelDefinition = function (model, config) {
   // Set the modelId back to 1, and reset the sequences
   this.reset = function () {
     modelId = 1;
-    for (name in sequences) {
+    for (var name in sequences) {
       sequences[name].reset();
     }
   };
@@ -117,7 +117,7 @@ ModelDefinition = function (model, config) {
     if (!object) {
       return;
     }
-    for (sequenceName in object) {
+    for (var sequenceName in object) {
       var sequenceFn = object[sequenceName];
       if (Ember.typeOf(sequenceFn) != 'function') {
         throw new Error('Problem with [' + sequenceName + '] sequence definition. Sequences must be functions');
