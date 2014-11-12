@@ -11,6 +11,7 @@ ModelDefinition = function (model, config) {
   var defaultAttributes = {};
   var namedModels = {};
   var modelId = 1;
+  var sequenceName = null;
   this.model = model;
   /**
    @param {String} name model name like 'user' or named type like 'admin'
@@ -117,7 +118,7 @@ ModelDefinition = function (model, config) {
     if (!object) {
       return;
     }
-    for (var sequenceName in object) {
+    for (sequenceName in object) {
       var sequenceFn = object[sequenceName];
       if (Ember.typeOf(sequenceFn) != 'function') {
         throw new Error('Problem with [' + sequenceName + '] sequence definition. Sequences must be functions');
