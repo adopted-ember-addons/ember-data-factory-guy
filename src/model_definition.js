@@ -12,7 +12,6 @@ ModelDefinition = function (model, config) {
   var namedModels = {};
   var modelId = 1;
   this.model = model;
-
   /**
    @param {String} name model name like 'user' or named type like 'admin'
    @returns {Boolean} true if name is this definitions model or this definition
@@ -20,12 +19,10 @@ ModelDefinition = function (model, config) {
    */
   this.matchesName = function (name) {
     return model == name || namedModels[name];
-  }
-
+  };
   // TODO
   this.merge = function (config) {
-  }
-
+  };
   /**
    Call the next method on the named sequence function. If the name
    is a function, create the sequence with that function
@@ -44,11 +41,10 @@ ModelDefinition = function (model, config) {
     }
     var sequence = sequences[name];
     if (!sequence) {
-      throw new MissingSequenceError("Can not find that sequence named [" + sequenceName + "] in '" + model + "' definition")
+      throw new MissingSequenceError('Can not find that sequence named [' + sequenceName + '] in \'' + model + '\' definition');
     }
     return sequence.next();
-  }
-
+  };
   /**
    Build a fixture by name
 
@@ -58,10 +54,10 @@ ModelDefinition = function (model, config) {
    @returns {Object} json
    */
   this.build = function (name, opts, traitArgs) {
-    var traitsObj = {}
-    traitArgs.forEach(function(trait) {
+    var traitsObj = {};
+    traitArgs.forEach(function (trait) {
       $.extend(traitsObj, traits[trait]);
-    })
+    });
     var modelAttributes = namedModels[name] || {};
     // merge default, modelAttributes, traits and opts to get the rough fixture
     var fixture = $.extend({}, defaultAttributes, modelAttributes, traitsObj, opts);
@@ -73,7 +69,7 @@ ModelDefinition = function (model, config) {
       } else if (Ember.typeOf(fixture[attribute]) == 'object') {
         // if it's an object it's for a model association, so build the json
         // for the association and replace the attribute with that json
-        fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute])
+        fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute]);
       }
     }
     // set the id, unless it was already set in opts
@@ -81,8 +77,7 @@ ModelDefinition = function (model, config) {
       fixture.id = modelId++;
     }
     return fixture;
-  }
-
+  };
   /**
    Build a list of fixtures
 
@@ -98,57 +93,48 @@ ModelDefinition = function (model, config) {
       arr.push(this.build(name, opts, traits));
     }
     return arr;
-  }
-
+  };
   // Set the modelId back to 1, and reset the sequences
   this.reset = function () {
     modelId = 1;
     for (name in sequences) {
       sequences[name].reset();
     }
-  }
-
+  };
   var parseDefault = function (object) {
     if (!object) {
-      return
+      return;
     }
     defaultAttributes = object;
-  }
-
+  };
   var parseTraits = function (object) {
     if (!object) {
-      return
+      return;
     }
     traits = object;
-  }
-
+  };
   var parseSequences = function (object) {
     if (!object) {
-      return
+      return;
     }
     for (sequenceName in object) {
       var sequenceFn = object[sequenceName];
       if (Ember.typeOf(sequenceFn) != 'function') {
-        throw new Error('Problem with [' + sequenceName + '] sequence definition. Sequences must be functions')
+        throw new Error('Problem with [' + sequenceName + '] sequence definition. Sequences must be functions');
       }
       object[sequenceName] = new Sequence(sequenceFn);
     }
     sequences = object;
-  }
-
+  };
   var parseConfig = function (config) {
     parseSequences(config.sequences);
     delete config.sequences;
-
     parseTraits(config.traits);
     delete config.traits;
-
     parseDefault(config.default);
     delete config.default;
-
     namedModels = config;
-  }
-
+  };
   // initialize
   parseConfig(config);
-}
+};
