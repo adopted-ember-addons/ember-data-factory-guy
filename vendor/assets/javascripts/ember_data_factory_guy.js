@@ -889,6 +889,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
     } else {
       httpOptions.status = 500;
     }
+    console.log('handleCreate responseJson',responseJson)
     this.stubEndpointForHttpRequest(url, responseJson, httpOptions)
   },
 

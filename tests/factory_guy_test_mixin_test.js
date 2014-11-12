@@ -105,7 +105,7 @@ module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
 
 /////// handleCreate //////////
 
-  asyncTest("#handleCreate the basic", function() {
+asyncTest("#handleCreate the basic", function() {
   testHelper.handleCreate('profile')
 
   store.createRecord('profile').save().then(function(profile) {
@@ -114,6 +114,19 @@ module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
     start();
   });
 });
+
+//asyncTest("#handleCreate more accurate scenario", function() {
+//  var company = store.makeFixture('company')
+//  testHelper.handleCreate('profile', {company: company})
+////  testHelper.stubEndpointForHttpRequest('/profiles', {profile: {id:2}}, {type: 'POST'})
+//
+//  store.createRecord('profile', {company: company}).save().then(function(profile) {
+//    ok(profile instanceof Profile)
+//    ok(profile.id == 2)
+//    ok(profile.get('company') == company)
+//    start();
+//  });
+//});
 
 asyncTest("#handleCreate with model that has camelCase attribute", function() {
   testHelper.handleCreate('profile', 'with_company', {camelCaseDescription: 'description'})

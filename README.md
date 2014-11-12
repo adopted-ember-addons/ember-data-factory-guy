@@ -606,11 +606,14 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
 ```
 
 ##### handleCreate
-
+  - naive handling of createRecord
+  - real life handling createRecord
+  
+###### Naive handling of createRecord
 *success case is the default*
 
 ```javascript
-  // set up the profile you want here 
+  // set up the profile you want to create here 
   testHelper.handleCreate('profile', 'with_company', {description: "Moo"})
   
   // don't put options or traits here just put 'profile', since the above handle create 
@@ -630,6 +633,24 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
   store.createRecord('profile').save() //=> fails
 
 ```
+
+
+###### Real Life handling of createRecord
+
+**Usually 
+```javascript
+  // set up the profile you want to create here 
+  testHelper.handleCreate('profile', 'with_company', {description: "Moo"})
+  
+  // don't put options or traits here just put 'profile', since the above handle create 
+  // is tailoring the profile for you 
+  store.createRecord('profile').save().then(function(profile) {
+    profile.toJSON() //=> {id:1, description: "Moo", company: "1"}
+  });
+
+```
+
+
 
 ##### handleUpdate
 
