@@ -262,7 +262,7 @@ FactoryGuy = {
         if (store.usingFixtureAdapter()) {
           modelType.FIXTURES = [];
         }
-        unloadModel(modelType);
+        this.unloadModel(modelType);
       } catch (e) {
       }
     }
