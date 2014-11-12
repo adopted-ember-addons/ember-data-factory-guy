@@ -15,9 +15,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "handlebars": "~1.1.2",
-    "jquery": "2.0.3",
-    "ember": "latest",
     "ember-data": "1.0.0-beta.11",
     "chance": "latest",
     "qunit": "latest",
@@ -37,6 +34,8 @@
   ],
   "devDependencies": {
     "sinon": "http://sinonjs.org/releases/sinon-1.10.1.js",
-    "sinon-qunit": "~2.0.0"
+    "sinon-qunit": "~2.0.0",
+    "jquery": "2.0.3",
+    "ember": "latest"
   }
 }
