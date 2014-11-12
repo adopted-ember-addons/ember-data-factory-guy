@@ -14,8 +14,8 @@ FactoryGuyTestMixin = Em.Mixin.create({
    */
   usingActiveModelSerializer: function (type) {
     var store = this.getStore();
-    var type = store.modelFor(type);
-    var serializer = store.serializerFor(type.typeKey);
+    var modelType = store.modelFor(type);
+    var serializer = store.serializerFor(modelType.typeKey);
     return serializer instanceof DS.ActiveModelSerializer;
   },
   /**
