@@ -742,12 +742,9 @@ test("Creates new project", function() {
 
         actions: {
           addProject: function (user) {
-            this.get('controller.store')
-            .createRecord('project', {
-              name: this.$('.add-project input').val(),
-              user: user
-            })
-            .save()
+            var name = this.$('.add-project input').val();
+            var store = this.get('controller.store');
+            store.createRecord('project', {name: name, user: user}).save();
           }
 
     */
