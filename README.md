@@ -14,9 +14,10 @@ of ember-data-factory-guy.
 
 **For versions ( 0.7.1 -> 0.7.9 ), support for the fixture adapter is currently broken.**  
 
-**Version 0.7.9 has many bug fixes that the earlier versions don't have, so hopefully you 
-can switch to newer version of ember-data and therefore the best ember-data-factory-guy version,
-but if not, send me bug report and I will try and go back and fix the older version you are using.**  
+*Version 0.7.9 has many bug fixes and improvements that the earlier versions don't have, so 
+hopefully you can switch to newer version of ember-data and therefore the best 
+ember-data-factory-guy version, but if not, send me bug report and I will try and go back 
+and fix the older version you are using.*  
 
 ## Using as Gem
 
