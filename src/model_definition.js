@@ -21,8 +21,9 @@ ModelDefinition = function (model, config) {
   this.matchesName = function (name) {
     return model == name || namedModels[name];
   };
-  // TODO
-  this.merge = function (config) {
+  // Increment id
+  this.nextId = function () {
+    return modelId++;
   };
   /**
    Call the next method on the named sequence function. If the name
@@ -75,7 +76,7 @@ ModelDefinition = function (model, config) {
     }
     // set the id, unless it was already set in opts
     if (!fixture.id) {
-      fixture.id = modelId++;
+      fixture.id = this.nextId();
     }
     return fixture;
   };

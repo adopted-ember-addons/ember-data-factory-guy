@@ -103,29 +103,20 @@ FactoryGuyTestMixin = Em.Mixin.create({
    Handling ajax POST ( create record ) for a model. You can mock
    failed create by passing in success argument as false.
 
-   @param {String} name  name of the fixture ( or model ) to create
-   @param {String} trait  optional traits ( one or more )
-   @param {Object} opts  optional fixture options
+   @param {String} modelName  name of model your creating like 'profile' for Profile
+   @param {Object} options  hash of model options ( that do not include associations )
    @param {Boolean} succeed  optional flag to indicate if the request
       should succeed ( default is true )
    */
-  handleCreate: function () {
-    var args = Array.prototype.slice.call(arguments);
-    var succeed = true;
-    if (Ember.typeOf(args[args.length - 1]) == 'boolean') {
-      succeed = args.pop();
-    }
-    var name = args[0];
-    var modelName = FactoryGuy.lookupModelForFixtureName(name);
+  handleCreate: function (modelName, options, succeed) {
+    succeed = succeed === undefined ? true : succeed;
+    options = options === undefined ? {} : options;
     var url = this.buildURL(modelName);
+    var definition = FactoryGuy.modelDefinitions[modelName];
     var responseJson = {};
     var httpOptions = { type: 'POST' };
     if (succeed) {
-      var store = this.getStore();
-      // make the record and load it in the store
-      var model = store.makeFixture.apply(store, args);
-      // believe it or not .. this actually works
-      responseJson[modelName] = model;
+      responseJson[modelName] = $.extend(options,{id: definition.nextId()});
     } else {
       httpOptions.status = 500;
     }

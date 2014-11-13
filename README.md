@@ -606,21 +606,33 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
 ```
 
 ##### handleCreate
-  - naive handling of createRecord
-  - real life handling createRecord
-  
-###### Naive handling of createRecord
-*success case is the default*
 
-```javascript
-  // set up the profile you want to create here 
-  testHelper.handleCreate('profile', 'with_company', {description: "Moo"})
+*success case is the default*
   
-  // don't put options or traits here just put 'profile', since the above handle create 
-  // is tailoring the profile for you 
-  store.createRecord('profile').save().then(function(profile) {
-    profile.toJSON() //=> {id:1, description: "Moo", company: "1"}
-  });
+*Realistically, you will have code in a view action or controller action that will
+ create the record, and setup any associations. 
+ Therefore, all you need to pass in to handleCreate are the attributes on the model
+ that are being tested ( excluding associations .. you don't need those)*
+ 
+```javascript
+  
+  // most actions that create a record look something like this:
+  action: {
+    addProject: function (user) {
+      var name = this.$('.add-project input').val();
+      var store = this.get('controller.store');
+      store.createRecord('project', {name: name, user: user}).save();
+    }
+  }
+
+```
+
+In this case, you are are creating a 'project' record with a specific name, and belonging
+to a particular user. To mock this createRecord call do this:
+  
+```javascript
+  // note that you don't include the user association 
+  testHelper.handleCreate('project', {name: "Moo"})
 
 ```
 
@@ -628,41 +640,12 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
 
 ```javascript
   // set the succeed flag to 'false' 
-  testHelper.handleCreate('profile', false);
+  testHelper.handleCreate('profile', null, false);
   
   store.createRecord('profile').save() //=> fails
 
 ```
 
-
-###### Real Life handling of createRecord
-  **Realistically, you will have code in a view action or controller action that will
-  create the record, and setup any associations. 
-  Therefore, you don't want to use handleCreate ( which will create another record entirely ),
-  you just need to mock the http POST action and return an id for the newly created record.** 
- 
-```javascript
-  
-  // most actions that create records look something like this
-  action: {
-    addProject: function (user) {
-      this.get('controller.store')
-      .createRecord('project', {
-        name: this.$('.add-project input').val(),
-        user: user
-      })
-      .save()
-    }
-  }
-
-```
-
-```javascript
-  
-  // the basic idea of how to mock this createRecord call   
-  testHelper.stubEndpointForHttpRequest('/projects', {project: {id:2}}, {type: 'POST'})
-  
-```
 
 
 ##### handleUpdate
@@ -747,8 +730,10 @@ test("Creates new project", function() {
     click('.add-div div:contains(New Project)')
     fillIn('.add-project input', newProjectName)
 
-    // stubEndpointForHttpRequest is found in FactoryGuyTestMixin
-    viewHelper.stubEndpointForHttpRequest('/projects', {project: {id:2}}, {type: 'POST'})
+    // Remember, you only need to pass in attributes of the model you expect
+    // to create in your application. You do not need to include belongsTo records,
+    // as in this case the 'user' belongsTo association
+    viewHelper.handleCreate('project', {name: newProjectName})
 
     /**
      Let's say that clicking this '.add-project .link', triggers action in the view to

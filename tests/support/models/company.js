@@ -1,4 +1,5 @@
 Company = DS.Model.extend({
+  type:    DS.attr('string', {defaultValue: 'Company'}),
   name:    DS.attr('string'),
   profile: DS.belongsTo('profile'),
   users:   DS.hasMany('user', {async: true, inverse: 'company'}),
@@ -6,6 +7,7 @@ Company = DS.Model.extend({
 });
 
 SmallCompany = Company.extend({
+  type:    DS.attr('string', {defaultValue: 'SmallCompany'}),
   owner: DS.belongsTo('user', {async: true}),
   projects: DS.hasMany('project')
 });

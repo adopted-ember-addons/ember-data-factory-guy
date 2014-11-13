@@ -219,6 +219,7 @@ FactoryGuy.define( 'unit', {
 });
 
 Company = DS.Model.extend({
+  type:    DS.attr('string', {defaultValue: 'Company'}),
   name:    DS.attr('string'),
   profile: DS.belongsTo('profile'),
   users:   DS.hasMany('user', {async: true, inverse: 'company'}),
@@ -226,19 +227,24 @@ Company = DS.Model.extend({
 });
 
 SmallCompany = Company.extend({
+  type:    DS.attr('string', {defaultValue: 'SmallCompany'}),
   owner: DS.belongsTo('user', {async: true}),
   projects: DS.hasMany('project')
 });
 
 Group = DS.Model.extend({
-  versions: DS.hasMany('group')
+  type:    DS.attr('string', {defaultValue: 'Group'}),
+  versions: DS.hasMany('group'),
+  profiles: DS.hasMany('profile')
 })
 
 BigGroup = Group.extend({
+  type:    DS.attr('string', {defaultValue: 'BigGroup'}),
   group: DS.belongsTo('group')
 })
 
 SmallGroup = Group.extend({
+  type:    DS.attr('string', {defaultValue: 'SmallGroup'}),
   group: DS.belongsTo('group')
 })
 
@@ -278,7 +284,8 @@ Profile = DS.Model.extend({
   description:            DS.attr('string'),
   camelCaseDescription:   DS.attr('string'),
   snake_case_description: DS.attr('string'),
-  company:                DS.belongsTo('company')
+  company:                DS.belongsTo('company'),
+  group:                  DS.belongsTo('group', {polymorphic: true})
 });
 
 Project = DS.Model.extend({

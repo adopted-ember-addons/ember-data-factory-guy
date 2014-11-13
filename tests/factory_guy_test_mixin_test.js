@@ -37,11 +37,12 @@ module('FactoryGuyTestMixin (using mockjax) with DS.RESTAdapter', {
 /////// handleCreate //////////
 
 asyncTest("#handleCreate the basic", function() {
-  testHelper.handleCreate('profile')
+  var customDescription = "special description"
+  testHelper.handleCreate('profile', {description: customDescription})
 
   store.createRecord('profile').save().then(function(profile) {
     ok(profile instanceof Profile)
-    ok(profile.get('description') == 'Text goes here')
+    ok(profile.get('description') == customDescription)
     start();
   });
 });
@@ -106,39 +107,53 @@ module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
 /////// handleCreate //////////
 
 asyncTest("#handleCreate the basic", function() {
-  testHelper.handleCreate('profile')
+  var customDescription = "special description"
+  testHelper.handleCreate('profile', {description: customDescription})
 
-  store.createRecord('profile').save().then(function(profile) {
+  store.createRecord('profile', {description: customDescription}).save().then(function(profile) {
     ok(profile instanceof Profile)
-    ok(profile.get('description') == 'Text goes here')
+    ok(profile.id == 1)
+    ok(profile.get('description') == customDescription)
     start();
   });
 });
 
-//asyncTest("#handleCreate more accurate scenario", function() {
-//  var company = store.makeFixture('company')
-//  testHelper.handleCreate('profile', {company: company})
-////  testHelper.stubEndpointForHttpRequest('/profiles', {profile: {id:2}}, {type: 'POST'})
-//
-//  store.createRecord('profile', {company: company}).save().then(function(profile) {
-//    ok(profile instanceof Profile)
-//    ok(profile.id == 2)
-//    ok(profile.get('company') == company)
-//    start();
-//  });
-//});
+asyncTest("#handleCreate with belongsTo association", function() {
+  var company = store.makeFixture('company')
+  testHelper.handleCreate('profile')
+
+  store.createRecord('profile', {company: company}).save().then(function(profile) {
+    ok(profile instanceof Profile)
+    ok(profile.id == 1)
+    ok(profile.get('company') == company)
+    start();
+  });
+});
+
+asyncTest("#handleCreate with belongsTo polymorphic association", function() {
+  var group = store.makeFixture('group')
+  testHelper.handleCreate('profile')
+
+  store.createRecord('profile', {group: group}).save().then(function(profile) {
+    ok(profile instanceof Profile)
+    ok(profile.id == 1)
+    ok(profile.get('group') == group)
+    start();
+  });
+});
 
 asyncTest("#handleCreate with model that has camelCase attribute", function() {
-  testHelper.handleCreate('profile', 'with_company', {camelCaseDescription: 'description'})
+  var customDescription = "special description"
+  testHelper.handleCreate('profile', {camelCaseDescription: customDescription})
 
-  store.createRecord('profile').save().then(function(profile) {
-    ok(profile.get('camelCaseDescription') == 'description')
+  store.createRecord('profile', {camelCaseDescription: 'description'}).save().then(function(profile) {
+    ok(profile.get('camelCaseDescription') == customDescription)
     start();
   });
 });
 
 asyncTest("#handleCreate failure", function() {
-  testHelper.handleCreate('profile', false)
+  testHelper.handleCreate('profile', {}, false)
 
   store.createRecord('profile').save()
     .then(
