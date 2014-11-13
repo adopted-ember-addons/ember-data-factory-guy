@@ -821,9 +821,9 @@ FactoryGuyTestMixin = Em.Mixin.create({
     } else {
       httpOptions.status = 500;
     }
-    console.log('handleCreate responseJson', responseJson);
     this.stubEndpointForHttpRequest(url, responseJson, httpOptions);
   },
+
   /**
    Handling ajax PUT ( update record ) for a model type. You can mock
    failed update by passing in success argument as false.
@@ -861,6 +861,7 @@ FactoryGuyTestMixin = Em.Mixin.create({
     $.mockjax.clear();
   }
 });
+
 /*!
  * MockJax - jQuery Plugin to Mock Ajax requests
  *

@@ -1,19 +1,17 @@
 Sequence = function (fn) {
   var index = 1;
-
   this.next = function () {
     return fn.call(this, index++);
-  }
-
+  };
   this.reset = function () {
     index = 1;
-  }
+  };
 };
-
 function MissingSequenceError(message) {
-  this.toString = function() { return message }
-};
-
+  this.toString = function () {
+    return message;
+  };
+}
 /**
  A ModelDefinition encapsulates a model's definition
 
@@ -27,8 +25,8 @@ ModelDefinition = function (model, config) {
   var defaultAttributes = {};
   var namedModels = {};
   var modelId = 1;
+  var sequenceName = null;
   this.model = model;
-
   /**
    @param {String} name model name like 'user' or named type like 'admin'
    @returns {Boolean} true if name is this definitions model or this definition
@@ -36,12 +34,10 @@ ModelDefinition = function (model, config) {
    */
   this.matchesName = function (name) {
     return model == name || namedModels[name];
-  }
-
+  };
   // TODO
   this.merge = function (config) {
-  }
-
+  };
   /**
    Call the next method on the named sequence function. If the name
    is a function, create the sequence with that function
@@ -60,11 +56,10 @@ ModelDefinition = function (model, config) {
     }
     var sequence = sequences[name];
     if (!sequence) {
-      throw new MissingSequenceError("Can not find that sequence named [" + sequenceName + "] in '" + model + "' definition")
+      throw new MissingSequenceError('Can not find that sequence named [' + sequenceName + '] in \'' + model + '\' definition');
     }
     return sequence.next();
-  }
-
+  };
   /**
    Build a fixture by name
 
@@ -74,22 +69,22 @@ ModelDefinition = function (model, config) {
    @returns {Object} json
    */
   this.build = function (name, opts, traitArgs) {
-    var traitsObj = {}
-    traitArgs.forEach(function(trait) {
+    var traitsObj = {};
+    traitArgs.forEach(function (trait) {
       $.extend(traitsObj, traits[trait]);
-    })
+    });
     var modelAttributes = namedModels[name] || {};
     // merge default, modelAttributes, traits and opts to get the rough fixture
     var fixture = $.extend({}, defaultAttributes, modelAttributes, traitsObj, opts);
     // deal with attributes that are functions or objects
-    for (attribute in fixture) {
+    for (var attribute in fixture) {
       if (Ember.typeOf(fixture[attribute]) == 'function') {
         // function might be a sequence of a named association
         fixture[attribute] = fixture[attribute].call(this, fixture);
       } else if (Ember.typeOf(fixture[attribute]) == 'object') {
         // if it's an object it's for a model association, so build the json
         // for the association and replace the attribute with that json
-        fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute])
+        fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute]);
       }
     }
     // set the id, unless it was already set in opts
@@ -97,8 +92,7 @@ ModelDefinition = function (model, config) {
       fixture.id = modelId++;
     }
     return fixture;
-  }
-
+  };
   /**
    Build a list of fixtures
 
@@ -114,63 +108,53 @@ ModelDefinition = function (model, config) {
       arr.push(this.build(name, opts, traits));
     }
     return arr;
-  }
-
+  };
   // Set the modelId back to 1, and reset the sequences
   this.reset = function () {
     modelId = 1;
-    for (name in sequences) {
+    for (var name in sequences) {
       sequences[name].reset();
     }
-  }
-
+  };
   var parseDefault = function (object) {
     if (!object) {
-      return
+      return;
     }
     defaultAttributes = object;
-  }
-
+  };
   var parseTraits = function (object) {
     if (!object) {
-      return
+      return;
     }
     traits = object;
-  }
-
+  };
   var parseSequences = function (object) {
     if (!object) {
-      return
+      return;
     }
     for (sequenceName in object) {
       var sequenceFn = object[sequenceName];
       if (Ember.typeOf(sequenceFn) != 'function') {
-        throw new Error('Problem with [' + sequenceName + '] sequence definition. Sequences must be functions')
+        throw new Error('Problem with [' + sequenceName + '] sequence definition. Sequences must be functions');
       }
       object[sequenceName] = new Sequence(sequenceFn);
     }
     sequences = object;
-  }
-
+  };
   var parseConfig = function (config) {
     parseSequences(config.sequences);
     delete config.sequences;
-
     parseTraits(config.traits);
     delete config.traits;
-
     parseDefault(config.default);
     delete config.default;
-
     namedModels = config;
-  }
-
+  };
   // initialize
   parseConfig(config);
-}
+};
 FactoryGuy = {
   modelDefinitions: {},
-
   /**
    ```javascript
 
@@ -216,7 +200,6 @@ FactoryGuy = {
       this.modelDefinitions[model] = new ModelDefinition(model, config);
     }
   },
-
   /**
    Used in model definitions to declare use of a sequence. For example:
 
@@ -241,16 +224,15 @@ FactoryGuy = {
             definition containing the sequence
    */
   generate: function (nameOrFunction) {
-    var sortaRandomName = Math.floor((1 + Math.random()) * 0x10000).toString(16) + Date.now()
+    var sortaRandomName = Math.floor((1 + Math.random()) * 65536).toString(16) + Date.now();
     return function () {
-      if (Em.typeOf(nameOrFunction) == "function") {
+      if (Em.typeOf(nameOrFunction) == 'function') {
         return this.generate(sortaRandomName, nameOrFunction);
       } else {
         return this.generate(nameOrFunction);
       }
-    }
+    };
   },
-
   /**
    Used in model definitions to define a belongsTo association attribute.
    For example:
@@ -282,14 +264,12 @@ FactoryGuy = {
   belongsTo: function (fixtureName, opts) {
     return function () {
       return FactoryGuy.build(fixtureName, opts);
-    }
+    };
   },
-
-  association: function(fixtureName, opts) {
-    console.log('DEPRECATION Warning: use FactoryGuy.belongsTo instead')
+  association: function (fixtureName, opts) {
+    console.log('DEPRECATION Warning: use FactoryGuy.belongsTo instead');
     return this.belongsTo(fixtureName, opts);
   },
-
   /**
    Used in model definitions to define a hasMany association attribute.
    For example:
@@ -321,9 +301,8 @@ FactoryGuy = {
   hasMany: function (fixtureName, number, opts) {
     return function () {
       return FactoryGuy.buildList(fixtureName, number, opts);
-    }
+    };
   },
-
   /**
     Given a fixture name like 'person' or 'dude' determine what model this name
     refers to. In this case it's 'person' for each one.
@@ -334,9 +313,10 @@ FactoryGuy = {
    */
   lookupModelForFixtureName: function (name) {
     var definition = this.lookupDefinitionForFixtureName(name);
-    if (definition) { return definition.model; }
+    if (definition) {
+      return definition.model;
+    }
   },
-
   /**
 
    @param {String} name a fixture name could be model name like 'person'
@@ -344,15 +324,13 @@ FactoryGuy = {
    @returns {ModelDefinition} ModelDefinition associated with model or undefined if not found
    */
   lookupDefinitionForFixtureName: function (name) {
-    for (model in this.modelDefinitions) {
+    for (var model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
       if (definition.matchesName(name)) {
         return definition;
       }
     }
   },
-
-
   /**
    Build fixtures for model or specific fixture name. For example:
 
@@ -369,23 +347,22 @@ FactoryGuy = {
    */
   build: function () {
     var args = Array.prototype.slice.call(arguments);
-    var opts = {}
+    var opts = {};
     var name = args.shift();
     if (!name) {
-      throw new Error("Build needs a factory name to build");
+      throw new Error('Build needs a factory name to build');
     }
-    if (Ember.typeOf(args[args.length-1]) == 'object') {
-      opts  = args.pop();
+    if (Ember.typeOf(args[args.length - 1]) == 'object') {
+      opts = args.pop();
     }
-    var traits = args; // whatever is left are traits
-
+    var traits = args;
+    // whatever is left are traits
     var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
-      throw new Error("Can't find that factory named [" + name + "]");
+      throw new Error('Can\'t find that factory named [' + name + ']');
     }
     return definition.build(name, opts, traits);
   },
-
   /**
    Build list of fixtures for model or specific fixture name. For example:
 
@@ -403,21 +380,28 @@ FactoryGuy = {
     var name = args.shift();
     var number = args.shift();
     if (!name || !number) {
-      throw new Error("buildList needs a name and a number ( at least ) to build with");
+      throw new Error('buildList needs a name and a number ( at least ) to build with');
     }
-    var opts = {}
-    if (Ember.typeOf(args[args.length-1]) == 'object') {
-      opts  = args.pop();
+    var opts = {};
+    if (Ember.typeOf(args[args.length - 1]) == 'object') {
+      opts = args.pop();
     }
-    var traits = args; // whatever is left are traits
-
+    var traits = args;
+    // whatever is left are traits
     var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
-      throw new Error("Can't find that factory named [" + name + "]");
+      throw new Error('Can\'t find that factory named [' + name + ']');
     }
     return definition.buildList(name, number, traits, opts);
   },
-
+  /**
+   Unload all models of the given type from the store in the next Ember runloop
+  */
+  unloadModel: function (modelType) {
+    Ember.run(function () {
+      store.unloadAll(modelType);
+    });
+  },
   /**
    TODO: This is kind of problematic right now .. needs work
 
@@ -425,7 +409,7 @@ FactoryGuy = {
    Reset the id sequence for the models back to zero.
   */
   resetModels: function (store) {
-    for (model in this.modelDefinitions) {
+    for (var model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
       definition.reset();
       try {
@@ -433,16 +417,11 @@ FactoryGuy = {
         if (store.usingFixtureAdapter()) {
           modelType.FIXTURES = [];
         }
-        Ember.run(function(){
-          store.unloadAll(modelType);
-        })
+        this.unloadModel(modelType);
       } catch (e) {
-//        console.log(e)
       }
     }
   },
-
-
   /**
    Push fixture to model's FIXTURES array.
    Used when store's adapter is a DS.FixtureAdapter.
@@ -452,13 +431,12 @@ FactoryGuy = {
    @returns {Object} json fixture data
    */
   pushFixture: function (modelClass, fixture) {
-    if (!modelClass['FIXTURES']) {
-      modelClass['FIXTURES'] = [];
+    if (!modelClass.FIXTURES) {
+      modelClass.FIXTURES = [];
     }
-    modelClass['FIXTURES'].push(fixture);
+    modelClass.FIXTURES.push(fixture);
     return fixture;
   },
-
   /**
    Clears all model definitions
   */
@@ -467,7 +445,7 @@ FactoryGuy = {
       this.modelDefinitions = {};
     }
   }
-}
+};
 DS.Store.reopen({
   /**
    @returns {Boolean} true if store's adapter is DS.FixtureAdapter
@@ -476,7 +454,6 @@ DS.Store.reopen({
     var adapter = this.adapterFor('application');
     return adapter instanceof DS.FixtureAdapter;
   },
-
   /**
    Make new fixture and save to store. If the store is using FixtureAdapter,
    will push to FIXTURE array, otherwise will use push method on adapter to load
@@ -489,23 +466,19 @@ DS.Store.reopen({
    */
   makeFixture: function () {
     var store = this;
-    var fixture = FactoryGuy.build.apply(FactoryGuy,arguments);
+    var fixture = FactoryGuy.build.apply(FactoryGuy, arguments);
     var name = arguments[0];
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var modelType = store.modelFor(modelName);
-
     if (this.usingFixtureAdapter()) {
       this.setAssociationsForFixtureAdapter(modelType, modelName, fixture);
       return FactoryGuy.pushFixture(modelType, fixture);
     } else {
-      return store.makeModel(modelType, fixture)
+      return store.makeModel(modelType, fixture);
     }
   },
-
   makeModel: function (modelType, fixture) {
-    var store = this,
-        modelName = store.modelFor(modelType).typeKey,
-        model;
+    var store = this, modelName = store.modelFor(modelType).typeKey, model;
     Em.run(function () {
       store.findEmbeddedAssociationsForRESTAdapter(modelType, fixture);
       if (fixture.type) {
@@ -519,7 +492,6 @@ DS.Store.reopen({
     });
     return model;
   },
-
   /**
    Make a list of Fixtures
 
@@ -532,11 +504,10 @@ DS.Store.reopen({
     var arr = [];
     var number = arguments[1];
     for (var i = 0; i < number; i++) {
-      arr.push(this.makeFixture.apply(this,arguments));
+      arr.push(this.makeFixture.apply(this, arguments));
     }
     return arr;
   },
-
   /**
    Set the hasMany and belongsTo associations for FixtureAdapter.
 
@@ -582,10 +553,9 @@ DS.Store.reopen({
             var hasManyfixtures = adapter.fixturesForType(relationship.type);
             var fixture = adapter.findFixtureById(hasManyfixtures, id);
             fixture[modelName] = fixture.id;
-          })
+          });
         }
       }
-
       if (relationship.kind == 'belongsTo') {
         var belongsToRecord = fixture[relationship.key];
         if (belongsToRecord) {
@@ -597,14 +567,13 @@ DS.Store.reopen({
           var belongsToFixtures = adapter.fixturesForType(relationship.type);
           var belongsTofixture = adapter.findFixtureById(belongsToFixtures, fixture[relationship.key]);
           if (!belongsTofixture[hasManyName]) {
-            belongsTofixture[hasManyName] = []
+            belongsTofixture[hasManyName] = [];
           }
           belongsTofixture[hasManyName].push(fixture.id);
         }
       }
-    })
+    });
   },
-
   /**
    Before pushing the fixture to the store, do some preprocessing. Descend into the tree
    of object data, and convert child objects to record instances recursively.
@@ -631,20 +600,19 @@ DS.Store.reopen({
         var hasManyRecords = fixture[relationship.key];
         if (Ember.typeOf(hasManyRecords) == 'array') {
           if (Ember.typeOf(hasManyRecords[0]) == 'object') {
-            var records = Em.A()
+            var records = Em.A();
             hasManyRecords.map(function (object) {
               store.findEmbeddedAssociationsForRESTAdapter(relationship.type, object);
               var record = store.push(relationship.type, object);
               records.push(record);
               return record;
-            })
+            });
             fixture[relationship.key] = records;
           }
         }
       }
-    })
+    });
   },
-
   /**
    For the REST type models:
 
@@ -680,47 +648,32 @@ DS.Store.reopen({
       if (relationship.kind == 'hasMany') {
         var children = model.get(name) || [];
         children.forEach(function (child) {
-          var belongsToName = self.findRelationshipName(
-            'belongsTo',
-            child.constructor,
-            model
-          );
+          var belongsToName = self.findRelationshipName('belongsTo', child.constructor, model);
           if (belongsToName) {
             child.set(belongsToName, model);
           }
-        })
+        });
       }
-    })
+    });
   },
-
-
   findRelationshipName: function (kind, belongToModelType, childModel) {
     var relationshipName;
-    Ember.get(belongToModelType, 'relationshipsByName').forEach(
-      function (relationship, name) {
-        if (relationship.kind == kind &&
-          childModel instanceof relationship.type) {
-          relationshipName = relationship.key;
-        }
+    Ember.get(belongToModelType, 'relationshipsByName').forEach(function (relationship, name) {
+      if (relationship.kind == kind && childModel instanceof relationship.type) {
+        relationshipName = relationship.key;
       }
-    )
+    });
     return relationshipName;
   },
-
   findHasManyRelationshipNameForFixtureAdapter: function (belongToModelType, childModelType) {
     var relationshipName;
-    Ember.get(belongToModelType, 'relationshipsByName').forEach(
-      function (relationship, name) {
-        if (relationship.kind == 'hasMany' &&
-          childModelType == relationship.type) {
-          relationshipName = relationship.key;
-        }
+    Ember.get(belongToModelType, 'relationshipsByName').forEach(function (relationship, name) {
+      if (relationship.kind == 'hasMany' && childModelType == relationship.type) {
+        relationshipName = relationship.key;
       }
-    )
+    });
     return relationshipName;
   },
-
-
   /**
    Adding a pushPayload for FixtureAdapter, but using the original with
    other adapters that support pushPayload.
@@ -737,31 +690,26 @@ DS.Store.reopen({
     }
   }
 });
-
 FactoryGuyTestMixin = Em.Mixin.create({
-
   // Pass in the app root, which typically is App.
   setup: function (app) {
     this.set('container', app.__container__);
     return this;
   },
-
   useFixtureAdapter: function (app) {
     app.ApplicationAdapter = DS.FixtureAdapter;
     this.getStore().adapterFor('application').simulateRemoteResponse = false;
   },
-
   /**
    @param {String} model type like user for model User
    @return {boolean} true if model's serializer is ActiveModelSerializer based
    */
   usingActiveModelSerializer: function (type) {
-    var store = this.getStore()
-    var type = store.modelFor(type);
-    var serializer = store.serializerFor(type.typeKey);
+    var store = this.getStore();
+    var modelType = store.modelFor(type);
+    var serializer = store.serializerFor(modelType.typeKey);
     return serializer instanceof DS.ActiveModelSerializer;
   },
-
   /**
    Proxy to store's find method
 
@@ -772,7 +720,6 @@ FactoryGuyTestMixin = Em.Mixin.create({
   find: function (type, id) {
     return this.getStore().find(type, id);
   },
-
   /**
    Proxy to store's makeFixture method
 
@@ -781,19 +728,15 @@ FactoryGuyTestMixin = Em.Mixin.create({
     var store = this.getStore();
     return store.makeFixture.apply(store, arguments);
   },
-
   getStore: function () {
     return this.get('container').lookup('store:main');
   },
-
   pushPayload: function (type, hash) {
     return this.getStore().pushPayload(type, hash);
   },
-
   pushRecord: function (type, hash) {
     return this.getStore().push(type, hash);
   },
-
   /**
    Using mockjax to stub an http request.
 
@@ -809,16 +752,12 @@ FactoryGuyTestMixin = Em.Mixin.create({
       responseText: json,
       type: options.type || 'GET',
       status: options.status || 200
-    }
-
+    };
     if (options.data) {
-      request.data = options.data
+      request.data = options.data;
     }
-
     $.mockjax(request);
   },
-
-
   /**
    Build url for the mockjax call. Proxy to the adapters buildURL method.
 
@@ -830,8 +769,6 @@ FactoryGuyTestMixin = Em.Mixin.create({
     var type = this.getStore().modelFor(typeName);
     return this.getStore().adapterFor(type).buildURL(type.typeKey, id);
   },
-
-
   /**
      Handling ajax GET for finding all records for a type of model.
      You can mock failed find by passing in success argument as false.
@@ -844,18 +781,16 @@ FactoryGuyTestMixin = Em.Mixin.create({
   handleFindMany: function () {
     var store = this.getStore();
     // make the records and load them in the store
-    store.makeList.apply(store,arguments);
-
+    store.makeList.apply(store, arguments);
     var name = arguments[0];
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var responseJson = {};
-    responseJson[modelName]=[];
+    responseJson[modelName] = [];
     var url = this.buildURL(modelName);
     // mock the ajax call, but return nothing, since the records will be
     // retrieved from the store where they were just loaded above
-    this.stubEndpointForHttpRequest(url, responseJson, {type: 'GET'})
+    this.stubEndpointForHttpRequest(url, responseJson, { type: 'GET' });
   },
-
   /**
    Handling ajax POST ( create record ) for a model. You can mock
    failed create by passing in success argument as false.
@@ -868,29 +803,25 @@ FactoryGuyTestMixin = Em.Mixin.create({
    */
   handleCreate: function () {
     var args = Array.prototype.slice.call(arguments);
-
     var succeed = true;
-    if (Ember.typeOf(args[args.length-1]) == 'boolean') {
+    if (Ember.typeOf(args[args.length - 1]) == 'boolean') {
       succeed = args.pop();
     }
-
     var name = args[0];
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var url = this.buildURL(modelName);
     var responseJson = {};
-    var httpOptions = {type: 'POST'}
-
+    var httpOptions = { type: 'POST' };
     if (succeed) {
       var store = this.getStore();
       // make the record and load it in the store
-      var model = store.makeFixture.apply(store,args);
+      var model = store.makeFixture.apply(store, args);
       // believe it or not .. this actually works
-      responseJson[modelName]=model;
+      responseJson[modelName] = model;
     } else {
       httpOptions.status = 500;
     }
-    console.log('handleCreate responseJson',responseJson)
-    this.stubEndpointForHttpRequest(url, responseJson, httpOptions)
+    this.stubEndpointForHttpRequest(url, responseJson, httpOptions);
   },
 
   /**
@@ -904,14 +835,11 @@ FactoryGuyTestMixin = Em.Mixin.create({
    */
   handleUpdate: function (type, id, succeed) {
     succeed = succeed === undefined ? true : succeed;
-
-    this.stubEndpointForHttpRequest(
-      this.buildURL(type, id),
-      {},
-      {type: 'PUT', status: (succeed ? 200 : 500)}
-    )
+    this.stubEndpointForHttpRequest(this.buildURL(type, id), {}, {
+      type: 'PUT',
+      status: succeed ? 200 : 500
+    });
   },
-
   /**
    Handling ajax DELETE ( delete record ) for a model type. You can mock
    failed delete by passing in success argument as false.
@@ -923,14 +851,11 @@ FactoryGuyTestMixin = Em.Mixin.create({
    */
   handleDelete: function (type, id, succeed) {
     succeed = succeed === undefined ? true : succeed;
-
-    this.stubEndpointForHttpRequest(
-      this.buildURL(type, id),
-      {},
-      {type: 'DELETE', status: (succeed ? 200 : 500)}
-    )
+    this.stubEndpointForHttpRequest(this.buildURL(type, id), {}, {
+      type: 'DELETE',
+      status: succeed ? 200 : 500
+    });
   },
-
   teardown: function () {
     FactoryGuy.resetModels(this.getStore());
     $.mockjax.clear();

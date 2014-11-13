@@ -636,20 +636,33 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
 
 
 ###### Real Life handling of createRecord
-
-**Usually 
+  **Realistically, you will have code in a view action or controller action that will
+  create the record, and setup any associations. 
+  Therefore, you don't want to use handleCreate ( which will create another record entirely ),
+  you just need to mock the http POST action and return an id for the newly created record.** 
+ 
 ```javascript
-  // set up the profile you want to create here 
-  testHelper.handleCreate('profile', 'with_company', {description: "Moo"})
   
-  // don't put options or traits here just put 'profile', since the above handle create 
-  // is tailoring the profile for you 
-  store.createRecord('profile').save().then(function(profile) {
-    profile.toJSON() //=> {id:1, description: "Moo", company: "1"}
-  });
+  // most actions that create records look something like this
+  action: {
+    addProject: function (user) {
+      this.get('controller.store')
+      .createRecord('project', {
+        name: this.$('.add-project input').val(),
+        user: user
+      })
+      .save()
+    }
+  }
 
 ```
 
+```javascript
+  
+  // the basic idea of how to mock this createRecord call   
+  testHelper.stubEndpointForHttpRequest('/projects', {project: {id:2}}, {type: 'POST'})
+  
+```
 
 
 ##### handleUpdate
@@ -733,9 +746,9 @@ test("Creates new project", function() {
 
     click('.add-div div:contains(New Project)')
     fillIn('.add-project input', newProjectName)
-    // This is the special sauce that makes this project really hum.
-    // Check out the FactoryGuyTestMixin to see what is going on here
-    viewHelper.handleCreate('project', {name: newProjectName})
+
+    // stubEndpointForHttpRequest is found in FactoryGuyTestMixin
+    viewHelper.stubEndpointForHttpRequest('/projects', {project: {id:2}}, {type: 'POST'})
 
     /**
      Let's say that clicking this '.add-project .link', triggers action in the view to
