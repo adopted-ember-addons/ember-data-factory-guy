@@ -609,10 +609,10 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
 
 *success case is the default*
   
-*Realistically, you will have code in a view action or controller action that will
+Realistically, you will have code in a view action or controller action that will
  create the record, and setup any associations. 
  Therefore, all you need to pass in to handleCreate are the attributes on the model
- that are being tested ( excluding associations .. you don't need those)*
+ that are being tested ( excluding associations .. you don't need those)
  
 ```javascript
   
