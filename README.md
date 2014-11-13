@@ -696,7 +696,7 @@ to a particular user. To mock this createRecord call do this:
 ````
 
 
-Here is a sample of what you could do in a view test:
+##### View test sample
 
 ```javascript
 
