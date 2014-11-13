@@ -19,6 +19,7 @@ hopefully you can switch to newer version of ember-data and therefore the best
 ember-data-factory-guy version, but if not, send me bug report and I will try and go back 
 and fix the older version you are using.*  
 
+
 ## Using as Gem
 
 To Use with in Rails project or project with sprockets:
@@ -607,6 +608,7 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
 ```
 
 ##### handleCreate
+  
 
 *success case is the default*
   
