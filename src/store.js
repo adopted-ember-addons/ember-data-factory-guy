@@ -6,7 +6,6 @@ DS.Store.reopen({
     var adapter = this.adapterFor('application');
     return adapter instanceof DS.FixtureAdapter;
   },
-
   /**
    Make new fixture and save to store. If the store is using FixtureAdapter,
    will push to FIXTURE array, otherwise will use push method on adapter to load
@@ -19,23 +18,19 @@ DS.Store.reopen({
    */
   makeFixture: function () {
     var store = this;
-    var fixture = FactoryGuy.build.apply(FactoryGuy,arguments);
+    var fixture = FactoryGuy.build.apply(FactoryGuy, arguments);
     var name = arguments[0];
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var modelType = store.modelFor(modelName);
-
     if (this.usingFixtureAdapter()) {
       this.setAssociationsForFixtureAdapter(modelType, modelName, fixture);
       return FactoryGuy.pushFixture(modelType, fixture);
     } else {
-      return store.makeModel(modelType, fixture)
+      return store.makeModel(modelType, fixture);
     }
   },
-
   makeModel: function (modelType, fixture) {
-    var store = this,
-        modelName = store.modelFor(modelType).typeKey,
-        model;
+    var store = this, modelName = store.modelFor(modelType).typeKey, model;
     Em.run(function () {
       store.findEmbeddedAssociationsForRESTAdapter(modelType, fixture);
       if (fixture.type) {
@@ -49,7 +44,6 @@ DS.Store.reopen({
     });
     return model;
   },
-
   /**
    Make a list of Fixtures
 
@@ -62,11 +56,10 @@ DS.Store.reopen({
     var arr = [];
     var number = arguments[1];
     for (var i = 0; i < number; i++) {
-      arr.push(this.makeFixture.apply(this,arguments));
+      arr.push(this.makeFixture.apply(this, arguments));
     }
     return arr;
   },
-
   /**
    Set the hasMany and belongsTo associations for FixtureAdapter.
 
@@ -112,10 +105,9 @@ DS.Store.reopen({
             var hasManyfixtures = adapter.fixturesForType(relationship.type);
             var fixture = adapter.findFixtureById(hasManyfixtures, id);
             fixture[modelName] = fixture.id;
-          })
+          });
         }
       }
-
       if (relationship.kind == 'belongsTo') {
         var belongsToRecord = fixture[relationship.key];
         if (belongsToRecord) {
@@ -127,14 +119,13 @@ DS.Store.reopen({
           var belongsToFixtures = adapter.fixturesForType(relationship.type);
           var belongsTofixture = adapter.findFixtureById(belongsToFixtures, fixture[relationship.key]);
           if (!belongsTofixture[hasManyName]) {
-            belongsTofixture[hasManyName] = []
+            belongsTofixture[hasManyName] = [];
           }
           belongsTofixture[hasManyName].push(fixture.id);
         }
       }
-    })
+    });
   },
-
   /**
    Before pushing the fixture to the store, do some preprocessing. Descend into the tree
    of object data, and convert child objects to record instances recursively.
@@ -161,20 +152,19 @@ DS.Store.reopen({
         var hasManyRecords = fixture[relationship.key];
         if (Ember.typeOf(hasManyRecords) == 'array') {
           if (Ember.typeOf(hasManyRecords[0]) == 'object') {
-            var records = Em.A()
+            var records = Em.A();
             hasManyRecords.map(function (object) {
               store.findEmbeddedAssociationsForRESTAdapter(relationship.type, object);
               var record = store.push(relationship.type, object);
               records.push(record);
               return record;
-            })
+            });
             fixture[relationship.key] = records;
           }
         }
       }
-    })
+    });
   },
-
   /**
    For the REST type models:
 
@@ -210,47 +200,32 @@ DS.Store.reopen({
       if (relationship.kind == 'hasMany') {
         var children = model.get(name) || [];
         children.forEach(function (child) {
-          var belongsToName = self.findRelationshipName(
-            'belongsTo',
-            child.constructor,
-            model
-          );
+          var belongsToName = self.findRelationshipName('belongsTo', child.constructor, model);
           if (belongsToName) {
             child.set(belongsToName, model);
           }
-        })
+        });
       }
-    })
+    });
   },
-
-
   findRelationshipName: function (kind, belongToModelType, childModel) {
     var relationshipName;
-    Ember.get(belongToModelType, 'relationshipsByName').forEach(
-      function (relationship, name) {
-        if (relationship.kind == kind &&
-          childModel instanceof relationship.type) {
-          relationshipName = relationship.key;
-        }
+    Ember.get(belongToModelType, 'relationshipsByName').forEach(function (relationship, name) {
+      if (relationship.kind == kind && childModel instanceof relationship.type) {
+        relationshipName = relationship.key;
       }
-    )
+    });
     return relationshipName;
   },
-
   findHasManyRelationshipNameForFixtureAdapter: function (belongToModelType, childModelType) {
     var relationshipName;
-    Ember.get(belongToModelType, 'relationshipsByName').forEach(
-      function (relationship, name) {
-        if (relationship.kind == 'hasMany' &&
-          childModelType == relationship.type) {
-          relationshipName = relationship.key;
-        }
+    Ember.get(belongToModelType, 'relationshipsByName').forEach(function (relationship, name) {
+      if (relationship.kind == 'hasMany' && childModelType == relationship.type) {
+        relationshipName = relationship.key;
       }
-    )
+    });
     return relationshipName;
   },
-
-
   /**
    Adding a pushPayload for FixtureAdapter, but using the original with
    other adapters that support pushPayload.

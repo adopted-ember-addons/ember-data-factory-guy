@@ -1,6 +1,5 @@
 FactoryGuy = {
   modelDefinitions: {},
-
   /**
    ```javascript
 
@@ -46,7 +45,6 @@ FactoryGuy = {
       this.modelDefinitions[model] = new ModelDefinition(model, config);
     }
   },
-
   /**
    Used in model definitions to declare use of a sequence. For example:
 
@@ -71,16 +69,15 @@ FactoryGuy = {
             definition containing the sequence
    */
   generate: function (nameOrFunction) {
-    var sortaRandomName = Math.floor((1 + Math.random()) * 0x10000).toString(16) + Date.now()
+    var sortaRandomName = Math.floor((1 + Math.random()) * 65536).toString(16) + Date.now();
     return function () {
-      if (Em.typeOf(nameOrFunction) == "function") {
+      if (Em.typeOf(nameOrFunction) == 'function') {
         return this.generate(sortaRandomName, nameOrFunction);
       } else {
         return this.generate(nameOrFunction);
       }
-    }
+    };
   },
-
   /**
    Used in model definitions to define a belongsTo association attribute.
    For example:
@@ -112,14 +109,12 @@ FactoryGuy = {
   belongsTo: function (fixtureName, opts) {
     return function () {
       return FactoryGuy.build(fixtureName, opts);
-    }
+    };
   },
-
-  association: function(fixtureName, opts) {
-    console.log('DEPRECATION Warning: use FactoryGuy.belongsTo instead')
+  association: function (fixtureName, opts) {
+    console.log('DEPRECATION Warning: use FactoryGuy.belongsTo instead');
     return this.belongsTo(fixtureName, opts);
   },
-
   /**
    Used in model definitions to define a hasMany association attribute.
    For example:
@@ -151,9 +146,8 @@ FactoryGuy = {
   hasMany: function (fixtureName, number, opts) {
     return function () {
       return FactoryGuy.buildList(fixtureName, number, opts);
-    }
+    };
   },
-
   /**
     Given a fixture name like 'person' or 'dude' determine what model this name
     refers to. In this case it's 'person' for each one.
@@ -164,9 +158,10 @@ FactoryGuy = {
    */
   lookupModelForFixtureName: function (name) {
     var definition = this.lookupDefinitionForFixtureName(name);
-    if (definition) { return definition.model; }
+    if (definition) {
+      return definition.model;
+    }
   },
-
   /**
 
    @param {String} name a fixture name could be model name like 'person'
@@ -174,15 +169,13 @@ FactoryGuy = {
    @returns {ModelDefinition} ModelDefinition associated with model or undefined if not found
    */
   lookupDefinitionForFixtureName: function (name) {
-    for (model in this.modelDefinitions) {
+    for (var model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
       if (definition.matchesName(name)) {
         return definition;
       }
     }
   },
-
-
   /**
    Build fixtures for model or specific fixture name. For example:
 
@@ -199,23 +192,22 @@ FactoryGuy = {
    */
   build: function () {
     var args = Array.prototype.slice.call(arguments);
-    var opts = {}
+    var opts = {};
     var name = args.shift();
     if (!name) {
-      throw new Error("Build needs a factory name to build");
+      throw new Error('Build needs a factory name to build');
     }
-    if (Ember.typeOf(args[args.length-1]) == 'object') {
-      opts  = args.pop();
+    if (Ember.typeOf(args[args.length - 1]) == 'object') {
+      opts = args.pop();
     }
-    var traits = args; // whatever is left are traits
-
+    var traits = args;
+    // whatever is left are traits
     var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
-      throw new Error("Can't find that factory named [" + name + "]");
+      throw new Error('Can\'t find that factory named [' + name + ']');
     }
     return definition.build(name, opts, traits);
   },
-
   /**
    Build list of fixtures for model or specific fixture name. For example:
 
@@ -233,21 +225,28 @@ FactoryGuy = {
     var name = args.shift();
     var number = args.shift();
     if (!name || !number) {
-      throw new Error("buildList needs a name and a number ( at least ) to build with");
+      throw new Error('buildList needs a name and a number ( at least ) to build with');
     }
-    var opts = {}
-    if (Ember.typeOf(args[args.length-1]) == 'object') {
-      opts  = args.pop();
+    var opts = {};
+    if (Ember.typeOf(args[args.length - 1]) == 'object') {
+      opts = args.pop();
     }
-    var traits = args; // whatever is left are traits
-
+    var traits = args;
+    // whatever is left are traits
     var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
-      throw new Error("Can't find that factory named [" + name + "]");
+      throw new Error('Can\'t find that factory named [' + name + ']');
     }
     return definition.buildList(name, number, traits, opts);
   },
-
+  /**
+   Unload all models of the given type from the store in the next Ember runloop
+  */
+  unloadModel: function (modelType) {
+    Ember.run(function () {
+      store.unloadAll(modelType);
+    });
+  },
   /**
    TODO: This is kind of problematic right now .. needs work
 
@@ -255,7 +254,7 @@ FactoryGuy = {
    Reset the id sequence for the models back to zero.
   */
   resetModels: function (store) {
-    for (model in this.modelDefinitions) {
+    for (var model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
       definition.reset();
       try {
@@ -263,16 +262,11 @@ FactoryGuy = {
         if (store.usingFixtureAdapter()) {
           modelType.FIXTURES = [];
         }
-        Ember.run(function(){
-          store.unloadAll(modelType);
-        })
+        this.unloadModel(modelType);
       } catch (e) {
-//        console.log(e)
       }
     }
   },
-
-
   /**
    Push fixture to model's FIXTURES array.
    Used when store's adapter is a DS.FixtureAdapter.
@@ -282,13 +276,12 @@ FactoryGuy = {
    @returns {Object} json fixture data
    */
   pushFixture: function (modelClass, fixture) {
-    if (!modelClass['FIXTURES']) {
-      modelClass['FIXTURES'] = [];
+    if (!modelClass.FIXTURES) {
+      modelClass.FIXTURES = [];
     }
-    modelClass['FIXTURES'].push(fixture);
+    modelClass.FIXTURES.push(fixture);
     return fixture;
   },
-
   /**
    Clears all model definitions
   */
@@ -297,4 +290,4 @@ FactoryGuy = {
       this.modelDefinitions = {};
     }
   }
-}
+};
