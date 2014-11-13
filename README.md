@@ -642,7 +642,8 @@ to a particular user. To mock this createRecord call do this:
   // set the succeed flag to 'false' 
   testHelper.handleCreate('profile', null, false);
   
-  store.createRecord('profile').save() //=> fails
+  // when the createRecord on the 'project' is called, it will fail
+  store.createRecord('project').save() //=> fails
 
 ```
 
