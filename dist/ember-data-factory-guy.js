@@ -14,7 +14,7 @@ var MissingSequenceError = function(message) {
   this.toString = function () {
     return message;
   };
-}
+};
 /**
  A ModelDefinition encapsulates a model's definition
 
