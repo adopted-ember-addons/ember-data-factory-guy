@@ -19,7 +19,7 @@ hopefully you can switch to newer version of ember-data and therefore the best
 ember-data-factory-guy version, but if not, send me bug report and I will try and go back 
 and fix the older version you are using.*  
 
-*Version 0.8.0 introduces amd and commonjs support*
+**Version 0.8.0 introduces amd and commonjs support**
 
 ## Using as Gem
 
