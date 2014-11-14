@@ -5,7 +5,7 @@
  @param config
  @constructor
  */
-ModelDefinition = function (model, config) {
+var ModelDefinition = function (model, config) {
   var sequences = {};
   var traits = {};
   var defaultAttributes = {};

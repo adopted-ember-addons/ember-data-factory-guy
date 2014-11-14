@@ -1,4 +1,4 @@
-FactoryGuyTestMixin = Em.Mixin.create({
+var FactoryGuyTestMixin = Em.Mixin.create({
   // Pass in the app root, which typically is App.
   setup: function (app) {
     this.set('container', app.__container__);

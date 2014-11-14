@@ -7,11 +7,13 @@ module.exports = function(grunt) {
     concat: {
       dist: {
         src: [
+          'src/prologue.js',
           'src/sequence.js',
           'src/model_definition.js',
           'src/factory_guy.js',
           'src/store.js',
-          'src/factory_guy_test_mixin.js'
+          'src/factory_guy_test_mixin.js',
+          'src/epilogue.js'
         ],
         dest: "dist/ember-data-factory-guy.js"
       },
