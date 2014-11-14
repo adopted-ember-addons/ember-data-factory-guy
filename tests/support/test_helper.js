@@ -1,4 +1,4 @@
-TestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin,{
+TestHelper = Ember.Object.createWithMixins(FactoryGuy.testMixin,{
 
   /**
    * Setup with type of adapter instead of application root.

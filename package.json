@@ -25,10 +25,12 @@
     "url": ""
   },
   "devDependencies": [
+    "grunt",
+    "grunt-bump",
     "grunt-contrib-coffee",
     "grunt-contrib-concat",
-    "grunt-contrib-uglify",
-    "grunt-contrib-qunit"
+    "grunt-contrib-qunit",
+    "grunt-contrib-uglify"
   ],
   "engines": {
     "node": ">=v0.10.1"

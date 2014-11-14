@@ -1,4 +1,4 @@
-Sequence = function (fn) {
+var Sequence = function (fn) {
   var index = 1;
   this.next = function () {
     return fn.call(this, index++);
@@ -7,8 +7,9 @@ Sequence = function (fn) {
     index = 1;
   };
 };
-function MissingSequenceError(message) {
+
+var MissingSequenceError = function(message) {
   this.toString = function () {
     return message;
   };
-}
+};

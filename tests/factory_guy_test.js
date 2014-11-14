@@ -54,7 +54,7 @@ test("Using sequences in definitions", function() {
   throws( function() {
       FactoryGuy.build('bro')
     },
-    MissingSequenceError,
+    FactoryGuy.sequence.missingSequenceError,
     "throws error when sequence name not found"
   )
 

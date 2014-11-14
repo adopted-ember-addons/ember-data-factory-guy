@@ -1,4 +1,4 @@
-FactoryGuy = {
+var FactoryGuy = {
   modelDefinitions: {},
   /**
    ```javascript
