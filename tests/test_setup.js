@@ -137,16 +137,6 @@ FactoryGuy.define("project", {
   }
 });
 
-
-FactoryGuy.define("sub_project", {
-  sequences: {
-    title: function (num) { return 'SubProject' + num }
-  },
-  default: {
-    title: FactoryGuy.generate('title'),
-    type: "SubProject"
-  }
-});
 FactoryGuy.define('property', {
   default: {
     name: 'Silly property'
@@ -183,40 +173,6 @@ FactoryGuy.define('user', {
   }
 });
 
-Progress = DS.Model.extend({});
-Unit = DS.Model.extend({
-  lesson: DS.belongsTo('lesson')
-})
-
-Lesson = DS.Model.extend({
-  steps: DS.hasMany('step'),
-  progress: DS.belongsTo('progress')
-})
-
-Step = DS.Model.extend({
-  progress: DS.belongsTo('progress')
-})
-
-
-FactoryGuy.define( 'progress', {
-  default: {}
-});
-FactoryGuy.define( 'step', {
-  default: {
-    progress: FactoryGuy.belongsTo('progress')
-  }
-});
-FactoryGuy.define( 'lesson', {
-  default: {
-    steps: FactoryGuy.hasMany('step', 2),
-    progress: FactoryGuy.belongsTo('progress')
-  }
-});
-FactoryGuy.define( 'unit', {
-  default: {
-    lesson: FactoryGuy.belongsTo('lesson')
-  }
-});
 
 Company = DS.Model.extend({
   type:    DS.attr('string', {defaultValue: 'Company'}),
@@ -278,6 +234,11 @@ FluffyMaterial = DS.Model.extend({
 Outfit = DS.Model.extend({
   name: DS.attr('string'),
   hats: DS.hasMany('hat', {polymorphic: true})
+})
+
+Person = DS.Model.extend({
+  type: DS.attr('string'),
+  name: DS.attr('string')
 })
 
 Profile = DS.Model.extend({

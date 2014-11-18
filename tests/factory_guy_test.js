@@ -1,8 +1,3 @@
-Person = DS.Model.extend({
-  type: DS.attr('string'),
-  name: DS.attr('string')
-})
-
 var testHelper, store;
 
 module('FactoryGuy', {

@@ -396,17 +396,8 @@ var FactoryGuy = {
     }
     return definition.buildList(name, number, traits, opts);
   },
-  /**
-   Unload all models of the given type from the store in the next Ember runloop
-  */
-  unloadModel: function (modelType) {
-    Ember.run(function () {
-      store.unloadAll(modelType);
-    });
-  },
-  /**
-   TODO: This is kind of problematic right now .. needs work
 
+  /**
    Clear model instances from FIXTURES array, and from store cache.
    Reset the id sequence for the models back to zero.
   */
@@ -419,8 +410,9 @@ var FactoryGuy = {
         if (store.usingFixtureAdapter()) {
           modelType.FIXTURES = [];
         }
-        this.unloadModel(modelType);
+        store.unloadAll(modelType);
       } catch (e) {
+        console.log('resetModels',e)
       }
     }
   },

@@ -33,14 +33,3 @@ FactoryGuy.define("project", {
     parent: FactoryGuy.belongsTo('project')
   }
 });
-
-
-FactoryGuy.define("sub_project", {
-  sequences: {
-    title: function (num) { return 'SubProject' + num }
-  },
-  default: {
-    title: FactoryGuy.generate('title'),
-    type: "SubProject"
-  }
-});

@@ -29,37 +29,3 @@ FactoryGuy.define('user', {
   }
 });
 
-Progress = DS.Model.extend({});
-Unit = DS.Model.extend({
-  lesson: DS.belongsTo('lesson')
-})
-
-Lesson = DS.Model.extend({
-  steps: DS.hasMany('step'),
-  progress: DS.belongsTo('progress')
-})
-
-Step = DS.Model.extend({
-  progress: DS.belongsTo('progress')
-})
-
-
-FactoryGuy.define( 'progress', {
-  default: {}
-});
-FactoryGuy.define( 'step', {
-  default: {
-    progress: FactoryGuy.belongsTo('progress')
-  }
-});
-FactoryGuy.define( 'lesson', {
-  default: {
-    steps: FactoryGuy.hasMany('step', 2),
-    progress: FactoryGuy.belongsTo('progress')
-  }
-});
-FactoryGuy.define( 'unit', {
-  default: {
-    lesson: FactoryGuy.belongsTo('lesson')
-  }
-});
