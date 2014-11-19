@@ -9,12 +9,12 @@ of ember-data-factory-guy.
 - Versions:
   - 0.6.4   -> ember-data-1.0.0-beta.8 and under
   - 0.7.1.1 -> ember-data-1.0.0-beta.10
-  - 0.7.9   -> ember-data-1.0.0-beta.11
-  - 0.7.9   -> ember-data-1.0.0-beta.12
+  - 0.8.1   -> ember-data-1.0.0-beta.11
+  - 0.8.1   -> ember-data-1.0.0-beta.12
 
-**For versions ( 0.7.1 -> 0.7.9 ), support for the fixture adapter is currently broken.**  
+**For versions ( 0.7.1 -> 0.8.1 ), support for the fixture adapter is currently broken.**  
 
-*Version 0.7.9 has many bug fixes and improvements that the earlier versions don't have, so 
+*Version 0.8.1 has many bug fixes and improvements that the earlier versions don't have, so 
 hopefully you can switch to newer version of ember-data and therefore the best 
 ember-data-factory-guy version, but if not, send me bug report and I will try and go back 
 and fix the older version you are using.*  
@@ -34,7 +34,7 @@ gem 'ember-data-factory-guy', group: test
 or for particular version:
 
 ```ruby
-gem 'ember-data-factory-guy', '0.7.9', group: test
+gem 'ember-data-factory-guy', '0.8.1', group: test
 ```
 
 then:
@@ -69,7 +69,7 @@ or for particular version:
   "dependencies": {
     "foo-dependency": "latest",
     "other-foo-dependency": "latest",
-    "ember-data-factory-guy": "0.7.9"
+    "ember-data-factory-guy": "0.8.1"
   }
 ```
 
