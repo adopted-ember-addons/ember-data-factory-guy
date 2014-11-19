@@ -700,7 +700,7 @@ to a particular user. To mock this createRecord call do this:
 ````
 
 
-##### View test sample
+##### Integration test sample
 
 ```javascript
 
