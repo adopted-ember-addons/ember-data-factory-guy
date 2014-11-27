@@ -65,12 +65,12 @@ test("makeFixture with fixture options", function() {
   ok(profile.get('description') == 'dude');
 });
 
-test("makeFixture with traits", function() {
+test("makeFixture with attributes in traits", function() {
   var profile = store.makeFixture('profile', 'goofy_description');
   ok(profile.get('description') == 'goofy');
 });
 
-test("makeFixture with traits and fixture options ", function() {
+test("makeFixture with attributes in traits and fixture options ", function() {
   var profile = store.makeFixture('profile', 'goofy_description', {description: 'dude'});
   ok(profile.get('description') == 'dude');
 });
@@ -244,6 +244,17 @@ test("hasMany associations defined with traits", function() {
   equal(user.get('projects.length'), 2)
   ok(user.get('projects.firstObject.user') == user)
   ok(user.get('projects.lastObject.user') == user)
+})
+
+
+
+test("belongsTo associations defined with traits", function() {
+  var hat1 = store.makeFixture('hat', 'with_user');
+  equal(hat1.get('user') instanceof User, true)
+
+  var hat2 = store.makeFixture('hat', 'with_user', 'with_outfit');
+  equal(hat2.get('user') instanceof User, true)
+  equal(hat2.get('outfit') instanceof Outfit, true)
 })
 
 

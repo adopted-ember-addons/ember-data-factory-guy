@@ -791,26 +791,61 @@ var FactoryGuyTestMixin = Em.Mixin.create({
    Handling ajax POST ( create record ) for a model. You can mock
    failed create by passing in success argument as false.
 
+   ```js
+     handleCreate('post')
+     handleCreate('post', { match: {title: 'foo'} )
+     handleCreate('post', { match: {title: 'foo', user: user} )
+     handleCreate('post', { returns: {createdAt: new Date()} )
+     handleCreate('post', { match: {title: 'foo'}, returns: {createdAt: new Date()} )
+     handleCreate('post', { match: {title: 'foo'}, success: false} } )
+   ```
+
+    match - attributes that must be in request json,
+    returns - attributes to include in response json,
+    succeed - flag to indicate if the request should succeed ( default is true )
+
+    Note that any attributes in match will be added to the response json automatically,
+    so you don't need to include them in the returns hash as well.
+
+    Also, if you match on a belongsTo association, you don't have to include that in the
+    returns hash.
+
    @param {String} modelName  name of model your creating like 'profile' for Profile
-   @param {Object} options  hash of model options ( that do not include associations )
-   @param {Boolean} succeed  optional flag to indicate if the request
-      should succeed ( default is true )
+   @param {Object} options  hash of options for handling request
    */
-  handleCreate: function (modelName, options, succeed) {
-    succeed = succeed === undefined ? true : succeed;
+  handleCreate: function (modelName, options) {
     options = options === undefined ? {} : options;
+    var succeed = options.succeed === undefined ? true : options.succeed;
+    var match = options.match || {};
+    var returnArgs = options.returns || {};
+
     var url = this.buildURL(modelName);
     var definition = FactoryGuy.modelDefinitions[modelName];
+
+    var record = this.getStore().createRecord(modelName, match);
+    var expectedRequest = {};
+    expectedRequest[modelName] = record.serialize();
+
+    var httpOptions = {type: 'POST', data: JSON.stringify(expectedRequest)};
+
+    var modelType = this.getStore().modelFor(modelName)
+
     var responseJson = {};
-    var httpOptions = { type: 'POST' };
     if (succeed) {
-      responseJson[modelName] = $.extend(options,{id: definition.nextId()});
+      responseJson[modelName] = $.extend({id: definition.nextId()}, match, returnArgs);
+      // Remove belongsTo associations since they will already be set when you called
+      // createRecord, and included them in those attributes
+      Ember.get(modelType, 'relationshipsByName').forEach(function (relationship) {
+        if (relationship.kind == 'belongsTo') {
+          delete responseJson[modelName][relationship.key];
+        }
+      })
     } else {
       httpOptions.status = 500;
     }
+
     this.stubEndpointForHttpRequest(url, responseJson, httpOptions);
   },
-
   /**
    Handling ajax PUT ( update record ) for a model type. You can mock
    failed update by passing in success argument as false.
@@ -848,6 +883,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     $.mockjax.clear();
   }
 });
+
 
 /*!
  * MockJax - jQuery Plugin to Mock Ajax requests
@@ -964,9 +1000,11 @@ var FactoryGuyTestMixin = Em.Mixin.create({
 				return null;
 			}
 		}
-
 		// Inspect the data submitted in the request (either POST body or GET query string)
 		if ( handler.data ) {
+//      console.log('request.data', requestSettings.data )
+//      console.log('handler.data', handler.data )
+//      console.log('data equal', isMockDataEqual(handler.data, requestSettings.data) )
 			if ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
 				// They're not identical, do not mock this request
 				return null;
@@ -978,7 +1016,6 @@ var FactoryGuyTestMixin = Em.Mixin.create({
 			// The request type doesn't match (GET vs. POST)
 			return null;
 		}
-
 		return handler;
 	}
 

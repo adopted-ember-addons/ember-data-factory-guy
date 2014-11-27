@@ -54,12 +54,10 @@ FactoryGuy.define('hat', {
     type: 'BigHat'
   },
   traits: {
-    belonging_to_user: {
-      user: FactoryGuy.belongsTo('user')
-    },
-    belonging_to_outfit: {
-      outfit: FactoryGuy.belongsTo('outfit')
-    }
+    with_user: { user: {} },
+    belonging_to_user: { user: {} },
+    with_outfit: { outfit: {} },
+    belonging_to_outfit: { outfit: {} }
   }
 })
 FactoryGuy.define('soft_material', {
@@ -242,6 +240,7 @@ Person = DS.Model.extend({
 })
 
 Profile = DS.Model.extend({
+  created_at:                   DS.attr('date'),
   description:            DS.attr('string'),
   camelCaseDescription:   DS.attr('string'),
   snake_case_description: DS.attr('string'),

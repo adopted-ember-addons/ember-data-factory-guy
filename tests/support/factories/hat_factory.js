@@ -7,11 +7,9 @@ FactoryGuy.define('hat', {
     type: 'BigHat'
   },
   traits: {
-    belonging_to_user: {
-      user: FactoryGuy.belongsTo('user')
-    },
-    belonging_to_outfit: {
-      outfit: FactoryGuy.belongsTo('outfit')
-    }
+    with_user: { user: {} },
+    belonging_to_user: { user: {} },
+    with_outfit: { outfit: {} },
+    belonging_to_outfit: { outfit: {} }
   }
 })

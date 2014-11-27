@@ -68,6 +68,7 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuy.testMixin,{
 
     container.register('serializer:-default', serializer);
     container.register('transform:string', DS.StringTransform);
+    container.register('transform:date', DS.DateTransform);
     container.injection('serializer', 'store', 'store:main');
 
     env.store = container.lookup('store:main');

@@ -38,9 +38,14 @@ module('FactoryGuyTestMixin (using mockjax) with DS.RESTAdapter', {
 
 asyncTest("#handleCreate the basic", function() {
   var customDescription = "special description"
-  testHelper.handleCreate('profile', {description: customDescription})
 
-  store.createRecord('profile').save().then(function(profile) {
+  testHelper.handleCreate('profile', {
+    match: {description: customDescription}
+  })
+
+  store.createRecord('profile', {
+    description: customDescription
+  }).save().then(function(profile) {
     ok(profile instanceof Profile)
     ok(profile.get('description') == customDescription)
     start();
@@ -106,11 +111,16 @@ module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
 
 /////// handleCreate //////////
 
-asyncTest("#handleCreate the basic", function() {
+asyncTest("#handleCreate matches attributes and returns these", function() {
   var customDescription = "special description"
-  testHelper.handleCreate('profile', {description: customDescription})
 
-  store.createRecord('profile', {description: customDescription}).save().then(function(profile) {
+  testHelper.handleCreate('profile', {
+    match: {description: customDescription}
+  })
+
+  store.createRecord('profile', {
+    description: customDescription
+  }).save().then(function(profile) {
     ok(profile instanceof Profile)
     ok(profile.id == 1)
     ok(profile.get('description') == customDescription)
@@ -118,44 +128,101 @@ asyncTest("#handleCreate the basic", function() {
   });
 });
 
-asyncTest("#handleCreate with belongsTo association", function() {
-  var company = store.makeFixture('company')
-  testHelper.handleCreate('profile')
 
-  store.createRecord('profile', {company: company}).save().then(function(profile) {
-    ok(profile instanceof Profile)
-    ok(profile.id == 1)
-    ok(profile.get('company') == company)
+asyncTest("#handleCreate returns attributes", function() {
+  var date = new Date()
+
+  testHelper.handleCreate('profile', {
+    returns: {created_at: date}
+  })
+
+  store.createRecord('profile').save().then(function(profile) {
+    ok(profile.get('created_at') == date.toString())
     start();
   });
 });
 
-asyncTest("#handleCreate with belongsTo polymorphic association", function() {
-  var group = store.makeFixture('group')
-  testHelper.handleCreate('profile')
-
-  store.createRecord('profile', {group: group}).save().then(function(profile) {
-    ok(profile instanceof Profile)
-    ok(profile.id == 1)
-    ok(profile.get('group') == group)
-    start();
-  });
-});
-
-asyncTest("#handleCreate with model that has camelCase attribute", function() {
+asyncTest("#handleCreate returns camelCase attributes", function() {
   var customDescription = "special description"
-  testHelper.handleCreate('profile', {camelCaseDescription: customDescription})
 
-  store.createRecord('profile', {camelCaseDescription: 'description'}).save().then(function(profile) {
+  testHelper.handleCreate('profile', {
+    returns: {camel_case_description: customDescription}
+  })
+
+  store.createRecord('profile', {
+    camel_case_description: 'description'
+  }).save().then(function(profile) {
     ok(profile.get('camelCaseDescription') == customDescription)
     start();
   });
 });
 
+asyncTest("#handleCreate match belongsTo association", function() {
+  var company = store.makeFixture('company')
+  testHelper.handleCreate('profile', {match:{ company: company}})
+
+  store.createRecord('profile', {company: company}).save().then(function(profile) {
+    ok(profile.get('company') == company)
+    start();
+  });
+});
+
+asyncTest("#handleCreate match belongsTo polymorphic association", function() {
+  var group = store.makeFixture('group')
+  testHelper.handleCreate('profile', {match:{ group: group}})
+
+  store.createRecord('profile', {group: group}).save().then(function(profile) {
+    ok(profile.get('group') == group)
+    start();
+  });
+});
+
+
+asyncTest("#handleCreate match attributes and return attributes", function() {
+  var date = new Date()
+  var customDescription = "special description"
+  var company = store.makeFixture('company')
+  var group = store.makeFixture('big_group')
+
+  testHelper.handleCreate('profile', {
+    match: {description: customDescription, company: company, group: group},
+    returns: {created_at: new Date()}
+  })
+
+  store.createRecord('profile', {
+    description: customDescription, company: company, group: group
+  }).save().then(function(profile) {
+    start();
+    ok(profile.get('created_at') == date.toString())
+    ok(profile.get('group') == group)
+    ok(profile.get('company') == company)
+    ok(profile.get('description') == customDescription)
+  });
+});
+
+
 asyncTest("#handleCreate failure", function() {
-  testHelper.handleCreate('profile', {}, false)
+  testHelper.handleCreate('profile', { succeed: false } )
 
   store.createRecord('profile').save()
+    .then(
+      function() {},
+      function() {
+        ok(true)
+        start();
+      }
+    )
+});
+
+
+asyncTest("#handleCreate match but still fail", function() {
+  var description = "special description"
+
+  testHelper.handleCreate('profile', {
+    match: {description: description}, succeed: false
+  })
+
+  store.createRecord('profile', {description: description}).save()
     .then(
       function() {},
       function() {

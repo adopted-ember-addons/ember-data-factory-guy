@@ -241,6 +241,15 @@ test("hasMany associations defined with traits", function() {
   ok(user.get('projects.lastObject.user') == user)
 })
 
+test("belongsTo associations defined with traits", function() {
+  var hat1 = store.makeFixture('hat', 'with_user');
+  equal(hat1.get('user') instanceof User, true)
+
+  var hat2 = store.makeFixture('hat', 'with_user', 'with_outfit');
+  equal(hat2.get('user') instanceof User, true)
+  equal(hat2.get('outfit') instanceof Outfit, true)
+})
+
 
 test("with (nested json fixture) belongsTo has a hasMany association which has a belongsTo", function() {
   var project = store.makeFixture('project', 'with_user_having_hats_belonging_to_outfit');
