@@ -111,6 +111,16 @@ module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
 
 /////// handleCreate //////////
 
+asyncTest("#handleCreate with no specific match (which returns no id)", function() {
+  testHelper.handleCreate('profile');
+
+  store.createRecord('profile', {description: 'whatever'}).save().then(function(profile) {
+    ok(profile.id == null) // no id returned when non specific matching
+    ok(profile.get('description') == 'whatever')
+    start();
+  });
+});
+
 asyncTest("#handleCreate matches attributes and returns these", function() {
   var customDescription = "special description"
 

@@ -9,12 +9,12 @@ of ember-data-factory-guy.
 - Versions:
   - 0.6.4   -> ember-data-1.0.0-beta.8 and under
   - 0.7.1.1 -> ember-data-1.0.0-beta.10
-  - 0.8.1   -> ember-data-1.0.0-beta.11
-  - 0.8.1   -> ember-data-1.0.0-beta.12
+  - 0.8.2   -> ember-data-1.0.0-beta.11
+  - 0.8.2   -> ember-data-1.0.0-beta.12
 
-**For versions ( 0.7.1 -> 0.8.1 ), support for the fixture adapter is currently broken.**  
+**For versions ( 0.7.1 -> 0.8.2 ), support for the fixture adapter is currently broken.**  
 
-*Version 0.8.1 has many bug fixes and improvements that the earlier versions don't have, so 
+*Version 0.8.2 has many bug fixes and improvements that the earlier versions don't have, so 
 hopefully you can switch to newer version of ember-data and therefore the best 
 ember-data-factory-guy version, but if not, send me bug report and I will try and go back 
 and fix the older version you are using.*  
@@ -34,7 +34,7 @@ gem 'ember-data-factory-guy', group: test
 or for particular version:
 
 ```ruby
-gem 'ember-data-factory-guy', '0.8.1', group: test
+gem 'ember-data-factory-guy', '0.8.2', group: test
 ```
 
 then:
@@ -69,7 +69,7 @@ or for particular version:
   "dependencies": {
     "foo-dependency": "latest",
     "other-foo-dependency": "latest",
-    "ember-data-factory-guy": "0.8.1"
+    "ember-data-factory-guy": "0.8.2"
   }
 ```
 
@@ -578,9 +578,9 @@ test("make a user using your applications default adapter", function() {
 - Uses mockjax
 - Has helper methods
   - handleFindMany 
-  - handleCreate
-  - handleUpdate ( can mock success or failure )
-  - handleDelete ( can mock success or failure )
+  - handleCreate 
+  - handleUpdate 
+  - handleDelete 
 
 Since it is recommended to use your normal adapter ( which is usually a subclass of RESTAdapter, )
 FactoryGuyTestMixin assumes you will want to use that adapter to do your integration tests.
@@ -609,14 +609,23 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
 ```
 
 ##### handleCreate
-  
+  - options
+    - match - attributes that must be in request json
+    - returns - attributes to include in response json
+    - succeed - flag to indicate if the request should succeed ( default is true )
 
-*success case is the default*
+*Note* 
+  That any attributes in match will be added to the response json automatically,
+  so you don't need to include them in the returns hash as well.
+    
+  If you don't use match options for exact match, there will be no id returned to the model.
+     
+  If you match on a belongsTo association, you don't have to include that in the
+  returns hash.
+  
   
 Realistically, you will have code in a view action or controller action that will
  create the record, and setup any associations. 
- Therefore, all you need to pass in to handleCreate are the attributes on the model
- that are being tested ( excluding associations .. you don't need those)
  
 ```javascript
   
@@ -632,11 +641,13 @@ Realistically, you will have code in a view action or controller action that wil
 ```
 
 In this case, you are are creating a 'project' record with a specific name, and belonging
-to a particular user. To mock this createRecord call do this:
+to a particular user. To mock this createRecord call here are a few ways to do this using
+match and or returns options.
   
 ```javascript
-  // note that you don't include the user association 
-  testHelper.handleCreate('project', {name: "Moo"})
+  // note that you don't need the returns option since the 
+  // match options are returned automatically  
+  testHelper.handleCreate('project', {match: {name: "Moo", user: user}})
 
 ```
 
@@ -644,7 +655,7 @@ to a particular user. To mock this createRecord call do this:
 
 ```javascript
   // set the succeed flag to 'false' 
-  testHelper.handleCreate('profile', null, false);
+  testHelper.handleCreate('profile', {succeed: false});
   
   // when the createRecord on the 'project' is called, it will fail
   store.createRecord('project').save() //=> fails

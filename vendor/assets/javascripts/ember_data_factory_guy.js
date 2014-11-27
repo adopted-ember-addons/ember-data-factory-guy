@@ -804,42 +804,49 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     returns - attributes to include in response json,
     succeed - flag to indicate if the request should succeed ( default is true )
 
-    Note that any attributes in match will be added to the response json automatically,
+    Note:
+     1) that any attributes in match will be added to the response json automatically,
     so you don't need to include them in the returns hash as well.
 
-    Also, if you match on a belongsTo association, you don't have to include that in the
+     2) If you don't use match options for exact match, there will be no id returned to the model.
+
+     3) If you match on a belongsTo association, you don't have to include that in the
     returns hash.
 
    @param {String} modelName  name of model your creating like 'profile' for Profile
    @param {Object} options  hash of options for handling request
    */
   handleCreate: function (modelName, options) {
-    options = options === undefined ? {} : options;
-    var succeed = options.succeed === undefined ? true : options.succeed;
-    var match = options.match || {};
-    var returnArgs = options.returns || {};
+    var opts = options === undefined ? {} : options;
+    var succeed = opts.succeed === undefined ? true : opts.succeed;
+    var match = opts.match || {};
+    var returnArgs = opts.returns || {};
 
     var url = this.buildURL(modelName);
     var definition = FactoryGuy.modelDefinitions[modelName];
 
-    var record = this.getStore().createRecord(modelName, match);
-    var expectedRequest = {};
-    expectedRequest[modelName] = record.serialize();
-
-    var httpOptions = {type: 'POST', data: JSON.stringify(expectedRequest)};
+    var httpOptions = {type: 'POST'};
+    if (opts.match) {
+      var expectedRequest = {};
+      var record = this.getStore().createRecord(modelName, match);
+      expectedRequest[modelName] = record.serialize();
+      httpOptions.data = JSON.stringify(expectedRequest);
+    }
 
     var modelType = this.getStore().modelFor(modelName)
 
     var responseJson = {};
     if (succeed) {
-      responseJson[modelName] = $.extend({id: definition.nextId()}, match, returnArgs);
-      // Remove belongsTo associations since they will already be set when you called
-      // createRecord, and included them in those attributes
-      Ember.get(modelType, 'relationshipsByName').forEach(function (relationship) {
-        if (relationship.kind == 'belongsTo') {
-          delete responseJson[modelName][relationship.key];
-        }
-      })
+      if (options) {
+        responseJson[modelName] = $.extend({id: definition.nextId()}, match, returnArgs);
+        // Remove belongsTo associations since they will already be set when you called
+        // createRecord, and included them in those attributes
+        Ember.get(modelType, 'relationshipsByName').forEach(function (relationship) {
+          if (relationship.kind == 'belongsTo') {
+            delete responseJson[modelName][relationship.key];
+          }
+        })
+      }
     } else {
       httpOptions.status = 500;
     }

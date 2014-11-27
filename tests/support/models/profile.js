@@ -1,5 +1,5 @@
 Profile = DS.Model.extend({
-  created_at:                   DS.attr('date'),
+  created_at:             DS.attr('date'),
   description:            DS.attr('string'),
   camelCaseDescription:   DS.attr('string'),
   snake_case_description: DS.attr('string'),
