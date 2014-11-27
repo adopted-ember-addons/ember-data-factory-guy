@@ -614,8 +614,9 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
     - returns - attributes to include in response json
     - succeed - flag to indicate if the request should succeed ( default is true )
 
-**Note** 
-  *That any attributes in match will be added to the response json automatically,
+**Note**
+ 
+  *Any attributes in match will be added to the response json automatically,
   so you don't need to include them in the returns hash as well.*
     
   *If you don't use match options for exact match, there will be no id returned to the model.*
