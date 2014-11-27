@@ -667,6 +667,13 @@ match and or returns options.
   // when the createRecord on the 'project' is called, it will fail
   store.createRecord('project').save() //=> fails
 
+  // or fail only if the attribues match exactly  
+  testHelper.handleCreate('project', {
+    match: {name: "Moo", user: user}, {succeed: false}
+  })
+  
+  store.createRecord('project', {name: 'Dude'}}).save() //=> succeeds
+  store.createRecord('project', {name: "Moo", user: user}).save() //=> fails
 ```
 
 
