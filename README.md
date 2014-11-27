@@ -672,7 +672,6 @@ match and or returns options.
     match: {name: "Moo", user: user}, {succeed: false}
   })
   
-  store.createRecord('project', {name: 'Dude'}}).save() //=> succeeds
   store.createRecord('project', {name: "Moo", user: user}).save() //=> fails
 ```
 
