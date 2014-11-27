@@ -614,14 +614,14 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
     - returns - attributes to include in response json
     - succeed - flag to indicate if the request should succeed ( default is true )
 
-*Note* 
-  That any attributes in match will be added to the response json automatically,
-  so you don't need to include them in the returns hash as well.
+**Note** 
+  *That any attributes in match will be added to the response json automatically,
+  so you don't need to include them in the returns hash as well.*
     
-  If you don't use match options for exact match, there will be no id returned to the model.
+  *If you don't use match options for exact match, there will be no id returned to the model.*
      
-  If you match on a belongsTo association, you don't have to include that in the
-  returns hash.
+  *If you match on a belongsTo association, you don't have to include that in the
+  returns hash.*
   
   
 Realistically, you will have code in a view action or controller action that will
@@ -645,9 +645,15 @@ to a particular user. To mock this createRecord call here are a few ways to do t
 match and or returns options.
   
 ```javascript
-  // note that you don't need the returns option since the 
-  // match options are returned automatically  
+  // Simplest case  
+  // Don't care about a match just handle createRecord for any project  
+  testHelper.handleCreate('project')
+  // Exactly matching attributes
   testHelper.handleCreate('project', {match: {name: "Moo", user: user}})
+  // Exactly matching attributes, and returning extra attributes
+  testHelper.handleCreate('project', {
+    match: {name: "Moo", user: user}, returns: {created_at: new Date()}
+  })
 
 ```
 
