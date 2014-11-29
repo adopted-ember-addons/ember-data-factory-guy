@@ -78,6 +78,12 @@ then:
     $ bower install
 ```
 
+## Using with Ember Cli
+  - https://github.com/igorrKurr/ember-cli-factory-guy-example
+    An example of how to manually set up ember-data-factory-guy with ember cli 
+  - https://github.com/cristinawithout/ember-cli-data-factory-guy
+    A wrapper around ember-data-factory-guy for ember-cli for even easier setup
+
 ### How this works
 
 - Using DS.RestAdapter / DS.ActiveModelAdapter 
