@@ -21,6 +21,15 @@ and fix the older version you are using.*
 
 **Version 0.8.0 introduces amd and commonjs support**
 
+## Using with Ember Cli
+  - https://github.com/igorrKurr/ember-cli-factory-guy-example
+    
+    An example of how to manually set up ember-data-factory-guy with ember cli 
+  
+  - https://github.com/cristinawithout/ember-cli-data-factory-guy
+    
+    A wrapper around ember-data-factory-guy for ember-cli for even easier setup
+
 ## Using as Gem
 
 To Use with in Rails project or project with sprockets:
@@ -77,12 +86,6 @@ then:
 ```
     $ bower install
 ```
-
-## Using with Ember Cli
-  - https://github.com/igorrKurr/ember-cli-factory-guy-example
-    An example of how to manually set up ember-data-factory-guy with ember cli 
-  - https://github.com/cristinawithout/ember-cli-data-factory-guy
-    A wrapper around ember-data-factory-guy for ember-cli for even easier setup
 
 ### How this works
 
