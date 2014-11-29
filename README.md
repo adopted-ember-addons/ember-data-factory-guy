@@ -662,7 +662,7 @@ match and or returns options.
 
 ```javascript
   // set the succeed flag to 'false' 
-  testHelper.handleCreate('profile', {succeed: false});
+  testHelper.handleCreate('project', {succeed: false});
   
   // when the createRecord on the 'project' is called, it will fail
   store.createRecord('project').save() //=> fails
