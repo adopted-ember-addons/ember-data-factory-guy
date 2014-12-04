@@ -13,3 +13,8 @@ var MissingSequenceError = function(message) {
     return message;
   };
 };
+
+if (FactoryGuy !== undefined) {
+  FactoryGuy.sequence = Sequence;
+  FactoryGuy.missingSequenceError = MissingSequenceError;
+};

@@ -203,3 +203,6 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   }
 });
 
+if (FactoryGuy !== undefined) {
+  FactoryGuy.testMixin = FactoryGuyTestMixin;
+};
