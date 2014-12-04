@@ -1,5 +1,3 @@
-(function () {
-
 var Sequence = function (fn) {
   var index = 1;
   this.next = function () {
@@ -15,6 +13,12 @@ var MissingSequenceError = function(message) {
     return message;
   };
 };
+
+if (FactoryGuy !== undefined) {
+  FactoryGuy.sequence = Sequence;
+  FactoryGuy.missingSequenceError = MissingSequenceError;
+};
+
 /**
  A ModelDefinition encapsulates a model's definition
 
@@ -157,6 +161,11 @@ var ModelDefinition = function (model, config) {
   // initialize
   parseConfig(config);
 };
+
+if (FactoryGuy !== undefined) {
+  FactoryGuy.modelDefiniton = ModelDefinition;
+};
+
 var FactoryGuy = {
   modelDefinitions: {},
   /**
@@ -893,29 +902,6 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   }
 });
 
-
+if (FactoryGuy !== undefined) {
   FactoryGuy.testMixin = FactoryGuyTestMixin;
-  FactoryGuy.sequence = Sequence;
-  FactoryGuy.sequence.missingSequenceError = MissingSequenceError;
-
-  // CommonJS module
-  if (typeof exports !== 'undefined') {
-    if (typeof module !== 'undefined' && module.exports) {
-      exports = module.exports = FactoryGuy;
-    }
-    exports.FactoryGuy = FactoryGuy;
-  }
-
-  // Register as an anonymous AMD module
-  if (typeof define === 'function' && define.amd) {
-    define('factory-guy', [], function () {
-      return FactoryGuy;
-    });
-  }
-
-  // If there is a window object, that at least has a document property,
-  // instantiate and define chance on the window
-  if (typeof window === "object" && typeof window.document === "object") {
-    window.FactoryGuy = FactoryGuy;
-  }
-})();
+};

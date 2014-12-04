@@ -140,3 +140,7 @@ var ModelDefinition = function (model, config) {
   // initialize
   parseConfig(config);
 };
+
+if (FactoryGuy !== undefined) {
+  FactoryGuy.modelDefiniton = ModelDefinition;
+};
