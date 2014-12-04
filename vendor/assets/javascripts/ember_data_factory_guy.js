@@ -1021,9 +1021,11 @@ if (FactoryGuy !== undefined) {
 				return null;
 			}
 		}
-
 		// Inspect the data submitted in the request (either POST body or GET query string)
 		if ( handler.data ) {
+//      console.log('request.data', requestSettings.data )
+//      console.log('handler.data', handler.data )
+//      console.log('data equal', isMockDataEqual(handler.data, requestSettings.data) )
 			if ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
 				// They're not identical, do not mock this request
 				return null;
@@ -1035,7 +1037,6 @@ if (FactoryGuy !== undefined) {
 			// The request type doesn't match (GET vs. POST)
 			return null;
 		}
-
 		return handler;
 	}
 
