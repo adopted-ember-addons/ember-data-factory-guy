@@ -14,9 +14,6 @@
     "FixtureAdapter"
   ],
   "license": "MIT",
-  "bugs": {
-    "url": ""
-  },
   "scripts": {
     "test": "grunt test"
   },
