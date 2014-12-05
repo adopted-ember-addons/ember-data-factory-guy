@@ -236,7 +236,7 @@
      */
     pushPayload: function (type, payload) {
       if (this.usingFixtureAdapter()) {
-        var model = this.modelFor(modelName);
+        var model = this.modelFor(type);
         FactoryGuy.pushFixture(model, payload);
       } else {
         this._super(type, payload);
