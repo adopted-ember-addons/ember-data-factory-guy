@@ -484,6 +484,7 @@ var FactoryGuy = {
     }
   }
 };
+
 (function () {
   DS.Store.reopen({
     /**
@@ -730,6 +731,7 @@ var FactoryGuy = {
     }
   });
 })();
+
 var FactoryGuyTestMixin = Em.Mixin.create({
   // Pass in the app root, which typically is App.
   setup: function (app) {
@@ -1056,7 +1058,10 @@ if (FactoryGuy !== undefined) {
 		}
 		// Inspect the data submitted in the request (either POST body or GET query string)
 		if ( handler.data ) {
-			if ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
+//      console.log('request.data', requestSettings.data )
+//      console.log('handler.data', handler.data )
+//      console.log('data equal', isMockDataEqual(handler.data, requestSettings.data) )
+			if  ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
 				// They're not identical, do not mock this request
 				return null;
 			}

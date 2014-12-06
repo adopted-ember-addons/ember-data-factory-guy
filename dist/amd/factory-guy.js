@@ -489,6 +489,7 @@ var FactoryGuy = {
     }
   }
 };
+
 (function () {
   DS.Store.reopen({
     /**
@@ -735,6 +736,7 @@ var FactoryGuy = {
     }
   });
 })();
+
 var FactoryGuyTestMixin = Em.Mixin.create({
   // Pass in the app root, which typically is App.
   setup: function (app) {

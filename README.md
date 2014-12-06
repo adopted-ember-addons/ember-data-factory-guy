@@ -9,8 +9,8 @@ of ember-data-factory-guy.
 - Versions:
   - 0.6.4   -> ember-data-1.0.0-beta.8 and under
   - 0.7.1.1 -> ember-data-1.0.0-beta.10
-  - 0.8.3   -> ember-data-1.0.0-beta.11
-  - 0.8.3   -> ember-data-1.0.0-beta.12
+  - 0.8.4   -> ember-data-1.0.0-beta.11
+  - 0.8.4   -> ember-data-1.0.0-beta.12
 
 **For versions ( 0.7.1 -> 0.8.4 ), support for the fixture adapter is currently broken.**  
 
