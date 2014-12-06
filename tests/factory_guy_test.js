@@ -203,3 +203,26 @@ test("#lookupModelForFixtureName", function() {
   equal(FactoryGuy.lookupModelForFixtureName('fake'), undefined, "return nothing if can't find definition");
 });
 
+asyncTest("#pushFixture", function() {
+  var User = store.modelFor('user'),
+      user = store.makeFixture('user'),
+      duplicateUser = FactoryGuy.build('user', { id: user.id, name: 'monkey' }),
+      differentUser = FactoryGuy.build('user'),
+      usersById = {};
+
+  usersById[duplicateUser.id] = duplicateUser;
+  usersById[differentUser.id] = differentUser;
+
+  FactoryGuy.pushFixture(User, duplicateUser);
+  FactoryGuy.pushFixture(User, differentUser);
+
+  store.find('user').then(function(users) {
+    ok(users.get('length') === 2);
+
+    users.forEach(function(user) {
+      equal(user.get('name'), usersById[user.get('id')].name, "Updates model fixture if duplicate id found");
+    });
+
+    start();
+  });
+});

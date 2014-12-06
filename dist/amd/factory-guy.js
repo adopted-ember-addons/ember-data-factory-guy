@@ -441,12 +441,45 @@ var FactoryGuy = {
    @returns {Object} json fixture data
    */
   pushFixture: function (modelClass, fixture) {
+    var index;
     if (!modelClass.FIXTURES) {
       modelClass.FIXTURES = [];
     }
-    modelClass.FIXTURES.push(fixture);
+
+    index = this.indexOfFixture(modelClass.FIXTURES, fixture);
+
+    if (index > -1) {
+      modelClass.FIXTURES[index] = fixture;
+    } else {
+      modelClass.FIXTURES.push(fixture);
+    }
+
     return fixture;
   },
+
+  /**
+   Used in compliment with pushFixture in order to
+   ensure we don't push duplicate fixtures
+
+   @private
+   @param {Array} fixtures
+   @param {String|Integer} id of fixture to find
+   @returns {Object} fixture
+   */
+  indexOfFixture: function(fixtures, fixture) {
+    var index = -1,
+        id = fixture.id + '';
+    Ember.A(fixtures).find(function(r, i) {
+      if ('' + Ember.get(r, 'id') === id) {
+        index = i;
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return index;
+  },
+
   /**
    Clears all model definitions
   */
