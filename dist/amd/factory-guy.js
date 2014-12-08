@@ -793,9 +793,32 @@ var FactoryGuy = {
      @param {Object} payload
      */
     pushPayload: function (type, payload) {
+      var typeName, model;
+
       if (this.usingFixtureAdapter()) {
-        var model = this.modelFor(type);
-        FactoryGuy.pushFixture(model, payload);
+        if (Ember.typeOf(type) === 'string' && Ember.isPresent(payload) && Ember.isPresent(payload.id)){
+          //pushPayload('user', {id:..})
+          model = this.modelFor(type);
+          FactoryGuy.pushFixture(model, payload);
+          this.push(model, Ember.copy(payload, true));
+        } else if(Ember.typeOf(type) === 'object' || Ember.typeOf(payload) === 'object') {
+          //pushPayload({users: {id:..}}) OR pushPayload('user', {users: {id:..}})
+          if(Ember.isBlank(payload)){
+            payload = type;
+          }
+
+          for (var prop in payload) {
+            typeName = Ember.String.camelize(Ember.String.singularize(prop));
+            model = this.modelFor(typeName);
+
+            this.pushMany(model, Ember.makeArray( Ember.copy(payload[prop], true) ));
+            Ember.ArrayPolyfills.forEach.call(Ember.makeArray(payload[prop]), function(hash) {
+              FactoryGuy.pushFixture(model, hash);
+            }, this);
+          }
+        } else {
+          throw new Ember.Error('Assertion Failed: You cannot use `store#pushPayload` with this method signature pushPayload(' + type + ',' + payload + ')');
+        }
       } else {
         this._super(type, payload);
       }
