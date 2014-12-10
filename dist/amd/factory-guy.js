@@ -449,10 +449,10 @@ var FactoryGuy = {
     index = this.indexOfFixture(modelClass.FIXTURES, fixture);
 
     if (index > -1) {
-      modelClass.FIXTURES[index] = fixture;
-    } else {
-      modelClass.FIXTURES.push(fixture);
+      modelClass.FIXTURES.splice(index, 1);
     }
+
+    modelClass.FIXTURES.push(fixture);
 
     return fixture;
   },
