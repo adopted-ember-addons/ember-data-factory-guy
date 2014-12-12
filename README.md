@@ -558,8 +558,8 @@ module('User Model', {
   setup: function() {
     testHelper = TestHelper.setup(App);
     store = testHelper.getStore();
-    // You could at this point, make fixtures with testHelper.make('user'),
-    // or store.makeFixture('user') but to be even more concise in tests
+    // You could at this point, make fixtures with testHelper.make,
+    // or store.makeFixture but to be even more concise in tests
     // you could add this shortcut method to your tests
     make = testHelper.make.bind(testHelper)
   },
