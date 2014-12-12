@@ -393,7 +393,7 @@ attributes will override any trait attributes or default attributes
       // create user model with default attributes
       user: {}
     },
-    project_with_dude: {
+    project_with_bob: {
       // create user model with custom attributes
       user: {name: 'Bob'}
     },
@@ -406,8 +406,8 @@ attributes will override any trait attributes or default attributes
   var json = FactoryGuy.build('project_with_user'); 
   json.user // => {id:1, name: 'Dude', style: 'normal'}
 
-  var json = FactoryGuy.build('project_with_dude'); 
-  json.user // => {id:1, name: 'Dude', style: 'normal'}
+  var json = FactoryGuy.build('project_with_bob');
+  json.user // => {id:1, name: 'Bob', style: 'normal'}
 
   var project = store.makeFixture('project_with_admin');
   project.get('user.name') // => 'Admin'
