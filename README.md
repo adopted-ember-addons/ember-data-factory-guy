@@ -552,21 +552,22 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin);
 
 // Then in your tests you can use it like so:
 
-var testHelper, store;
+var testHelper, store, make;
 
 module('User Model', {
   setup: function() {
     testHelper = TestHelper.setup(App);
     store = testHelper.getStore();
+    // You could at this point, make fixtures with testHelper.make('user'),
+    // or store.makeFixture('user') but to be even more concise in tests
+    // you could add this shortcut method to your tests
+    make = testHelper.make.bind(testHelper)
   },
   teardown: function() {
     Em.run(function() { testHelper.teardown(); });
   }
 });
 
-// You could at this point, make fixtures with testHelper.make('user'), but
-// to be even more concise in tests you could add this method to your tests
-var make = function(name, opts) { return testHelper.make(name, opts); }
 
 // assuming your default adapter is ActiveModelAdapter or RESTAdapter
 test("make a user using your applications default adapter", function() {
