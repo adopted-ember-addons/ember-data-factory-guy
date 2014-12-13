@@ -235,13 +235,13 @@ the store is looking up the correct model type name
 
   // returns a User instance that is loaded into your application's store   
   var user = store.makeFixture('user');
-  user.toJSON() // => {id: 2, name: 'Dude', style: 'normal'}
+  user.toJSON({includeId: true}) // => {id: 2, name: 'Dude', style: 'normal'}
 
   var json = FactoryGuy.build('admin'); 
   json // => {id: 3, name: 'Admin', style: 'super'}
 
   var user = store.makeFixture('admin');
-  user.toJSON() // => {id: 4, name: 'Admin', style: 'super'}
+  user.toJSON({includeId: true}) // => {id: 4, name: 'Admin', style: 'super'}
   
 ```
 
@@ -427,7 +427,7 @@ attributes will override any trait attributes or default attributes
   });
   
   var user = store.makeFixture('project', 'with_user');
-  project.get('user').toJSON() // => {id:1, name: 'Dude', style: 'normal'}
+  project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
   
 ```
 
@@ -438,7 +438,7 @@ attributes will override any trait attributes or default attributes
   var user = store.makeFixture('user');
   var project = store.makeFixture('project', {user: user});
     
-  project.get('user').toJSON() // => {id:1, name: 'Dude', style: 'normal'}
+  project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
 ```
 
 *Note that though you are setting the 'user' belongsTo association on a project,
@@ -527,8 +527,8 @@ the reverse 'user' belongsTo association is being setup for you on the project
 ```javascript
   var users = store.makeList('user', 2) 
   users.get('length') // => 2 
-  users[0].toJSON() // => {id: 3, name: 'User3', style: 'normal'}
-  users[1].toJSON() // => {id: 4, name: 'User4', style: 'normal'}
+  users[0].toJSON({includeId: true}) // => {id: 3, name: 'User3', style: 'normal'}
+  users[1].toJSON({includeId: true}) // => {id: 4, name: 'User4', style: 'normal'}
 
 ```
 
@@ -819,7 +819,7 @@ store.makeFixture('admin', {name: 'Fred'}); //  user.FIXTURES = [{id: 4, name: '
 // have to then go and find it )
 var userJson = store.makeFixture('user');
 store.find('user', userJson.id).then(function(user) {
-   user.toJSON() ( pretty much equals ) userJson;
+   user.toJSON({includeId: true}) ( pretty much equals ) userJson;
 });
 
 // and to setup associations ...
@@ -835,7 +835,7 @@ var projectJson = store.makeFixture('project', {user: userJson.id});
 // in view specs though, this clunk is dealt with for you. But remember,
 // you DON'T have to use the Fixture adapter.
 store.find('user', 1).then(function(user) {
-  user.toJSON() (pretty much equals) userJson;
+  user.toJSON({includeId: true}) (pretty much equals) userJson;
   user.get('projects').then(function(projects) {
     projects.length == 1;
   });
