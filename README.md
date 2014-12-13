@@ -751,12 +751,12 @@ ViewTestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin,{
   }
 }
 
-var viewHelper;
+var viewHelper, user;
 
 module('User View', {
   setup: function() {
     viewHelper = ViewTestHelper.setup(App); // set up helper
-    var user = viewHelper.make('user'); // create a user in the store
+    user = viewHelper.make('user'); // create a user in the store
     visit('/users/'+user.id); // visit the users route
   },
   teardown: function() {
@@ -771,10 +771,9 @@ test("Creates new project", function() {
     click('.add-div div:contains(New Project)')
     fillIn('.add-project input', newProjectName)
 
-    // Remember, you only need to pass in attributes of the model you expect
-    // to create in your application. You do not need to include belongsTo records,
-    // as in this case the 'user' belongsTo association
-    viewHelper.handleCreate('project', {name: newProjectName})
+    // Remember, this is for handling an exact match, if you did not care about
+    // matching attributes, you could just do: viewHelper.handleCreate('project')
+    viewHelper.handleCreate('project', {match:{name: newProjectName, user:user}})
 
     /**
      Let's say that clicking this '.add-project .link', triggers action in the view to
