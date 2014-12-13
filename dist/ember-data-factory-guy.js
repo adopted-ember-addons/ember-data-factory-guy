@@ -764,7 +764,6 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   },
   /**
    Proxy to store's makeFixture method
-
    */
   make: function () {
     var store = this.getStore();

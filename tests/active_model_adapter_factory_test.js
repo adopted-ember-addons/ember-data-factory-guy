@@ -1,5 +1,6 @@
 var testHelper, store, make;
 
+
 module('FactoryGuy with ActiveModelAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.ActiveModelAdapter);
@@ -37,7 +38,7 @@ module('DS.Store#makeFixture with ActiveModelAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.ActiveModelAdapter);
     store = testHelper.getStore();
-    make = testHelper.make.bind(testHelper)
+    make = function() {return testHelper.make.apply(testHelper,arguments)}
   },
   teardown: function() {
     Em.run(function() { testHelper.teardown(); });

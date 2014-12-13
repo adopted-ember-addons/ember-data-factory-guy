@@ -505,6 +505,7 @@ var FactoryGuy = {
      @returns {Object|DS.Model} json or record depending on the adapter type
      */
     makeFixture: function () {
+      console.log(arguments)
       var store = this;
       var fixture = FactoryGuy.build.apply(FactoryGuy, arguments);
       var name = arguments[0];
@@ -764,7 +765,6 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   },
   /**
    Proxy to store's makeFixture method
-
    */
   make: function () {
     var store = this.getStore();

@@ -4,7 +4,7 @@ module('FactoryGuy with DS.RESTAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.RESTAdapter);
     store = testHelper.getStore();
-    make = testHelper.make.bind(testHelper)
+    make = function() {return testHelper.make.apply(testHelper,arguments)}
   },
   teardown: function() {
     Em.run(function() { testHelper.teardown(); });
@@ -38,7 +38,7 @@ module('DS.Store#makeFixture with RestAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.RESTAdapter);
     store = testHelper.getStore();
-    make = testHelper.make.bind(testHelper)
+    make = function() {return testHelper.make.apply(testHelper,arguments)}
   },
   teardown: function() {
     Em.run(function() { testHelper.teardown(); });

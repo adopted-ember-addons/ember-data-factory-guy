@@ -45,8 +45,8 @@ module.exports = function(grunt) {
       },
       test: {
         src: [
-          'tests/support/factories/*.js',
           'tests/support/models/*.js',
+          'tests/support/factories/*.js',
           'tests/support/libs/*.js'],
         dest: "tests/test_setup.js"
       }

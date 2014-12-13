@@ -562,6 +562,8 @@ module('User Model', {
     // or store.makeFixture but to be even more concise in tests
     // you could add this shortcut method to your tests
     make = testHelper.make.bind(testHelper)
+    // or if your running in phantomjs and it does not support bind method try this:
+    // make = function() {return testHelper.make.apply(testHelper,arguments)}
   },
   teardown: function() {
     Em.run(function() { testHelper.teardown(); });
