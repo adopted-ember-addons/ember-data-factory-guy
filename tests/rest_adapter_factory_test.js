@@ -56,6 +56,12 @@ asyncTest("creates records in the store", function() {
   });
 });
 
+test("handles custom attribute type attributes", function() {
+  var info = {first:1}
+  var user = make('user', {info: info});
+  ok(user.get('info') == info)
+});
+
 test("makeFixture with fixture options", function() {
   var profile = make('profile',  {description: 'dude'});
   ok(profile.get('description') == 'dude');

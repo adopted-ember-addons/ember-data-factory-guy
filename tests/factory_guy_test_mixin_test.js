@@ -1,4 +1,4 @@
-var testHelper, store;
+var testHelper, store, make;
 
 module('FactoryGuyTestMixin with DS.RESTAdapter', {});
 
@@ -28,6 +28,7 @@ module('FactoryGuyTestMixin (using mockjax) with DS.RESTAdapter', {
   setup: function () {
     testHelper = TestHelper.setup(DS.RESTAdapter);
     store = testHelper.getStore();
+    make = function() {return testHelper.make.apply(testHelper,arguments)}
   },
   teardown: function () {
     testHelper.teardown();
@@ -102,6 +103,7 @@ module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
   setup: function () {
     testHelper = TestHelper.setup(DS.ActiveModelAdapter);
     store = testHelper.getStore();
+    make = function() {return testHelper.make.apply(testHelper,arguments)}
   },
   teardown: function () {
     testHelper.teardown();
@@ -168,7 +170,7 @@ asyncTest("#handleCreate returns camelCase attributes", function() {
 });
 
 asyncTest("#handleCreate match belongsTo association", function() {
-  var company = store.makeFixture('company')
+  var company = make('company')
   testHelper.handleCreate('profile', {match:{ company: company}})
 
   store.createRecord('profile', {company: company}).save().then(function(profile) {
@@ -178,7 +180,7 @@ asyncTest("#handleCreate match belongsTo association", function() {
 });
 
 asyncTest("#handleCreate match belongsTo polymorphic association", function() {
-  var group = store.makeFixture('group')
+  var group = make('group')
   testHelper.handleCreate('profile', {match:{ group: group}})
 
   store.createRecord('profile', {group: group}).save().then(function(profile) {
@@ -191,8 +193,8 @@ asyncTest("#handleCreate match belongsTo polymorphic association", function() {
 asyncTest("#handleCreate match attributes and return attributes", function() {
   var date = new Date()
   var customDescription = "special description"
-  var company = store.makeFixture('company')
-  var group = store.makeFixture('big_group')
+  var company = make('company')
+  var group = make('big_group')
 
   testHelper.handleCreate('profile', {
     match: {description: customDescription, company: company, group: group},
@@ -291,8 +293,15 @@ asyncTest("#handleFindMany with traits and fixture options", function () {
 
 /////// handleUpdate //////////
 
-asyncTest("#handleUpdate the basic", function() {
-  var profile = store.makeFixture('profile');
+test("#handleUpdate with incorrect parameters", function(assert) {
+//  assert.throws(function(){testHelper.handleUpdate()},"missing everything");
+//  assert.throws(function(){testHelper.handleUpdate('profile')},"missing id");
+//  assert.throws(function(){testHelper.handleUpdate('profile', false)},"missing id");
+  assert.throws(function(){testHelper.handleUpdate('profile', true)},"missing id");
+});
+
+asyncTest("#handleUpdate the with modelType and id", function() {
+  var profile = make('profile');
   testHelper.handleUpdate('profile', profile.id);
 
   profile.set('description','new desc');
@@ -302,9 +311,35 @@ asyncTest("#handleUpdate the basic", function() {
   });
 });
 
-asyncTest("#handleUpdate failure", function() {
-  var profile = store.makeFixture('profile');
+
+asyncTest("#handleUpdate the with model", function() {
+  var profile = make('profile');
+  testHelper.handleUpdate(profile, true, {e:1});
+
+  profile.set('description','new desc');
+  profile.save().then(function(profile) {
+    ok(profile.get('description') == 'new desc');
+    start();
+  });
+});
+
+asyncTest("#handleUpdate the with modelType and id that fails", function() {
+  var profile = make('profile');
   testHelper.handleUpdate('profile', profile.id, false);
+
+  profile.set('description','new desc');
+  profile.save().then(
+    function() {},
+    function() {
+      ok(true)
+      start();
+    }
+  )
+});
+
+asyncTest("#handleUpdate with model that fails", function() {
+  var profile = make('profile');
+  testHelper.handleUpdate(profile, false);
 
   profile.set('description','new desc');
   profile.save().then(
@@ -320,7 +355,7 @@ asyncTest("#handleUpdate failure", function() {
 /////// handleDelete //////////
 
 asyncTest("#handleDelete the basic", function() {
-  var profile = store.makeFixture('profile');
+  var profile = make('profile');
   testHelper.handleDelete('profile', profile.id);
 
   profile.destroyRecord().then(function() {
@@ -330,7 +365,7 @@ asyncTest("#handleDelete the basic", function() {
 });
 
 asyncTest("#handleDelete failure case", function() {
-  var profile = store.makeFixture('profile');
+  var profile = make('profile');
   testHelper.handleDelete('profile', profile.id, false);
 
   profile.destroyRecord().then(

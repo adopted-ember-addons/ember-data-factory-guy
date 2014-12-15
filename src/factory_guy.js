@@ -46,6 +46,43 @@ var FactoryGuy = {
     }
   },
   /**
+   Setting the store so FactoryGuy can do some model introspection.
+   */
+   setStore: function(store) {
+    Ember.assert("FactoryGuy#setStore needs a valid store instance.You passed in ["+store+"]",store instanceof DS.Store)
+    this.store = store;
+  },
+  getStore: function() {
+    return this.store;
+  },
+  /**
+   Checks a model's attribute to determine if it's a relationship.
+
+   @param {String} typeName  model type name like 'user' for User model class
+   @param {String} attribute  attribute you want to check
+   @returns {Boolean} true if the attribute is a relationship, false if not
+   */
+  isAttributeRelationship: function(typeName, attribute) {
+    if (!this.store) {
+      console.log("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures")
+      // The legacy value was true.
+      return true;
+    }
+    var model = this.store.modelFor(typeName);
+    return !!model.typeForRelationship(attribute);
+  },
+  /**
+   Make new fixture and save to store. Proxy to store#makeFixture method
+
+   @param {String} name  fixture name
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} opts  optional fixture options that will override default fixture values
+   @returns {Object|DS.Model} json or record depending on the adapter type
+   */
+  make: function() {
+    return this.store.makeFixture.apply(this.store,arguments);
+  },
+  /**
    Used in model definitions to declare use of a sequence. For example:
 
    ```

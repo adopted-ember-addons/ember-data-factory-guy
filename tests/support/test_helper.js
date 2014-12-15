@@ -1,3 +1,13 @@
+ObjectTransform = DS.Transform.extend({
+  serialize: function(obj) {
+    return JSON.parse(obj);
+  },
+  deserialize: function(obj) {
+    return JSON.stringify(obj);
+  }
+});
+
+
 TestHelper = Ember.Object.createWithMixins(FactoryGuy.testMixin,{
 
   /**
@@ -34,7 +44,10 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuy.testMixin,{
     if (adapter instanceof DS.FixtureAdapter) {
       adapter.simulateRemoteResponse = false;
     }
+    // bypassing the parent TestHelper setup because there is no application
+    // here in testing, just a container
     this.set('container', env.container);
+    FactoryGuy.setStore(this.getStore());
     return this;
   }
 });
@@ -69,6 +82,7 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuy.testMixin,{
     container.register('serializer:-default', serializer);
     container.register('transform:string', DS.StringTransform);
     container.register('transform:date', DS.DateTransform);
+    container.register('transform:object', ObjectTransform);
     container.injection('serializer', 'store', 'store:main');
 
     env.store = container.lookup('store:main');

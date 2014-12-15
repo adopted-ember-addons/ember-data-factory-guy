@@ -69,9 +69,19 @@ var ModelDefinition = function (model, config) {
         // function might be a sequence of a named association
         fixture[attribute] = fixture[attribute].call(this, fixture);
       } else if (Ember.typeOf(fixture[attribute]) == 'object') {
-        // if it's an object it's for a model association, so build the json
+        // If it's an object and it's a model association attribute, build the json
         // for the association and replace the attribute with that json
-        fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute]);
+        if (FactoryGuy.getStore()) {
+          if (FactoryGuy.isAttributeRelationship(this.model, attribute)) {
+            fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute]);
+          }
+        } else {
+          // For legacy reasons, if the store is not set in FactoryGuy, keep
+          // this code the way it is ( though it will cause failures when the object is actually
+          // a custom attribute and not a relationship ), while users start setting the store
+          // in FactoryGuy, or using testHelper.make instead of store.makeFixture
+          fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute]);
+        }
       }
     }
     // set the id, unless it was already set in opts

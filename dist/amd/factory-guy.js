@@ -95,9 +95,19 @@ var ModelDefinition = function (model, config) {
         // function might be a sequence of a named association
         fixture[attribute] = fixture[attribute].call(this, fixture);
       } else if (Ember.typeOf(fixture[attribute]) == 'object') {
-        // if it's an object it's for a model association, so build the json
+        // If it's an object and it's a model association attribute, build the json
         // for the association and replace the attribute with that json
-        fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute]);
+        if (FactoryGuy.getStore()) {
+          if (FactoryGuy.isAttributeRelationship(this.model, attribute)) {
+            fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute]);
+          }
+        } else {
+          // For legacy reasons, if the store is not set in FactoryGuy, keep
+          // this code the way it is ( though it will cause failures when the object is actually
+          // a custom attribute and not a relationship ), while users start setting the store
+          // in FactoryGuy, or using testHelper.make instead of store.makeFixture
+          fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute]);
+        }
       }
     }
     // set the id, unless it was already set in opts
@@ -217,6 +227,43 @@ var FactoryGuy = {
     } else {
       this.modelDefinitions[model] = new ModelDefinition(model, config);
     }
+  },
+  /**
+   Setting the store so FactoryGuy can do some model introspection.
+   */
+   setStore: function(store) {
+    Ember.assert("FactoryGuy#setStore needs a valid store instance.You passed in ["+store+"]",store instanceof DS.Store)
+    this.store = store;
+  },
+  getStore: function() {
+    return this.store;
+  },
+  /**
+   Checks a model's attribute to determine if it's a relationship.
+
+   @param {String} typeName  model type name like 'user' for User model class
+   @param {String} attribute  attribute you want to check
+   @returns {Boolean} true if the attribute is a relationship, false if not
+   */
+  isAttributeRelationship: function(typeName, attribute) {
+    if (!this.store) {
+      console.log("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures")
+      // The legacy value was true.
+      return true;
+    }
+    var model = this.store.modelFor(typeName);
+    return !!model.typeForRelationship(attribute);
+  },
+  /**
+   Make new fixture and save to store. Proxy to store#makeFixture method
+
+   @param {String} name  fixture name
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} opts  optional fixture options that will override default fixture values
+   @returns {Object|DS.Model} json or record depending on the adapter type
+   */
+  make: function() {
+    return this.store.makeFixture.apply(this.store,arguments);
   },
   /**
    Used in model definitions to declare use of a sequence. For example:
@@ -510,7 +557,6 @@ var FactoryGuy = {
      @returns {Object|DS.Model} json or record depending on the adapter type
      */
     makeFixture: function () {
-      console.log(arguments)
       var store = this;
       var fixture = FactoryGuy.build.apply(FactoryGuy, arguments);
       var name = arguments[0];
@@ -742,6 +788,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   // Pass in the app root, which typically is App.
   setup: function (app) {
     this.set('container', app.__container__);
+    FactoryGuy.setStore(this.getStore());
     return this;
   },
   useFixtureAdapter: function (app) {
@@ -777,12 +824,6 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   },
   getStore: function () {
     return this.get('container').lookup('store:main');
-  },
-  pushPayload: function (type, hash) {
-    return this.getStore().pushPayload(type, hash);
-  },
-  pushRecord: function (type, hash) {
-    return this.getStore().push(type, hash);
   },
   /**
    Using mockjax to stub an http request.
@@ -860,7 +901,10 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     so you don't need to include them in the returns hash as well.
 
      2) If you don't use match options for exact match, there will be no id returned to the model.
-
+        The reason being, that this method purposely returns an empty hash response with a 'don't match'
+        style handleCreate, because if the responseJson returns a non empty data hash ( with even only
+        the id), this essentially empty hash of attributes will override ( and nullify ) all the attributes
+        that set when you created the record.
      3) If you match on a belongsTo association, you don't have to include that in the
     returns hash.
 
@@ -913,8 +957,25 @@ var FactoryGuyTestMixin = Em.Mixin.create({
    @param {Boolean} succeed  optional flag to indicate if the request
       should succeed ( default is true )
    */
-  handleUpdate: function (type, id, succeed) {
-    succeed = succeed === undefined ? true : succeed;
+  handleUpdate: function () {
+    var args = Array.prototype.slice.call(arguments)
+    Ember.assert("To handleUpdate pass in a model instance or a type and an id", args.length>0)
+    var succeed = true;
+    if (typeof args[args.length-1] == 'boolean') {
+      args.pop()
+      succeed = false;
+    }
+    Ember.assert("To handleUpdate pass in a model instance or a type and an id",args.length>0)
+    var type, id;
+    if (args[0] instanceof DS.Model) {
+      var model = args[0];
+      type = model.constructor.typeKey;
+      id = model.id;
+    } else if (typeof args[0] == "string" && typeof parseInt(args[1]) == "number") {
+      type = args[0];
+      id = args[1];
+    }
+    Ember.assert("To handleUpdate pass in a model instance or a type and an id",type && id)
     this.stubEndpointForHttpRequest(this.buildURL(type, id), {}, {
       type: 'PUT',
       status: succeed ? 200 : 500

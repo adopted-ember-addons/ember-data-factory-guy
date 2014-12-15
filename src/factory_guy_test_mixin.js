@@ -2,6 +2,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   // Pass in the app root, which typically is App.
   setup: function (app) {
     this.set('container', app.__container__);
+    FactoryGuy.setStore(this.getStore());
     return this;
   },
   useFixtureAdapter: function (app) {
@@ -37,12 +38,6 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   },
   getStore: function () {
     return this.get('container').lookup('store:main');
-  },
-  pushPayload: function (type, hash) {
-    return this.getStore().pushPayload(type, hash);
-  },
-  pushRecord: function (type, hash) {
-    return this.getStore().push(type, hash);
   },
   /**
    Using mockjax to stub an http request.
@@ -120,7 +115,10 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     so you don't need to include them in the returns hash as well.
 
      2) If you don't use match options for exact match, there will be no id returned to the model.
-
+        The reason being, that this method purposely returns an empty hash response with a 'don't match'
+        style handleCreate, because if the responseJson returns a non empty data hash ( with even only
+        the id), this essentially empty hash of attributes will override ( and nullify ) all the attributes
+        that set when you created the record.
      3) If you match on a belongsTo association, you don't have to include that in the
     returns hash.
 
@@ -173,8 +171,25 @@ var FactoryGuyTestMixin = Em.Mixin.create({
    @param {Boolean} succeed  optional flag to indicate if the request
       should succeed ( default is true )
    */
-  handleUpdate: function (type, id, succeed) {
-    succeed = succeed === undefined ? true : succeed;
+  handleUpdate: function () {
+    var args = Array.prototype.slice.call(arguments)
+    Ember.assert("To handleUpdate pass in a model instance or a type and an id", args.length>0)
+    var succeed = true;
+    if (typeof args[args.length-1] == 'boolean') {
+      args.pop()
+      succeed = false;
+    }
+    Ember.assert("To handleUpdate pass in a model instance or a type and an id",args.length>0)
+    var type, id;
+    if (args[0] instanceof DS.Model) {
+      var model = args[0];
+      type = model.constructor.typeKey;
+      id = model.id;
+    } else if (typeof args[0] == "string" && typeof parseInt(args[1]) == "number") {
+      type = args[0];
+      id = args[1];
+    }
+    Ember.assert("To handleUpdate pass in a model instance or a type and an id",type && id)
     this.stubEndpointForHttpRequest(this.buildURL(type, id), {}, {
       type: 'PUT',
       status: succeed ? 200 : 500

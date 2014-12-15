@@ -12,6 +12,10 @@ module('FactoryGuy', {
   }
 });
 
+test("can set and get store", function() {
+  FactoryGuy.setStore(store);
+  equal(FactoryGuy.getStore(), store)
+});
 
 test("Using sequences in definitions", function() {
   delete FactoryGuy.modelDefinitions['person']
@@ -188,6 +192,15 @@ test("#buildList creates list of fixtures", function() {
 
   var projectList = FactoryGuy.buildList('project', 1, 'big', {title: 'Really Big'});
   deepEqual(projectList[0], {id: 2, title: 'Really Big'}, 'using traits and custom attributes');
+});
+
+
+test("#isAttributeRelationship", function() {
+  FactoryGuy.setStore(store);
+  var typeName = 'user'
+  equal(FactoryGuy.isAttributeRelationship(typeName,'company'),true);
+  equal(FactoryGuy.isAttributeRelationship(typeName,'hats'),true);
+  equal(FactoryGuy.isAttributeRelationship(typeName,'name'),false);
 });
 
 

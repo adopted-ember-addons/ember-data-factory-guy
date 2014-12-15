@@ -5,6 +5,7 @@ module('FactoryGuy with ActiveModelAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.ActiveModelAdapter);
     store = testHelper.getStore();
+    make = function() {return testHelper.make.apply(testHelper,arguments)}
   },
   teardown: function() {
     testHelper.teardown();
@@ -13,8 +14,8 @@ module('FactoryGuy with ActiveModelAdapter', {
 
 
 test("#resetModels clears the store of models, and resets the model definition", function() {
-  var project = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [project]});
+  var project = make('project');
+  var user = make('user', {projects: [project]});
 
   for (model in FactoryGuy.modelDefinitions) {
     var definition = FactoryGuy.modelDefinitions[model];
@@ -56,6 +57,12 @@ asyncTest("creates records in the store", function() {
   });
 });
 
+
+test("handles custom attribute type attributes", function() {
+  var info = {first:1}
+  var user = make('user', {info: info});
+  ok(user.get('info') == info)
+});
 
 test("handles camelCase attributes", function() {
   var profile = make('profile', {camelCaseDescription: 'description'});

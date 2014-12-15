@@ -2,26 +2,17 @@
 
 *NOTE*
   
-ember-data is changing the way they are doing relationships in 1.0.0-beta.10 and above 
-so, if you are using ember-data-1.0.0-beta.8 and earlier, then be sure to use version 0.6.4 
-of ember-data-factory-guy.  
+ember-data is changing the way they are doing relationships in 1.0.0-beta.10 and above
+so, if you are using ember-data-1.0.0-beta.8 and earlier, then be sure to use version 0.6.4
+of ember-data-factory-guy.
 
 - Versions:
   - 0.6.4   -> ember-data-1.0.0-beta.8 and under
   - 0.7.1.1 -> ember-data-1.0.0-beta.10
-  - 0.8.6   -> ember-data-1.0.0-beta.11
-  - 0.8.7   -> ember-data-1.0.0-beta.12
+  - 0.8.8   -> ember-data-1.0.0-beta.11 / 12
 
-**For versions ( 0.7.1 -> 0.8.5 ), support for the fixture adapter is currently broken.**
+**Support for fixture adapter is currently kinda broken.**
 
-**For versions ( 0.8.6 -> 0.8.7 ), support for the fixture adapter is only kinda broken.**
-
-*Versions 0.8.5 and up have many bug fixes and improvements that the earlier versions don't have,
- so hopefully you can switch to newer version of ember-data and therefore the best
- ember-data-factory-guy version, but if not, send me bug report and I will try and go back
- and fix the older version you are using.*
-
-**Version 0.8.0 introduces amd and commonjs support**
 
 ## Using with Ember Cli
   - https://github.com/igorrKurr/ember-cli-factory-guy-example
@@ -559,8 +550,7 @@ module('User Model', {
     testHelper = TestHelper.setup(App);
     store = testHelper.getStore();
     // You could at this point, make fixtures with testHelper.make,
-    // or store.makeFixture but to be even more concise in tests
-    // you could add this shortcut method to your tests
+    // but to be even more concise try this shortcut method to your tests
     make = testHelper.make.bind(testHelper)
     // or if your running in phantomjs and it does not support bind method try this:
     // make = function() {return testHelper.make.apply(testHelper,arguments)}
@@ -690,11 +680,16 @@ match and or returns options.
 
 
 ##### handleUpdate
+  - handleUpdate(model)
+  - handleUpdate(modelType, id)
 
 *success case is the default*
 
 ```javascript
   var profile = store.makeFixture('profile');
+  // Simplest way is to pass in the model that will be updated ( if you have it available )
+  testHelper.handleUpdate(profile);
+  // If the model is not available, pass in the modelType and the id
   testHelper.handleUpdate('profile', profile.id);
 
   profile.set('description', 'good value');
