@@ -80,6 +80,7 @@ var FactoryGuy = {
    @returns {Object|DS.Model} json or record depending on the adapter type
    */
   make: function() {
+    Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures", this.store);
     return this.store.makeFixture.apply(this.store,arguments);
   },
   /**

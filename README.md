@@ -9,9 +9,14 @@ of ember-data-factory-guy.
 - Versions:
   - 0.6.4   -> ember-data-1.0.0-beta.8 and under
   - 0.7.1.1 -> ember-data-1.0.0-beta.10
-  - 0.8.8   -> ember-data-1.0.0-beta.11 / 12
+  - 0.8.6   -> ember-data-1.0.0-beta.11
+  - 0.9.0   -> ember-data-1.0.0-beta.12
 
 **Support for fixture adapter is currently kinda broken.**
+
+**Version 0.9.0 expects you to no longer use store.makeFixture explicitly in your tests
+but rather use the testHelper.make from FactoryGuyTestHelperMixin instead. If this is not the case,
+just add a FactoryGuy.setStore(store) somewhere in your code before you start making fixtures.**
 
 
 ## Using with Ember Cli
@@ -34,7 +39,7 @@ gem 'ember-data-factory-guy', group: test
 or for particular version:
 
 ```ruby
-gem 'ember-data-factory-guy', '0.8.6', group: test
+gem 'ember-data-factory-guy', '0.9.0', group: test
 ```
 
 then:
@@ -69,7 +74,7 @@ or for particular version:
   "dependencies": {
     "foo-dependency": "latest",
     "other-foo-dependency": "latest",
-    "ember-data-factory-guy": "0.8.6"
+    "ember-data-factory-guy": "0.9.0"
   }
 ```
 
@@ -211,27 +216,33 @@ the store is looking up the correct model type name
 
 
 ### Using Factories
+ - FactorGuy.setStore
+   - pass in the store instance to FactoryGuy before making fixtures.
  - FactoryGuy.build
    - Builds json  
- - store.makeFixture
+ - FactoryGuy.make
    - Loads model instance into the store  
  - Can override default attributes by passing in a hash
  - Can add attributes with traits ( see traits section )  
  
 ```javascript
-  
+  // First set the store on FactoryGuy. You don't have to do this step manually if you use
+  // FactoryGuyTestHelperMixin since this is done for you in the setup method.
+  var store = this.get('container').lookup('store:main');
+  FactoryGuy.setStore(store);
+
   // returns json   
   var json = FactoryGuy.build('user'); 
   json // => {id: 1, name: 'Dude', style: 'normal'}
 
   // returns a User instance that is loaded into your application's store   
-  var user = store.makeFixture('user');
+  var user = FactoryGuy.make('user');
   user.toJSON({includeId: true}) // => {id: 2, name: 'Dude', style: 'normal'}
 
   var json = FactoryGuy.build('admin'); 
   json // => {id: 3, name: 'Admin', style: 'super'}
 
-  var user = store.makeFixture('admin');
+  var user = FactoryGuy.make('admin');
   user.toJSON({includeId: true}) // => {id: 4, name: 'Admin', style: 'super'}
   
 ```
@@ -274,7 +285,7 @@ You can override the default attributes by passing in a hash
   var json = FactoryGuy.build('user'); 
   json.name // => 'User1'
 
-  var user = store.makeFixture('user');
+  var user = FactoryGuy.make('user');
   user.get('name') // => 'User2'
 
 ```
@@ -292,7 +303,7 @@ You can override the default attributes by passing in a hash
   var json = FactoryGuy.build('special_project'); 
   json.title // => 'Project #1'
 
-  var project = store.makeFixture('special_project');
+  var project = FactoryGuy.make('special_project');
   project.get('title') // => 'Project #2'
 
 ```
@@ -317,7 +328,7 @@ You can override the default attributes by passing in a hash
   json.name // => 'User1'
   json.style // => 'funny User1'
   
-  var user = store.makeFixture('funny_user');
+  var user = FactoryGuy.make('funny_user');
   user.get('name') // => 'User2'
   user.get('style') // => 'funny User2'
 
@@ -346,7 +357,7 @@ You can override the default attributes by passing in a hash
   json.name // => 'Big Guy'
   json.style // => 'Friendly'
 
-  var user = store.makeFixture('user', 'big', 'friendly');
+  var user = FactoryGuy.make('user', 'big', 'friendly');
   user.get('name') // => 'Big Guy'
   user.get('style') // => 'Friendly'
 
@@ -357,7 +368,7 @@ attributes will override any trait attributes or default attributes
     
 ```javascript
 
-  var user = store.makeFixture('user', 'big', 'friendly', {name: 'Dave'});
+  var user = FactoryGuy.make('user', 'big', 'friendly', {name: 'Dave'});
   user.get('name') // => 'Dave'
   user.get('style') // => 'Friendly'
 
@@ -400,7 +411,7 @@ attributes will override any trait attributes or default attributes
   var json = FactoryGuy.build('project_with_bob');
   json.user // => {id:1, name: 'Bob', style: 'normal'}
 
-  var project = store.makeFixture('project_with_admin');
+  var project = FactoryGuy.make('project_with_admin');
   project.get('user.name') // => 'Admin'
   project.get('user.style') // => 'super'
 
@@ -417,7 +428,7 @@ attributes will override any trait attributes or default attributes
     }
   });
   
-  var user = store.makeFixture('project', 'with_user');
+  var user = FactoryGuy.make('project', 'with_user');
   project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
   
 ```
@@ -426,8 +437,8 @@ attributes will override any trait attributes or default attributes
 ##### Setup belongsTo associations manually
 
 ```javascript
-  var user = store.makeFixture('user');
-  var project = store.makeFixture('project', {user: user});
+  var user = FactoryGuy.make('user');
+  var project = FactoryGuy.make('project', {user: user});
     
   project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
 ```
@@ -449,7 +460,7 @@ the reverse user hasMany 'projects' association is being setup for you on the us
     user_with_projects: { FactoryGuy.hasMany('project', 2) }
   });
   
-  var user = store.makeFixture('user_with_projects');
+  var user = FactoryGuy.make('user_with_projects');
   user.get('projects.length') // => 2
   
 ```
@@ -466,7 +477,7 @@ the reverse user hasMany 'projects' association is being setup for you on the us
     }
   });
   
-  var user = store.makeFixture('user', 'with_projects');
+  var user = FactoryGuy.make('user', 'with_projects');
   user.get('projects.length') // => 2
   
 ```
@@ -474,14 +485,14 @@ the reverse user hasMany 'projects' association is being setup for you on the us
 ##### Setup hasMany associations manually
 
 ```javascript
-  var project1 = store.makeFixture('project');
-  var project2 = store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [project1,project2]});
+  var project1 = FactoryGuy.make('project');
+  var project2 = FactoryGuy.make('project');
+  var user = FactoryGuy.make('user', {projects: [project1,project2]});
   user.get('projects.length') // => 2
   
   // or  
   var projects = store.makeList('project', 2);
-  var user = store.makeFixture('user', {projects: projects});
+  var user = FactoryGuy.make('user', {projects: projects});
   user.get('projects.length') // => 2
   
 ```
@@ -686,11 +697,13 @@ match and or returns options.
 *success case is the default*
 
 ```javascript
-  var profile = store.makeFixture('profile');
+  var profile = FactoryGuy.make('profile');
+
   // Simplest way is to pass in the model that will be updated ( if you have it available )
   testHelper.handleUpdate(profile);
-  // If the model is not available, pass in the modelType and the id
-  testHelper.handleUpdate('profile', profile.id);
+
+  // If the model is not available, pass in the modelType and the id ( if you know it )
+  testHelper.handleUpdate('profile', 1);
 
   profile.set('description', 'good value');
   profile.save() //=> will succeed
@@ -699,9 +712,12 @@ match and or returns options.
 *mocking a failed update*
 
 ```javascript
-  var profile = store.makeFixture('profile');
+  var profile = FactoryGuy.make('profile');
+
   // set the succeed flag to 'false'
   testHelper.handleUpdate('profile', profile.id, false);
+  // or
+  testHelper.handleUpdate(profile, false);
 
   profile.set('description', 'bad value');
   profile.save() //=> will fail
@@ -714,7 +730,7 @@ match and or returns options.
 *success case is the default*
 
 ```javascript
-  var profile = store.makeFixture('profile');
+  var profile = FactoryGuy.make('profile');
   testHelper.handleDelete('profile', profile.id);
 
   profile.destroyRecord() // => will succeed
@@ -723,7 +739,7 @@ match and or returns options.
 *mocking a failed delete*
 
 ```javascript
-  var profile = store.makeFixture('profile');
+  var profile = FactoryGuy.make('profile');
   // set the succeed flag to 'false'
   testHelper.handleDelete('profile', profile.id, false);
 
@@ -795,9 +811,9 @@ test("Creates new project", function() {
 ### Using DS.Fixture adapter
 
 - Not recommended
-- store.makeFixture ... creates model in the store and returns json
+- FactoryGuy.make ... creates model in the store and returns json
 
-Technically when you call store.makeFixture with a store using the DS.FixtureAdapter,
+Technically when you call FactoryGuy.make with a store using the DS.FixtureAdapter,
 the fixture is actually added to the models FIXTURE array. It just seems to be added
 to the store because when you call store.find to get that record, the adapter looks
 in that FIXTURE array to find it and then puts it in the store.
@@ -805,26 +821,26 @@ in that FIXTURE array to find it and then puts it in the store.
 ```javascript
 
 
-store.makeFixture('user'); // user.FIXTURES = [{id: 1, name: 'User1', style: 'normal'}]
-store.makeFixture('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', style: 'normal'}]
-store.makeFixture('admin'); //  user.FIXTURES = [{id: 3, name: 'Admin', style: 'super'}]
-store.makeFixture('admin', {name: 'Fred'}); //  user.FIXTURES = [{id: 4, name: 'Fred', style: 'super'}]
+FactoryGuy.make('user'); // user.FIXTURES = [{id: 1, name: 'User1', style: 'normal'}]
+FactoryGuy.make('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', style: 'normal'}]
+FactoryGuy.make('admin'); //  user.FIXTURES = [{id: 3, name: 'Admin', style: 'super'}]
+FactoryGuy.make('admin', {name: 'Fred'}); //  user.FIXTURES = [{id: 4, name: 'Fred', style: 'super'}]
 
 
 // Use store.find to get the model instance ( Remember this is the Fixture adapter, if
 // you use the ActiveModelAdapter or RESTAdapter the record is returned so you don't
 // have to then go and find it )
-var userJson = store.makeFixture('user');
+var userJson = FactoryGuy.make('user');
 store.find('user', userJson.id).then(function(user) {
    user.toJSON({includeId: true}) ( pretty much equals ) userJson;
 });
 
 // and to setup associations ...
-var projectJson = store.makeFixture('project');
-var userJson = store.makeFixture('user', {projects: [projectJson.id]});
+var projectJson = FactoryGuy.make('project');
+var userJson = FactoryGuy.make('user', {projects: [projectJson.id]});
 // OR
-var userJson = store.makeFixture('user');
-var projectJson = store.makeFixture('project', {user: userJson.id});
+var userJson = FactoryGuy.make('user');
+var projectJson = FactoryGuy.make('project', {user: userJson.id});
 
 // will give you the same result, but with fixture adapter all associations
 // are treated as async ( by factory_guy_has_many.js fix ), so it's

@@ -30,7 +30,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     return this.getStore().find(type, id);
   },
   /**
-   Proxy to store's makeFixture method
+   Make new fixture and save to store. Proxy to store#makeFixture method
    */
   make: function () {
     var store = this.getStore();

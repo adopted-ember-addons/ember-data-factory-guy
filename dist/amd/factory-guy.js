@@ -263,6 +263,7 @@ var FactoryGuy = {
    @returns {Object|DS.Model} json or record depending on the adapter type
    */
   make: function() {
+    Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures", this.store);
     return this.store.makeFixture.apply(this.store,arguments);
   },
   /**
@@ -816,7 +817,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     return this.getStore().find(type, id);
   },
   /**
-   Proxy to store's makeFixture method
+   Make new fixture and save to store. Proxy to store#makeFixture method
    */
   make: function () {
     var store = this.getStore();

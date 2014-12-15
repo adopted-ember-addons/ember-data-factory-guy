@@ -1,8 +1,8 @@
 var testHelper, store;
 
-module('FactoryGuy', {
+module('FactoryGuy with DS.RESTAdapter', {
   setup: function() {
-    testHelper = TestHelper.setup(DS.FixtureAdapter);
+    testHelper = TestHelper.setup(DS.RESTAdapter);
     store = testHelper.getStore();
   },
   teardown: function() {
@@ -216,9 +216,45 @@ test("#lookupModelForFixtureName", function() {
   equal(FactoryGuy.lookupModelForFixtureName('fake'), undefined, "return nothing if can't find definition");
 });
 
+
+test("#make returns a model instance", function() {
+  FactoryGuy.setStore(store);
+  var user = FactoryGuy.make('user');
+  ok(user instanceof User)
+});
+
+test("#make requires that the store is set on FactoryGuy", function(assert) {
+  assert.throws(FactoryGuy.make('user'))
+});
+
+
+module('FactoryGuy with DS.FixtureAdapter', {
+  setup: function() {
+    testHelper = TestHelper.setup(DS.FixtureAdapter);
+    store = testHelper.getStore();
+  },
+  teardown: function() {
+    Em.run(function() {
+      testHelper.teardown();
+    });
+  }
+});
+
+
+asyncTest("#make loads the fixture in the store and returns an object", function() {
+  FactoryGuy.setStore(store);
+  var user = FactoryGuy.make('user');
+  ok(user instanceof Object )
+  store.find('user', user.id).then(function(u){
+    ok(u instanceof User)
+    start()
+  })
+});
+
+
 asyncTest("#pushFixture", function() {
   var User = store.modelFor('user'),
-      user = store.makeFixture('user'),
+      user = FactoryGuy.make('user'),
       duplicateUser = FactoryGuy.build('user', { id: user.id, name: 'monkey' }),
       differentUser = FactoryGuy.build('user'),
       usersById = {};
