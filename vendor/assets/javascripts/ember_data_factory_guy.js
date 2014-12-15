@@ -462,7 +462,9 @@ var FactoryGuy = {
 
     if (store.usingFixtureAdapter()) {
       store.setAssociationsForFixtureAdapter(modelType, modelName, fixture);
-      return this.pushFixture(modelType, fixture);
+      fixture = FactoryGuy.pushFixture(modelType, fixture);
+      store.loadModelForFixtureAdapter(modelType, fixture);
+      return fixture;
     } else {
       return store.makeModel(modelType, fixture);
     }
@@ -643,9 +645,11 @@ var FactoryGuy = {
     setAssociationsForFixtureAdapter: function (modelType, modelName, fixture) {
       var self = this;
       var adapter = this.adapterFor('application');
+
       Ember.get(modelType, 'relationshipsByName').forEach(function (relationship, name) {
+        var hasManyRelation, belongsToRecord;
         if (relationship.kind == 'hasMany') {
-          var hasManyRelation = fixture[relationship.key];
+          hasManyRelation = fixture[relationship.key];
           if (hasManyRelation) {
             $.each(fixture[relationship.key], function (index, object) {
               // used to require that the relationship was set by id,
@@ -653,17 +657,19 @@ var FactoryGuy = {
               // normalize that back to the id
               var id = object;
               if (Ember.typeOf(object) == 'object') {
+                FactoryGuy.pushFixture(relationship.type, object);
                 id = object.id;
                 hasManyRelation[index] = id;
               }
               var hasManyfixtures = adapter.fixturesForType(relationship.type);
-              var fixture = adapter.findFixtureById(hasManyfixtures, id);
-              fixture[modelName] = fixture.id;
+              var hasManyFixture = adapter.findFixtureById(hasManyfixtures, id);
+              hasManyFixture[modelName] = fixture.id;
+              self.loadModelForFixtureAdapter(relationship.type, hasManyFixture);
             });
           }
         }
         if (relationship.kind == 'belongsTo') {
-          var belongsToRecord = fixture[relationship.key];
+          belongsToRecord = fixture[relationship.key];
           if (belongsToRecord) {
             if (typeof belongsToRecord == 'object') {
               FactoryGuy.pushFixture(relationship.type, belongsToRecord);
@@ -676,10 +682,29 @@ var FactoryGuy = {
               belongsTofixture[hasManyName] = [];
             }
             belongsTofixture[hasManyName].push(fixture.id);
+            self.loadModelForFixtureAdapter(relationship.type, belongsTofixture);
           }
         }
       });
     },
+
+    loadModelForFixtureAdapter: function(modelType, fixture) {
+      var storeModel = this.getById(modelType, fixture.id),
+          that = this;
+      if (!Ember.isPresent(storeModel) || storeModel.get('isEmpty')) {
+        Ember.run(function () {
+          var dup = Ember.copy(fixture, true);
+          that.push(modelType, fixture);
+          //replace relationships back to ids instead of built ember objects
+          Ember.get(modelType, 'relationshipsByName').forEach(function (relationship, name) {
+            if(fixture[relationship.key]) {
+              fixture[relationship.key] = dup[relationship.key];
+            }
+          });
+        });
+      }
+    },
+
     /**
      Before pushing the fixture to the store, do some preprocessing. Descend into the tree
      of object data, and convert child objects to record instances recursively.
@@ -1105,7 +1130,7 @@ if (FactoryGuy !== undefined) {
  *
  * Copyright (c) 2014 appendTo, Jordan Kasper
  * NOTE: This repository was taken over by Jordan Kasper (@jakerella) October, 2014
- * 
+ *
  * Dual licensed under the MIT or GPL licenses.
  * http://opensource.org/licenses/MIT OR http://www.gnu.org/licenses/gpl-2.0.html
  */

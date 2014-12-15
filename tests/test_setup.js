@@ -123,6 +123,7 @@ FactoryGuy.define("small_company", {
     projects: FactoryGuy.hasMany('project', 2)
   }
 })
+
 FactoryGuy.define("group", {
   sequences: {
     name: function(num) {return 'Group' + num}
@@ -245,8 +246,14 @@ FactoryGuy.define("project", {
 FactoryGuy.define('property', {
   default: {
     name: 'Silly property'
+  },
+  traits: {
+    with_owners_with_projects: {
+      owners: FactoryGuy.hasMany('user', 2, 'with_projects')
+    }
   }
 })
+
 FactoryGuy.define('user', {
   sequences: {
     name: function(num) {return 'User' + num}
