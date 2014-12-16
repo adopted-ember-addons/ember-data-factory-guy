@@ -294,9 +294,9 @@ asyncTest("#handleFindMany with traits and fixture options", function () {
 /////// handleUpdate //////////
 
 test("#handleUpdate with incorrect parameters", function(assert) {
-//  assert.throws(function(){testHelper.handleUpdate()},"missing everything");
-//  assert.throws(function(){testHelper.handleUpdate('profile')},"missing id");
-//  assert.throws(function(){testHelper.handleUpdate('profile', false)},"missing id");
+  assert.throws(function(){testHelper.handleUpdate()},"missing everything");
+  assert.throws(function(){testHelper.handleUpdate('profile')},"missing id");
+  assert.throws(function(){testHelper.handleUpdate('profile', false)},"missing id");
   assert.throws(function(){testHelper.handleUpdate('profile', true)},"missing id");
 });
 
