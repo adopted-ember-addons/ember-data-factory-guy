@@ -702,7 +702,7 @@ match and or returns options.
 *success case is the default*
 
 ```javascript
-  var profile = FactoryGuy.make('profile');
+  var profile = testHelper.make('profile');
 
   // Simplest way is to pass in the model that will be updated ( if you have it available )
   testHelper.handleUpdate(profile);
@@ -717,7 +717,7 @@ match and or returns options.
 *mocking a failed update*
 
 ```javascript
-  var profile = FactoryGuy.make('profile');
+  var profile = testHelper.make('profile');
 
   // set the succeed flag to 'false'
   testHelper.handleUpdate('profile', profile.id, false);
@@ -735,7 +735,7 @@ match and or returns options.
 *success case is the default*
 
 ```javascript
-  var profile = FactoryGuy.make('profile');
+  var profile = testHelper.make('profile');
   testHelper.handleDelete('profile', profile.id);
 
   profile.destroyRecord() // => will succeed
@@ -744,7 +744,7 @@ match and or returns options.
 *mocking a failed delete*
 
 ```javascript
-  var profile = FactoryGuy.make('profile');
+  var profile = testHelper.make('profile');
   // set the succeed flag to 'false'
   testHelper.handleDelete('profile', profile.id, false);
 
