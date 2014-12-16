@@ -637,8 +637,6 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
   *Any attributes in match will be added to the response json automatically,
   so you don't need to include them in the returns hash as well.*
     
-  *If you don't use match options for exact match, there will be no id returned to the model.*
-     
   *If you match on a belongsTo association, you don't have to include that in the
   returns hash.*
   
