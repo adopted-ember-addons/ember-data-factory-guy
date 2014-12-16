@@ -14,9 +14,9 @@ of ember-data-factory-guy.
 
 **Support for fixture adapter is currently kinda broken.**
 
-*Version 0.9.0 expects you to no longer use store.makeFixture explicitly in your tests
-but rather use the testHelper.make from FactoryGuyTestHelperMixin instead. If this is not the case,
-just add a FactoryGuy.setStore(store) somewhere in your code before you start making fixtures.*
+Version 0.9.0 expects you to no longer use store.makeFixture explicitly in your tests
+but rather use the testHelper.make from FactoryGuyTestHelperMixin instead. If your not doing
+this already, add a FactoryGuy.setStore(store) somewhere in your code before you start making fixtures.
 
 
 ## Using with Ember Cli
