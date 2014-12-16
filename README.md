@@ -10,13 +10,14 @@ of ember-data-factory-guy.
   - 0.6.4   -> ember-data-1.0.0-beta.8 and under
   - 0.7.1.1 -> ember-data-1.0.0-beta.10
   - 0.8.6   -> ember-data-1.0.0-beta.11
-  - 0.9.0   -> ember-data-1.0.0-beta.12
+  - 0.9.1   -> ember-data-1.0.0-beta.12
 
 **Support for fixture adapter is currently kinda broken.**
 
-*Version 0.9.0 expects you to no longer use store.makeFixture explicitly in your tests
-but rather use the testHelper.make from FactoryGuyTestHelperMixin instead. If your not doing
-this already, add a FactoryGuy.setStore(store) somewhere in your code before you start making fixtures.*
+*Version 0.9.0 and up deprecates explicit call to store.makeFixture in your tests, in favor
+of using the testHelper.make function from FactoryGuyTestHelperMixin instead. If your not currently
+doing this already ( using FactoryGuyTestHelperMixin ), add a FactoryGuy.setStore(store) somewhere
+in your code before you start making fixtures.*
 
 
 ## Using with Ember Cli
@@ -39,7 +40,7 @@ gem 'ember-data-factory-guy', group: test
 or for particular version:
 
 ```ruby
-gem 'ember-data-factory-guy', '0.9.0', group: test
+gem 'ember-data-factory-guy', '0.9.1', group: test
 ```
 
 then:
@@ -74,7 +75,7 @@ or for particular version:
   "dependencies": {
     "foo-dependency": "latest",
     "other-foo-dependency": "latest",
-    "ember-data-factory-guy": "0.9.0"
+    "ember-data-factory-guy": "0.9.1"
   }
 ```
 
