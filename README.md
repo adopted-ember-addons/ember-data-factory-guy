@@ -558,6 +558,7 @@ var testHelper, store, make;
 
 module('User Model', {
   setup: function() {
+    // Assumes the application's namespace is App, though yours may not be.
     testHelper = TestHelper.setup(App);
     store = testHelper.getStore();
     // You could at this point, make fixtures with testHelper.make,
@@ -607,7 +608,11 @@ But what if you want to handle create, update, and delete? Or even findAll recor
 
 FactoryGuy assumes you want to mock ajax calls with the mockjax library,
 and this is already bundled for you when you use the ember-data-factory-guy library.
-                
+
+
+**The following examples assume the variable testHelper was setup before your
+tests run as shown in the previous section (Using FactoryGuyTestMixin)**
+
 
 ##### handleFindMany
   - for dealing with finding all records of a particular type
