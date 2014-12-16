@@ -933,7 +933,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
 
     var responseJson = {};
     if (succeed) {
-      if (options) {
+//      if (options) {
         responseJson[modelName] = $.extend({id: definition.nextId()}, match, returnArgs);
         // Remove belongsTo associations since they will already be set when you called
         // createRecord, and included them in those attributes
@@ -942,7 +942,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
             delete responseJson[modelName][relationship.key];
           }
         })
-      }
+//      }
     } else {
       httpOptions.status = 500;
     }
