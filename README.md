@@ -703,10 +703,11 @@ match and or returns options.
 ```javascript
   var profile = testHelper.make('profile');
 
-  // Simplest way is to pass in the model that will be updated ( if you have it available )
+  // Pass in the model that will be updated ( if you have it available )
   testHelper.handleUpdate(profile);
 
-  // If the model is not available, pass in the modelType and the id ( if you know it )
+  // If the model is not available, pass in the modelType and the id of
+  // the model that will be updated
   testHelper.handleUpdate('profile', 1);
 
   profile.set('description', 'good value');
