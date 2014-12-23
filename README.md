@@ -10,7 +10,7 @@ of ember-data-factory-guy.
   - 0.6.4   -> ember-data-1.0.0-beta.8 and under
   - 0.7.1.1 -> ember-data-1.0.0-beta.10
   - 0.8.6   -> ember-data-1.0.0-beta.11
-  - 0.9.1   -> ember-data-1.0.0-beta.12
+  - 0.9.2   -> ember-data-1.0.0-beta.12
 
 **Support for fixture adapter is currently kinda broken.**
 
@@ -39,7 +39,7 @@ gem 'ember-data-factory-guy', group: test
 or for particular version:
 
 ```ruby
-gem 'ember-data-factory-guy', '0.9.1', group: test
+gem 'ember-data-factory-guy', '0.9.2', group: test
 ```
 
 then:
@@ -74,7 +74,7 @@ or for particular version:
   "dependencies": {
     "foo-dependency": "latest",
     "other-foo-dependency": "latest",
-    "ember-data-factory-guy": "0.9.1"
+    "ember-data-factory-guy": "0.9.2"
   }
 ```
 
