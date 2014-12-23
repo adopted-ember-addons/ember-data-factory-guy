@@ -114,7 +114,8 @@ You do not have to use the DS.FixtureAdapter.  But if you do choose to use the F
 which does not run any faster, and does not handle associations as elegantly
 ( and in some cases not at all ), you may run into problems with accessing associations.
 
-Error: Assertion Failed: You looked up the 'projects' relationship on '<User:ember379:1>' but some of the associated records were not loaded. Either make sure they are all loaded together with the parent record, or specify that the relationship is async (`DS.hasMany({ async: true })`)
+Error: Assertion Failed: You looked up the 'projects' relationship on '<User:ember379:1>'
+but some of the associated records were not loaded. Either make sure they are all loaded together with the parent record, or specify that the relationship is async (`DS.hasMany({ async: true })`)
 
 If you do get these types of errors try requiring the factory_guy_has_many.js file
 ( located in dist dir and vendor dir ) AFTER you require ember-data,
@@ -226,9 +227,10 @@ the store is looking up the correct model type name
  - Can add attributes with traits ( see traits section )  
  
 ```javascript
-  // First set the store on FactoryGuy. You don't have to do this step manually if you use
-  // FactoryGuyTestHelperMixin since this is done for you in the setup method. The following
-  // store lookup assumes you have a namespace for your Ember app named 'App'.
+  // First set the store on FactoryGuy. You don't have to do this step manually
+  // if you use FactoryGuyTestHelperMixin since this is done for you in the setup
+  // method. The following store lookup assumes you have a namespace for your Ember
+  // app named 'App'.
   var store = App.__container__.lookup('store:main');
   FactoryGuy.setStore(store);
 
