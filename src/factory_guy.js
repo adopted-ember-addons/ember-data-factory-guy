@@ -64,7 +64,7 @@ var FactoryGuy = {
    */
   isAttributeRelationship: function(typeName, attribute) {
     if (!this.store) {
-      console.log("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures")
+      Ember.debug("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures")
       // The legacy value was true.
       return true;
     }
@@ -150,7 +150,7 @@ var FactoryGuy = {
     };
   },
   association: function (fixtureName, opts) {
-    console.log('DEPRECATION Warning: use FactoryGuy.belongsTo instead');
+    Ember.deprecate('DEPRECATION Warning: use FactoryGuy.belongsTo instead');
     return this.belongsTo(fixtureName, opts);
   },
   /**
