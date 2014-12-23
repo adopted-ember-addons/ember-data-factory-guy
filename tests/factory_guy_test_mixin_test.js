@@ -54,6 +54,20 @@ asyncTest("#handleCreate the basic", function() {
 });
 
 
+/////// handleFindQuery //////////
+
+asyncTest("#handleFindQuery", function() {
+  var users = FactoryGuy.buildList('user', 2);
+  testHelper.handleFindQuery('user', ['name'], users);
+
+  store.findQuery('user', {name: 'Bob'}).then(function (users) {
+    equal(users.get('length'), 2)
+    equal(users.get('firstObject.name'), 'User1')
+    equal(users.get('lastObject.name'), 'User2')
+    start();
+  })
+});
+
 
 /////// handleFindMany //////////
 
@@ -376,3 +390,5 @@ asyncTest("#handleDelete failure case", function() {
     }
   );
 });
+
+

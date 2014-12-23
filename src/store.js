@@ -8,30 +8,30 @@
       return adapter instanceof DS.FixtureAdapter;
     },
     /**
-     Make new fixture and save to store. If the store is using FixtureAdapter,
-     will push to FIXTURE array, otherwise will use push method on adapter to load
-     the record into the store
-
-     @param {String} name  fixture name
-     @param {String} trait  optional trait names ( one or more )
-     @param {Object} opts  optional fixture options that will override default fixture values
-     @returns {Object|DS.Model} json or record depending on the adapter type
+      Deprecated in favor of FactoryGuy.make
      */
     makeFixture: function () {
-      var store = this;
-      var fixture = FactoryGuy.build.apply(FactoryGuy, arguments);
-      var name = arguments[0];
-      var modelName = FactoryGuy.lookupModelForFixtureName(name);
-      var modelType = store.modelFor(modelName);
-      if (this.usingFixtureAdapter()) {
-        this.setAssociationsForFixtureAdapter(modelType, modelName, fixture);
-        return FactoryGuy.pushFixture(modelType, fixture);
-      } else {
-        return store.makeModel(modelType, fixture);
-      }
+      Ember.deprecate('DEPRECATION Warning: use FactoryGuy.make instead');
+      FactoryGuy.make.call(FactoryGuy, arguments)
     },
+    /**
+      Deprecated in favor of FactoryGuy.makeList
+     */
+    makeList: function () {
+      Ember.deprecate('DEPRECATION Warning: use FactoryGuy.makeList instead');
+      FactoryGuy.makeList.call(FactoryGuy, arguments)
+    },
+    /**
+     * Most of the work of making the model from the json fixture is going on here.
+     * @param modelType
+     * @param fixture
+     * @returns {*}
+     */
     makeModel: function (modelType, fixture) {
-      var store = this, modelName = store.modelFor(modelType).typeKey, model;
+      var store = this,
+          modelName = store.modelFor(modelType).typeKey,
+          model;
+
       Em.run(function () {
         store.findEmbeddedAssociationsForRESTAdapter(modelType, fixture);
         if (fixture.type) {
@@ -44,22 +44,6 @@
         store.setAssociationsForRESTAdapter(modelType, modelName, model);
       });
       return model;
-    },
-    /**
-     Make a list of Fixtures
-
-     @param {String} name name of fixture
-     @param {Number} number number to create
-     @param {Object} options fixture options
-     @returns {Array} list of json fixtures or records depending on the adapter type
-     */
-    makeList: function () {
-      var arr = [];
-      var number = arguments[1];
-      for (var i = 0; i < number; i++) {
-        arr.push(this.makeFixture.apply(this, arguments));
-      }
-      return arr;
     },
     /**
      Set the hasMany and belongsTo associations for FixtureAdapter.

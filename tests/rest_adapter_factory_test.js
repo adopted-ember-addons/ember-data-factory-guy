@@ -4,7 +4,7 @@ module('FactoryGuy with DS.RESTAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.RESTAdapter);
     store = testHelper.getStore();
-    make = function() {return testHelper.make.apply(testHelper,arguments)}
+    make = function() {return FactoryGuy.make.apply(FactoryGuy,arguments)}
   },
   teardown: function() {
     Em.run(function() { testHelper.teardown(); });
@@ -34,11 +34,11 @@ test("#resetModels clears the store of models, and resets the model definition",
 });
 
 
-module('DS.Store#makeFixture with RestAdapter', {
+module('#make with RestAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.RESTAdapter);
     store = testHelper.getStore();
-    make = function() {return testHelper.make.apply(testHelper,arguments)}
+    make = function() {return FactoryGuy.make.apply(FactoryGuy,arguments)}
   },
   teardown: function() {
     Em.run(function() { testHelper.teardown(); });
@@ -279,7 +279,7 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
 });
 
 
-module('DS.Store#makeList with DS.RESTAdapter', {
+module('#makeList with DS.RESTAdapter', {
   setup: function() {
     testHelper = TestHelper.setup(DS.RESTAdapter);
     store = testHelper.getStore();
@@ -291,16 +291,24 @@ module('DS.Store#makeList with DS.RESTAdapter', {
 
 
 test("creates list of DS.Model instances", function() {
-  var users = store.makeList('user', 2);
-  ok(users.length == 2);
+  var users = FactoryGuy.makeList('user', 2);
+  equal(users.length, 2);
   ok(users[0] instanceof DS.Model == true);
-});
-
-
-test("creates records in the store", function() {
-  var users = store.makeList('user', 2);
 
   var storeUsers = store.all('user').get('content');
   ok(storeUsers[0] == users[0]);
   ok(storeUsers[1] == users[1]);
 });
+
+test("handles accept traits", function() {
+  var users = FactoryGuy.makeList('user', 2, 'with_hats');
+  equal(users.length, 2);
+  equal(users[0].get('hats.length') == 2, true);
+});
+
+test("handles accept traits and optional fixture arguments", function() {
+  var users = FactoryGuy.makeList('user', 2, 'with_hats', {name: 'Bob'});
+  equal(users[0].get('name'), 'Bob');
+  equal(users[0].get('hats.length') == 2, true);
+});
+

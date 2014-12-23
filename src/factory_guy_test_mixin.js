@@ -30,11 +30,10 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     return this.getStore().find(type, id);
   },
   /**
-   Make new fixture and save to store. Proxy to store#makeFixture method
+   Make new fixture and save to store. Proxy to FactoryGuy#make method
    */
   make: function () {
-    var store = this.getStore();
-    return store.makeFixture.apply(store, arguments);
+    return FactoryGuy.make.apply(FactoryGuy, arguments);
   },
   getStore: function () {
     return this.get('container').lookup('store:main');
@@ -55,6 +54,9 @@ var FactoryGuyTestMixin = Em.Mixin.create({
       type: options.type || 'GET',
       status: options.status || 200
     };
+    if (options.urlParams) {
+      request.urlParams = options.urlParams;
+    }
     if (options.data) {
       request.data = options.data;
     }
@@ -81,9 +83,8 @@ var FactoryGuyTestMixin = Em.Mixin.create({
      @param {Object} opts  optional fixture options
    */
   handleFindMany: function () {
-    var store = this.getStore();
     // make the records and load them in the store
-    store.makeList.apply(store, arguments);
+    FactoryGuy.makeList.apply(FactoryGuy, arguments);
     var name = arguments[0];
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var responseJson = {};
@@ -91,7 +92,35 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     var url = this.buildURL(modelName);
     // mock the ajax call, but return nothing, since the records will be
     // retrieved from the store where they were just loaded above
-    this.stubEndpointForHttpRequest(url, responseJson, { type: 'GET' });
+    this.stubEndpointForHttpRequest(url, responseJson);
+  },
+  /**
+   Handling ajax GET for finding all records for a type of model with query parameters.
+
+   ```js
+     // First build json for the instances you want 'returned' in your query.
+     var usersJson = FactoryGuy.buildList('user', 2);
+
+     // Pass in the parameters you will search on ( in this case 'name' and 'age' ) as an array,
+     // in the second argument.
+     testHelper.handleFindQuery('user', ['name', 'age'], usersJson);
+
+     store.findQuery('user', {name:'Bob', age: 10}}).then(function(userInstances){
+        /// userInstances were created from the usersJson that you passed in
+     })
+   ```
+
+   The model instances will be created from the json you have passed in.
+
+   @param {String} modelName  name of the mode like 'user' for User model type
+   @param {String} searchParams  the parameters that will be queried
+   @param {Object} json   fixture json used to build the resulting modelType instances
+   */
+  handleFindQuery: function (modelName, searchParams, json) {
+    var responseJson = {};
+    responseJson[modelName.pluralize()] = json;
+    var url = this.buildURL(modelName);
+    this.stubEndpointForHttpRequest(url, responseJson, {urlParams: searchParams});
   },
   /**
    Handling ajax POST ( create record ) for a model. You can mock

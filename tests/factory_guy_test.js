@@ -242,7 +242,6 @@ module('FactoryGuy with DS.FixtureAdapter', {
 
 
 asyncTest("#make loads the fixture in the store and returns an object", function() {
-  FactoryGuy.setStore(store);
   var user = FactoryGuy.make('user');
   ok(user instanceof Object )
   store.find('user', user.id).then(function(u){

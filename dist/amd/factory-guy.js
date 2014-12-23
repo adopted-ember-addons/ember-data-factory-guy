@@ -247,24 +247,12 @@ var FactoryGuy = {
    */
   isAttributeRelationship: function(typeName, attribute) {
     if (!this.store) {
-      console.log("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures")
+      Ember.debug("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures")
       // The legacy value was true.
       return true;
     }
     var model = this.store.modelFor(typeName);
     return !!model.typeForRelationship(attribute);
-  },
-  /**
-   Make new fixture and save to store. Proxy to store#makeFixture method
-
-   @param {String} name  fixture name
-   @param {String} trait  optional trait names ( one or more )
-   @param {Object} opts  optional fixture options that will override default fixture values
-   @returns {Object|DS.Model} json or record depending on the adapter type
-   */
-  make: function() {
-    Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures", this.store);
-    return this.store.makeFixture.apply(this.store,arguments);
   },
   /**
    Used in model definitions to declare use of a sequence. For example:
@@ -333,7 +321,7 @@ var FactoryGuy = {
     };
   },
   association: function (fixtureName, opts) {
-    console.log('DEPRECATION Warning: use FactoryGuy.belongsTo instead');
+    Ember.deprecate('DEPRECATION Warning: use FactoryGuy.belongsTo instead');
     return this.belongsTo(fixtureName, opts);
   },
   /**
@@ -460,7 +448,53 @@ var FactoryGuy = {
     }
     return definition.buildList(name, number, traits, opts);
   },
+  /**
+   Make new fixture and save to store.
 
+   @param {String} name  fixture name
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} options  optional fixture options that will override default fixture values
+   @returns {Object|DS.Model} json or record depending on the adapter type
+   */
+  make: function() {
+    var store = this.store;
+    Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures", store);
+
+    var fixture = this.build.apply(this, arguments);
+    var name = arguments[0];
+    var modelName = this.lookupModelForFixtureName(name);
+    var modelType = store.modelFor(modelName);
+
+    if (store.usingFixtureAdapter()) {
+      store.setAssociationsForFixtureAdapter(modelType, modelName, fixture);
+      return this.pushFixture(modelType, fixture);
+    } else {
+      return store.makeModel(modelType, fixture);
+    }
+  },
+  /**
+   Make a list of Fixtures
+
+   @param {String} name name of fixture
+   @param {Number} number number to create
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} options  optional fixture options that will override default fixture values
+   @returns {Array} list of json fixtures or records depending on the adapter type
+   */
+  makeList: function() {
+    Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures", this.store);
+
+    var arr = [];
+    var args = Array.prototype.slice.call(arguments);
+    Ember.assert("makeList needs at least 2 arguments, a name and a number",args.length >= 2);
+    var number = args.splice(1,1)[0];
+    Ember.assert("Second argument to makeList should be a number (of fixtures to make.)",typeof number == 'number');
+
+    for (var i = 0; i < number; i++) {
+      arr.push(this.make.apply(this, args));
+    }
+    return arr;
+  },
   /**
    Clear model instances from FIXTURES array, and from store cache.
    Reset the id sequence for the models back to zero.
@@ -548,30 +582,23 @@ var FactoryGuy = {
       return adapter instanceof DS.FixtureAdapter;
     },
     /**
-     Make new fixture and save to store. If the store is using FixtureAdapter,
-     will push to FIXTURE array, otherwise will use push method on adapter to load
-     the record into the store
-
-     @param {String} name  fixture name
-     @param {String} trait  optional trait names ( one or more )
-     @param {Object} opts  optional fixture options that will override default fixture values
-     @returns {Object|DS.Model} json or record depending on the adapter type
+      Deprecated in favor of FactoryGuy.make
      */
     makeFixture: function () {
-      var store = this;
-      var fixture = FactoryGuy.build.apply(FactoryGuy, arguments);
-      var name = arguments[0];
-      var modelName = FactoryGuy.lookupModelForFixtureName(name);
-      var modelType = store.modelFor(modelName);
-      if (this.usingFixtureAdapter()) {
-        this.setAssociationsForFixtureAdapter(modelType, modelName, fixture);
-        return FactoryGuy.pushFixture(modelType, fixture);
-      } else {
-        return store.makeModel(modelType, fixture);
-      }
+      Ember.deprecate('DEPRECATION Warning: use FactoryGuy.make instead');
+      FactoryGuy.make.call(FactoryGuy, arguments)
     },
+    /**
+     * Most of the work of making the model from the json fixture is going on here.
+     * @param modelType
+     * @param fixture
+     * @returns {*}
+     */
     makeModel: function (modelType, fixture) {
-      var store = this, modelName = store.modelFor(modelType).typeKey, model;
+      var store = this,
+          modelName = store.modelFor(modelType).typeKey,
+          model;
+
       Em.run(function () {
         store.findEmbeddedAssociationsForRESTAdapter(modelType, fixture);
         if (fixture.type) {
@@ -584,22 +611,6 @@ var FactoryGuy = {
         store.setAssociationsForRESTAdapter(modelType, modelName, model);
       });
       return model;
-    },
-    /**
-     Make a list of Fixtures
-
-     @param {String} name name of fixture
-     @param {Number} number number to create
-     @param {Object} options fixture options
-     @returns {Array} list of json fixtures or records depending on the adapter type
-     */
-    makeList: function () {
-      var arr = [];
-      var number = arguments[1];
-      for (var i = 0; i < number; i++) {
-        arr.push(this.makeFixture.apply(this, arguments));
-      }
-      return arr;
     },
     /**
      Set the hasMany and belongsTo associations for FixtureAdapter.
@@ -817,11 +828,10 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     return this.getStore().find(type, id);
   },
   /**
-   Make new fixture and save to store. Proxy to store#makeFixture method
+   Make new fixture and save to store. Proxy to FactoryGuy#make method
    */
   make: function () {
-    var store = this.getStore();
-    return store.makeFixture.apply(store, arguments);
+    return FactoryGuy.make.apply(FactoryGuy, arguments);
   },
   getStore: function () {
     return this.get('container').lookup('store:main');
@@ -842,6 +852,9 @@ var FactoryGuyTestMixin = Em.Mixin.create({
       type: options.type || 'GET',
       status: options.status || 200
     };
+    if (options.urlParams) {
+      request.urlParams = options.urlParams;
+    }
     if (options.data) {
       request.data = options.data;
     }
@@ -868,9 +881,8 @@ var FactoryGuyTestMixin = Em.Mixin.create({
      @param {Object} opts  optional fixture options
    */
   handleFindMany: function () {
-    var store = this.getStore();
     // make the records and load them in the store
-    store.makeList.apply(store, arguments);
+    FactoryGuy.makeList.apply(FactoryGuy, arguments);
     var name = arguments[0];
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var responseJson = {};
@@ -878,7 +890,35 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     var url = this.buildURL(modelName);
     // mock the ajax call, but return nothing, since the records will be
     // retrieved from the store where they were just loaded above
-    this.stubEndpointForHttpRequest(url, responseJson, { type: 'GET' });
+    this.stubEndpointForHttpRequest(url, responseJson);
+  },
+  /**
+   Handling ajax GET for finding all records for a type of model with query parameters.
+
+   ```js
+     // First build json for the instances you want 'returned' in your query.
+     var usersJson = FactoryGuy.buildList('user', 2);
+
+     // Pass in the parameters you will search on ( in this case 'name' and 'age' ) as an array,
+     // in the second argument.
+     testHelper.handleFindQuery('user', ['name', 'age'], usersJson);
+
+     store.findQuery('user', {name:'Bob', age: 10}}).then(function(userInstances){
+        /// userInstances were created from the usersJson that you passed in
+     })
+   ```
+
+   The model instances
+
+   @param {String} modelName  name of the mode like 'user' for User model type
+   @param {String} searchParams  the parameters that will be queried
+   @param {Object} json   fixture json used to build the resulting modelType instances
+   */
+  handleFindQuery: function (modelName, searchParams, json) {
+    var responseJson = {};
+    responseJson[modelName.pluralize()] = json;
+    var url = this.buildURL(modelName);
+    this.stubEndpointForHttpRequest(url, responseJson, {urlParams: searchParams});
   },
   /**
    Handling ajax POST ( create record ) for a model. You can mock

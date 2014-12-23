@@ -72,18 +72,6 @@ var FactoryGuy = {
     return !!model.typeForRelationship(attribute);
   },
   /**
-   Make new fixture and save to store. Proxy to store#makeFixture method
-
-   @param {String} name  fixture name
-   @param {String} trait  optional trait names ( one or more )
-   @param {Object} opts  optional fixture options that will override default fixture values
-   @returns {Object|DS.Model} json or record depending on the adapter type
-   */
-  make: function() {
-    Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures", this.store);
-    return this.store.makeFixture.apply(this.store,arguments);
-  },
-  /**
    Used in model definitions to declare use of a sequence. For example:
 
    ```
@@ -277,7 +265,53 @@ var FactoryGuy = {
     }
     return definition.buildList(name, number, traits, opts);
   },
+  /**
+   Make new fixture and save to store.
 
+   @param {String} name  fixture name
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} options  optional fixture options that will override default fixture values
+   @returns {Object|DS.Model} json or record depending on the adapter type
+   */
+  make: function() {
+    var store = this.store;
+    Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures", store);
+
+    var fixture = this.build.apply(this, arguments);
+    var name = arguments[0];
+    var modelName = this.lookupModelForFixtureName(name);
+    var modelType = store.modelFor(modelName);
+
+    if (store.usingFixtureAdapter()) {
+      store.setAssociationsForFixtureAdapter(modelType, modelName, fixture);
+      return this.pushFixture(modelType, fixture);
+    } else {
+      return store.makeModel(modelType, fixture);
+    }
+  },
+  /**
+   Make a list of Fixtures
+
+   @param {String} name name of fixture
+   @param {Number} number number to create
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} options  optional fixture options that will override default fixture values
+   @returns {Array} list of json fixtures or records depending on the adapter type
+   */
+  makeList: function() {
+    Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures", this.store);
+
+    var arr = [];
+    var args = Array.prototype.slice.call(arguments);
+    Ember.assert("makeList needs at least 2 arguments, a name and a number",args.length >= 2);
+    var number = args.splice(1,1)[0];
+    Ember.assert("Second argument to makeList should be a number (of fixtures to make.)",typeof number == 'number');
+
+    for (var i = 0; i < number; i++) {
+      arr.push(this.make.apply(this, args));
+    }
+    return arr;
+  },
   /**
    Clear model instances from FIXTURES array, and from store cache.
    Reset the id sequence for the models back to zero.

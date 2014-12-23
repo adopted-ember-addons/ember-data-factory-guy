@@ -15,10 +15,9 @@ of ember-data-factory-guy.
 **Support for fixture adapter is currently kinda broken.**
 
 *Version 0.9.0 and up deprecates explicit call to store.makeFixture in your tests, in favor
-of using the testHelper.make function from FactoryGuyTestHelperMixin instead. If your not currently
-doing this already ( using FactoryGuyTestHelperMixin ), add a FactoryGuy.setStore(store) somewhere
-in your code before you start making fixtures.*
-
+of using the FactoryGuy.make or testHelper.make function from FactoryGuyTestHelperMixin instead.
+If your not currently doing this already ( using FactoryGuyTestHelperMixin ), add a call to
+FactoryGuy.setStore(store) somewhere in your code before you start making fixtures.*
 
 ## Using with Ember Cli
   - https://github.com/igorrKurr/ember-cli-factory-guy-example
@@ -228,8 +227,9 @@ the store is looking up the correct model type name
  
 ```javascript
   // First set the store on FactoryGuy. You don't have to do this step manually if you use
-  // FactoryGuyTestHelperMixin since this is done for you in the setup method.
-  var store = this.get('container').lookup('store:main');
+  // FactoryGuyTestHelperMixin since this is done for you in the setup method. The following
+  // store lookup assumes you have a namespace for your Ember app named 'App'.
+  var store = App.__container__.lookup('store:main');
   FactoryGuy.setStore(store);
 
   // returns json   
@@ -492,7 +492,7 @@ the reverse user hasMany 'projects' association is being setup for you on the us
   user.get('projects.length') // => 2
   
   // or  
-  var projects = store.makeList('project', 2);
+  var projects = FactoryGuy.makeList('project', 2);
   var user = FactoryGuy.make('user', {projects: projects});
   user.get('projects.length') // => 2
   
@@ -511,7 +511,7 @@ the reverse 'user' belongsTo association is being setup for you on the project
 
 - FactoryGuy.buildList
     - Builds an array of one or more json objects
-- store.makeList
+- FactoryGuy.makeList
     - Loads one or more instances into store
 
 
@@ -528,7 +528,7 @@ the reverse 'user' belongsTo association is being setup for you on the project
 ##### Building model instances
 
 ```javascript
-  var users = store.makeList('user', 2) 
+  var users = FactoryGuy.makeList('user', 2)
   users.get('length') // => 2 
   users[0].toJSON({includeId: true}) // => {id: 3, name: 'User3', style: 'normal'}
   users[1].toJSON({includeId: true}) // => {id: 4, name: 'User4', style: 'normal'}
@@ -593,7 +593,8 @@ test("make a user using your applications default adapter", function() {
 - Uses mockjax
 - Has helper methods
   - handleFindMany 
-  - handleCreate 
+  - handleFindQuery
+  - handleCreate
   - handleUpdate 
   - handleDelete 
 
@@ -619,13 +620,31 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
   - for dealing with finding all records of a particular type
 
 ```javascript
-    // can use traits and extra fixture options here as you would with store#makeList
+    // can use traits and extra fixture options here as you would with FactoryGuy#makeList
     testHelper.handleFindMany('profile', 2);
      
     store.find('profile').then(function (profiles) {
       profiles.get('length') //=> 2
     });
 ```
+
+
+##### handleFindQuery
+   - for dealing with finding all records for a type of model with query parameters.
+
+```javascript
+     // First build json for the instances you want 'returned' in your query.
+     var usersJson = FactoryGuy.buildList('user', 2);
+
+     // Pass in the parameters you will search on ( in this case 'name' and 'age' ) as an array,
+     // in the second argument.
+     testHelper.handleFindQuery('user', ['name', 'age'], usersJson);
+
+     store.findQuery('user', {name:'Bob', age: 10}}).then(function(userInstances){
+        /// userInstances are created from the usersJson that you passed in
+     })
+```
+
 
 ##### handleCreate
   - options
