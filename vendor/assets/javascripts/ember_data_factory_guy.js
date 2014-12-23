@@ -584,6 +584,13 @@ var FactoryGuy = {
       FactoryGuy.make.call(FactoryGuy, arguments)
     },
     /**
+      Deprecated in favor of FactoryGuy.makeList
+     */
+    makeList: function () {
+      Ember.deprecate('DEPRECATION Warning: use FactoryGuy.makeList instead');
+      FactoryGuy.makeList.call(FactoryGuy, arguments)
+    },
+    /**
      * Most of the work of making the model from the json fixture is going on here.
      * @param modelType
      * @param fixture
@@ -903,7 +910,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
      })
    ```
 
-   The model instances
+   The model instances will be created from the json you have passed in.
 
    @param {String} modelName  name of the mode like 'user' for User model type
    @param {String} searchParams  the parameters that will be queried
