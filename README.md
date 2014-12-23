@@ -636,8 +636,8 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
      // First build json for the instances you want 'returned' in your query.
      var usersJson = FactoryGuy.buildList('user', 2);
 
-     // Pass in the parameters you will search on ( in this case 'name' and 'age' ) as an array,
-     // in the second argument.
+     // Pass in the parameters you will search on ( in this case 'name' and 'age' )
+     // as an array, in the second argument.
      testHelper.handleFindQuery('user', ['name', 'age'], usersJson);
 
      store.findQuery('user', {name:'Bob', age: 10}}).then(function(userInstances){
