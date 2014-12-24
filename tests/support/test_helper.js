@@ -1,9 +1,9 @@
 ObjectTransform = DS.Transform.extend({
   serialize: function(obj) {
-    return JSON.parse(obj);
+    return obj ? JSON.parse(obj) : {};
   },
   deserialize: function(obj) {
-    return JSON.stringify(obj);
+    return obj ? JSON.stringify(obj) : '{}';
   }
 });
 

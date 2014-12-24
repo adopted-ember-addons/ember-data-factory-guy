@@ -902,7 +902,10 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   /**
    Handling ajax GET for finding all records for a type of model with query parameters.
 
+          First variation = pass in fixture json
+
    ```js
+
      // First build json for the instances you want 'returned' in your query.
      var usersJson = FactoryGuy.buildList('user', 2);
 
@@ -911,17 +914,49 @@ var FactoryGuyTestMixin = Em.Mixin.create({
      testHelper.handleFindQuery('user', ['name', 'age'], usersJson);
 
      store.findQuery('user', {name:'Bob', age: 10}}).then(function(userInstances){
-        /// userInstances were created from the usersJson that you passed in
+        // userInstances returned are created from the usersJson that you passed in
+     });
+   ```
+
+          Second variation = pass in model instances
+   ```js
+
+     // Create model instances
+     var users = FactoryGuy.makeList('user', 2, 'with_hats');
+
+     // Pass in the array of model instances as last argument
+     testHelper.handleFindQuery('user', ['name', 'age'], users);
+
+     store.findQuery('user', {name:'Bob', age: 10}}).then(function(userInstances){
+        /// userInstances will be the same of the users that were passed in
      })
    ```
 
-   The model instances will be created from the json you have passed in.
+        Third variation - pass in nothing for last argument
+   ```js
+   // This simulates a query that returns no results
+   testHelper.handleFindQuery('user', ['age']);
+
+   store.findQuery('user', {age: 10000}}).then(function(userInstances){
+        /// userInstances will be empty
+     })
+   ```
 
    @param {String} modelName  name of the mode like 'user' for User model type
    @param {String} searchParams  the parameters that will be queried
-   @param {Object} json   fixture json used to build the resulting modelType instances
+   @param {Object|DS.Model} array  json array of fixture data used to build the resulting
+    model instances or an array of model instances that are already in the store
    */
-  handleFindQuery: function (modelName, searchParams, json) {
+  handleFindQuery: function (modelName, searchParams, array) {
+    Ember.assert('The second argument of searchParams must be an array',Em.typeOf(arguments[1]) == 'array')
+    var json = [];
+    if (!Em.isEmpty(array)) {
+      if (Em.typeOf(array[0]) == 'instance') {
+        json = array.map(function(user) {return user.toJSON({includeId: true})})
+      } else {
+        json = array;
+      }
+    }
     var responseJson = {};
     responseJson[modelName.pluralize()] = json;
     var url = this.buildURL(modelName);

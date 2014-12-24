@@ -56,7 +56,19 @@ asyncTest("#handleCreate the basic", function() {
 
 /////// handleFindQuery //////////
 
-asyncTest("#handleFindQuery", function() {
+test("#handleFindQuery second argument should be an array", function(assert) {
+  assert.throws(function(){testHelper.handleFindQuery('user', 'name', {})},"second argument not correct type");
+});
+
+asyncTest("#handleFindQuery passing in nothing as last argument returns no results", function() {
+  testHelper.handleFindQuery('user', ['name']);
+  store.findQuery('user', {name: 'Bob'}).then(function (users) {
+    equal(users.get('length'),0)
+    start()
+  });
+})
+
+asyncTest("#handleFindQuery passing in json creates new instances and returns those", function() {
   var users = FactoryGuy.buildList('user', 2);
   testHelper.handleFindQuery('user', ['name'], users);
 
@@ -64,6 +76,22 @@ asyncTest("#handleFindQuery", function() {
     equal(users.get('length'), 2)
     equal(users.get('firstObject.name'), 'User1')
     equal(users.get('lastObject.name'), 'User2')
+    start();
+  })
+});
+
+asyncTest("#handleFindQuery passing in existing instances returns those and does not create new ones", function() {
+  var users = FactoryGuy.makeList('user', 2, 'with_hats');
+  testHelper.handleFindQuery('user', ['name'], users);
+
+  equal(store.all('user').get('content.length'), 2, 'start out with 2 instances')
+
+  store.findQuery('user', {name: 'Bob'}).then(function (users) {
+    equal(users.get('length'), 2)
+    equal(users.get('firstObject.name'), 'User1')
+    equal(users.get('firstObject.hats.length'), 2)
+    equal(users.get('lastObject.name'), 'User2')
+    equal(store.all('user').get('content.length'), 2, 'no new instances created')
     start();
   })
 });
