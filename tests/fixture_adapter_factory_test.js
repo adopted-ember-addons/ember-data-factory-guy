@@ -25,7 +25,7 @@ test("#pushFixture adds fixture to Fixture array on model", function () {
 
 
 asyncTest("can change fixture attributes after creation", function () {
-  var user = store.makeFixture('user');
+  var user = FactoryGuy.make('user');
   notEqual(user.name, 'new name');
   user.name = "new name";
 
@@ -37,8 +37,8 @@ asyncTest("can change fixture attributes after creation", function () {
 
 
 test("#resetModels clears the store of models, clears the FIXTURES arrays for each model and resets the model definition", function () {
-  var project = store.makeFixture('project');
-  var user = store.makeFixture('user', { projects: [project] });
+  var project = FactoryGuy.make('project');
+  var user = FactoryGuy.make('user', { projects: [project] });
 
   for (model in FactoryGuy.modelDefinitions) {
     var definition = FactoryGuy.modelDefinitions[model];
@@ -67,8 +67,8 @@ test("#resetModels clears the store of models, clears the FIXTURES arrays for ea
 });
 
 test("Confirm traits build relationships", function () {
-  var project = store.makeFixture('project', 'big'),
-      projectWithUser = store.makeFixture('project_with_admin');
+  var project = FactoryGuy.make('project', 'big'),
+      projectWithUser = FactoryGuy.make('project_with_admin');
 
   equal(Project.FIXTURES.length, 2);
   equal(User.FIXTURES.length, 1);
@@ -90,18 +90,18 @@ module('DS.Store with DS.FixtureAdapter', {
 });
 
 
-test("#makeFixture builds and pushes fixture into the models FIXTURE array", function () {
-  var json = store.makeFixture('user');
+test("#make builds and pushes fixture into the models FIXTURE array", function () {
+  var json = FactoryGuy.make('user');
   equal(User.FIXTURES.length, 1);
   equal(User.FIXTURES[0], json);
 });
 
-asyncTest("#makeFixture sets belongsTo on hasMany associations", function () {
-  var p1 = store.makeFixture('project');
+asyncTest("#make sets belongsTo on hasMany associations", function () {
+  var p1 = FactoryGuy.make('project');
   // second project not added on purpose to make sure only one is
   // assigned in hasMany
-  store.makeFixture('project');
-  var user = store.makeFixture('user', {projects: [p1]})
+  FactoryGuy.make('project');
+  var user = FactoryGuy.make('user', {projects: [p1]})
 
   store.find('user', 1).then(function (user) {
     var projects = user.get('projects');
@@ -110,9 +110,9 @@ asyncTest("#makeFixture sets belongsTo on hasMany associations", function () {
   });
 });
 
-asyncTest("#makeFixture adds record to hasMany association array for which it belongsTo", function () {
-  var userJson = store.makeFixture('user');
-  var projectJson = store.makeFixture('project', { user: userJson });
+asyncTest("#make adds record to hasMany association array for which it belongsTo", function () {
+  var userJson = FactoryGuy.make('user');
+  var projectJson = FactoryGuy.make('project', { user: userJson });
 
   store.find('user', userJson.id).then(function (user) {
     var projects = user.get('projects');
@@ -122,8 +122,8 @@ asyncTest("#makeFixture adds record to hasMany association array for which it be
   });
 });
 
-asyncTest("#makeFixture handles trait reverse belongsTo associations in fixture", function () {
-  var projectWithUser = store.makeFixture('project_with_user');
+asyncTest("#make handles trait reverse belongsTo associations in fixture", function () {
+  var projectWithUser = FactoryGuy.make('project_with_user');
   equal(Project.FIXTURES.length, 1);
   equal(User.FIXTURES.length, 1);
 
@@ -137,8 +137,8 @@ asyncTest("#makeFixture handles trait reverse belongsTo associations in fixture"
   });
 });
 
-asyncTest("#makeFixture handles primary belongsTo association in fixture", function () {
-  var projectWithUser = store.makeFixture('project_with_user');
+asyncTest("#make handles primary belongsTo association in fixture", function () {
+  var projectWithUser = FactoryGuy.make('project_with_user');
   equal(Project.FIXTURES.length, 1);
   equal(User.FIXTURES.length, 1);
 
@@ -152,8 +152,8 @@ asyncTest("#makeFixture handles primary belongsTo association in fixture", funct
   });
 });
 
-asyncTest('#makeFixture handles hasMany association in fixture', function () {
-  var userWithProjects = store.makeFixture('user', 'with_projects');
+asyncTest('#make handles hasMany association in fixture', function () {
+  var userWithProjects = FactoryGuy.make('user', 'with_projects');
   equal(Project.FIXTURES.length, 2);
   equal(User.FIXTURES.length, 1);
 
@@ -171,8 +171,8 @@ asyncTest('#makeFixture handles hasMany association in fixture', function () {
 });
 
 // TODO:: does not handle deeply embedded relationships yet..
-// asyncTest('#makeFixture handles belongsTo deeply associated in fixture', function () {
-//   var propertyOwnersProjects = store.makeFixture('property', 'with_owners_with_projects');
+// asyncTest('#make handles belongsTo deeply associated in fixture', function () {
+//   var propertyOwnersProjects = FactoryGuy.make('property', 'with_owners_with_projects');
 //   equal(Property.FIXTURES.length, 1);
 //   equal(User.FIXTURES.length, 2);
 //   equal(Project.FIXTURES.length, 4);
@@ -187,7 +187,7 @@ asyncTest('#makeFixture handles hasMany association in fixture', function () {
 // });
 
 asyncTest("#createRecord adds belongsTo association to records it hasMany of", function () {
-  var user = store.makeFixture('user');
+  var user = FactoryGuy.make('user');
 
   store.find('user', user.id).then(function (user) {
     var projectJson = {title: 'project', user: user};
@@ -206,7 +206,7 @@ asyncTest("#createRecord adds belongsTo association to records it hasMany of", f
 });
 
 asyncTest("#createRecord can work for one-to-none associations", function () {
-  var user = store.makeFixture('user');
+  var user = FactoryGuy.make('user');
 
   store.find('user', user.id).then(function (user) {
     var smallCompanyJson = {name: 'small company', owner: user};
@@ -222,7 +222,7 @@ asyncTest("#createRecord can work for one-to-none associations", function () {
 });
 
 asyncTest("#createRecord adds hasMany association to records it hasMany of ", function () {
-  var usersJson = store.makeList('user', 3);
+  var usersJson = FactoryGuy.makeList('user', 3);
   var userPromises = usersJson.map(function(json) { return store.find('user', json.id) });
 
   Ember.RSVP.all(userPromises).then(function (users) {
