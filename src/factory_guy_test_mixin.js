@@ -149,6 +149,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
       if (Em.typeOf(array[0]) == 'instance') {
         json = array.map(function(user) {return user.toJSON({includeId: true})})
       } else {
+        Ember.assert('When passing a json payload it must be an array - found type:' + Em.typeOf(array), Em.typeOf(array) == 'array')
         json = array;
       }
     }
