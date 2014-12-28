@@ -60,6 +60,10 @@ test("#handleFindQuery second argument should be an array", function(assert) {
   assert.throws(function(){testHelper.handleFindQuery('user', 'name', {})},"second argument not correct type");
 });
 
+test("#handleFindQuery json payload argument should be an array", function(assert) {
+  assert.throws(function(){testHelper.handleFindQuery('user', ['name'], {})},"payload argument is not an array");
+});
+
 asyncTest("#handleFindQuery passing in nothing as last argument returns no results", function() {
   testHelper.handleFindQuery('user', ['name']);
   store.findQuery('user', {name: 'Bob'}).then(function (users) {
