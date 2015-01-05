@@ -14,7 +14,7 @@ module('FactoryGuy with DS.RESTAdapter', {
 
 test("can set and get store", function() {
   FactoryGuy.setStore(store);
-  equal(FactoryGuy.getStore(), store)
+  ok(FactoryGuy.getStore() == store)
 });
 
 test("Using sequences in definitions", function() {

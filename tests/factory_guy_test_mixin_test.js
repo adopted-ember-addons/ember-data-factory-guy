@@ -100,13 +100,29 @@ asyncTest("#handleFindQuery passing in existing instances returns those and does
   })
 });
 
+asyncTest("#handleFindQuery passing in existing instances with hasMany and belongsTo with embedded associations", function() {
+  var users = FactoryGuy.makeList('user', 2, 'with_projects', 'with_person');
+  testHelper.handleFindQuery('user', ['name'], users);
+
+  equal(store.all('user').get('content.length'), 2, 'start out with 2 instances')
+
+  store.findQuery('user', {name: 'Dude'}).then(function (users) {
+    equal(users.get('length'), 2)
+    equal(users.get('firstObject.name'), 'User1')
+    equal(users.get('firstObject.projects.length'), 2)
+    equal(users.get('lastObject.name'), 'User2')
+    equal(store.all('user').get('content.length'), 2, 'no new instances created')
+    start();
+  })
+});
+
 
 /////// handleFindMany //////////
 
 asyncTest("#handleFindMany the basic", function () {
   testHelper.handleFindMany('profile', 2);
 
-  store.find('profile').then(function (profiles) {
+  store.findAll('profile').then(function (profiles) {
     ok(profiles.get('length') == 2);
     start();
   });
@@ -115,7 +131,7 @@ asyncTest("#handleFindMany the basic", function () {
 asyncTest("#handleFindMany with fixture options", function () {
   testHelper.handleFindMany('profile', 2, {description: 'dude'});
 
-  store.find('profile').then(function (profiles) {
+  store.findAll('profile').then(function (profiles) {
     ok(profiles.get('length') == 2);
     ok(profiles.get('firstObject.description') == 'dude');
     start();
@@ -125,7 +141,7 @@ asyncTest("#handleFindMany with fixture options", function () {
 asyncTest("#handleFindMany with traits", function () {
   testHelper.handleFindMany('profile', 2, 'goofy_description');
 
-  store.find('profile').then(function (profiles) {
+  store.findAll('profile').then(function (profiles) {
     ok(profiles.get('length') == 2);
     ok(profiles.get('firstObject.description') == 'goofy');
     start();
@@ -135,7 +151,7 @@ asyncTest("#handleFindMany with traits", function () {
 asyncTest("#handleFindMany with traits and extra options", function () {
   testHelper.handleFindMany('profile', 2, 'goofy_description', {description: 'dude'});
 
-  store.find('profile').then(function (profiles) {
+  store.findAll('profile').then(function (profiles) {
     ok(profiles.get('length') == 2);
     ok(profiles.get('firstObject.description') == 'dude');
     start();

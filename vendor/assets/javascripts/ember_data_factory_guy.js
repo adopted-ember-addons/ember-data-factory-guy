@@ -877,6 +877,17 @@ var FactoryGuyTestMixin = Em.Mixin.create({
      Handling ajax GET for finding all records for a type of model.
      You can mock failed find by passing in success argument as false.
 
+   ```js
+     // Pass in the parameters you would normally pass into FactoryGuy.makeList,
+     // like fixture name, number of fixtures to make, and optional traits,
+     // or fixture options
+     testHelper.handleFindMany('user', 2, 'with_hats');
+
+     store.find('user').then(function(users){
+
+     });
+   ```
+
      @param {String} name  name of the fixture ( or model ) to find
      @param {Number} number  number of fixtures to create
      @param {String} trait  optional traits (one or more)
@@ -884,14 +895,13 @@ var FactoryGuyTestMixin = Em.Mixin.create({
    */
   handleFindMany: function () {
     // make the records and load them in the store
-    FactoryGuy.makeList.apply(FactoryGuy, arguments);
+    var records = FactoryGuy.makeList.apply(FactoryGuy, arguments);
     var name = arguments[0];
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
     var responseJson = {};
-    responseJson[modelName] = [];
+    var json = records.map(function(record) {return record.toJSON({includeId: true})});
+    responseJson[modelName.pluralize()] = json;
     var url = this.buildURL(modelName);
-    // mock the ajax call, but return nothing, since the records will be
-    // retrieved from the store where they were just loaded above
     this.stubEndpointForHttpRequest(url, responseJson);
   },
   /**
@@ -949,6 +959,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
       if (Em.typeOf(array[0]) == 'instance') {
         json = array.map(function(user) {return user.toJSON({includeId: true})})
       } else {
+        Ember.assert('When passing a json payload it must be an array - found type:' + Em.typeOf(array), Em.typeOf(array) == 'array')
         json = array;
       }
     }
@@ -1198,10 +1209,12 @@ if (FactoryGuy !== undefined) {
 				return null;
 			}
 		}
-
 		// Inspect the data submitted in the request (either POST body or GET query string)
 		if ( handler.data ) {
-			if ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
+//      console.log('request.data', requestSettings.data )
+//      console.log('handler.data', handler.data )
+//      console.log('data equal', isMockDataEqual(handler.data, requestSettings.data) )
+			if  ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
 				// They're not identical, do not mock this request
 				return null;
 			}
@@ -1212,7 +1225,6 @@ if (FactoryGuy !== undefined) {
 			// The request type doesn't match (GET vs. POST)
 			return null;
 		}
-
 		return handler;
 	}
 
