@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+require 'json'
 
 package = JSON.parse(File.read('package.json'))
 
