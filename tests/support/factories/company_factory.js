@@ -3,6 +3,9 @@ FactoryGuy.define("company", {
     name: 'Silly corp'
   },
   traits: {
+    with_profile: {
+      profile: {}
+    },
     with_projects: {
       projects: FactoryGuy.hasMany('project', 2)
     }

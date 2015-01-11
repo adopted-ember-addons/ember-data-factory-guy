@@ -72,17 +72,6 @@ asyncTest("#handleFindQuery passing in nothing as last argument returns no resul
   });
 })
 
-asyncTest("#handleFindQuery passing in json creates new instances and returns those", function() {
-  var users = FactoryGuy.buildList('user', 2);
-  testHelper.handleFindQuery('user', ['name'], users);
-
-  store.findQuery('user', {name: 'Bob'}).then(function (users) {
-    equal(users.get('length'), 2)
-    equal(users.get('firstObject.name'), 'User1')
-    equal(users.get('lastObject.name'), 'User2')
-    start();
-  })
-});
 
 asyncTest("#handleFindQuery passing in existing instances returns those and does not create new ones", function() {
   var users = FactoryGuy.makeList('user', 2, 'with_hats');
@@ -100,18 +89,19 @@ asyncTest("#handleFindQuery passing in existing instances returns those and does
   })
 });
 
-asyncTest("#handleFindQuery passing in existing instances with hasMany and belongsTo with embedded associations", function() {
-  var users = FactoryGuy.makeList('user', 2, 'with_projects', 'with_person');
-  testHelper.handleFindQuery('user', ['name'], users);
+asyncTest("#handleFindQuery passing in existing instances with hasMany and belongsTo", function() {
+  var users = FactoryGuy.makeList('company', 2, 'with_projects', 'with_profile');
+  testHelper.handleFindQuery('company', ['name'], users);
 
-  equal(store.all('user').get('content.length'), 2, 'start out with 2 instances')
+  equal(store.all('company').get('content.length'), 2, 'start out with 2 instances')
 
-  store.findQuery('user', {name: 'Dude'}).then(function (users) {
-    equal(users.get('length'), 2)
-    equal(users.get('firstObject.name'), 'User1')
-    equal(users.get('firstObject.projects.length'), 2)
-    equal(users.get('lastObject.name'), 'User2')
-    equal(store.all('user').get('content.length'), 2, 'no new instances created')
+  store.findQuery('company', {name: 'Dude'}).then(function (companies) {
+    equal(companies.get('length'), 2)
+    ok(companies.get('firstObject.profile') instanceof Profile)
+    equal(companies.get('firstObject.projects.length'), 2)
+    ok(companies.get('lastObject.profile') instanceof Profile)
+    equal(companies.get('lastObject.projects.length'), 2)
+    equal(store.all('company').get('content.length'), 2, 'no new instances created')
     start();
   })
 });

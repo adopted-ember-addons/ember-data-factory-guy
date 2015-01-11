@@ -107,23 +107,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   /**
    Handling ajax GET for finding all records for a type of model with query parameters.
 
-          First variation = pass in fixture json
-
-   ```js
-
-     // First build json for the instances you want 'returned' in your query.
-     var usersJson = FactoryGuy.buildList('user', 2);
-
-     // Pass in the parameters you will search on ( in this case 'name' and 'age' ) as an array,
-     // in the second argument.
-     testHelper.handleFindQuery('user', ['name', 'age'], usersJson);
-
-     store.findQuery('user', {name:'Bob', age: 10}}).then(function(userInstances){
-        // userInstances returned are created from the usersJson that you passed in
-     });
-   ```
-
-          Second variation = pass in model instances
+          First variation = pass in model instances
    ```js
 
      // Create model instances
@@ -149,20 +133,16 @@ var FactoryGuyTestMixin = Em.Mixin.create({
 
    @param {String} modelName  name of the mode like 'user' for User model type
    @param {String} searchParams  the parameters that will be queried
-   @param {Object|DS.Model} array  json array of fixture data used to build the resulting
-    model instances or an array of model instances that are already in the store
+   @param {Array}  array of DS.Model records to be 'returned' by query
    */
-  handleFindQuery: function (modelName, searchParams, array) {
-    Ember.assert('The second argument of searchParams must be an array',Em.typeOf(arguments[1]) == 'array')
-    var json = [];
-    if (!Em.isEmpty(array)) {
-      if (Em.typeOf(array[0]) == 'instance') {
-        json = array.map(function(user) {return user.toJSON({includeId: true})})
-      } else {
-        Ember.assert('When passing a json payload it must be an array - found type:' + Em.typeOf(array), Em.typeOf(array) == 'array')
-        json = array;
-      }
+  handleFindQuery: function (modelName, searchParams, records) {
+    Ember.assert('The second argument of searchParams must be an array',Em.typeOf(searchParams) == 'array')
+    if (records) {
+      Ember.assert('The third argument ( records ) must be an array - found type:' + Em.typeOf(records), Em.typeOf(records) == 'array')
+    } else {
+      records = []
     }
+    var json = records.map(function(record) {return record.toJSON({includeId: true})})
     var responseJson = {};
     responseJson[modelName.pluralize()] = json;
     var url = this.buildURL(modelName);

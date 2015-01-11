@@ -97,7 +97,6 @@ Property = DS.Model.extend({
 User = DS.Model.extend({
   name:       DS.attr('string'),
   info:       DS.attr('object'),
-  person:     DS.belongsTo('person', {embedded: 'always'}),
   company:    DS.belongsTo('company', {async: true, inverse: 'users', polymorphic: true}),
   properties: DS.hasMany('property', {async: true, inverse: 'owners'}),
   projects:   DS.hasMany('project', {embedded: 'always'}),
@@ -110,6 +109,9 @@ FactoryGuy.define("company", {
     name: 'Silly corp'
   },
   traits: {
+    with_profile: {
+      profile: {}
+    },
     with_projects: {
       projects: FactoryGuy.hasMany('project', 2)
     }
@@ -263,8 +265,8 @@ FactoryGuy.define('user', {
     projects: FactoryGuy.hasMany('project', 2)
   },
   traits: {
-    with_person: {
-      person: {}
+    with_company: {
+      company: {}
     },
     with_projects: {
       projects: FactoryGuy.hasMany('project', 2)

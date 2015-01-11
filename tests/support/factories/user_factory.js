@@ -14,8 +14,8 @@ FactoryGuy.define('user', {
     projects: FactoryGuy.hasMany('project', 2)
   },
   traits: {
-    with_person: {
-      person: {}
+    with_company: {
+      company: {}
     },
     with_projects: {
       projects: FactoryGuy.hasMany('project', 2)
