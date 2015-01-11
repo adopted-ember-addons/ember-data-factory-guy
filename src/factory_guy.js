@@ -284,7 +284,9 @@ var FactoryGuy = {
 
     if (store.usingFixtureAdapter()) {
       store.setAssociationsForFixtureAdapter(modelType, modelName, fixture);
-      return this.pushFixture(modelType, fixture);
+      fixture = FactoryGuy.pushFixture(modelType, fixture);
+      store.loadModelForFixtureAdapter(modelType, fixture);
+      return fixture;
     } else {
       return store.makeModel(modelType, fixture);
     }
