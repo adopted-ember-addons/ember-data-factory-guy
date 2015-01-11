@@ -25,7 +25,7 @@
      * Most of the work of making the model from the json fixture is going on here.
      * @param modelType
      * @param fixture
-     * @returns {*}
+     * @returns {DS.Model} instance of DS.Model
      */
     makeModel: function (modelType, fixture) {
       var store = this,
