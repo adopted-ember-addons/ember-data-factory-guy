@@ -10,9 +10,9 @@ of ember-data-factory-guy.
   - 0.6.4   -> ember-data-1.0.0-beta.8 and under
   - 0.7.1.1 -> ember-data-1.0.0-beta.10
   - 0.8.6   -> ember-data-1.0.0-beta.11
-  - 0.9.2   -> ember-data-1.0.0-beta.12
+  - 0.9.3   -> ember-data-1.0.0-beta.12
 
-**Support for fixture adapter is currently kinda broken.**
+** Support for fixture adapter is back in business as of version 0.9.3 **
 
 *Version 0.9.0 and up deprecates explicit call to store.makeFixture in your tests, in favor
 of using the FactoryGuy.make or testHelper.make function from FactoryGuyTestHelperMixin instead.
@@ -39,7 +39,7 @@ gem 'ember-data-factory-guy', group: test
 or for particular version:
 
 ```ruby
-gem 'ember-data-factory-guy', '0.9.2', group: test
+gem 'ember-data-factory-guy', '0.9.3', group: test
 ```
 
 then:
@@ -74,7 +74,7 @@ or for particular version:
   "dependencies": {
     "foo-dependency": "latest",
     "other-foo-dependency": "latest",
-    "ember-data-factory-guy": "0.9.2"
+    "ember-data-factory-guy": "0.9.3"
   }
 ```
 
@@ -864,7 +864,6 @@ test("Creates new project", function() {
 
 ### Using DS.Fixture adapter
 
-- Not recommended
 - FactoryGuy.make ... creates model in the store and returns json
 
 Technically when you call FactoryGuy.make with a store using the DS.FixtureAdapter,
@@ -872,8 +871,8 @@ the fixture is actually added to the models FIXTURE array. It just seems to be a
 to the store because when you call store.find to get that record, the adapter looks
 in that FIXTURE array to find it and then puts it in the store.
 
-```javascript
 
+```javascript
 
 FactoryGuy.make('user'); // user.FIXTURES = [{id: 1, name: 'User1', style: 'normal'}]
 FactoryGuy.make('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', style: 'normal'}]
