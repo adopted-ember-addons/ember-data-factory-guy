@@ -955,7 +955,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   /**
    Handling ajax GET for finding all records for a type of model with query parameters.
 
-          First variation = pass in model instances
+
    ```js
 
      // Create model instances
@@ -969,9 +969,11 @@ var FactoryGuyTestMixin = Em.Mixin.create({
      })
    ```
 
-        Third variation - pass in nothing for last argument
+      By omitting the last argument (pass in no records), this simulates a findQuery
+      request that returns no records
+
    ```js
-   // This simulates a query that returns no results
+   // Simulate a query that returns no results
    testHelper.handleFindQuery('user', ['age']);
 
    store.findQuery('user', {age: 10000}}).then(function(userInstances){
