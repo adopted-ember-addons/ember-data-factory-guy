@@ -853,9 +853,7 @@ test("Creates new project", function() {
 - FactoryGuy.make ... creates model in the store and returns json
 
 Technically when you call FactoryGuy.make with a store using the DS.FixtureAdapter,
-the fixture is actually added to the models FIXTURE array. It just seems to be added
-to the store because when you call store.find to get that record, the adapter looks
-in that FIXTURE array to find it and then puts it in the store.
+the fixture is added to the model's FIXTURE array and also pushed into the store. Normally the store is populated by the DS.FixtureAdapter when you call store.find.
 
 
 ```javascript
@@ -865,10 +863,11 @@ FactoryGuy.make('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob'
 FactoryGuy.make('admin'); //  user.FIXTURES = [{id: 3, name: 'Admin', style: 'super'}]
 FactoryGuy.make('admin', {name: 'Fred'}); //  user.FIXTURES = [{id: 4, name: 'Fred', style: 'super'}]
 
+// This works because we push the models into the store when called FactoryGuy.make
+var userJson = FactoryGuy.make('user'); // user.FIXTURES = [{id: 1, name: 'User1', style: 'normal'}]
+store.all('user') // returns the user equal to userJson
 
-// Use store.find to get the model instance ( Remember this is the Fixture adapter, if
-// you use the ActiveModelAdapter or RESTAdapter the record is returned so you don't
-// have to then go and find it )
+// Use store.find to get the model instance
 var userJson = FactoryGuy.make('user');
 store.find('user', userJson.id).then(function(user) {
    user.toJSON({includeId: true}) ( pretty much equals ) userJson;
@@ -881,8 +880,15 @@ var userJson = FactoryGuy.make('user', {projects: [projectJson.id]});
 var userJson = FactoryGuy.make('user');
 var projectJson = FactoryGuy.make('project', {user: userJson.id});
 
-// will give you the same result, but with fixture adapter all associations
-// are treated as async ( by factory_guy_has_many.js fix ), so it's
+// Associations are pushed on as well
+store.find('user', 1).then(function (user) {
+  var projects = user.get('projects');
+  projects.get('length'); //1
+  projects.get('firstObject').toJSON({includeId: true}); //equal to projectJSON
+});
+
+// If you are using factory_guy_has_many.js fix, will give you the same result,
+// but all associations are treated as async, so it's
 // a bit clunky to get this associated data. When using DS.FixtureAdapter
 // in view specs though, this clunk is dealt with for you. But remember,
 // you DON'T have to use the Fixture adapter.
