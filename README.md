@@ -633,22 +633,8 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
 
 ##### handleFindQuery
    - for dealing with finding all records for a type of model with query parameters.
-     - can pass in fixture json, model instances or empty array
+     - can pass in model instances or empty array
 
-*Passing in array of fixture json*
-
-```javascript
-     // First build json for the instances you want 'returned' in your query.
-     var usersJson = FactoryGuy.buildList('user', 2);
-
-     // Pass in the parameters you will search on ( in this case 'name' and 'age' )
-     // as an array, in the second argument.
-     testHelper.handleFindQuery('user', ['name', 'age'], usersJson);
-
-     store.findQuery('user', {name:'Bob', age: 10}}).then(function(userInstances){
-        // userInstances returned are created from the usersJson that you passed in
-     })
-```
 
 *Passing in array of model instances*
 
