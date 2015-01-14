@@ -952,6 +952,38 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     var url = this.buildURL(modelName);
     this.stubEndpointForHttpRequest(url, responseJson);
   },
+
+  /**
+     Handling ajax GET for finding one record for a type of model and an id.
+     You can mock failed find by passing in success argument as false.
+
+   ```js
+     // Pass in the parameters you would normally pass into FactoryGuy.make,
+     // like fixture name, number of fixtures to make, and optional traits,
+     // or fixture options
+     testHelper.handleFindOne('user', 'with_hats', {id: 1});
+
+     store.find('user', 1).then(function(user){
+
+     });
+   ```
+
+     @param {String} name  name of the fixture ( or model ) to find
+     @param {String} trait  optional traits (one or more)
+     @param {Object} opts  optional fixture options (including id)
+   */
+  handleFindOne: function () {
+    // make the records and load them in the store
+    var record = FactoryGuy.make.apply(FactoryGuy, arguments);
+    var name = arguments[0];
+    var modelName = FactoryGuy.lookupModelForFixtureName(name);
+    var responseJson = {};
+    var json = record.toJSON({includeId: true});
+    responseJson[modelName.pluralize()] = json;
+    var url = this.buildURL(modelName, record.id);
+    this.stubEndpointForHttpRequest(url, responseJson);
+  },
+
   /**
    Handling ajax GET for finding all records for a type of model with query parameters.
 
@@ -1239,12 +1271,10 @@ if (FactoryGuy !== undefined) {
 				return null;
 			}
 		}
+
 		// Inspect the data submitted in the request (either POST body or GET query string)
 		if ( handler.data ) {
-//      console.log('request.data', requestSettings.data )
-//      console.log('handler.data', handler.data )
-//      console.log('data equal', isMockDataEqual(handler.data, requestSettings.data) )
-			if  ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
+			if ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
 				// They're not identical, do not mock this request
 				return null;
 			}
@@ -1255,6 +1285,7 @@ if (FactoryGuy !== undefined) {
 			// The request type doesn't match (GET vs. POST)
 			return null;
 		}
+
 		return handler;
 	}
 

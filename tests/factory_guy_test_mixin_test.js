@@ -149,6 +149,50 @@ asyncTest("#handleFindMany with traits and extra options", function () {
 });
 
 
+//////// handleFindOne /////////
+
+asyncTest("#handleFindOne the basic", function () {
+  var id = 1
+  testHelper.handleFindOne('profile', {id: id});
+
+  store.find('profile', 1).then(function (profile) {
+    ok(profile.get('id') == id);
+    start();
+  });
+});
+
+asyncTest("#handleFindOne with traits", function () {
+  var id = 1
+  testHelper.handleFindOne('profile', 'goofy_description', {id: id});
+
+  store.find('profile', 1).then(function (profile) {
+    ok(profile.get('description') == 'goofy');
+    start();
+  });
+});
+
+asyncTest("#handleFindOne with arguments", function () {
+  var id = 1
+  var description = 'guy';
+  testHelper.handleFindOne('profile', {id: id, description: description });
+
+  store.find('profile', 1).then(function (profile) {
+    ok(profile.get('description') == description);
+    start();
+  });
+});
+
+asyncTest("#handleFindOne with traits and arguments", function () {
+  var id = 1
+  var description = 'guy';
+  testHelper.handleFindOne('profile', 'goofy_description', {id: id, description: description});
+
+  store.find('profile', 1).then(function (profile) {
+    ok(profile.get('description') == description);
+    start();
+  });
+})
+
 
 
 module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
