@@ -1,7 +1,7 @@
 # Ember Data Factory Guy  [![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy)
 
 *NOTE*
-  
+
 ember-data is changing the way they are doing relationships in 1.0.0-beta.10 and above
 so, if you are using ember-data-1.0.0-beta.8 and earlier, then be sure to use version 0.6.4
 of ember-data-factory-guy.
@@ -21,8 +21,8 @@ FactoryGuy.setStore(store) somewhere in your code before you start making fixtur
 
 ## Using with Ember Cli
   - https://github.com/igorrKurr/ember-cli-factory-guy-example
-    An example of how to manually set up ember-data-factory-guy with ember cli 
-  
+    An example of how to manually set up ember-data-factory-guy with ember cli
+
   - https://github.com/cristinawithout/ember-cli-data-factory-guy
     A wrapper around ember-data-factory-guy for ember-cli for even easier setup
 
@@ -60,7 +60,7 @@ require the 'ember_data_factory_guy' javascript file in your test helper
 
 Add as one of your dependencies in bower.json file:
 
-```json    
+```json
   "dependencies": {
     "foo-dependency": "latest",
     "other-foo-dependency": "latest",
@@ -85,29 +85,29 @@ then:
 
 ### How this works
 
-- Using DS.RestAdapter / DS.ActiveModelAdapter 
+- Using DS.RestAdapter / DS.ActiveModelAdapter
   - Add record instances to the store
-  - Faster, since models can be accessed synchronously  
-- Using DS.FixtureAdapter 
+  - Faster, since models can be accessed synchronously
+- Using DS.FixtureAdapter
   - Add fixtures to the store
   - Slower, since models are accessed asynchronously
-  
+
 
 ##### DS.RestAdapter / DS.ActiveModelAdapter
 
-The preferred way to use this project is to use the default adapter for your project, 
+The preferred way to use this project is to use the default adapter for your project,
 which is usually going to be the RESTAdapter/ActiveModelAdapter.
-*In other words, it is NOT recommended to use the DS.FixtureAdapter.*  
+*In other words, it is NOT recommended to use the DS.FixtureAdapter.*
 
-When you call: store.makeFixture('user'), you create model in the store and this method 
-returns this model instance 
+When you call: store.makeFixture('user'), you create model in the store and this method
+returns this model instance
 
 *Since you are synchronously getting model instances, you can immediately start asking
  for data from the model, and its associations, which is why it is faster to use
  the REST/ActiveModel adapter than the FixtureAdapter*
 
 ##### Using DS.FixtureAdapter
- 
+
 The benefit of using FactoryGuy is that you can run your tests with the
 default adapter that your application's store normally uses. In other words:
 You do not have to use the DS.FixtureAdapter.  But if you do choose to use the Fixture adapter,
@@ -119,10 +119,10 @@ but some of the associated records were not loaded. Either make sure they are al
 
 If you do get these types of errors try requiring the factory_guy_has_many.js file
 ( located in dist dir and vendor dir ) AFTER you require ember-data,
-but BEFORE you require your models.  
+but BEFORE you require your models.
 
 
-### Setup 
+### Setup
 
 In the following examples, assume the models look like this:
 
@@ -139,22 +139,22 @@ In the following examples, assume the models look like this:
     title:  DS.attr('string'),
     user:   DS.belongsTo('user')
   });
-  
-  // polymorphic models 
+
+  // polymorphic models
   Hat = DS.Model.extend({
     type: DS.attr('string'),
     user: DS.belongsTo('user')
   });
-  
+
   BigHat = Hat.extend();
   SmallHat = Hat.extend();
 ```
 
 
 ### Defining Factories
- - A factory has a name and a set of attributes.  
- - The name should match the model type name. So, for 'User' model, the name would be 'user' 
-    
+ - A factory has a name and a set of attributes.
+ - The name should match the model type name. So, for 'User' model, the name would be 'user'
+
 
 ##### Standard models
 
@@ -187,7 +187,7 @@ It is better to define each polymorphic model in it's own typed definition:
       type: 'SmallHat'
     }
   })
-  
+
   FactoryGuy.define('big_hat', {
     default: {
       type: 'BigHat'
@@ -199,7 +199,7 @@ It is better to define each polymorphic model in it's own typed definition:
 rather than doing this:
 
 ```javascript
-  
+
   FactoryGuy.define('hat', {
     default: {},
     small_hat: {
@@ -209,10 +209,10 @@ rather than doing this:
       type: 'BigHat'
     }
   })
-  
+
 ```
 
-Since there are times that the latter can cause problems when 
+Since there are times that the latter can cause problems when
 the store is looking up the correct model type name
 
 
@@ -220,12 +220,12 @@ the store is looking up the correct model type name
  - FactorGuy.setStore
    - pass in the store instance to FactoryGuy before making fixtures.
  - FactoryGuy.build
-   - Builds json  
+   - Builds json
  - FactoryGuy.make
-   - Loads model instance into the store  
+   - Loads model instance into the store
  - Can override default attributes by passing in a hash
- - Can add attributes with traits ( see traits section )  
- 
+ - Can add attributes with traits ( see traits section )
+
 ```javascript
   // First set the store on FactoryGuy. You don't have to do this step manually
   // if you use FactoryGuyTestHelperMixin since this is done for you in the setup
@@ -234,41 +234,41 @@ the store is looking up the correct model type name
   var store = App.__container__.lookup('store:main');
   FactoryGuy.setStore(store);
 
-  // returns json   
-  var json = FactoryGuy.build('user'); 
+  // returns json
+  var json = FactoryGuy.build('user');
   json // => {id: 1, name: 'Dude', style: 'normal'}
 
-  // returns a User instance that is loaded into your application's store   
+  // returns a User instance that is loaded into your application's store
   var user = FactoryGuy.make('user');
   user.toJSON({includeId: true}) // => {id: 2, name: 'Dude', style: 'normal'}
 
-  var json = FactoryGuy.build('admin'); 
+  var json = FactoryGuy.build('admin');
   json // => {id: 3, name: 'Admin', style: 'super'}
 
   var user = FactoryGuy.make('admin');
   user.toJSON({includeId: true}) // => {id: 4, name: 'Admin', style: 'super'}
-  
+
 ```
 
-You can override the default attributes by passing in a hash 
+You can override the default attributes by passing in a hash
 
 ```javascript
-  
-  var json = FactoryGuy.build('user', {name: 'Fred'}); 
+
+  var json = FactoryGuy.build('user', {name: 'Fred'});
   // json.name => 'Fred'
-  
+
 ```
 
 
 ### Sequences
 
-- For generating unique attribute values. 
-- Can be defined: 
-    - In the model definition's sequences hash 
-    - Inline on the attribute 
+- For generating unique attribute values.
+- Can be defined:
+    - In the model definition's sequences hash
+    - Inline on the attribute
 - Values are generated by calling FactoryGuy.generate
 
-##### Declaring sequences in sequences hash 
+##### Declaring sequences in sequences hash
 
 ```javascript
 
@@ -285,7 +285,7 @@ You can override the default attributes by passing in a hash
     }
   });
 
-  var json = FactoryGuy.build('user'); 
+  var json = FactoryGuy.build('user');
   json.name // => 'User1'
 
   var user = FactoryGuy.make('user');
@@ -293,7 +293,7 @@ You can override the default attributes by passing in a hash
 
 ```
 
-##### Declaring an inline sequence on attribute 
+##### Declaring an inline sequence on attribute
 
 ```javascript
 
@@ -303,7 +303,7 @@ You can override the default attributes by passing in a hash
     },
   });
 
-  var json = FactoryGuy.build('special_project'); 
+  var json = FactoryGuy.build('special_project');
   json.title // => 'Project #1'
 
   var project = FactoryGuy.make('special_project');
@@ -313,15 +313,15 @@ You can override the default attributes by passing in a hash
 
 ### Inline Functions
 
-- Declare a function for an attribute 
+- Declare a function for an attribute
   - Can reference other attributes
 
-```javascript 
-   
+```javascript
+
   FactoryGuy.define('user', {
     // Assume that this definition includes the same sequences and default section
-    // from the user definition in: "Declaring sequences in sequences hash" section. 
-     
+    // from the user definition in: "Declaring sequences in sequences hash" section.
+
     funny_user: {
       style: function(f) { return 'funny '  + f.name }
     }
@@ -330,7 +330,7 @@ You can override the default attributes by passing in a hash
   var json = FactoryGuy.build('funny_user');
   json.name // => 'User1'
   json.style // => 'funny User1'
-  
+
   var user = FactoryGuy.make('funny_user');
   user.get('name') // => 'User2'
   user.get('style') // => 'funny User2'
@@ -343,10 +343,10 @@ You can override the default attributes by passing in a hash
 
 ### Traits
 
-- For grouping attributes together  
+- For grouping attributes together
 - Can use one or more traits in a row
  - The last trait included overrides any values in traits before it
- 
+
 ```javascript
 
   FactoryGuy.define('user', {
@@ -355,8 +355,8 @@ You can override the default attributes by passing in a hash
       friendly: { style: 'Friendly' }
     }
   });
-  
-  var json = FactoryGuy.build('user', 'big', 'friendly'); 
+
+  var json = FactoryGuy.build('user', 'big', 'friendly');
   json.name // => 'Big Guy'
   json.style // => 'Friendly'
 
@@ -366,9 +366,9 @@ You can override the default attributes by passing in a hash
 
 ```
 
-You can still pass in a hash of options when using traits. This hash of 
-attributes will override any trait attributes or default attributes  
-    
+You can still pass in a hash of options when using traits. This hash of
+attributes will override any trait attributes or default attributes
+
 ```javascript
 
   var user = FactoryGuy.make('user', 'big', 'friendly', {name: 'Dave'});
@@ -387,7 +387,7 @@ attributes will override any trait attributes or default attributes
 - The inverse association is being set up for you
 
 ##### Setup belongsTo associations in Factory Definition
- 
+
 ```javascript
   // Recall ( from above setup ) that there is a user belongsTo on the Project model
   // Also, assume 'user' factory is same as from 'user' factory definition above in
@@ -407,8 +407,8 @@ attributes will override any trait attributes or default attributes
       user: FactoryGuy.belongsTo('admin')
     }
   });
-  
-  var json = FactoryGuy.build('project_with_user'); 
+
+  var json = FactoryGuy.build('project_with_user');
   json.user // => {id:1, name: 'Dude', style: 'normal'}
 
   var json = FactoryGuy.build('project_with_bob');
@@ -423,17 +423,17 @@ attributes will override any trait attributes or default attributes
 *You could also accomplish the above with traits:*
 
 ```javascript
-  
+
   FactoryGuy.define('project', {
     traits: {
       with_user: { user: {} },
       with_admin: { user: FactoryGuy.belongsTo('admin') }
     }
   });
-  
+
   var user = FactoryGuy.make('project', 'with_user');
   project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
-  
+
 ```
 
 
@@ -442,12 +442,12 @@ attributes will override any trait attributes or default attributes
 ```javascript
   var user = FactoryGuy.make('user');
   var project = FactoryGuy.make('project', {user: user});
-    
+
   project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
 ```
 
 *Note that though you are setting the 'user' belongsTo association on a project,
-the reverse user hasMany 'projects' association is being setup for you on the user 
+the reverse user hasMany 'projects' association is being setup for you on the user
 ( for both manual and factory defined belongsTo associations ) as well*
 
 ```javascript
@@ -462,16 +462,16 @@ the reverse user hasMany 'projects' association is being setup for you on the us
   FactoryGuy.define('user', {
     user_with_projects: { FactoryGuy.hasMany('project', 2) }
   });
-  
+
   var user = FactoryGuy.make('user_with_projects');
   user.get('projects.length') // => 2
-  
+
 ```
 
 *You could also accomplish the above with traits:*
 
 ```javascript
-  
+
   FactoryGuy.define('project', {
     traits: {
       with_projects: {
@@ -479,10 +479,10 @@ the reverse user hasMany 'projects' association is being setup for you on the us
       }
     }
   });
-  
+
   var user = FactoryGuy.make('user', 'with_projects');
   user.get('projects.length') // => 2
-  
+
 ```
 
 ##### Setup hasMany associations manually
@@ -492,18 +492,18 @@ the reverse user hasMany 'projects' association is being setup for you on the us
   var project2 = FactoryGuy.make('project');
   var user = FactoryGuy.make('user', {projects: [project1,project2]});
   user.get('projects.length') // => 2
-  
-  // or  
+
+  // or
   var projects = FactoryGuy.makeList('project', 2);
   var user = FactoryGuy.make('user', {projects: projects});
   user.get('projects.length') // => 2
-  
+
 ```
 
 *Note that though you are setting the 'projects' hasMany association on a user,
-the reverse 'user' belongsTo association is being setup for you on the project 
+the reverse 'user' belongsTo association is being setup for you on the project
 ( for both manual and factory defined hasMany associations ) as well*
-   
+
 ```javascript
   projects.get('firstObject.user')  // => user
 ```
@@ -517,11 +517,11 @@ the reverse 'user' belongsTo association is being setup for you on the project
     - Loads one or more instances into store
 
 
-##### Building json array 
+##### Building json array
 
 ```javascript
-  var json = FactoryGuy.buildList('user', 2) 
-  json.length // => 2 
+  var json = FactoryGuy.buildList('user', 2)
+  json.length // => 2
   json[0] // => {id: 1, name: 'User1', style: 'normal'}
   json[1] // => {id: 2, name: 'User2', style: 'normal'}
 
@@ -531,14 +531,14 @@ the reverse 'user' belongsTo association is being setup for you on the project
 
 ```javascript
   var users = FactoryGuy.makeList('user', 2)
-  users.get('length') // => 2 
+  users.get('length') // => 2
   users[0].toJSON({includeId: true}) // => {id: 3, name: 'User3', style: 'normal'}
   users[1].toJSON({includeId: true}) // => {id: 4, name: 'User4', style: 'normal'}
 
 ```
 
 
-### Testing models, controllers, views 
+### Testing models, controllers, views
 
 - Testing the models, controllers and views in isolation
 - Use FactoryGuyTestMixin to help with testing
@@ -549,7 +549,7 @@ the reverse 'user' belongsTo association is being setup for you on the project
 - Using FactoryGuyTestMixin helper methods:
   - make
   - teardown
-  
+
 ```javascript
 
 // Create a helper class using FactoryGuyTestMixin.
@@ -594,11 +594,12 @@ test("make a user using your applications default adapter", function() {
 
 - Uses mockjax
 - Has helper methods
-  - handleFindMany 
+  - handleFindMany
+  - handleFindOne
   - handleFindQuery
   - handleCreate
-  - handleUpdate 
-  - handleDelete 
+  - handleUpdate
+  - handleDelete
 
 Since it is recommended to use your normal adapter ( which is usually a subclass of RESTAdapter, )
 FactoryGuyTestMixin assumes you will want to use that adapter to do your integration tests.
@@ -624,9 +625,21 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
 ```javascript
     // can use traits and extra fixture options here as you would with FactoryGuy#makeList
     testHelper.handleFindMany('profile', 2);
-     
+
     store.find('profile').then(function (profiles) {
       profiles.get('length') //=> 2
+    });
+```
+
+##### handleFindOne
+  - for dealing with finding one record with an id
+
+```javascript
+    // can use traits and extra fixture options here as you would with FactoryGuy#make
+    testHelper.handleFindOne('profile', {id: 1});
+
+    store.find('profile', 1).then(function (profile) {
+      profile.get('id') //=> 1
     });
 ```
 
@@ -669,19 +682,19 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
     - succeed - flag to indicate if the request should succeed ( default is true )
 
 **Note**
- 
+
   *Any attributes in match will be added to the response json automatically,
   so you don't need to include them in the returns hash as well.*
-    
+
   *If you match on a belongsTo association, you don't have to include that in the
   returns hash.*
-  
-  
+
+
 Realistically, you will have code in a view action or controller action that will
- create the record, and setup any associations. 
- 
+ create the record, and setup any associations.
+
 ```javascript
-  
+
   // most actions that create a record look something like this:
   action: {
     addProject: function (user) {
@@ -696,10 +709,10 @@ Realistically, you will have code in a view action or controller action that wil
 In this case, you are are creating a 'project' record with a specific name, and belonging
 to a particular user. To mock this createRecord call here are a few ways to do this using
 match and or returns options.
-  
+
 ```javascript
-  // Simplest case  
-  // Don't care about a match just handle createRecord for any project  
+  // Simplest case
+  // Don't care about a match just handle createRecord for any project
   testHelper.handleCreate('project')
   // Exactly matching attributes
   testHelper.handleCreate('project', {match: {name: "Moo", user: user}})
@@ -713,17 +726,17 @@ match and or returns options.
 *mocking a failed create*
 
 ```javascript
-  // set the succeed flag to 'false' 
+  // set the succeed flag to 'false'
   testHelper.handleCreate('project', {succeed: false});
-  
+
   // when the createRecord on the 'project' is called, it will fail
   store.createRecord('project').save() //=> fails
 
-  // or fail only if the attribues match exactly  
+  // or fail only if the attribues match exactly
   testHelper.handleCreate('project', {
     match: {name: "Moo", user: user}, {succeed: false}
   })
-  
+
   store.createRecord('project', {name: "Moo", user: user}).save() //=> fails
 ```
 
