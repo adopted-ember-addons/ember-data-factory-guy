@@ -12,10 +12,10 @@ of ember-data-factory-guy.
   - 0.8.6   -> ember-data-1.0.0-beta.11
   - 0.9.4   -> ember-data-1.0.0-beta.12
 
-** Waiting for ember-data-1.0.0-beta.15 to make upgrade release, since there are a few issues with
- ember-data-1.0.0-beta.14.1 that make it difficult to use **
+**Waiting for ember-data-1.0.0-beta.15 to make upgrade release, since there are a few issues with
+ ember-data-1.0.0-beta.14.1 that make it difficult to use**
 
-** Support for fixture adapter is back in business as of version 0.9.3 **
+**Support for fixture adapter is back in business as of version 0.9.3**
 
 *Version 0.9.0 and up deprecates explicit call to store.makeFixture in your tests, in favor
 of using the FactoryGuy.make or testHelper.make function from FactoryGuyTestHelperMixin instead.
