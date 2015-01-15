@@ -463,7 +463,7 @@ the reverse user hasMany 'projects' association is being setup for you on the us
 
 ``` javascript
   FactoryGuy.define('user', {
-    user_with_projects: { FactoryGuy.hasMany('project', 2) }
+    user_with_projects: { projects: FactoryGuy.hasMany('project', 2) }
   });
 
   var user = FactoryGuy.make('user_with_projects');
