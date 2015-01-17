@@ -60,6 +60,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     if (options.data) {
       request.data = options.data;
     }
+
     $.mockjax(request);
   },
   /**
@@ -81,7 +82,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
      // Pass in the parameters you would normally pass into FactoryGuy.makeList,
      // like fixture name, number of fixtures to make, and optional traits,
      // or fixture options
-     testHelper.handleFindMany('user', 2, 'with_hats');
+     testHelper.handleFindAll('user', 2, 'with_hats');
 
      store.find('user').then(function(users){
 
@@ -93,7 +94,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
      @param {String} trait  optional traits (one or more)
      @param {Object} opts  optional fixture options
    */
-  handleFindMany: function () {
+  handleFindAll: function () {
     // make the records and load them in the store
     var records = FactoryGuy.makeList.apply(FactoryGuy, arguments);
     var name = arguments[0];
@@ -104,7 +105,10 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     var url = this.buildURL(modelName);
     this.stubEndpointForHttpRequest(url, responseJson);
   },
-
+  handleFindMany: function() {
+    Ember.deprecate('DEPRECATION Warning: use handleFindAll instead');
+    this.handleFindAll.apply(this, arguments)
+  },
   /**
      Handling ajax GET for finding one record for a type of model and an id.
      You can mock failed find by passing in success argument as false.
@@ -124,18 +128,28 @@ var FactoryGuyTestMixin = Em.Mixin.create({
      @param {String} trait  optional traits (one or more)
      @param {Object} opts  optional fixture options (including id)
    */
-  handleFindOne: function () {
-    // make the records and load them in the store
-    var record = FactoryGuy.make.apply(FactoryGuy, arguments);
-    var name = arguments[0];
-    var modelName = FactoryGuy.lookupModelForFixtureName(name);
+  handleFind: function () {
+    var args = Array.prototype.slice.call(arguments)
+    Ember.assert("To handleFindOne pass in a model instance or a type and model options", args.length>0)
+
+    var record, modelName;
+    if (args[0] instanceof DS.Model) {
+      record = args[0];
+      modelName = record.constructor.typeKey;
+    } else {
+      // make the record and load it in the store
+      record = FactoryGuy.make.apply(FactoryGuy, arguments);
+      var name = arguments[0];
+      modelName = FactoryGuy.lookupModelForFixtureName(name);
+    }
+
     var responseJson = {};
     var json = record.toJSON({includeId: true});
     responseJson[modelName.pluralize()] = json;
     var url = this.buildURL(modelName, record.id);
     this.stubEndpointForHttpRequest(url, responseJson);
   },
-
+  handleFindOne: function() { this.handleFind.apply(this, arguments) },
   /**
    Handling ajax GET for finding all records for a type of model with query parameters.
 
@@ -200,55 +214,74 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     succeed - flag to indicate if the request should succeed ( default is true )
 
     Note:
-     1) that any attributes in match will be added to the response json automatically,
-    so you don't need to include them in the returns hash as well.
+     1) Any attributes in match will be added to the response json automatically,
+    so you don't need to include them in the returns hash.
 
-     2) If you don't use match options for exact match, there will be no id returned to the model.
-        The reason being, that this method purposely returns an empty hash response with a 'don't match'
-        style handleCreate, because if the responseJson returns a non empty data hash ( with even only
-        the id), this essentially empty hash of attributes will override ( and nullify ) all the attributes
-        that set when you created the record.
-     3) If you match on a belongsTo association, you don't have to include that in the
-    returns hash.
+     2) As long as all the match attributes are found in the record being created,
+     the create will succeed. In other words, there may be other attributes in the
+     createRecord call, but you don't have to match them all. For example:
+
+      ```js
+        handleCreate('post', {match: {title: 'foo'})
+        store.createRecord('post', {title: 'foo', created_at: new Date()})
+      ```
+
+     2) If you match on a belongsTo association, you don't have to include that in the
+    returns hash either.
 
    @param {String} modelName  name of model your creating like 'profile' for Profile
    @param {Object} options  hash of options for handling request
    */
   handleCreate: function (modelName, options) {
     var opts = options === undefined ? {} : options;
+    var store = this.getStore()
     var succeed = opts.succeed === undefined ? true : opts.succeed;
     var match = opts.match || {};
     var returnArgs = opts.returns || {};
 
-    var url = this.buildURL(modelName);
-    var definition = FactoryGuy.modelDefinitions[modelName];
-
-    var httpOptions = {type: 'POST'};
     if (opts.match) {
-      var expectedRequest = {};
-      var record = this.getStore().createRecord(modelName, match);
-      expectedRequest[modelName] = record.serialize();
-      httpOptions.data = JSON.stringify(expectedRequest);
+      var record = store.createRecord(modelName, match);
+      var expectedRequest = record.serialize();
     }
 
-    var modelType = this.getStore().modelFor(modelName)
+    var modelType = store.modelFor(modelName)
 
     var responseJson = {};
     if (succeed) {
-        responseJson[modelName] = $.extend({id: definition.nextId()}, match, returnArgs);
-        // Remove belongsTo associations since they will already be set when you called
-        // createRecord, and included them in those attributes
-        Ember.get(modelType, 'relationshipsByName').forEach(function (relationship) {
-          if (relationship.kind == 'belongsTo') {
-            delete responseJson[modelName][relationship.key];
-          }
-        })
-    } else {
-      httpOptions.status = 500;
+      var definition = FactoryGuy.modelDefinitions[modelName];
+      responseJson[modelName] = $.extend({id: definition.nextId()}, match, returnArgs);
+      // Remove belongsTo associations since they will already be set when you called
+      // createRecord, so they don't need to be returned.
+      Ember.get(modelType, 'relationshipsByName').forEach(function (relationship) {
+        if (relationship.kind == 'belongsTo') {
+          delete responseJson[modelName][relationship.key];
+        }
+      })
     }
 
-    this.stubEndpointForHttpRequest(url, responseJson, httpOptions);
+    var url = this.buildURL(modelName);
+
+    var handler = function(settings) {
+      if (settings.url != url || settings.type != 'POST') { return false}
+
+      if (opts.match) {
+        var requestData = JSON.parse(settings.data)[modelName];
+        for (attribute in expectedRequest) {
+          if (expectedRequest[attribute] && requestData[attribute] != expectedRequest[attribute]) {
+            return false
+          }
+        }
+      }
+      var responseStatus = (succeed ? 200: 500);
+      return {
+        responseText: responseJson,
+        status: responseStatus
+      };
+    }
+
+    $.mockjax(handler);
   },
+
   /**
    Handling ajax PUT ( update record ) for a model type. You can mock
    failed update by passing in success argument as false.

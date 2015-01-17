@@ -597,8 +597,8 @@ test("make a user using your applications default adapter", function() {
 
 - Uses mockjax
 - Has helper methods
-  - handleFindMany
-  - handleFindOne
+  - handleFindAll
+  - handleFind
   - handleFindQuery
   - handleCreate
   - handleUpdate
@@ -622,24 +622,43 @@ and this is already bundled for you when you use the ember-data-factory-guy libr
 tests run as shown in the previous section (Using FactoryGuyTestMixin)**
 
 
-##### handleFindMany
+##### handleFindAll
   - for dealing with finding all records of a particular type
+  - handleFindMany ( deprecated alias )
 
 ```javascript
     // can use traits and extra fixture options here as you would with FactoryGuy#makeList
-    testHelper.handleFindMany('profile', 2);
+    testHelper.handleFindAll('profile', 2);
 
     store.find('profile').then(function (profiles) {
       profiles.get('length') //=> 2
     });
 ```
 
-##### handleFindOne
-  - for dealing with finding one record with an id
+##### handleFind
+  - pass in a record to handle reload
+  - pass in fixture name and options ( including id if needed ) to handle making a record
+    with those options and finding that record
+  - handleFindOne ( deprecated alias )
+
+*Passing in a model instance*
 
 ```javascript
-    // can use traits and extra fixture options here as you would with FactoryGuy#make
-    testHelper.handleFindOne('profile', {id: 1});
+    var profile = FactoryGuy.make('profile')
+    testHelper.handleFind(profile);
+
+    profile.reload().then(function (profile2) {
+      ok(profile2.id == profile.id);
+      start();
+    });
+```
+
+*Passing in fixture name and options*
+
+```javascript
+    // can use traits and extra fixture options here as you would with FactoryGuy#make,
+    // since a record will be made, and placed in the store for you.
+    testHelper.handleFind('profile', {id: 1});
 
     store.find('profile', 1).then(function (profile) {
       profile.get('id') //=> 1
@@ -717,8 +736,13 @@ match and or returns options.
   // Simplest case
   // Don't care about a match just handle createRecord for any project
   testHelper.handleCreate('project')
+
   // Exactly matching attributes
   testHelper.handleCreate('project', {match: {name: "Moo", user: user}})
+
+  // Matching some attributes
+  testHelper.handleCreate('project', {match: {name: "Moo"}})
+
   // Exactly matching attributes, and returning extra attributes
   testHelper.handleCreate('project', {
     match: {name: "Moo", user: user}, returns: {created_at: new Date()}
@@ -735,7 +759,7 @@ match and or returns options.
   // when the createRecord on the 'project' is called, it will fail
   store.createRecord('project').save() //=> fails
 
-  // or fail only if the attribues match exactly
+  // or fail only if the attributes match the match options
   testHelper.handleCreate('project', {
     match: {name: "Moo", user: user}, {succeed: false}
   })

@@ -107,10 +107,10 @@ asyncTest("#handleFindQuery passing in existing instances with hasMany and belon
 });
 
 
-/////// handleFindMany //////////
+/////// handleFindAll //////////
 
-asyncTest("#handleFindMany the basic", function () {
-  testHelper.handleFindMany('profile', 2);
+asyncTest("#handleFindAll the basic", function () {
+  testHelper.handleFindAll('profile', 2);
 
   store.findAll('profile').then(function (profiles) {
     ok(profiles.get('length') == 2);
@@ -118,8 +118,8 @@ asyncTest("#handleFindMany the basic", function () {
   });
 });
 
-asyncTest("#handleFindMany with fixture options", function () {
-  testHelper.handleFindMany('profile', 2, {description: 'dude'});
+asyncTest("#handleFindAll with fixture options", function () {
+  testHelper.handleFindAll('profile', 2, {description: 'dude'});
 
   store.findAll('profile').then(function (profiles) {
     ok(profiles.get('length') == 2);
@@ -128,8 +128,8 @@ asyncTest("#handleFindMany with fixture options", function () {
   });
 });
 
-asyncTest("#handleFindMany with traits", function () {
-  testHelper.handleFindMany('profile', 2, 'goofy_description');
+asyncTest("#handleFindAll with traits", function () {
+  testHelper.handleFindAll('profile', 2, 'goofy_description');
 
   store.findAll('profile').then(function (profiles) {
     ok(profiles.get('length') == 2);
@@ -138,8 +138,8 @@ asyncTest("#handleFindMany with traits", function () {
   });
 });
 
-asyncTest("#handleFindMany with traits and extra options", function () {
-  testHelper.handleFindMany('profile', 2, 'goofy_description', {description: 'dude'});
+asyncTest("#handleFindAll with traits and extra options", function () {
+  testHelper.handleFindAll('profile', 2, 'goofy_description', {description: 'dude'});
 
   store.findAll('profile').then(function (profiles) {
     ok(profiles.get('length') == 2);
@@ -149,9 +149,9 @@ asyncTest("#handleFindMany with traits and extra options", function () {
 });
 
 
-//////// handleFindOne /////////
+//////// handleFind /////////
 
-asyncTest("#handleFindOne the basic", function () {
+asyncTest("#handleFindOne aliases handleFind", function () {
   var id = 1
   testHelper.handleFindOne('profile', {id: id});
 
@@ -159,11 +159,45 @@ asyncTest("#handleFindOne the basic", function () {
     ok(profile.get('id') == id);
     start();
   });
+
 });
 
-asyncTest("#handleFindOne with traits", function () {
+asyncTest("#handleFind with a record returns the record", function () {
+  var profile = FactoryGuy.make('profile')
+  testHelper.handleFind(profile);
+
+  store.find('profile', 1).then(function (profile2) {
+    ok(profile2.id == profile.id);
+    start();
+  });
+
+});
+
+asyncTest("#handleFind with a record handles reload", function () {
+  var profile = FactoryGuy.make('profile')
+  testHelper.handleFind(profile);
+
+  profile.reload().then(function (profile2) {
+    ok(profile2.id == profile.id);
+    start();
+  });
+
+});
+
+asyncTest("#handleFind with options", function () {
   var id = 1
-  testHelper.handleFindOne('profile', 'goofy_description', {id: id});
+  testHelper.handleFind('profile', {id: id});
+
+  store.find('profile', 1).then(function (profile) {
+    ok(profile.get('id') == id);
+    start();
+  });
+
+});
+
+asyncTest("#handleFind with traits", function () {
+  var id = 1
+  testHelper.handleFind('profile', 'goofy_description', {id: id});
 
   store.find('profile', 1).then(function (profile) {
     ok(profile.get('description') == 'goofy');
@@ -171,10 +205,10 @@ asyncTest("#handleFindOne with traits", function () {
   });
 });
 
-asyncTest("#handleFindOne with arguments", function () {
+asyncTest("#handleFind with arguments", function () {
   var id = 1
   var description = 'guy';
-  testHelper.handleFindOne('profile', {id: id, description: description });
+  testHelper.handleFind('profile', {id: id, description: description });
 
   store.find('profile', 1).then(function (profile) {
     ok(profile.get('description') == description);
@@ -182,10 +216,10 @@ asyncTest("#handleFindOne with arguments", function () {
   });
 });
 
-asyncTest("#handleFindOne with traits and arguments", function () {
+asyncTest("#handleFind with traits and arguments", function () {
   var id = 1
   var description = 'guy';
-  testHelper.handleFindOne('profile', 'goofy_description', {id: id, description: description});
+  testHelper.handleFind('profile', 'goofy_description', {id: id, description: description});
 
   store.find('profile', 1).then(function (profile) {
     ok(profile.get('description') == description);
@@ -219,19 +253,39 @@ asyncTest("#handleCreate with no specific match", function() {
   });
 });
 
-asyncTest("#handleCreate matches attributes and returns these", function() {
+asyncTest("#handleCreate match some attributes", function() {
   var customDescription = "special description"
+  var date = new Date();
 
   testHelper.handleCreate('profile', {
     match: {description: customDescription}
   })
 
   store.createRecord('profile', {
-    description: customDescription
+    description: customDescription, created_at: date
   }).save().then(function(profile) {
     ok(profile instanceof Profile)
     ok(profile.id == 1)
     ok(profile.get('description') == customDescription)
+    start();
+  });
+});
+
+asyncTest("#handleCreate match all attributes", function() {
+  var customDescription = "special description"
+  var date = new Date();
+
+  testHelper.handleCreate('profile', {
+    match: {description: customDescription, created_at: date}
+  })
+
+  store.createRecord('profile', {
+    description: customDescription, created_at: date
+  }).save().then(function(profile) {
+    ok(profile instanceof Profile)
+    ok(profile.id == 1)
+    ok(profile.get('description') == customDescription)
+    ok(profile.get('created_at') == date.toString())
     start();
   });
 });
@@ -342,11 +396,20 @@ asyncTest("#handleCreate match but still fail", function() {
 
 
 
-/////// handleFindMany //////////
+/////// handleFindAll //////////
 
-
-asyncTest("#handleFindMany the basic", function () {
+asyncTest("#handleFindMany aliases handleFindAll", function () {
   testHelper.handleFindMany('profile', 2);
+
+  store.find('profile').then(function (profiles) {
+    ok(profiles.get('length') == 2);
+    ok(profiles.get('firstObject.description') == 'Text goes here');
+    start();
+  });
+})
+
+asyncTest("#handleFindAll the basic", function () {
+  testHelper.handleFindAll('profile', 2);
 
   store.find('profile').then(function (profiles) {
     ok(profiles.get('length') == 2);
@@ -355,8 +418,8 @@ asyncTest("#handleFindMany the basic", function () {
   });
 });
 
-asyncTest("#handleFindMany with fixture options", function () {
-  testHelper.handleFindMany('profile', 2, {description: 'dude'});
+asyncTest("#handleFindAll with fixture options", function () {
+  testHelper.handleFindAll('profile', 2, {description: 'dude'});
 
   store.find('profile').then(function (profiles) {
     ok(profiles.get('length') == 2);
@@ -365,8 +428,8 @@ asyncTest("#handleFindMany with fixture options", function () {
   });
 });
 
-asyncTest("#handleFindMany with traits", function () {
-  testHelper.handleFindMany('profile', 2, 'goofy_description');
+asyncTest("#handleFindAll with traits", function () {
+  testHelper.handleFindAll('profile', 2, 'goofy_description');
 
   store.find('profile').then(function (profiles) {
     ok(profiles.get('length') == 2);
@@ -375,8 +438,8 @@ asyncTest("#handleFindMany with traits", function () {
   });
 });
 
-asyncTest("#handleFindMany with traits and fixture options", function () {
-  testHelper.handleFindMany('profile', 2, 'goofy_description', {description: 'dude'});
+asyncTest("#handleFindAll with traits and fixture options", function () {
+  testHelper.handleFindAll('profile', 2, 'goofy_description', {description: 'dude'});
 
   store.find('profile').then(function (profiles) {
     ok(profiles.get('length') == 2);
