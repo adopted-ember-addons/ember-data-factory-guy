@@ -1092,14 +1092,13 @@ var FactoryGuyTestMixin = Em.Mixin.create({
       var expectedRequest = record.serialize();
     }
 
-    var modelType = store.modelFor(modelName)
-
     var responseJson = {};
     if (succeed) {
       var definition = FactoryGuy.modelDefinitions[modelName];
       responseJson[modelName] = $.extend({id: definition.nextId()}, match, returnArgs);
       // Remove belongsTo associations since they will already be set when you called
       // createRecord, so they don't need to be returned.
+      var modelType = store.modelFor(modelName)
       Ember.get(modelType, 'relationshipsByName').forEach(function (relationship) {
         if (relationship.kind == 'belongsTo') {
           delete responseJson[modelName][relationship.key];
