@@ -624,7 +624,7 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
 
 ##### handleFindAll
   - for dealing with finding all records of a particular type
-  - handleFindMany ( deprecated alias )
+  - handleFindMany is a deprecated alias for handleFindAll
 
 ```javascript
     // can use traits and extra fixture options here as you would with FactoryGuy#makeList
@@ -639,7 +639,7 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
   - pass in a record to handle reload
   - pass in fixture name and options ( including id if needed ) to handle making a record
     with those options and finding that record
-  - handleFindOne ( deprecated alias )
+  - handleFindOne is deprecated alias for handleFind
 
 *Passing in a model instance*
 
