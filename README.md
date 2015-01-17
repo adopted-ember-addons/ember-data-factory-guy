@@ -737,11 +737,11 @@ match and or returns options.
   // Don't care about a match just handle createRecord for any project
   testHelper.handleCreate('project')
 
-  // Exactly matching attributes
-  testHelper.handleCreate('project', {match: {name: "Moo", user: user}})
-
   // Matching some attributes
   testHelper.handleCreate('project', {match: {name: "Moo"}})
+
+  // Exactly matching attributes
+  testHelper.handleCreate('project', {match: {name: "Moo", user: user}})
 
   // Exactly matching attributes, and returning extra attributes
   testHelper.handleCreate('project', {
