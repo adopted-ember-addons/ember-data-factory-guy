@@ -593,7 +593,7 @@ test("make a user using your applications default adapter", function() {
 ### Integration Tests
 
 
-#### Using FactoryGuyTestMixin
+##### With FactoryGuyTestMixin
 
 - Uses mockjax
 - Has helper methods
