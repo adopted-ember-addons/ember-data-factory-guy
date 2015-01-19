@@ -75,6 +75,32 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     return this.getStore().adapterFor(type).buildURL(type.typeKey, id);
   },
   /**
+   Map many json objects to response json.
+
+   Allows custom serializing mappings and meta data to be added to requests.
+
+   @param {String} modelName model name
+   @param {Object} json Json objects from records.map
+   @return {Object} responseJson
+  */
+  mapFindAll: function(modelName, json) {
+    var responseJson = {};
+    return responseJson[modelName.pluralize()] = json;
+  },
+  /**
+   Map single object to response json.
+
+   Allows custom serializing mappings and meta data to be added to requests.
+
+   @param {String} modelName model name
+   @param {Object} json Json object from record.toJSON
+   @return {Object} responseJson
+  */
+  mapFind:function(modelName, json){
+    var responseJson = {};
+    return responseJson[modelName.pluralize()] = json;
+  }
+  /**
      Handling ajax GET for finding all records for a type of model.
      You can mock failed find by passing in success argument as false.
 
@@ -99,9 +125,8 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     var records = FactoryGuy.makeList.apply(FactoryGuy, arguments);
     var name = arguments[0];
     var modelName = FactoryGuy.lookupModelForFixtureName(name);
-    var responseJson = {};
     var json = records.map(function(record) {return record.toJSON({includeId: true})});
-    responseJson[modelName.pluralize()] = json;
+    var responseJson = this.mapFindAll(modelName, json);
     var url = this.buildURL(modelName);
     this.stubEndpointForHttpRequest(url, responseJson);
   },
@@ -143,9 +168,8 @@ var FactoryGuyTestMixin = Em.Mixin.create({
       modelName = FactoryGuy.lookupModelForFixtureName(name);
     }
 
-    var responseJson = {};
     var json = record.toJSON({includeId: true});
-    responseJson[modelName.pluralize()] = json;
+    var responseJson = this.mapFind(modelName, json);
     var url = this.buildURL(modelName, record.id);
     this.stubEndpointForHttpRequest(url, responseJson);
   },
@@ -191,8 +215,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
       records = []
     }
     var json = records.map(function(record) {return record.toJSON({includeId: true})})
-    var responseJson = {};
-    responseJson[modelName.pluralize()] = json;
+    var responseJson = this.mapFindAll(modelName, json);
     var url = this.buildURL(modelName);
     this.stubEndpointForHttpRequest(url, responseJson, {urlParams: searchParams});
   },
