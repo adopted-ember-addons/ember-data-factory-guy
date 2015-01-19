@@ -102,7 +102,7 @@ The preferred way to use this project is to use the default adapter for your pro
 which is usually going to be the RESTAdapter/ActiveModelAdapter.
 *In other words, it is NOT recommended to use the DS.FixtureAdapter.*
 
-When you call: store.makeFixture('user'), you create model in the store and this method
+When you call: FactoryGuy.make('user'), you create model in the store and this method
 returns this model instance
 
 *Since you are synchronously getting model instances, you can immediately start asking
@@ -609,7 +609,7 @@ FactoryGuyTestMixin assumes you will want to use that adapter to do your integra
 
 To do that you will still have to deal with ember data trying to create, update or delete records.
 
-If you put models into the store ( with store#makeFixture ), the http GET call does not need to be mocked,
+If you put models into the store ( with FactoryGuy#make ), the http GET call does not need to be mocked,
 since that model is already in the store.
 
 But what if you want to handle create, update, and delete? Or even findAll records?
@@ -639,7 +639,7 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
   - pass in a record to handle reload
   - pass in fixture name and options ( including id if needed ) to handle making a record
     with those options and finding that record
-  - handleFindOne is deprecated alias for handleFind
+  - handleFindOne is a deprecated alias for handleFind
 
 *Passing in a model instance*
 
