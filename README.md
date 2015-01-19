@@ -698,10 +698,16 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
 
 
 ##### handleCreate
-  - options
+  - use chainable methods to build the response
+    - match - attributes that must be in request json
+    - andReturns - attributes to include in response json
+    - andFail - request should fail
+
+  - use hash of options to build the response
     - match - attributes that must be in request json
     - returns - attributes to include in response json
     - succeed - flag to indicate if the request should succeed ( default is true )
+    - this style will eventually be deprecated
 
 **Note**
 
@@ -732,6 +738,40 @@ In this case, you are are creating a 'project' record with a specific name, and 
 to a particular user. To mock this createRecord call here are a few ways to do this using
 match and or returns options.
 
+
+######Using chainable methods
+
+```javascript
+  // Simplest case
+  // Don't care about a match just handle createRecord for any project
+  testHelper.handleCreate('project')
+
+  // Matching some attributes
+  testHelper.handleCreate('project').match({match: {name: "Moo"})
+
+  // Match all attributes
+  testHelper.handleCreate('project').match({match: {name: "Moo", user: user})
+
+  // Exactly matching attributes, and returning extra attributes
+  testHelper.handleCreate('project')
+    .match({name: "Moo", user: user})
+    .andReturn({created_at: new Date()})
+
+```
+
+*mocking a failed create*
+
+```javascript
+
+  // Mocking failure case is easy with chainable methods, just use #andFail
+  testHelper.handleCreate('project').match({match: {name: "Moo"}).andFail()
+
+  store.createRecord('project', {name: "Moo"}).save() //=> fails
+```
+
+
+######Using hash of options
+
 ```javascript
   // Simplest case
   // Don't care about a match just handle createRecord for any project
@@ -740,7 +780,7 @@ match and or returns options.
   // Matching some attributes
   testHelper.handleCreate('project', {match: {name: "Moo"}})
 
-  // Exactly matching attributes
+  // Match all attributes
   testHelper.handleCreate('project', {match: {name: "Moo", user: user}})
 
   // Exactly matching attributes, and returning extra attributes
