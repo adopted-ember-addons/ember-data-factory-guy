@@ -99,7 +99,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   mapFind:function(modelName, json){
     var responseJson = {};
     return responseJson[modelName.pluralize()] = json;
-  }
+  },
   /**
      Handling ajax GET for finding all records for a type of model.
      You can mock failed find by passing in success argument as false.
