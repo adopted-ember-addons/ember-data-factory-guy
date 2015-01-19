@@ -567,11 +567,11 @@ module('User Model', {
     // Assumes the application's namespace is App, though yours may not be.
     testHelper = TestHelper.setup(App);
     store = testHelper.getStore();
-    // You could at this point, make fixtures with testHelper.make,
+    // You could at this point, make fixtures with FactoryGuy.make,
     // but to be even more concise try this shortcut method to your tests
-    make = testHelper.make.bind(testHelper)
+    make = FactoryGuy.make.bind(FactoryGuy)
     // or if your running in phantomjs and it does not support bind method try this:
-    // make = function() {return testHelper.make.apply(testHelper,arguments)}
+    // make = function() {return FactoryGuy.make.apply(FactoryGuy,arguments)}
   },
   teardown: function() {
     Em.run(function() { testHelper.teardown(); });
@@ -776,7 +776,7 @@ match and or returns options.
 *success case is the default*
 
 ```javascript
-  var profile = testHelper.make('profile');
+  var profile = FactoryGuy.make('profile');
 
   // Pass in the model that will be updated ( if you have it available )
   testHelper.handleUpdate(profile);
@@ -792,7 +792,7 @@ match and or returns options.
 *mocking a failed update*
 
 ```javascript
-  var profile = testHelper.make('profile');
+  var profile = FactoryGuy.make('profile');
 
   // set the succeed flag to 'false'
   testHelper.handleUpdate('profile', profile.id, false);
@@ -810,7 +810,7 @@ match and or returns options.
 *success case is the default*
 
 ```javascript
-  var profile = testHelper.make('profile');
+  var profile = FactoryGuy.make('profile');
   testHelper.handleDelete('profile', profile.id);
 
   profile.destroyRecord() // => will succeed
@@ -819,7 +819,7 @@ match and or returns options.
 *mocking a failed delete*
 
 ```javascript
-  var profile = testHelper.make('profile');
+  var profile = FactoryGuy.make('profile');
   // set the succeed flag to 'false'
   testHelper.handleDelete('profile', profile.id, false);
 
@@ -847,7 +847,7 @@ var viewHelper, user;
 module('User View', {
   setup: function() {
     viewHelper = ViewTestHelper.setup(App); // set up helper
-    user = viewHelper.make('user'); // create a user in the store
+    user = FactoryGuy.make('user'); // create a user in the store
     visit('/users/'+user.id); // visit the users route
   },
   teardown: function() {
