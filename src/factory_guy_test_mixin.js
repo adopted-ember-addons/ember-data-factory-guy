@@ -85,7 +85,8 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   */
   mapFindAll: function(modelName, json) {
     var responseJson = {};
-    return responseJson[modelName.pluralize()] = json;
+    responseJson[modelName.pluralize()] = json;
+    return responseJson;
   },
   /**
    Map single object to response json.
@@ -98,7 +99,8 @@ var FactoryGuyTestMixin = Em.Mixin.create({
   */
   mapFind:function(modelName, json){
     var responseJson = {};
-    return responseJson[modelName.pluralize()] = json;
+    responseJson[modelName.pluralize()] = json;
+    return responseJson;
   },
   /**
      Handling ajax GET for finding all records for a type of model.
