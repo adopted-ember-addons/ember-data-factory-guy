@@ -612,7 +612,7 @@ To do that you will still have to deal with ember data trying to create, update 
 If you put models into the store ( with FactoryGuy#make ), the http GET call does not need to be mocked,
 since that model is already in the store.
 
-But what if you want to handle create, update, and delete? Or even findAll records?
+But what if you want to handle create, update, and delete? Or even reload or findAll records?
 
 FactoryGuy assumes you want to mock ajax calls with the mockjax library,
 and this is already bundled for you when you use the ember-data-factory-guy library.
