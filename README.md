@@ -736,7 +736,7 @@ Realistically, you will have code in a view action or controller action that wil
 
 In this case, you are are creating a 'project' record with a specific name, and belonging
 to a particular user. To mock this createRecord call here are a few ways to do this using
-match and or returns options.
+chainable methods, or options hash.
 
 
 ######Using chainable methods
