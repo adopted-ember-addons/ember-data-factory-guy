@@ -1081,52 +1081,10 @@ var FactoryGuyTestMixin = Em.Mixin.create({
    @param {Object} options  hash of options for handling request
    */
   handleCreate: function (modelName, options) {
-    var opts = options === undefined ? {} : options;
-    var store = this.getStore()
-    var succeed = opts.succeed === undefined ? true : opts.succeed;
-    var match = opts.match || {};
-    var returnArgs = opts.returns || {};
-
-    if (opts.match) {
-      var record = store.createRecord(modelName, match);
-      var expectedRequest = record.serialize();
-    }
-
-    var responseJson = {};
-    if (succeed) {
-      var definition = FactoryGuy.modelDefinitions[modelName];
-      responseJson[modelName] = $.extend({id: definition.nextId()}, match, returnArgs);
-      // Remove belongsTo associations since they will already be set when you called
-      // createRecord, so they don't need to be returned.
-      var modelType = store.modelFor(modelName)
-      Ember.get(modelType, 'relationshipsByName').forEach(function (relationship) {
-        if (relationship.kind == 'belongsTo') {
-          delete responseJson[modelName][relationship.key];
-        }
-      })
-    }
-
     var url = this.buildURL(modelName);
-
-    var handler = function(settings) {
-      if (settings.url != url || settings.type != 'POST') { return false}
-
-      if (opts.match) {
-        var requestData = JSON.parse(settings.data)[modelName];
-        for (attribute in expectedRequest) {
-          if (expectedRequest[attribute] && requestData[attribute] != expectedRequest[attribute]) {
-            return false
-          }
-        }
-      }
-      var responseStatus = (succeed ? 200: 500);
-      return {
-        responseText: responseJson,
-        status: responseStatus
-      };
-    }
-
-    $.mockjax(handler);
+    var store = this.getStore();
+    var opts = options === undefined ? {} : options;
+    return new MockCreateRequest(url, store, modelName, opts);
   },
 
   /**

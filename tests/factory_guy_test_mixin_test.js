@@ -28,7 +28,7 @@ module('FactoryGuyTestMixin (using mockjax) with DS.RESTAdapter', {
   setup: function () {
     testHelper = TestHelper.setup(DS.RESTAdapter);
     store = testHelper.getStore();
-    make = function() {return testHelper.make.apply(testHelper,arguments)}
+    make = function() {return FactoryGuy.make.apply(FactoryGuy,arguments)}
   },
   teardown: function () {
     testHelper.teardown();
@@ -233,7 +233,7 @@ module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
   setup: function () {
     testHelper = TestHelper.setup(DS.ActiveModelAdapter);
     store = testHelper.getStore();
-    make = function() {return testHelper.make.apply(testHelper,arguments)}
+    make = function() {return FactoryGuy.make.apply(FactoryGuy,arguments)}
   },
   teardown: function () {
     testHelper.teardown();
@@ -241,8 +241,9 @@ module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
 });
 
 
-/////// handleCreate //////////
+  /////// handleCreate //////////
 
+/////// with hash of parameters ///////////////////
 asyncTest("#handleCreate with no specific match", function() {
   testHelper.handleCreate('profile');
 
@@ -394,6 +395,128 @@ asyncTest("#handleCreate match but still fail", function() {
     )
 });
 
+/////// handleCreate //////////
+/////// with chaining methods ///////////////////
+
+asyncTest("#handleCreate match some attributes with match method", function() {
+  var customDescription = "special description"
+  var date = new Date();
+
+  testHelper.handleCreate('profile').match({description: customDescription});
+
+  store.createRecord('profile', {
+    description: customDescription, created_at: date
+  }).save().then(function(profile) {
+    ok(profile instanceof Profile)
+    ok(profile.id == 1)
+    ok(profile.get('description') == customDescription)
+    start();
+  });
+});
+
+asyncTest("#handleCreate match all attributes  with match method", function() {
+  var customDescription = "special description"
+  var date = new Date();
+
+  testHelper.handleCreate('profile').match({description: customDescription, created_at: date});
+
+  store.createRecord('profile', {
+    description: customDescription, created_at: date
+  }).save().then(function(profile) {
+    ok(profile instanceof Profile)
+    ok(profile.id == 1)
+    ok(profile.get('description') == customDescription)
+    ok(profile.get('created_at') == date.toString())
+    start();
+  });
+});
+
+asyncTest("#handleCreate match belongsTo association with match method", function() {
+  var company = make('company')
+  testHelper.handleCreate('profile').match({company: company})
+
+  store.createRecord('profile', {company: company}).save().then(function(profile) {
+    ok(profile.get('company') == company)
+    start();
+  });
+});
+
+asyncTest("#handleCreate match belongsTo polymorphic association  with match method", function() {
+  var group = make('group')
+  testHelper.handleCreate('profile').match({group: group})
+
+  store.createRecord('profile', {group: group}).save().then(function(profile) {
+    ok(profile.get('group') == group)
+    start();
+  });
+});
+
+
+
+asyncTest("#handleCreate returns attributes with andReturns method", function() {
+  var date = new Date()
+
+  testHelper.handleCreate('profile').andReturn({created_at: date});
+
+  store.createRecord('profile').save().then(function(profile) {
+    ok(profile.get('created_at') == date.toString())
+    start();
+  });
+});
+
+asyncTest("#handleCreate match attributes and return attributes with match and andReturn methods", function() {
+  var date = new Date()
+  var customDescription = "special description"
+  var company = make('company')
+  var group = make('big_group')
+
+  testHelper.handleCreate('profile')
+    .match({description: customDescription, company: company, group: group})
+    .andReturn({created_at: new Date()})
+
+  store.createRecord('profile', {
+    description: customDescription, company: company, group: group
+  }).save().then(function(profile) {
+    start();
+    ok(profile.get('created_at') == date.toString())
+    ok(profile.get('group') == group)
+    ok(profile.get('company') == company)
+    ok(profile.get('description') == customDescription)
+  });
+});
+
+
+asyncTest("#handleCreate failure with andFail method", function() {
+  testHelper.handleCreate('profile').andFail();
+
+  store.createRecord('profile').save()
+    .then(
+      function() {},
+      function() {
+        ok(true)
+        start();
+      }
+    )
+});
+
+
+asyncTest("#handleCreate match but still fail with chaining methods", function() {
+  var description = "special description"
+
+  testHelper.handleCreate('profile').match({description: description}).andFail();
+
+  store.createRecord('profile', {description: description}).save()
+    .then(
+      function() {},
+      function() {
+        ok(true)
+        start();
+      }
+    )
+});
+
+
+
 
 
 /////// handleFindAll //////////
@@ -535,5 +658,3 @@ asyncTest("#handleDelete failure case", function() {
     }
   );
 });
-
-
