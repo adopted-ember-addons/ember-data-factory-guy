@@ -1,5 +1,9 @@
 # Ember Data Factory Guy  [![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy)
 
+Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
+Factories simplify the process of testing, making you more efficient and your tests more readable.
+
+
 *NOTE*
 
 ember-data is changing the way they are doing relationships in 1.0.0-beta.10 and above
