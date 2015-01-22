@@ -10,6 +10,7 @@ var MockCreateRequest = function(url, store, modelName, options) {
     if (matchArgs) {
       var record = store.createRecord(modelName, matchArgs);
       expectedRequest = record.serialize();
+      record.deleteRecord();
     }
 
     if (succeed) {
