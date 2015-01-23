@@ -14,7 +14,7 @@ of ember-data-factory-guy.
   - 0.6.4   -> ember-data-1.0.0-beta.8 and under
   - 0.7.1.1 -> ember-data-1.0.0-beta.10
   - 0.8.6   -> ember-data-1.0.0-beta.11
-  - 0.9.6   -> ember-data-1.0.0-beta.12
+  - 0.9.7   -> ember-data-1.0.0-beta.12
 
 **Waiting for ember-data-1.0.0-beta.15 to make upgrade release, since there are a few issues with
  ember-data-1.0.0-beta.14.1 that make it difficult to use**
@@ -46,7 +46,7 @@ gem 'ember-data-factory-guy', group: test
 or for particular version:
 
 ```ruby
-gem 'ember-data-factory-guy', '0.9.6', group: test
+gem 'ember-data-factory-guy', '0.9.7', group: test
 ```
 
 then:
@@ -81,7 +81,7 @@ or for particular version:
   "dependencies": {
     "foo-dependency": "latest",
     "other-foo-dependency": "latest",
-    "ember-data-factory-guy": "0.9.6"
+    "ember-data-factory-guy": "0.9.7"
   }
 ```
 
