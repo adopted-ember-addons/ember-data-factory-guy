@@ -8,8 +8,9 @@ var MockCreateRequest = function(url, store, modelName, options) {
 
   this.calculate = function() {
     if (matchArgs) {
-      var record = store.createRecord(modelName, matchArgs);
-      expectedRequest = record.serialize();
+      var tmpRecord = store.createRecord(modelName, matchArgs);
+      expectedRequest = tmpRecord.serialize(matchArgs);
+      tmpRecord.deleteRecord();
     }
 
     if (succeed) {

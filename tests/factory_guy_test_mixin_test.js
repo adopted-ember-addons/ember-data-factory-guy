@@ -43,12 +43,13 @@ asyncTest("#handleCreate the basic", function() {
   testHelper.handleCreate('profile', {
     match: {description: customDescription}
   })
-
+  ok(store.all('profile').get('content.length') == 0)
   store.createRecord('profile', {
     description: customDescription
   }).save().then(function(profile) {
-    ok(profile instanceof Profile)
-    ok(profile.get('description') == customDescription)
+    ok(store.all('profile').get('content.length') == 1, 'No extra records created')
+    ok(profile instanceof Profile, 'Creates the correct type of record')
+    ok(profile.get('description') == customDescription, 'Passes along the match attributes')
     start();
   });
 });
