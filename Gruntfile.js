@@ -39,6 +39,7 @@ module.exports = function(grunt) {
             'src/sequence.js',
             'src/model_definition.js',
             'src/factory_guy.js',
+            'src/mock_create_request.js',
             'src/store.js',
             'src/factory_guy_test_mixin.js',
             'bower_components/jquery-mockjax/jquery.mockjax.js'],
