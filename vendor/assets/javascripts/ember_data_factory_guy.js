@@ -625,6 +625,7 @@ var MockCreateRequest = function(url, store, modelName, options) {
 
     if (matchArgs) {
       var requestData = JSON.parse(settings.data)[modelName];
+      var attribute;
       for (attribute in expectedRequest) {
         if (expectedRequest[attribute] &&
             requestData[attribute] != expectedRequest[attribute]) {
@@ -1361,12 +1362,10 @@ if (FactoryGuy !== undefined) {
 				return null;
 			}
 		}
+
 		// Inspect the data submitted in the request (either POST body or GET query string)
 		if ( handler.data ) {
-//      console.log('request.data', requestSettings.data )
-//      console.log('handler.data', handler.data )
-//      console.log('data equal', isMockDataEqual(handler.data, requestSettings.data) )
-			if  ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
+			if ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
 				// They're not identical, do not mock this request
 				return null;
 			}
@@ -1377,6 +1376,7 @@ if (FactoryGuy !== undefined) {
 			// The request type doesn't match (GET vs. POST)
 			return null;
 		}
+
 		return handler;
 	}
 
@@ -1740,7 +1740,6 @@ if (FactoryGuy !== undefined) {
 			}
 
 			mockHandler = getMockForRequest( mockHandlers[k], requestSettings );
-
 			if(!mockHandler) {
 				// No valid mock found for this request
 				continue;
@@ -1792,7 +1791,7 @@ if (FactoryGuy !== undefined) {
 			}
 
 			copyUrlParameters(mockHandler, origSettings);
-		 	//console.log('here copyUrlParameters', 'mockHandler=>',mockHandler, 'requestSettings=>',requestSettings, 'origSettings=>',origSettings)
+
 			(function(mockHandler, requestSettings, origSettings, origHandler) {
 
 				mockRequest = _ajax.call($, $.extend(true, {}, origSettings, {
