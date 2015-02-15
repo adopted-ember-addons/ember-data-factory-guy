@@ -31,26 +31,30 @@ module('FactoryGuyTestMixin (using mockjax) with DS.RESTAdapter', {
     make = function() {return FactoryGuy.make.apply(FactoryGuy,arguments)}
   },
   teardown: function () {
-    testHelper.teardown();
+    Em.run(function() {
+      testHelper.teardown();
+    });
   }
 });
 
 /////// handleCreate //////////
 
 asyncTest("#handleCreate the basic", function() {
-  var customDescription = "special description"
+  Em.run(function() {
+    var customDescription = "special description"
 
-  testHelper.handleCreate('profile', {
-    match: {description: customDescription}
-  })
-  ok(store.all('profile').get('content.length') == 0)
-  store.createRecord('profile', {
-    description: customDescription
-  }).save().then(function(profile) {
-    ok(store.all('profile').get('content.length') == 1, 'No extra records created')
-    ok(profile instanceof Profile, 'Creates the correct type of record')
-    ok(profile.get('description') == customDescription, 'Passes along the match attributes')
-    start();
+    testHelper.handleCreate('profile', {
+      match: {description: customDescription}
+    })
+    ok(store.all('profile').get('content.length') == 0)
+    store.createRecord('profile', {
+      description: customDescription
+    }).save().then(function(profile) {
+      ok(store.all('profile').get('content.length') == 1, 'No extra records created')
+      ok(profile instanceof Profile, 'Creates the correct type of record')
+      ok(profile.get('description') == customDescription, 'Passes along the match attributes')
+      start();
+    });
   });
 });
 
@@ -175,14 +179,15 @@ asyncTest("#handleFind with a record returns the record", function () {
 });
 
 asyncTest("#handleFind with a record handles reload", function () {
-  var profile = FactoryGuy.make('profile')
-  testHelper.handleFind(profile);
+  Em.run(function() {
+    var profile = FactoryGuy.make('profile')
+    testHelper.handleFind(profile);
 
-  profile.reload().then(function (profile2) {
-    ok(profile2.id == profile.id);
-    start();
+    profile.reload().then(function (profile2) {
+      ok(profile2.id == profile.id);
+      start();
+    });
   });
-
 });
 
 asyncTest("#handleFind with options", function () {
@@ -237,7 +242,9 @@ module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
     make = function() {return FactoryGuy.make.apply(FactoryGuy,arguments)}
   },
   teardown: function () {
-    testHelper.teardown();
+    Em.run(function() {
+      testHelper.teardown();
+    });
   }
 });
 
@@ -246,274 +253,311 @@ module('FactoryGuyTestMixin (using mockjax) with DS.ActiveModelAdapter', {
 
 /////// with hash of parameters ///////////////////
 asyncTest("#handleCreate with no specific match", function() {
-  testHelper.handleCreate('profile');
+  Em.run(function() {
+    testHelper.handleCreate('profile');
 
-  store.createRecord('profile', {description: 'whatever'}).save().then(function(profile) {
-    ok(profile.id == 1)
-    ok(profile.get('description') == 'whatever')
-    start();
+    store.createRecord('profile', {description: 'whatever'}).save().then(function(profile) {
+      ok(profile.id == 1)
+      ok(profile.get('description') == 'whatever')
+      start();
+    });
   });
 });
 
 asyncTest("#handleCreate match some attributes", function() {
-  var customDescription = "special description"
-  var date = new Date();
+  Em.run(function() {
+    var customDescription = "special description"
+    var date = new Date();
 
-  testHelper.handleCreate('profile', {
-    match: {description: customDescription}
+    testHelper.handleCreate('profile', {
+      match: {description: customDescription}
+    })
+
+    store.createRecord('profile', {
+      description: customDescription, created_at: date
+    }).save().then(function (profile) {
+      ok(profile instanceof Profile)
+      ok(profile.id == 1)
+      ok(profile.get('description') == customDescription)
+      start();
+    });
   })
-
-  store.createRecord('profile', {
-    description: customDescription, created_at: date
-  }).save().then(function(profile) {
-    ok(profile instanceof Profile)
-    ok(profile.id == 1)
-    ok(profile.get('description') == customDescription)
-    start();
-  });
 });
 
 asyncTest("#handleCreate match all attributes", function() {
-  var customDescription = "special description"
-  var date = new Date();
+  Em.run(function() {
+    var customDescription = "special description"
+    var date = new Date();
 
-  testHelper.handleCreate('profile', {
-    match: {description: customDescription, created_at: date}
-  })
+    testHelper.handleCreate('profile', {
+      match: {description: customDescription, created_at: date}
+    })
 
-  store.createRecord('profile', {
-    description: customDescription, created_at: date
-  }).save().then(function(profile) {
-    ok(profile instanceof Profile)
-    ok(profile.id == 1)
-    ok(profile.get('description') == customDescription)
-    ok(profile.get('created_at') == date.toString())
-    start();
+    store.createRecord('profile', {
+      description: customDescription, created_at: date
+    }).save().then(function(profile) {
+      ok(profile instanceof Profile)
+      ok(profile.id == 1)
+      ok(profile.get('description') == customDescription)
+      ok(profile.get('created_at') == date.toString())
+      start();
+    });
   });
 });
 
 
 asyncTest("#handleCreate returns attributes", function() {
-  var date = new Date()
+  Em.run(function() {
+    var date = new Date()
 
-  testHelper.handleCreate('profile', {
-    returns: {created_at: date}
-  })
+    testHelper.handleCreate('profile', {
+      returns: {created_at: date}
+    })
 
-  store.createRecord('profile').save().then(function(profile) {
-    ok(profile.get('created_at') == date.toString())
-    start();
+    store.createRecord('profile').save().then(function(profile) {
+      ok(profile.get('created_at') == date.toString())
+      start();
+    });
   });
 });
 
 asyncTest("#handleCreate returns camelCase attributes", function() {
-  var customDescription = "special description"
+  Em.run(function() {
+    var customDescription = "special description"
 
-  testHelper.handleCreate('profile', {
-    returns: {camel_case_description: customDescription}
-  })
+    testHelper.handleCreate('profile', {
+      returns: {camel_case_description: customDescription}
+    })
 
-  store.createRecord('profile', {
-    camel_case_description: 'description'
-  }).save().then(function(profile) {
-    ok(profile.get('camelCaseDescription') == customDescription)
-    start();
+    store.createRecord('profile', {
+      camel_case_description: 'description'
+    }).save().then(function(profile) {
+      ok(profile.get('camelCaseDescription') == customDescription)
+      start();
+    });
   });
 });
 
 asyncTest("#handleCreate match belongsTo association", function() {
-  var company = make('company')
-  testHelper.handleCreate('profile', {match:{ company: company}})
+  Em.run(function() {
+    var company = make('company')
+    testHelper.handleCreate('profile', {match:{ company: company}})
 
-  store.createRecord('profile', {company: company}).save().then(function(profile) {
-    ok(profile.get('company') == company)
-    start();
+    store.createRecord('profile', {company: company}).save().then(function(profile) {
+      ok(profile.get('company') == company)
+      start();
+    });
   });
 });
 
 asyncTest("#handleCreate match belongsTo polymorphic association", function() {
-  var group = make('group')
-  testHelper.handleCreate('profile', {match:{ group: group}})
+  Em.run(function() {
+    var group = make('group')
+    testHelper.handleCreate('profile', {match:{ group: group}})
 
-  store.createRecord('profile', {group: group}).save().then(function(profile) {
-    ok(profile.get('group') == group)
-    start();
+    store.createRecord('profile', {group: group}).save().then(function(profile) {
+      ok(profile.get('group') == group)
+      start();
+    });
   });
 });
 
 
 asyncTest("#handleCreate match attributes and return attributes", function() {
-  var date = new Date()
-  var customDescription = "special description"
-  var company = make('company')
-  var group = make('big_group')
+  Em.run(function() {
+    var date = new Date()
+    var customDescription = "special description"
+    var company = make('company')
+    var group = make('big_group')
 
-  testHelper.handleCreate('profile', {
-    match: {description: customDescription, company: company, group: group},
-    returns: {created_at: new Date()}
-  })
+    testHelper.handleCreate('profile', {
+      match: {description: customDescription, company: company, group: group},
+      returns: {created_at: new Date()}
+    })
 
-  store.createRecord('profile', {
-    description: customDescription, company: company, group: group
-  }).save().then(function(profile) {
-    start();
-    ok(profile.get('created_at') == date.toString())
-    ok(profile.get('group') == group)
-    ok(profile.get('company') == company)
-    ok(profile.get('description') == customDescription)
+    store.createRecord('profile', {
+      description: customDescription, company: company, group: group
+    }).save().then(function(profile) {
+      start();
+      ok(profile.get('created_at') == date.toString())
+      ok(profile.get('group') == group)
+      ok(profile.get('company') == company)
+      ok(profile.get('description') == customDescription)
+    });
   });
 });
 
 
 asyncTest("#handleCreate failure", function() {
-  testHelper.handleCreate('profile', { succeed: false } )
+  Em.run(function() {
+    testHelper.handleCreate('profile', { succeed: false } )
 
-  store.createRecord('profile').save()
-    .then(
-      function() {},
-      function() {
-        ok(true)
-        start();
-      }
-    )
+    store.createRecord('profile').save()
+      .then(
+        function() {},
+        function() {
+          ok(true)
+          start();
+        }
+      )
+  });
 });
 
 
 asyncTest("#handleCreate match but still fail", function() {
-  var description = "special description"
+  Em.run(function() {
+    var description = "special description"
 
-  testHelper.handleCreate('profile', {
-    match: {description: description}, succeed: false
-  })
+    testHelper.handleCreate('profile', {
+      match: {description: description}, succeed: false
+    })
 
-  store.createRecord('profile', {description: description}).save()
-    .then(
-      function() {},
-      function() {
-        ok(true)
-        start();
-      }
-    )
+    store.createRecord('profile', {description: description}).save()
+      .then(
+        function() {},
+        function() {
+          ok(true)
+          start();
+        }
+      )
+  });
 });
 
 /////// handleCreate //////////
 /////// with chaining methods ///////////////////
 
 asyncTest("#handleCreate match some attributes with match method", function() {
-  var customDescription = "special description"
-  var date = new Date();
+  Em.run(function() {
+    var customDescription = "special description"
+    var date = new Date();
 
-  testHelper.handleCreate('profile').match({description: customDescription});
+    testHelper.handleCreate('profile').match({description: customDescription});
 
-  store.createRecord('profile', {
-    description: customDescription, created_at: date
-  }).save().then(function(profile) {
-    ok(profile instanceof Profile)
-    ok(profile.id == 1)
-    ok(profile.get('description') == customDescription)
-    start();
+    store.createRecord('profile', {
+      description: customDescription, created_at: date
+    }).save().then(function(profile) {
+      ok(profile instanceof Profile)
+      ok(profile.id == 1)
+      ok(profile.get('description') == customDescription)
+      start();
+    });
   });
 });
 
 asyncTest("#handleCreate match all attributes  with match method", function() {
-  var customDescription = "special description"
-  var date = new Date();
+  Em.run(function() {
+    var customDescription = "special description"
+    var date = new Date();
 
-  testHelper.handleCreate('profile').match({description: customDescription, created_at: date});
+    testHelper.handleCreate('profile').match({description: customDescription, created_at: date});
 
-  store.createRecord('profile', {
-    description: customDescription, created_at: date
-  }).save().then(function(profile) {
-    ok(profile instanceof Profile)
-    ok(profile.id == 1)
-    ok(profile.get('description') == customDescription)
-    ok(profile.get('created_at') == date.toString())
-    start();
+    store.createRecord('profile', {
+      description: customDescription, created_at: date
+    }).save().then(function(profile) {
+      ok(profile instanceof Profile)
+      ok(profile.id == 1)
+      ok(profile.get('description') == customDescription)
+      ok(profile.get('created_at') == date.toString())
+      start();
+    });
   });
 });
 
 asyncTest("#handleCreate match belongsTo association with match method", function() {
-  var company = make('company')
-  testHelper.handleCreate('profile').match({company: company})
+  Em.run(function() {
+    var company = make('company')
 
-  store.createRecord('profile', {company: company}).save().then(function(profile) {
-    ok(profile.get('company') == company)
-    start();
+    testHelper.handleCreate('profile').match({company: company})
+
+    store.createRecord('profile', {company: company}).save().then(function(profile) {
+      ok(profile.get('company') == company)
+      start();
+    });
   });
 });
 
 asyncTest("#handleCreate match belongsTo polymorphic association  with match method", function() {
-  var group = make('group')
-  testHelper.handleCreate('profile').match({group: group})
+  Em.run(function() {
+    var group = make('group')
+    testHelper.handleCreate('profile').match({group: group})
 
-  store.createRecord('profile', {group: group}).save().then(function(profile) {
-    ok(profile.get('group') == group)
-    start();
+    store.createRecord('profile', {group: group}).save().then(function(profile) {
+      ok(profile.get('group') == group)
+      start();
+    });
   });
 });
 
 
 
 asyncTest("#handleCreate returns attributes with andReturns method", function() {
-  var date = new Date()
+  Em.run(function() {
+    var date = new Date()
 
-  testHelper.handleCreate('profile').andReturn({created_at: date});
+    testHelper.handleCreate('profile').andReturn({created_at: date});
 
-  store.createRecord('profile').save().then(function(profile) {
-    ok(profile.get('created_at') == date.toString())
-    start();
+    store.createRecord('profile').save().then(function(profile) {
+      ok(profile.get('created_at') == date.toString())
+      start();
+    });
   });
 });
 
 asyncTest("#handleCreate match attributes and return attributes with match and andReturn methods", function() {
-  var date = new Date()
-  var customDescription = "special description"
-  var company = make('company')
-  var group = make('big_group')
+  Em.run(function() {
+    var date = new Date()
+    var customDescription = "special description"
+    var company = make('company')
+    var group = make('big_group')
 
-  testHelper.handleCreate('profile')
-    .match({description: customDescription, company: company, group: group})
-    .andReturn({created_at: new Date()})
+    testHelper.handleCreate('profile')
+      .match({description: customDescription, company: company, group: group})
+      .andReturn({created_at: new Date()})
 
-  store.createRecord('profile', {
-    description: customDescription, company: company, group: group
-  }).save().then(function(profile) {
-    start();
-    ok(profile.get('created_at') == date.toString())
-    ok(profile.get('group') == group)
-    ok(profile.get('company') == company)
-    ok(profile.get('description') == customDescription)
+    store.createRecord('profile', {
+      description: customDescription, company: company, group: group
+    }).save().then(function(profile) {
+      start();
+      ok(profile.get('created_at') == date.toString())
+      ok(profile.get('group') == group)
+      ok(profile.get('company') == company)
+      ok(profile.get('description') == customDescription)
+    });
   });
 });
 
 
 asyncTest("#handleCreate failure with andFail method", function() {
-  testHelper.handleCreate('profile').andFail();
+  Em.run(function() {
+    testHelper.handleCreate('profile').andFail();
 
-  store.createRecord('profile').save()
-    .then(
-      function() {},
-      function() {
-        ok(true)
-        start();
-      }
-    )
+    store.createRecord('profile').save()
+      .then(
+        function() {},
+        function() {
+          ok(true)
+          start();
+        }
+      )
+  });
 });
 
 
 asyncTest("#handleCreate match but still fail with chaining methods", function() {
-  var description = "special description"
+  Em.run(function() {
+    var description = "special description"
 
-  testHelper.handleCreate('profile').match({description: description}).andFail();
+    testHelper.handleCreate('profile').match({description: description}).andFail();
 
-  store.createRecord('profile', {description: description}).save()
-    .then(
-      function() {},
-      function() {
-        ok(true)
-        start();
-      }
-    )
+    store.createRecord('profile', {description: description}).save()
+      .then(
+        function() {},
+        function() {
+          ok(true)
+          start();
+        }
+      )
+  });
 });
 
 
@@ -584,78 +628,91 @@ test("#handleUpdate with incorrect parameters", function(assert) {
 });
 
 asyncTest("#handleUpdate the with modelType and id", function() {
-  var profile = make('profile');
-  testHelper.handleUpdate('profile', profile.id);
+  Em.run(function() {
+    var profile = make('profile');
+    testHelper.handleUpdate('profile', profile.id);
 
-  profile.set('description','new desc');
-  profile.save().then(function(profile) {
-    ok(profile.get('description') == 'new desc');
-    start();
+    profile.set('description','new desc');
+    profile.save().then(function(profile) {
+      ok(profile.get('description') == 'new desc');
+      start();
+    });
   });
 });
 
 
 asyncTest("#handleUpdate the with model", function() {
-  var profile = make('profile');
-  testHelper.handleUpdate(profile, true, {e:1});
+  Em.run(function() {
+    var profile = make('profile');
+    testHelper.handleUpdate(profile, true, {e:1});
 
-  profile.set('description','new desc');
-  profile.save().then(function(profile) {
-    ok(profile.get('description') == 'new desc');
-    start();
+    profile.set('description','new desc');
+    profile.save().then(function(profile) {
+      ok(profile.get('description') == 'new desc');
+      start();
+    });
   });
 });
 
 asyncTest("#handleUpdate the with modelType and id that fails", function() {
-  var profile = make('profile');
-  testHelper.handleUpdate('profile', profile.id, false);
+  Em.run(function() {
+    var profile = make('profile');
+    testHelper.handleUpdate('profile', profile.id, false);
 
-  profile.set('description','new desc');
-  profile.save().then(
-    function() {},
-    function() {
-      ok(true)
-      start();
-    }
-  )
-});
-
-asyncTest("#handleUpdate with model that fails", function() {
-  var profile = make('profile');
-  testHelper.handleUpdate(profile, false);
-
-  profile.set('description','new desc');
-  profile.save().then(
+    profile.set('description','new desc');
+    profile.save().then(
       function() {},
       function() {
         ok(true)
         start();
       }
     )
+  });
+});
+
+asyncTest("#handleUpdate with model that fails", function() {
+  Em.run(function() {
+    var profile = make('profile');
+
+    testHelper.handleUpdate(profile, false);
+
+    profile.set('description','new desc');
+    profile.save().then(
+        function() {},
+        function() {
+          ok(true)
+          start();
+        }
+      )
+  });
 });
 
 
 /////// handleDelete //////////
 
 asyncTest("#handleDelete the basic", function() {
-  var profile = make('profile');
-  testHelper.handleDelete('profile', profile.id);
+  Em.run(function() {
+    var profile = make('profile');
+    testHelper.handleDelete('profile', profile.id);
 
-  profile.destroyRecord().then(function() {
-    equal(store.all('profile').get('content.length'), 0);
-    start();
+    profile.destroyRecord().then(function() {
+      equal(store.all('profile').get('content.length'), 0);
+      start();
+    });
   });
 });
 
 asyncTest("#handleDelete failure case", function() {
-  var profile = make('profile');
-  testHelper.handleDelete('profile', profile.id, false);
+  Em.run(function() {
+    var profile = make('profile');
+    testHelper.handleDelete('profile', profile.id, false);
 
-  profile.destroyRecord().then(
-    function() {},
-    function() {
-      ok(true);
-      start();
-    }
-  );
+    profile.destroyRecord().then(
+      function() {},
+      function() {
+        ok(true);
+        start();
+      }
+    );
+  });
 });

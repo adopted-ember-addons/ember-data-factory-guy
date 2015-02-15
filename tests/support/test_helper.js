@@ -85,6 +85,8 @@ TestHelper = Ember.Object.createWithMixins(FactoryGuy.testMixin,{
     container.register('transform:object', ObjectTransform);
     container.injection('serializer', 'store', 'store:main');
 
+    Ember.setupForTesting()
+
     env.store = container.lookup('store:main');
     env.adapter = env.store.get('defaultAdapter');
 

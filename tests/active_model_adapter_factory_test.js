@@ -14,24 +14,26 @@ module('FactoryGuy with ActiveModelAdapter', {
 
 
 test("#resetModels clears the store of models, and resets the model definition", function() {
-  var project = make('project');
-  var user = make('user', {projects: [project]});
+  Em.run(function() {
+    var project = make('project');
+    var user = make('user', {projects: [project]});
 
-  for (model in FactoryGuy.modelDefinitions) {
-    var definition = FactoryGuy.modelDefinitions[model];
-    sinon.spy(definition, 'reset');
-  }
+    for (model in FactoryGuy.modelDefinitions) {
+      var definition = FactoryGuy.modelDefinitions[model];
+      sinon.spy(definition, 'reset');
+    }
 
-  FactoryGuy.resetModels(store);
+    FactoryGuy.resetModels(store);
 
-  equal(store.all('user').get('content.length'),0)
-  equal(store.all('project').get('content.length'),0)
+    equal(store.all('user').get('content.length'),0)
+    equal(store.all('project').get('content.length'),0)
 
-  for (model in FactoryGuy.modelDefinitions) {
-    var definition = FactoryGuy.modelDefinitions[model];
-    ok(definition.reset.calledOnce);
-    definition.reset.restore();
-  }
+    for (model in FactoryGuy.modelDefinitions) {
+      var definition = FactoryGuy.modelDefinitions[model];
+      ok(definition.reset.calledOnce);
+      definition.reset.restore();
+    }
+  });
 });
 
 

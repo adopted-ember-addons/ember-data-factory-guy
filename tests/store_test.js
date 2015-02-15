@@ -52,18 +52,20 @@ testFixtureEquality = function(models, json, num){
 }
 
 asyncTest("no root", function() {
-  var userJson = {
-        id: '1',
-        name: 'monkey'
-      };
+  Em.run(function() {
+    var userJson = {
+          id: '1',
+          name: 'monkey'
+        };
 
-  store.pushPayload('user', userJson);
-  store.find('user').then(function(users){
-    equal(users.get('length'), 1, 'Expected one user in the data store');
+    store.pushPayload('user', userJson);
+    store.find('user').then(function(users){
+      equal(users.get('length'), 1, 'Expected one user in the data store');
 
-    equal(users.get('firstObject.id'), userJson.id);
-    equal(users.get('firstObject.name'), userJson.name);
-    start();
+      equal(users.get('firstObject.id'), userJson.id);
+      equal(users.get('firstObject.name'), userJson.name);
+      start();
+    });
   });
 });
 
@@ -94,86 +96,92 @@ asyncTest("no root replace data", function(){
 });
 
 asyncTest("single root", function() {
-  var userJson = {
-    users: [{ id:'1', name:'monkey' }, { id:'2', name:'banana' }]
-  };
+  Em.run(function() {
+    var userJson = {
+      users: [{ id:'1', name:'monkey' }, { id:'2', name:'banana' }]
+    };
 
-  store.pushPayload(userJson);
-  store.find('user').then(function(users) {
+    store.pushPayload(userJson);
+    store.find('user').then(function(users) {
 
-    testFixtureEquality(users, userJson['users'], 2);
+      testFixtureEquality(users, userJson['users'], 2);
 
-    users.forEach(function(user) {
-      var u = userJson['users'].findBy('id', user.get('id'));
-      equal(user.get('name'), u.name, 'Got unexpected name ' + user.get('name'));
+      users.forEach(function(user) {
+        var u = userJson['users'].findBy('id', user.get('id'));
+        equal(user.get('name'), u.name, 'Got unexpected name ' + user.get('name'));
+      });
+
+      start();
     });
-
-    start();
   });
 });
 
 asyncTest("multiple roots", function() {
-  var json = {
-    companies: [{ id: '1', name: 'Google', projects: ['1', '2'] }],
-    projects: [
-      { id:'1', title: 'Docs', user: '1' },
-      { id:'2', title: 'Gmail' }
-    ],
-    users: [{ id: '1', name: 'monkey', projects: ['1'] }],
-    profiles: [
-      { id: '1', created_at: new Date(), description: 'banana' },
-      { id: '2', created_at: new Date(), description: 'monkey' }
-    ],
-    hats: [
-      { id: '2', type: 'Trilby' }
-    ],
-  };
+  Em.run(function() {
+    var json = {
+      companies: [{ id: '1', name: 'Google', projects: ['1', '2'] }],
+      projects: [
+        { id:'1', title: 'Docs', user: '1' },
+        { id:'2', title: 'Gmail' }
+      ],
+      users: [{ id: '1', name: 'monkey', projects: ['1'] }],
+      profiles: [
+        { id: '1', created_at: new Date(), description: 'banana' },
+        { id: '2', created_at: new Date(), description: 'monkey' }
+      ],
+      hats: [
+        { id: '2', type: 'Trilby' }
+      ],
+    };
 
-  store.pushPayload(json);
-  Ember.RSVP.Promise.all([
-    store.find('company'), store.find('project'),
-    store.find('user'), store.find('profile'), store.find('hat')
-  ]).then(function(data) {
-    var companies = data[0],
-        projects = data[1],
-        users = data[2],
-        profiles = data[3],
-        hats = data[4];
+    store.pushPayload(json);
+    Ember.RSVP.Promise.all([
+      store.find('company'), store.find('project'),
+      store.find('user'), store.find('profile'), store.find('hat')
+    ]).then(function(data) {
+      var companies = data[0],
+          projects = data[1],
+          users = data[2],
+          profiles = data[3],
+          hats = data[4];
 
-    testFixtureEquality(companies, json['companies'], 1);
-    testFixtureEquality(projects, json['projects'], 2);
-    testFixtureEquality(users, json['users'], 1);
-    testFixtureEquality(profiles, json['profiles'], 2);
-    testFixtureEquality(hats, json['hats'], 1);
+      testFixtureEquality(companies, json['companies'], 1);
+      testFixtureEquality(projects, json['projects'], 2);
+      testFixtureEquality(users, json['users'], 1);
+      testFixtureEquality(profiles, json['profiles'], 2);
+      testFixtureEquality(hats, json['hats'], 1);
 
-    start();
+      start();
+    });
   });
 });
 
 asyncTest("multiple roots with type specified", function() {
-  var json = {
-    companies: [{ id: '1', name: 'Google', projects: ['1', '2'] }],
-    projects: [
-      { id:'1', title: 'Docs', user: '1' },
-      { id:'2', title: 'Gmail' }
-    ],
-    users: [{ id: '1', name: 'monkey', projects: ['1'] }],
-  }
+  Em.run(function() {
+    var json = {
+      companies: [{ id: '1', name: 'Google', projects: ['1', '2'] }],
+      projects: [
+        { id:'1', title: 'Docs', user: '1' },
+        { id:'2', title: 'Gmail' }
+      ],
+      users: [{ id: '1', name: 'monkey', projects: ['1'] }],
+    }
 
-  store.pushPayload('company', json);
+    store.pushPayload('company', json);
 
-  Ember.RSVP.Promise.all([
-    store.find('company'), store.find('project'), store.find('user')
-  ]).then(function(data) {
-    var companies = data[0],
-        projects = data[1],
-        users = data[2];
+    Ember.RSVP.Promise.all([
+      store.find('company'), store.find('project'), store.find('user')
+    ]).then(function(data) {
+      var companies = data[0],
+          projects = data[1],
+          users = data[2];
 
-    testFixtureEquality(companies, json['companies'], 1);
-    testFixtureEquality(projects, json['projects'], 2);
-    testFixtureEquality(users, json['users'], 1);
+      testFixtureEquality(companies, json['companies'], 1);
+      testFixtureEquality(projects, json['projects'], 2);
+      testFixtureEquality(users, json['users'], 1);
 
-    start();
+      start();
+    });
   });
 });
 

@@ -51,7 +51,9 @@ test("#resetModels clears the store of models, clears the FIXTURES arrays for ea
   equal(store.all('user').get('length'), 1);
   equal(store.all('project').get('length'), 1);
 
-  FactoryGuy.resetModels(store);
+  Em.run(function() {
+    FactoryGuy.resetModels(store);
+  });
 
   equal(User.FIXTURES.length, 0);
   equal(Project.FIXTURES.length, 0);

@@ -713,6 +713,7 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
     - succeed - flag to indicate if the request should succeed ( default is true )
     - this style will eventually be deprecated
 
+  - need to wrap tests using handleCreate with: Ember.run.function() { 'your test' })
 **Note**
 
   *Any attributes in match will be added to the response json automatically,
@@ -816,6 +817,7 @@ chainable methods, or options hash.
 ##### handleUpdate
   - handleUpdate(model)
   - handleUpdate(modelType, id)
+  - need to wrap tests using handleUpdate with: Ember.run.function() { 'your test' })
 
 *success case is the default*
 
@@ -850,6 +852,7 @@ chainable methods, or options hash.
 
 
 ##### handleDelete
+  - need to wrap tests using handleDelete with: Ember.run.function() { 'your test' })
 
 *success case is the default*
 
@@ -900,32 +903,34 @@ module('User View', {
 });
 
 test("Creates new project", function() {
-  andThen(function() {
-    var newProjectName  = "Gonzo Project"
+  Em.run(function() {
+    andThen(function() {
+      var newProjectName  = "Gonzo Project"
 
-    click('.add-div div:contains(New Project)')
-    fillIn('.add-project input', newProjectName)
+      click('.add-div div:contains(New Project)')
+      fillIn('.add-project input', newProjectName)
 
-    // Remember, this is for handling an exact match, if you did not care about
-    // matching attributes, you could just do: viewHelper.handleCreate('project')
-    viewHelper.handleCreate('project', {match:{name: newProjectName, user:user}})
+      // Remember, this is for handling an exact match, if you did not care about
+      // matching attributes, you could just do: viewHelper.handleCreate('project')
+      viewHelper.handleCreate('project', {match:{name: newProjectName, user:user}})
 
-    /**
-     Let's say that clicking this '.add-project .link', triggers action in the view to
-     create project record and looks something like this:
+      /**
+       Let's say that clicking this '.add-project .link', triggers action in the view to
+       create project record and looks something like this:
 
-        actions: {
-          addProject: function (user) {
-            var name = this.$('.add-project input').val();
-            var store = this.get('controller.store');
-            store.createRecord('project', {name: name, user: user}).save();
-          }
+          actions: {
+            addProject: function (user) {
+              var name = this.$('.add-project input').val();
+              var store = this.get('controller.store');
+              store.createRecord('project', {name: name, user: user}).save();
+            }
 
-    */
-    click('.add-project .link')
+      */
+      click('.add-project .link')
 
-    var newProjectDiv = find('.project:contains('+newProjectName+')')
-    equal(newProjectDiv[0] != undefined, true)
+      var newProjectDiv = find('.project:contains('+newProjectName+')')
+      equal(newProjectDiv[0] != undefined, true)
+    })
   })
 })
 
