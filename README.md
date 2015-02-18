@@ -714,6 +714,7 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
     - this style will eventually be deprecated
 
   - need to wrap tests using handleCreate with: Ember.run.function() { 'your test' })
+
 **Note**
 
   *Any attributes in match will be added to the response json automatically,
