@@ -1191,34 +1191,36 @@ var FactoryGuyTestMixin = Em.Mixin.create({
    Handling ajax PUT ( update record ) for a model type. You can mock
    failed update by passing in success argument as false.
 
-   @param {String} type  model type like 'user' for User model
+   @param {String} type  model type like 'user' for User model, or a model instance
    @param {String} id  id of record to update
-   @param {Boolean} succeed  optional flag to indicate if the request
-      should succeed ( default is true )
+   @param {Object} options options object
    */
   handleUpdate: function () {
-    var args = Array.prototype.slice.call(arguments)
+    var args = Array.prototype.slice.call(arguments);
     Ember.assert("To handleUpdate pass in a model instance or a type and an id", args.length>0)
-    var succeed = true;
-    if (typeof args[args.length-1] == 'boolean') {
-      args.pop()
-      succeed = false;
+
+    var options = {};
+    if (args.length > 1 && typeof args[args.length - 1] === 'object') {
+      options = args.pop();
     }
-    Ember.assert("To handleUpdate pass in a model instance or a type and an id",args.length>0)
-    var type, id;
+
+    var model, type, id;
+    var store = this.getStore();
+
     if (args[0] instanceof DS.Model) {
-      var model = args[0];
-      type = model.constructor.typeKey;
+      model = args[0];
       id = model.id;
+      type = model.constructor.typeKey;
     } else if (typeof args[0] == "string" && typeof parseInt(args[1]) == "number") {
       type = args[0];
       id = args[1];
+      model = store.getById(type, id)
     }
-    Ember.assert("To handleUpdate pass in a model instance or a type and an id",type && id)
-    this.stubEndpointForHttpRequest(this.buildURL(type, id), {}, {
-      type: 'PUT',
-      status: succeed ? 200 : 500
-    });
+    Ember.assert("To handleUpdate pass in a model instance or a type and an id",type && id);
+
+    var url = this.buildURL(type, id);
+    var opts = options === undefined ? {} : options;
+    return new MockUpdateRequest(url, model, this.mapFind, opts);
   },
   /**
    Handling ajax DELETE ( delete record ) for a model type. You can mock
@@ -1361,12 +1363,10 @@ if (FactoryGuy !== undefined) {
 				return null;
 			}
 		}
+
 		// Inspect the data submitted in the request (either POST body or GET query string)
 		if ( handler.data ) {
-//      console.log('request.data', requestSettings.data )
-//      console.log('handler.data', handler.data )
-//      console.log('data equal', isMockDataEqual(handler.data, requestSettings.data) )
-			if  ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
+			if ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
 				// They're not identical, do not mock this request
 				return null;
 			}
@@ -1377,6 +1377,7 @@ if (FactoryGuy !== undefined) {
 			// The request type doesn't match (GET vs. POST)
 			return null;
 		}
+
 		return handler;
 	}
 
@@ -1740,7 +1741,6 @@ if (FactoryGuy !== undefined) {
 			}
 
 			mockHandler = getMockForRequest( mockHandlers[k], requestSettings );
-
 			if(!mockHandler) {
 				// No valid mock found for this request
 				continue;
@@ -1792,7 +1792,7 @@ if (FactoryGuy !== undefined) {
 			}
 
 			copyUrlParameters(mockHandler, origSettings);
-		 	//console.log('here copyUrlParameters', 'mockHandler=>',mockHandler, 'requestSettings=>',requestSettings, 'origSettings=>',origSettings)
+
 			(function(mockHandler, requestSettings, origSettings, origHandler) {
 
 				mockRequest = _ajax.call($, $.extend(true, {}, origSettings, {
