@@ -294,7 +294,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
       model = store.getById(type, id)
     }
     Ember.assert("To handleUpdate pass in a model instance or a type and an id",type && id);
-    
+
     var url = this.buildURL(type, id);
     var opts = options === undefined ? {} : options;
     return new MockUpdateRequest(url, model, this.mapFind, opts);
