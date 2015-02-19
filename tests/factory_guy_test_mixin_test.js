@@ -623,8 +623,8 @@ asyncTest("#handleFindAll with traits and fixture options", function () {
 test("#handleUpdate with incorrect parameters", function(assert) {
   assert.throws(function(){testHelper.handleUpdate()},"missing everything");
   assert.throws(function(){testHelper.handleUpdate('profile')},"missing id");
-  assert.throws(function(){testHelper.handleUpdate('profile', false)},"missing id");
-  assert.throws(function(){testHelper.handleUpdate('profile', true)},"missing id");
+  assert.throws(function(){testHelper.handleUpdate('profile', {})},"missing id");
+  assert.throws(function(){testHelper.handleUpdate('profile', {})},"missing id");
 });
 
 asyncTest("#handleUpdate the with modelType and id", function() {
@@ -644,7 +644,7 @@ asyncTest("#handleUpdate the with modelType and id", function() {
 asyncTest("#handleUpdate the with model", function() {
   Em.run(function() {
     var profile = make('profile');
-    testHelper.handleUpdate(profile, true, {e:1});
+    testHelper.handleUpdate(profile);
 
     profile.set('description','new desc');
     profile.save().then(function(profile) {
@@ -657,7 +657,9 @@ asyncTest("#handleUpdate the with model", function() {
 asyncTest("#handleUpdate the with modelType and id that fails", function() {
   Em.run(function() {
     var profile = make('profile');
-    testHelper.handleUpdate('profile', profile.id, false);
+    testHelper.handleUpdate('profile', profile.id).andFail({
+      status: 500
+    });
 
     profile.set('description','new desc');
     profile.save().then(
@@ -674,7 +676,9 @@ asyncTest("#handleUpdate with model that fails", function() {
   Em.run(function() {
     var profile = make('profile');
 
-    testHelper.handleUpdate(profile, false);
+    testHelper.handleUpdate(profile).andFail({
+      status: 404
+    });
 
     profile.set('description','new desc');
     profile.save().then(
