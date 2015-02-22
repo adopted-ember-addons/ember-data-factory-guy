@@ -296,8 +296,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     Ember.assert("To handleUpdate pass in a model instance or a type and an id",type && id);
 
     var url = this.buildURL(type, id);
-    var opts = options === undefined ? {} : options;
-    return new MockUpdateRequest(url, model, this.mapFind, opts);
+    return new MockUpdateRequest(url, model, this.mapFind, options);
   },
   /**
    Handling ajax DELETE ( delete record ) for a model type. You can mock

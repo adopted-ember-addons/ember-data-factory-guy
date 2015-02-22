@@ -624,7 +624,6 @@ test("#handleUpdate with incorrect parameters", function(assert) {
   assert.throws(function(){testHelper.handleUpdate()},"missing everything");
   assert.throws(function(){testHelper.handleUpdate('profile')},"missing id");
   assert.throws(function(){testHelper.handleUpdate('profile', {})},"missing id");
-  assert.throws(function(){testHelper.handleUpdate('profile', {})},"missing id");
 });
 
 asyncTest("#handleUpdate the with modelType and id", function() {
@@ -655,8 +654,62 @@ asyncTest("#handleUpdate the with model", function() {
 });
 
 asyncTest("#handleUpdate the with modelType and id that fails", function() {
+    Em.run(function() {
+        var profile = make('profile');
+
+        testHelper.handleUpdate('profile', profile.id, {succeed: false, status: 500});
+
+        profile.set('description','new desc');
+        profile.save().then(
+            function() {},
+            function() {
+                ok(true);
+                start();
+            }
+        )
+    });
+});
+
+asyncTest("#handleUpdate with model that fails", function() {
+    Em.run(function() {
+        var profile = make('profile');
+
+        testHelper.handleUpdate(profile, {succeed: false, status: 500});
+
+        profile.set('description','new desc');
+        profile.save().then(
+            function() {},
+            function() {
+                ok(true);
+                start();
+            }
+        )
+    });
+});
+
+asyncTest("#handleUpdate with model that fails with custom response", function() {
+    Em.run(function() {
+        var profile = make('profile');
+
+        testHelper.handleUpdate(profile, {succeed: false, status: 400, response: "{error: 'invalid data'}"});
+
+        profile.set('description','new desc');
+        profile.save().then(
+            function() {},
+            function(reason) {
+                ok(true);
+                equal(reason.status, 400);
+                equal(reason.responseText, "{error: 'invalid data'}");
+                start();
+            }
+        )
+    });
+});
+
+asyncTest("#handleUpdate the with modelType and id that fails chained", function() {
   Em.run(function() {
     var profile = make('profile');
+
     testHelper.handleUpdate('profile', profile.id).andFail({
       status: 500
     });
@@ -664,33 +717,55 @@ asyncTest("#handleUpdate the with modelType and id that fails", function() {
     profile.set('description','new desc');
     profile.save().then(
       function() {},
-      function() {
-        ok(true)
+      function(reason) {
+        ok(true);
+        equal(reason.status, 500);
         start();
       }
     )
   });
 });
 
-asyncTest("#handleUpdate with model that fails", function() {
+asyncTest("#handleUpdate with model that fails chained", function() {
   Em.run(function() {
     var profile = make('profile');
 
     testHelper.handleUpdate(profile).andFail({
-      status: 404
+      status: 500
     });
 
     profile.set('description','new desc');
     profile.save().then(
         function() {},
-        function() {
-          ok(true)
+        function(reason) {
+          ok(true);
+            equal(reason.status, 500);
           start();
         }
       )
   });
 });
 
+asyncTest("#handleUpdate with model that fail with custom response", function() {
+    Em.run(function() {
+        var profile = make('profile');
+
+        testHelper.handleUpdate(profile).andFail({
+            status: 400,
+            response: "{error: 'invalid data'}"
+        });
+
+        profile.set('description','new desc');
+        profile.save().then(
+            function() {},
+            function(reason) {
+                ok(true);
+                equal(reason.responseText, "{error: 'invalid data'}");
+                start();
+            }
+        )
+    });
+});
 
 /////// handleDelete //////////
 

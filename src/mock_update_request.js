@@ -1,6 +1,15 @@
 var MockUpdateRequest = function(url, model, mapFind, options) {
 	var status = options.status || 200;
-	var succeed = options.succeed || true;
+	var succeed = true;
+    var response = null;
+
+    if ('succeed' in options) {
+        succeed = options.succeed;
+    }
+
+    if ('response' in options) {
+        response = options.response;
+    }
 
 	this.andReturn = function(returns) {
 		return this;
@@ -9,12 +18,18 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
 	this.andFail = function(options) {
 		succeed = false;
 		status = options.status || 500;
+        if ('response' in options) {
+            response = options.response;
+        }
 		return this;
 	};
 
 	this.handler = function(settings) {
 		if (!succeed) {
 			this.status = status;
+            if (response !== null) {
+                this.responseText = response;
+            }
 		} else {
 			var json = model.toJSON({includeId: true});
 			this.responseText = mapFind(model.constructor.typeKey, json);
@@ -26,7 +41,6 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
 		url: url,
 		dataType: 'json',
 		type: 'PUT',
-		status: status,
 		response: this.handler
 	};
 
