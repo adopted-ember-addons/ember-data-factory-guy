@@ -646,21 +646,37 @@ var MockCreateRequest = function(url, store, modelName, options) {
 
 var MockUpdateRequest = function(url, model, mapFind, options) {
 	var status = options.status || 200;
-	var succeed = options.succeed || true;
+	var succeed = true;
+    var response = null;
 
-	this.andReturn = function(returns) {
+    if ('succeed' in options) {
+        succeed = options.succeed;
+    }
+
+    if ('response' in options) {
+        response = options.response;
+    }
+
+	this.andSucceed = function(options) {
+        succeed = true;
 		return this;
 	};
 
 	this.andFail = function(options) {
 		succeed = false;
 		status = options.status || 500;
+        if ('response' in options) {
+            response = options.response;
+        }
 		return this;
 	};
 
 	this.handler = function(settings) {
 		if (!succeed) {
 			this.status = status;
+            if (response !== null) {
+                this.responseText = response;
+            }
 		} else {
 			var json = model.toJSON({includeId: true});
 			this.responseText = mapFind(model.constructor.typeKey, json);
@@ -672,7 +688,6 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
 		url: url,
 		dataType: 'json',
 		type: 'PUT',
-		status: status,
 		response: this.handler
 	};
 
@@ -1253,8 +1268,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     Ember.assert("To handleUpdate pass in a model instance or a type and an id",type && id);
 
     var url = this.buildURL(type, id);
-    var opts = options === undefined ? {} : options;
-    return new MockUpdateRequest(url, model, this.mapFind, opts);
+    return new MockUpdateRequest(url, model, this.mapFind, options);
   },
   /**
    Handling ajax DELETE ( delete record ) for a model type. You can mock
