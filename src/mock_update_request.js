@@ -11,7 +11,8 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
         response = options.response;
     }
 
-	this.andReturn = function(returns) {
+	this.andSucceed = function(options) {
+        succeed = true;
 		return this;
 	};
 
