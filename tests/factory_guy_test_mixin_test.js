@@ -770,7 +770,39 @@ asyncTest("#handleUpdate with model that fail with custom response", function ()
         start();
       }
     );
+  });
+});
+
+asyncTest("#handleUpdate with model that fail and then succeeds", function () {
+  Em.run(function () {
+    var profile = make('profile');
+
+    var updateMock = testHelper.handleUpdate(profile).andFail({
+      status: 400,
+      response: "{error: 'invalid data'}"
     });
+
+    profile.set('description', 'new desc');
+    profile.save().then(
+      function () {
+      },
+      function (reason) {
+        equal(reason.responseText, "{error: 'invalid data'}", "Could not save model.");
+      }
+    ).then(function () {
+        updateMock.andSucceed();
+
+        ok(!profile.get('valid'), "Profile is invalid.");
+
+        profile.save().then(
+          function () {
+            ok(!profile.get('saving'), "Saved model");
+            ok(profile.get('description') == 'new desc', "Description was updated.");
+            start();
+          }
+        );
+      });
+  });
 });
 
 /////// handleDelete //////////
