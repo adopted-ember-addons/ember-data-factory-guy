@@ -814,8 +814,17 @@ chainable methods, or options hash.
 
 
 ##### handleUpdate
+
+  - Use chainable methods to build response:
+    - andFail - request should fail, use options argument to pass status and response text
+    - andSucceed - update should succeed, this is the default behavior, use this after a ```andFail``` call
+
   - handleUpdate(model)
   - handleUpdate(modelType, id)
+  - Use hash of options to build response:
+    - status - HTTP status code, defaults to 200.
+    - response - what the server has responded, only used on failure cases, default is empty on failure and model json on succees.
+    - succeed - indicates if the resquest should succeed, defaults to true.
   - need to wrap tests using handleUpdate with: Ember.run.function() { 'your test' })
 
 *success case is the default*
@@ -834,15 +843,54 @@ chainable methods, or options hash.
   profile.save() //=> will succeed
 ````
 
+######Using chainable methods
+
 *mocking a failed update*
 
 ```javascript
   var profile = FactoryGuy.make('profile');
 
   // set the succeed flag to 'false'
-  testHelper.handleUpdate('profile', profile.id, false);
+  testHelper.handleUpdate('profile', profile.id).andFail({status: 422, response: "{error: 'Invalid data'}"});
   // or
-  testHelper.handleUpdate(profile, false);
+  testHelper.handleUpdate(profile).andFail({status: 422, response: "{error: 'Invalid data'}"});
+
+  profile.set('description', 'bad value');
+  profile.save() //=> will fail
+````
+
+*mocking a failed update and retry with succees*
+
+```javascript
+  var profile = FactoryGuy.make('profile');
+
+  // set the succeed flag to 'false'
+  var mockUpdate = testHelper.handleUpdate('profile', profile.id);
+  // or
+  var mockUpdate = testHelper.handleUpdate(profile);
+
+  mockUpdate.andFail({status: 422, response: "{error: 'Invalid data'}"});
+
+  profile.set('description', 'bad value');
+  profile.save() //=> will fail
+
+  // Some logic for retrying...
+
+  mockUpdate.andSucceed();
+  profile.save() //=> will succeed!
+````
+
+######Using hash of options
+
+*mocking a failed update*
+
+```javascript
+  var profile = FactoryGuy.make('profile');
+
+  // set the succeed flag to 'false'
+  testHelper.handleUpdate('profile', profile.id, {succeed: false});
+  // or
+  testHelper.handleUpdate(profile, {succeed: false});
 
   profile.set('description', 'bad value');
   profile.save() //=> will fail
