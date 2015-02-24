@@ -195,12 +195,12 @@ test("#buildList creates list of fixtures", function() {
 });
 
 
-test("#isAttributeRelationship", function() {
+test("#getAttributeRelationship", function() {
   FactoryGuy.setStore(store);
   var typeName = 'user'
-  equal(FactoryGuy.isAttributeRelationship(typeName,'company'),true);
-  equal(FactoryGuy.isAttributeRelationship(typeName,'hats'),true);
-  equal(FactoryGuy.isAttributeRelationship(typeName,'name'),false);
+  equal(FactoryGuy.getAttributeRelationship(typeName,'company').typeKey,'company');
+  equal(FactoryGuy.getAttributeRelationship(typeName,'hats').typeKey,'hat');
+  equal(FactoryGuy.getAttributeRelationship(typeName,'name'),null);
 });
 
 

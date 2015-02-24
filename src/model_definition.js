@@ -72,8 +72,9 @@ var ModelDefinition = function (model, config) {
         // If it's an object and it's a model association attribute, build the json
         // for the association and replace the attribute with that json
         if (FactoryGuy.getStore()) {
-          if (FactoryGuy.isAttributeRelationship(this.model, attribute)) {
-            fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute]);
+          var relationship = FactoryGuy.getAttributeRelationship(this.model, attribute);
+          if (relationship) {
+            fixture[attribute] = FactoryGuy.build(relationship.typeKey, fixture[attribute]);
           }
         } else {
           // For legacy reasons, if the store is not set in FactoryGuy, keep
