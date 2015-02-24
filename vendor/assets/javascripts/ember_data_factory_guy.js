@@ -93,8 +93,9 @@ var ModelDefinition = function (model, config) {
         // If it's an object and it's a model association attribute, build the json
         // for the association and replace the attribute with that json
         if (FactoryGuy.getStore()) {
-          if (FactoryGuy.isAttributeRelationship(this.model, attribute)) {
-            fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute]);
+          var relationship = FactoryGuy.getAttributeRelationship(this.model, attribute);
+          if (relationship) {
+            fixture[attribute] = FactoryGuy.build(relationship.typeKey, fixture[attribute]);
           }
         } else {
           // For legacy reasons, if the store is not set in FactoryGuy, keep
@@ -240,14 +241,15 @@ var FactoryGuy = {
    @param {String} attribute  attribute you want to check
    @returns {Boolean} true if the attribute is a relationship, false if not
    */
-  isAttributeRelationship: function(typeName, attribute) {
+  getAttributeRelationship: function(typeName, attribute) {
     if (!this.store) {
       Ember.debug("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures")
       // The legacy value was true.
       return true;
     }
     var model = this.store.modelFor(typeName);
-    return !!model.typeForRelationship(attribute);
+    var relationship = model.typeForRelationship(attribute);
+    return !!relationship ? relationship : null;
   },
   /**
    Used in model definitions to declare use of a sequence. For example:
