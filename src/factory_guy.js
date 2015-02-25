@@ -62,14 +62,15 @@ var FactoryGuy = {
    @param {String} attribute  attribute you want to check
    @returns {Boolean} true if the attribute is a relationship, false if not
    */
-  isAttributeRelationship: function(typeName, attribute) {
+  getAttributeRelationship: function(typeName, attribute) {
     if (!this.store) {
       Ember.debug("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures")
       // The legacy value was true.
       return true;
     }
     var model = this.store.modelFor(typeName);
-    return !!model.typeForRelationship(attribute);
+    var relationship = model.typeForRelationship(attribute);
+    return !!relationship ? relationship : null;
   },
   /**
    Used in model definitions to declare use of a sequence. For example:
