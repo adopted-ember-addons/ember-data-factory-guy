@@ -39,11 +39,7 @@ var FactoryGuy = {
    @param {Object} config your model definition
    */
   define: function (model, config) {
-    if (this.modelDefinitions[model]) {
-      this.modelDefinitions[model].merge(config);
-    } else {
-      this.modelDefinitions[model] = new ModelDefinition(model, config);
-    }
+    this.modelDefinitions[model] = new ModelDefinition(model, config);
   },
   /**
    Setting the store so FactoryGuy can do some model introspection.

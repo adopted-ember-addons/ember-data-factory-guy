@@ -93,8 +93,9 @@ var ModelDefinition = function (model, config) {
         // If it's an object and it's a model association attribute, build the json
         // for the association and replace the attribute with that json
         if (FactoryGuy.getStore()) {
-          if (FactoryGuy.isAttributeRelationship(this.model, attribute)) {
-            fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute]);
+          var relationship = FactoryGuy.getAttributeRelationship(this.model, attribute);
+          if (relationship) {
+            fixture[attribute] = FactoryGuy.build(relationship.typeKey, fixture[attribute]);
           }
         } else {
           // For legacy reasons, if the store is not set in FactoryGuy, keep
@@ -217,11 +218,7 @@ var FactoryGuy = {
    @param {Object} config your model definition
    */
   define: function (model, config) {
-    if (this.modelDefinitions[model]) {
-      this.modelDefinitions[model].merge(config);
-    } else {
-      this.modelDefinitions[model] = new ModelDefinition(model, config);
-    }
+    this.modelDefinitions[model] = new ModelDefinition(model, config);
   },
   /**
    Setting the store so FactoryGuy can do some model introspection.
@@ -240,14 +237,15 @@ var FactoryGuy = {
    @param {String} attribute  attribute you want to check
    @returns {Boolean} true if the attribute is a relationship, false if not
    */
-  isAttributeRelationship: function(typeName, attribute) {
+  getAttributeRelationship: function(typeName, attribute) {
     if (!this.store) {
       Ember.debug("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures")
       // The legacy value was true.
       return true;
     }
     var model = this.store.modelFor(typeName);
-    return !!model.typeForRelationship(attribute);
+    var relationship = model.typeForRelationship(attribute);
+    return !!relationship ? relationship : null;
   },
   /**
    Used in model definitions to declare use of a sequence. For example:
@@ -1411,10 +1409,12 @@ if (FactoryGuy !== undefined) {
 				return null;
 			}
 		}
-
 		// Inspect the data submitted in the request (either POST body or GET query string)
 		if ( handler.data ) {
-			if ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
+//      console.log('request.data', requestSettings.data )
+//      console.log('handler.data', handler.data )
+//      console.log('data equal', isMockDataEqual(handler.data, requestSettings.data) )
+			if  ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
 				// They're not identical, do not mock this request
 				return null;
 			}
@@ -1425,7 +1425,6 @@ if (FactoryGuy !== undefined) {
 			// The request type doesn't match (GET vs. POST)
 			return null;
 		}
-
 		return handler;
 	}
 
@@ -1789,6 +1788,7 @@ if (FactoryGuy !== undefined) {
 			}
 
 			mockHandler = getMockForRequest( mockHandlers[k], requestSettings );
+
 			if(!mockHandler) {
 				// No valid mock found for this request
 				continue;
@@ -1840,7 +1840,7 @@ if (FactoryGuy !== undefined) {
 			}
 
 			copyUrlParameters(mockHandler, origSettings);
-
+		 	//console.log('here copyUrlParameters', 'mockHandler=>',mockHandler, 'requestSettings=>',requestSettings, 'origSettings=>',origSettings)
 			(function(mockHandler, requestSettings, origSettings, origHandler) {
 
 				mockRequest = _ajax.call($, $.extend(true, {}, origSettings, {
