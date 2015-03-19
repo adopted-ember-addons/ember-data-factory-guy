@@ -1,36 +1,36 @@
 var MockUpdateRequest = function(url, model, mapFind, options) {
 	var status = options.status || 200;
 	var succeed = true;
-    var response = null;
+  var response = null;
 
-    if ('succeed' in options) {
-        succeed = options.succeed;
-    }
+  if ('succeed' in options) {
+    succeed = options.succeed;
+  }
 
-    if ('response' in options) {
-        response = options.response;
-    }
+  if ('response' in options) {
+    response = options.response;
+  }
 
 	this.andSucceed = function(options) {
-        succeed = true;
+    succeed = true;
 		return this;
 	};
 
 	this.andFail = function(options) {
 		succeed = false;
 		status = options.status || 500;
-        if ('response' in options) {
-            response = options.response;
-        }
+    if ('response' in options) {
+      response = options.response;
+    }
 		return this;
 	};
 
 	this.handler = function(settings) {
 		if (!succeed) {
 			this.status = status;
-            if (response !== null) {
-                this.responseText = response;
-            }
+      if (response !== null) {
+        this.responseText = response;
+      }
 		} else {
 			var json = model.toJSON({includeId: true});
 			this.responseText = mapFind(model.constructor.typeKey, json);

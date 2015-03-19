@@ -403,6 +403,22 @@ asyncTest("#handleCreate failure", function() {
   });
 });
 
+asyncTest("#handleCreate failure with status code 422 and errors in response", function() {
+  Em.run(function() {
+    testHelper.handleCreate('profile', {succeed: false, status: 422, response: {errors: {description: ['bad']}} } )
+
+    store.createRecord('profile').save()
+      .then(
+        function() {},
+        function(reason) {
+          equal(reason.errors.description, ['bad']+'');
+          ok(true)
+          start();
+        }
+      )
+  });
+});
+
 
 asyncTest("#handleCreate match but still fail", function() {
   Em.run(function() {
@@ -543,7 +559,7 @@ asyncTest("#handleCreate failure with andFail method", function() {
 });
 
 
-asyncTest("#handleCreate match but still fail with chaining methods", function() {
+asyncTest("#handleCreate match but still fail with andFail method", function() {
   Em.run(function() {
     var description = "special description"
 
@@ -560,7 +576,21 @@ asyncTest("#handleCreate match but still fail with chaining methods", function()
   });
 });
 
+asyncTest("#handleCreate failure with status code 422 and errors in response with andFail method", function() {
+  Em.run(function() {
+    testHelper.handleCreate('profile').andFail({status: 422, response: {errors: {description: ['bad']}}});
 
+    store.createRecord('profile').save()
+      .then(
+        function() {},
+        function(reason) {
+          equal(reason.errors.description, ['bad']+'');
+          ok(true)
+          start();
+        }
+      )
+  });
+});
 
 
 
