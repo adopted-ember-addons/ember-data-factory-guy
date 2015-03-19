@@ -700,16 +700,19 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
 
 
 ##### handleCreate
-  - use chainable methods to build the response
+  - Use chainable methods to build the response
     - match - attributes that must be in request json
     - andReturns - attributes to include in response json
     - andFail - request should fail
+      - Takes a hash of options:
+        - status - HTTP status code, defaults to 500.
+        - response - error response message, or an errors hash for 422 status
 
-  - use hash of options to build the response
+  - Use hash of options to build the response
     - match - attributes that must be in request json
     - returns - attributes to include in response json
     - succeed - flag to indicate if the request should succeed ( default is true )
-    - this style will eventually be deprecated
+    - This style will eventually be deprecated in favor of chainable methods
 
   - need to wrap tests using handleCreate with: Ember.run.function() { 'your test' })
 
@@ -770,6 +773,9 @@ chainable methods, or options hash.
   // Mocking failure case is easy with chainable methods, just use #andFail
   testHelper.handleCreate('project').match({match: {name: "Moo"}).andFail()
 
+  // Can optionally add a status code and/or errors to the response
+  testHelper.handleCreate('project').andFail({status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}});
+
   store.createRecord('project', {name: "Moo"}).save() //=> fails
 ```
 
@@ -799,6 +805,9 @@ chainable methods, or options hash.
 ```javascript
   // set the succeed flag to 'false'
   testHelper.handleCreate('project', {succeed: false});
+
+  // can optionally add a status code and/or errors to the response
+  testHelper.handleCreate('project', {succeed: false, status: 422, response: {errors: {name: ['bad']}}});
 
   // when the createRecord on the 'project' is called, it will fail
   store.createRecord('project').save() //=> fails
