@@ -15,7 +15,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "ember-data": "1.0.0-beta.15",
+    "ember-data": "1.0.0-beta.16",
     "jquery-mockjax": "latest"
   },
   "ignore": [

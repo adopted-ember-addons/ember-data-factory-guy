@@ -505,9 +505,9 @@ var FactoryGuy = {
       definition.reset();
       try {
         var modelType = store.modelFor(definition.model);
-        if (store.usingFixtureAdapter()) {
-          modelType.FIXTURES = [];
-        }
+        //if (store.usingFixtureAdapter()) {
+        //  modelType.FIXTURES = [];
+        //}
         store.unloadAll(modelType);
       } catch (e) {
         console.log('resetModels',e)
@@ -715,7 +715,7 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
      @returns {Boolean} true if store's adapter is DS.FixtureAdapter
      */
     usingFixtureAdapter: function () {
-      var adapter = this.adapterFor('application');
+      var adapter = this.lookupAdapter('application');
       return adapter instanceof DS.FixtureAdapter;
     },
     /**

@@ -321,9 +321,9 @@ var FactoryGuy = {
       definition.reset();
       try {
         var modelType = store.modelFor(definition.model);
-        if (store.usingFixtureAdapter()) {
-          modelType.FIXTURES = [];
-        }
+        //if (store.usingFixtureAdapter()) {
+        //  modelType.FIXTURES = [];
+        //}
         store.unloadAll(modelType);
       } catch (e) {
         console.log('resetModels',e)

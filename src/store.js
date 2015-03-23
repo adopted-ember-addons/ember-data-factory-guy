@@ -4,7 +4,7 @@
      @returns {Boolean} true if store's adapter is DS.FixtureAdapter
      */
     usingFixtureAdapter: function () {
-      var adapter = this.adapterFor('application');
+      var adapter = this.lookupAdapter('application');
       return adapter instanceof DS.FixtureAdapter;
     },
     /**
