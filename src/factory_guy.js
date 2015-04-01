@@ -387,3 +387,5 @@ var FactoryGuy = {
     }
   }
 };
+
+export default FactoryGuy;
