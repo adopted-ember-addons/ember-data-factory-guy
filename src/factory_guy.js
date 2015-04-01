@@ -285,7 +285,7 @@ var FactoryGuy = {
       store.loadModelForFixtureAdapter(modelType, fixture);
       return fixture;
     } else {
-      return store.makeModel(modelType, fixture);
+      return this.makeModel(store, modelType, fixture);
     }
   },
   /**
@@ -311,6 +311,60 @@ var FactoryGuy = {
     }
     return arr;
   },
+
+  /**
+   * Most of the work of making the model from the json fixture is going on here.
+   * @param modelType
+   * @param fixture
+   * @returns {DS.Model} instance of DS.Model
+   */
+  makeModel: function (store, modelType, fixture) {
+    var modelName = store.modelFor(modelType).typeKey;
+    var model;
+    var self = this;
+
+    Em.run(function () {
+      self.findEmbeddedAssociationsForRESTAdapter(store, modelType, fixture);
+      if (fixture.type) {
+        // assuming its polymorphic if there is a type attribute
+        // is this too bold an assumption?
+        modelName = fixture.type.underscore();
+        modelType = store.modelFor(modelName);
+      }
+      model = store.push(modelName, fixture);
+    });
+    return model;
+  },
+
+  findEmbeddedAssociationsForRESTAdapter: function (store, modelType, fixture) {
+    var self = this;
+    Ember.get(modelType, 'relationshipsByName').forEach(function (relationship, name) {
+      if (relationship.kind == 'belongsTo') {
+        var belongsToRecord = fixture[relationship.key];
+        if (Ember.typeOf(belongsToRecord) == 'object') {
+          self.findEmbeddedAssociationsForRESTAdapter(store, relationship.type, belongsToRecord);
+          belongsToRecord = store.push(relationship.type, belongsToRecord);
+          fixture[relationship.key] = belongsToRecord;
+        }
+      }
+      if (relationship.kind == 'hasMany') {
+        var hasManyRecords = fixture[relationship.key];
+        if (Ember.typeOf(hasManyRecords) == 'array') {
+          if (Ember.typeOf(hasManyRecords[0]) == 'object') {
+            var records = Em.A();
+            hasManyRecords.map(function (object) {
+              self.findEmbeddedAssociationsForRESTAdapter(store, relationship.type, object);
+              var record = store.push(relationship.type, object);
+              records.push(record);
+              return record;
+            });
+            fixture[relationship.key] = records;
+          }
+        }
+      }
+    });
+  },
+
   /**
    Clear model instances from FIXTURES array, and from store cache.
    Reset the id sequence for the models back to zero.
@@ -330,6 +384,7 @@ var FactoryGuy = {
       }
     }
   },
+
   /**
    Push fixture to model's FIXTURES array.
    Used when store's adapter is a DS.FixtureAdapter.
