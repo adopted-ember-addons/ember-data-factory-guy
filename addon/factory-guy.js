@@ -380,16 +380,16 @@ var FactoryGuy = {
    Clear model instances from FIXTURES array, and from store cache.
    Reset the id sequence for the models back to zero.
    */
-  resetModels: function (store) {
+  resetModels: function () {
     for (var model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
       definition.reset();
       try {
-        var modelType = store.modelFor(definition.model);
+        var modelType = this.store.modelFor(definition.model);
         //if (store.usingFixtureAdapter()) {
         //  modelType.FIXTURES = [];
         //}
-        store.unloadAll(modelType);
+        this.store.unloadAll(modelType);
       } catch (e) {
         console.log('resetModels', e);
       }

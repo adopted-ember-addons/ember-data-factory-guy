@@ -8,9 +8,9 @@ export default {
   initialize: function(container, application) {
     FactoryGuy.setStore(container.lookup('store:main'))
 
-    console.log('Hi Mom', container.lookup('store:main')+'', FactoryGuy.getStore()+'')
-    console.log('Hi Rob A', container.lookup('serializer:-default'))
-    console.log('Hi Rob B', container.lookup('adapter:-default'))
+    //console.log('Hi Mom', container.lookup('store:main')+'', FactoryGuy.getStore()+'')
+    //console.log('Hi Rob A', container.lookup('serializer:-default'))
+    //console.log('Hi Rob B', container.lookup('adapter:-default'))
     //var normalizedPath = require("path")
     //console.log('Hi Rob C', requirejs._eak_seen)
 

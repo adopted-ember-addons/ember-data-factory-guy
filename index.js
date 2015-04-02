@@ -18,33 +18,8 @@ module.exports = {
 
     if (app.tests) {
       app.import(app.bowerDirectory + '/jquery-mockjax/jquery.mockjax.js');
-      //app.import(app.bowerDirectory + '/ember-data-factory-guy');
-      //  exports: {
-      //    'factory-guy': [
-      //      'default',
-      //      'modelDefinition',
-      //      'sequence',
-      //      'testMixin'
-      //    ]
-      //  }
-      //});
+      app.import(app.bowerDirectory + '/sinonjs/sinon.js');
     }
-  },
-
-  //treeFor: function(name) {
-    //if (this.app.env !== 'production') {
-    //this._super.treeFor.apply(this, arguments);
-    //console.log('tree for'+name, tree);
-    //return tree;
-    //}
-    //this._requireBuildPackages();
-    //return this.mergeTrees([]);
-  //},
-
-  shouldIncludeFiles: function() {
-    //var config = this.app.project.config()['ember-data-factory-guy'];
-
-    //return config.force || (this.app.env !== 'production')
   }
 
 };

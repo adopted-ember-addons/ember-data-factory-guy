@@ -2,10 +2,10 @@ import FactoryGuy from 'ember-data-factory-guy/factory-guy';
 
 FactoryGuy.define('hat', {
   default: {},
-  small_hat: {
+  'small-hat': {
     type: 'SmallHat'
   },
-  big_hat: {
+  'big-hat': {
     type: 'BigHat'
   },
   traits: {

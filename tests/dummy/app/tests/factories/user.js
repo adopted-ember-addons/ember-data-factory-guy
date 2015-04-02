@@ -23,13 +23,13 @@ FactoryGuy.define('user', {
       projects: FactoryGuy.hasMany('project', 2)
     },
     with_hats: {
-      hats: FactoryGuy.hasMany('big_hat', 2)
+      hats: FactoryGuy.hasMany('big-hat', 2)
     },
     with_hats_belonging_to_user: {
-      hats: FactoryGuy.hasMany('big_hat', 2, 'belonging_to_user')
+      hats: FactoryGuy.hasMany('big-hat', 2, 'belonging_to_user')
     },
     with_hats_belonging_to_outfit: {
-      hats: FactoryGuy.hasMany('big_hat', 2, 'belonging_to_outfit')
+      hats: FactoryGuy.hasMany('big-hat', 2, 'belonging_to_outfit')
     }
   }
 });

@@ -316,7 +316,7 @@ var FactoryGuyTestMixin = Ember.Mixin.create({
     });
   },
   teardown: function () {
-    FactoryGuy.resetModels(this.getStore());
+    FactoryGuy.resetModels();
     $.mockjax.clear();
   }
 });

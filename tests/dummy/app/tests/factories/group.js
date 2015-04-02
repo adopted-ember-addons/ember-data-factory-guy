@@ -10,7 +10,7 @@ FactoryGuy.define("group", {
   }
 });
 
-FactoryGuy.define("big_group", {
+FactoryGuy.define("big-group", {
   sequences: {
     name: function(num) {return 'Big Group' + num}
   },
@@ -20,7 +20,7 @@ FactoryGuy.define("big_group", {
   }
 });
 
-FactoryGuy.define("small_group", {
+FactoryGuy.define("small-group", {
   sequences: {
     name: function(num) {return 'Small Group' + num}
   },
