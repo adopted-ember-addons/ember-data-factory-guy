@@ -159,7 +159,7 @@ test("when hasMany associations are assigned, belongsTo parent is assigned using
 
 test("when hasMany associations are assigned, belongsTo ( polymorphic ) parent is assigned", function() {
   var fluff = make('fluffy-material');
-  var bigHat = make('big-hat', {fluffy_materials: [fluff]});
+  var bigHat = make('big-hat', {fluffyMaterials: [fluff]});
 
   ok(fluff.get('hat') === bigHat)
 });
@@ -290,12 +290,12 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
 
   ok(user.get('projects.firstObject') === project)
   ok(firstHat.get('user') === user)
-  ok(firstHat.get('outfit.id') === 1)
+  ok(firstHat.get('outfit.id') == 1)
   ok(firstHat.get('outfit.hats.length') === 1)
   ok(firstHat.get('outfit.hats.firstObject') === firstHat)
 
   ok(lastHat.get('user') === user)
-  ok(lastHat.get('outfit.id') === 2)
+  ok(lastHat.get('outfit.id') == 2)
   ok(lastHat.get('outfit.hats.length') === 1)
   ok(lastHat.get('outfit.hats.firstObject') === lastHat)
 });

@@ -36,7 +36,7 @@ var ModelDefinition = function (model, config) {
    is a function, create the sequence with that function
 
    @param   {String} name previously declared sequence name or
-            an the random name generate for inline functions
+   an the random name generate for inline functions
    @param   {Function} sequenceFn optional function to use as sequence
    @returns {String} output of sequence function
    */
@@ -82,12 +82,6 @@ var ModelDefinition = function (model, config) {
           if (relationship) {
             fixture[attribute] = FactoryGuy.build(relationship.typeKey, fixture[attribute]);
           }
-        } else {
-          // For legacy reasons, if the store is not set in FactoryGuy, keep
-          // this code the way it is ( though it will cause failures when the object is actually
-          // a custom attribute and not a relationship ), while users start setting the store
-          // in FactoryGuy, or using testHelper.make instead of store.makeFixture
-          fixture[attribute] = FactoryGuy.build(attribute, fixture[attribute]);
         }
       }
     }

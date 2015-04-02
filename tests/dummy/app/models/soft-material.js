@@ -2,5 +2,5 @@ import DS from 'ember-data';
 
 export default DS.Model.extend({
   name: DS.attr('string'),
-  hat:  DS.belongsTo('big_hat')
+  hat:  DS.belongsTo('big-hat')
 });

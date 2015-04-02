@@ -4,6 +4,6 @@ export default DS.Model.extend({
   type:    DS.attr('string', {defaultValue: 'Group'}),
   name:    DS.attr('string'),
   profiles: DS.hasMany('profile'),
-  group: DS.belongsTo('group', {inverse: 'versions'}),
-  versions: DS.hasMany('group', {inverse: 'group'})
+  versions: DS.hasMany('group', {polymorphic: true, inverse: 'group'}),
+  group: DS.belongsTo('group', {inverse: 'versions'})
 });

@@ -8,4 +8,3 @@ export default DS.Model.extend({
   projects:   DS.hasMany('project', {embedded: 'always'}),
   hats:       DS.hasMany('hat', {polymorphic: true})
 });
-
