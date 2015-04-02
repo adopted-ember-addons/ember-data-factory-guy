@@ -2,11 +2,11 @@ var path = require('path');
 
 module.exports = {
   name: 'ember-data-factory-guy',
-
-  isDevelopingAddon: function() {
-    return true;
-  },
-
+  //
+  //isDevelopingAddon: function() {
+  //  return true;
+  //},
+  //
   blueprintsPath: function() {
     return path.join(__dirname, 'blueprints');
   },

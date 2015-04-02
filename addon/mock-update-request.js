@@ -15,7 +15,7 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
 
 	this.andSucceed = function(options) {
     succeed = true;
-    status = options.status || 200;
+    status = options && options.status || 200;
 		return this;
 	};
 

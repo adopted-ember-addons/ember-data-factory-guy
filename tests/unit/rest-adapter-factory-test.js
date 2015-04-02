@@ -1,38 +1,40 @@
-import FactoryGuy from 'ember-data-factory-guy/factory-guy';
-import TestHelper from '../support/factory-guy-test-helper';
+import FactoryGuy, { make } from 'ember-data-factory-guy/factory-guy';
+import { theUsualSetup, theUsualTeardown } from '../helpers/utility-methods';
+import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
+import User from 'dummy/models/user';
+import BigHat from 'dummy/models/big-hat';
+import SmallHat from 'dummy/models/small-hat';
+import Outfit from 'dummy/models/outfit';
 
-var testHelper, store, make;
+var App, store;
 
-console.log('test FactoryGuy', FactoryGuy.getStore()+'')
-
-module('FactoryGuy with ActiveModelAdapter', {
-  setup: function() {
-    testHelper = TestHelper //TestHelper.setup(DS.ActiveModelAdapter);
-    //store = testHelper.getStore();
-    make = function() {return FactoryGuy.make.apply(FactoryGuy,arguments)}
+module('FactoryGuy with DS.RESTAdapter', {
+  setup: function () {
+    App = theUsualSetup('-rest');
+    store = FactoryGuy.getStore();
   },
-  teardown: function() {
-    testHelper.teardown();
+  teardown: function () {
+    theUsualTeardown(App);
   }
 });
 
 
-test("#resetModels clears the store of models, and resets the model definition", function() {
+test("#clearStore clears the store of models, and resets the model definition", function() {
   Em.run(function() {
     var project = make('project');
     var user = make('user', {projects: [project]});
 
-    for (model in FactoryGuy.modelDefinitions) {
+    for (var model in FactoryGuy.modelDefinitions) {
       var definition = FactoryGuy.modelDefinitions[model];
       sinon.spy(definition, 'reset');
     }
 
-    FactoryGuy.resetModels(store);
+    FactoryGuy.clearStore();
 
-    equal(store.all('user').get('content.length'),0)
-    equal(store.all('project').get('content.length'),0)
+    equal(store.all('user').get('content.length'), 0)
+    equal(store.all('project').get('content.length'), 0)
 
-    for (model in FactoryGuy.modelDefinitions) {
+    for (var model in FactoryGuy.modelDefinitions) {
       var definition = FactoryGuy.modelDefinitions[model];
       ok(definition.reset.calledOnce);
       definition.reset.restore();
@@ -41,61 +43,55 @@ test("#resetModels clears the store of models, and resets the model definition",
 });
 
 
-module('#make with ActiveModelAdapter', {
-  setup: function() {
-    testHelper = TestHelper.setup(DS.ActiveModelAdapter);
-    store = testHelper.getStore();
-    make = function() {return FactoryGuy.make.apply(FactoryGuy,arguments)}
+module('#make', {
+  setup: function () {
+    App = theUsualSetup('-rest');
+    store = FactoryGuy.getStore();
   },
-  teardown: function() {
-    Em.run(function() { testHelper.teardown(); });
+  teardown: function () {
+    theUsualTeardown(App);
   }
 });
 
 
 asyncTest("creates records in the store", function() {
   var user = make('user');
-
   ok(user instanceof User);
+
   store.find('user', user.id).then(function(store_user) {
-    ok(store_user == user);
+    ok(store_user === user);
     start()
   });
 });
 
-
 test("handles custom attribute type attributes", function() {
   var info = {first:1}
   var user = make('user', {info: info});
-  ok(user.get('info') == info)
-});
-
-test("handles camelCase attributes", function() {
-  var profile = make('profile', {camelCaseDescription: 'description'});
-  ok(profile.get('camelCaseDescription') == 'description')
+  ok(user.get('info') === info)
 });
 
 test("makeFixture with fixture options", function() {
   var profile = make('profile',  {description: 'dude'});
-  ok(profile.get('description') == 'dude');
+  ok(profile.get('description') === 'dude');
 });
 
-test("makeFixture with attributes in traits", function() {
+test("makeFixture with traits", function() {
   var profile = make('profile', 'goofy_description');
-  ok(profile.get('description') == 'goofy');
+  ok(profile.get('description') === 'goofy');
 });
 
-test("makeFixture with attributes in traits and fixture options ", function() {
+test("makeFixture with traits and fixture options ", function() {
   var profile = make('profile', 'goofy_description', {description: 'dude'});
-  ok(profile.get('description') == 'dude');
+  ok(profile.get('description') === 'dude');
 });
+
 
 
 test("when hasMany associations assigned, belongTo parent is assigned", function() {
   var project = make('project');
   var user = make('user', {projects: [project]})
 
-  ok(project.get('user') == user);
+  ok(project.get('user') === user);
 });
 
 
@@ -104,30 +100,30 @@ asyncTest("when hasMany ( asnyc ) associations assigned, belongTo parent is assi
   var company = make('company', {users: [user]});
 
   user.get('company').then(function(c){
-    ok(c == company);
+    ok(c === company);
     start();
   })
 });
 
 
 test("when hasMany ( polymorphic ) associations are assigned, belongTo parent is assigned", function() {
-  var bh = make('big_hat');
-  var sh = make('small_hat');
-  var user = make('user', {hats: [bh, sh]})
+  var bh = make('big-hat');
+  var sh = make('small-hat');
+  var user = make('user', {hats: [bh, sh]});
 
   equal(user.get('hats.length'), 2);
   ok(user.get('hats.firstObject') instanceof BigHat)
   ok(user.get('hats.lastObject') instanceof SmallHat)
   // sets the belongTo user association
-  ok(bh.get('user') == user)
-  ok(sh.get('user') == user)
+  ok(bh.get('user') === user)
+  ok(sh.get('user') === user)
 });
 
 
 test("when hasMany ( self referential ) associations are assigned, belongsTo parent is assigned", function() {
-  var big_group = make('big_group');
-  var group = make('group', {versions: [big_group]});
-  ok(big_group.get('group') == group)
+  var bigGroup = make('big-group');
+  var group = make('group', {versions: [bigGroup]});
+  ok(bigGroup.get('group') === group)
 });
 
 
@@ -135,23 +131,23 @@ test("when hasMany associations are assigned, belongsTo parent is assigned using
   var project = make('project');
   var project2 = make('project', {children: [project]});
 
-  ok(project.get('parent') == project2);
+  ok(project.get('parent') === project2);
 });
 
 
 test("when hasMany associations are assigned, belongsTo parent is assigned using actual belongsTo name", function() {
   var silk = make('silk');
-  var big_hat = make('big_hat', {materials: [silk]});
+  var bh = make('big-hat', {materials: [silk]});
 
-  ok(silk.get('hat') == big_hat)
+  ok(silk.get('hat') === bh)
 });
 
 
 test("when hasMany associations are assigned, belongsTo ( polymorphic ) parent is assigned", function() {
-  var fluff = make('fluffy_material');
-  var big_hat = make('big_hat', {fluffy_materials: [fluff]});
+  var fluff = make('fluffy-material');
+  var bigHat = make('big-hat', {fluffyMaterials: [fluff]});
 
-  ok(fluff.get('hat') == big_hat)
+  ok(fluff.get('hat') === bigHat)
 });
 
 
@@ -161,15 +157,15 @@ test("when belongTo parent is assigned, parent adds to hasMany records", functio
   var project2 = make('project', {user: user});
 
   equal(user.get('projects.length'), 2);
-  ok(user.get('projects.firstObject') == project1);
-  ok(user.get('projects.lastObject') == project2);
+  ok(user.get('projects.firstObject') === project1);
+  ok(user.get('projects.lastObject') === project2);
 });
 
 
 test("when belongTo parent is assigned, parent adds to polymorphic hasMany records", function() {
   var user = make('user');
-  make('big_hat', {user: user});
-  make('small_hat', {user: user});
+  make('big-hat', {user: user});
+  make('small-hat', {user: user});
 
   equal(user.get('hats.length'), 2);
   ok(user.get('hats.firstObject') instanceof BigHat)
@@ -177,26 +173,26 @@ test("when belongTo parent is assigned, parent adds to polymorphic hasMany recor
 });
 
 
-asyncTest("when async hasMany relationship is assigned, model relationship is synced on both sides", function() {
+asyncTest("when hasMany ( async ) relationship is assigned, model relationship is synced on both sides", function() {
   var property = make('property');
   var user1 = make('user', {properties: [property]});
   var user2 = make('user', {properties: [property]});
 
   equal(property.get('owners.length'), 2);
-  ok(property.get('owners.firstObject') == user1);
-  ok(property.get('owners.lastObject') == user2);
+  ok(property.get('owners.firstObject') === user1);
+  ok(property.get('owners.lastObject') === user2);
   start();
 });
 
 
-asyncTest("when async belongsTo parent is assigned, parent adds to hasMany records", function() {
-  var company = make('company');
-  var user1 = make('user', {company: company});
-  var user2 = make('user', {company: company});
+asyncTest("when belongsTo ( async ) parent is assigned, parent adds to hasMany records", function() {
+  var user1 = make('user');
+  var user2 = make('user');
+  var company = make('company', {users: [user1, user2]});
 
   equal(company.get('users.length'), 2);
-  ok(company.get('users.firstObject') == user1);
-  ok(company.get('users.lastObject') == user2);
+  ok(company.get('users.firstObject') === user1);
+  ok(company.get('users.lastObject') === user2);
   start();
 });
 
@@ -206,42 +202,42 @@ test("when belongTo parent is assigned, parent adds to hasMany record using inve
   var project2 = make('project', {parent: project});
 
   equal(project.get('children.length'), 1);
-  ok(project.get('children.firstObject') == project2);
+  ok(project.get('children.firstObject') === project2);
 });
 
 
 test("when belongTo parent is assigned, parent adds to hasMany record using actual hasMany name", function() {
-  var bh = make('big_hat');
+  var bh = make('big-hat');
   var silk = make('silk', {hat: bh});
 
-  ok(bh.get('materials.firstObject') == silk)
+  ok(bh.get('materials.firstObject') === silk)
 });
 
 
 test("when belongTo parent is assigned, parent adds to belongsTo record", function() {
   var company = make('company');
   var profile = make('profile', {company: company});
-  ok(company.get('profile') == profile);
+  ok(company.get('profile') === profile);
 
   // but guard against a situation where a model can belong to itself
   // and do not want to set the belongsTo on this case.
-  var hat1 = make('big_hat')
-  var hat2 = make('big_hat', {hat: hat1})
-  ok(hat1.get('hat') == null);
-  ok(hat2.get('hat') == hat1);
+  var hat1 = make('big-hat')
+  var hat2 = make('big-hat', {hat: hat1})
+  ok(hat1.get('hat') === null);
+  ok(hat2.get('hat') === hat1);
 });
 
 
 test("belongsTo associations defined as attributes in fixture", function() {
   var project = make('project_with_user');
   equal(project.get('user') instanceof User, true)
-  ok(project.get('user.name') == 'User1');
+  ok(project.get('user.name') === 'User1');
 
   var project = make('project_with_dude');
-  ok(project.get('user.name') == 'Dude');
+  ok(project.get('user.name') === 'Dude');
 
   var project = make('project_with_admin');
-  ok(project.get('user.name') == 'Admin');
+  ok(project.get('user.name') === 'Admin');
 });
 
 
@@ -249,19 +245,17 @@ test("belongsTo associations defined as attributes in fixture", function() {
 test("hasMany associations defined as attributes in fixture", function() {
   var user = make('user_with_projects');
   equal(user.get('projects.length'), 2)
-  ok(user.get('projects.firstObject.user') == user)
-  ok(user.get('projects.lastObject.user') == user)
+  ok(user.get('projects.firstObject.user') === user)
+  ok(user.get('projects.lastObject.user') === user)
 })
 
 
 test("hasMany associations defined with traits", function() {
   var user = make('user', 'with_projects');
   equal(user.get('projects.length'), 2)
-  ok(user.get('projects.firstObject.user') == user)
-  ok(user.get('projects.lastObject.user') == user)
+  ok(user.get('projects.firstObject.user') === user)
+  ok(user.get('projects.lastObject.user') === user)
 })
-
-
 
 test("belongsTo associations defined with traits", function() {
   var hat1 = make('hat', 'with_user');
@@ -280,26 +274,26 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
   var firstHat = hats.get('firstObject');
   var lastHat = hats.get('lastObject');
 
-  ok(user.get('projects.firstObject') == project)
-  ok(firstHat.get('user') == user)
+  ok(user.get('projects.firstObject') === project)
+  ok(firstHat.get('user') === user)
   ok(firstHat.get('outfit.id') == 1)
-  ok(firstHat.get('outfit.hats.length') == 1)
-  ok(firstHat.get('outfit.hats.firstObject') == firstHat)
+  ok(firstHat.get('outfit.hats.length') === 1)
+  ok(firstHat.get('outfit.hats.firstObject') === firstHat)
 
-  ok(lastHat.get('user') == user)
+  ok(lastHat.get('user') === user)
   ok(lastHat.get('outfit.id') == 2)
-  ok(lastHat.get('outfit.hats.length') == 1)
-  ok(lastHat.get('outfit.hats.firstObject') == lastHat)
+  ok(lastHat.get('outfit.hats.length') === 1)
+  ok(lastHat.get('outfit.hats.firstObject') === lastHat)
 });
 
 
-module('#makeList with ActiveModelAdapter', {
-  setup: function() {
-    testHelper = TestHelper.setup(DS.ActiveModelAdapter);
-    store = testHelper.getStore();
+module('#makeList', {
+  setup: function () {
+    App = theUsualSetup('-rest');
+    store = FactoryGuy.getStore();
   },
-  teardown: function() {
-    Em.run(function() { testHelper.teardown(); });
+  teardown: function () {
+    theUsualTeardown(App);
   }
 });
 
@@ -307,22 +301,22 @@ module('#makeList with ActiveModelAdapter', {
 test("creates list of DS.Model instances", function() {
   var users = FactoryGuy.makeList('user', 2);
   equal(users.length, 2);
-  ok(users[0] instanceof DS.Model == true);
+  ok(users[0] instanceof DS.Model === true);
 
   var storeUsers = store.all('user').get('content');
-  ok(storeUsers[0] == users[0]);
-  ok(storeUsers[1] == users[1]);
+  ok(storeUsers[0] === users[0]);
+  ok(storeUsers[1] === users[1]);
 });
 
-test("handles trait arguments", function() {
+test("handles accept traits", function() {
   var users = FactoryGuy.makeList('user', 2, 'with_hats');
   equal(users.length, 2);
-  equal(users[0].get('hats.length') == 2, true);
+  equal(users[0].get('hats.length') === 2, true);
 });
 
-test("handles traits and optional fixture arguments", function() {
+test("handles accept traits and optional fixture arguments", function() {
   var users = FactoryGuy.makeList('user', 2, 'with_hats', {name: 'Bob'});
   equal(users[0].get('name'), 'Bob');
-  equal(users[0].get('hats.length') == 2, true);
+  equal(users[0].get('hats.length') === 2, true);
 });
 

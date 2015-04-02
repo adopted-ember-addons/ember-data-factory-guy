@@ -5,11 +5,10 @@ import FactoryGuy from './factory-guy';
 import MockUpdateRequest from './mock-update-request';
 import MockCreateRequest from './mock-create-request';
 
-var FactoryGuyTestMixin = Ember.Mixin.create({
+var FactoryGuyTestHelper = Ember.Object.create({
   // Pass in the app root, which typically is App.
   setup: function (app) {
     this.set('container', app.__container__);
-    FactoryGuy.setStore(this.getStore());
     return this;
   },
   /**
@@ -321,4 +320,4 @@ var FactoryGuyTestMixin = Ember.Mixin.create({
   }
 });
 
-export default FactoryGuyTestMixin;
+export default FactoryGuyTestHelper;

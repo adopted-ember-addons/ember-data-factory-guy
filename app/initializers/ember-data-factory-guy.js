@@ -1,4 +1,5 @@
 import FactoryGuy from 'ember-data-factory-guy/factory-guy';
+import FactoryGuyTestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 import ENV from '../config/environment';
 
 export default {
@@ -6,7 +7,8 @@ export default {
   after: 'store',
 
   initialize: function(container, application) {
-    FactoryGuy.setStore(container.lookup('store:main'))
+    FactoryGuy.setStore(container.lookup('store:main'));
+    FactoryGuyTestHelper.set('container', container);
 
     //console.log('Hi Mom', container.lookup('store:main')+'', FactoryGuy.getStore()+'')
     //console.log('Hi Rob A', container.lookup('serializer:-default'))

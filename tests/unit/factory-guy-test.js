@@ -1,26 +1,59 @@
-import FactoryGuy from 'ember-data-factory-guy/factory-guy';
+import FactoryGuy, { make, makeList, build, buildList, clearStore } from 'ember-data-factory-guy/factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
+import { theUsualSetup, theUsualTeardown } from '../helpers/utility-methods';
 import User from 'dummy/models/user';
-import startApp from '../helpers/start-app';
 
 var App;
 
-module('FactoryGuy with DS.RESTAdapter', {
+module('FactoryGuy', {
   setup: function() {
-    App = startApp();
-    var restAdapter = App.__container__.lookup('adapter:-active-model');
-    FactoryGuy.getStore().adapterFor = function() { return restAdapter }
+    App = theUsualSetup();
   },
   teardown: function() {
-    Ember.run(function() {
-      FactoryGuy.resetModels();
-      App.destroy();
-    });
+    theUsualTeardown(App);
   }
 });
 
-test("FactoryGuy has store set in initializer", function() {
+test("has store set in initializer", function() {
   ok(FactoryGuy.getStore() instanceof DS.Store)
+});
+
+test("#make returns a model instance", function() {
+  var user = FactoryGuy.make('user');
+  ok(user instanceof User)
+});
+
+test("exposes make method which is shortcut for FactoryGuy.make", function() {
+  ok(make('user') instanceof User)
+});
+
+test("#makeList returns an array of model instances", function() {
+  var users = FactoryGuy.makeList('user',2);
+  deepEqual(FactoryGuy.getStore().all('user').get('content'), users);
+});
+
+test("exposes makeList method which is shortcut for FactoryGuy.makeList", function() {
+  var users = makeList('user',2);
+  deepEqual(FactoryGuy.getStore().all('user').get('content'), users);
+});
+
+test("exposes build method which is shortcut for FactoryGuy.build", function() {
+  var json = build('user');
+  deepEqual(json, {id: 1, name: 'User1'});
+});
+
+test("exposes buildList method which is shortcut for FactoryGuy.buildList", function() {
+  var userList = FactoryGuy.buildList('user', 2);
+  deepEqual(userList[0], {id: 1, name: 'User1'});
+  deepEqual(userList[1], {id: 2, name: 'User2'});
+});
+
+test("exposes clearStore method which is a shortcut for FactoryGuy.clearStore", function() {
+  Em.run( function() {
+    makeList('user',2);
+    clearStore();
+    equal(FactoryGuy.getStore().all('user').get('content.length'), 0);
+  });
 });
 
 
@@ -210,6 +243,14 @@ test("#getAttributeRelationship", function() {
 });
 
 
+
+
+
+
+
+
+
+
 //test("#lookupDefinitionForFixtureName", function() {
 //  equal(!!FactoryGuy.lookupDefinitionForFixtureName('person'), true, 'finds definition if its the same as model name');
 //  equal(!!FactoryGuy.lookupDefinitionForFixtureName('funny_person'), true, 'finds definition if its a named fixture');
@@ -222,11 +263,6 @@ test("#getAttributeRelationship", function() {
 //  equal(FactoryGuy.lookupModelForFixtureName('fake'), undefined, "return nothing if can't find definition");
 //});
 //
-
-test("#make returns a model instance", function() {
-  var user = FactoryGuy.make('user');
-  ok(user instanceof User)
-});
 
 
 //module('FactoryGuy with DS.FixtureAdapter', {
