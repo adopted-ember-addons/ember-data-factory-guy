@@ -1,13 +1,15 @@
-FactoryGuy.define('soft_material', {
+import FactoryGuy from 'ember-data-factory-guy/factory-guy';
+
+FactoryGuy.define('soft-material', {
   default: {
     name: 'Soft material'
   },
   silk: {
     name: 'silk'
   }
-})
+});
 
-FactoryGuy.define('fluffy_material', {
+FactoryGuy.define('fluffy-material', {
   default: {
     name: 'fluffy material'
   },
@@ -15,3 +17,4 @@ FactoryGuy.define('fluffy_material', {
     name: 'fluff'
   }
 })
+

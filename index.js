@@ -13,7 +13,9 @@ module.exports = {
 
   included: function(app) {
     this._super.included(app);
-    console.log('included #####', app.tests)
+    console.log('included index.js #####', this.app.env, app.tests)
+    this.app = app;
+
     if (app.tests) {
       app.import(app.bowerDirectory + '/jquery-mockjax/jquery.mockjax.js');
       //app.import(app.bowerDirectory + '/ember-data-factory-guy');
@@ -27,5 +29,22 @@ module.exports = {
       //  }
       //});
     }
+  },
+
+  //treeFor: function(name) {
+    //if (this.app.env !== 'production') {
+    //this._super.treeFor.apply(this, arguments);
+    //console.log('tree for'+name, tree);
+    //return tree;
+    //}
+    //this._requireBuildPackages();
+    //return this.mergeTrees([]);
+  //},
+
+  shouldIncludeFiles: function() {
+    //var config = this.app.project.config()['ember-data-factory-guy'];
+
+    //return config.force || (this.app.env !== 'production')
   }
+
 };

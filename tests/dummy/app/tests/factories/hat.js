@@ -1,3 +1,5 @@
+import FactoryGuy from 'ember-data-factory-guy/factory-guy';
+
 FactoryGuy.define('hat', {
   default: {},
   small_hat: {
@@ -12,4 +14,4 @@ FactoryGuy.define('hat', {
     with_outfit: { outfit: {} },
     belonging_to_outfit: { outfit: {} }
   }
-})
+});

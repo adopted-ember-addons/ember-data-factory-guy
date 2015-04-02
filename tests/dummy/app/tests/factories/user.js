@@ -1,3 +1,5 @@
+import FactoryGuy from 'ember-data-factory-guy/factory-guy';
+
 FactoryGuy.define('user', {
   sequences: {
     name: function(num) {return 'User' + num}

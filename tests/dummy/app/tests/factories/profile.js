@@ -1,3 +1,5 @@
+import FactoryGuy from 'ember-data-factory-guy/factory-guy';
+
 FactoryGuy.define('profile', {
   default: {
     description: 'Text goes here'
@@ -10,4 +12,4 @@ FactoryGuy.define('profile', {
       company: FactoryGuy.belongsTo('company')
     }
   }
-})
+});

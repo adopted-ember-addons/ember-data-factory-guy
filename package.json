@@ -12,11 +12,6 @@
     "url": "https://github.com/danielspaniel/ember-data-factory-guy.git"
   },
   "homepage": "https://github.com/samselikoff/ember-data-factory-guy",
-  "keywords": [
-    "ember-addon",
-    "testing",
-    "server"
-  ],
   "scripts": {
     "start": "ember server",
     "build": "ember build",
@@ -25,10 +20,6 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "ember-addon": {
-    "configPath": "tests/dummy/config"
-  },
-  "main": "index.js",
   "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.2",
@@ -44,6 +35,15 @@
     "ember-cli-uglify": "1.0.1",
     "ember-data": "1.0.0-beta.16.1",
     "ember-export-application-global": "^1.0.2"
+  },
+  "keywords": [
+    "ember-addon",
+    "testing",
+    "factories"
+  ],
+  "main": "index.js",
+  "ember-addon": {
+    "configPath": "tests/dummy/config"
   },
   "dependencies": {}
 }

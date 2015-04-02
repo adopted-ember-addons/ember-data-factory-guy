@@ -8,14 +8,9 @@ import MockCreateRequest from './mock-create-request';
 var FactoryGuyTestMixin = Ember.Mixin.create({
   // Pass in the app root, which typically is App.
   setup: function (app) {
-    console.log('mixin setup ',app);
-    //this.set('container', app.__container__);
-    //FactoryGuy.setStore(this.getStore());
+    this.set('container', app.__container__);
+    FactoryGuy.setStore(this.getStore());
     return this;
-  },
-  useFixtureAdapter: function (app) {
-    app.ApplicationAdapter = DS.FixtureAdapter;
-    this.getStore().adapterFor('application').simulateRemoteResponse = false;
   },
   /**
    @param {String} model type like user for model User
@@ -36,12 +31,6 @@ var FactoryGuyTestMixin = Ember.Mixin.create({
    */
   find: function (type, id) {
     return this.getStore().find(type, id);
-  },
-  /**
-   Make new fixture and save to store. Proxy to FactoryGuy#make method
-   */
-  make: function () {
-    return FactoryGuy.make.apply(FactoryGuy, arguments);
   },
   getStore: function () {
     return this.get('container').lookup('store:main');
@@ -331,8 +320,5 @@ var FactoryGuyTestMixin = Ember.Mixin.create({
     $.mockjax.clear();
   }
 });
-
-// for legacy reasons keep this around for a while
-FactoryGuy.testMixin = FactoryGuyTestMixin;
 
 export default FactoryGuyTestMixin;

@@ -1,3 +1,5 @@
+import FactoryGuy from 'ember-data-factory-guy/factory-guy';
+
 FactoryGuy.define('property', {
   default: {
     name: 'Silly property'
@@ -7,4 +9,4 @@ FactoryGuy.define('property', {
       owners: FactoryGuy.hasMany('user', 2, 'with_projects')
     }
   }
-})
+});

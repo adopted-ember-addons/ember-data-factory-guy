@@ -10,6 +10,10 @@
 /bower_components
 
 # misc
+.ruby-gemset
+.ruby-version
+
+stats/
 /.sass-cache
 /connect.lock
 /coverage/*

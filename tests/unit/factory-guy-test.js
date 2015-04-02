@@ -1,8 +1,18 @@
 import FactoryGuy from 'ember-data-factory-guy/factory-guy';
-var testHelper, store;
+import startApp from '../helpers/start-app';
+//var testHelper, store;
+
+var App;
 
 module('FactoryGuy with DS.RESTAdapter', {
   setup: function() {
+    App = startApp();
+    var restAdapter = App.__container__.lookup('adapter:-active-model');
+    FactoryGuy.getStore().adapterFor = function() { return restAdapter }
+    var ad = FactoryGuy.getStore().adapterFor('group');
+    console.log('ad',ad+'')
+    //console.log('store',App.__container__.lookup('adapter:-active-model')+'')
+    //console.log('adapter',App.ApplicationAdapter)
     //testHelper = TestHelper.setup(DS.RESTAdapter);
     //store = testHelper.getStore();
   },
@@ -14,9 +24,9 @@ module('FactoryGuy with DS.RESTAdapter', {
 });
 
 test("can set and get store", function() {
-  console.log(FactoryGuy.getStore())
-  //FactoryGuy.setStore(store);
-  //ok(FactoryGuy.getStore() == store)
+  //console.log(FactoryGuy.getStore()+'')
+  console.log(FactoryGuy.make('group')+'')
+  ok(true)
 });
 
 //test("Using sequences in definitions", function() {
