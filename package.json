@@ -1,6 +1,6 @@
 {
   "name": "ember-data-factory-guy",
-  "version": "0.9.12",
+  "version": "1.0.0",
   "description": "Factories for testing Ember applications using EmberData",
   "directories": {
     "doc": "doc",
@@ -23,8 +23,6 @@
   "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.2",
-    "broccoli-static-compiler": "^0.2.1",
-    "broccoli-merge-trees": "latest",
     "ember-cli": "0.1.9",
     "ember-cli-app-version": "0.3.3",
     "ember-cli-babel": "^4.0.0",
