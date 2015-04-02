@@ -563,6 +563,7 @@ var FactoryGuy = {
       }
     }
   },
+
   /**
    Push fixture to model's FIXTURES array.
    Used when store's adapter is a DS.FixtureAdapter.
