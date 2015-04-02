@@ -1,42 +1,49 @@
 {
   "name": "ember-data-factory-guy",
-  "description": "Factory for testing Ember application",
   "version": "0.9.12",
-  "license": "MIT",
-  "authors": [
-    "Daniel Sudol <dansudol@yahoo.com>",
-    "Opak Alex <opak.alexandr@gmail.com>"
-  ],
-  "keywords": [
-    "ember-addon"
-  ],
-  "main": "lib/ember-addon/index.js",
-  "ember-addon": {
-    "main": "lib/ember-addon/index.js"
+  "description": "Factories for testing Ember applications using EmberData",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
   },
-  "files": [
-    "lib/ember-addon"
-  ],
+  "author": "Daniel Sudol <dansudol@yahoo.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danielspaniel/ember-data-factory-guy.git"
+  },
+  "homepage": "https://github.com/samselikoff/ember-data-factory-guy",
   "keywords": [
-    "Factory",
-    "Ember",
-    "Data",
-    "FixtureAdapter"
+    "ember-addon",
+    "testing",
+    "server"
   ],
   "scripts": {
-    "test": "grunt test"
-  },
-  "repository": "git://github.com/danielspaniel/ember-data-factory-guy.git",
-  "devDependencies": {
-    "broccoli": "^0.15.3",
-    "grunt": "~0.4.5",
-    "grunt-bump": "~0.0.16",
-    "grunt-contrib-coffee": "~0.12.0",
-    "grunt-contrib-concat": "~0.5.0",
-    "grunt-contrib-qunit": "~0.5.2",
-    "grunt-contrib-uglify": "~0.6.0"
+    "start": "ember server",
+    "build": "ember build",
+    "test": "ember test"
   },
   "engines": {
-    "node": ">=v0.10.1"
-  }
+    "node": ">= 0.10.0"
+  },
+  "ember-addon": {
+    "configPath": "tests/dummy/config"
+  },
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "broccoli-asset-rev": "^2.0.2",
+    "ember-cli": "0.2.2",
+    "ember-cli-app-version": "0.3.3",
+    "ember-cli-babel": "^4.0.0",
+    "ember-cli-content-security-policy": "0.4.0",
+    "ember-cli-dependency-checker": "0.0.8",
+    "ember-cli-htmlbars": "0.7.4",
+    "ember-cli-ic-ajax": "0.1.1",
+    "ember-cli-inject-live-reload": "^1.3.0",
+    "ember-cli-qunit": "0.3.9",
+    "ember-cli-uglify": "1.0.1",
+    "ember-data": "1.0.0-beta.16.1",
+    "ember-export-application-global": "^1.0.2"
+  },
+  "dependencies": {}
 }

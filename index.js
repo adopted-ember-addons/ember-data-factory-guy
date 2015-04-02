@@ -1,7 +1,11 @@
 var path = require('path');
 
 module.exports = {
-  name: 'Ember Data Factory Guy',
+  name: 'ember-data-factory-guy',
+
+  isDevelopingAddon: function() {
+    return true;
+  },
 
   blueprintsPath: function() {
     return path.join(__dirname, 'blueprints');
@@ -9,19 +13,19 @@ module.exports = {
 
   included: function(app) {
     this._super.included(app);
-
-    if (app.env !== 'production') {
+    console.log('included #####', app.tests)
+    if (app.tests) {
       app.import(app.bowerDirectory + '/jquery-mockjax/jquery.mockjax.js');
-      app.import(app.bowerDirectory + '/ember-data-factory-guy/dist/amd/factory-guy.js', {
-        exports: {
-          'factory-guy': [
-            'default',
-            'modelDefinition',
-            'sequence',
-            'testMixin'
-          ]
-        }
-      });
+      //app.import(app.bowerDirectory + '/ember-data-factory-guy');
+      //  exports: {
+      //    'factory-guy': [
+      //      'default',
+      //      'modelDefinition',
+      //      'sequence',
+      //      'testMixin'
+      //    ]
+      //  }
+      //});
     }
   }
 };
