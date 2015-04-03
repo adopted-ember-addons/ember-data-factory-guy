@@ -1,4 +1,4 @@
-import FactoryGuy, { make } from 'ember-data-factory-guy/factory-guy';
+import FactoryGuy, { make } from 'ember-data-factory-guy';
 import { theUsualSetup, theUsualTeardown } from '../helpers/utility-methods';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import User from 'dummy/models/user';

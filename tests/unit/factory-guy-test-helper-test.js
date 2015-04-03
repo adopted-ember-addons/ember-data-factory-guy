@@ -1,4 +1,4 @@
-import FactoryGuy, { make, makeList } from 'ember-data-factory-guy/factory-guy';
+import FactoryGuy, { make, makeList } from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import User from 'dummy/models/user';
 import BigHat from 'dummy/models/big-hat';
