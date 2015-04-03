@@ -2,7 +2,7 @@ import FactoryGuy from 'ember-data-factory-guy/factory-guy';
 
 FactoryGuy.define("group", {
   sequences: {
-    name: function(num) {return 'Group' + num}
+    name: function(num) {return 'Group' + num;}
   },
   default: {
     type: "Group",
@@ -12,7 +12,7 @@ FactoryGuy.define("group", {
 
 FactoryGuy.define("big-group", {
   sequences: {
-    name: function(num) {return 'Big Group' + num}
+    name: function(num) {return 'Big Group' + num;}
   },
   default: {
     type: "BigGroup",
@@ -22,7 +22,7 @@ FactoryGuy.define("big-group", {
 
 FactoryGuy.define("small-group", {
   sequences: {
-    name: function(num) {return 'Small Group' + num}
+    name: function(num) {return 'Small Group' + num;}
   },
   default: {
     type: "SmallGroup",

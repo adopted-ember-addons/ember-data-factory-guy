@@ -16,5 +16,4 @@ FactoryGuy.define('fluffy-material', {
   silk: {
     name: 'fluff'
   }
-})
-
+});

@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import FactoryGuy from 'ember-data-factory-guy/factory-guy';
 import startApp from '../helpers/start-app';
 
@@ -7,12 +8,12 @@ export function theUsualSetup(adapterType) {
   // brute force setting the adapter on the store.
   if (adapterType) {
     var adapter = App.__container__.lookup('adapter:'+adapterType);
-    FactoryGuy.getStore().adapterFor = function() { return adapter; }
+    FactoryGuy.getStore().adapterFor = function() { return adapter; };
   }
   $.mockjaxSettings.logging = false;
   $.mockjaxSettings.responseTime = 0;
   return App;
-};
+}
 
 export function theUsualTeardown(App) {
   Ember.run(function() {
@@ -20,4 +21,4 @@ export function theUsualTeardown(App) {
     App.destroy();
     $.mockjax.clear();
   });
-};
+}

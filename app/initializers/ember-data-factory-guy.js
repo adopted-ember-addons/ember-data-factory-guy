@@ -1,6 +1,6 @@
 import FactoryGuy from 'ember-data-factory-guy/factory-guy';
 import FactoryGuyTestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
-import ENV from '../config/environment';
+import config from '../config/environment';
 
 export default {
   name: 'ember-data-factory-guy',
@@ -10,13 +10,7 @@ export default {
     FactoryGuy.setStore(container.lookup('store:main'));
     FactoryGuyTestHelper.set('container', container);
 
-    //console.log('Hi Mom', container.lookup('store:main')+'', FactoryGuy.getStore()+'')
-    //console.log('Hi Rob A', container.lookup('serializer:-default'))
-    //console.log('Hi Rob B', container.lookup('adapter:-default'))
-    //var normalizedPath = require("path")
-    //console.log('Hi Rob C', requirejs._eak_seen)
-
-    var prefix = ENV.modulePrefix
+    var prefix = config.modulePrefix
     var factoryFileRegExp = new RegExp('^' + prefix + '/tests/factories');
 
     Ember.keys(requirejs._eak_seen).filter(function(key) {

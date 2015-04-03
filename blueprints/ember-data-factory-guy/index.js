@@ -3,7 +3,7 @@ module.exports = {
   normalizeEntityName: function() {},
 
   afterInstall: function(options) {
-    return this.addBowerPackageToProject('ember-data-factory-guy');
+    return this.addBowerPackageToProject('ember-data-factory-guy', '^1.0.0');
   },
 
   initialize: function(container, application) {
