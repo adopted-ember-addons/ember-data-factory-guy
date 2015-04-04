@@ -454,7 +454,6 @@ var FactoryGuy = {
   }
 };
 
-
 //To accomodate for phantomjs ( which does not recognise bind method ( for now )
 var make = function() { return FactoryGuy.make.apply(FactoryGuy, arguments); };
 var makeList = function() { return FactoryGuy.makeList.apply(FactoryGuy, arguments); };
@@ -462,5 +461,5 @@ var build = function() { return FactoryGuy.build.apply(FactoryGuy, arguments); }
 var buildList = function() { return FactoryGuy.buildList.apply(FactoryGuy, arguments); };
 var clearStore = function() { return FactoryGuy.clearStore.apply(FactoryGuy, arguments); };
 
-export default FactoryGuy;
 export { make, makeList, build, buildList, clearStore };
+export default FactoryGuy;

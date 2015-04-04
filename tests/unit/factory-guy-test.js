@@ -1,7 +1,10 @@
+import Ember from 'ember';
 import FactoryGuy, { make, makeList, build, buildList, clearStore } from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import { theUsualSetup, theUsualTeardown } from '../helpers/utility-methods';
 import User from 'dummy/models/user';
+
+import  '../test-helper';
 
 var App;
 
@@ -15,16 +18,16 @@ module('FactoryGuy', {
 });
 
 test("has store set in initializer", function() {
-  ok(FactoryGuy.getStore() instanceof DS.Store)
+  ok(FactoryGuy.getStore() instanceof DS.Store);
 });
 
 test("#make returns a model instance", function() {
   var user = FactoryGuy.make('user');
-  ok(user instanceof User)
+  ok(user instanceof User);
 });
 
 test("exposes make method which is shortcut for FactoryGuy.make", function() {
-  ok(make('user') instanceof User)
+  ok(make('user') instanceof User);
 });
 
 test("#makeList returns an array of model instances", function() {
@@ -49,7 +52,7 @@ test("exposes buildList method which is shortcut for FactoryGuy.buildList", func
 });
 
 test("exposes clearStore method which is a shortcut for FactoryGuy.clearStore", function() {
-  Em.run( function() {
+  Ember.run( function() {
     makeList('user',2);
     clearStore();
     equal(FactoryGuy.getStore().all('user').get('content.length'), 0);
@@ -58,7 +61,7 @@ test("exposes clearStore method which is a shortcut for FactoryGuy.clearStore", 
 
 
 test("Using sequences in definitions", function() {
-  delete FactoryGuy.modelDefinitions['person']
+  delete FactoryGuy.modelDefinitions['person'];
 
   FactoryGuy.define('person', {
     sequences: {
@@ -80,33 +83,33 @@ test("Using sequences in definitions", function() {
       type: FactoryGuy.generate('broType')
     },
     dude_inline: {
-      type: FactoryGuy.generate(function(num) { return 'Dude #' + num})
+      type: FactoryGuy.generate(function(num) { return 'Dude #' + num;})
     }
   });
 
   var json = FactoryGuy.build('person');
   deepEqual(json, {id: 1, name: 'person #1', type: 'normal'}, 'in default attributes');
 
-  var json = FactoryGuy.build('dude');
+  json = FactoryGuy.build('dude');
   deepEqual(json, {id: 2, name: 'person #2', type: 'person type #1'}, 'in named attributes');
 
   throws( function() {
-      FactoryGuy.build('bro')
+      FactoryGuy.build('bro');
     },
       MissingSequenceError,
     "throws error when sequence name not found"
-  )
+  );
 
-  var json = FactoryGuy.build('dude_inline');
+  json = FactoryGuy.build('dude_inline');
   deepEqual(json, {id: 3, name: 'person #3', type: 'Dude #1'}, 'as inline sequence function #1');
 
-  var json = FactoryGuy.build('dude_inline');
+  json = FactoryGuy.build('dude_inline');
   deepEqual(json, {id: 4, name: 'person #4', type: 'Dude #2'}, 'as inline sequence function #2');
 });
 
 
 test("Referring to other attributes in attribute definition", function() {
-  delete FactoryGuy.modelDefinitions['person']
+  delete FactoryGuy.modelDefinitions['person'];
 
   FactoryGuy.define('person', {
     default: {
@@ -114,17 +117,17 @@ test("Referring to other attributes in attribute definition", function() {
       type: 'normal'
     },
     funny_person: {
-      type: function(f) { return 'funny ' + f.name }
+      type: function(f) { return 'funny ' + f.name; }
     },
     missing_person: {
-      type: function(f) { return 'level ' + f.brain_size }
+      type: function(f) { return 'level ' + f.brain_size; }
     }
   });
 
   var json = FactoryGuy.build('funny_person');
   deepEqual(json, {id: 1, name: 'Bob', type: 'funny Bob'}, 'works when attribute exists');
 
-  var json = FactoryGuy.build('missing_person');
+  json = FactoryGuy.build('missing_person');
   deepEqual(json, {id: 2, name: 'Bob', type: 'level undefined'}, 'still works when attribute does not exists');
 });
 
@@ -133,13 +136,13 @@ test("Using belongsTo associations in attribute definition", function() {
   var json = FactoryGuy.build('project_with_user');
   deepEqual(json, {id: 1, title: 'Project1', user: {id: 1, name: 'User1'}}, 'creates default association');
 
-  var json = FactoryGuy.build('project_with_dude');
+  json = FactoryGuy.build('project_with_dude');
   deepEqual(json, {id: 2, title: 'Project2', user: {id: 2, name: 'Dude'}}, 'creates association with optional attributes');
 
-  var json = FactoryGuy.build('project_with_admin');
+  json = FactoryGuy.build('project_with_admin');
   deepEqual(json, {id: 3, title: 'Project3', user: {id: 3, name: 'Admin'}}, 'creates association using named attribute');
 
-  var json = FactoryGuy.build('project_with_parent');
+  json = FactoryGuy.build('project_with_parent');
   deepEqual(json, {id: 5, title: 'Project4', parent: {id: 4, title: 'Project5'}}, 'belongsTo association name differs from model name');
 });
 
@@ -158,25 +161,25 @@ test("#build with traits", function() {
   var json = FactoryGuy.build('project', 'big');
   deepEqual(json, {id: 1, title: 'Big Project'}, 'trait with model attributes');
 
-  var json = FactoryGuy.build('project', 'with_user');
+  json = FactoryGuy.build('project', 'with_user');
   deepEqual(json, {id: 2, title: 'Project1', user: {id: 1, name: 'User1'}}, 'trait with belongsTo attributes');
 
-  var json = FactoryGuy.build('project', 'big', 'with_user');
+  json = FactoryGuy.build('project', 'big', 'with_user');
   deepEqual(json, {id: 3, title: 'Big Project', user: {id: 2, name: 'User2'}}, 'more than one trait used together');
 
-  var json = FactoryGuy.build('project', 'big', 'with_user', {title: 'Crazy Project'});
+  json = FactoryGuy.build('project', 'big', 'with_user', {title: 'Crazy Project'});
   deepEqual(json, {id: 4, title: 'Crazy Project', user: {id: 3, name: 'User3'}}, 'more than one trait used together with custom attributes');
 
-  var json = FactoryGuy.build('project', 'big', 'with_dude');
+  json = FactoryGuy.build('project', 'big', 'with_dude');
   deepEqual(json, {id: 5, title: 'Big Project', user: {id: 4, name: 'Dude'}}, 'trait with custom belongsTo association object');
 
-  var json = FactoryGuy.build('project', 'with_admin');
+  json = FactoryGuy.build('project', 'with_admin');
   deepEqual(json, {id: 6, title: 'Project2', user: {id: 5, name: 'Admin'}}, 'trait with attribute using FactoryGuy.association method');
 
-  var json = FactoryGuy.build('project', 'with_title_sequence');
+  json = FactoryGuy.build('project', 'with_title_sequence');
   deepEqual(json, {id: 7, title: 'Project3'}, 'trait with attribute using sequence');
 
-  var json = FactoryGuy.build('user', 'with_projects');
+  json = FactoryGuy.build('user', 'with_projects');
   deepEqual(json, {
     id: 6,
     name: 'User4',
@@ -198,13 +201,13 @@ test("#build can override default model attributes", function() {
 
 
 test("#build can have named model definition with custom attributes", function() {
-  var json = FactoryGuy.build('admin')
+  var json = FactoryGuy.build('admin');
   deepEqual(json, {id: 1, name: 'Admin'});
 });
 
 
 test("#build can override named model attributes", function() {
-  var json = FactoryGuy.build('admin', {name: 'AdminGuy'})
+  var json = FactoryGuy.build('admin', {name: 'AdminGuy'});
   deepEqual(json, {id: 1, name: 'AdminGuy'});
 });
 
@@ -224,19 +227,19 @@ test("#buildList creates list of fixtures", function() {
   deepEqual(userList[0], {id: 1, name: 'User1'});
   deepEqual(userList[1], {id: 2, name: 'User2'});
 
-  var userList = FactoryGuy.buildList('user', 1, {name: 'Crazy'});
+  userList = FactoryGuy.buildList('user', 1, {name: 'Crazy'});
   deepEqual(userList[0], {id: 3, name: 'Crazy'},'using custom attributes');
 
   var projectList = FactoryGuy.buildList('project', 1, 'big');
   deepEqual(projectList[0], {id: 1, title: 'Big Project'}, 'using traits');
 
-  var projectList = FactoryGuy.buildList('project', 1, 'big', {title: 'Really Big'});
+  projectList = FactoryGuy.buildList('project', 1, 'big', {title: 'Really Big'});
   deepEqual(projectList[0], {id: 2, title: 'Really Big'}, 'using traits and custom attributes');
 });
 
 
 test("#getAttributeRelationship", function() {
-  var typeName = 'user'
+  var typeName = 'user';
   equal(FactoryGuy.getAttributeRelationship(typeName,'company').typeKey,'company');
   equal(FactoryGuy.getAttributeRelationship(typeName,'hats').typeKey,'hat');
   equal(FactoryGuy.getAttributeRelationship(typeName,'name'),null);
@@ -271,7 +274,7 @@ test("#getAttributeRelationship", function() {
 //    store = testHelper.getStore();
 //  },
 //  teardown: function() {
-//    Em.run(function() {
+//    Ember.run(function() {
 //      testHelper.teardown();
 //    });
 //  }

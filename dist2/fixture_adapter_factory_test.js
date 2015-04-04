@@ -24,14 +24,15 @@ test("#pushFixture adds fixture to Fixture array on model", function () {
 });
 
 
-asyncTest("can change fixture attributes after creation", function () {
+asyncTest("can change fixture attributes after creation", function (assert) {
+  var done = assert.async();
   var user = FactoryGuy.make('user');
   notEqual(user.name, 'new name');
   user.name = "new name";
 
   store.find('user', 1).then(function (user) {
     equal(user.get('name'), "new name", "changes local attributes");
-    start();
+    done();
   });
 });
 
@@ -40,8 +41,10 @@ test("#resetModels clears the store of models, clears the FIXTURES arrays for ea
   var project = FactoryGuy.make('project');
   var user = FactoryGuy.make('user', { projects: [project] });
 
+  var model, definition;
+
   for (model in FactoryGuy.modelDefinitions) {
-    var definition = FactoryGuy.modelDefinitions[model];
+    definition = FactoryGuy.modelDefinitions[model];
     sinon.spy(definition, 'reset');
   }
 
@@ -51,8 +54,8 @@ test("#resetModels clears the store of models, clears the FIXTURES arrays for ea
   equal(store.all('user').get('length'), 1);
   equal(store.all('project').get('length'), 1);
 
-  Em.run(function() {
-    FactoryGuy.resetModels(store);
+  Ember.run(function() {
+    FactoryGuy.clearStore();
   });
 
   equal(User.FIXTURES.length, 0);
@@ -62,7 +65,7 @@ test("#resetModels clears the store of models, clears the FIXTURES arrays for ea
   equal(store.all('project').get('length'), 0);
 
   for (model in FactoryGuy.modelDefinitions) {
-    var definition = FactoryGuy.modelDefinitions[model];
+    definition = FactoryGuy.modelDefinitions[model];
     ok(definition.reset.calledOnce);
     definition.reset.restore();
   }
@@ -98,7 +101,8 @@ test("#make builds and pushes fixture into the models FIXTURE array", function (
   equal(User.FIXTURES[0], json);
 });
 
-asyncTest("#make sets belongsTo on hasMany associations", function () {
+asyncTest("#make sets belongsTo on hasMany associations", function (assert) {
+  var done = assert.async();
   var p1 = FactoryGuy.make('project');
   // second project not added on purpose to make sure only one is
   // assigned in hasMany
@@ -108,11 +112,12 @@ asyncTest("#make sets belongsTo on hasMany associations", function () {
   store.find('user', 1).then(function (user) {
     var projects = user.get('projects');
     equal(projects.get('length'), 1, "adds hasMany records");
-    start();
+    done();
   });
 });
 
-asyncTest("#make adds record to hasMany association array for which it belongsTo", function () {
+asyncTest("#make adds record to hasMany association array for which it belongsTo", function (assert) {
+  var done = assert.async();
   var userJson = FactoryGuy.make('user');
   var projectJson = FactoryGuy.make('project', { user: userJson });
 
@@ -120,11 +125,12 @@ asyncTest("#make adds record to hasMany association array for which it belongsTo
     var projects = user.get('projects');
     equal(projects.get('length'), 1, "adds hasMany records");
     ok(projects.get('firstObject.user') == user, "sets belongsTo record");
-    start();
+    done();
   });
 });
 
-asyncTest("#make handles traits declaring belongsTo associations in fixture", function () {
+asyncTest("#make handles traits declaring belongsTo associations in fixture", function (assert) {
+  var done = assert.async();
   var projectWithUser = FactoryGuy.make('project_with_user');
   equal(Project.FIXTURES.length, 1);
   equal(User.FIXTURES.length, 1);
@@ -135,11 +141,12 @@ asyncTest("#make handles traits declaring belongsTo associations in fixture", fu
     equal(projects.get('length'), 1, "adds hasMany records");
     equal(projects.get('firstObject.id'), projectWithUser.id);
     equal(projects.get('firstObject.user.id'), 1, "sets belongsTo record");
-    start();
+    done();
   });
 });
 
-asyncTest("#make handles primary belongsTo association in fixture", function () {
+asyncTest("#make handles primary belongsTo association in fixture", function (assert) {
+  var done = assert.async();
   var projectWithUser = FactoryGuy.make('project_with_user');
   equal(Project.FIXTURES.length, 1);
   equal(User.FIXTURES.length, 1);
@@ -150,11 +157,12 @@ asyncTest("#make handles primary belongsTo association in fixture", function () 
     equal(user.get('id'), projectWithUser.user);
     equal(user.get('projects.firstObject.id'), projectWithUser.id)
 
-    start();
+    done();
   });
 });
 
-asyncTest('#make handles hasMany association in fixture', function () {
+asyncTest('#make handles hasMany association in fixture', function (assert) {
+  var done = assert.async();
   var userWithProjects = FactoryGuy.make('user', 'with_projects');
   equal(Project.FIXTURES.length, 2);
   equal(User.FIXTURES.length, 1);
@@ -168,7 +176,7 @@ asyncTest('#make handles hasMany association in fixture', function () {
       userWithProjects.projects.map(function(project){ return project.toString(); }).sort()
     );
 
-    start();
+    done();
   });
 });
 
@@ -188,7 +196,8 @@ asyncTest('#make handles hasMany association in fixture', function () {
 //   });
 // });
 
-asyncTest("#createRecord adds belongsTo association to records it hasMany of", function () {
+asyncTest("#createRecord adds belongsTo association to records it hasMany of", function (assert) {
+  var done = assert.async();
   var user = FactoryGuy.make('user');
 
   store.find('user', user.id).then(function (user) {
@@ -202,12 +211,13 @@ asyncTest("#createRecord adds belongsTo association to records it hasMany of", f
 
         ok(projectUser == user);
         equal(projects.get('length'), 1);
-        start();
+        done();
       });
   });
 });
 
-asyncTest("#createRecord can work for one-to-none associations", function () {
+asyncTest("#createRecord can work for one-to-none associations", function (assert) {
+  var done = assert.async();
   var user = FactoryGuy.make('user');
 
   store.find('user', user.id).then(function (user) {
@@ -218,12 +228,13 @@ asyncTest("#createRecord can work for one-to-none associations", function () {
         return smallCompany.get('owner');
       }).then(function (owner) {
         equal(owner.get('id'), user.get('id'));
-        start();
+        done();
       });
   });
 });
 
-asyncTest("#createRecord adds hasMany association to records it hasMany of ", function () {
+asyncTest("#createRecord adds hasMany association to records it hasMany of ", function (assert) {
+  var done = assert.async();
   var usersJson = FactoryGuy.makeList('user', 3);
   var userPromises = usersJson.map(function(json) { return store.find('user', json.id) });
 
@@ -234,6 +245,6 @@ asyncTest("#createRecord adds hasMany association to records it hasMany of ", fu
 
     owners.addObjects(users);
     equal(users.get('length'), usersJson.length);
-    start();
+    done();
   });
 });
