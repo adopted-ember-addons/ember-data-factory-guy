@@ -49,7 +49,7 @@
     "describe",
     "afterEach",
     "it",
-    "sinon"
+    'sinon'
   ],
   "node": false,
   "browser": false,

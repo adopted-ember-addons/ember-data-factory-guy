@@ -1,13 +1,12 @@
+import Ember from 'ember';
+
 import FactoryGuy, { make, makeList, build, buildList, clearStore } from 'ember-data-factory-guy';
 import { theUsualSetup, theUsualTeardown } from '../helpers/utility-methods';
+
 import User from 'dummy/models/user';
 import BigHat from 'dummy/models/big-hat';
 import SmallHat from 'dummy/models/small-hat';
 import Outfit from 'dummy/models/outfit';
-
-import Ember from 'ember';
-//import  '../test-helper';
-//import  { ok, test, module, equal, deepEqual, throws } from 'qunit';
 
 var App, store;
 
@@ -342,4 +341,3 @@ test("handles traits and optional fixture arguments", function () {
   equal(users[0].get('name'), 'Bob');
   equal(users[0].get('hats.length') === 2, true);
 });
-

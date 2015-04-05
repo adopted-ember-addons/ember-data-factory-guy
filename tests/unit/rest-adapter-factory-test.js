@@ -2,12 +2,11 @@ import Ember from 'ember';
 import FactoryGuy, { make } from 'ember-data-factory-guy';
 import { theUsualSetup, theUsualTeardown } from '../helpers/utility-methods';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
+
 import User from 'dummy/models/user';
 import BigHat from 'dummy/models/big-hat';
 import SmallHat from 'dummy/models/small-hat';
 import Outfit from 'dummy/models/outfit';
-
-//import { ok, test, module, equal } from 'qunit';
 
 var App, store;
 
