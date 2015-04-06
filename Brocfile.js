@@ -19,5 +19,7 @@ var app = new EmberAddon({
 // modules that you would like to import into your application
 // please specify an object with the list of modules as keys
 // along with the exports of each module as its value.
+app.import('bower_components/jquery-mockjax/jquery.mockjax.js');
+app.import('bower_components/sinon/index.js');
 
 module.exports = app.toTree();

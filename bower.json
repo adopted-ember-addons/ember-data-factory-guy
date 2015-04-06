@@ -41,7 +41,6 @@
     "qunit": "latest",
     "ember-qunit": "latest",
     "ember-qunit-notifications": "latest",
-    "sinonjs": "1.10.2",
-    "sinon-qunit": "~2.0.0"
+    "sinon": "http://sinonjs.org/releases/sinon-1.12.2.js"
   }
 }
