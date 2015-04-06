@@ -9,7 +9,10 @@ module.exports = {
 
   included: function(app) {
     this._super.included(app);
-    console.log('included ember-data-factory-guy index.js ('+app.tests+') #####');
+    console.log('included ember-data-factory-guy index.js ('+app.tests+') '+app.bowerDirectory+'#####');
+    if (app.tests) {
+      app.import(app.bowerDirectory + '/jquery-mockjax/jquery.mockjax.js');
+    }
   }
 
 };

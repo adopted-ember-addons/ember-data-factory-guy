@@ -3,7 +3,7 @@ module.exports = {
   normalizeEntityName: function() {},
 
   afterInstall: function(options) {
-    return this.addBowerPackageToProject('ember-data-factory-guy', 'cli');
+    return this.addBowerPackageToProject('jquery-mockjax', 'latest');
   },
 
   initialize: function(container, application) {
