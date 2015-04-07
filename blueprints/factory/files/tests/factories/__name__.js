@@ -1,4 +1,4 @@
-import FactoryGuy from 'ember-data-factory-guy';
+import FactoryGuy from 'actory-guy';
 
 FactoryGuy.define('<%= dasherizedModuleName %>', {
   default: {}

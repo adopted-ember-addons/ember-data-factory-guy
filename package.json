@@ -1,5 +1,5 @@
 {
-  "name": "ember-data-factory-guy",
+  "name": "factory-guy",
   "version": "1.0.0",
   "description": "Factories for testing Ember applications using EmberData",
   "directories": {
@@ -9,9 +9,9 @@
   "author": "Daniel Sudol <dansudol@yahoo.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/danielspaniel/ember-data-factory-guy.git"
+    "url": "https://github.com/danielspaniel/factory-guy.git"
   },
-  "homepage": "https://github.com/samselikoff/ember-data-factory-guy",
+  "homepage": "https://github.com/samselikoff/factory-guy",
   "scripts": {
     "start": "ember server",
     "build": "ember build",

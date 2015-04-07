@@ -7,6 +7,5 @@ module.exports = {
   },
 
   initialize: function(container, application) {
-    console.log('IN -->  blueprints/ember-data-factory-guy/index.js')
   }
 };

@@ -1,4 +1,4 @@
-# Ember Data Factory Guy  [![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy)
+# Ember Data Factory Guy  [![Build Status](https://secure.travis-ci.org/danielspaniel/factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/factory-guy)
 
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
@@ -8,7 +8,7 @@ Factories simplify the process of testing, making you more efficient and your te
 
 ember-data is changing the way they are doing relationships in 1.0.0-beta.10 and above
 so, if you are using ember-data-1.0.0-beta.8 and earlier, then be sure to use version 0.6.4
-of ember-data-factory-guy.
+of factory-guy.
 
 - Versions:
   - 0.6.4   -> ember-data-1.0.0-beta.8 and under
@@ -27,10 +27,10 @@ FactoryGuy.setStore(store) somewhere in your code before you start making fixtur
 
 ## Using with Ember Cli
   - https://github.com/igorrKurr/ember-cli-factory-guy-example
-    An example of how to manually set up ember-data-factory-guy with ember cli
+    An example of how to manually set up factory-guy with ember cli
 
   - https://github.com/cristinawithout/ember-cli-data-factory-guy
-    A wrapper around ember-data-factory-guy for ember-cli for even easier setup
+    A wrapper around factory-guy for ember-cli for even easier setup
 
 ## Using as Gem
 
@@ -39,13 +39,13 @@ To Use with in Rails project or project with sprockets:
 In Gemfile:
 
 ```ruby
-gem 'ember-data-factory-guy', group: test
+gem 'factory-guy', group: test
 ```
 
 or for particular version:
 
 ```ruby
-gem 'ember-data-factory-guy', '0.9.11', group: test
+gem 'factory-guy', '0.9.11', group: test
 ```
 
 then:
@@ -70,7 +70,7 @@ Add as one of your dependencies in bower.json file:
   "dependencies": {
     "foo-dependency": "latest",
     "other-foo-dependency": "latest",
-    "ember-data-factory-guy": "latest"
+    "factory-guy": "latest"
   }
 ```
 
@@ -80,7 +80,7 @@ or for particular version:
   "dependencies": {
     "foo-dependency": "latest",
     "other-foo-dependency": "latest",
-    "ember-data-factory-guy": "0.9.11"
+    "factory-guy": "0.9.11"
   }
 ```
 
@@ -618,7 +618,7 @@ since that model is already in the store.
 But what if you want to handle create, update, and delete? Or even reload or findAll records?
 
 FactoryGuy assumes you want to mock ajax calls with the mockjax library,
-and this is already bundled for you when you use the ember-data-factory-guy library.
+and this is already bundled for you when you use the factory-guy library.
 
 
 **The following examples assume the variable testHelper was setup before your

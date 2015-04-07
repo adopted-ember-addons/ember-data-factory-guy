@@ -1,4 +1,4 @@
-import FactoryGuy from 'ember-data-factory-guy/factory-guy';
+import FactoryGuy from 'factory-guy';
 
 FactoryGuy.define('profile', {
   default: {

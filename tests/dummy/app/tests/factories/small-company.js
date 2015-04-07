@@ -1,4 +1,4 @@
-import FactoryGuy from 'ember-data-factory-guy/factory-guy';
+import FactoryGuy from 'factory-guy';
 
 FactoryGuy.define("small_company", {
   default: {

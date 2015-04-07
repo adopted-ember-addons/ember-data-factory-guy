@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-  name: 'ember-data-factory-guy',
+  name: 'factory-guy',
 
   blueprintsPath: function() {
     return path.join(__dirname, 'blueprints');
@@ -9,7 +9,7 @@ module.exports = {
 
   included: function(app) {
     this._super.included(app);
-    console.log('included ember-data-factory-guy index.js ('+app.tests+') '+app.bowerDirectory+'#####');
+    console.log('included factory-guy index.js ('+app.tests+') '+app.bowerDirectory+'#####');
     if (app.tests) {
       app.import(app.bowerDirectory + '/jquery-mockjax/jquery.mockjax.js');
     }

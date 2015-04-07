@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import FactoryGuy, { make, makeList, build, buildList, clearStore } from 'ember-data-factory-guy';
-import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
+import FactoryGuy, { make, makeList, build, buildList, clearStore } from 'factory-guy';
+import MissingSequenceError from 'factory-guy/missing-sequence-error';
 
 import { theUsualSetup, theUsualTeardown } from '../helpers/utility-methods';
 

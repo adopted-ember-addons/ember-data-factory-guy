@@ -4,18 +4,18 @@ require 'json'
 package = JSON.parse(File.read('package.json'))
 
 Gem::Specification.new do |s|
-  s.name        = "ember-data-factory-guy"
+  s.name        = "factory-guy"
   s.version     = package["version"]
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Daniel Sudol", "Alex Opak"]
   s.email       = ["dansudol@yahoo.com", "opak.alexandr@gmail.com"]
-  s.homepage    = "https://github.com/danielspaniel/ember-data-factory-guy"
+  s.homepage    = "https://github.com/danielspaniel/factory-guy"
   s.summary     = "Easily create Fixtures for Ember Data"
   s.description = "Easily create Fixtures for Ember Data"
   s.license     = "MIT"
 
   s.required_rubygems_version = ">= 1.3.6"
-  s.rubyforge_project         = "ember-data-factory-guy"
+  s.rubyforge_project         = "factory-guy"
 
   s.files        = `git ls-files`.split("\n")
   s.test_files   = `git ls-files -- {tests}/*`.split("\n")

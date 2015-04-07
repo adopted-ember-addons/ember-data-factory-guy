@@ -15,7 +15,7 @@ module.exports = function(grunt) {
           'src/store.js',
           'src/factory_guy_test_mixin.js',
         ],
-        dest: "dist/ember-data-factory-guy.js"
+        dest: "dist/factory-guy.js"
       },
       amd: {
         src: [
@@ -62,8 +62,8 @@ module.exports = function(grunt) {
       options: { mangle: false, compress: false },
 
       dist: {
-        src: ['dist/ember-data-factory-guy.js'],
-        dest: 'dist/ember-data-factory-guy.min.js'
+        src: ['dist/factory-guy.js'],
+        dest: 'dist/factory-guy.min.js'
       }
     },
 
