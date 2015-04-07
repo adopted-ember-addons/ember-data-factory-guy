@@ -1,6 +1,6 @@
 {
-  "name": "factory-guy",
-  "version": "1.0.1",
+  "name": "ember-data-factory-guy",
+  "version": "1.0.0",
   "description": "Factories for testing Ember applications using EmberData",
   "directories": {
     "doc": "doc",
@@ -11,7 +11,7 @@
     "type": "git",
     "url": "https://github.com/danielspaniel/factory-guy.git"
   },
-  "homepage": "https://github.com/samselikoff/factory-guy",
+  "homepage": "https://github.com/danielspaniel/ember-data-factory-guy",
   "scripts": {
     "start": "ember server",
     "build": "ember build",
