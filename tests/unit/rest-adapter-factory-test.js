@@ -1,7 +1,7 @@
 import Ember from 'ember';
-import FactoryGuy, { make } from 'factory-guy';
+import FactoryGuy, { make } from 'ember-data-factory-guy';
 import { theUsualSetup, theUsualTeardown } from '../helpers/utility-methods';
-import MissingSequenceError from 'factory-guy/missing-sequence-error';
+import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 
 import User from 'dummy/models/user';
 import BigHat from 'dummy/models/big-hat';

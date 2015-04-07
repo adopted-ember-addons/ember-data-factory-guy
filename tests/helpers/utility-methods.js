@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy from 'factory-guy';
+import FactoryGuy from 'ember-data-factory-guy';
 import startApp from '../helpers/start-app';
 
 // adapterType like -rest or -active-model

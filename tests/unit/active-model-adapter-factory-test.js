@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-import FactoryGuy, { make, makeList, build, buildList, clearStore } from 'factory-guy';
+import FactoryGuy, { make, makeList, build, buildList, clearStore } from 'ember-data-factory-guy';
 import { theUsualSetup, theUsualTeardown } from '../helpers/utility-methods';
 
 import User from 'dummy/models/user';

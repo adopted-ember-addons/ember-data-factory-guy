@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-  name: 'factory-guy',
+  name: 'ember-data-factory-guy',
 
   blueprintsPath: function() {
     return path.join(__dirname, 'blueprints');

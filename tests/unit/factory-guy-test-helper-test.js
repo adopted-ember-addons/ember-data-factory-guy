@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import FactoryGuy, { make, makeList } from 'factory-guy';
-import MissingSequenceError from 'factory-guy/missing-sequence-error';
+import FactoryGuy, { make, makeList } from 'ember-data-factory-guy';
+import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 
 import User from 'dummy/models/user';
 import BigHat from 'dummy/models/big-hat';
@@ -9,7 +9,7 @@ import Outfit from 'dummy/models/outfit';
 import Profile from 'dummy/models/profile';
 
 import startApp from '../helpers/start-app';
-import TestHelper from 'factory-guy/factory-guy-test-helper';
+import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 import { theUsualSetup, theUsualTeardown } from '../helpers/utility-methods';
 
 var App, store;

@@ -1,4 +1,4 @@
-import FactoryGuy from 'factory-guy';
+import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define("outfit", {
   sequences: {

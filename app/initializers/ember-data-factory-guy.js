@@ -1,9 +1,9 @@
-import FactoryGuy from 'factory-guy/factory-guy';
-import FactoryGuyTestHelper from 'factory-guy/factory-guy-test-helper';
+import FactoryGuy from 'ember-data-factory-guy/factory-guy';
+import FactoryGuyTestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 import config from '../config/environment';
 
 export default {
-  name: 'factory-guy',
+  name: 'ember-data-factory-guy',
   after: 'store',
 
   initialize: function(container, application) {
