@@ -3,130 +3,31 @@
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
-
 *NOTE*
 
-ember-data is changing the way they are doing relationships in 1.0.0-beta.10 and above
-so, if you are using ember-data-1.0.0-beta.8 and earlier, then be sure to use version 0.6.4
-of factory-guy.
+ember-data-factory-guy is now an ember-cli addon!
 
-- Versions:
-  - 0.6.4   -> ember-data-1.0.0-beta.8 and under
-  - 0.7.1.1 -> ember-data-1.0.0-beta.10
-  - 0.8.6   -> ember-data-1.0.0-beta.11
-  - 0.9.8   -> ember-data-1.0.0-beta.12
-  - 0.9.11   -> ember-data-1.0.0-beta.15
-  - 0.9.12   -> ember-data-1.0.0-beta.16
+## Installation
 
-**Support for fixture adapter is working for versions 0.9.3 -> 0.9.12**
+##### Never used ember-data-factory-guy before
+ 
+ ember install:addon ember-data-factory-guy
 
-*Version 0.9.0 and up deprecates explicit call to store.makeFixture in your tests, in favor
-of using the FactoryGuy.make or testHelper.make function from FactoryGuyTestHelperMixin instead.
-If your not currently doing this already ( using FactoryGuyTestHelperMixin ), add a call to
-FactoryGuy.setStore(store) somewhere in your code before you start making fixtures.*
+##### Have a previous installation as bower component or ember-cli-factory-guy
 
-## Using with Ember Cli
-  - https://github.com/igorrKurr/ember-cli-factory-guy-example
-    An example of how to manually set up factory-guy with ember cli
-
-  - https://github.com/cristinawithout/ember-cli-data-factory-guy
-    A wrapper around factory-guy for ember-cli for even easier setup
-
-## Using as Gem
-
-To Use with in Rails project or project with sprockets:
-
-In Gemfile:
-
-```ruby
-gem 'factory-guy', group: test
-```
-
-or for particular version:
-
-```ruby
-gem 'factory-guy', '0.9.11', group: test
-```
-
-then:
-
-```
-$ bundle install
-```
-
-then:
-
-require the 'ember_data_factory_guy' javascript file in your test helper
-
-```
-//= require ember_data_factory_guy
-```
-
-## Using as bower component
-
-Add as one of your dependencies in bower.json file:
-
-```json
-  "dependencies": {
-    "foo-dependency": "latest",
-    "other-foo-dependency": "latest",
-    "factory-guy": "latest"
-  }
-```
-
-or for particular version:
-
-```json
-  "dependencies": {
-    "foo-dependency": "latest",
-    "other-foo-dependency": "latest",
-    "factory-guy": "0.9.11"
-  }
-```
-
-then:
-```
-    $ bower install
-```
+ bower uninstall ember-data-factory-guy
+ npm uninstall ember-cli-factory-guy
+  
+  then:
+   
+ ember install:addon ember-data-factory-guy
 
 ### How this works
 
-- Using DS.RestAdapter / DS.ActiveModelAdapter
-  - Add record instances to the store
-  - Faster, since models can be accessed synchronously
-- Using DS.FixtureAdapter
-  - Add fixtures to the store
-  - Slower, since models are accessed asynchronously
-
-
-##### DS.RestAdapter / DS.ActiveModelAdapter
-
-The preferred way to use this project is to use the default adapter for your project,
-which is usually going to be the RESTAdapter/ActiveModelAdapter.
-*In other words, it is NOT recommended to use the DS.FixtureAdapter.*
-
-When you call: FactoryGuy.make('user'), you create model in the store and this method
-returns this model instance
-
-*Since you are synchronously getting model instances, you can immediately start asking
- for data from the model, and its associations, which is why it is faster to use
- the REST/ActiveModel adapter than the FixtureAdapter*
-
-##### Using DS.FixtureAdapter
-
-The benefit of using FactoryGuy is that you can run your tests with the
-default adapter that your application's store normally uses. In other words:
-You do not have to use the DS.FixtureAdapter.  But if you do choose to use the Fixture adapter,
-which does not run any faster, and does not handle associations as elegantly
-( and in some cases not at all ), you may run into problems with accessing associations.
-
-Error: Assertion Failed: You looked up the 'projects' relationship on '<User:ember379:1>'
-but some of the associated records were not loaded. Either make sure they are all loaded together with the parent record, or specify that the relationship is async (`DS.hasMany({ async: true })`)
-
-If you do get these types of errors try requiring the factory_guy_has_many.js file
-( located in dist dir and vendor dir ) AFTER you require ember-data,
-but BEFORE you require your models.
-
+ You create factories for you models.
+ Can use blueprints: 
+ 
+ ```ember g factory user``` 
 
 ### Setup
 
@@ -165,7 +66,9 @@ In the following examples, assume the models look like this:
 ##### Standard models
 
 ```javascript
-
+  
+  import FactoryGuy from 'ember-data-factory-guy';
+  
   FactoryGuy.define('user', {
     // Put default 'user' attributes in the default section
     default: {
@@ -187,7 +90,9 @@ In the following examples, assume the models look like this:
 It is better to define each polymorphic model in it's own typed definition:
 
 ```javascript
-
+  
+  import FactoryGuy from 'ember-data-factory-guy';
+  
   FactoryGuy.define('small_hat', {
     default: {
       type: 'SmallHat'
@@ -205,7 +110,7 @@ It is better to define each polymorphic model in it's own typed definition:
 rather than doing this:
 
 ```javascript
-
+  
   FactoryGuy.define('hat', {
     default: {},
     small_hat: {
@@ -223,8 +128,6 @@ the store is looking up the correct model type name
 
 
 ### Using Factories
- - FactorGuy.setStore
-   - pass in the store instance to FactoryGuy before making fixtures.
  - FactoryGuy.build
    - Builds json
  - FactoryGuy.make
@@ -233,13 +136,8 @@ the store is looking up the correct model type name
  - Can add attributes with traits ( see traits section )
 
 ```javascript
-  // First set the store on FactoryGuy. You don't have to do this step manually
-  // if you use FactoryGuyTestHelperMixin since this is done for you in the setup
-  // method. The following store lookup assumes you have a namespace for your Ember
-  // app named 'App'.
-  var store = App.__container__.lookup('store:main');
-  FactoryGuy.setStore(store);
-
+  import FactoryGuy from 'ember-data-factory-guy';
+  
   // returns json
   var json = FactoryGuy.build('user');
   json // => {id: 1, name: 'Dude', style: 'normal'}

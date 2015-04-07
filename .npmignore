@@ -7,6 +7,7 @@
 /tests
 /vendor
 /dist
+.idea/*
 /node_modules
 .editorconfig
 .ember-cli
@@ -17,4 +18,5 @@ testem.json
 Brocfile.js
 bower.json
 .bowerrc
+
 
