@@ -9,8 +9,9 @@ module.exports = {
 
   included: function(app) {
     this._super.included(app);
-    console.log('included factory-guy index.js ('+app.tests+') '+app.bowerDirectory+'#####');
+
     if (app.tests) {
+      console.log('hi there')
       app.import(app.bowerDirectory + '/jquery-mockjax/jquery.mockjax.js');
     }
   }

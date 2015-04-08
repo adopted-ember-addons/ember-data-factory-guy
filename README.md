@@ -24,10 +24,9 @@ ember-data-factory-guy is now an ember-cli addon!
 
 ### How this works
 
- You create factories for you models.
- Can use blueprints: 
+ -You create factories for you models.
+ -Then you use them to create models in your tests.
  
- ```ember g factory user``` 
 
 ### Setup
 
@@ -61,12 +60,19 @@ In the following examples, assume the models look like this:
 ### Defining Factories
  - A factory has a name and a set of attributes.
  - The name should match the model type name. So, for 'User' model, the name would be 'user'
+ - Create factory files in the tests/factories directory. 
+ 
+ Can use generator to create the outline of a factory file: 
+ 
+ ```ember g factory user``` 
 
+ This will create a file named user.js in the tests/factories directory.
 
 ##### Standard models
 
 ```javascript
   
+  // file tests/factories/user.js
   import FactoryGuy from 'ember-data-factory-guy';
   
   FactoryGuy.define('user', {
@@ -91,6 +97,7 @@ It is better to define each polymorphic model in it's own typed definition:
 
 ```javascript
   
+  // file tests/factories/small-hat.js
   import FactoryGuy from 'ember-data-factory-guy';
   
   FactoryGuy.define('small_hat', {
@@ -98,7 +105,10 @@ It is better to define each polymorphic model in it's own typed definition:
       type: 'SmallHat'
     }
   })
-
+  
+  // file tests/factories/big-hat.js
+  import FactoryGuy from 'ember-data-factory-guy';
+  
   FactoryGuy.define('big_hat', {
     default: {
       type: 'BigHat'
@@ -110,7 +120,9 @@ It is better to define each polymorphic model in it's own typed definition:
 rather than doing this:
 
 ```javascript
-  
+  // file tests/factories/hat.js  
+  import FactoryGuy from 'ember-data-factory-guy';
+
   FactoryGuy.define('hat', {
     default: {},
     small_hat: {
@@ -128,10 +140,10 @@ the store is looking up the correct model type name
 
 
 ### Using Factories
- - FactoryGuy.build
-   - Builds json
  - FactoryGuy.make
    - Loads model instance into the store
+ - FactoryGuy.build
+   - Builds json
  - Can override default attributes by passing in a hash
  - Can add attributes with traits ( see traits section )
 
@@ -415,10 +427,10 @@ the reverse 'user' belongsTo association is being setup for you on the project
 
 #### Building many models at once
 
-- FactoryGuy.buildList
-    - Builds an array of one or more json objects
 - FactoryGuy.makeList
     - Loads one or more instances into store
+- FactoryGuy.buildList
+    - Builds an array of one or more json objects
 
 
 ##### Building json array
@@ -442,59 +454,48 @@ the reverse 'user' belongsTo association is being setup for you on the project
 ```
 
 
-### Testing models, controllers, views
+### Testing models, controllers, components
 
-- Testing the models, controllers and views in isolation
-- Use FactoryGuyTestMixin to help with testing
-
-
-##### Using FactoryGuyTestMixin
-
-- Using FactoryGuyTestMixin helper methods:
+- Testing the models, controllers and components in isolation
+- Using FactoryGuy shortcut methods:
   - make
-  - teardown
+  - clearStore
+
 
 ```javascript
 
-// Create a helper class using FactoryGuyTestMixin.
-TestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin);
+// file: tests/unit/models/user-test.js
 
-// Then in your tests you can use it like so:
+import Ember from 'ember';
+import { make, clearStore } from 'ember-data-factory-guy';
+import startApp from '../../helpers/start-app';
 
-var testHelper, store, make;
+var App;
 
-module('User Model', {
+module('User', {
   setup: function() {
-    // Assumes the application's namespace is App, though yours may not be.
-    testHelper = TestHelper.setup(App);
-    store = testHelper.getStore();
-    // You could at this point, make fixtures with FactoryGuy.make,
-    // but to be even more concise try this shortcut method to your tests
-    make = FactoryGuy.make.bind(FactoryGuy)
-    // or if your running in phantomjs and it does not support bind method try this:
-    // make = function() {return FactoryGuy.make.apply(FactoryGuy,arguments)}
+    App = startApp();
   },
   teardown: function() {
-    Em.run(function() { testHelper.teardown(); });
+    Ember.run(function() {
+      clearStore();
+      App.destroy();
+    });
   }
 });
 
-
-// assuming your default adapter is ActiveModelAdapter or RESTAdapter
-test("make a user using your applications default adapter", function() {
-  var user = make('user');
-  equal(store.all('user').get('content.length'), 1);
-  equal(user instanceof DS.Model, true);
+test('it has projects', function() {
+  var user = make('user', 'with_projects');
+  equal(user.get('projects.length'), 2);
 });
 
 
 ```
 
 
-### Integration Tests
+### Integration/Acceptacne Tests
 
-
-##### With FactoryGuyTestMixin
+##### With FactoryGuyTestHelper
 
 - Uses mockjax
 - Has helper methods
@@ -505,8 +506,6 @@ test("make a user using your applications default adapter", function() {
   - handleUpdate
   - handleDelete
 
-Since it is recommended to use your normal adapter ( which is usually a subclass of RESTAdapter, )
-FactoryGuyTestMixin assumes you will want to use that adapter to do your integration tests.
 
 To do that you will still have to deal with ember data trying to create, update or delete records.
 
@@ -519,17 +518,13 @@ FactoryGuy assumes you want to mock ajax calls with the mockjax library,
 and this is already bundled for you when you use the factory-guy library.
 
 
-**The following examples assume the variable testHelper was setup before your
-tests run as shown in the previous section (Using FactoryGuyTestMixin)**
-
-
 ##### handleFindAll
   - for dealing with finding all records of a particular type
   - handleFindMany is a deprecated alias for handleFindAll
 
 ```javascript
     // can use traits and extra fixture options here as you would with FactoryGuy#makeList
-    testHelper.handleFindAll('profile', 2);
+    TestHelper.handleFindAll('profile', 2);
 
     store.find('profile').then(function (profiles) {
       profiles.get('length') //=> 2
@@ -546,7 +541,7 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
 
 ```javascript
     var profile = FactoryGuy.make('profile')
-    testHelper.handleFind(profile);
+    TestHelper.handleFind(profile);
 
     profile.reload().then(function (profile2) {
       ok(profile2.id == profile.id);
@@ -559,7 +554,7 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
 ```javascript
     // can use traits and extra fixture options here as you would with FactoryGuy#make,
     // since a record will be made, and placed in the store for you.
-    testHelper.handleFind('profile', {id: 1});
+    TestHelper.handleFind('profile', {id: 1});
 
     store.find('profile', 1).then(function (profile) {
       profile.get('id') //=> 1
@@ -579,7 +574,7 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
      var users = FactoryGuy.makeList('user', 2, 'with_hats');
 
      // Pass in the array of model instances as last argument
-     testHelper.handleFindQuery('user', ['name', 'age'], users);
+     TestHelper.handleFindQuery('user', ['name', 'age'], users);
 
      store.findQuery('user', {name:'Bob', age: 10}}).then(function(userInstances){
         /// userInstances will be the same of the users that were passed in
@@ -590,7 +585,7 @@ tests run as shown in the previous section (Using FactoryGuyTestMixin)**
 
    ```js
      // This simulates a query that returns no results
-     testHelper.handleFindQuery('user', ['age']);
+     TestHelper.handleFindQuery('user', ['age']);
 
      store.findQuery('user', {age: 10000}}).then(function(userInstances){
         /// userInstances will be empty
@@ -632,7 +627,7 @@ Realistically, you will have code in a view action or controller action that wil
   // most actions that create a record look something like this:
   action: {
     addProject: function (user) {
-      var name = this.$('.add-project input').val();
+      var name = this.$('button.project-name').val();
       var store = this.get('controller.store');
       store.createRecord('project', {name: name, user: user}).save();
     }
@@ -645,21 +640,21 @@ to a particular user. To mock this createRecord call here are a few ways to do t
 chainable methods, or options hash.
 
 
-######Using chainable methods
+###### Using chainable methods
 
 ```javascript
   // Simplest case
   // Don't care about a match just handle createRecord for any project
-  testHelper.handleCreate('project')
+  TestHelper.handleCreate('project')
 
   // Matching some attributes
-  testHelper.handleCreate('project').match({match: {name: "Moo"})
+  TestHelper.handleCreate('project').match({match: {name: "Moo"})
 
   // Match all attributes
-  testHelper.handleCreate('project').match({match: {name: "Moo", user: user})
+  TestHelper.handleCreate('project').match({match: {name: "Moo", user: user})
 
   // Exactly matching attributes, and returning extra attributes
-  testHelper.handleCreate('project')
+  TestHelper.handleCreate('project')
     .match({name: "Moo", user: user})
     .andReturn({created_at: new Date()})
 
@@ -670,30 +665,30 @@ chainable methods, or options hash.
 ```javascript
 
   // Mocking failure case is easy with chainable methods, just use #andFail
-  testHelper.handleCreate('project').match({match: {name: "Moo"}).andFail()
+  TestHelper.handleCreate('project').match({match: {name: "Moo"}).andFail()
 
   // Can optionally add a status code and/or errors to the response
-  testHelper.handleCreate('project').andFail({status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}});
+  TestHelper.handleCreate('project').andFail({status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}});
 
   store.createRecord('project', {name: "Moo"}).save() //=> fails
 ```
 
 
-######Using hash of options
+###### Using hash of options
 
 ```javascript
   // Simplest case
   // Don't care about a match just handle createRecord for any project
-  testHelper.handleCreate('project')
+  TestHelper.handleCreate('project')
 
   // Matching some attributes
-  testHelper.handleCreate('project', {match: {name: "Moo"}})
+  TestHelper.handleCreate('project', {match: {name: "Moo"}})
 
   // Match all attributes
-  testHelper.handleCreate('project', {match: {name: "Moo", user: user}})
+  TestHelper.handleCreate('project', {match: {name: "Moo", user: user}})
 
   // Exactly matching attributes, and returning extra attributes
-  testHelper.handleCreate('project', {
+  TestHelper.handleCreate('project', {
     match: {name: "Moo", user: user}, returns: {created_at: new Date()}
   })
 
@@ -703,16 +698,16 @@ chainable methods, or options hash.
 
 ```javascript
   // set the succeed flag to 'false'
-  testHelper.handleCreate('project', {succeed: false});
+  TestHelper.handleCreate('project', {succeed: false});
 
   // can optionally add a status code and/or errors to the response
-  testHelper.handleCreate('project', {succeed: false, status: 422, response: {errors: {name: ['bad']}}});
+  TestHelper.handleCreate('project', {succeed: false, status: 422, response: {errors: {name: ['bad']}}});
 
   // when the createRecord on the 'project' is called, it will fail
   store.createRecord('project').save() //=> fails
 
   // or fail only if the attributes match the match options
-  testHelper.handleCreate('project', {
+  TestHelper.handleCreate('project', {
     match: {name: "Moo", user: user}, {succeed: false}
   })
 
@@ -741,17 +736,17 @@ chainable methods, or options hash.
   var profile = FactoryGuy.make('profile');
 
   // Pass in the model that will be updated ( if you have it available )
-  testHelper.handleUpdate(profile);
+  TestHelper.handleUpdate(profile);
 
   // If the model is not available, pass in the modelType and the id of
   // the model that will be updated
-  testHelper.handleUpdate('profile', 1);
+  TestHelper.handleUpdate('profile', 1);
 
   profile.set('description', 'good value');
   profile.save() //=> will succeed
 ````
 
-######Using chainable methods
+###### Using chainable methods
 
 *mocking a failed update*
 
@@ -759,9 +754,9 @@ chainable methods, or options hash.
   var profile = FactoryGuy.make('profile');
 
   // set the succeed flag to 'false'
-  testHelper.handleUpdate('profile', profile.id).andFail({status: 422, response: "{error: 'Invalid data'}"});
+  TestHelper.handleUpdate('profile', profile.id).andFail({status: 422, response: "{error: 'Invalid data'}"});
   // or
-  testHelper.handleUpdate(profile).andFail({status: 422, response: "{error: 'Invalid data'}"});
+  TestHelper.handleUpdate(profile).andFail({status: 422, response: "{error: 'Invalid data'}"});
 
   profile.set('description', 'bad value');
   profile.save() //=> will fail
@@ -773,9 +768,9 @@ chainable methods, or options hash.
   var profile = FactoryGuy.make('profile');
 
   // set the succeed flag to 'false'
-  var mockUpdate = testHelper.handleUpdate('profile', profile.id);
+  var mockUpdate = TestHelper.handleUpdate('profile', profile.id);
   // or
-  var mockUpdate = testHelper.handleUpdate(profile);
+  var mockUpdate = TestHelper.handleUpdate(profile);
 
   mockUpdate.andFail({status: 422, response: "{error: 'Invalid data'}"});
 
@@ -788,7 +783,7 @@ chainable methods, or options hash.
   profile.save() //=> will succeed!
 ````
 
-######Using hash of options
+###### Using hash of options
 
 *mocking a failed update*
 
@@ -796,9 +791,9 @@ chainable methods, or options hash.
   var profile = FactoryGuy.make('profile');
 
   // set the succeed flag to 'false'
-  testHelper.handleUpdate('profile', profile.id, {succeed: false});
+  TestHelper.handleUpdate('profile', profile.id, {succeed: false});
   // or
-  testHelper.handleUpdate(profile, {succeed: false});
+  TestHelper.handleUpdate(profile, {succeed: false});
 
   profile.set('description', 'bad value');
   profile.save() //=> will fail
@@ -813,7 +808,7 @@ chainable methods, or options hash.
 
 ```javascript
   var profile = FactoryGuy.make('profile');
-  testHelper.handleDelete('profile', profile.id);
+  TestHelper.handleDelete('profile', profile.id);
 
   profile.destroyRecord() // => will succeed
 ````
@@ -823,42 +818,47 @@ chainable methods, or options hash.
 ```javascript
   var profile = FactoryGuy.make('profile');
   // set the succeed flag to 'false'
-  testHelper.handleDelete('profile', profile.id, false);
+  TestHelper.handleDelete('profile', profile.id, false);
 
   profile.destroyRecord() // => will fail
 ````
 
 
-##### Integration test sample
+##### Sample Integration/Acceptance test
+
+#### Qunit style 
 
 ```javascript
 
-// create a view test helper using the FactoryGuyTestMixin
-ViewTestHelper = Ember.Object.createWithMixins(FactoryGuyTestMixin,{
-  // override setup to do a few extra things for view tests
-  setup: function (app, opts) {
-    app.reset();  // reset ember app before test
-    $.mockjaxSettings.logging = false;   // mockjax settings
-    $.mockjaxSettings.responseTime = 0;  // mockjax settings
-    return this._super(app); // still call the base setup from FactoryGuyTestMixin
-  }
-}
+// file: tests/acceptance/user-view-test.js
+import Ember from 'ember';
+import FactoryGuy, { make, makeList } from 'ember-data-factory-guy';
+import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 
-var viewHelper, user;
+import startApp from '../helpers/start-app';
+
+var App;
 
 module('User View', {
-  setup: function() {
-    viewHelper = ViewTestHelper.setup(App); // set up helper
-    user = FactoryGuy.make('user'); // create a user in the store
-    visit('/users/'+user.id); // visit the users route
+  setup: function () {
+    App = startApp();
+    TestHelper.start();
   },
-  teardown: function() {
-    Em.run(function() { viewHelper.teardown(); });
+  teardown: function () {
+    Em.run(function() {
+      TestHelper.end();
+      App.destroy();
+    });
   }
 });
 
+
 test("Creates new project", function() {
   Em.run(function() {
+    user = FactoryGuy.make('user'); // create a user in the store
+    
+    visit('/users/'+user.id); 
+    
     andThen(function() {
       var newProjectName  = "Gonzo Project"
 
@@ -891,54 +891,3 @@ test("Creates new project", function() {
 
 ```
 
-
-### Using DS.Fixture adapter
-
-- FactoryGuy.make ... creates model in the store and returns json
-
-Technically when you call FactoryGuy.make with a store using the DS.FixtureAdapter,
-the fixture is added to the model's FIXTURE array and also pushed into the store. Normally the store is populated by the DS.FixtureAdapter when you call store.find.
-
-
-```javascript
-
-FactoryGuy.make('user'); // user.FIXTURES = [{id: 1, name: 'User1', style: 'normal'}]
-FactoryGuy.make('user', {name: 'bob'}); //  user.FIXTURES = [{id: 2, name: 'bob', style: 'normal'}]
-FactoryGuy.make('admin'); //  user.FIXTURES = [{id: 3, name: 'Admin', style: 'super'}]
-FactoryGuy.make('admin', {name: 'Fred'}); //  user.FIXTURES = [{id: 4, name: 'Fred', style: 'super'}]
-
-// This works because we push the models into the store when called FactoryGuy.make
-var userJson = FactoryGuy.make('user'); // user.FIXTURES = [{id: 1, name: 'User1', style: 'normal'}]
-store.all('user') // returns the user equal to userJson
-
-// Use store.find to get the model instance
-var userJson = FactoryGuy.make('user');
-store.find('user', userJson.id).then(function(user) {
-   user.toJSON({includeId: true}) ( pretty much equals ) userJson;
-});
-
-// and to setup associations ...
-var projectJson = FactoryGuy.make('project');
-var userJson = FactoryGuy.make('user', {projects: [projectJson.id]});
-// OR
-var userJson = FactoryGuy.make('user');
-var projectJson = FactoryGuy.make('project', {user: userJson.id});
-
-// Associations are pushed on as well
-store.find('user', 1).then(function (user) {
-  var projects = user.get('projects');
-  projects.get('length'); //1
-  projects.get('firstObject').toJSON({includeId: true}); //equal to projectJSON
-});
-
-// If you are using factory_guy_has_many.js fix, will give you the same result,
-// but all associations are treated as async, so it's
-// a bit clunky to get this associated data. When using DS.FixtureAdapter
-// in view specs though, this clunk is dealt with for you. But remember,
-// you DON'T have to use the Fixture adapter.
-store.find('user', 1).then(function(user) {
-  user.toJSON({includeId: true}) (pretty much equals) userJson;
-  user.get('projects').then(function(projects) {
-    projects.length == 1;
-  });
-});

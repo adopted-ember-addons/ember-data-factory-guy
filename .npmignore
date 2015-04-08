@@ -1,4 +1,6 @@
 /bower_components
+/node_modules
+/dist
 /dist2
 /factory_guy_presents
 /factory_guy_presentation
@@ -6,17 +8,13 @@
 /tmp
 /tests
 /vendor
-/dist
-.idea/*
-/node_modules
+.bowerrc
 .editorconfig
 .ember-cli
-.ruby-gemset
-.ruby-version
+.idea/*
 .travis.yml
 testem.json
 Brocfile.js
 bower.json
-.bowerrc
 
 

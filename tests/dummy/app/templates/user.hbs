@@ -1,0 +1,11 @@
+<div>User {{user.name}}</div>
+
+Projects:
+<ul>
+ {{#each project in user.projects}}
+   <li>{{project.name}}</li>
+ {{/each}}
+</ul>
+
+<input class="project-name" type="textbox">
+<button {{action 'addProject' user}}>Add New User</button>

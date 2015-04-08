@@ -6,11 +6,12 @@ import MockUpdateRequest from './mock-update-request';
 import MockCreateRequest from './mock-create-request';
 
 var FactoryGuyTestHelper = Ember.Object.create({
-  // Pass in the app root, which typically is App.
-  setup: function (app) {
-    this.set('container', app.__container__);
-    return this;
+
+  setup: function () {
+    $.mockjaxSettings.logging = false;
+    $.mockjaxSettings.responseTime = 0;
   },
+
   /**
    @param {String} model type like user for model User
    @return {boolean} true if model's serializer is ActiveModelSerializer based
@@ -314,8 +315,9 @@ var FactoryGuyTestHelper = Ember.Object.create({
       status: succeed ? 200 : 500
     });
   },
+
   teardown: function () {
-    FactoryGuy.resetModels();
+    FactoryGuy.clearStore();
     $.mockjax.clear();
   }
 });

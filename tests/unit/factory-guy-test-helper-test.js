@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import FactoryGuy, { make, makeList } from 'ember-data-factory-guy';
+import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 
 import User from 'dummy/models/user';
@@ -9,7 +10,6 @@ import Outfit from 'dummy/models/outfit';
 import Profile from 'dummy/models/profile';
 
 import startApp from '../helpers/start-app';
-import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 import { theUsualSetup, theUsualTeardown } from '../helpers/utility-methods';
 
 var App, store;

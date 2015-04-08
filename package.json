@@ -9,7 +9,7 @@
   "author": "Daniel Sudol <dansudol@yahoo.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/danielspaniel/factory-guy.git"
+    "url": "https://github.com/danielspaniel/ember-data-factory-guy"
   },
   "homepage": "https://github.com/danielspaniel/ember-data-factory-guy",
   "scripts": {
@@ -21,6 +21,7 @@
     "node": ">= 0.10.0"
   },
   "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.2",
     "ember-cli": "0.2.2",
@@ -42,9 +43,8 @@
     "testing",
     "factories"
   ],
-  "main": "index.js",
   "ember-addon": {
     "configPath": "tests/dummy/config"
   },
-  "dependencies": {}
+  "main": "index.js"
 }
