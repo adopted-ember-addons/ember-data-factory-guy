@@ -118,7 +118,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
      // or fixture options
      testHelper.handleFindAll('user', 2, 'with_hats');
 
-     store.find('user').then(function(users){
+     store.findAll('user').then(function(users){
 
      });
    ```
@@ -299,10 +299,9 @@ var FactoryGuyTestHelper = Ember.Object.create({
       id = model.id;
       type = model.constructor.typeKey;
     } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
-      type = args[0];
+      type = args[0].dasherize();
       id = args[1];
-      console.log(store+'', type.dasherize(),id,  store.getById(type.dasherize(), id)+'')
-      model = store.getById(type.dasherize(), id);
+      model = store.getById(type, id);
     }
     Ember.assert("To handleUpdate pass in a model instance or a type and an id",type && id);
 

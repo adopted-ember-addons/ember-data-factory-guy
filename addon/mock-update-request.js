@@ -29,19 +29,15 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
 	};
 
 	this.handler = function() {
-    console.log('MUR handler', 'succeed',succeed)
 		if (!succeed) {
 			this.status = status;
       if (response !== null) {
         this.responseText = response;
       }
 		} else {
-      console.log('MUR else', 'model',model+'')
-			var json = model.toJSON({includeId: true});
-      console.log('MUR json', json)
-      console.log('MUR json2', mapFind(model.constructor.typeKey, json))
-			this.responseText = mapFind(model.constructor.typeKey, json);
-			this.status = 200;
+      var json = model.toJSON({includeId: true});
+      this.responseText = mapFind(model.constructor.typeKey, json);
+      this.status = 200;
 		}
 	};
 
