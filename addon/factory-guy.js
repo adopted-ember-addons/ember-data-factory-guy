@@ -384,7 +384,7 @@ var FactoryGuy = {
     for (var model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
       definition.reset();
-      try {
+      //try {
         var modelType = this.store.modelFor(definition.model);
         //if (store.usingFixtureAdapter()) {
         //  modelType.FIXTURES = [];
@@ -392,9 +392,9 @@ var FactoryGuy = {
         //console.log(this.store+'')
         //console.log(this.store.unloadAll)
         this.store.unloadAll(modelType);
-      } catch (e) {
-        console.log('resetModels', e.stacktrace());
-      }
+      //} catch (e) {
+      //  console.log('resetModels', e.stacktrace());
+      //}
     }
   },
 

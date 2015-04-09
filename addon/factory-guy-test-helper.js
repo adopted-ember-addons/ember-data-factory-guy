@@ -301,7 +301,8 @@ var FactoryGuyTestHelper = Ember.Object.create({
     } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
       type = args[0];
       id = args[1];
-      model = store.getById(type, id);
+      console.log(store+'', type.dasherize(),id,  store.getById(type.dasherize(), id)+'')
+      model = store.getById(type.dasherize(), id);
     }
     Ember.assert("To handleUpdate pass in a model instance or a type and an id",type && id);
 
