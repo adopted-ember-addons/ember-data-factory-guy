@@ -389,9 +389,11 @@ var FactoryGuy = {
         //if (store.usingFixtureAdapter()) {
         //  modelType.FIXTURES = [];
         //}
+        //console.log(this.store+'')
+        //console.log(this.store.unloadAll)
         this.store.unloadAll(modelType);
       } catch (e) {
-        console.log('resetModels', e);
+        console.log('resetModels', e.stacktrace());
       }
     }
   },

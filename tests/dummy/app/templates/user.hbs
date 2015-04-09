@@ -1,11 +1,11 @@
-<div>User {{user.name}}</div>
+<div>User {{model.name}}</div>
 
 Projects:
 <ul>
- {{#each project in user.projects}}
-   <li>{{project.name}}</li>
+ {{#each project in model.projects}}
+   <li class="project">{{project.name}}</li>
  {{/each}}
 </ul>
 
 <input class="project-name" type="textbox">
-<button {{action 'addProject' user}}>Add New User</button>
+<button {{action 'addProject' model target=view}}>Add New User</button>

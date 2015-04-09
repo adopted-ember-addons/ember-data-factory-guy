@@ -22,6 +22,15 @@ var FactoryGuyTestHelper = Ember.Object.create({
     var serializer = store.serializerFor(modelType.typeKey);
     return serializer instanceof DS.ActiveModelSerializer;
   },
+
+  controllerFor: function(name) {
+    return this.get('container').lookup('controller:'+name);
+  },
+
+  setControllerProp: function (controller_name, property, value) {
+    var controller = this.controllerFor(controller_name);
+    controller.set(property, value);
+  },
   /**
    Proxy to store's find method
 
