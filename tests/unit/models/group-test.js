@@ -1,12 +1,14 @@
 import Ember from 'ember';
-import FactoryGuy, { make, clearStore } from 'ember-data-factory-guy';
+import { make, clearStore } from 'ember-data-factory-guy';
 import startApp from '../../helpers/start-app';
 
 var App;
 
 module('User', {
   setup: function() {
-    App = startApp();
+    Ember.run(function() {
+      App = startApp();
+    });
   },
   teardown: function() {
     Ember.run(function() {
