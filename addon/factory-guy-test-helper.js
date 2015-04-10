@@ -299,7 +299,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
       id = model.id;
       type = model.constructor.typeKey;
     } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
-      type = args[0].dasherize();
+      type = args[0];
       id = args[1];
       model = store.getById(type, id);
     }
