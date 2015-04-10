@@ -767,6 +767,22 @@ test("#handleUpdate the with model", function (assert) {
   });
 });
 
+test("#handleUpdate the with model that has polymorphic belongsTo", function (assert) {
+  Ember.run(function () {
+    var done = assert.async();
+
+    var group = make('group');
+    var profile = make('profile', {group: group});
+    TestHelper.handleUpdate(profile);
+
+    profile.set('description', 'new desc');
+    profile.save().then(function (profile) {
+      ok(profile.get('description') === 'new desc');
+      done();
+    });
+  });
+});
+
 test("#handleUpdate the with modelType and id that fails", function (assert) {
   Ember.run(function () {
     var done = assert.async();
