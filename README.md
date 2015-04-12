@@ -1,4 +1,4 @@
-# Ember Data Factory Guy  [![Build Status](https://secure.travis-ci.org/danielspaniel/factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy)
+# Ember Data Factory Guy  [![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy)
 
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
@@ -466,7 +466,9 @@ the reverse 'user' belongsTo association is being setup for you on the project
 - Using FactoryGuy shortcut methods:
   - make
   - clearStore
-- [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/group-test.js) 
+- [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js) 
+
+*Note* 
 
 ```javascript
 
@@ -513,20 +515,16 @@ test('it has projects', function() {
   - handleDelete
 
 
-To do that you will still have to deal with ember data trying to create, update or delete records.
-
 If you put models into the store ( with FactoryGuy#make ), the http GET call does not need to be mocked,
 since that model is already in the store.
 
 But what if you want to handle create, update, and delete? Or even reload or findAll records?
 
 FactoryGuy assumes you want to mock ajax calls with the mockjax library,
-and this is already bundled for you when you use the factory-guy library.
-
+and this javascript library is already bundled for you when you install ember-data-factory-guy.
 
 ##### handleFindAll
   - for dealing with finding all records of a particular type
-  - handleFindMany is a deprecated alias for handleFindAll
 
 ```javascript
     // can use traits and extra fixture options here as you would with FactoryGuy#makeList
@@ -834,66 +832,68 @@ chainable methods, or options hash.
 
 #### Qunit style 
 
-```javascript
+- [Sample acceptance test (user-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
+
+```javascript
 // file: tests/acceptance/user-view-test.js
+
 import Ember from 'ember';
-import FactoryGuy, { make, makeList } from 'ember-data-factory-guy';
+
+import { make } from 'ember-data-factory-guy';
 import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 
 import startApp from '../helpers/start-app';
 
-var App;
+var App, user;
 
 module('User View', {
   setup: function () {
-    App = startApp();
-    TestHelper.start();
+    Ember.run(function () {
+      App = startApp();
+      TestHelper.setup();
+    });
   },
   teardown: function () {
-    Em.run(function() {
-      TestHelper.end();
+    Ember.run(function () {
+      TestHelper.teardown();
       App.destroy();
     });
   }
 });
 
 
-test("Creates new project", function() {
-  Em.run(function() {
-    user = FactoryGuy.make('user'); // create a user in the store
-    
-    visit('/users/'+user.id); 
-    
-    andThen(function() {
-      var newProjectName  = "Gonzo Project"
+test("Creates new project", function () {
+  var user = make('user', 'with_projects'); // create a user with projects in the store
+  visit('/user/1');
 
-      click('.add-div div:contains(New Project)')
-      fillIn('.add-project input', newProjectName)
+  andThen(function () {
+    var newProjectName = "Gonzo Project";
 
-      // Remember, this is for handling an exact match, if you did not care about
-      // matching attributes, you could just do: viewHelper.handleCreate('project')
-      viewHelper.handleCreate('project', {match:{name: newProjectName, user:user}})
+    fillIn('input.project-name', newProjectName);
 
-      /**
-       Let's say that clicking this '.add-project .link', triggers action in the view to
-       create project record and looks something like this:
+    // Remember, this is for handling an exact match, if you did not care about
+    // matching attributes, you could just do: viewHelper.handleCreate('project')
+    TestHelper.handleCreate('project', {match: {name: newProjectName, user: user}});
 
-          actions: {
+    /**
+     Let's say that clicking this 'button.add-project', triggers action in the view to
+     create project record and looks something like this:
+     actions: {
             addProject: function (user) {
-              var name = this.$('.add-project input').val();
+              var name = this.$('input.project-name').val();
               var store = this.get('controller.store');
               store.createRecord('project', {name: name, user: user}).save();
             }
-
       */
-      click('.add-project .link')
+    click('button:contains(Add New User)');
 
-      var newProjectDiv = find('.project:contains('+newProjectName+')')
-      equal(newProjectDiv[0] != undefined, true)
-    })
-  })
-})
+    andThen(function () {
+      var newProjectDiv = find('li.project:contains(' + newProjectName + ')');
+      ok(newProjectDiv[0] !== undefined);
+    });
+  });
+});
 
 ```
 
