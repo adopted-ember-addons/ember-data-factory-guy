@@ -1,12 +1,12 @@
 {
-  "name": "ember-data-factory-guy",
-  "version": "0.9.13",
+  "name": "factory-guy",
+  "description": "Factory for testing Ember application using Ember Data",
+  "version": "1.0.0",
   "authors": [
     "Daniel Sudol <dansudol@yahoo.com>",
     "Opak Alex <opak.alexandr@gmail.com>"
   ],
-  "description": "Factory for testing Ember application using Ember Data",
-  "main": "dist/ember-data-factory-guy.js",
+  "main": "dist/factory-guy.js",
   "keywords": [
     "Factory",
     "Ember",
@@ -14,9 +14,6 @@
     "FixtureAdapter"
   ],
   "license": "MIT",
-  "dependencies": {
-    "jquery-mockjax": "latest"
-  },
   "ignore": [
     "**/.*",
     "node_modules",
@@ -26,17 +23,24 @@
     "gruntfile.js",
     "package.json",
     "README.md",
-    "src",
     "test",
     "tests"
   ],
+  "dependencies": {
+    "jquery-mockjax": "latest"
+  },
   "devDependencies": {
-    "ember-data": "1.0.0-beta.16",
-    "chance": "latest",
+    "jquery": "^2.1.0",
+    "ember": "1.11.0",
+    "handlebars": "~1.3.0",
+    "ember-resolver": "~0.1.14",
+    "loader.js": "ember-cli/loader.js#3.2.0",
+    "ember-cli-shims": "ember-cli/ember-cli-shims#0.0.3",
+    "ember-cli-test-loader": "ember-cli-test-loader#0.1.3",
+    "ember-load-initializers": "ember-cli/ember-load-initializers#0.0.2",
     "qunit": "latest",
-    "sinon": "http://sinonjs.org/releases/sinon-1.10.1.js",
-    "sinon-qunit": "~2.0.0",
-    "jquery": "2.0.3",
-    "ember": "1.10.0"
+    "ember-qunit": "latest",
+    "ember-qunit-notifications": "latest",
+    "sinon": "http://sinonjs.org/releases/sinon-1.12.2.js"
   }
 }
