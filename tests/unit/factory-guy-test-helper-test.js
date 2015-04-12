@@ -148,7 +148,7 @@ test("#handleFindAll the basic", function (assert) {
     var done = assert.async();
     TestHelper.handleFindAll('profile', 2);
 
-    store.findAll('profile').then(function (profiles) {
+    store.find('profile').then(function (profiles) {
       ok(profiles.get('length') === 2);
       done();
     });
@@ -160,7 +160,7 @@ test("#handleFindAll with fixture options", function (assert) {
     var done = assert.async();
     TestHelper.handleFindAll('profile', 2, {description: 'dude'});
 
-    store.findAll('profile').then(function (profiles) {
+    store.find('profile').then(function (profiles) {
       ok(profiles.get('length') === 2);
       ok(profiles.get('firstObject.description') === 'dude');
       done();
@@ -172,7 +172,7 @@ test("#handleFindAll with traits", function (assert) {
   var done = assert.async();
   TestHelper.handleFindAll('profile', 2, 'goofy_description');
 
-  store.findAll('profile').then(function (profiles) {
+  store.find('profile').then(function (profiles) {
     ok(profiles.get('length') === 2);
     ok(profiles.get('firstObject.description') === 'goofy');
     done();
@@ -183,7 +183,7 @@ test("#handleFindAll with traits and extra options", function (assert) {
   var done = assert.async();
   TestHelper.handleFindAll('profile', 2, 'goofy_description', {description: 'dude'});
 
-  store.findAll('profile').then(function (profiles) {
+  store.find('profile').then(function (profiles) {
     ok(profiles.get('length') === 2);
     ok(profiles.get('firstObject.description') === 'dude');
     done();
