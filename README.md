@@ -19,20 +19,18 @@ ember-data-factory-guy is now an ember-cli addon!
 
  ```npm uninstall ember-cli-data-factory-guy```
   
-  then:
+then:
    
  ```ember install:addon ember-data-factory-guy```
 
- - move your existing factories to tests/factories directory
+- move your existing factories to tests/factories directory
  
 
 ### How this works
 
   - You create factories for you models.
     - put them in tests/factories directory
-     - [Sample factory: (company.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/company.js)
   - Then you use them to create models in your tests.
- 
 
 ### Setup
 
@@ -75,6 +73,8 @@ In the following examples, assume the models look like this:
  This will create a file named user.js in the tests/factories directory.
 
 ##### Standard models
+
+- [Sample full blown factory: (user.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js)
 
 ```javascript
   
@@ -146,15 +146,17 @@ the store is looking up the correct model type name
 
 
 ### Using Factories
- - FactoryGuy.make
+
+ - FactoryGuy.make or just make
    - Loads model instance into the store
- - FactoryGuy.build
+ - FactoryGuy.build or just build
    - Builds json
  - Can override default attributes by passing in a hash
  - Can add attributes with traits ( see traits section )
 
 ```javascript
-  import FactoryGuy from 'ember-data-factory-guy';
+
+  import FactoryGuy, { make, build } from 'ember-data-factory-guy';
   
   // returns json
   var json = FactoryGuy.build('user');
@@ -164,10 +166,10 @@ the store is looking up the correct model type name
   var user = FactoryGuy.make('user');
   user.toJSON({includeId: true}) // => {id: 2, name: 'Dude', style: 'normal'}
 
-  var json = FactoryGuy.build('admin');
+  var json = build('admin');
   json // => {id: 3, name: 'Admin', style: 'super'}
 
-  var user = FactoryGuy.make('admin');
+  var user = make('admin');
   user.toJSON({includeId: true}) // => {id: 4, name: 'Admin', style: 'super'}
 
 ```
@@ -176,7 +178,7 @@ You can override the default attributes by passing in a hash
 
 ```javascript
 
-  var json = FactoryGuy.build('user', {name: 'Fred'});
+  var json = build('user', {name: 'Fred'});
   // json.name => 'Fred'
 
 ```
