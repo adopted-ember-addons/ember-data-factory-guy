@@ -525,13 +525,22 @@ and this javascript library is already bundled for you when you install ember-da
 
 ##### handleFindAll
   - for dealing with finding all records of a particular type
+  - [Sample using handleFindAll in test:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
 
 ```javascript
     // can use traits and extra fixture options here as you would with FactoryGuy#makeList
-    TestHelper.handleFindAll('profile', 2);
+    TestHelper.handleFindAll('user', 2);
 
-    store.find('profile').then(function (profiles) {
-      profiles.get('length') //=> 2
+    store.find('user').then(function (users) {
+      users.get('length') //=> 2
+    });
+    // or 
+    
+    visit('/users');    
+    
+    andThen(function () {
+      var users = find('li.user');
+      ok(users.length === 2);
     });
 ```
 
@@ -830,7 +839,6 @@ chainable methods, or options hash.
 
 ##### Sample Integration/Acceptance test
 
-#### Qunit style 
 
 - [Sample acceptance test (user-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
@@ -880,11 +888,11 @@ test("Creates new project", function () {
      Let's say that clicking this 'button.add-project', triggers action in the view to
      create project record and looks something like this:
      actions: {
-            addProject: function (user) {
-              var name = this.$('input.project-name').val();
-              var store = this.get('controller.store');
-              store.createRecord('project', {name: name, user: user}).save();
-            }
+        addProject: function (user) {
+          var name = this.$('input.project-name').val();
+          var store = this.get('controller.store');
+          store.createRecord('project', {name: name, user: user}).save();
+        }
       */
     click('button:contains(Add New User)');
 
