@@ -11,21 +11,26 @@ ember-data-factory-guy is now an ember-cli addon!
 
 ##### Never used ember-data-factory-guy before
  
- ember install:addon ember-data-factory-guy
+ ```ember install:addon ember-data-factory-guy```
 
 ##### Have a previous installation as bower component or ember-cli-factory-guy
 
- bower uninstall ember-data-factory-guy
- npm uninstall ember-cli-factory-guy
+ ```bower uninstall ember-data-factory-guy```
+ ```npm uninstall ember-cli-data-factory-guy```
   
   then:
    
- ember install:addon ember-data-factory-guy
+ ```ember install:addon ember-data-factory-guy```
+
+ - move your existing factories to tests/factories directory
+ 
 
 ### How this works
 
- -You create factories for you models.
- -Then you use them to create models in your tests.
+  - You create factories for you models.
+    - put them in tests/factories directory
+     - [Sample factory:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/company.js)
+  - Then you use them to create models in your tests.
  
 
 ### Setup
