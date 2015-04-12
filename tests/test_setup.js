@@ -83,11 +83,6 @@ Project = DS.Model.extend({
   children: DS.hasMany('project', {inverse: 'parent'})
 });
 
-
-
-
-
-
 Property = DS.Model.extend({
   name:    DS.attr('string'),
   company: DS.belongsTo('company', {async: true}),

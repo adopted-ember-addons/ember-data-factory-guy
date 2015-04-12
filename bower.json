@@ -15,13 +15,13 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "ember-data": "1.0.0-beta.16",
     "jquery-mockjax": "latest"
   },
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
+    "blueprints",
     "bower.json",
     "gruntfile.js",
     "package.json",
@@ -31,6 +31,7 @@
     "tests"
   ],
   "devDependencies": {
+    "ember-data": "1.0.0-beta.16",
     "chance": "latest",
     "qunit": "latest",
     "sinon": "http://sinonjs.org/releases/sinon-1.10.1.js",

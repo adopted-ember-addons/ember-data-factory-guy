@@ -563,6 +563,7 @@ var FactoryGuy = {
       }
     }
   },
+
   /**
    Push fixture to model's FIXTURES array.
    Used when store's adapter is a DS.FixtureAdapter.
@@ -743,7 +744,9 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
         this.responseText = response;
       }
 		} else {
-			var json = model.toJSON({includeId: true});
+      // need to serialize instead of toJSON for polymorphic associations
+			var json = model.serialize();
+      json.id = model.id;
 			this.responseText = mapFind(model.constructor.typeKey, json);
 			this.status = 200;
 		}
@@ -758,6 +761,7 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
 
 	$.mockjax(requestConfig);
 };
+
 (function () {
   DS.Store.reopen({
     /**
@@ -1338,12 +1342,10 @@ if (FactoryGuy !== undefined) {
 				return null;
 			}
 		}
+
 		// Inspect the data submitted in the request (either POST body or GET query string)
 		if ( handler.data ) {
-//      console.log('request.data', requestSettings.data )
-//      console.log('handler.data', handler.data )
-//      console.log('data equal', isMockDataEqual(handler.data, requestSettings.data) )
-			if  ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
+			if ( ! requestSettings.data || !isMockDataEqual(handler.data, requestSettings.data) ) {
 				// They're not identical, do not mock this request
 				return null;
 			}
@@ -1354,6 +1356,7 @@ if (FactoryGuy !== undefined) {
 			// The request type doesn't match (GET vs. POST)
 			return null;
 		}
+
 		return handler;
 	}
 
@@ -1717,7 +1720,6 @@ if (FactoryGuy !== undefined) {
 			}
 
 			mockHandler = getMockForRequest( mockHandlers[k], requestSettings );
-
 			if(!mockHandler) {
 				// No valid mock found for this request
 				continue;
@@ -1769,7 +1771,7 @@ if (FactoryGuy !== undefined) {
 			}
 
 			copyUrlParameters(mockHandler, origSettings);
-		 	//console.log('here copyUrlParameters', 'mockHandler=>',mockHandler, 'requestSettings=>',requestSettings, 'origSettings=>',origSettings)
+
 			(function(mockHandler, requestSettings, origSettings, origHandler) {
 
 				mockRequest = _ajax.call($, $.extend(true, {}, origSettings, {

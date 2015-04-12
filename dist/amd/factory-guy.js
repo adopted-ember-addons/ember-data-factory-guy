@@ -568,6 +568,7 @@ var FactoryGuy = {
       }
     }
   },
+
   /**
    Push fixture to model's FIXTURES array.
    Used when store's adapter is a DS.FixtureAdapter.
@@ -748,7 +749,9 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
         this.responseText = response;
       }
 		} else {
-			var json = model.toJSON({includeId: true});
+      // need to serialize instead of toJSON for polymorphic associations
+			var json = model.serialize();
+      json.id = model.id;
 			this.responseText = mapFind(model.constructor.typeKey, json);
 			this.status = 200;
 		}
@@ -763,6 +766,7 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
 
 	$.mockjax(requestConfig);
 };
+
 (function () {
   DS.Store.reopen({
     /**
