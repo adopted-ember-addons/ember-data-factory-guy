@@ -1,4 +1,4 @@
-# Ember Data Factory Guy  [![Build Status](https://secure.travis-ci.org/danielspaniel/factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/factory-guy)
+# Ember Data Factory Guy  [![Build Status](https://secure.travis-ci.org/danielspaniel/factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy)
 
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
@@ -16,6 +16,7 @@ ember-data-factory-guy is now an ember-cli addon!
 ##### Have a previous installation as bower component or ember-cli-factory-guy
 
  ```bower uninstall ember-data-factory-guy```
+
  ```npm uninstall ember-cli-data-factory-guy```
   
   then:
@@ -29,7 +30,7 @@ ember-data-factory-guy is now an ember-cli addon!
 
   - You create factories for you models.
     - put them in tests/factories directory
-     - [Sample factory:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/company.js)
+     - [Sample factory: (company.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/company.js)
   - Then you use them to create models in your tests.
  
 
@@ -465,7 +466,7 @@ the reverse 'user' belongsTo association is being setup for you on the project
 - Using FactoryGuy shortcut methods:
   - make
   - clearStore
-
+- [Sample model test:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/group-test.js) 
 
 ```javascript
 
