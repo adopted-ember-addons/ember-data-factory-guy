@@ -27,7 +27,8 @@
     "tests"
   ],
   "dependencies": {
-    "jquery-mockjax": "latest"
+    "jquery-mockjax": "latest",
+    "ember-data": "^1.0.0-beta.16"
   },
   "devDependencies": {
     "jquery": "^2.1.0",

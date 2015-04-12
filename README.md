@@ -466,7 +466,7 @@ the reverse 'user' belongsTo association is being setup for you on the project
 - Using FactoryGuy shortcut methods:
   - make
   - clearStore
-- [Sample model test:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/group-test.js) 
+- [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/group-test.js) 
 
 ```javascript
 
