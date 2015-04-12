@@ -65,12 +65,10 @@ In the following examples, assume the models look like this:
  - A factory has a name and a set of attributes.
  - The name should match the model type name. So, for 'User' model, the name would be 'user'
  - Create factory files in the tests/factories directory. 
- 
- Can use generator to create the outline of a factory file: 
- 
- ```ember g factory user``` 
+  - Can use generator to create the outline of a factory file: 
+  ```ember g factory user``` This will create a file named user.js in the tests/factories directory. 
 
- This will create a file named user.js in the tests/factories directory.
+  
 
 ##### Standard models
 
