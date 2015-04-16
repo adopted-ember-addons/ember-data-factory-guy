@@ -326,7 +326,6 @@ var FactoryGuyTestHelper = Ember.Object.create({
   },
 
   teardown: function () {
-    FactoryGuy.clearStore();
     $.mockjax.clear();
   }
 });

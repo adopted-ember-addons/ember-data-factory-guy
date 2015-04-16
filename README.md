@@ -15,16 +15,21 @@ ember-data-factory-guy is now an ember-cli addon!
 
 ##### Have a previous installation as bower component or ember-cli-factory-guy
 
- ```bower uninstall ember-data-factory-guy```
+ - remove ember-data-factory-guy from bower.json, then:
 
- ```npm uninstall ember-cli-data-factory-guy```
-  
+ - ```bower prune ```
+
+ - remove ember-cli-data-factory-guy or ember-data-factory-guy from package.json, then:
+ 
+ - ```npm prune ```
+
 then:
    
- ```ember install:addon ember-data-factory-guy```
-
-- move your existing factories to tests/factories directory
- 
+ - ```ember install:addon ember-data-factory-guy```
+   
+ - ```ember install ember-data-factory-guy``` ( ember cli ^0.2.3 )
+  
+ - then move your existing factories to tests/factories directory
 
 ### How this works
 
@@ -905,3 +910,22 @@ test("Creates new project", function () {
 
 ```
 
+*NOTE* 
+  TestHelper.teardown(), clears the store, and calls mockjacx.clear(), but there have been reports that 
+  App.destroy with clearing the store is causing problems. So if you find this happening in your tests,
+  try teardown of this:
+  
+  ```teardown: function () {
+    Ember.run(function () {
+      TestHelper.teardown();
+      App.destroy();
+    });
+  }```
+  
+  to this:  
+  ```teardown: function () {
+    Ember.run(function () {
+      $.mockjax.clear();
+      App.destroy();
+    });
+  } ```
