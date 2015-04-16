@@ -480,7 +480,7 @@ the reverse 'user' belongsTo association is being setup for you on the project
 // file: tests/unit/models/user-test.js
 
 import Ember from 'ember';
-import { make, clearStore } from 'ember-data-factory-guy';
+import { make } from 'ember-data-factory-guy';
 import startApp from '../../helpers/start-app';
 
 var App;
@@ -491,7 +491,6 @@ module('User', {
   },
   teardown: function() {
     Ember.run(function() {
-      clearStore();
       App.destroy();
     });
   }
@@ -910,22 +909,3 @@ test("Creates new project", function () {
 
 ```
 
-*NOTE* 
-  TestHelper.teardown(), clears the store, and calls mockjacx.clear(), but there have been reports that 
-  App.destroy with clearing the store is causing problems. So if you find this happening in your tests,
-  try teardown of this:
-  
-  ```teardown: function () {
-    Ember.run(function () {
-      TestHelper.teardown();
-      App.destroy();
-    });
-  }```
-  
-  to this:  
-  ```teardown: function () {
-    Ember.run(function () {
-      $.mockjax.clear();
-      App.destroy();
-    });
-  } ```

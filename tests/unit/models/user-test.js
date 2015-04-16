@@ -12,7 +12,6 @@ module('User', {
   },
   teardown: function() {
     Ember.run(function() {
-      clearStore();
       App.destroy();
     });
   }
