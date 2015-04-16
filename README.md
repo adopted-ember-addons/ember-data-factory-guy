@@ -27,6 +27,8 @@ then:
    
  - ```ember install:addon ember-data-factory-guy```
    
+   or
+   
  - ```ember install ember-data-factory-guy``` ( ember cli ^0.2.3 )
   
  - then move your existing factories to tests/factories directory
