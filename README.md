@@ -481,8 +481,9 @@ the reverse 'user' belongsTo association is being setup for you on the project
 **Note** 
   
   *In the following model test, it seemed preferable not to use the ember-qunit moduleForModel, since
-  the premise for that helper is to setup an isolated container with the minimal requirements. But
-  FactoryGuy needs the application to startup in order to load the factories, and setup the store.* 
+  the premise for that helper is to setup an isolated container with the minimal requirements with only that model loaded.
+  But FactoryGuy needs the application to startup in order to load the factories, and setup the store.
+  Also, if you have many relationships, it's tedious to "needs: []" them all, to get them imported* 
 
 ```javascript
 
