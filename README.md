@@ -469,13 +469,19 @@ the reverse 'user' belongsTo association is being setup for you on the project
 
 ### Testing models, controllers, components
 
-- Testing the models, controllers and components in isolation
+- Testing the models, controllers and components 
 - Using FactoryGuy shortcut methods:
   - make
-  - clearStore
 - [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js) 
+- [Sample component test (translate-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/components/translate-test.js) 
+- You need to use the 'startApp' function that ember provides in the /tests/helper directory 
+  to set up the application because that is how FactoryGuy sets up the store for you and 
+  loads the factories 
 
 *Note* 
+  **In the following model test, it seemed preferable not to use the ember-qunit moduleForModel, since
+  the premise for that helper is to setup an isolated container with the minimal requirements. But
+  FactoryGuy needs the application to startup in order to load the factories, and setup the store.** 
 
 ```javascript
 
