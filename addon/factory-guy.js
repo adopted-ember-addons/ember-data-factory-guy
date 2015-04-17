@@ -446,6 +446,7 @@ var FactoryGuy = {
       this.modelDefinitions = {};
     }
   }
+
 };
 
 //To accomodate for phantomjs ( which does not recognise bind method ( for now )

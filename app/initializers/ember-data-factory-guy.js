@@ -22,6 +22,5 @@ export default {
       }
       require(moduleName, null, null, true);
     });
-
   }
 };
