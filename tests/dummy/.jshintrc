@@ -46,7 +46,6 @@
     "currentPath",
     "currentRouteName",
     "require",
-    "describe",
     "afterEach",
     "it",
     "sinon"

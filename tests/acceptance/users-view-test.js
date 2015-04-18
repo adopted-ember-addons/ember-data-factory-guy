@@ -5,7 +5,7 @@ import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 
 import startApp from '../helpers/start-app';
 
-var App, user;
+var App;
 
 module('User View', {
   beforeEach: function () {
