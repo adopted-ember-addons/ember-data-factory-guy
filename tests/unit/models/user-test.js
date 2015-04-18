@@ -6,14 +6,10 @@ var App;
 
 module('User', {
   beforeEach: function() {
-    Ember.run(function() {
-      App = startApp();
-    });
+    App = startApp();
   },
   afterEach: function() {
-    Ember.run(function() {
-      App.destroy();
-    });
+    Ember.run(App, 'destroy');
   }
 });
 
