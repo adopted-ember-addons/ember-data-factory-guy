@@ -481,10 +481,13 @@ the reverse 'user' belongsTo association is being setup for you on the project
 
 **Note** 
   
-  *In the following model test, it seemed preferable not to use the ember-qunit moduleForModel, since
-  the premise for that helper is to setup an isolated container with the minimal requirements with only that model loaded.
+  *In the following model test, it's not necessary or helpful to use the ember-qunit moduleForModel, 
+  since the premise for that helper is to setup an isolated container with the minimal requirements 
+  with only that model loaded. 
   But FactoryGuy needs the application to startup in order to load the factories, and setup the store.
-  Also, if you have many relationships, it's tedious to "needs: []" them all, to get them imported* 
+  Also, if you have many relationships, it's tedious to "needs: []" them all, to get them imported.
+  Furthermore you don't want a model handed to you, you want to make your own, which is the whole
+  point of factory guy.* 
 
 ```javascript
 
@@ -866,7 +869,7 @@ import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 
 import startApp from '../helpers/start-app';
 
-var App, user;
+var App;
 
 module('User View', {
   setup: function () {
@@ -894,7 +897,7 @@ test("Creates new project", function () {
     fillIn('input.project-name', newProjectName);
 
     // Remember, this is for handling an exact match, if you did not care about
-    // matching attributes, you could just do: viewHelper.handleCreate('project')
+    // matching attributes, you could just do: TestHelper.handleCreate('project')
     TestHelper.handleCreate('project', {match: {name: newProjectName, user: user}});
 
     /**
