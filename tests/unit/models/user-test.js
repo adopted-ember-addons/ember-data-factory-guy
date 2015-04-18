@@ -5,12 +5,12 @@ import startApp from '../../helpers/start-app';
 var App;
 
 module('User', {
-  setup: function() {
+  beforeEach: function() {
     Ember.run(function() {
       App = startApp();
     });
   },
-  teardown: function() {
+  afterEach: function() {
     Ember.run(function() {
       App.destroy();
     });

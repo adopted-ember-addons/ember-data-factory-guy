@@ -8,13 +8,13 @@ import startApp from '../helpers/start-app';
 var App, user;
 
 module('User View', {
-  setup: function () {
+  beforeEach: function () {
     Ember.run(function () {
       App = startApp();
       TestHelper.setup();
     });
   },
-  teardown: function () {
+  afterEach: function () {
     Ember.run(function () {
       TestHelper.teardown();
       App.destroy();

@@ -8,6 +8,7 @@ FactoryGuy.define("project", {
     big: { title: 'Big Project' },
     with_title_sequence: { title: FactoryGuy.generate('title') },
     with_user: { user: {} },
+    with_parent: { project: {} },
     with_user_having_hats: { user: FactoryGuy.belongsTo('user', 'with_hats') },
     with_user_having_hats_belonging_to_user: { user: FactoryGuy.belongsTo('user', 'with_hats_belonging_to_user') },
     with_user_having_hats_belonging_to_outfit: { user: FactoryGuy.belongsTo('user', 'with_hats_belonging_to_outfit') },
