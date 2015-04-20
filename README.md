@@ -469,17 +469,19 @@ the reverse 'user' belongsTo association is being setup for you on the project
                    
 ### Testing models, controllers, components
 
-- Testing the models, controllers and components 
+- Testing the models, controllers and components
+  - FactoryGuy needs the application to startup in order to load the factories, and setup the store.
+  - That is why all the tests import startApp function from 'tests/helpers/start-app.js' ( a file
+    provided to you by ember cli )
 - Using FactoryGuy shortcut methods:
   - make
 - [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js) 
   - Avoid using moduleForModel ( ember-qunit ), or describeModel ( ember-mocha ) test helper.
 - [Sample model test (user2-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user2-test.js) 
   - Same test, just an even simpler setup style
-- [Sample component test (translate-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/components/translate-test.js) 
-- You need to use the 'startApp' function that ember-cli provides for you in the /tests/helper/start-app 
-  file to set up the application because that is how FactoryGuy sets up the store for you and 
-  loads the factories 
+- [Sample component test (translate-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/components/translate-test.js)
+  - Using 'moduleForComponent' because in it is easier in this case to get the component and render it with this 
+    helper, but you are still starting up the application with startApp().
 
 **Note** 
   
@@ -487,8 +489,8 @@ the reverse 'user' belongsTo association is being setup for you on the project
   helper, since the premise for that helper is to setup an isolated container with the minimal 
   requirements ( that model ) loaded.*
    
- *But FactoryGuy needs the application to startup in order to load the factories, and setup the store.
-  Also, if you have many relationships, it's tedious to "needs: []" them all, to get them imported.
+ *But, you need to startup the application ( for reasons stated above ), and if you have many relationships, 
+  it's tedious to "needs: []" them all, to get them imported.
   Furthermore you don't want a model handed to you, you want to make your own, which is the whole
   point of factory guy.* 
 
