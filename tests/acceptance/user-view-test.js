@@ -11,12 +11,15 @@ module('User View', {
   beforeEach: function () {
     Ember.run(function () {
       App = startApp();
+      // TestHelper.teardown sets $.mockjaxSettings response time to zero ( speeds up tests )
       TestHelper.setup();
     });
   },
   afterEach: function () {
     Ember.run(function () {
+      // TestHelper.teardown calls $.mockjax.clear() which resets all the mockjax handlers
       TestHelper.teardown();
+      // destroy blows away the application and the store ( and the models you've made )
       App.destroy();
     });
   }
@@ -33,8 +36,8 @@ test("Creates new project", function () {
     fillIn('input.project-name', newProjectName);
 
     // Remember, this is for handling an exact match, if you did not care about
-    // matching attributes, you could just do: viewHelper.handleCreate('project')
-    TestHelper.handleCreate('project', {match: {name: newProjectName, user: user}});
+    // matching attributes, you could just do: TestHelper.handleCreate('project')
+    TestHelper.handleCreate('project').match({name: newProjectName, user: user}});
 
     /**
      Let's say that clicking this 'button.add-project', triggers action in the view to

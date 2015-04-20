@@ -862,16 +862,15 @@ chainable methods, or options hash.
 
 ##### Sample Integration/Acceptance test
 
-
 - [Sample acceptance test (user-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
-- Version ^1.0.3 does not clean up the store in  
+
 
 ```javascript
 // file: tests/acceptance/user-view-test.js
 
 import Ember from 'ember';
 
-import { make, clearStore } from 'ember-data-factory-guy';
+import { make } from 'ember-data-factory-guy';
 import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 
 import startApp from '../helpers/start-app';
@@ -882,13 +881,12 @@ module('User View', {
   setup: function () {
     Ember.run(function () {
       App = startApp();
-      TestHelper.setup();
+      TestHelper.setup(); 
     });
   },
   teardown: function () {
     Ember.run(function () {
       TestHelper.teardown();
-      // clearStore();  
       App.destroy();
     });
   }

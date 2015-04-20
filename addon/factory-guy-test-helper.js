@@ -232,21 +232,26 @@ var FactoryGuyTestHelper = Ember.Object.create({
     this.stubEndpointForHttpRequest(url, responseJson, {urlParams: searchParams});
   },
   /**
-   Handling ajax POST ( create record ) for a model. You can mock
-   failed create by passing in success argument as false.
+   Handling ajax POST ( create record ) for a model.
 
    ```js
      handleCreate('post')
-     handleCreate('post', { match: {title: 'foo'} )
-     handleCreate('post', { match: {title: 'foo', user: user} )
-     handleCreate('post', { returns: {createdAt: new Date()} )
-     handleCreate('post', { match: {title: 'foo'}, returns: {createdAt: new Date()} )
-     handleCreate('post', { match: {title: 'foo'}, success: false} } )
+     handleCreate('post').match({title: 'foo'});
+     handleCreate('post').match({title: 'foo', user: user});
+     handleCreate('post').andReturn({createdAt: new Date()});
+     handleCreate('post').match({title: 'foo'}).andReturn({createdAt: new Date()});
+     handleCreate('post').match({title: 'foo'}.andFail();
    ```
 
     match - attributes that must be in request json,
-    returns - attributes to include in response json,
-    succeed - flag to indicate if the request should succeed ( default is true )
+    andReturn - attributes to include in response json,
+    andFail - can include optional status and response attributes
+
+    ```js
+      TestHelper.handleCreate('project').andFail({
+        status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}
+      });
+    ```
 
     Note:
      1) Any attributes in match will be added to the response json automatically,
@@ -257,7 +262,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
      createRecord call, but you don't have to match them all. For example:
 
       ```js
-        handleCreate('post', {match: {title: 'foo'})
+        handleCreate('post').match({title: 'foo'});
         store.createRecord('post', {title: 'foo', created_at: new Date()})
       ```
 

@@ -369,7 +369,7 @@ var FactoryGuy = {
   },
 
   /**
-   Clear model instances from FIXTURES array, and from store cache.
+   Clear model instances from store cache.
    Reset the id sequence for the models back to zero.
    */
   clearStore: function () {
@@ -377,6 +377,10 @@ var FactoryGuy = {
     this.clearModels();
   },
 
+
+  /**
+   Reset the id sequence for the models back to zero.
+   */
   resetDefinitions: function () {
     for (var model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
@@ -384,6 +388,9 @@ var FactoryGuy = {
     }
   },
 
+  /**
+   Clear model instances from store cache.
+   */
   clearModels: function () {
     for (var model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
