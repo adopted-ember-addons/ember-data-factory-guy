@@ -37,7 +37,7 @@ test("Creates new project", function () {
 
     // Remember, this is for handling an exact match, if you did not care about
     // matching attributes, you could just do: TestHelper.handleCreate('project')
-    TestHelper.handleCreate('project').match({name: newProjectName, user: user}});
+    TestHelper.handleCreate('project').match({name: newProjectName, user: user});
 
     /**
      Let's say that clicking this 'button.add-project', triggers action in the view to
