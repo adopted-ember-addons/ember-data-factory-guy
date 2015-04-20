@@ -10,6 +10,7 @@ export default {
   initialize: function(container, application) {
     FactoryGuy.setStore(container.lookup('store:main'));
     FactoryGuyTestHelper.set('container', container);
+    FactoryGuy.resetDefinitions();
 
     var prefix = config.modulePrefix;
     var factoryFileRegExp = new RegExp('^' + prefix + '/tests/factories');

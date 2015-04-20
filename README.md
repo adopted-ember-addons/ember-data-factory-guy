@@ -551,7 +551,8 @@ and this javascript library is already bundled for you when you install ember-da
 ```javascript
     // can use traits and extra fixture options here as you would with FactoryGuy#makeList
     TestHelper.handleFindAll('user', 2);
-
+    
+    // If your router or other code 
     store.find('user').then(function (users) {
       users.get('length') //=> 2
     });
@@ -863,14 +864,14 @@ chainable methods, or options hash.
 
 
 - [Sample acceptance test (user-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
-
+- Version ^1.0.3 does not clean up the store in  
 
 ```javascript
 // file: tests/acceptance/user-view-test.js
 
 import Ember from 'ember';
 
-import { make } from 'ember-data-factory-guy';
+import { make, clearStore } from 'ember-data-factory-guy';
 import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 
 import startApp from '../helpers/start-app';
@@ -887,6 +888,7 @@ module('User View', {
   teardown: function () {
     Ember.run(function () {
       TestHelper.teardown();
+      // clearStore();  
       App.destroy();
     });
   }

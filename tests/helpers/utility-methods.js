@@ -17,7 +17,6 @@ export function theUsualSetup(adapterType) {
 
 export function theUsualTeardown(App) {
   Ember.run(function() {
-    FactoryGuy.clearStore();
     App.destroy();
     $.mockjax.clear();
   });

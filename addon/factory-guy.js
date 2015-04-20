@@ -373,20 +373,22 @@ var FactoryGuy = {
    Reset the id sequence for the models back to zero.
    */
   clearStore: function () {
+    this.resetDefinitions();
+    this.clearModels();
+  },
+
+  resetDefinitions: function () {
     for (var model in this.modelDefinitions) {
       var definition = this.modelDefinitions[model];
       definition.reset();
-      //try {
-        var modelType = this.store.modelFor(definition.model);
-        //if (store.usingFixtureAdapter()) {
-        //  modelType.FIXTURES = [];
-        //}
-        //console.log(this.store+'')
-        //console.log(this.store.unloadAll)
-        this.store.unloadAll(modelType);
-      //} catch (e) {
-      //  console.log('resetModels', e.stacktrace());
-      //}
+    }
+  },
+
+  clearModels: function () {
+    for (var model in this.modelDefinitions) {
+      var definition = this.modelDefinitions[model];
+      var modelType = this.store.modelFor(definition.model);
+      this.store.unloadAll(modelType);
     }
   },
 
