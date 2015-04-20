@@ -28,10 +28,12 @@ module('User View', {
 
 test("Creates new project", function () {
   var user = make('user', 'with_projects'); // create a user with projects in the store
+
   visit('/user/1');
 
+  var newProjectName = "Gonzo Project";
+
   andThen(function () {
-    var newProjectName = "Gonzo Project";
 
     fillIn('input.project-name', newProjectName);
 
@@ -58,4 +60,5 @@ test("Creates new project", function () {
       ok(newProjectDiv[0] !== undefined);
     });
   });
+
 });
