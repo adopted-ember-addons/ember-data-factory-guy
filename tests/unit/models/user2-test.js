@@ -1,15 +1,10 @@
 import Ember from 'ember';
-import { make } from 'ember-data-factory-guy';
+import { make, clearStore } from 'ember-data-factory-guy';
 import startApp from '../../helpers/start-app';
 
-var App;
-
 module('User Model', {
-  beforeEach: function() {
-    App = startApp();
-  },
   afterEach: function() {
-    Ember.run(App, 'destroy');
+    Ember.run(function() {clearStore();});
   }
 });
 

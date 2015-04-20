@@ -474,6 +474,8 @@ the reverse 'user' belongsTo association is being setup for you on the project
   - make
 - [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js) 
   - Avoid using moduleForModel ( ember-qunit ), or describeModel ( ember-mocha ) test helper.
+- [Sample model test (user2-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user2-test.js) 
+  - Same test, just an even simpler setup style
 - [Sample component test (translate-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/components/translate-test.js) 
 - You need to use the 'startApp' function that ember-cli provides for you in the /tests/helper/start-app 
   file to set up the application because that is how FactoryGuy sets up the store for you and 
@@ -551,6 +553,7 @@ and this javascript library is already bundled for you when you install ember-da
     store.find('user').then(function (users) {
       users.get('length') //=> 2
     });
+
     // or 
     
     visit('/users');    
@@ -910,7 +913,7 @@ test("Creates new project", function () {
           var store = this.get('controller.store');
           store.createRecord('project', {name: name, user: user}).save();
         }
-      */
+    */
     click('button:contains(Add New User)');
 
     andThen(function () {
