@@ -16,21 +16,22 @@ ember-data-factory-guy is now an ember-cli addon!
 
 ##### Have a previous installation as bower component or ember-cli-factory-guy
 
-  Clear bower:
-    - remove ember-data-factory-guy from bower.json
-    - ```bower prune ```
+Clear bower:
+ - remove ember-data-factory-guy from bower.json
+ - ```bower prune ```
 
-  Clear npm:
-    - remove 'ember-cli-data-factory-guy' or 'ember-data-factory-guy' from package.json
-    - ```npm prune ```
+Clear npm:
+ - remove 'ember-cli-data-factory-guy' or 'ember-data-factory-guy' from package.json
+ - ```npm prune ```
 
 then:
    
-  Install FactoryGuy:
-    - ```ember install:addon ember-data-factory-guy```  
-    - ```ember install ember-data-factory-guy``` ( ember cli ^0.2.3 )
-  Move factories: 
-    - To tests/factories directory
+Install FactoryGuy:
+ - ```ember install:addon ember-data-factory-guy```  
+ - ```ember install ember-data-factory-guy``` ( ember cli ^0.2.3 )
+
+Move factories: 
+ - To tests/factories directory
 
 ### How this works
 
