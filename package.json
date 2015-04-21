@@ -41,7 +41,8 @@
   "keywords": [
     "ember-addon",
     "testing",
-    "factories"
+    "factories",
+    "ember-data"
   ],
   "ember-addon": {
     "configPath": "tests/dummy/config"
