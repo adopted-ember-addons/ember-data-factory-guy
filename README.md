@@ -477,8 +477,6 @@ the reverse 'user' belongsTo association is being setup for you on the project
   - make
 - [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js) 
   - Avoid using moduleForModel ( ember-qunit ), or describeModel ( ember-mocha ) test helper.
-- [Sample model test (user2-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user2-test.js) 
-  - Same test, just an even simpler setup style
 - [Sample component test (translate-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/components/translate-test.js)
   - Using 'moduleForComponent' because in it is easier in this case to get the component and render it with this 
     helper, but you are still starting up the application with startApp().
