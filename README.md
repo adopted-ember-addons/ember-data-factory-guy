@@ -550,7 +550,6 @@ and this javascript library is already bundled for you when you install ember-da
     // can use traits and extra fixture options here as you would with FactoryGuy#makeList
     TestHelper.handleFindAll('user', 2);
     
-    // If your router or other code 
     store.find('user').then(function (users) {
       users.get('length') //=> 2
     });
