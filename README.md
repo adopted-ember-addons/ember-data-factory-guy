@@ -26,7 +26,7 @@ Clear npm:
 
 then:
    
- - [Follow never use factory guy before instructions](https://github.com/danielspaniel/ember-data-factory-guy#never-used-ember-data-factory-guy-before)
+ - Follow ["Never used ember-data-factory-guy before"](https://github.com/danielspaniel/ember-data-factory-guy#never-used-ember-data-factory-guy-before) instructions
  - Move existing factories to tests/factories directory
 
 ### How this works
