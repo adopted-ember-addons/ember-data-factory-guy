@@ -26,12 +26,8 @@ Clear npm:
 
 then:
    
-Install FactoryGuy:
- - ```ember install:addon ember-data-factory-guy```  
- - ```ember install ember-data-factory-guy``` ( ember cli ^0.2.3 )
-
-Move factories: 
- - To tests/factories directory
+ - [Install FactoryGuy as New](https://github.com/danielspaniel/ember-data-factory-guy#never-used-ember-data-factory-guy-before)
+ - Move existing factories to tests/factories directory
 
 ### How this works
 
@@ -548,16 +544,17 @@ and this javascript library is already bundled for you when you install ember-da
 
 ```javascript
     // can use traits and extra fixture options here as you would with FactoryGuy#makeList
-    TestHelper.handleFindAll('user', 2);
-    
+
     store.find('user').then(function (users) {
       users.get('length') //=> 2
     });
 
     // or 
     
-    visit('/users');    
-    
+    visit('/users');
+        
+    TestHelper.handleFindAll('user', 2);
+        
     andThen(function () {
       var users = find('li.user');
       ok(users.length === 2);
