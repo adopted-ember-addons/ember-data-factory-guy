@@ -26,7 +26,7 @@ Clear npm:
 
 then:
    
- - [Install FactoryGuy as New](https://github.com/danielspaniel/ember-data-factory-guy#never-used-ember-data-factory-guy-before)
+ - [Follow never use factory guy before instructions](https://github.com/danielspaniel/ember-data-factory-guy#never-used-ember-data-factory-guy-before)
  - Move existing factories to tests/factories directory
 
 ### How this works
