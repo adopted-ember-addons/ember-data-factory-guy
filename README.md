@@ -516,7 +516,7 @@ test('it has projects', function() {
 ```
 
 
-### Integration/Acceptacne Tests
+### Integration/Acceptance Tests
 
 ##### With FactoryGuyTestHelper
 
