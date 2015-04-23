@@ -543,16 +543,16 @@ and this javascript library is already bundled for you when you install ember-da
   - [Sample using handleFindAll in test:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
 
 ```javascript
-    // can use traits and extra fixture options here as you would with FactoryGuy#makeList
+    
+    // If when visiting a page some part of application ( like router, action ) is going to 
+    // make a call to the store for records like this call that seeks all user records
+    store.find('user')
 
-    store.find('user').then(function (users) {
-      users.get('length') //=> 2
-    });
-
-    // or 
+    // Integration test ( to mock that find call ) will look like this: 
     
     visit('/users');
-        
+    
+    // can use traits and extra fixture options here as you would with FactoryGuy#makeList    
     TestHelper.handleFindAll('user', 2);
         
     andThen(function () {
@@ -565,7 +565,6 @@ and this javascript library is already bundled for you when you install ember-da
   - pass in a record to handle reload
   - pass in fixture name and options ( including id if needed ) to handle making a record
     with those options and finding that record
-  - handleFindOne is a deprecated alias for handleFind
 
 *Passing in a model instance*
 
