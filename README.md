@@ -544,11 +544,13 @@ and this javascript library is already bundled for you when you install ember-da
 
 ```javascript
     
-    // If when visiting a page some part of application ( like router, action ) is going to 
-    // make a call to the store for records like this call that seeks all user records
+    // If when visiting a page, some part of your application ( like router, or controller action ) 
+    // is going to make a call to the store for records like this call that seeks all user records
+    // like:  
+    
     store.find('user')
 
-    // Integration test ( to mock that find call ) will look like this: 
+    // An integration test ( to stub that find call and return factory guy data ) will look like this: 
     
     visit('/users');
     
@@ -561,6 +563,7 @@ and this javascript library is already bundled for you when you install ember-da
     });
 ```
 
+ 
 ##### handleFind
   - pass in a record to handle reload
   - pass in fixture name and options ( including id if needed ) to handle making a record
@@ -570,12 +573,11 @@ and this javascript library is already bundled for you when you install ember-da
 
 ```javascript
     var profile = FactoryGuy.make('profile')
+    // Using handleFind   
     TestHelper.handleFind(profile);
 
-    profile.reload().then(function (profile2) {
-      ok(profile2.id == profile.id);
-      start();
-    });
+    // will stub a call to reload that profile
+    profile.reload()
 ```
 
 *Passing in fixture name and options*
@@ -585,9 +587,9 @@ and this javascript library is already bundled for you when you install ember-da
     // since a record will be made, and placed in the store for you.
     TestHelper.handleFind('profile', {id: 1});
 
-    store.find('profile', 1).then(function (profile) {
-      profile.get('id') //=> 1
-    });
+    // will stub a call to the store like this:
+    store.find('profile', 1);
+    
 ```
 
 
@@ -604,10 +606,9 @@ and this javascript library is already bundled for you when you install ember-da
 
      // Pass in the array of model instances as last argument
      TestHelper.handleFindQuery('user', ['name', 'age'], users);
-
-     store.findQuery('user', {name:'Bob', age: 10}}).then(function(userInstances){
-        /// userInstances will be the same of the users that were passed in
-     })
+     
+     // will stub a call to the store like this:
+     store.findQuery('user', {name:'Bob', age: 10}});
    ```
 
 *Passing in nothing for last argument*
@@ -703,48 +704,6 @@ chainable methods, or options hash.
 ```
 
 
-###### Using hash of options
-
-```javascript
-  // Simplest case
-  // Don't care about a match just handle createRecord for any project
-  TestHelper.handleCreate('project')
-
-  // Matching some attributes
-  TestHelper.handleCreate('project', {match: {name: "Moo"}})
-
-  // Match all attributes
-  TestHelper.handleCreate('project', {match: {name: "Moo", user: user}})
-
-  // Exactly matching attributes, and returning extra attributes
-  TestHelper.handleCreate('project', {
-    match: {name: "Moo", user: user}, returns: {created_at: new Date()}
-  })
-
-```
-
-*mocking a failed create*
-
-```javascript
-  // set the succeed flag to 'false'
-  TestHelper.handleCreate('project', {succeed: false});
-
-  // can optionally add a status code and/or errors to the response
-  TestHelper.handleCreate('project', {succeed: false, status: 422, response: {errors: {name: ['bad']}}});
-
-  // when the createRecord on the 'project' is called, it will fail
-  store.createRecord('project').save() //=> fails
-
-  // or fail only if the attributes match the match options
-  TestHelper.handleCreate('project', {
-    match: {name: "Moo", user: user}, {succeed: false}
-  })
-
-  store.createRecord('project', {name: "Moo", user: user}).save() //=> fails
-```
-
-
-
 ##### handleUpdate
 
   - Use chainable methods to build response:
@@ -810,22 +769,6 @@ chainable methods, or options hash.
 
   mockUpdate.andSucceed();
   profile.save() //=> will succeed!
-````
-
-###### Using hash of options
-
-*mocking a failed update*
-
-```javascript
-  var profile = FactoryGuy.make('profile');
-
-  // set the succeed flag to 'false'
-  TestHelper.handleUpdate('profile', profile.id, {succeed: false});
-  // or
-  TestHelper.handleUpdate(profile, {succeed: false});
-
-  profile.set('description', 'bad value');
-  profile.save() //=> will fail
 ````
 
 
