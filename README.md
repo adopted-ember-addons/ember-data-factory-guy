@@ -18,6 +18,8 @@ Contents:
   - [Traits](https://github.com/danielspaniel/ember-data-factory-guy#traits)
   - [Associations](https://github.com/danielspaniel/ember-data-factory-guy#associations)
   - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
+  - [Testing models, controllers, components](https://github.com/danielspaniel/ember-data-factory-guy#testing-models-controllers-components)
+  - [Integration/Acceptance Tests](https://github.com/danielspaniel/ember-data-factory-guy#integrationacceptance-tests)
 
 ### Installation
 
