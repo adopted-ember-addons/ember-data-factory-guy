@@ -24,7 +24,7 @@ test("#clearStore clears the store of models, and resets the model definition", 
   Ember.run(function () {
     var project = make('project');
     var user = make('user', {projects: [project]});
-    var model,definition;
+    var model, definition;
 
     for (model in FactoryGuy.modelDefinitions) {
       definition = FactoryGuy.modelDefinitions[model];
@@ -306,6 +306,14 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
   ok(lastHat.get('outfit.id') === '2');
   ok(lastHat.get('outfit.hats.length') === 1);
   ok(lastHat.get('outfit.hats.firstObject') === lastHat);
+});
+
+
+test("using afterMake with transient attributes", function () {
+  Ember.run(function () {
+    var property = FactoryGuy.make('property');
+    ok(property.get('name') === 'Silly property(FOR SALE)');
+  });
 });
 
 

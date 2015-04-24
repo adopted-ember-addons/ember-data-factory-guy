@@ -14,6 +14,8 @@ import $ from 'jquery';
 var ModelDefinition = function (model, config) {
   var sequences = {};
   var traits = {};
+  var transient = {};
+  var afterMake = null;
   var defaultAttributes = {};
   var namedModels = {};
   var modelId = 1;
@@ -114,38 +116,54 @@ var ModelDefinition = function (model, config) {
       sequences[name].reset();
     }
   };
-  var parseDefault = function (object) {
-    if (!object) {
-      return;
+
+  this.applyAfterMake = function (model, opts) {
+    if (afterMake) {
+      var options = $.extend(opts, transient);
+      afterMake(model, options);
     }
-    defaultAttributes = object;
   };
-  var parseTraits = function (object) {
-    if (!object) {
-      return;
-    }
-    traits = object;
-  };
-  var parseSequences = function (object) {
-    if (!object) {
-      return;
-    }
-    for (sequenceName in object) {
-      var sequenceFn = object[sequenceName];
-      if (Ember.typeOf(sequenceFn) !== 'function') {
-        throw new Error('Problem with [' + sequenceName + '] sequence definition. Sequences must be functions');
-      }
-      object[sequenceName] = new Sequence(sequenceFn);
-    }
-    sequences = object;
-  };
-  var parseConfig = function (config) {
-    parseSequences(config.sequences);
-    delete config.sequences;
-    parseTraits(config.traits);
-    delete config.traits;
-    parseDefault(config.default);
+
+  var parseDefault = function (config) {
+    defaultAttributes = config.default;
     delete config.default;
+  };
+
+  var parseTraits = function (config) {
+    traits = config.traits;
+    delete config.traits;
+  };
+
+  var parseTransient = function (config) {
+    transient = config.transient;
+    delete config.transient;
+  };
+
+  var parseCallBacks = function (config) {
+    afterMake = config.afterMake;
+    delete config.afterMake;
+  };
+
+  var parseSequences = function (config) {
+    sequences = config.sequences || {};
+    delete config.sequences;
+    for (sequenceName in sequences) {
+      var sequenceFn = sequences[sequenceName];
+      if (Ember.typeOf(sequenceFn) !== 'function') {
+        throw new Error(
+          'Problem with [' + sequenceName + '] sequence definition. ' +
+          'Sequences must be functions');
+      }
+      sequences[sequenceName] = new Sequence(sequenceFn);
+    }
+  };
+
+  var parseConfig = function (config) {
+    parseSequences(config);
+    parseTraits(config);
+    parseDefault(config);
+    parseTransient(config);
+    parseCallBacks(config);
     namedModels = config;
   };
   // initialize

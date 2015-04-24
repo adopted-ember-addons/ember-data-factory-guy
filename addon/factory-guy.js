@@ -46,7 +46,7 @@ var FactoryGuy = {
     this.modelDefinitions[model] = new ModelDefinition(model, config);
   },
   /**
-    Used for setting the store in FactoryGuy, when used without test mixin.
+   Used for setting the store in FactoryGuy, when used without test mixin.
    */
   setup: function (app) {
     Ember.assert("FactoryGuy#setup needs a valid application instance.You passed in [" + app + "]", app instanceof Ember.Application);
@@ -211,6 +211,27 @@ var FactoryGuy = {
     }
   },
   /**
+   extract arguments for build and make function
+   @param {String} name  fixture name
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} opts  optional fixture options that will override default fixture values
+   @returns {Object} json fixture
+   */
+  extractArguments: function () {
+    var args = Array.prototype.slice.call(arguments);
+    var opts = {};
+    var name = args.shift();
+    if (!name) {
+      throw new Error('Build needs a factory name to build');
+    }
+    if (Ember.typeOf(args[args.length - 1]) === 'object') {
+      opts = args.pop();
+    }
+    // whatever is left are traits
+    var traits = args;
+    return {name: name, opts: opts, traits: traits};
+  },
+  /**
    Build fixtures for model or specific fixture name. For example:
 
    FactoryGuy.build('user') for User model
@@ -225,22 +246,13 @@ var FactoryGuy = {
    @returns {Object} json fixture
    */
   build: function () {
-    var args = Array.prototype.slice.call(arguments);
-    var opts = {};
-    var name = args.shift();
-    if (!name) {
-      throw new Error('Build needs a factory name to build');
-    }
-    if (Ember.typeOf(args[args.length - 1]) === 'object') {
-      opts = args.pop();
-    }
-    var traits = args;
-    // whatever is left are traits
-    var definition = this.lookupDefinitionForFixtureName(name);
+    var args = this.extractArguments.apply(this, arguments);
+
+    var definition = this.lookupDefinitionForFixtureName(args.name);
     if (!definition) {
-      throw new Error('Can\'t find that factory named [' + name + ']');
+      throw new Error('Can\'t find that factory named [' + args.name + ']');
     }
-    return definition.build(name, opts, traits);
+    return definition.build(args.name, args.opts, args.traits);
   },
   /**
    Build list of fixtures for model or specific fixture name. For example:
@@ -282,14 +294,22 @@ var FactoryGuy = {
    @returns {Object|DS.Model} json or record depending on the adapter type
    */
   make: function () {
+    var args = this.extractArguments.apply(this, arguments);
+
     var store = this.store;
-    Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures", store);
+    Ember.assert(
+      "FactoryGuy does not have the application's store." +
+      " Use FactoryGuy.setStore(store) before making any fixtures", store
+    );
     var fixture = this.build.apply(this, arguments);
-    var name = arguments[0];
-    var modelName = this.lookupModelForFixtureName(name);
+
+    var definition = this.lookupDefinitionForFixtureName(args.name);
+    var modelName = this.lookupModelForFixtureName(args.name);
     var modelType = store.modelFor(modelName);
 
-    return this.makeModel(store, modelType, fixture);
+    var model = this.makeModel(store, modelType, fixture);
+    definition.applyAfterMake(model, args.opts);
+    return model;
   },
   /**
    Make a list of Fixtures
@@ -459,11 +479,21 @@ var FactoryGuy = {
 };
 
 //To accomodate for phantomjs ( which does not recognise bind method ( for now )
-var make = function() { return FactoryGuy.make.apply(FactoryGuy, arguments); };
-var makeList = function() { return FactoryGuy.makeList.apply(FactoryGuy, arguments); };
-var build = function() { return FactoryGuy.build.apply(FactoryGuy, arguments); };
-var buildList = function() { return FactoryGuy.buildList.apply(FactoryGuy, arguments); };
-var clearStore = function() { return FactoryGuy.clearStore.apply(FactoryGuy, arguments); };
+var make = function () {
+  return FactoryGuy.make.apply(FactoryGuy, arguments);
+};
+var makeList = function () {
+  return FactoryGuy.makeList.apply(FactoryGuy, arguments);
+};
+var build = function () {
+  return FactoryGuy.build.apply(FactoryGuy, arguments);
+};
+var buildList = function () {
+  return FactoryGuy.buildList.apply(FactoryGuy, arguments);
+};
+var clearStore = function () {
+  return FactoryGuy.clearStore.apply(FactoryGuy, arguments);
+};
 
 export { make, makeList, build, buildList, clearStore };
 export default FactoryGuy;

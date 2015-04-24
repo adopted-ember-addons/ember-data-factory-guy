@@ -212,6 +212,12 @@ test("#build can override named model attributes", function() {
 });
 
 
+test("#build ignores transient attributes", function() {
+  var json = FactoryGuy.build('property');
+  deepEqual(json, {id: 1, name: 'Silly property'});
+});
+
+
 test("#build similar model type ids are created sequentially", function() {
   var user1 = FactoryGuy.build('user');
   var user2 = FactoryGuy.build('user');
@@ -244,8 +250,6 @@ test("#getAttributeRelationship", function() {
   equal(FactoryGuy.getAttributeRelationship(typeName,'hats').typeKey,'hat');
   equal(FactoryGuy.getAttributeRelationship(typeName,'name'),null);
 });
-
-
 
 
 

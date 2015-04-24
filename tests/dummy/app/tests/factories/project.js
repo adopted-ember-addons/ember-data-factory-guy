@@ -18,6 +18,10 @@ FactoryGuy.define("project", {
   default: {
     title: FactoryGuy.generate('title')
   },
+
+  // All the following project '_with_somethings' can be declared as traits.
+  // But doing them in this style as well to show how it might be done
+
   project_with_user: {
     // user model with default attributes
     user: {}

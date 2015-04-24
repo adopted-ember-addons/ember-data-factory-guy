@@ -179,15 +179,17 @@ test("when belongTo parent is assigned, parent adds to polymorphic hasMany recor
 
 
 test("when hasMany ( async ) relationship is assigned, model relationship is synced on both sides", function(assert) {
-  var done = assert.async();
-  var property = make('property');
-  var user1 = make('user', {properties: [property]});
-  var user2 = make('user', {properties: [property]});
+  Ember.run(function () {
+    var done = assert.async();
+    var property = make('property');
+    var user1 = make('user', {properties: [property]});
+    var user2 = make('user', {properties: [property]});
 
-  equal(property.get('owners.length'), 2);
-  ok(property.get('owners.firstObject') === user1);
-  ok(property.get('owners.lastObject') === user2);
-  done();
+    equal(property.get('owners.length'), 2);
+    ok(property.get('owners.firstObject') === user1);
+    ok(property.get('owners.lastObject') === user2);
+    done();
+  });
 });
 
 
@@ -292,6 +294,14 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
   ok(lastHat.get('outfit.id') === '2');
   ok(lastHat.get('outfit.hats.length') === 1);
   ok(lastHat.get('outfit.hats.firstObject') === lastHat);
+});
+
+
+test("using afterMake with transient attributes", function () {
+  Ember.run(function () {
+    var property = FactoryGuy.make('property');
+    ok(property.get('name') === 'Silly property(FOR SALE)');
+  });
 });
 
 
