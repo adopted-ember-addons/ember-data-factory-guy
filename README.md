@@ -11,6 +11,13 @@ Contents:
   - [Installation](https://github.com/danielspaniel/ember-data-factory-guy#installation)
   - [How This Works](https://github.com/danielspaniel/ember-data-factory-guy#how-this-works)
   - [Setup](https://github.com/danielspaniel/ember-data-factory-guy#setup)
+  - [Defining Factories](https://github.com/danielspaniel/ember-data-factory-guy#defining-factories)
+  - [Using Factories](https://github.com/danielspaniel/ember-data-factory-guy#using-factories)
+  - [Sequences](https://github.com/danielspaniel/ember-data-factory-guy#sequences)
+  - [Inline Function](https://github.com/danielspaniel/ember-data-factory-guy#inline-functions)
+  - [Traits](https://github.com/danielspaniel/ember-data-factory-guy#traits)
+  - [Associations](https://github.com/danielspaniel/ember-data-factory-guy#associations)
+  - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
 
 ### Installation
 
@@ -470,6 +477,7 @@ the reverse 'user' belongsTo association is being setup for you on the project
 
 ### Callbacks
  - afterMake
+  - Uses transient attributes 
 
 Assuming the factory-guy model definition like this defines afterMake function
 
