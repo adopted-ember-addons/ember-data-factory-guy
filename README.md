@@ -7,7 +7,12 @@ Factories simplify the process of testing, making you more efficient and your te
 
 ember-data-factory-guy is now an ember-cli addon!
 
-## Installation
+Contents: 
+  - [Installation](https://github.com/danielspaniel/ember-data-factory-guy#installation)
+  - [How This Works](https://github.com/danielspaniel/ember-data-factory-guy#how-this-works)
+  - [Setup](https://github.com/danielspaniel/ember-data-factory-guy#setup)
+
+### Installation
 
 ##### Never used ember-data-factory-guy before
  
@@ -462,6 +467,39 @@ the reverse 'user' belongsTo association is being setup for you on the project
 
 ```
 
+
+### Callbacks
+ - afterMake
+
+Assuming the factory-guy model definition like this defines afterMake function
+
+```javascript
+  FactoryGuy.define('property', {
+    default: {
+      name: 'Silly property'
+    },
+    
+    // optionally set transient attributes, that will be passed in to afterMake function
+    transient: {
+      for_sale: true
+    },
+    
+    // The attributes passed to after make will include any optional attributes you
+    // passed in to make, and the transient attributes defined in this definition
+    afterMake: function(model, attributes) {
+      if (attributes.for_sale) {
+        model.set('name', model.get('name') + '(FOR SALE)');
+      }
+    }
+  }
+  
+```javascript
+  Ember.run(function () {
+    var property = FactoryGuy.make('property');
+    property.get('name'); // => 'Silly property(FOR SALE)')
+  });
+
+```
                    
 ### Testing models, controllers, components
 
@@ -528,14 +566,14 @@ test('it has projects', function() {
   - handleCreate
   - handleUpdate
   - handleDelete
-
+- Override FactoryGuyTestHelper by 'reopeing' it.
 
 If you put models into the store ( with FactoryGuy#make ), the http GET call does not need to be mocked,
 since that model is already in the store.
 
 But what if you want to handle create, update, and delete? Or even reload or findAll records?
 
-FactoryGuy assumes you want to mock ajax calls with the mockjax library,
+FactoryGuy assumes you want to stub ajax calls with the mockjax library,
 and this javascript library is already bundled for you when you install ember-data-factory-guy.
 
 ##### handleFindAll
@@ -733,8 +771,6 @@ chainable methods, or options hash.
   profile.set('description', 'good value');
   profile.save() //=> will succeed
 ````
-
-###### Using chainable methods
 
 *mocking a failed update*
 
