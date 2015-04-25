@@ -301,14 +301,17 @@ var FactoryGuy = {
       "FactoryGuy does not have the application's store." +
       " Use FactoryGuy.setStore(store) before making any fixtures", store
     );
-    var fixture = this.build.apply(this, arguments);
 
-    var definition = this.lookupDefinitionForFixtureName(args.name);
+    var fixture = this.build.apply(this, arguments);
     var modelName = this.lookupModelForFixtureName(args.name);
     var modelType = store.modelFor(modelName);
 
     var model = this.makeModel(store, modelType, fixture);
-    definition.applyAfterMake(model, args.opts);
+
+    var definition = this.lookupDefinitionForFixtureName(args.name);
+    if (definition.hasAfterMake()){
+      definition.applyAfterMake(model, args.opts);
+    }
     return model;
   },
   /**

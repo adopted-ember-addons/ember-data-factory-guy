@@ -309,10 +309,17 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
 });
 
 
-test("using afterMake with transient attributes", function () {
+test("using afterMake with transient attributes in definition", function () {
   Ember.run(function () {
     var property = FactoryGuy.make('property');
     ok(property.get('name') === 'Silly property(FOR SALE)');
+  });
+});
+
+test("using afterMake with transient attributes in options", function () {
+  Ember.run(function () {
+    var property = FactoryGuy.make('property', {for_sale: false});
+    ok(property.get('name') === 'Silly property');
   });
 });
 

@@ -117,9 +117,12 @@ var ModelDefinition = function (model, config) {
     }
   };
 
+  this.hasAfterMake = function() { return !!afterMake; };
+
   this.applyAfterMake = function (model, opts) {
     if (afterMake) {
-      var options = $.extend(opts, transient);
+      // passed in options override transient setting
+      var options = $.extend({}, transient, opts);
       afterMake(model, options);
     }
   };
