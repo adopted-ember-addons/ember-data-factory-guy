@@ -12,6 +12,7 @@ FactoryGuy.define('user', {
   admin: {
     name: 'Admin'
   },
+  // can accomplish this with traits ( see 'with_projects' trait below )
   user_with_projects: {
     projects: FactoryGuy.hasMany('project', 2)
   },
