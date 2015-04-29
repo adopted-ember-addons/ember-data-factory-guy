@@ -481,7 +481,7 @@ the reverse 'user' belongsTo association is being setup for you on the project
  - afterMake
   - Uses transient attributes 
 
-Assuming the factory-guy model definition like this defines afterMake function
+Assuming the factory-guy model definition defines afterMake function:
 
 ```javascript
   FactoryGuy.define('property', {
@@ -502,11 +502,18 @@ Assuming the factory-guy model definition like this defines afterMake function
       }
     }
   }
+```
+
+You would use this to make models like:
   
 ```javascript
   Ember.run(function () {
+
     var property = FactoryGuy.make('property');
     property.get('name'); // => 'Silly property(FOR SALE)')
+
+    var property = FactoryGuy.make('property', for_sale: false);
+    property.get('name'); // => 'Silly property')
   });
 
 ```
