@@ -18,7 +18,7 @@ test('has funny name', function() {
   equal(user.get('funnyName'), 'funny Dude');
 });
 
-test('it has projects', function() {
+test('has projects', function() {
   var user = make('user', 'with_projects');
   equal(user.get('projects.length'), 2);
 });
