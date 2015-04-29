@@ -325,6 +325,7 @@ module('FactoryGuy with DS.RESTAdapter #makeList', {
 
 test("creates list of DS.Model instances", function() {
   var users = FactoryGuy.makeList('user', 2);
+  Ember.A(users);
   equal(users.get('length'), 2);
   ok(users[0] instanceof DS.Model === true);
 
@@ -335,6 +336,7 @@ test("creates list of DS.Model instances", function() {
 
 test("handles accept traits", function() {
   var users = FactoryGuy.makeList('user', 2, 'with_hats');
+  Ember.A(users);
   equal(users.get('length'), 2);
   equal(users[0].get('hats.length') === 2, true);
 });

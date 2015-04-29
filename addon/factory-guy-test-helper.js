@@ -91,7 +91,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
   */
   mapFindAll: function(modelName, json) {
     var responseJson = {};
-    responseJson[modelName.pluralize()] = json;
+    responseJson[Ember.String.pluralize(modelName)] = json;
     return responseJson;
   },
   /**
@@ -105,7 +105,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
   */
   mapFind:function(modelName, json){
     var responseJson = {};
-    responseJson[modelName.pluralize()] = json;
+    responseJson[Ember.String.pluralize(modelName)] = json;
     return responseJson;
   },
   /**

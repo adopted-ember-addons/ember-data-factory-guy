@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import DS from 'ember-data';
 
 export default DS.Model.extend({
@@ -8,7 +9,7 @@ export default DS.Model.extend({
   projects:   DS.hasMany('project', {embedded: 'always'}),
   hats:       DS.hasMany('hat', {polymorphic: true}),
 
-  funnyName: function() {
+  funnyName: Ember.computed("name", function() {
     return "funny " + this.get('name');
-  }.property('name')
+  })
 });
