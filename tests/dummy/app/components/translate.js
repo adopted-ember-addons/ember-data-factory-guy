@@ -8,9 +8,9 @@ var TranslateComponent = Ember.Component.extend({
   layout: layout,
   classNames: ['translate'],
 
-  translation: function() {
+  translation: Ember.computed('original', function() {
     return this.get('original') + ' dude';
-  }.property('original')
+  })
 
 });
 

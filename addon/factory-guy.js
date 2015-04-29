@@ -354,7 +354,7 @@ var FactoryGuy = {
       if (fixture.type) {
         // assuming its polymorphic if there is a type attribute
         // is this too bold an assumption?
-        modelName = fixture.type.underscore();
+        modelName = Ember.String.underscore(fixture.type);
         modelType = store.modelFor(modelName);
       }
       model = store.push(modelName, fixture);
