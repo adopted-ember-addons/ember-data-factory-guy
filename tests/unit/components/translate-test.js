@@ -25,7 +25,7 @@ moduleForComponent('translate', 'Translate', {
 });
 
 
-test("change to color shows in values", function () {
+test("can translate original word", function () {
   var component = this.subject();
   var user = make('user', {name: 'Rob'});
   component.set('original', user.get('name'));
