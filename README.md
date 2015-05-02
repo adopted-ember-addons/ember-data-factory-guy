@@ -595,18 +595,20 @@ and this javascript library is already bundled for you when you install ember-da
 
 ##### handleFindAll
   - for dealing with finding all records of a particular type
-  - [Sample using handleFindAll in test:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
+  - [Sample acceptance test using handleFindAll (users-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
 
+If when visiting a route, some part of your application ( like router, or 
+controller action ) is going to make a call to the store for all records of 
+a particular type:  
+   
 ```javascript
-    
-    // If when visiting a page, some part of your application ( like router, or controller action ) 
-    // is going to make a call to the store for records like this call that seeks all user records
-    // like:  
-    
-    store.find('user')
+  store.find('user') // fires ajax request for all user records 
+```
 
-    // An integration test ( to stub that find call and return factory guy data ) will look like this: 
-    
+An Integration test ( to stub that ajax call and return factory guy data ) 
+will look like this:
+   
+```javascript
     visit('/users');
     
     // can use traits and extra fixture options here as you would with FactoryGuy#makeList    
