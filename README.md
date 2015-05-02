@@ -885,7 +885,7 @@ module('User View', {
 
 test("Creates new project", function () {
   var user = make('user', 'with_projects'); // create a user with projects in the store
-  visit('/user/1');
+  visit('/user/'+user.id);
 
   andThen(function () {
     var newProjectName = "Gonzo Project";
