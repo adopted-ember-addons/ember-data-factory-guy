@@ -683,7 +683,7 @@ will look like this:
 ##### handleCreate
 
   - Use chainable methods to build the response.
-    - match 
+  - match 
       - attributes that must be in request json
     - andReturns 
       - attributes to include in response json
