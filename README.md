@@ -819,9 +819,13 @@ chainable methods, or options hash.
   profile.set('description', 'bad value');
   profile.save() //=> will fail
 
-  // Some logic for retrying...
-
+  // After setting valid value 
+  profile.set('description', 'good value');
+  
+  // Now expecting success
   mockUpdate.andSucceed();
+  
+  // Try that update again   
   profile.save() //=> will succeed!
 ````
 
