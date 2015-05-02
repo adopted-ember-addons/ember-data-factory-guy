@@ -681,6 +681,7 @@ will look like this:
 
 
 ##### handleCreate
+
   - Use chainable methods to build the response
     - match - attributes that must be in request json
     - andReturns - attributes to include in response json
@@ -757,6 +758,10 @@ chainable methods, or options hash.
 
 ##### handleUpdate
 
+  - handleUpdate(model)
+    - single argument ( the model instance that will be updated )
+  - handleUpdate(modelType, id)
+    - two arguments: modelType ( like 'profile' ) , and the profile id that will updated 
   - Use chainable methods to help build response:
     - andFail 
       - request should fail, use options argument to pass status and response text
@@ -764,10 +769,6 @@ chainable methods, or options hash.
       - update should succeed, this is the default behavior
       - can even use this after an ```andFail``` call to simulate failure with
         invalid properties and then success after valid ones.
-  - handleUpdate(model)
-    - single argument ( the model instance that will be updated )
-  - handleUpdate(modelType, id)
-    - two arguments: modelType ( like 'profile' ) , and the profile id that will updated 
   - need to wrap tests using handleUpdate with: Ember.run.function() { 'your test' })
 
 *success case is the default*
