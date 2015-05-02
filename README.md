@@ -682,8 +682,8 @@ will look like this:
 
 ##### handleCreate
 
-  - Use chainable methods to build the response.
-  - match 
+  - Use chainable methods to build the response
+    - match
       - attributes that must be in request json
     - andReturns 
       - attributes to include in response json
