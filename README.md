@@ -609,15 +609,15 @@ An Integration test ( to stub that ajax call and return factory guy data )
 will look like this:
    
 ```javascript
-    visit('/users');
-    
-    // can use traits and extra fixture options here as you would with FactoryGuy#makeList    
-    TestHelper.handleFindAll('user', 2);
-        
-    andThen(function () {
-      var users = find('li.user');
-      ok(users.length === 2);
-    });
+  visit('/users');
+  
+  // can use traits and extra fixture options here as you would with FactoryGuy#makeList    
+  TestHelper.handleFindAll('user', 2);
+      
+  andThen(function () {
+    var users = find('li.user');
+    ok(users.length === 2);
+  });
 ```
 
  
@@ -689,12 +689,6 @@ will look like this:
         - status - HTTP status code, defaults to 500.
         - response - error response message, or an errors hash for 422 status
 
-  - Use hash of options to build the response
-    - match - attributes that must be in request json
-    - returns - attributes to include in response json
-    - succeed - flag to indicate if the request should succeed ( default is true )
-    - This style will eventually be deprecated in favor of chainable methods
-
   - need to wrap tests using handleCreate with: Ember.run.function() { 'your test' })
 
 **Note**
@@ -763,16 +757,17 @@ chainable methods, or options hash.
 
 ##### handleUpdate
 
-  - Use chainable methods to build response:
-    - andFail - request should fail, use options argument to pass status and response text
-    - andSucceed - update should succeed, this is the default behavior, use this after a ```andFail``` call
-
+  - Use chainable methods to help build response:
+    - andFail 
+      - request should fail, use options argument to pass status and response text
+    - andSucceed 
+      - update should succeed, this is the default behavior
+      - can even use this after an ```andFail``` call to simulate failure with
+        invalid properties and then success after valid ones.
   - handleUpdate(model)
+    - single argument ( the model instance that will be updated )
   - handleUpdate(modelType, id)
-  - Use hash of options to build response:
-    - status - HTTP status code, defaults to 200.
-    - response - what the server has responded, only used on failure cases, default is empty on failure and model json on succees.
-    - succeed - indicates if the resquest should succeed, defaults to true.
+    - two arguments: modelType ( like 'profile' ) , and the profile id that will updated 
   - need to wrap tests using handleUpdate with: Ember.run.function() { 'your test' })
 
 *success case is the default*
