@@ -682,18 +682,18 @@ will look like this:
 
 ##### handleCreate
 
-- Use chainable methods to build the response
-  - match 
-    - attributes that must be in request json
-  - andReturns 
-    - attributes to include in response json
-  - andFail 
-    - request should fail
-    - Takes a hash of options:
-      - status - HTTP status code, defaults to 500.
-      - response - error response message, or an errors hash for 422 status
-
-- need to wrap tests using handleCreate with: Ember.run.function() { 'your test' })
+  - Use chainable methods to build the response.
+    - match 
+      - attributes that must be in request json
+    - andReturns 
+      - attributes to include in response json
+    - andFail 
+      - request should fail
+      - Takes a hash of options:
+        - status - HTTP status code, defaults to 500.
+        - response - error response message, or an errors hash for 422 status
+  
+  - need to wrap tests using handleCreate with: Ember.run.function() { 'your test' })
 
 **Note**
 
