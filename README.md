@@ -594,7 +594,7 @@ FactoryGuy assumes you want to stub ajax calls with the mockjax library,
 and this javascript library is already bundled for you when you install ember-data-factory-guy.
 
 ##### handleFindAll
-  - for dealing with finding all records of a particular type
+  - For dealing with finding all records of a particular type
   - [Sample acceptance test using handleFindAll (users-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
 
 If when visiting a route, some part of your application ( like router, or 
@@ -622,8 +622,8 @@ will look like this:
 
  
 ##### handleFind
-  - pass in a record to handle reload
-  - pass in fixture name and options ( including id if needed ) to handle making a record
+  - Pass in a record to handle reload
+  - Pass in fixture name and options ( including id if needed ) to handle making a record
     with those options and finding that record
 
 *Passing in a model instance*
@@ -651,8 +651,8 @@ will look like this:
 
 
 ##### handleFindQuery
-   - for dealing with finding all records for a type of model with query parameters.
-     - can pass in model instances or empty array
+   - For dealing with finding all records for a type of model with query parameters.
+     - Can pass in model instances or empty array
 
 
 *Passing in array of model instances*
@@ -693,7 +693,7 @@ will look like this:
         - status - HTTP status code, defaults to 500.
         - response - error response message, or an errors hash for 422 status
   
-  - need to wrap tests using handleCreate with: Ember.run.function() { 'your test' })
+  - Need to wrap tests using handleCreate with: Ember.run.function() { 'your test' })
 
 **Note**
 
@@ -762,9 +762,9 @@ chainable methods.
 ##### handleUpdate
 
   - handleUpdate(model)
-    - single argument ( the model instance that will be updated )
+    - Single argument ( the model instance that will be updated )
   - handleUpdate(modelType, id)
-    - two arguments: modelType ( like 'profile' ) , and the profile id that will updated 
+    - Two arguments: modelType ( like 'profile' ) , and the profile id that will updated 
   - Use chainable methods to help build response:
     - andFail 
       - Request will fail 
@@ -773,7 +773,7 @@ chainable methods.
       - Update should succeed, this is the default behavior
       - Can even use this after an ```andFail``` call to simulate failure with
         invalid properties and then success after valid ones.
-  - need to wrap tests using handleUpdate with: Ember.run.function() { 'your test' })
+  - Need to wrap tests using handleUpdate with: Ember.run.function() { 'your test' })
 
 *success case is the default*
 
