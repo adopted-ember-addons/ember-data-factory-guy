@@ -684,11 +684,11 @@ will look like this:
 
   - Use chainable methods to build the response
     - match
-      - attributes that must be in request json
+      - Attributes that must be in request json
     - andReturns 
-      - attributes to include in response json
+      - Attributes to include in response json
     - andFail 
-      - request should fail
+      - Request will fail
       - Takes a hash of options:
         - status - HTTP status code, defaults to 500.
         - response - error response message, or an errors hash for 422 status
@@ -767,10 +767,11 @@ chainable methods.
     - two arguments: modelType ( like 'profile' ) , and the profile id that will updated 
   - Use chainable methods to help build response:
     - andFail 
-      - request should fail, use options argument to pass status and response text
+      - Request will fail 
+      - Optional arguments ( status and response text )
     - andSucceed 
-      - update should succeed, this is the default behavior
-      - can even use this after an ```andFail``` call to simulate failure with
+      - Update should succeed, this is the default behavior
+      - Can even use this after an ```andFail``` call to simulate failure with
         invalid properties and then success after valid ones.
   - need to wrap tests using handleUpdate with: Ember.run.function() { 'your test' })
 
@@ -832,7 +833,7 @@ chainable methods.
 
 
 ##### handleDelete
-  - need to wrap tests using handleDelete with: Ember.run.function() { 'your test' })
+  - Need to wrap tests using handleDelete with: Ember.run.function() { 'your test' })
 
 *success case is the default*
 
