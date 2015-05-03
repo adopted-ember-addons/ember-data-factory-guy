@@ -609,11 +609,11 @@ An Integration test ( to stub that ajax call and return factory guy data )
 will look like this:
    
 ```javascript
-  visit('/users');
-  
   // can use traits and extra fixture options here as you would with FactoryGuy#makeList    
   TestHelper.handleFindAll('user', 2);
       
+  visit('/users');
+  
   andThen(function () {
     var users = find('li.user');
     ok(users.length === 2);
