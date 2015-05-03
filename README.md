@@ -722,7 +722,7 @@ Realistically, you will have code in a view action or controller action that wil
 
 In this case, you are are creating a 'project' record with a specific name, and belonging
 to a particular user. To mock this createRecord call here are a few ways to do this using
-chainable methods, or options hash.
+chainable methods.
 
 
 ###### Using chainable methods
@@ -730,18 +730,18 @@ chainable methods, or options hash.
 ```javascript
   // Simplest case
   // Don't care about a match just handle createRecord for any project
-  TestHelper.handleCreate('project')
+  TestHelper.handleCreate('project');
 
   // Matching some attributes
-  TestHelper.handleCreate('project').match({match: {name: "Moo"})
+  TestHelper.handleCreate('project').match({match: {name: "Moo"});
 
   // Match all attributes
-  TestHelper.handleCreate('project').match({match: {name: "Moo", user: user})
+  TestHelper.handleCreate('project').match({match: {name: "Moo", user: user});
 
   // Exactly matching attributes, and returning extra attributes
   TestHelper.handleCreate('project')
     .match({name: "Moo", user: user})
-    .andReturn({created_at: new Date()})
+    .andReturn({created_at: new Date()});
 
 ```
 
@@ -750,12 +750,12 @@ chainable methods, or options hash.
 ```javascript
 
   // Mocking failure case is easy with chainable methods, just use #andFail
-  TestHelper.handleCreate('project').match({match: {name: "Moo"}).andFail()
+  TestHelper.handleCreate('project').match({match: {name: "Moo"}).andFail();
 
   // Can optionally add a status code and/or errors to the response
   TestHelper.handleCreate('project').andFail({status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}});
 
-  store.createRecord('project', {name: "Moo"}).save() //=> fails
+  store.createRecord('project', {name: "Moo"}).save(); //=> fails
 ```
 
 
