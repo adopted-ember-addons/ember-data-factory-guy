@@ -228,7 +228,7 @@ var FactoryGuy = {
       opts = args.pop();
     }
     // whatever is left are traits
-    var traits = args;
+    var traits = Ember.A(args).compact();
     return {name: name, opts: opts, traits: traits};
   },
   /**
@@ -277,7 +277,7 @@ var FactoryGuy = {
     if (Ember.typeOf(args[args.length - 1]) === 'object') {
       opts = args.pop();
     }
-    var traits = args;
+    var traits = Ember.A(args).compact();
     // whatever is left are traits
     var definition = this.lookupDefinitionForFixtureName(name);
     if (!definition) {
