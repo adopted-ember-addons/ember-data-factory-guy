@@ -493,6 +493,24 @@ test("#handleCreate match but still fail", function (assert) {
   });
 });
 
+test("#handleCreate fails when match args not present in createRecord attributes", function (assert) {
+  Ember.run(function () {
+    var done = assert.async();
+    var customDescription = "special description";
+    var date = new Date();
+
+    TestHelper.handleCreate('profile', {match: {description: customDescription}});
+
+    store.createRecord('profile', {description: 'wrong description'}).save().then(
+      function () {},
+      function () {
+        ok(true);
+        done();
+      });
+  });
+});
+
+
 /////// handleCreate //////////
 /////// with chaining methods ///////////////////
 

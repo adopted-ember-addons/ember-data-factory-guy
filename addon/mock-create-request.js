@@ -17,8 +17,9 @@ var MockCreateRequest = function(url, store, modelName, options) {
       // get properly serialized payload.
       // TODO: Need to figure out how to use serializer without a record
       var tmpRecord = store.createRecord(modelName, matchArgs);
-      expectedRequest = tmpRecord.serialize(matchArgs);
+      expectedRequest = tmpRecord.serialize();
       tmpRecord.deleteRecord();
+
     }
 
     if (succeed) {
