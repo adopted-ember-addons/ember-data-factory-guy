@@ -3,6 +3,7 @@ import FactoryGuy, { make, makeList } from 'ember-data-factory-guy';
 import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 
+import $ from 'jquery';
 import User from 'dummy/models/user';
 import BigHat from 'dummy/models/big-hat';
 import SmallHat from 'dummy/models/small-hat';
@@ -274,6 +275,24 @@ test("#handleFind with traits and arguments", function (assert) {
   store.find('profile', 1).then(function (profile) {
     ok(profile.get('description') === description);
     done();
+  });
+});
+
+test("#handleFind failure with andFail method", function (assert) {
+  Ember.run(function () {
+    var done = assert.async();
+    TestHelper.handleFind('profile', 1).andFail();
+
+    store.find('profile', 1).then(
+      function (response) {
+        ok(false);
+        done();
+      },
+      function (error) {
+        ok(true);
+        done();
+      }
+    );
   });
 });
 
