@@ -21,6 +21,9 @@ Contents:
   - [Testing models, controllers, components](https://github.com/danielspaniel/ember-data-factory-guy#testing-models-controllers-components)
   - [Integration/Acceptance Tests](https://github.com/danielspaniel/ember-data-factory-guy#integrationacceptance-tests)
 
+ChangeLog: ( Notes about what has changed in each version )
+  - [Release Notes](https://github.com/danielspaniel/ember-data-factory-guy/releases)
+  
 ### Installation
 
 ##### Never used ember-data-factory-guy before
