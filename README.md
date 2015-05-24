@@ -528,6 +528,8 @@ You would use this to make models like:
   - make
 - [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js) 
   - Avoid using moduleForModel ( ember-qunit ), or describeModel ( ember-mocha ) test helper.
+- [Experimental, faster style model test (profile-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js) 
+  - Converting your model tests to this style will get you up to 35% speed up.
 - [Sample component test (translate-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/components/translate-test.js)
   - Using 'moduleForComponent' because in it is easier in this case to get the component and render it with this 
     helper, but you are still starting up the application with startApp().
