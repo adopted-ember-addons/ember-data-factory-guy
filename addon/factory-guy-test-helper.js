@@ -19,7 +19,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
   usingActiveModelSerializer: function (type) {
     var store = this.getStore();
     var modelType = store.modelFor(type);
-    var serializer = store.serializerFor(modelType.typeKey);
+    var serializer = store.serializerFor(modelType.modelName);
     return serializer instanceof DS.ActiveModelSerializer;
   },
   // Look up a controller from the current container
@@ -78,7 +78,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
    */
   buildURL: function (typeName, id) {
     var type = this.getStore().modelFor(typeName);
-    return this.getStore().adapterFor(type).buildURL(type.typeKey, id);
+    return this.getStore().adapterFor(type).buildURL(type.modelName, id);
   },
   /**
    Map many json objects to response json.
@@ -170,7 +170,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     var record, modelName;
     if (args[0] instanceof DS.Model) {
       record = args[0];
-      modelName = record.constructor.typeKey;
+      modelName = record.constructor.modelName;
     } else {
       // make the record and load it in the store
       record = FactoryGuy.make.apply(FactoryGuy, arguments);
@@ -302,7 +302,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     if (args[0] instanceof DS.Model) {
       model = args[0];
       id = model.id;
-      type = model.constructor.typeKey;
+      type = model.constructor.modelName;
     } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
       type = args[0];
       id = args[1];

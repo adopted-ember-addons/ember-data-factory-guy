@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-import { make } from 'ember-data-factory-guy';
+import FactoryGuy, { make } from 'ember-data-factory-guy';
 import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 
 import startApp from '../helpers/start-app';
@@ -8,12 +8,11 @@ import startApp from '../helpers/start-app';
 var App;
 
 module('User View', {
+
   beforeEach: function () {
-    Ember.run(function () {
-      App = startApp();
-      // TestHelper.teardown sets $.mockjaxSettings response time to zero ( speeds up tests )
-      TestHelper.setup();
-    });
+    App = startApp();
+    // TestHelper.setup sets $.mockjaxSettings response time to zero ( speeds up tests )
+    TestHelper.setup();
   },
   afterEach: function () {
     Ember.run(function () {

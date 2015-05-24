@@ -345,7 +345,7 @@ var FactoryGuy = {
    * @returns {DS.Model} instance of DS.Model
    */
   makeModel: function (store, modelType, fixture) {
-    var modelName = store.modelFor(modelType).typeKey;
+    var modelName = store.modelFor(modelType).modelName;
     var model;
     var self = this;
 

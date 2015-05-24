@@ -1,11 +1,11 @@
 import Ember from 'ember';
-import { make } from 'ember-data-factory-guy';
+import FactoryGuy, { make } from 'ember-data-factory-guy';
 import startApp from '../../helpers/start-app';
 
 var App;
 
 module('User Model', {
-  beforeEach: function() {
+  beforeEach: function () {
     App = startApp();
   },
   afterEach: function() {
