@@ -4,6 +4,7 @@ import $ from 'jquery';
 import FactoryGuy from './factory-guy';
 import MockUpdateRequest from './mock-update-request';
 import MockCreateRequest from './mock-create-request';
+import MockGetRequest from './mock-get-request';
 
 var FactoryGuyTestHelper = Ember.Object.create({
 
@@ -161,7 +162,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
 
      @param {String} name  name of the fixture ( or model ) to find
      @param {String} trait  optional traits (one or more)
-     @param {Object} opts  optional fixture options (including id)
+     @param {Object} options  optional fixture options (including id)
    */
   handleFind: function () {
     var args = Array.prototype.slice.call(arguments);
@@ -178,10 +179,8 @@ var FactoryGuyTestHelper = Ember.Object.create({
       modelName = FactoryGuy.lookupModelForFixtureName(name);
     }
 
-    var json = record.toJSON({includeId: true});
-    var responseJson = this.mapFind(modelName, json);
     var url = this.buildURL(modelName, record.id);
-    this.stubEndpointForHttpRequest(url, responseJson);
+    return new MockGetRequest(url, modelName, record, this.mapFind);
   },
   handleFindOne: function() { this.handleFind.apply(this, arguments); },
   /**
