@@ -28,7 +28,7 @@ module('User View', {
 test("Creates new project", function () {
   var user = make('user', 'with_projects'); // create a user with projects in the store
 
-  visit('/user/'+user.id);
+  visit('/user/' + user.id);
 
   var newProjectName = "Gonzo Project";
 
@@ -45,13 +45,13 @@ test("Creates new project", function () {
      create project record and looks something like this:
 
      actions: {
-            addProject: function (user) {
-              var name = this.$('input.project-name').val();
-              var store = this.get('controller.store');
-              store.createRecord('project', {name: name, user: user}).save();
-            }
+          addProject: function (user) {
+            var name = this.$('input.project-name').val();
+            var store = this.get('controller.store');
+            store.createRecord('project', {name: name, user: user}).save();
+          }
 
-      */
+    */
     click('button:contains(Add New User)');
 
     andThen(function () {
@@ -59,5 +59,4 @@ test("Creates new project", function () {
       ok(newProjectDiv[0] !== undefined);
     });
   });
-
 });

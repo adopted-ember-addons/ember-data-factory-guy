@@ -219,6 +219,7 @@ var FactoryGuy = {
    */
   extractArguments: function () {
     var args = Array.prototype.slice.call(arguments);
+
     var opts = {};
     var name = args.shift();
     if (!name) {
@@ -303,9 +304,9 @@ var FactoryGuy = {
     );
 
     var fixture = this.build.apply(this, arguments);
+
     var modelName = this.lookupModelForFixtureName(args.name);
     var modelType = store.modelFor(modelName);
-
     var model = this.makeModel(store, modelType, fixture);
 
     var definition = this.lookupDefinitionForFixtureName(args.name);
@@ -345,7 +346,7 @@ var FactoryGuy = {
    * @returns {DS.Model} instance of DS.Model
    */
   makeModel: function (store, modelType, fixture) {
-    var modelName = store.modelFor(modelType).modelName;
+    var modelName = store.modelFor(modelType).typeKey;
     var model;
     var self = this;
 

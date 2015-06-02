@@ -246,8 +246,8 @@ test("#buildList creates list of fixtures", function() {
 
 test("#getAttributeRelationship", function() {
   var typeName = 'user';
-  equal(FactoryGuy.getAttributeRelationship(typeName,'company').modelName,'company');
-  equal(FactoryGuy.getAttributeRelationship(typeName,'hats').modelName,'hat');
+  equal(FactoryGuy.getAttributeRelationship(typeName,'company').typeKey,'company');
+  equal(FactoryGuy.getAttributeRelationship(typeName,'hats').typeKey,'hat');
   equal(FactoryGuy.getAttributeRelationship(typeName,'name'),null);
 });
 
