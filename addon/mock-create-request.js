@@ -13,20 +13,16 @@ var MockCreateRequest = function(url, store, modelName, options) {
 
   this.calculate = function() {
     if (matchArgs) {
-      // although not ideal to create and delete a record, using this technique to
-      // get properly serialized payload.
-      // TODO: Need to figure out how to use serializer without a record
+      // Using this technique to get properly serialized payload.
+      // Although it's not ideal to have to create and delete a record,
+      // TODO: Figure out how to use serializer without a record
       var tmpRecord = store.createRecord(modelName, matchArgs);
       expectedRequest = tmpRecord.serialize();
       tmpRecord.deleteRecord();
-
     }
 
     if (succeed) {
-      var definition = FactoryGuy.modelDefinitions[modelName];
-      // If already calculated once, keep the same id
-      var id = responseJson[modelName] ? responseJson[modelName].id : definition.nextId();
-      responseJson[modelName] = $.extend({id: id}, matchArgs, returnArgs);
+      responseJson[modelName] = $.extend({}, matchArgs, returnArgs);
       // Remove belongsTo associations since they will already be set when you called
       // createRecord, so they don't need to be returned.
       Ember.get(modelType, 'relationshipsByName').forEach(function (relationship) {
@@ -34,8 +30,6 @@ var MockCreateRequest = function(url, store, modelName, options) {
           delete responseJson[modelName][relationship.key];
         }
       });
-    } else {
-      this.andFail(options);
     }
   };
 
@@ -61,6 +55,13 @@ var MockCreateRequest = function(url, store, modelName, options) {
  		return this;
  	};
 
+  // for supporting older ( non chaining methods ) style of passing in options
+  if (succeed) {
+    this.calculate();
+  } else {
+    this.andFail(options);
+  }
+
   this.handler = function(settings) {
     if (succeed) {
       if (matchArgs) {
@@ -73,13 +74,16 @@ var MockCreateRequest = function(url, store, modelName, options) {
         }
       }
       this.status = 200;
+      // Setting the id at the very last minute, so that calling calculate
+      // again and again does not mess with id, and it's reset for each call
+      var definition = FactoryGuy.modelDefinitions[modelName];
+      var id = definition.nextId();
+      responseJson[modelName].id = id;
     } else {
       this.status = status;
     }
     this.responseText = responseJson;
   };
-
-  this.calculate();
 
   var requestConfig = {
  		url: url,

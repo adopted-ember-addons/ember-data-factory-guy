@@ -193,90 +193,21 @@ test("#handleFindAll with traits and extra options", function (assert) {
 
 
 //////// handleFind /////////
-
-test("#handleFindOne aliases handleFind", function (assert) {
-  var done = assert.async();
-  var id = '1';
-  TestHelper.handleFindOne('profile', {id: id});
-
-  store.find('profile', 1).then(function (profile) {
-    ok(profile.get('id') === id);
-    done();
-  });
-
-});
-
-test("#handleFind with a record returns the record", function (assert) {
-  var done = assert.async();
-  var profile = FactoryGuy.make('profile');
-  TestHelper.handleFind(profile);
-
-  store.find('profile', 1).then(function (profile2) {
-    ok(profile2.id.toString() === profile.id.toString());
-    done();
-  });
-
-});
-
-test("#handleFind with a record handles reload", function (assert) {
+test("#handleFind with a record handles reload, and does not change attributes", function (assert) {
   var done = assert.async();
   Ember.run(function () {
-    var profile = FactoryGuy.make('profile');
+    var original_description = "whatever";
+    var profile = FactoryGuy.make('profile', {description: original_description});
     TestHelper.handleFind(profile);
 
     profile.reload().then(function (profile2) {
       ok(profile2.id === profile.id);
+      ok(profile2.get('description') === original_description);
       done();
     });
   });
 });
 
-test("#handleFind with options", function (assert) {
-  var done = assert.async();
-  var id = '1';
-  TestHelper.handleFind('profile', {id: id});
-
-  store.find('profile', 1).then(function (profile) {
-    ok(profile.get('id') === id);
-    done();
-  });
-
-});
-
-test("#handleFind with traits", function (assert) {
-  var done = assert.async();
-  var id = 1;
-  TestHelper.handleFind('profile', 'goofy_description', {id: id});
-
-  store.find('profile', 1).then(function (profile) {
-    ok(profile.get('description') === 'goofy');
-    done();
-  });
-});
-
-test("#handleFind with arguments", function (assert) {
-  var done = assert.async();
-  var id = 1;
-  var description = 'guy';
-  TestHelper.handleFind('profile', {id: id, description: description});
-
-  store.find('profile', 1).then(function (profile) {
-    ok(profile.get('description') === description);
-    done();
-  });
-});
-
-test("#handleFind with traits and arguments", function (assert) {
-  var done = assert.async();
-  var id = 1;
-  var description = 'guy';
-  TestHelper.handleFind('profile', 'goofy_description', {id: id, description: description});
-
-  store.find('profile', 1).then(function (profile) {
-    ok(profile.get('description') === description);
-    done();
-  });
-});
 
 test("#handleFind failure with andFail method", function (assert) {
   Ember.run(function () {
@@ -284,10 +215,7 @@ test("#handleFind failure with andFail method", function (assert) {
     TestHelper.handleFind('profile', 1).andFail();
 
     store.find('profile', 1).then(
-      function (response) {
-        ok(false);
-        done();
-      },
+      function (response) {},
       function (error) {
         ok(true);
         done();
@@ -319,6 +247,27 @@ test("#handleCreate with no specific match", function (assert) {
     store.createRecord('profile', {description: 'whatever'}).save().then(function (profile) {
       ok(profile.id === '1');
       ok(profile.get('description') === 'whatever');
+      done();
+    });
+
+  });
+});
+
+test("#handleCreate with no specific match creates many in a loop", function (assert) {
+  Ember.run(function () {
+    var done = assert.async();
+
+    TestHelper.handleCreate('profile');
+
+    var promises = [1,2,3].map(function() {
+      return store.createRecord('profile', {description: 'whatever'}).save();
+    });
+
+    Ember.RSVP.all(promises).then(function (profiles) {
+      var ids = profiles.map(function(profile) {return profile.get('id');});
+      var descriptions = profiles.map(function(profile) {return profile.get('description');});
+      ok(ids+'' === [1,2,3]+'');
+      ok(descriptions+'' === ['whatever', 'whatever', 'whatever']+'');
       done();
     });
   });
@@ -479,14 +428,13 @@ test("#handleCreate failure with status code 422 and errors in response", functi
 
     store.createRecord('profile').save()
       .then(
-      function () {
-      },
-      function (reason) {
-        equal(reason.errors.description, ['bad'] + '');
-        ok(true);
-        done();
-      }
-    );
+        function () {},
+        function (reason) {
+          equal(reason.errors.description, ['bad'] + '');
+          ok(true);
+          done();
+        }
+      );
   });
 });
 
@@ -552,7 +500,7 @@ test("#handleCreate match some attributes with match method", function (assert) 
   });
 });
 
-test("#handleCreate match all attributes  with match method", function (assert) {
+test("#handleCreate match all attributes with match method", function (assert) {
   Ember.run(function () {
     var done = assert.async();
     var customDescription = "special description";

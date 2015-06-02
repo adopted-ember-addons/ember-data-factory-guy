@@ -1,9 +1,9 @@
 import $ from 'jquery';
 
-var MockGetRequest = function (url, modelName, record, mapFind) {
+var MockGetRequest = function (url, modelName, id, mapFind) {
   var status = 200;
   var succeed = true;
-  var response = null;
+  var response = {};
 
   this.andSucceed = function (options) {
     succeed = true;
@@ -13,7 +13,6 @@ var MockGetRequest = function (url, modelName, record, mapFind) {
   };
 
   this.andFail = function (options) {
-    console.log('INFO: andFail is called');
     options = options || {};
     succeed = false;
     status = options.status || 500;
@@ -29,12 +28,7 @@ var MockGetRequest = function (url, modelName, record, mapFind) {
       this.responseText = response;
     } else {
       this.status = status;
-      this.responseText = mapFind(
-        modelName,
-        record.toJSON({
-          includeId: true
-        })
-      );
+      this.responseText = mapFind(modelName, {id:id});
     }
   };
 

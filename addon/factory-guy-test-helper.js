@@ -20,7 +20,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
   usingActiveModelSerializer: function (type) {
     var store = this.getStore();
     var modelType = store.modelFor(type);
-    var serializer = store.serializerFor(modelType.modelName);
+    var serializer = store.serializerFor(modelType.typeKey);
     return serializer instanceof DS.ActiveModelSerializer;
   },
   // Look up a controller from the current container
@@ -79,7 +79,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
    */
   buildURL: function (typeName, id) {
     var type = this.getStore().modelFor(typeName);
-    return this.getStore().adapterFor(type).buildURL(type.modelName, id);
+    return this.getStore().adapterFor(type).buildURL(type.typeKey, id);
   },
   /**
    Map many json objects to response json.
@@ -146,7 +146,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     this.handleFindAll.apply(this, arguments);
   },
   /**
-     Handling ajax GET for finding one record for a type of model and an id.
+     Handling ajax GET for handling reloading a record
      You can mock failed find by passing in success argument as false.
 
    ```js
@@ -161,28 +161,25 @@ var FactoryGuyTestHelper = Ember.Object.create({
    ```
 
      @param {String} name  name of the fixture ( or model ) to find
-     @param {String} trait  optional traits (one or more)
-     @param {Object} options  optional fixture options (including id)
    */
   handleFind: function () {
     var args = Array.prototype.slice.call(arguments);
-    Ember.assert("To handleFindOne pass in a model instance or a type and model options", args.length>0);
 
-    var record, modelName;
+    var modelName, id;
     if (args[0] instanceof DS.Model) {
-      record = args[0];
-      modelName = record.constructor.modelName;
-    } else {
-      // make the record and load it in the store
-      record = FactoryGuy.make.apply(FactoryGuy, arguments);
-      var name = arguments[0];
-      modelName = FactoryGuy.lookupModelForFixtureName(name);
+      var record = args[0];
+      modelName = record.constructor.typeKey;
+      id = record.id;
+    } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
+      modelName = args[0];
+      id = args[1];
     }
 
-    var url = this.buildURL(modelName, record.id);
-    return new MockGetRequest(url, modelName, record, this.mapFind);
+    Ember.assert("To handleFind pass in a model instance or a model type name and an id",modelName && id);
+
+    var url = this.buildURL(modelName, id);
+    return new MockGetRequest(url, modelName, id, this.mapFind);
   },
-  handleFindOne: function() { this.handleFind.apply(this, arguments); },
   /**
    Handling ajax GET for finding all records for a type of model with query parameters.
 
@@ -301,13 +298,13 @@ var FactoryGuyTestHelper = Ember.Object.create({
     if (args[0] instanceof DS.Model) {
       model = args[0];
       id = model.id;
-      type = model.constructor.modelName;
+      type = model.constructor.typeKey;
     } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
       type = args[0];
       id = args[1];
       model = store.getById(type, id);
     }
-    Ember.assert("To handleUpdate pass in a model instance or a type and an id",type && id);
+    Ember.assert("To handleUpdate pass in a model instance or a model type name and an id",type && id);
 
     var url = this.buildURL(type, id);
     return new MockUpdateRequest(url, model, this.mapFind, options);
