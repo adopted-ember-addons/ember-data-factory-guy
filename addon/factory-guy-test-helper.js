@@ -147,20 +147,20 @@ var FactoryGuyTestHelper = Ember.Object.create({
   },
   /**
      Handling ajax GET for handling reloading a record
-     You can mock failed find by passing in success argument as false.
+     You can mock failed find by calling andFail
 
    ```js
-     // Pass in the parameters you would normally pass into FactoryGuy.make,
-     // like fixture name, number of fixtures to make, and optional traits,
-     // or fixture options
-     testHelper.handleFindOne('user', 'with_hats', {id: 1});
+     // Typically you will make a model
+     var user = make('user');
+     // and then to handle reload, use the testHelper.handleFind call to mock a reload
+     testHelper.handleFind(user);
 
-     store.find('user', 1).then(function(user){
-
-     });
+     // to mock failure case use method andFail
+     testHelper.handleFind(user).andFail();
    ```
 
-     @param {String} name  name of the fixture ( or model ) to find
+   @param {String} type  model type like 'user' for User model, or a model instance
+   @param {String} id  id of record to find
    */
   handleFind: function () {
     var args = Array.prototype.slice.call(arguments);
@@ -277,7 +277,19 @@ var FactoryGuyTestHelper = Ember.Object.create({
 
   /**
    Handling ajax PUT ( update record ) for a model type. You can mock
-   failed update by passing in success argument as false.
+   failed update by calling 'andFail' method after setting up the mock
+
+   ```js
+     // Typically you will make a model
+     var user = make('user');
+     // and then to handle update, use the testHelper.handleUpdate call to mock a update
+     testHelper.handleUpdate(user);
+     or
+     // testHelper.handleUpdate('user', user.id);
+
+     // and to mock failure case use method andFail
+     testHelper.handleFind(user).andFail();
+   ```
 
    @param {String} type  model type like 'user' for User model, or a model instance
    @param {String} id  id of record to update

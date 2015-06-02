@@ -627,11 +627,12 @@ will look like this:
 
  
 ##### handleFind
-  - Pass in a record to handle reload
-  - Pass in fixture name and options ( including id if needed ) to handle making a record
-    with those options and finding that record
+  - To handle reloading a model 
+    - Pass in a record ( or a typeName and id )
+    - Use andFail to mock failure
+  - Not advised to use this method to make models themselves ( just use make for that ) 
 
-*Passing in a model instance*
+*Passing in a record / model instance*
 
 ```javascript
     var profile = FactoryGuy.make('profile')
@@ -642,15 +643,11 @@ will look like this:
     profile.reload()
 ```
 
-*Passing in fixture name and options*
+*Mocking a failed reload*
 
 ```javascript
-    // can use traits and extra fixture options here as you would with FactoryGuy#make,
-    // since a record will be made, and placed in the store for you.
-    TestHelper.handleFind('profile', {id: 1});
 
-    // will stub a call to the store like this:
-    store.find('profile', 1);
+    TestHelper.handleFind('profile', 1}).andFail();
     
 ```
 
