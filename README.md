@@ -647,7 +647,7 @@ will look like this:
 
 ```javascript
 
-    TestHelper.handleFind('profile', 1}).andFail();
+    TestHelper.handleFind('profile', 1).andFail();
     
 ```
 
