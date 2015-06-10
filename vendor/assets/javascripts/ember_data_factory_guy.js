@@ -939,7 +939,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
     return FactoryGuy.make.apply(FactoryGuy, arguments);
   },
   getStore: function () {
-    return this.get('container').lookup('store:main');
+    return this.get('container').lookup('store:application');
   },
   /**
    Using mockjax to stub an http request.

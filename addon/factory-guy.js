@@ -50,7 +50,7 @@ var FactoryGuy = {
    */
   setup: function (app) {
     Ember.assert("FactoryGuy#setup needs a valid application instance.You passed in [" + app + "]", app instanceof Ember.Application);
-    this.setStore(app.__container__.lookup('store:main'));
+    this.setStore(app.__container__.lookup('store:application'));
   },
   /**
    Setting the store so FactoryGuy can do some model introspection.
