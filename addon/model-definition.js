@@ -82,7 +82,6 @@ var ModelDefinition = function (model, config) {
         if (FactoryGuy.getStore()) {
           var relationship = FactoryGuy.getAttributeRelationship(this.model, attribute);
           if (relationship) {
-            //console.log('attribute', relationship);
             fixture[attribute] = FactoryGuy.build(relationship.type, fixture[attribute]);
           }
         }
