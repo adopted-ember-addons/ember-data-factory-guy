@@ -57,7 +57,6 @@ module('FactoryGuy with DS.ActiveModelAdapter #make', {
 
 
 test("creates records in the store", function (assert) {
-  //Ember.run(function () {
   var done = assert.async();
   var user = make('user');
 
@@ -66,7 +65,6 @@ test("creates records in the store", function (assert) {
     ok(store_user === user);
     done();
   });
-  //});
 });
 
 
@@ -338,11 +336,9 @@ module('FactoryGuy with DS.ActiveModelAdapter #makeList', {
 test("creates list of DS.Model instances", function () {
   var users = FactoryGuy.makeList('user', 2);
   equal(users.length, 2);
-  ok(users[0] instanceof DS.Model === true);
-
-  var storeUsers = store.all('user').get('content');
-  ok(storeUsers[0] === users[0]);
-  ok(storeUsers[1] === users[1]);
+  ok(users[0] instanceof User);
+  ok(users[1] instanceof User);
+  equal(FactoryGuy.getStore().all('user').get('content').length , 2);
 });
 
 test("handles trait arguments", function () {

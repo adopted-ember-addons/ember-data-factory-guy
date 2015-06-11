@@ -8,7 +8,7 @@ export default {
   after: 'store',
 
   initialize: function(container, application) {
-    FactoryGuy.setStore(container.lookup('store:main'));
+    FactoryGuy.setStore(container.lookup('store:application'));
     FactoryGuyTestHelper.set('container', container);
     FactoryGuy.resetDefinitions();
 

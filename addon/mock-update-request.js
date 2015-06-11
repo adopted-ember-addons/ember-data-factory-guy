@@ -38,7 +38,7 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
       // need to use serialize instead of toJSON to handle polymorphic belongsTo
       var json = model.serialize();
       json.id = model.id;
-      this.responseText = mapFind(model.constructor.typeKey, json);
+      this.responseText = mapFind(model.constructor.modelName, json);
       this.status = 200;
 		}
 	};

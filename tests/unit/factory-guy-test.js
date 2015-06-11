@@ -32,12 +32,18 @@ test("exposes make method which is shortcut for FactoryGuy.make", function() {
 
 test("#makeList returns an array of model instances", function() {
   var users = FactoryGuy.makeList('user',2);
-  deepEqual(FactoryGuy.getStore().all('user').get('content'), users);
+  equal(users.length, 2);
+  ok(users[0] instanceof User);
+  ok(users[1] instanceof User);
+  equal(FactoryGuy.getStore().all('user').get('content').length , 2);
 });
 
 test("exposes makeList method which is shortcut for FactoryGuy.makeList", function() {
   var users = makeList('user',2);
-  deepEqual(FactoryGuy.getStore().all('user').get('content'), users);
+  equal(users.length, 2);
+  ok(users[0] instanceof User);
+  ok(users[1] instanceof User);
+  equal(FactoryGuy.getStore().all('user').get('content').length , 2);
 });
 
 test("exposes build method which is shortcut for FactoryGuy.build", function() {
@@ -55,7 +61,7 @@ test("exposes clearStore method which is a shortcut for FactoryGuy.clearStore", 
   Ember.run( function() {
     makeList('user',2);
     clearStore();
-    equal(FactoryGuy.getStore().all('user').get('content.length'), 0);
+    equal(FactoryGuy.getStore().all('user').get('content').length, 0);
   });
 });
 
@@ -246,8 +252,8 @@ test("#buildList creates list of fixtures", function() {
 
 test("#getAttributeRelationship", function() {
   var typeName = 'user';
-  equal(FactoryGuy.getAttributeRelationship(typeName,'company').typeKey,'company');
-  equal(FactoryGuy.getAttributeRelationship(typeName,'hats').typeKey,'hat');
+  equal(FactoryGuy.getAttributeRelationship(typeName,'company').type,'company');
+  equal(FactoryGuy.getAttributeRelationship(typeName,'hats').type,'hat');
   equal(FactoryGuy.getAttributeRelationship(typeName,'name'),null);
 });
 
