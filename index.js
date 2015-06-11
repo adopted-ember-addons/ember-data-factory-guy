@@ -11,7 +11,7 @@ module.exports = {
     this._super.included(app);
 
     if (app.tests) {
-      app.import(app.bowerDirectory + '/jquery-mockjax/jquery.mockjax.js');
+      app.import(app.bowerDirectory + '/jquery-mockjax/dist/jquery.mockjax.js');
     }
   }
 
