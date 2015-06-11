@@ -1,6 +1,6 @@
 {
   "name": "ember-data-factory-guy",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Factories for testing Ember applications using EmberData",
   "directories": {
     "doc": "doc",
