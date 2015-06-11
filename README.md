@@ -5,7 +5,7 @@ Factories simplify the process of testing, making you more efficient and your te
 
 *NOTE*
 
-ember-data-factory-guy is now an ember-cli addon!
+
 
 Contents: 
   - [Installation](https://github.com/danielspaniel/ember-data-factory-guy#installation)
@@ -28,14 +28,9 @@ ChangeLog: ( Notes about what has changed in each version )
 
 ##### Never used ember-data-factory-guy before
  
- - ```ember install:addon ember-data-factory-guy```
- - ```ember install ember-data-factory-guy``` ( ember cli ^0.2.3 )
+ - ```ember install ember-data-factory-guy``` 
 
-##### Have a previous installation as bower component or ember-cli-factory-guy
-
-Clear bower:
- - remove ember-data-factory-guy from bower.json
- - ```bower prune ```
+##### Have a previous installation ( updating to new version )
 
 Clear npm:
  - remove 'ember-cli-data-factory-guy' or 'ember-data-factory-guy' from package.json
