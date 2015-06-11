@@ -20,7 +20,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
   usingActiveModelSerializer: function (type) {
     var store = this.getStore();
     var modelType = store.modelFor(type);
-    var serializer = store.serializerFor(modelType.typeKey);
+    var serializer = store.serializerFor(modelType.modelName);
     return serializer instanceof DS.ActiveModelSerializer;
   },
   // Look up a controller from the current container
@@ -77,9 +77,9 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @param {String} id
    @return {String} url
    */
-  buildURL: function (typeName, id) {
-    var type = this.getStore().modelFor(typeName);
-    return this.getStore().adapterFor(type).buildURL(type.typeKey, id);
+  buildURL: function (modelName, id) {
+    //var modelClass = this.getStore().modelFor(typeName);
+    return this.getStore().adapterFor(modelName).buildURL(modelName, id);
   },
   /**
    Map many json objects to response json.
@@ -168,7 +168,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     var modelName, id;
     if (args[0] instanceof DS.Model) {
       var record = args[0];
-      modelName = record.constructor.typeKey;
+      modelName = record.constructor.modelName;
       id = record.id;
     } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
       modelName = args[0];
@@ -310,7 +310,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     if (args[0] instanceof DS.Model) {
       model = args[0];
       id = model.id;
-      type = model.constructor.typeKey;
+      type = model.constructor.modelName;
     } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
       type = args[0];
       id = args[1];

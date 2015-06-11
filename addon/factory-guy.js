@@ -75,8 +75,9 @@ var FactoryGuy = {
       // The legacy value was true.
       return true;
     }
+
     var model = this.store.modelFor(typeName);
-    var relationship = model.typeForRelationship(attribute);
+    var relationship = Ember.get(model, 'relationshipsByName').get(attribute);
     return !!relationship ? relationship : null;
   },
   /**
@@ -306,8 +307,8 @@ var FactoryGuy = {
     var fixture = this.build.apply(this, arguments);
 
     var modelName = this.lookupModelForFixtureName(args.name);
-    var modelType = store.modelFor(modelName);
-    var model = this.makeModel(store, modelType, fixture);
+    //var modelType = store.modelFor(modelName);
+    var model = this.makeModel(store, modelName, fixture);
 
     var definition = this.lookupDefinitionForFixtureName(args.name);
     if (definition.hasAfterMake()){
@@ -345,33 +346,40 @@ var FactoryGuy = {
    * @param fixture
    * @returns {DS.Model} instance of DS.Model
    */
-  makeModel: function (store, modelType, fixture) {
-    var modelName = store.modelFor(modelType).typeKey;
+  makeModel: function (store, modelName, fixture) {
+    //console.log('modelType', modelName+'');
+    //var modelClass = store.modelFor(modelName);
+    //console.log(modelName, 'modelType:', modelType+'');
     var model;
     var self = this;
 
     Ember.run(function () {
-      self.findEmbeddedAssociationsForRESTAdapter(store, modelType, fixture);
+      self.findEmbeddedAssociationsForRESTAdapter(store, modelName, fixture);
       if (fixture.type) {
         // assuming its polymorphic if there is a type attribute
         // is this too bold an assumption?
-        modelName = Ember.String.underscore(fixture.type);
-        modelType = store.modelFor(modelName);
+        modelName = Ember.String.dasherize(fixture.type);
+        //console.log('modelName', modelName)
+        //modelType = store.modelFor(modelName);
       }
       model = store.push(modelName, fixture);
     });
     return model;
   },
 
-  findEmbeddedAssociationsForRESTAdapter: function (store, modelType, fixture) {
+  findEmbeddedAssociationsForRESTAdapter: function (store, modelName, fixture) {
     var self = this;
-    Ember.get(modelType, 'relationshipsByName').forEach(function (relationship) {
+    var modelClass = store.modelFor(modelName);
+    modelClass.eachRelationship(function (name, relationship) {
+      //console.log('modelName',modelName, 'relationshipName', name, 'relationship', relationship)
+    //Ember.get(modelType, 'relationshipsByName').forEach(function (relationship) {
       if (relationship.kind === 'belongsTo') {
         var belongsToRecord = fixture[relationship.key];
         if (Ember.typeOf(belongsToRecord) === 'object') {
           self.findEmbeddedAssociationsForRESTAdapter(store, relationship.type, belongsToRecord);
           belongsToRecord = store.push(relationship.type, belongsToRecord);
-          fixture[relationship.key] = belongsToRecord;
+          //console.log(relationship, 'belongsToRecord',belongsToRecord);
+          fixture[relationship.key] = belongsToRecord.id;
         }
       }
       if (relationship.kind === 'hasMany') {
@@ -416,11 +424,12 @@ var FactoryGuy = {
    Clear model instances from store cache.
    */
   clearModels: function () {
-    for (var model in this.modelDefinitions) {
-      var definition = this.modelDefinitions[model];
-      var modelType = this.store.modelFor(definition.model);
-      this.store.unloadAll(modelType);
-    }
+    this.store.unloadAll();
+    //for (var model in this.modelDefinitions) {
+    //  var definition = this.modelDefinitions[model];
+    //  var modelName = definition.model;
+    //  this.store.unloadAll(modelName);
+    //}
   },
 
   /**
