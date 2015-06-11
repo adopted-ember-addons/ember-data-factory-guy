@@ -3,9 +3,6 @@
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
-*NOTE*
-
-
 
 Contents: 
   - [Installation](https://github.com/danielspaniel/ember-data-factory-guy#installation)
