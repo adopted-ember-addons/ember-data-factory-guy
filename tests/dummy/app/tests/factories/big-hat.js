@@ -3,7 +3,7 @@ import './hat';
 
 FactoryGuy.define('big-hat', {
   extends: 'hat',
-  'big-hat': {
+  default: {
     type: 'BigHat'
   }
 });

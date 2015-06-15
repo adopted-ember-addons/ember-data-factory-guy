@@ -13,6 +13,7 @@ Contents:
   - [Sequences](https://github.com/danielspaniel/ember-data-factory-guy#sequences)
   - [Inline Function](https://github.com/danielspaniel/ember-data-factory-guy#inline-functions)
   - [Traits](https://github.com/danielspaniel/ember-data-factory-guy#traits)
+  - [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
   - [Associations](https://github.com/danielspaniel/ember-data-factory-guy#associations)
   - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
   - [Testing models, controllers, components](https://github.com/danielspaniel/ember-data-factory-guy#testing-models-controllers-components)
@@ -471,7 +472,17 @@ the reverse 'user' belongsTo association is being setup for you on the project
 
 ```
 
-
+### Extending Other Definitions
+  - Extending another definition will inherit these sections:
+    - sequences
+    - traits
+    - default attributes
+  - Inheritance is fine grained, so in each section, any attribute that is local
+    will take precedence over an inherited one. So you can override some 
+    attributes in the default section ( for example ), and inherit the rest
+  
+  - [Sample Factory using inheritance (big-group.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/big-group.js)  
+  
 ### Callbacks
  - afterMake
   - Uses transient attributes 
@@ -523,22 +534,17 @@ You would use this to make models like:
   - make
 - [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js) 
   - Avoid using moduleForModel ( ember-qunit ), or describeModel ( ember-mocha ) test helper.
-- [Experimental, faster style model test (profile-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js) 
-  - Converting your model tests to this style will get you up to 35% speed up.
 - [Sample component test (translate-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/components/translate-test.js)
   - Using 'moduleForComponent' because in it is easier in this case to get the component and render it with this 
-    helper, but you are still starting up the application with startApp().
+    helper, but for these, you want to start a new application with startApp() before each test.
 
 **Note** 
   
  *In the following model test, it's not necessary or helpful to use the ember-qunit moduleForModel
   helper, since the premise for that helper is to setup an isolated container with the minimal 
-  requirements ( that model ) loaded.*
-   
- *But, you need to startup the application ( for reasons stated above ), and if you have many relationships, 
-  it's tedious to "needs: []" them all, to get them imported.
-  Furthermore you don't want a model handed to you, you want to make your own, which is the whole
-  point of factory guy.* 
+  requirements ( that model ) loaded. So, if you have many relationships, it's tedious to "needs: []" them all,
+  to get them imported. Furthermore you don't want a model handed to you, you want to make your own, 
+  which is the whole point of factory guy.* 
 
 ```javascript
 
