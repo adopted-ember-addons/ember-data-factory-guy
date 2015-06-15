@@ -110,14 +110,14 @@ In the following examples, assume the models look like this:
 
 ##### Polymorphic models
 
-It is better to define each polymorphic model in it's own typed definition:
+It is imperative that you define each polymorphic model in it's own typed definition:
 
 ```javascript
   
   // file tests/factories/small-hat.js
   import FactoryGuy from 'ember-data-factory-guy';
   
-  FactoryGuy.define('small_hat', {
+  FactoryGuy.define('small-hat', {
     default: {
       type: 'SmallHat'
     }
@@ -126,7 +126,7 @@ It is better to define each polymorphic model in it's own typed definition:
   // file tests/factories/big-hat.js
   import FactoryGuy from 'ember-data-factory-guy';
   
-  FactoryGuy.define('big_hat', {
+  FactoryGuy.define('big-hat', {
     default: {
       type: 'BigHat'
     }
@@ -142,18 +142,15 @@ rather than doing this:
 
   FactoryGuy.define('hat', {
     default: {},
-    small_hat: {
+    small-hat: {
       type: 'SmallHat'
     },
-    big_hat: {
+    big-hat: {
       type: 'BigHat'
     }
   })
 
 ```
-
-Since there are times that the latter can cause problems when
-the store is looking up the correct model type name
 
 
 ### Using Factories
