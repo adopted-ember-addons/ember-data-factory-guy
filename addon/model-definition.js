@@ -74,7 +74,7 @@ var ModelDefinition = function (model, config) {
     // deal with attributes that are functions or objects
     for (var attribute in fixture) {
       if (Ember.typeOf(fixture[attribute]) === 'function') {
-        // function might be a sequence of a named association
+        // function might be a sequence or an association
         fixture[attribute] = fixture[attribute].call(this, fixture);
       } else if (Ember.typeOf(fixture[attribute]) === 'object') {
         // If it's an object and it's a model association attribute, build the json
@@ -126,6 +126,46 @@ var ModelDefinition = function (model, config) {
       afterMake(model, options);
     }
   };
+  /*
+    Need special 'merge' function to be able to merge objects with functions
+
+    @param newConfig
+    @param config
+    @param otherConfig
+    @param section
+   */
+  var mergeSection = function(config, otherConfig, section) {
+    var attr;
+    if (otherConfig[section]) {
+      if (!config[section]) { config[section] = {}; }
+      for (attr in otherConfig[section]) {
+        if (!config[section][attr]) {
+          config[section][attr] = otherConfig[section][attr];
+        }
+      }
+    }
+  };
+  /**
+   When extending another definition, merge it with this one by:
+   merging only sequences, default section and traits
+
+   @param {Object} config
+   @param {ModelDefinition} otherDefinition
+   */
+  var merge = function(config, otherDefinition) {
+    var otherConfig = $.extend(true, {}, otherDefinition.originalConfig);
+    delete otherConfig.extends;
+    mergeSection(config, otherConfig, 'sequences');
+    mergeSection(config, otherConfig, 'default');
+    mergeSection(config, otherConfig, 'traits');
+  };
+
+  var mergeConfig = function (config) {
+    var extending = config.extends;
+    var definition = FactoryGuy.modelDefinitions[extending];
+    Ember.assert("You are trying to extend ["+model+"] with [ "+extending+" ]. But FactoryGuy can't find that definition [ "+extending+" ] you are trying to extend. Make sure it was created before you define ["+model+"]", definition);
+    merge(config, definition);
+  };
 
   var parseDefault = function (config) {
     defaultAttributes = config.default;
@@ -162,6 +202,9 @@ var ModelDefinition = function (model, config) {
   };
 
   var parseConfig = function (config) {
+    if (config.extends) {
+      mergeConfig.call(this, config);
+    }
     parseSequences(config);
     parseTraits(config);
     parseDefault(config);
@@ -169,8 +212,11 @@ var ModelDefinition = function (model, config) {
     parseCallBacks(config);
     namedModels = config;
   };
+  // During parseConfig, the original config will be altered, so save this original
+  // configuration since it's needed for merging when others extend this definition.
+  this.originalConfig = $.extend(true, {}, config);
   // initialize
-  parseConfig(config);
+  parseConfig.call(this, config);
 };
 
 export default ModelDefinition;

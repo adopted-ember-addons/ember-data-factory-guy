@@ -1,6 +1,5 @@
-import DS from 'ember-data';
+import Material from './material';
 
-export default DS.Model.extend({
-  name: DS.attr('string'),
+export default Material.extend({
   hat:  DS.belongsTo('big-hat')
 });

@@ -1,13 +1,6 @@
 import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define('hat', {
-  default: {},
-  'small-hat': {
-    type: 'SmallHat'
-  },
-  'big-hat': {
-    type: 'BigHat'
-  },
   traits: {
     with_user: { user: {} },
     belonging_to_user: { user: {} },

@@ -8,12 +8,3 @@ FactoryGuy.define('soft-material', {
     name: 'silk'
   }
 });
-
-FactoryGuy.define('fluffy-material', {
-  default: {
-    name: 'fluffy material'
-  },
-  silk: {
-    name: 'fluff'
-  }
-});

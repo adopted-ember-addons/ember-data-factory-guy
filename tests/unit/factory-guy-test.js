@@ -193,7 +193,6 @@ test("#build with traits", function() {
   }, 'trait with hasMany association');
 });
 
-
 test("#build creates default json for model", function() {
   var json = FactoryGuy.build('user');
   deepEqual(json, {id: 1, name: 'User1'});
@@ -256,6 +255,124 @@ test("#getAttributeRelationship", function() {
   equal(FactoryGuy.getAttributeRelationship(typeName,'hats').type,'hat');
   equal(FactoryGuy.getAttributeRelationship(typeName,'name'),null);
 });
+
+
+module('FactoryGuy definition extending another definition', {
+  setup: function() {
+    App = theUsualSetup();
+    delete FactoryGuy.modelDefinitions['person'];
+    delete FactoryGuy.modelDefinitions['super-hero'];
+  },
+  teardown: function() {
+    theUsualTeardown(App);
+  }
+});
+
+test("default values and sequences", function() {
+  FactoryGuy.define('person', {
+    sequences: {
+      personName: function(num) {
+        return 'person #' + num;
+      },
+    },
+    default: {
+      type: 'normal',
+      name: FactoryGuy.generate('personName')
+    }
+  });
+
+  FactoryGuy.define('super-hero', {
+    extends: 'person',
+    default: {
+      type: 'super duper'
+    }
+  });
+
+  FactoryGuy.define('villain', {
+    extends: 'person',
+    sequences: {
+      personName: function(num) {
+        return 'joker#' + num;
+      }
+    }
+  });
+
+  var json;
+
+  json = FactoryGuy.build('person');
+  equal(json.name, 'person #1');
+
+  json = FactoryGuy.build('super-hero');
+  // since the sequence ( personName ) that was inherited from person is owned by super hero,
+  // the person# starts at 1 again, and is not person#2
+  equal(json.name, 'person #1', 'inherits parent default attribute functions and sequences');
+  equal(json.type, 'super duper', 'local attributes override parent attributes');
+
+  json = FactoryGuy.build('villain');
+  equal(json.name, 'joker#1', 'uses local sequence with inherited parent default attribute function');
+
+});
+
+
+test("traits", function() {
+  FactoryGuy.define('person', {
+    traits: {
+      lazy_type: {type: 'Super Lazy'}
+    }
+  });
+
+  FactoryGuy.define('super-hero', {
+    extends: 'person',
+    traits: {
+      super_name: {name: 'Super Man'}
+    },
+    default: {
+      type: 'Super Duper'
+    }
+  });
+
+  var json;
+
+  json = FactoryGuy.build('super-hero', 'super_name', 'lazy_type');
+  equal(json.type, 'Super Lazy', 'inherits parent traits');
+  equal(json.name, 'Super Man', 'local traits are available');
+});
+
+
+test("named types are not inherited", function() {
+  FactoryGuy.define('person', {
+    sequences: {
+      personType: function(num) {
+        return 'person type #' + num;
+      }
+    },
+    default: {
+      type: 'normal',
+    },
+    dude: {
+      type: FactoryGuy.generate('personType')
+    }
+  });
+
+  FactoryGuy.define('super-hero', {
+    extends: 'person',
+    default: {
+      type: 'Super Duper'
+    },
+    super_man: {
+      name: 'Super Man'
+    },
+  });
+
+  var json;
+
+  json = FactoryGuy.build('super_man');
+  equal(json.name, 'Super Man');
+
+  var definition = FactoryGuy.modelDefinitions['super-hero'];
+  equal(definition.matchesName('dude'), undefined);
+});
+
 
 
 

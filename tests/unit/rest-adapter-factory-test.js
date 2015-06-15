@@ -237,6 +237,18 @@ test("when belongTo parent is assigned, parent adds to belongsTo record", functi
 });
 
 
+test("belongTo ( polymorphic ) association assigned in optional attributes", function () {
+  var small_hat = make('small-hat');
+  var feathers = make('feathers', {hat: small_hat});
+  ok(feathers.get('hat') instanceof SmallHat);
+});
+
+test("belongTo ( polymorphic ) association assigned from traits", function () {
+  var feathers = make('feathers', 'belonging_to_hat');
+  ok(feathers.get('hat') instanceof SmallHat);
+});
+
+
 test("belongsTo associations defined as attributes in fixture", function() {
   var project;
   project = make('project_with_user');

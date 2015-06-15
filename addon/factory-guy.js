@@ -106,6 +106,7 @@ var FactoryGuy = {
   generate: function (nameOrFunction) {
     var sortaRandomName = Math.floor((1 + Math.random()) * 65536).toString(16) + Date.now();
     return function () {
+      // this function will be called by ModelDefinition, which has it's own generate method
       if (Ember.typeOf(nameOrFunction) === 'function') {
         return this.generate(sortaRandomName, nameOrFunction);
       } else {
@@ -145,10 +146,6 @@ var FactoryGuy = {
     return function () {
       return FactoryGuy.build(fixtureName, opts);
     };
-  },
-  association: function (fixtureName, opts) {
-    Ember.deprecate('DEPRECATION Warning: use FactoryGuy.belongsTo instead');
-    return this.belongsTo(fixtureName, opts);
   },
   /**
    Used in model definitions to define a hasMany association attribute.
@@ -340,10 +337,11 @@ var FactoryGuy = {
   },
 
   /**
-   * Most of the work of making the model from the json fixture is going on here.
-   * @param modelType
-   * @param fixture
-   * @returns {DS.Model} instance of DS.Model
+   Most of the work of making the model from the json fixture is going on here.
+
+   @param modelType
+   @param fixture
+   @returns {DS.Model} instance of DS.Model
    */
   makeModel: function (store, modelName, fixture) {
     var model;
@@ -351,41 +349,66 @@ var FactoryGuy = {
 
     Ember.run(function () {
       self.findEmbeddedAssociationsForRESTAdapter(store, modelName, fixture);
-      if (fixture.type) {
-        // assuming its polymorphic if there is a type attribute
-        // is this too bold an assumption?
-        modelName = Ember.String.dasherize(fixture.type);
-      }
       model = store.push(modelName, fixture);
     });
     return model;
   },
 
+  /**
+   In order to conform to the way ember data expects to handle relationships
+   in a json payload ( during deserialization ), convert an record ( model instance )
+   into an id reference or object with type and id for polymorphic models.
+   Thought this ( polymorphic object ) is not json-api standard and might change ??
+
+   @param record
+   @param relationship
+   */
+  normalizeAssociation: function (record, relationship) {
+    if (relationship.options.polymorphic) {
+      return {type: record.constructor.modelName, id: record.id};
+    } else {
+      return record.id;
+    }
+  },
+
+  /**
+   Recursively descend into the fixture json, looking for relationships that are
+   either record instances or other fixture objects that need to be turned into
+   records.
+
+   @param store
+   @param modelName
+   @param fixture
+   */
   findEmbeddedAssociationsForRESTAdapter: function (store, modelName, fixture) {
     var self = this;
     var modelClass = store.modelFor(modelName);
     modelClass.eachRelationship(function (name, relationship) {
+
       if (relationship.kind === 'belongsTo') {
         var belongsToRecord = fixture[relationship.key];
         if (Ember.typeOf(belongsToRecord) === 'object') {
           self.findEmbeddedAssociationsForRESTAdapter(store, relationship.type, belongsToRecord);
-          belongsToRecord = store.push(relationship.type, belongsToRecord);
-          fixture[relationship.key] = belongsToRecord;
+          var isPolymorphic = relationship.options.polymorphic;
+          var relationshipType = isPolymorphic ? Ember.String.dasherize(belongsToRecord.type) : relationship.type;
+          belongsToRecord = store.push(relationshipType, belongsToRecord);
+          fixture[relationship.key] = self.normalizeAssociation(belongsToRecord, relationship);
+        } else if (Ember.typeOf(belongsToRecord) === 'instance') {
+          fixture[relationship.key] = self.normalizeAssociation(belongsToRecord, relationship);
         }
       }
+
       if (relationship.kind === 'hasMany') {
         var hasManyRecords = fixture[relationship.key];
         if (Ember.typeOf(hasManyRecords) === 'array') {
-          if (Ember.typeOf(hasManyRecords[0]) === 'object') {
-            var records = Ember.A();
-            hasManyRecords.map(function (object) {
-              self.findEmbeddedAssociationsForRESTAdapter(store, relationship.type, object);
-              var record = store.push(relationship.type, object);
-              records.push(record);
-              return record;
-            });
-            fixture[relationship.key] = records;
-          }
+          var records = hasManyRecords.map(function(record) {
+            if (Ember.typeOf(record) === 'object') {
+              self.findEmbeddedAssociationsForRESTAdapter(store, relationship.type, record);
+              record = store.push(relationship.type, record);
+            }
+            return self.normalizeAssociation(record, relationship);
+          });
+          fixture[relationship.key] = records;
         }
       }
     });
@@ -399,7 +422,6 @@ var FactoryGuy = {
     this.resetDefinitions();
     this.clearModels();
   },
-
 
   /**
    Reset the id sequence for the models back to zero.
