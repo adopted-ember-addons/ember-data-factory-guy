@@ -534,9 +534,11 @@ You would use this to make models like:
   - make
 - [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js) 
   - Avoid using moduleForModel ( ember-qunit ), or describeModel ( ember-mocha ) test helper.
+  - Don't need to startApp() to get new application
 - [Sample component test (translate-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/components/translate-test.js)
   - Using 'moduleForComponent' because in it is easier in this case to get the component and render it with this 
-    helper, but for these, you want to start a new application with startApp() before each test.
+    helper
+  - Need to start a new application with startApp() before each test.
 
 **Note** 
   
@@ -551,17 +553,11 @@ You would use this to make models like:
 // file: tests/unit/models/user-test.js
 
 import Ember from 'ember';
-import { make } from 'ember-data-factory-guy';
-import startApp from '../../helpers/start-app';
-
-var App;
+import FactoryGuy, { make } from 'ember-data-factory-guy';
 
 module('User', {
-  beforeEach: function() {
-    App = startApp();
-  },
   afterEach: function() {
-    Ember.run(App, 'destroy');
+    Ember.run(FactoryGuy, 'clearStore');
   }
 });
 
