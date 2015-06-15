@@ -110,7 +110,9 @@ In the following examples, assume the models look like this:
 
 ##### Polymorphic models
 
-It is imperative that you define each polymorphic model in it's own typed definition:
+ - Define each polymorphic model in it's own typed definition
+ - May want to extend parent factory here
+   - See [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions) 
 
 ```javascript
   
@@ -134,7 +136,7 @@ It is imperative that you define each polymorphic model in it's own typed defini
 
 ```
 
-rather than doing this:
+In other words, don't do this:
 
 ```javascript
   // file tests/factories/hat.js  
