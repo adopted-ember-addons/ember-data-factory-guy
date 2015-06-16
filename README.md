@@ -26,8 +26,8 @@ ChangeLog: ( Notes about what has changed in each version )
 
 ##### Never used ember-data-factory-guy before
   
- ```ember install ember-data-factory-guy``` ( ember-data-1.0.0-beta.19.1 ) 
- ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )
+ - ```ember install ember-data-factory-guy``` ( ember-data-1.0.0-beta.19.1 ) 
+ - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )
    
 ##### Have a previous installation ( updating to new version )
 
