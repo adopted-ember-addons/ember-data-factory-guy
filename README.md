@@ -24,9 +24,8 @@ ChangeLog: ( Notes about what has changed in each version )
   
 ### Installation
 
-**NOTE** 
-*If you are using ember 1.12+, make sure you are using ember-cli/ember-load-initializers#0.1.4
-in bower.json*  
+**NOTE:** 
+*If you're on ember 1.12+, make sure you have ember-cli/ember-load-initializers#0.1.4 in bower.json*  
 
 ##### Never used ember-data-factory-guy before
   
