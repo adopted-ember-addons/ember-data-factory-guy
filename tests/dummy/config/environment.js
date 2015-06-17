@@ -13,7 +13,7 @@ module.exports = function(environment) {
       },
 
       // http://emberjs.com/guides/configuring-ember/disabling-prototype-extensions/
-      EXTEND_PROTOTYPES: false
+      //EXTEND_PROTOTYPES: false
     },
 
     APP: {
@@ -36,7 +36,7 @@ module.exports = function(environment) {
     // Testem prefers this...
     ENV.baseURL = '/';
     ENV.locationType = 'none';
-
+    ENV.exportApplicationGlobal =  true,
     //keep test console output quieter
     //ENV.APP.LOG_RESOLVER = true;
     //ENV.APP.LOG_ACTIVE_GENERATION = true;
@@ -50,6 +50,10 @@ module.exports = function(environment) {
 
   if (environment === 'production') {
 
+  }
+
+  ENV.contentSecurityPolicy = {
+    'style-src': "'self' 'unsafe-inline'"
   }
   return ENV;
 };

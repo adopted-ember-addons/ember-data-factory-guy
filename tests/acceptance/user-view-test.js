@@ -33,7 +33,6 @@ test("Creates new project", function () {
   var newProjectName = "Gonzo Project";
 
   andThen(function () {
-
     fillIn('input.project-name', newProjectName);
 
     // Remember, this is for handling an exact match, if you did not care about

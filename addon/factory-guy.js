@@ -2,7 +2,8 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import ModelDefinition from './model-definition';
 
-var FactoryGuy = {
+var FactoryGuy = Ember.Object.create({
+  stores: Ember.inject.service('store'),
   modelDefinitions: {},
   /**
    ```javascript
@@ -44,13 +45,6 @@ var FactoryGuy = {
    */
   define: function (model, config) {
     this.modelDefinitions[model] = new ModelDefinition(model, config);
-  },
-  /**
-   Used for setting the store in FactoryGuy, when used without test mixin.
-   */
-  setup: function (app) {
-    Ember.assert("FactoryGuy#setup needs a valid application instance.You passed in [" + app + "]", app instanceof Ember.Application);
-    this.setStore(app.__container__.lookup('store:application'));
   },
   /**
    Setting the store so FactoryGuy can do some model introspection.
@@ -497,7 +491,7 @@ var FactoryGuy = {
     }
   }
 
-};
+});
 
 //To accomodate for phantomjs ( which does not recognise bind method ( for now )
 var make = function () {

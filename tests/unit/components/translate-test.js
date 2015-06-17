@@ -8,7 +8,7 @@ import { test, moduleForComponent } from 'ember-qunit';
 var App = null;
 
 moduleForComponent('translate', 'Translate', {
-
+  unit: true,
   setup: function () {
     Ember.run(function () {
       App = startApp();

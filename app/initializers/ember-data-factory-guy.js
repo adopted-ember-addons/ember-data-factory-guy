@@ -7,7 +7,10 @@ export default {
   name: 'ember-data-factory-guy',
   after: 'store',
 
-  initialize: function(container, application) {
+  initialize: function(registry, application) {
+    // ember 1.12+ no longer passing in container and application, but registry and application
+    // But make sure you are using ember-cli/ember-load-initializers#0.1.4
+    var container = (registry._defaultContainer) ? registry._defaultContainer : registry;
     FactoryGuy.setStore(container.lookup('store:application'));
     FactoryGuyTestHelper.set('container', container);
     FactoryGuy.resetDefinitions();
