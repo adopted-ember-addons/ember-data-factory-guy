@@ -10,6 +10,7 @@ var MockCreateRequest = function(url, store, modelName, options) {
   var responseJson = {};
   var expectedRequest = {};
   var modelType = store.modelFor(modelName);
+  var thenCallback = function() {};
 
   this.calculate = function() {
     if (matchArgs) {
@@ -43,6 +44,10 @@ var MockCreateRequest = function(url, store, modelName, options) {
     returnArgs = returns;
     this.calculate();
     return this;
+  };
+
+  this.then = function(callback) {
+    thenCallback = callback;
   };
 
   this.andFail = function(options) {
@@ -83,6 +88,7 @@ var MockCreateRequest = function(url, store, modelName, options) {
       this.status = status;
     }
     this.responseText = responseJson;
+    thenCallback(responseJson);
   };
 
   var requestConfig = {
