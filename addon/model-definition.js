@@ -1,5 +1,5 @@
-import FactoryGuy from './factory-guy';
 import Ember from 'ember';
+import FactoryGuy from './factory-guy';
 import Sequence from './sequence';
 import MissingSequenceError from './missing-sequence-error';
 import $ from 'jquery';
@@ -20,14 +20,27 @@ var ModelDefinition = function (model, config) {
   var namedModels = {};
   var modelId = 1;
   var sequenceName = null;
-  this.model = model;
+  var modelName = this.modelName = model;
+
+
+  /**
+   Returns a model's full relationship if the field is a relationship.
+
+   @param {String} field  field you want to relationship info for
+   @returns {DS.Relationship} relationship object if the field is a relationship, null if not
+   */
+  var getRelationship = function (field) {
+    var modelClass = FactoryGuy.getStore().modelFor(modelName);
+    var relationship = Ember.get(modelClass, 'relationshipsByName').get(field);
+    return !!relationship ? relationship : null;
+  };
   /**
    @param {String} name model name like 'user' or named type like 'admin'
    @returns {Boolean} true if name is this definitions model or this definition
    contains a named model with that name
    */
   this.matchesName = function (name) {
-    return model === name || namedModels[name];
+    return modelName === name || namedModels[name];
   };
   // Increment id
   this.nextId = function () {
@@ -79,11 +92,9 @@ var ModelDefinition = function (model, config) {
       } else if (Ember.typeOf(fixture[attribute]) === 'object') {
         // If it's an object and it's a model association attribute, build the json
         // for the association and replace the attribute with that json
-        if (FactoryGuy.getStore()) {
-          var relationship = FactoryGuy.getAttributeRelationship(this.model, attribute);
-          if (relationship) {
-            fixture[attribute] = FactoryGuy.build(relationship.type, fixture[attribute]);
-          }
+        var relationship = getRelationship(attribute);
+        if (relationship) {
+          fixture[attribute] = FactoryGuy.buildSingle(relationship.type, fixture[attribute]);
         }
       }
     }
@@ -117,7 +128,9 @@ var ModelDefinition = function (model, config) {
     }
   };
 
-  this.hasAfterMake = function() { return !!afterMake; };
+  this.hasAfterMake = function () {
+    return !!afterMake;
+  };
 
   this.applyAfterMake = function (model, opts) {
     if (afterMake) {
@@ -127,17 +140,19 @@ var ModelDefinition = function (model, config) {
     }
   };
   /*
-    Need special 'merge' function to be able to merge objects with functions
+   Need special 'merge' function to be able to merge objects with functions
 
-    @param newConfig
-    @param config
-    @param otherConfig
-    @param section
+   @param newConfig
+   @param config
+   @param otherConfig
+   @param section
    */
-  var mergeSection = function(config, otherConfig, section) {
+  var mergeSection = function (config, otherConfig, section) {
     var attr;
     if (otherConfig[section]) {
-      if (!config[section]) { config[section] = {}; }
+      if (!config[section]) {
+        config[section] = {};
+      }
       for (attr in otherConfig[section]) {
         if (!config[section][attr]) {
           config[section][attr] = otherConfig[section][attr];
@@ -152,7 +167,7 @@ var ModelDefinition = function (model, config) {
    @param {Object} config
    @param {ModelDefinition} otherDefinition
    */
-  var merge = function(config, otherDefinition) {
+  var merge = function (config, otherDefinition) {
     var otherConfig = $.extend(true, {}, otherDefinition.originalConfig);
     delete otherConfig.extends;
     mergeSection(config, otherConfig, 'sequences');
@@ -162,8 +177,12 @@ var ModelDefinition = function (model, config) {
 
   var mergeConfig = function (config) {
     var extending = config.extends;
-    var definition = FactoryGuy.modelDefinitions[extending];
-    Ember.assert("You are trying to extend ["+model+"] with [ "+extending+" ]. But FactoryGuy can't find that definition [ "+extending+" ] you are trying to extend. Make sure it was created before you define ["+model+"]", definition);
+    var definition = FactoryGuy.findModelDefinition(extending);
+    Ember.assert(
+      "You are trying to extend [" + model + "] with [ " + extending + " ]." +
+      " But FactoryGuy can't find that definition [ " + extending + " ] " +
+      "you are trying to extend. Make sure it was created/imported before " +
+      "you define [" + model + "]", definition);
     merge(config, definition);
   };
 
@@ -220,3 +239,4 @@ var ModelDefinition = function (model, config) {
 };
 
 export default ModelDefinition;
+

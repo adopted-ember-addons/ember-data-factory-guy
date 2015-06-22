@@ -3,9 +3,9 @@
 Projects:
 <ul>
  {{#each model.projects as |project|}}
-   <li class="project">{{project.name}}</li>
+   <li class="project">{{project.title}}</li>
  {{/each}}
 </ul>
 
-<input class="project-name" type="textbox">
+<input class="project-title" type="textbox">
 <button {{action 'addProject' model target=view}}>Add New User</button>

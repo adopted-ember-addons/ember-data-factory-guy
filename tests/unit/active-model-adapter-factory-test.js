@@ -51,7 +51,7 @@ module('FactoryGuy with DS.ActiveModelAdapter #make', {
     store = FactoryGuy.getStore();
   },
   teardown: function () {
-    theUsualTeardown(App);
+    //theUsualTeardown(App);
   }
 });
 

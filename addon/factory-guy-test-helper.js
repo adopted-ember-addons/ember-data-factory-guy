@@ -43,7 +43,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     return this.getStore().find(type, id);
   },
   getStore: function () {
-    return this.get('container').lookup('store:application');
+    return this.get('container').lookup('service:store');
   },
   /**
    Using mockjax to stub an http request.
@@ -132,8 +132,8 @@ var FactoryGuyTestHelper = Ember.Object.create({
   handleFindAll: function () {
     // make the records and load them in the store
     var records = FactoryGuy.makeList.apply(FactoryGuy, arguments);
-    var name = arguments[0];
-    var modelName = FactoryGuy.lookupModelForFixtureName(name);
+    //var name = arguments[0];
+    var modelName = records[0].constructor.modelName;//FactoryGuy.lookupModelForFixtureName(name);
     var json = records.map(function(record) {
       return record.toJSON({includeId: true});
     });
@@ -220,10 +220,15 @@ var FactoryGuyTestHelper = Ember.Object.create({
     } else {
       records = [];
     }
+    //var store = this.getStore();
+    //var serializerD = this.get('container').lookup('serializer:-default')
+    //var serializer = store.serializerFor('application');
+    //console.log(serializer+'', serializerD+'', serializer.store+'')
     var json = records.map(function(record) {
       return record.toJSON({includeId: true});
     });
     var responseJson = this.mapFindAll(modelName, json);
+    //console.log(modelName, responseJson)
     var url = this.buildURL(modelName);
     this.stubEndpointForHttpRequest(url, responseJson, {urlParams: searchParams});
   },

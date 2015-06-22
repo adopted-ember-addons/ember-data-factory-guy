@@ -10,7 +10,7 @@ var App;
 
 module('FactoryGuy', {
   setup: function() {
-    App = theUsualSetup();
+    App = theUsualSetup('-active-model');
   },
   teardown: function() {
     theUsualTeardown(App);
@@ -35,7 +35,7 @@ test("#makeList returns an array of model instances", function() {
   equal(users.length, 2);
   ok(users[0] instanceof User);
   ok(users[1] instanceof User);
-  equal(FactoryGuy.getStore().all('user').get('content').length , 2);
+  equal(FactoryGuy.getStore().peekAll('user').get('content').length , 2);
 });
 
 test("exposes makeList method which is shortcut for FactoryGuy.makeList", function() {
@@ -43,7 +43,7 @@ test("exposes makeList method which is shortcut for FactoryGuy.makeList", functi
   equal(users.length, 2);
   ok(users[0] instanceof User);
   ok(users[1] instanceof User);
-  equal(FactoryGuy.getStore().all('user').get('content').length , 2);
+  equal(FactoryGuy.getStore().peekAll('user').get('content').length , 2);
 });
 
 test("exposes build method which is shortcut for FactoryGuy.build", function() {
@@ -61,13 +61,12 @@ test("exposes clearStore method which is a shortcut for FactoryGuy.clearStore", 
   Ember.run( function() {
     makeList('user',2);
     clearStore();
-    equal(FactoryGuy.getStore().all('user').get('content').length, 0);
+    equal(FactoryGuy.getStore().peekAll('user').get('content').length, 0);
   });
 });
 
 
 test("Using sequences in definitions", function() {
-  delete FactoryGuy.modelDefinitions['person'];
 
   FactoryGuy.define('person', {
     sequences: {
@@ -115,7 +114,6 @@ test("Using sequences in definitions", function() {
 
 
 test("Referring to other attributes in attribute definition", function() {
-  delete FactoryGuy.modelDefinitions['person'];
 
   FactoryGuy.define('person', {
     default: {
@@ -249,19 +247,83 @@ test("#buildList creates list of fixtures", function() {
 });
 
 
-test("#getAttributeRelationship", function() {
-  var typeName = 'user';
-  equal(FactoryGuy.getAttributeRelationship(typeName,'company').type,'company');
-  equal(FactoryGuy.getAttributeRelationship(typeName,'hats').type,'hat');
-  equal(FactoryGuy.getAttributeRelationship(typeName,'name'),null);
-});
+//test("#build (nested json)", function() {
+//
+//  var  data = {
+//    "data": {
+//      "type": "project",
+//      "id": "1",
+//      "attributes": {
+//        "title": "JSON API paints my bikeshed!"
+//      },
+//      "relationships": {
+//        "user": {
+//          "data": { "id": "1", "type": "user" },
+//        }
+//      }
+//    },
+//    "included": [{
+//      "type": "user",
+//      "id": "1",
+//      "attributes": {
+//        "name": "Dan",
+//      },
+//      "relationships": {
+//        "hats": {
+//          data: [
+//            { "type": "big-hat", "id": "1" },
+//            { "type": "big-hat", "id": "2" }
+//          ]}
+//        }
+//    }, {
+//      "type": "big-hat",
+//      "id": "1",
+//      "attributes": {
+//        "type": "BigHat"
+//      },
+//      "relationships": {
+//        "outfit": {
+//          data: { id: 1, type: 'outfit' }
+//        }
+//      }
+//    }, {
+//      "type": "small-hat",
+//      "id": "2",
+//      "attributes": {
+//        "type": "SmallHat"
+//      }
+//    },{
+//      "type": "outfit",
+//      "id": "1",
+//      "attributes": {
+//        "name": "outfit"
+//      }
+//    }
+//    ]
+//  }
+//
+//  var project = build('project', 'with_user_having_hats_belonging_to_outfit');
+//  var data = FactoryGuy.convertToJSONAPIFormat('project', project)
+//  //var project = build('project', 'with_user_having_hats_belonging_to_outfit');
+//  console.log(data.data)
+//  console.log(data.included)
+//
+//});
 
+
+//test("#getAttributeRelationship", function() {
+//  var typeName = 'user';
+//  equal(FactoryGuy.getAttributeRelationship(typeName,'company').type,'company');
+//  equal(FactoryGuy.getAttributeRelationship(typeName,'hats').type,'hat');
+//  equal(FactoryGuy.getAttributeRelationship(typeName,'name'),null);
+//});
+//
 
 module('FactoryGuy definition extending another definition', {
   setup: function() {
     App = theUsualSetup();
-    delete FactoryGuy.modelDefinitions['person'];
-    delete FactoryGuy.modelDefinitions['super-hero'];
+    //FactoryGuy.modelDefinitions['person'];
+    //FactoryGuy.modelDefinitions['super-hero'];
   },
   teardown: function() {
     theUsualTeardown(App);
@@ -299,17 +361,17 @@ test("default values and sequences", function() {
 
   var json;
 
-  json = FactoryGuy.build('person');
-  equal(json.name, 'person #1');
+  json = FactoryGuy.build('person').data;
+  equal(json.attributes.name, 'person #1');
 
-  json = FactoryGuy.build('super-hero');
+  json = FactoryGuy.build('super-hero').data;
   // since the sequence ( personName ) that was inherited from person is owned by super hero,
   // the person# starts at 1 again, and is not person#2
-  equal(json.name, 'person #1', 'inherits parent default attribute functions and sequences');
-  equal(json.type, 'super duper', 'local attributes override parent attributes');
+  equal(json.attributes.name, 'person #1', 'inherits parent default attribute functions and sequences');
+  equal(json.attributes.type, 'super duper', 'local attributes override parent attributes');
 
-  json = FactoryGuy.build('villain');
-  equal(json.name, 'joker#1', 'uses local sequence with inherited parent default attribute function');
+  json = FactoryGuy.build('villain').data;
+  equal(json.attributes.name, 'joker#1', 'uses local sequence with inherited parent default attribute function');
 
 });
 
@@ -333,9 +395,9 @@ test("traits", function() {
 
   var json;
 
-  json = FactoryGuy.build('super-hero', 'super_name', 'lazy_type');
-  equal(json.type, 'Super Lazy', 'inherits parent traits');
-  equal(json.name, 'Super Man', 'local traits are available');
+  json = FactoryGuy.build('super-hero', 'super_name', 'lazy_type').data;
+  equal(json.attributes.type, 'Super Lazy', 'inherits parent traits');
+  equal(json.attributes.name, 'Super Man', 'local traits are available');
 });
 
 
@@ -366,78 +428,9 @@ test("named types are not inherited", function() {
 
   var json;
 
-  json = FactoryGuy.build('super_man');
-  equal(json.name, 'Super Man');
+  json = FactoryGuy.build('super_man').data;
+  equal(json.attributes.name, 'Super Man');
 
-  var definition = FactoryGuy.modelDefinitions['super-hero'];
+  var definition = FactoryGuy.findModelDefinition('super-hero');
   equal(definition.matchesName('dude'), undefined);
 });
-
-
-
-
-
-
-
-
-
-//test("#lookupDefinitionForFixtureName", function() {
-//  equal(!!FactoryGuy.lookupDefinitionForFixtureName('person'), true, 'finds definition if its the same as model name');
-//  equal(!!FactoryGuy.lookupDefinitionForFixtureName('funny_person'), true, 'finds definition if its a named fixture');
-//  equal(!!FactoryGuy.lookupDefinitionForFixtureName('fake'), false, "return nothing if can't find definition");
-//});
-//
-//test("#lookupModelForFixtureName", function() {
-//  equal(FactoryGuy.lookupModelForFixtureName('person'), 'person', "finds model if its the same as model name");
-//  equal(FactoryGuy.lookupModelForFixtureName('funny_person'), 'person', "finds model if it's definition has this named fixture");
-//  equal(FactoryGuy.lookupModelForFixtureName('fake'), undefined, "return nothing if can't find definition");
-//});
-//
-
-
-//module('FactoryGuy with DS.FixtureAdapter', {
-//  setup: function() {
-//    testHelper = TestHelper.setup(DS.FixtureAdapter);
-//    store = testHelper.getStore();
-//  },
-//  teardown: function() {
-//    Ember.run(function() {
-//      testHelper.teardown();
-//    });
-//  }
-//});
-//
-//
-//asyncTest("#make loads the fixture in the store and returns an object", function() {
-//  var user = FactoryGuy.make('user');
-//  ok(user instanceof Object )
-//  store.find('user', user.id).then(function(u){
-//    ok(u instanceof User)
-//    start()
-//  })
-//});
-//
-//
-//asyncTest("#pushFixture", function() {
-//  var User = store.modelFor('user'),
-//      user = FactoryGuy.make('user'),
-//      duplicateUser = FactoryGuy.build('user', { id: user.id, name: 'monkey' }),
-//      differentUser = FactoryGuy.build('user'),
-//      usersById = {};
-//
-//  usersById[duplicateUser.id] = duplicateUser;
-//  usersById[differentUser.id] = differentUser;
-//
-//  FactoryGuy.pushFixture(User, duplicateUser);
-//  FactoryGuy.pushFixture(User, differentUser);
-//
-//  store.find('user').then(function(users) {
-//    ok(users.get('length') === 2);
-//
-//    users.forEach(function(user) {
-//      equal(user.get('name'), usersById[user.get('id')].name, "Updates model fixture if duplicate id found");
-//    });
-//
-//    start();
-//  });
-//});

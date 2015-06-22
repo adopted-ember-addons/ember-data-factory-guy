@@ -216,7 +216,7 @@ test("#handleFind failure with andFail method", function (assert) {
 
     store.find('profile', 1).then(
       function (response) {},
-      function (error) {
+      function (reason) {
         ok(true);
         done();
       }
@@ -279,9 +279,7 @@ test("#handleCreate match some attributes", function (assert) {
     var customDescription = "special description";
     var date = new Date();
 
-    TestHelper.handleCreate('profile', {
-      match: {description: customDescription}
-    });
+    TestHelper.handleCreate('profile', { match: {description: customDescription} });
 
     store.createRecord('profile', {
       description: customDescription, created_at: date
@@ -426,12 +424,14 @@ test("#handleCreate failure with status code 422 and errors in response", functi
     var done = assert.async();
     TestHelper.handleCreate('profile', {succeed: false, status: 422, response: {errors: {description: ['bad']}}});
 
-    store.createRecord('profile').save()
+    var profile = store.createRecord('profile');
+    profile.save()
       .then(
         function () {},
-        function (reason) {
-          equal(reason.errors.description, ['bad'] + '');
-          ok(true);
+        function () {
+          var errors = profile.get('errors').errorsFor('description')[0];
+          equal(errors.attribute, 'description');
+          equal(errors.message, 'bad');
           done();
         }
       );
@@ -629,13 +629,15 @@ test("#handleCreate failure with status code 422 and errors in response with and
     var done = assert.async();
     TestHelper.handleCreate('profile').andFail({status: 422, response: {errors: {description: ['bad']}}});
 
-    store.createRecord('profile').save()
+    var profile = store.createRecord('profile');
+    profile.save()
       .then(
       function () {
       },
-      function (reason) {
-        equal(reason.errors.description, ['bad'] + '');
-        ok(true);
+      function () {
+        var errors = profile.get('errors').errorsFor('description')[0];
+        equal(errors.attribute, 'description');
+        equal(errors.message, 'bad');
         done();
       }
     );
@@ -723,7 +725,7 @@ test("#handleUpdate with incorrect parameters", function (assert) {
   }, "missing id");
 });
 
-test("#handleUpdate the with modelType and id", function (assert) {
+test("#handleUpdate with modelType and id", function (assert) {
   Ember.run(function () {
     var done = assert.async();
     var profile = make('profile');
@@ -738,7 +740,7 @@ test("#handleUpdate the with modelType and id", function (assert) {
 });
 
 
-test("#handleUpdate the with model", function (assert) {
+test("#handleUpdate with model", function (assert) {
   Ember.run(function () {
     var done = assert.async();
     var profile = make('profile');
@@ -811,23 +813,23 @@ test("#handleUpdate with model that fails with custom response", function (asser
     var done = assert.async();
     var profile = make('profile');
 
-    TestHelper.handleUpdate(profile, {succeed: false, status: 400, response: "{error: 'invalid data'}"});
+    TestHelper.handleUpdate(profile, {succeed: false, status: 400, response: 'invalid data'});
 
     profile.set('description', 'new desc');
     profile.save().then(
       function () {
       },
       function (reason) {
-        ok(true);
-        equal(reason.status, 400);
-        equal(reason.responseText, "{error: 'invalid data'}");
+        var error = reason.errors[0];
+        equal(error.status, "400");
+        equal(error.details, "invalid data");
         done();
       }
     );
   });
 });
 
-test("#handleUpdate the with modelType and id that fails chained", function (assert) {
+test("#handleUpdate with modelType and id that fails chained", function (assert) {
   Ember.run(function () {
     var done = assert.async();
     var profile = make('profile');
@@ -841,8 +843,8 @@ test("#handleUpdate the with modelType and id that fails chained", function (ass
       function () {
       },
       function (reason) {
-        ok(true);
-        equal(reason.status, 500);
+        var error = reason.errors[0];
+        equal(error.status, "500");
         done();
       }
     );
@@ -863,22 +865,22 @@ test("#handleUpdate with model that fails chained", function (assert) {
       function () {
       },
       function (reason) {
-        ok(true);
-        equal(reason.status, 500);
+        var error = reason.errors[0];
+        equal(error.status, "500");
         done();
       }
     );
   });
 });
 
-test("#handleUpdate with model that fail with custom response", function (assert) {
+test("#handleUpdate with model that fails with custom response", function (assert) {
   var done = assert.async();
   Ember.run(function () {
     var profile = make('profile');
 
     TestHelper.handleUpdate(profile).andFail({
       status: 400,
-      response: "{error: 'invalid data'}"
+      response: "invalid data"
     });
 
     profile.set('description', 'new desc');
@@ -886,22 +888,23 @@ test("#handleUpdate with model that fail with custom response", function (assert
       function () {
       },
       function (reason) {
-        ok(true);
-        equal(reason.responseText, "{error: 'invalid data'}");
+        var error = reason.errors[0];
+        equal(error.status, "400");
+        equal(error.details, "invalid data");
         done();
       }
     );
   });
 });
 
-test("#handleUpdate with model that fail and then succeeds", function (assert) {
+test("#handleUpdate with model that fails and then succeeds", function (assert) {
   Ember.run(function () {
     var done = assert.async();
     var profile = make('profile');
 
     var updateMock = TestHelper.handleUpdate(profile).andFail({
       status: 400,
-      response: "{error: 'invalid data'}"
+      response: "invalid data"
     });
 
     profile.set('description', 'new desc');
@@ -909,7 +912,8 @@ test("#handleUpdate with model that fail and then succeeds", function (assert) {
       function () {
       },
       function (reason) {
-        equal(reason.responseText, "{error: 'invalid data'}", "Could not save model.");
+        var error = reason.errors[0];
+        equal(error.details, "invalid data", "Could not save model.");
       }
     ).then(function () {
         updateMock.andSucceed();

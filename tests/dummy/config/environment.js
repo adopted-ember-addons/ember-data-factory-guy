@@ -11,7 +11,7 @@ module.exports = function(environment) {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
       },
-
+      isNewSerializerAPI: true
       // http://emberjs.com/guides/configuring-ember/disabling-prototype-extensions/
       //EXTEND_PROTOTYPES: false
     },
