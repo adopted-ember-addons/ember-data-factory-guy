@@ -62,6 +62,15 @@ var MockCreateRequest = function(url, store, modelName, options) {
     this.andFail(options);
   }
 
+  function modelId() {
+    if (Ember.isPresent(returnArgs) && Ember.isPresent(returnArgs['id'])) {
+      return returnArgs['id'];
+    } else {
+      var definition = FactoryGuy.modelDefinitions[modelName];
+      return definition.nextId();
+    }
+  }
+
   this.handler = function(settings) {
     if (succeed) {
       if (matchArgs) {
@@ -76,9 +85,7 @@ var MockCreateRequest = function(url, store, modelName, options) {
       this.status = 200;
       // Setting the id at the very last minute, so that calling calculate
       // again and again does not mess with id, and it's reset for each call
-      var definition = FactoryGuy.modelDefinitions[modelName];
-      var id = definition.nextId();
-      responseJson[modelName].id = id;
+      responseJson[modelName].id = modelId();
     } else {
       this.status = status;
     }
