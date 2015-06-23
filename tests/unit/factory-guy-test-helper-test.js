@@ -562,6 +562,20 @@ test("#handleCreate returns attributes with andReturns method", function (assert
   });
 });
 
+test("#handleCreate returns user-supplied model ID", function (assert) {
+  Ember.run(function () {
+    var done = assert.async();
+    var id = 42;
+
+    TestHelper.handleCreate('profile').andReturn({id: id});
+
+    store.createRecord('profile').save().then(function (profile) {
+      assert.equal(profile.get('id'), id);
+      done();
+    });
+  });
+});
+
 test("#handleCreate match attributes and return attributes with match and andReturn methods", function (assert) {
   Ember.run(function () {
     var done = assert.async();
