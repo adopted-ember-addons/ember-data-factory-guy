@@ -343,7 +343,11 @@ var FactoryGuy = function () {
   this.convertToJSONAPIFormat = function (modelName, fixture) {
     var included = [];
     var data = convertSingle(modelName, fixture, included);
-    return {data: data, included: included};
+    var jsonApiData = {data: data};
+    if (!Ember.isEmpty(included)) {
+      jsonApiData.included = included;
+    }
+    return jsonApiData;
   };
   /**
    Most of the work of making the model from the json fixture is going on here.

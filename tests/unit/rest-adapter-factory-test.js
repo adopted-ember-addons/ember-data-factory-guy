@@ -290,73 +290,13 @@ test("belongsTo associations defined with traits", function() {
 
 
 test("with (nested json fixture) belongsTo has a hasMany association which has a belongsTo", function() {
-  //var  data = {
-  //  "data": {
-  //    "type": "project",
-  //    "id": "1",
-  //    "attributes": {
-  //      "title": "JSON API paints my bikeshed!"
-  //    },
-  //    "relationships": {
-  //      "user": {
-  //        "data": { "id": "1", "type": "user" },
-  //      }
-  //    }
-  //  },
-  //  "included": [{
-  //    "type": "user",
-  //    "id": "1",
-  //    "attributes": {
-  //      "name": "Dan",
-  //    },
-  //    "relationships": {
-  //      "hats": {
-  //        data: [
-  //          { "type": "big-hat", "id": "1" },
-  //          { "type": "small-hat", "id": "2" }
-  //        ]}
-  //      }
-  //  }, {
-  //    "type": "big-hat",
-  //    "id": "1",
-  //    "attributes": {
-  //      "type": "BigHat"
-  //    },
-  //    "relationships": {
-  //      "outfit": {
-  //        data: { id: 1, type: 'outfit' }
-  //      }
-  //    }
-  //  }, {
-  //    "type": "small-hat",
-  //    "id": "2",
-  //    "attributes": {
-  //      "type": "SmallHat"
-  //    }
-  //  },{
-  //    "type": "outfit",
-  //    "id": "1",
-  //    "attributes": {
-  //      "name": "outfit"
-  //    }
-  //  }
-  //  ]
-  //}
-
-
-  Em.run(function(){
-
-  //var project = store.push(data);
   var project = make('project', 'with_user_having_hats_belonging_to_outfit');
-  //console.log(project+'', 'then:', project.then+'')
-  //console.log('all users', store.peekAll('user').get('content.firstObject.project')+'')
+
   var user = project.get('user');
-  //console.log('project user',user+'')
   var hats = user.get('hats');
-  //console.log('hats',hats+'')
   var firstHat = hats.get('firstObject');
   var lastHat = hats.get('lastObject');
-  //console.log(lastHat+'')
+
   ok(user.get('projects.firstObject') === project);
   ok(firstHat.get('user') === user);
   ok(firstHat.get('outfit.id') === '1');
@@ -367,7 +307,6 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
   ok(lastHat.get('outfit.id') === '2');
   ok(lastHat.get('outfit.hats.length') === 1);
   ok(lastHat.get('outfit.hats.firstObject') === lastHat);
-  });
 });
 
 

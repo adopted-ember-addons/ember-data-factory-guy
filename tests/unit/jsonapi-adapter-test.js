@@ -88,8 +88,8 @@ test("#build with (nested json fixture) belongsTo has a hasMany association whic
   };
 
   var projectJson = build('project', 'with_user_having_hats_belonging_to_outfit');
-  deepEqual(projectJson.data, expectedData.data)
-  deepEqual(projectJson.included, expectedData.included)
+  deepEqual(projectJson.data, expectedData.data);
+  deepEqual(projectJson.included, expectedData.included);
 });
 
 test("#make with (nested json fixture) belongsTo has a hasMany association which has a belongsTo", function () {
@@ -97,16 +97,14 @@ test("#make with (nested json fixture) belongsTo has a hasMany association which
 
   var user = project.get('user');
   var hats = user.get('hats');
-  //console.log('hats',hats.mapBy('outfit.name')+'')
   var firstHat = hats.get('firstObject');
   var lastHat = hats.get('lastObject');
-  //console.log(lastHat+'')
+
   ok(user.get('projects.firstObject') === project);
   ok(firstHat.get('user') === user);
   ok(firstHat.get('outfit.id') === '1');
+
   var outfit1 = firstHat.get('outfit');
-  console.log('outfit1', outfit1+'', outfit1)
-  console.log('outfit1 hats', outfit1.get('hats')+'', outfit1.get('hats.length')+'')
   ok(outfit1.get('hats.length') === 1);
   ok(firstHat.get('outfit.hats.firstObject') === firstHat);
 
