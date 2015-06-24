@@ -1,15 +1,15 @@
-import FactoryGuy from './factory-guy';
 import Ember from 'ember';
+import FactoryGuy from './factory-guy';
 import $ from 'jquery';
 
-var MockCreateRequest = function (url, store, modelName, options) {
+var MockCreateRequest = function (url, modelName, options) {
   var status = options.status;
   var succeed = options.succeed === undefined ? true : options.succeed;
   var matchArgs = options.match;
   var returnArgs = options.returns;
   var responseJson = {};
   var expectedRequest = {};
-  var modelClass = store.modelFor(modelName);
+  var store = FactoryGuy.getStore();
 
   this.calculate = function () {
     if (matchArgs) {
@@ -18,12 +18,13 @@ var MockCreateRequest = function (url, store, modelName, options) {
       // TODO: Figure out how to use serializer without a record instance
       var tmpRecord = store.createRecord(modelName, matchArgs);
       expectedRequest = tmpRecord.serialize();
+      //console.log('MCR expectedRequest', expectedRequest);
       tmpRecord.deleteRecord();
     }
 
     if (succeed) {
+      var modelClass = store.modelFor(modelName);
       responseJson[modelName] = $.extend({}, matchArgs, returnArgs);
-      console.log('responseJson[modelName]', responseJson[modelName]);
       // Remove belongsTo associations since they will already be set when you called
       // createRecord, so they don't need to be returned.
       Ember.get(modelClass, 'relationshipsByName').forEach(function (relationship) {
@@ -65,46 +66,70 @@ var MockCreateRequest = function (url, store, modelName, options) {
 
   var attributesMatch = function (requestData, expectedData) {
     // convert to json-api style data for standardization purposes
+    var allMatch = true;
     if (!expectedData.data) {
-      expectedData = store.normalize(modelName, expectedData).data;
+      expectedData = store.normalize(modelName, expectedData);
     }
     if (!requestData.data && requestData[modelName]) {
-      requestData = store.normalize(modelName, requestData[modelName]).data;
+      requestData = store.normalize(modelName, requestData[modelName]);
     }
-    //console.log('requestData',requestData.attributes)
-    //console.log('expectedData',expectedData.attributes)
-    for (var attribute in expectedData.attributes) {
-      if (expectedData.attributes[attribute]) {
+    var expectedAttributes = expectedData.data.attributes;
+    var requestedAttributes = requestData.data.attributes;
+    //console.log('expectedAttributes',expectedAttributes);
+    for (var attribute in expectedAttributes) {
+      if (expectedAttributes[attribute]) {
+        //console.log('expectedAttributes[attribute]',expectedAttributes[attribute])
         // compare as strings for date comparison
-        //console.log(attribute, expectedData.attributes[attribute].toString(), requestData.attributes[attribute].toString(), requestData.attributes[attribute].toString() === expectedData.attributes[attribute].toString())
-        if (requestData.attributes[attribute].toString() !== expectedData.attributes[attribute].toString()) {
-          return false;
+        var requestAttribute = requestedAttributes[attribute].toString();
+        var expectedAttribute = expectedAttributes[attribute].toString();
+        //console.log(requestAttribute, expectedAttribute, requestAttribute !== expectedAttribute);
+        if (requestAttribute !== expectedAttribute) {
+          allMatch = false;
+          break;
         }
       }
     }
-    return true;
+    //console.log('attributesMatch', requestData, expectedData, allMatch);
+    return allMatch;
   };
 
+  /*
+   Setting the id at the very last minute, so that calling calculate
+   again and again does not mess with id, and it's reset for each call.
+   */
+  function modelId() {
+    if (Ember.isPresent(returnArgs) && Ember.isPresent(returnArgs['id'])) {
+      return returnArgs['id'];
+    } else {
+      var definition = FactoryGuy.findModelDefinition(modelName);
+      return definition.nextId();
+    }
+  }
+
   this.handler = function (settings) {
+    // need to clone the response since it could be used a few times in a row,
+    // in a loop where you're doing createRecord of same model type
+    var finalResponseJson = $.extend({}, true, responseJson);
+
     if (succeed) {
       if (matchArgs) {
         var requestData = JSON.parse(settings.data);
-        //console.log('requestData', requestData);
-        //console.log('expectedRequest', expectedRequest);
         if (!attributesMatch(requestData, expectedRequest)) {
           return false;
         }
       }
       this.status = 200;
-      // Setting the id at the very last minute, so that calling calculate
-      // again and again does not mess with id, and it's reset for each call
-      var definition = FactoryGuy.findModelDefinition(modelName);
-      var id = definition.nextId();
-      responseJson[modelName].id = id;
+      // add the id
+      finalResponseJson[modelName].id = modelId();
+      // convert to JSONAPI if needed
+      if (FactoryGuy.useJSONAPI()) {
+        finalResponseJson = FactoryGuy.convertToJSONAPIFormat(modelName, finalResponseJson[modelName]);
+      }
+      //console.log('MCR 2', 'responseJson', finalResponseJson);
     } else {
       this.status = status;
     }
-    this.responseText = responseJson;
+    this.responseText = finalResponseJson;
   };
 
   var requestConfig = {

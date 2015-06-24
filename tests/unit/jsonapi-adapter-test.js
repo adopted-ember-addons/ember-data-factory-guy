@@ -1,116 +1,48 @@
-import Ember from 'ember';
-import FactoryGuy, { make, build } from 'ember-data-factory-guy';
-import { theUsualSetup, theUsualTeardown } from '../helpers/utility-methods';
+import SharedFactoryGuyBehavior from './shared-factory-guy-tests';
+import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
+import { title, inlineSetup } from '../helpers/utility-methods';
 
-import User from 'dummy/models/user';
-import BigHat from 'dummy/models/big-hat';
-import SmallHat from 'dummy/models/small-hat';
-import Outfit from 'dummy/models/outfit';
+var App = null;
+var adapter = 'DS.JSONAPIAdapter';
+var adapterType = '-json-api';
+//var adapterType = '-rest';
+//var adapterType = '-active-model';
 
-var App, store;
+module(title(adapter, 'FactoryGuy#make'), inlineSetup(App, adapterType));
+SharedFactoryGuyBehavior.makeTests();
 
-module('FactoryGuy with DS.JSONAPIAdapter', {
-  setup: function () {
-    App = theUsualSetup('-json-api');
-    store = FactoryGuy.getStore();
-  },
-  teardown: function () {
-    theUsualTeardown(App);
-  }
-});
 
-test("#build with (nested json fixture) belongsTo has a hasMany association which has a belongsTo", function () {
+module(title(adapter, 'FactoryGuy#makeList'), inlineSetup(App, adapterType));
+SharedFactoryGuyBehavior.makeListTests();
 
-  var expectedData = {
-    "data": {
-      "type": "project",
-      "id": 1,
-      "attributes": {
-        "title": "Project1"
-      },
-      "relationships": {
-        "user": {
-          "data": {"id": 1, "type": "user"},
-        }
-      }
-    },
-    "included": [
-      {
-        "type": "outfit",
-        "id": 1,
-        "attributes": {
-          "name": "Outfit1"
-        },
-      }, {
-        "type": "big-hat",
-        "id": 1,
-        "attributes": {
-          "type": "BigHat"
-        },
-        "relationships": {
-          "outfit": {
-            data: {id: 1, type: 'outfit'}
-          }
-        }
-      }, {
-        "type": "outfit",
-        "id": 2,
-        "attributes": {
-          "name": "Outfit2"
-        },
-      }, {
-        "type": "big-hat",
-        "id": 2,
-        "attributes": {
-          "type": "BigHat"
-        },
-        "relationships": {
-          "outfit": {
-            data: {id: 2, type: 'outfit'}
-          }
-        }
-      }, {
-        "type": "user",
-        "id": 1,
-        "attributes": {
-          "name": "User1",
-        },
-        "relationships": {
-          "hats": {
-            data: [
-              {"type": "big-hat", "id": 1},
-              {"type": "big-hat", "id": 2}
-            ]
-          }
-        }
-      }
-    ]
-  };
 
-  var projectJson = build('project', 'with_user_having_hats_belonging_to_outfit');
-  deepEqual(projectJson.data, expectedData.data);
-  deepEqual(projectJson.included, expectedData.included);
-});
+module(title(adapter, 'FactoryGuy#build'), inlineSetup(App, adapterType));
+SharedFactoryGuyBehavior.buildTests();
 
-test("#make with (nested json fixture) belongsTo has a hasMany association which has a belongsTo", function () {
-  var project = make('project', 'with_user_having_hats_belonging_to_outfit');
 
-  var user = project.get('user');
-  var hats = user.get('hats');
-  var firstHat = hats.get('firstObject');
-  var lastHat = hats.get('lastObject');
+module(title(adapter, 'FactoryGuy#buildList'), inlineSetup(App, adapterType));
+SharedFactoryGuyBehavior.buildListTests();
+//SharedFactoryGuyBehavior.buildListJSONAPITests();
 
-  ok(user.get('projects.firstObject') === project);
-  ok(firstHat.get('user') === user);
-  ok(firstHat.get('outfit.id') === '1');
+module(title(adapter, 'FactoryGuyTestHelper#handleReload'), inlineSetup(App, adapterType));
+SharedFactoryGuyTestHelperBehavior.handleReloadTests();
 
-  var outfit1 = firstHat.get('outfit');
-  ok(outfit1.get('hats.length') === 1);
-  ok(firstHat.get('outfit.hats.firstObject') === firstHat);
 
-  ok(lastHat.get('user') === user);
-  ok(lastHat.get('outfit.id') === '2');
-  ok(lastHat.get('outfit.hats.length') === 1);
-  ok(lastHat.get('outfit.hats.firstObject') === lastHat);
+module(title(adapter, 'FactoryGuyTestHelper#handleFindAll'), inlineSetup(App, adapterType));
+SharedFactoryGuyTestHelperBehavior.handleFindAllTests();
 
-});
+
+//module(title(adapter, 'FactoryGuyTestHelper#handleFindQuery'), inlineSetup(App, adapterType));
+//SharedFactoryGuyTestHelperBehavior.handleFindQueryTests();
+
+
+module(title(adapter, 'FactoryGuyTestHelper#handleCreate'), inlineSetup(App, adapterType));
+SharedFactoryGuyTestHelperBehavior.handleCreateTests();
+
+
+module(title(adapter, 'FactoryGuyTestHelper#handleUpdate'), inlineSetup(App, adapterType));
+SharedFactoryGuyTestHelperBehavior.handleUpdateTests();
+
+
+module(title(adapter, 'FactoryGuyTestHelper#handleDelete'), inlineSetup(App, adapterType));
+SharedFactoryGuyTestHelperBehavior.handleDeleteTests();

@@ -46,9 +46,23 @@ var FactoryGuy = function () {
   this.define = function (model, config) {
     modelDefinitions[model] = new ModelDefinition(model, config);
   };
-
+  /*
+    @param model name of named fixture type like: 'admin' or model name like 'user'
+    @returns {ModelDefinition} if there is one matching that name
+   */
   this.findModelDefinition = function (model) {
     return modelDefinitions[model];
+  };
+  /*
+   Using JSONAPIAdapter ?
+   */
+  this.useJSONAPI = function () {
+    var adapter = store.adapterFor('application');
+    var useJSONAPI = (adapter instanceof DS.JSONAPIAdapter);
+    var isREST = (adapter instanceof DS.RESTAdapter) && !useJSONAPI;
+    var isAMS = (adapter instanceof DS.ActiveModelAdapter);
+    //console.log('isREST', isREST, 'isAMS', isAMS, 'useJSONAPI', useJSONAPI);
+    return !isAMS && !isREST;
   };
   /**
    Setting the store so FactoryGuy can do some model introspection.
@@ -229,14 +243,12 @@ var FactoryGuy = function () {
   this.build = function () {
     var args = extractArguments.apply(this, arguments);
     var fixture = this.buildSingle.apply(this, arguments);
-    //var adapter = store.adapterFor('application');
-    var modelName = lookupModelForFixtureName(args.name);
-    //console.log('build app adapter', adapter + '');
-    //if (adapter instanceof DS.JSONAPIAdapter) {
-    return this.convertToJSONAPIFormat(modelName, fixture);
-    //} else {
-    //  return fixture;
-    //}
+    if (this.useJSONAPI()) {
+      var modelName = lookupModelForFixtureName(args.name);
+      return this.convertToJSONAPIFormat(modelName, fixture);
+    } else {
+      return fixture;
+    }
   };
   this.buildSingle = function () {
     var args = extractArguments.apply(this, arguments);
@@ -261,8 +273,16 @@ var FactoryGuy = function () {
    @returns {Array} list of fixtures
    */
   this.buildList = function () {
+    var args = Array.prototype.slice.call(arguments);
+    var name = args.shift();
     var list = this.buildSingleList.apply(this, arguments);
-    return list;
+
+    if (this.useJSONAPI()) {
+      var modelName = lookupModelForFixtureName(name);
+      return this.convertToJSONAPIFormat(modelName, list);
+    } else {
+      return list;
+    }
   };
 
   this.buildSingleList = function () {
@@ -301,9 +321,9 @@ var FactoryGuy = function () {
     );
 
     var data = this.build.apply(this, arguments);
-    //console.log('data=>', data)
     var modelName = lookupModelForFixtureName(args.name);
-    var model = makeModel(modelName, data);
+
+    var model = makeModel.call(this, modelName, data);
 
     var definition = lookupDefinitionForFixtureName(args.name);
     if (definition.hasAfterMake()) {
@@ -342,7 +362,15 @@ var FactoryGuy = function () {
    */
   this.convertToJSONAPIFormat = function (modelName, fixture) {
     var included = [];
-    var data = convertSingle(modelName, fixture, included);
+    var data;
+
+    if (Ember.typeOf(fixture) === 'array') {
+      data = fixture.map(function(single) {
+        return convertSingle(modelName, single, included);
+      });
+    } else {
+      data = convertSingle(modelName, fixture, included);
+    }
     var jsonApiData = {data: data};
     if (!Ember.isEmpty(included)) {
       jsonApiData.included = included;
@@ -350,26 +378,23 @@ var FactoryGuy = function () {
     return jsonApiData;
   };
   /**
-   Most of the work of making the model from the json fixture is going on here.
+   Push the data into the store to make the model.
 
-   @param modelType
-   @param fixture
+   @param modelName
+   @param data
    @returns {DS.Model} instance of DS.Model
    */
-  var makeModel = function (modelName, fixture) {
+  var makeModel = function (modelName, data) {
     var model;
 
-    //var adapter = store.adapterFor('application');
-    //console.log(modelName, 'adapter', adapter + '', adapter instanceof DS.JSONAPIAdapter);
-    //if (!(adapter instanceof DS.JSONAPIAdapter)) {
-    //  findEmbeddedAssociationsForRESTAdapter(modelName, fixture);
-      //fixture = store.normalize(modelName, fixture);
-      //console.log('data', data.data);
-    //}
+    // make should always convert data to JSONAPI format, since the
+    // store.push method expects that format
+    if (!this.useJSONAPI()) {
+      data = this.convertToJSONAPIFormat(modelName, data);
+    }
 
     Ember.run(function () {
-      model = store.push(fixture);
-      //model = store.push(modelName, fixture);
+      model = store.push(data);
     });
 
     return model;
@@ -426,7 +451,13 @@ var FactoryGuy = function () {
     }
     return data;
   };
+  /*
+    Find the attributes in the fixture.
 
+    @param modelName
+    @param fixture
+    @returns {{}}
+   */
   var extractAttributes = function (modelName, fixture) {
     var attributes = {};
     store.modelFor(modelName).eachAttribute(function (attribute) {
@@ -435,6 +466,15 @@ var FactoryGuy = function () {
       }
     });
     return attributes;
+  };
+  /*
+    Add the model to included array unless it's already there.
+   */
+  var addToIncluded = function (included, data) {
+    var found = included.find(function(model) {
+      return model.id === data.id && model.type === data.type;
+    });
+    if (!found) { included.push(data); }
   };
   /**
 
@@ -456,7 +496,7 @@ var FactoryGuy = function () {
             // find possibly more embedded fixtures
             var relationshipType = isPolymorphic ? Ember.String.dasherize(embeddedFixture.type) : relationship.type;
             var data = convertSingle(relationshipType, embeddedFixture, included);
-            included.push(data);
+            addToIncluded(included, data);
             relationships[relationship.key] = {data: normalizeJSONAPIAssociation(data, relationship)};
           } else if (Ember.typeOf(belongsToRecord) === 'instance') {
             relationships[relationship.key] = {data: normalizeJSONAPIAssociation(belongsToRecord, relationship)};
@@ -469,7 +509,7 @@ var FactoryGuy = function () {
                 var embeddedFixture = hasManyRecord;
                 var relationshipType = isPolymorphic ? Ember.String.dasherize(embeddedFixture.type) : relationship.type;
                 var data = convertSingle(relationshipType, embeddedFixture, included);
-                included.push(data);
+                addToIncluded(included, data);
                 return normalizeJSONAPIAssociation(data, relationship);
               } else if (Ember.typeOf(hasManyRecord) === 'instance') {
                 return normalizeJSONAPIAssociation(hasManyRecord, relationship);

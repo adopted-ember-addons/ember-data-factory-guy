@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import FactoryGuy, { make } from 'ember-data-factory-guy';
-import startApp from '../../helpers/start-app';
+import startApp from '../helpers/start-app';
 
 var App = null;
 
@@ -12,7 +12,6 @@ module('User Model', {
     Ember.run(App, 'destroy');
   }
 });
-
 
 test('has funny name', function() {
   var user = make('user', {name: 'Dude'});

@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import FactoryGuy from './factory-guy';
 
 var MockGetRequest = function (url, modelName, id, mapFind) {
   var status = 200;
@@ -28,7 +29,14 @@ var MockGetRequest = function (url, modelName, id, mapFind) {
       this.responseText = response;
     } else {
       this.status = status;
-      this.responseText = mapFind(modelName, {id:id});
+      var responseJson = mapFind(modelName, {id:id});
+      //console.log('MCR ', modelName, 'responseJson', responseJson);
+      //  Convert to JSONAPI if appropriate
+      if (FactoryGuy.useJSONAPI()) {
+        responseJson = FactoryGuy.convertToJSONAPIFormat(modelName, responseJson[modelName]);
+      }
+      //console.log('MCR ', 'responseJson', responseJson);
+      this.responseText = responseJson;
     }
   };
 
