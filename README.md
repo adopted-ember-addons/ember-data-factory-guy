@@ -583,7 +583,7 @@ test('it has projects', function() {
 - Uses mockjax
 - Has helper methods
   - handleFindAll
-  - handleFind
+  - handleReload
   - handleFindQuery
   - handleCreate
   - handleUpdate
@@ -626,7 +626,7 @@ will look like this:
 ```
 
  
-##### handleFind
+##### handleReload
   - To handle reloading a model 
     - Pass in a record ( or a typeName and id )
     - Use andFail to mock failure
@@ -637,7 +637,7 @@ will look like this:
 ```javascript
     var profile = FactoryGuy.make('profile')
     // Using handleFind   
-    TestHelper.handleFind(profile);
+    TestHelper.handleReload(profile);
 
     // will stub a call to reload that profile
     profile.reload()
@@ -647,7 +647,7 @@ will look like this:
 
 ```javascript
 
-    TestHelper.handleFind('profile', 1).andFail();
+    TestHelper.handleReload('profile', 1).andFail();
     
 ```
 
