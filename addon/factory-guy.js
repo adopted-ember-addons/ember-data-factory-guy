@@ -170,9 +170,8 @@ var FactoryGuy = function () {
    @returns {Function} wrapper function that will build the association json
    */
   this.hasMany = function (fixtureName, number, opts) {
-    var self = this;
     return function () {
-      return self.buildSingleList(fixtureName, number, opts);
+      return buildSingleList(fixtureName, number, opts);
     };
   };
   /**
@@ -274,7 +273,7 @@ var FactoryGuy = function () {
   this.buildList = function () {
     var args = Array.prototype.slice.call(arguments);
     var name = args.shift();
-    var list = this.buildSingleList.apply(this, arguments);
+    var list = buildSingleList.apply(this, arguments);
 
     if (this.useJSONAPI()) {
       var modelName = lookupModelForFixtureName(name);
@@ -284,7 +283,7 @@ var FactoryGuy = function () {
     }
   };
 
-  this.buildSingleList = function () {
+  var buildSingleList = function () {
     var args = Array.prototype.slice.call(arguments);
     var name = args.shift();
     var number = args.shift();
@@ -398,24 +397,14 @@ var FactoryGuy = function () {
 
     return model;
   };
-
   /**
    In order to conform to the way ember data expects to handle relationships
-   in a json payload ( during deserialization ), convert an record ( model instance )
-   into an id reference or object with type and id for polymorphic models.
-   Thought this ( polymorphic object ) is not json-api standard and might change ??
+   in a json payload ( during deserialization ), convert a record ( model instance )
+   into an object with type and id, or convert object same way.
 
    @param record
    @param relationship
    */
-  //var normalizeAssociation = function (record, relationship) {
-  //  if (relationship.options.polymorphic) {
-  //    return {type: record.constructor.modelName, id: record.id};
-  //  } else {
-  //    return record.id;
-  //  }
-  //};
-
   var normalizeJSONAPIAssociation = function (record, relationship) {
     if (Ember.typeOf(record) === 'object') {
       if (relationship.options.polymorphic) {
@@ -427,7 +416,6 @@ var FactoryGuy = function () {
       return {type: record.constructor.modelName, id: record.id};
     }
   };
-
   /**
    Recursively descend into the fixture json, looking for relationships that are
    either record instances or other fixture objects that need to be normalized
@@ -521,42 +509,6 @@ var FactoryGuy = function () {
     });
     return relationships;
   };
-
-  //var findEmbeddedAssociationsForRESTAdapter = function (modelName, fixture) {
-  //  var modelClass = store.modelFor(modelName);
-  //  modelClass.eachRelationship(function (name, relationship) {
-  //
-  //    if (relationship.kind === 'belongsTo') {
-  //      var belongsToRecord = fixture[relationship.key];
-  //      if (Ember.typeOf(belongsToRecord) === 'object') {
-  //        findEmbeddedAssociationsForRESTAdapter(relationship.type, belongsToRecord);
-  //        var isPolymorphic = relationship.options.polymorphic;
-  //        var relationshipType = isPolymorphic ? Ember.String.dasherize(belongsToRecord.type) : relationship.type;
-  //        var data = store.normalize(relationshipType, belongsToRecord);
-  //        belongsToRecord = store.push(data);
-  //        fixture[relationship.key] = normalizeAssociation(belongsToRecord, relationship);
-  //      } else if (Ember.typeOf(belongsToRecord) === 'instance') {
-  //        fixture[relationship.key] = normalizeAssociation(belongsToRecord, relationship);
-  //      }
-  //    }
-  //
-  //    if (relationship.kind === 'hasMany') {
-  //      var hasManyRecords = fixture[relationship.key];
-  //
-  //      if (Ember.typeOf(hasManyRecords) === 'array') {
-  //        var records = hasManyRecords.map(function (record) {
-  //          if (Ember.typeOf(record) === 'object') {
-  //            findEmbeddedAssociationsForRESTAdapter(relationship.type, record);
-  //            var data = store.normalize(relationship.type, record);
-  //            record = store.push(data);
-  //          }
-  //          return normalizeAssociation(record, relationship);
-  //        });
-  //        fixture[relationship.key] = records;
-  //      }
-  //    }
-  //  });
-  //};
 
   /**
    Clear model instances from store cache.
