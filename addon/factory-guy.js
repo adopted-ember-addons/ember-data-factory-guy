@@ -225,13 +225,19 @@ var FactoryGuy = function () {
     return {name: name, opts: opts, traits: traits};
   };
   /**
-   Build fixtures for model or specific fixture name. For example:
+   Build fixtures for model or specific fixture name.
+
+   For example:
+
+   ```
 
    FactoryGuy.build('user') for User model
    FactoryGuy.build('bob') for a 'bob' User
    FactoryGuy.build('bob', 'dude') for a 'bob' User with dude traits
    FactoryGuy.build('bob', 'dude', 'funny') for a 'bob' User with dude and funny traits
    FactoryGuy.build('bob', 'dude', {name: 'wombat'}) for a 'bob' User with dude trait and custom attribute name of 'wombat'
+
+   ```
 
    @param {String} name  fixture name
    @param {String} trait  optional trait names ( one or more )
@@ -261,8 +267,12 @@ var FactoryGuy = function () {
   /**
    Build list of fixtures for model or specific fixture name. For example:
 
+   ```
+
    FactoryGuy.buildList('user', 2) for 2 User models
    FactoryGuy.build('bob', 2) for 2 User model with bob attributes
+
+   ```
 
    @param {String} name  fixture name
    @param {Number} number  number of fixtures to create
