@@ -2,9 +2,9 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import ModelDefinition from './model-definition';
 
-var FactoryGuy = Ember.Object.create({
-  stores: Ember.inject.service('store'),
-  modelDefinitions: {},
+var FactoryGuy = function () {
+  var modelDefinitions = {};
+  var store = null;
   /**
    ```javascript
 
@@ -43,37 +43,36 @@ var FactoryGuy = Ember.Object.create({
    @param {String} model the model to define
    @param {Object} config your model definition
    */
-  define: function (model, config) {
-    this.modelDefinitions[model] = new ModelDefinition(model, config);
-  },
+  this.define = function (model, config) {
+    modelDefinitions[model] = new ModelDefinition(model, config);
+  };
+  /*
+    @param model name of named fixture type like: 'admin' or model name like 'user'
+    @returns {ModelDefinition} if there is one matching that name
+   */
+  this.findModelDefinition = function (model) {
+    return modelDefinitions[model];
+  };
+  /*
+   Using JSONAPIAdapter ?
+   */
+  this.useJSONAPI = function () {
+    var adapter = store.adapterFor('application');
+    var useJSONAPI = (adapter instanceof DS.JSONAPIAdapter);
+    var isREST = (adapter instanceof DS.RESTAdapter) && !useJSONAPI;
+    var isAMS = (adapter instanceof DS.ActiveModelAdapter);
+    return !isAMS && !isREST;
+  };
   /**
    Setting the store so FactoryGuy can do some model introspection.
    */
-  setStore: function (store) {
-    Ember.assert("FactoryGuy#setStore needs a valid store instance.You passed in [" + store + "]", store instanceof DS.Store);
-    this.store = store;
-  },
-  getStore: function () {
-    return this.store;
-  },
-  /**
-   Checks a model's attribute to determine if it's a relationship.
-
-   @param {String} typeName  model type name like 'user' for User model class
-   @param {String} attribute  attribute you want to check
-   @returns {Boolean} true if the attribute is a relationship, false if not
-   */
-  getAttributeRelationship: function (typeName, attribute) {
-    if (!this.store) {
-      Ember.debug("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures");
-      // The legacy value was true.
-      return true;
-    }
-
-    var model = this.store.modelFor(typeName);
-    var relationship = Ember.get(model, 'relationshipsByName').get(attribute);
-    return !!relationship ? relationship : null;
-  },
+  this.setStore = function (aStore) {
+    Ember.assert("FactoryGuy#setStore needs a valid store instance.You passed in [" + aStore + "]", aStore instanceof DS.Store);
+    store = aStore;
+  };
+  this.getStore = function () {
+    return store;
+  };
   /**
    Used in model definitions to declare use of a sequence. For example:
 
@@ -97,7 +96,7 @@ var FactoryGuy = Ember.Object.create({
    @returns {Function} wrapper function that is called by the model
    definition containing the sequence
    */
-  generate: function (nameOrFunction) {
+  this.generate = function (nameOrFunction) {
     var sortaRandomName = Math.floor((1 + Math.random()) * 65536).toString(16) + Date.now();
     return function () {
       // this function will be called by ModelDefinition, which has it's own generate method
@@ -107,7 +106,7 @@ var FactoryGuy = Ember.Object.create({
         return this.generate(nameOrFunction);
       }
     };
-  },
+  };
   /**
    Used in model definitions to define a belongsTo association attribute.
    For example:
@@ -136,11 +135,12 @@ var FactoryGuy = Ember.Object.create({
    @param   {Object} opts options
    @returns {Function} wrapper function that will build the association json
    */
-  belongsTo: function (fixtureName, opts) {
+  this.belongsTo = function (fixtureName, opts) {
+    var self = this;
     return function () {
-      return FactoryGuy.build(fixtureName, opts);
+      return self.buildSingle(fixtureName, opts);
     };
-  },
+  };
   /**
    Used in model definitions to define a hasMany association attribute.
    For example:
@@ -169,11 +169,12 @@ var FactoryGuy = Ember.Object.create({
    @param   {Object} opts options
    @returns {Function} wrapper function that will build the association json
    */
-  hasMany: function (fixtureName, number, opts) {
+  this.hasMany = function (fixtureName, number, opts) {
+    var self = this;
     return function () {
-      return FactoryGuy.buildList(fixtureName, number, opts);
+      return self.buildSingleList(fixtureName, number, opts);
     };
-  },
+  };
   /**
    Given a fixture name like 'person' or 'dude' determine what model this name
    refers to. In this case it's 'person' for each one.
@@ -182,26 +183,26 @@ var FactoryGuy = Ember.Object.create({
    or a named person in model definition like 'dude'
    @returns {String} model  name associated with fixture name or undefined if not found
    */
-  lookupModelForFixtureName: function (name) {
-    var definition = this.lookupDefinitionForFixtureName(name);
+  var lookupModelForFixtureName = function (name) {
+    var definition = lookupDefinitionForFixtureName(name);
     if (definition) {
-      return definition.model;
+      return definition.modelName;
     }
-  },
+  };
   /**
 
    @param {String} name a fixture name could be model name like 'person'
    or a named person in model definition like 'dude'
    @returns {ModelDefinition} ModelDefinition associated with model or undefined if not found
    */
-  lookupDefinitionForFixtureName: function (name) {
-    for (var model in this.modelDefinitions) {
-      var definition = this.modelDefinitions[model];
+  var lookupDefinitionForFixtureName = function (name) {
+    for (var model in modelDefinitions) {
+      var definition = modelDefinitions[model];
       if (definition.matchesName(name)) {
         return definition;
       }
     }
-  },
+  };
   /**
    extract arguments for build and make function
    @param {String} name  fixture name
@@ -209,7 +210,7 @@ var FactoryGuy = Ember.Object.create({
    @param {Object} opts  optional fixture options that will override default fixture values
    @returns {Object} json fixture
    */
-  extractArguments: function () {
+  var extractArguments = function () {
     var args = Array.prototype.slice.call(arguments);
 
     var opts = {};
@@ -223,7 +224,7 @@ var FactoryGuy = Ember.Object.create({
     // whatever is left are traits
     var traits = Ember.A(args).compact();
     return {name: name, opts: opts, traits: traits};
-  },
+  };
   /**
    Build fixtures for model or specific fixture name. For example:
 
@@ -238,15 +239,26 @@ var FactoryGuy = Ember.Object.create({
    @param {Object} opts  optional fixture options that will override default fixture values
    @returns {Object} json fixture
    */
-  build: function () {
-    var args = this.extractArguments.apply(this, arguments);
+  this.build = function () {
+    var args = extractArguments.apply(this, arguments);
+    var fixture = this.buildSingle.apply(this, arguments);
+    if (this.useJSONAPI()) {
+      var modelName = lookupModelForFixtureName(args.name);
+      return this.convertToJSONAPIFormat(modelName, fixture);
+    } else {
+      return fixture;
+    }
+  };
+  this.buildSingle = function () {
+    var args = extractArguments.apply(this, arguments);
 
-    var definition = this.lookupDefinitionForFixtureName(args.name);
+    var definition = lookupDefinitionForFixtureName(args.name);
     if (!definition) {
       throw new Error('Can\'t find that factory named [' + args.name + ']');
     }
+
     return definition.build(args.name, args.opts, args.traits);
-  },
+  };
   /**
    Build list of fixtures for model or specific fixture name. For example:
 
@@ -259,7 +271,20 @@ var FactoryGuy = Ember.Object.create({
    @param {Object} opts  optional fixture options that will override default fixture values
    @returns {Array} list of fixtures
    */
-  buildList: function () {
+  this.buildList = function () {
+    var args = Array.prototype.slice.call(arguments);
+    var name = args.shift();
+    var list = this.buildSingleList.apply(this, arguments);
+
+    if (this.useJSONAPI()) {
+      var modelName = lookupModelForFixtureName(name);
+      return this.convertToJSONAPIFormat(modelName, list);
+    } else {
+      return list;
+    }
+  };
+
+  this.buildSingleList = function () {
     var args = Array.prototype.slice.call(arguments);
     var name = args.shift();
     var number = args.shift();
@@ -270,42 +295,41 @@ var FactoryGuy = Ember.Object.create({
     if (Ember.typeOf(args[args.length - 1]) === 'object') {
       opts = args.pop();
     }
-    var traits = Ember.A(args).compact();
     // whatever is left are traits
-    var definition = this.lookupDefinitionForFixtureName(name);
+    var traits = Ember.A(args).compact();
+    var definition = lookupDefinitionForFixtureName(name);
     if (!definition) {
       throw new Error('Can\'t find that factory named [' + name + ']');
     }
     return definition.buildList(name, number, traits, opts);
-  },
+  };
   /**
    Make new fixture and save to store.
 
    @param {String} name  fixture name
    @param {String} trait  optional trait names ( one or more )
    @param {Object} options  optional fixture options that will override default fixture values
-   @returns {Object|DS.Model} json or record depending on the adapter type
+   @returns {DS.Model} record
    */
-  make: function () {
-    var args = this.extractArguments.apply(this, arguments);
+  this.make = function () {
+    var args = extractArguments.apply(this, arguments);
 
-    var store = this.store;
     Ember.assert(
       "FactoryGuy does not have the application's store." +
       " Use FactoryGuy.setStore(store) before making any fixtures", store
     );
 
-    var fixture = this.build.apply(this, arguments);
+    var data = this.build.apply(this, arguments);
+    var modelName = lookupModelForFixtureName(args.name);
 
-    var modelName = this.lookupModelForFixtureName(args.name);
-    var model = this.makeModel(store, modelName, fixture);
+    var model = makeModel.call(this, modelName, data);
 
-    var definition = this.lookupDefinitionForFixtureName(args.name);
-    if (definition.hasAfterMake()){
+    var definition = lookupDefinitionForFixtureName(args.name);
+    if (definition.hasAfterMake()) {
       definition.applyAfterMake(model, args.opts);
     }
     return model;
-  },
+  };
   /**
    Make a list of Fixtures
 
@@ -315,8 +339,8 @@ var FactoryGuy = Ember.Object.create({
    @param {Object} options  optional fixture options that will override default fixture values
    @returns {Array} list of json fixtures or records depending on the adapter type
    */
-  makeList: function () {
-    Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures", this.store);
+  this.makeList = function () {
+    Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.setStore(store) before making any fixtures", store);
 
     var arr = [];
     var args = Array.prototype.slice.call(arguments);
@@ -328,25 +352,52 @@ var FactoryGuy = Ember.Object.create({
       arr.push(this.make.apply(this, args));
     }
     return arr;
-  },
-
+  };
   /**
-   Most of the work of making the model from the json fixture is going on here.
 
-   @param modelType
+   @param modelName
    @param fixture
+   @returns {{data: {type: *, id: *, attributes}, included: Array}}
+   */
+  this.convertToJSONAPIFormat = function (modelName, fixture) {
+    var included = [];
+    var data;
+
+    if (Ember.typeOf(fixture) === 'array') {
+      data = fixture.map(function(single) {
+        return convertSingle(modelName, single, included);
+      });
+    } else {
+      data = convertSingle(modelName, fixture, included);
+    }
+    var jsonApiData = {data: data};
+    if (!Ember.isEmpty(included)) {
+      jsonApiData.included = included;
+    }
+    return jsonApiData;
+  };
+  /**
+   Push the data into the store to make the model.
+
+   @param modelName
+   @param data
    @returns {DS.Model} instance of DS.Model
    */
-  makeModel: function (store, modelName, fixture) {
+  var makeModel = function (modelName, data) {
     var model;
-    var self = this;
+
+    // make should always convert data to JSONAPI format, since the
+    // store.push method expects that format
+    if (!this.useJSONAPI()) {
+      data = this.convertToJSONAPIFormat(modelName, data);
+    }
 
     Ember.run(function () {
-      self.findEmbeddedAssociationsForRESTAdapter(store, modelName, fixture);
-      model = store.push(modelName, fixture);
+      model = store.push(data);
     });
+
     return model;
-  },
+  };
 
   /**
    In order to conform to the way ember data expects to handle relationships
@@ -357,82 +408,181 @@ var FactoryGuy = Ember.Object.create({
    @param record
    @param relationship
    */
-  normalizeAssociation: function (record, relationship) {
-    if (relationship.options.polymorphic) {
-      return {type: record.constructor.modelName, id: record.id};
+  //var normalizeAssociation = function (record, relationship) {
+  //  if (relationship.options.polymorphic) {
+  //    return {type: record.constructor.modelName, id: record.id};
+  //  } else {
+  //    return record.id;
+  //  }
+  //};
+
+  var normalizeJSONAPIAssociation = function (record, relationship) {
+    if (Ember.typeOf(record) === 'object') {
+      if (relationship.options.polymorphic) {
+        return {type: Ember.String.dasherize(record.type), id: record.id};
+      } else {
+        return {type: record.type, id: record.id};
+      }
     } else {
-      return record.id;
+      return {type: record.constructor.modelName, id: record.id};
     }
-  },
+  };
 
   /**
    Recursively descend into the fixture json, looking for relationships that are
-   either record instances or other fixture objects that need to be turned into
-   records.
+   either record instances or other fixture objects that need to be normalized
+   and/or included in the 'included' hash
 
-   @param store
    @param modelName
    @param fixture
+   @param included
+   @returns {{type: *, id: *, attributes}}
    */
-  findEmbeddedAssociationsForRESTAdapter: function (store, modelName, fixture) {
-    var self = this;
-    var modelClass = store.modelFor(modelName);
-    modelClass.eachRelationship(function (name, relationship) {
+  var convertSingle = function (modelName, fixture, included) {
+    var data = {
+      type: modelName,
+      id: fixture.id,
+      attributes: extractAttributes(modelName, fixture),
+    };
+    var relationships = extractRelationships(modelName, fixture, included);
+    if (Object.getOwnPropertyNames(relationships).length > 0) {
+      data.relationships = relationships;
+    }
+    return data;
+  };
+  /*
+    Find the attributes in the fixture.
 
-      if (relationship.kind === 'belongsTo') {
-        var belongsToRecord = fixture[relationship.key];
-        if (Ember.typeOf(belongsToRecord) === 'object') {
-          self.findEmbeddedAssociationsForRESTAdapter(store, relationship.type, belongsToRecord);
-          var isPolymorphic = relationship.options.polymorphic;
-          var relationshipType = isPolymorphic ? Ember.String.dasherize(belongsToRecord.type) : relationship.type;
-          belongsToRecord = store.push(relationshipType, belongsToRecord);
-          fixture[relationship.key] = self.normalizeAssociation(belongsToRecord, relationship);
-        } else if (Ember.typeOf(belongsToRecord) === 'instance') {
-          fixture[relationship.key] = self.normalizeAssociation(belongsToRecord, relationship);
-        }
+    @param modelName
+    @param fixture
+    @returns {{}}
+   */
+  var extractAttributes = function (modelName, fixture) {
+    var attributes = {};
+    store.modelFor(modelName).eachAttribute(function (attribute) {
+      if (fixture.hasOwnProperty(attribute)) {
+        attributes[attribute] = fixture[attribute];
       }
+    });
+    return attributes;
+  };
+  /*
+    Add the model to included array unless it's already there.
+   */
+  var addToIncluded = function (included, data) {
+    var found = included.find(function(model) {
+      return model.id === data.id && model.type === data.type;
+    });
+    if (!found) { included.push(data); }
+  };
+  /**
 
-      if (relationship.kind === 'hasMany') {
-        var hasManyRecords = fixture[relationship.key];
-        if (Ember.typeOf(hasManyRecords) === 'array') {
-          var records = hasManyRecords.map(function(record) {
-            if (Ember.typeOf(record) === 'object') {
-              self.findEmbeddedAssociationsForRESTAdapter(store, relationship.type, record);
-              record = store.push(relationship.type, record);
-            }
-            return self.normalizeAssociation(record, relationship);
-          });
-          fixture[relationship.key] = records;
+   @param modelName
+   @param fixture
+   @param included
+   @returns {{}}
+   */
+  var extractRelationships = function (modelName, fixture, included) {
+    var relationships = {};
+
+    store.modelFor(modelName).eachRelationship(function (key, relationship) {
+      var isPolymorphic = relationship.options.polymorphic;
+      if (fixture.hasOwnProperty(key)) {
+        if (relationship.kind === 'belongsTo') {
+          var belongsToRecord = fixture[relationship.key];
+          if (Ember.typeOf(belongsToRecord) === 'object') {
+            var embeddedFixture = belongsToRecord;
+            // find possibly more embedded fixtures
+            var relationshipType = isPolymorphic ? Ember.String.dasherize(embeddedFixture.type) : relationship.type;
+            var data = convertSingle(relationshipType, embeddedFixture, included);
+            addToIncluded(included, data);
+            relationships[relationship.key] = {data: normalizeJSONAPIAssociation(data, relationship)};
+          } else if (Ember.typeOf(belongsToRecord) === 'instance') {
+            relationships[relationship.key] = {data: normalizeJSONAPIAssociation(belongsToRecord, relationship)};
+          }
+        } else if (relationship.kind === 'hasMany') {
+          var hasManyRecords = fixture[relationship.key];
+          if (Ember.typeOf(hasManyRecords) === 'array') {
+            var records = hasManyRecords.map(function (hasManyRecord) {
+              if (Ember.typeOf(hasManyRecord) === 'object') {
+                var embeddedFixture = hasManyRecord;
+                var relationshipType = isPolymorphic ? Ember.String.dasherize(embeddedFixture.type) : relationship.type;
+                var data = convertSingle(relationshipType, embeddedFixture, included);
+                addToIncluded(included, data);
+                return normalizeJSONAPIAssociation(data, relationship);
+              } else if (Ember.typeOf(hasManyRecord) === 'instance') {
+                return normalizeJSONAPIAssociation(hasManyRecord, relationship);
+              }
+            });
+            relationships[relationship.key] = {data: records};
+          }
         }
       }
     });
-  },
+    return relationships;
+  };
+
+  //var findEmbeddedAssociationsForRESTAdapter = function (modelName, fixture) {
+  //  var modelClass = store.modelFor(modelName);
+  //  modelClass.eachRelationship(function (name, relationship) {
+  //
+  //    if (relationship.kind === 'belongsTo') {
+  //      var belongsToRecord = fixture[relationship.key];
+  //      if (Ember.typeOf(belongsToRecord) === 'object') {
+  //        findEmbeddedAssociationsForRESTAdapter(relationship.type, belongsToRecord);
+  //        var isPolymorphic = relationship.options.polymorphic;
+  //        var relationshipType = isPolymorphic ? Ember.String.dasherize(belongsToRecord.type) : relationship.type;
+  //        var data = store.normalize(relationshipType, belongsToRecord);
+  //        belongsToRecord = store.push(data);
+  //        fixture[relationship.key] = normalizeAssociation(belongsToRecord, relationship);
+  //      } else if (Ember.typeOf(belongsToRecord) === 'instance') {
+  //        fixture[relationship.key] = normalizeAssociation(belongsToRecord, relationship);
+  //      }
+  //    }
+  //
+  //    if (relationship.kind === 'hasMany') {
+  //      var hasManyRecords = fixture[relationship.key];
+  //
+  //      if (Ember.typeOf(hasManyRecords) === 'array') {
+  //        var records = hasManyRecords.map(function (record) {
+  //          if (Ember.typeOf(record) === 'object') {
+  //            findEmbeddedAssociationsForRESTAdapter(relationship.type, record);
+  //            var data = store.normalize(relationship.type, record);
+  //            record = store.push(data);
+  //          }
+  //          return normalizeAssociation(record, relationship);
+  //        });
+  //        fixture[relationship.key] = records;
+  //      }
+  //    }
+  //  });
+  //};
 
   /**
    Clear model instances from store cache.
    Reset the id sequence for the models back to zero.
    */
-  clearStore: function () {
+  this.clearStore = function () {
     this.resetDefinitions();
     this.clearModels();
-  },
+  };
 
   /**
    Reset the id sequence for the models back to zero.
    */
-  resetDefinitions: function () {
-    for (var model in this.modelDefinitions) {
-      var definition = this.modelDefinitions[model];
+  this.resetDefinitions = function () {
+    for (var model in modelDefinitions) {
+      var definition = modelDefinitions[model];
       definition.reset();
     }
-  },
+  };
 
   /**
    Clear model instances from store cache.
    */
-  clearModels: function () {
-    this.store.unloadAll();
-  },
+  this.clearModels = function () {
+    store.unloadAll();
+  };
 
   /**
    Push fixture to model's FIXTURES array.
@@ -442,7 +592,7 @@ var FactoryGuy = Ember.Object.create({
    @param {Object} fixture the fixture to add
    @returns {Object} json fixture data
    */
-  pushFixture: function (modelClass, fixture) {
+  this.pushFixture = function (modelClass, fixture) {
     var index;
     if (!modelClass.FIXTURES) {
       modelClass.FIXTURES = [];
@@ -457,7 +607,7 @@ var FactoryGuy = Ember.Object.create({
     modelClass.FIXTURES.push(fixture);
 
     return fixture;
-  },
+  };
 
   /**
    Used in compliment with pushFixture in order to
@@ -468,7 +618,7 @@ var FactoryGuy = Ember.Object.create({
    @param {String|Integer} id of fixture to find
    @returns {Object} fixture
    */
-  indexOfFixture: function (fixtures, fixture) {
+  this.indexOfFixture = function (fixtures, fixture) {
     var index = -1,
       id = fixture.id + '';
     Ember.A(fixtures).find(function (r, i) {
@@ -480,35 +630,37 @@ var FactoryGuy = Ember.Object.create({
       }
     });
     return index;
-  },
+  };
 
   /**
    Clears all model definitions
    */
-  clearDefinitions: function (opts) {
+  this.clearDefinitions = function (opts) {
     if (!opts) {
-      this.modelDefinitions = {};
+      modelDefinitions = {};
     }
-  }
+  };
 
-});
+};
 
-//To accomodate for phantomjs ( which does not recognise bind method ( for now )
+var factoryGuy = new FactoryGuy();
+
+//To accomodate for phantomjs ( older versions do not recognise bind method )
 var make = function () {
-  return FactoryGuy.make.apply(FactoryGuy, arguments);
+  return factoryGuy.make.apply(factoryGuy, arguments);
 };
 var makeList = function () {
-  return FactoryGuy.makeList.apply(FactoryGuy, arguments);
+  return factoryGuy.makeList.apply(factoryGuy, arguments);
 };
 var build = function () {
-  return FactoryGuy.build.apply(FactoryGuy, arguments);
+  return factoryGuy.build.apply(factoryGuy, arguments);
 };
 var buildList = function () {
-  return FactoryGuy.buildList.apply(FactoryGuy, arguments);
+  return factoryGuy.buildList.apply(factoryGuy, arguments);
 };
 var clearStore = function () {
-  return FactoryGuy.clearStore.apply(FactoryGuy, arguments);
+  return factoryGuy.clearStore.apply(factoryGuy, arguments);
 };
 
 export { make, makeList, build, buildList, clearStore };
-export default FactoryGuy;
+export default factoryGuy;

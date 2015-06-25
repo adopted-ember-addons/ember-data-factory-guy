@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import FactoryGuy from './factory-guy';
 
 var MockUpdateRequest = function(url, model, mapFind, options) {
 	var status = options.status || 200;
@@ -36,17 +37,16 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
       }
 		} else {
       // need to use serialize instead of toJSON to handle polymorphic belongsTo
-      var json = model.serialize();
-      json.id = model.id;
-      this.responseText = mapFind(model.constructor.modelName, json);
+      var json = model.serialize({includeId: true});
+      this.responseText = FactoryGuy.useJSONAPI() ? json : mapFind(model.constructor.modelName, json);
       this.status = 200;
 		}
 	};
-
+	var requestType = FactoryGuy.useJSONAPI() ? 'PATCH' : 'PUT';
 	var requestConfig = {
 		url: url,
 		dataType: 'json',
-		type: 'PUT',
+		type: requestType,
 		response: this.handler
 	};
 

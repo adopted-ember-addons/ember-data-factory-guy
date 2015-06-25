@@ -5,6 +5,6 @@ export default DS.Model.extend({
   description:            DS.attr('string'),
   camelCaseDescription:   DS.attr('string'),
   snake_case_description: DS.attr('string'),
-  company:                DS.belongsTo('company'),
-  group:                  DS.belongsTo('group', {polymorphic: true})
+  company:                DS.belongsTo('company', {async: false}),
+  group:                  DS.belongsTo('group', {async: false, polymorphic: true})
 });

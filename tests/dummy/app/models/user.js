@@ -6,8 +6,8 @@ export default DS.Model.extend({
   info:       DS.attr('object'),
   company:    DS.belongsTo('company', {async: true, inverse: 'users', polymorphic: true}),
   properties: DS.hasMany('property', {async: true, inverse: 'owners'}),
-  projects:   DS.hasMany('project', {embedded: 'always'}),
-  hats:       DS.hasMany('hat', {polymorphic: true}),
+  projects:   DS.hasMany('project', {async: false}),
+  hats:       DS.hasMany('hat', {async: false, polymorphic: true}),
 
   funnyName: Ember.computed("name", function() {
     return "funny " + this.get('name');

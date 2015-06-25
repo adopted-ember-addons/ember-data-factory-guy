@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import { make } from 'ember-data-factory-guy';
-import startApp from '../../helpers/start-app';
+import FactoryGuy, { make } from 'ember-data-factory-guy';
+import startApp from '../helpers/start-app';
 
 var App = null;
 
