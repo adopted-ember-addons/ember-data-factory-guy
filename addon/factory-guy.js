@@ -363,6 +363,7 @@ var FactoryGuy = function () {
     return arr;
   };
   /**
+   Convert an initial fixture into JSONAPI document
 
    @param modelName
    @param fixture
@@ -396,7 +397,8 @@ var FactoryGuy = function () {
     var model;
 
     // make should always convert data to JSONAPI format, since the
-    // store.push method expects that format
+    // store.push method expects that format, so if the data is not
+    // in JSONAPI format, do that now
     if (!this.useJSONAPI()) {
       data = this.convertToJSONAPIFormat(modelName, data);
     }
