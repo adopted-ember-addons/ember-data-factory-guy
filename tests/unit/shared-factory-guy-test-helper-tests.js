@@ -8,6 +8,25 @@ import Profile from 'dummy/models/profile';
 
 var SharedBehavior = {};
 
+//////// buildUrl /////////
+SharedBehavior.buildUrl = function () {
+
+  test("#buildURL without namespace", function () {
+    equal(TestHelper.buildURL('project'), '/projects', 'has no namespace by default');
+  });
+
+  test("#buildURL with namespace and host", function () {
+    var adapter = FactoryGuy.getStore().adapterFor('application');
+    adapter.setProperties({
+      host: 'https://dude.com',
+      namespace: 'api/v1'
+    });
+
+    equal(TestHelper.buildURL('project'), 'https://dude.com/api/v1/projects');
+  });
+
+};
+
 //////// handleFind /////////
 SharedBehavior.handleFindTests = function () {
 
@@ -176,23 +195,23 @@ SharedBehavior.handleFindAllTests = function () {
 
 SharedBehavior.handleFindQueryTests = function () {
 
-  test("#handleFindQuery second argument should be an array", function (assert) {
+  test("second argument should be an array", function (assert) {
     assert.throws(function () {
       TestHelper.handleFindQuery('user', 'name', {});
     }, "second argument not correct type");
   });
 
-  test("#handleFindQuery json payload argument should be an array", function (assert) {
+  test("json payload argument should be an array", function (assert) {
     assert.throws(function () {
       TestHelper.handleFindQuery('user', ['name'], {});
     }, "payload argument is not an array");
   });
 
-  test("#handleFindQuery passing in nothing as last argument returns no results", function (assert) {
+  test("passing in nothing as last argument returns no results", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       TestHelper.handleFindQuery('user', ['name']);
-      FactoryGuy.getStore().findQuery('user', {name: 'Bob'}).then(function (users) {
+      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(function (users) {
         equal(users.get('length'), 0);
         done();
       });
@@ -200,7 +219,7 @@ SharedBehavior.handleFindQueryTests = function () {
   });
 
 
-  test("#handleFindQuery passing in existing instances returns those and does not create new ones", function (assert) {
+  test("passing in existing instances returns those and does not create new ones", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var users = FactoryGuy.makeList('user', 2, 'with_hats');
@@ -208,7 +227,7 @@ SharedBehavior.handleFindQueryTests = function () {
 
       equal(FactoryGuy.getStore().peekAll('user').get('content.length'), 2, 'start out with 2 instances');
 
-      FactoryGuy.getStore().findQuery('user', {name: 'Bob'}).then(function (users) {
+      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(function (users) {
         equal(users.get('length'), 2);
         equal(users.get('firstObject.name'), 'User1');
         equal(users.get('firstObject.hats.length'), 2);
@@ -219,7 +238,7 @@ SharedBehavior.handleFindQueryTests = function () {
     });
   });
 
-  test("#handleFindQuery passing in existing instances with hasMany and belongsTo", function (assert) {
+  test("passing in existing instances with hasMany and belongsTo", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var users = FactoryGuy.makeList('company', 2, 'with_projects', 'with_profile');
@@ -227,7 +246,7 @@ SharedBehavior.handleFindQueryTests = function () {
 
       equal(FactoryGuy.getStore().peekAll('company').get('content.length'), 2, 'start out with 2 instances');
 
-      FactoryGuy.getStore().findQuery('company', {name: 'Dude'}).then(function (companies) {
+      FactoryGuy.getStore().query('company', {name: 'Dude'}).then(function (companies) {
         equal(companies.get('length'), 2);
         ok(companies.get('firstObject.profile') instanceof Profile);
         equal(companies.get('firstObject.projects.length'), 2);
@@ -575,6 +594,22 @@ SharedBehavior.handleCreateTests = function () {
     });
   });
 
+
+  test("returns user-supplied model ID", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+      var id = 42;
+
+      TestHelper.handleCreate('profile').andReturn({id: id});
+
+      FactoryGuy.getStore().createRecord('profile').save().then(function (profile) {
+        assert.equal(profile.get('id'), id);
+        done();
+      });
+    });
+  });
+
+
   test("match attributes and return attributes with match and andReturn methods", function (assert) {
     Ember.run(function () {
       var done = assert.async();
@@ -640,7 +675,7 @@ SharedBehavior.handleCreateTests = function () {
   test("failure with status code 422 and errors in response with andFail method", function (assert) {
     Ember.run(function () {
       var done = assert.async();
-      TestHelper.handleCreate('profile').andFail({status: 422, response: {errors: {description: ['bad']}}});
+      TestHelper.handleCreate('profile').andFail({status: 422, response: {errors: {description: ['bad']} } });
 
       var profile = FactoryGuy.getStore().createRecord('profile');
       profile.save()
@@ -663,7 +698,7 @@ SharedBehavior.handleCreateTests = function () {
 
 SharedBehavior.handleUpdateTests = function () {
 
-  test("#handleUpdate with incorrect parameters", function (assert) {
+  test("with incorrect parameters", function (assert) {
     assert.throws(function () {
       TestHelper.handleUpdate();
     }, "missing everything");
@@ -675,7 +710,7 @@ SharedBehavior.handleUpdateTests = function () {
     }, "missing id");
   });
 
-  test("#handleUpdate with modelType and id", function (assert) {
+  test("with modelType and id", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var profile = make('profile');
@@ -690,7 +725,7 @@ SharedBehavior.handleUpdateTests = function () {
   });
 
 
-  test("#handleUpdate with model", function (assert) {
+  test("with model", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var profile = make('profile');
@@ -704,7 +739,7 @@ SharedBehavior.handleUpdateTests = function () {
     });
   });
 
-  test("#handleUpdate the with model that has polymorphic belongsTo", function (assert) {
+  test("the with model that has polymorphic belongsTo", function (assert) {
     Ember.run(function () {
       var done = assert.async();
 
@@ -720,7 +755,7 @@ SharedBehavior.handleUpdateTests = function () {
     });
   });
 
-  test("#handleUpdate the with modelType and id that fails", function (assert) {
+  test("the with modelType and id that fails", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var profile = make('profile');
@@ -739,7 +774,7 @@ SharedBehavior.handleUpdateTests = function () {
     });
   });
 
-  test("#handleUpdate with model that fails", function (assert) {
+  test("with model that fails", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var profile = make('profile');
@@ -758,7 +793,7 @@ SharedBehavior.handleUpdateTests = function () {
     });
   });
 
-  test("#handleUpdate with model that fails with custom response", function (assert) {
+  test("with model that fails with custom response", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var profile = make('profile');
@@ -779,7 +814,7 @@ SharedBehavior.handleUpdateTests = function () {
     });
   });
 
-  test("#handleUpdate with modelType and id that fails chained", function (assert) {
+  test("with modelType and id that fails chained", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var profile = make('profile');
@@ -801,7 +836,7 @@ SharedBehavior.handleUpdateTests = function () {
     });
   });
 
-  test("#handleUpdate with model that fails chained", function (assert) {
+  test("with model that fails chained", function (assert) {
     var done = assert.async();
     Ember.run(function () {
       var profile = make('profile');
@@ -823,7 +858,7 @@ SharedBehavior.handleUpdateTests = function () {
     });
   });
 
-  test("#handleUpdate with model that fails with custom response", function (assert) {
+  test("with model that fails with custom response", function (assert) {
     var done = assert.async();
     Ember.run(function () {
       var profile = make('profile');
@@ -847,7 +882,7 @@ SharedBehavior.handleUpdateTests = function () {
     });
   });
 
-  test("#handleUpdate with model that fails and then succeeds", function (assert) {
+  test("with model that fails and then succeeds", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var profile = make('profile');
@@ -885,7 +920,7 @@ SharedBehavior.handleUpdateTests = function () {
 /////// handleDelete //////////
 
 SharedBehavior.handleDeleteTests = function () {
-  test("#handleDelete the basic", function (assert) {
+  test("the basic", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var profile = make('profile');
@@ -898,7 +933,7 @@ SharedBehavior.handleDeleteTests = function () {
     });
   });
 
-  test("#handleDelete failure case", function (assert) {
+  test("failure case", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var profile = make('profile');

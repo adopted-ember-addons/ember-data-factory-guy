@@ -18,7 +18,7 @@ var theUsualSetup = function (adapterType) {
     var serializer = App.__container__.lookup('serializer:'+adapterType);
     serializer.store = store;
     if (adapterType === "-json-api") {
-      // the json api serializer is dasherizing keys .. why?
+      // the json api serializer is dasherizing keys
       serializer.keyForAttribute = function (key, method) {
         return key;
       };
@@ -26,7 +26,12 @@ var theUsualSetup = function (adapterType) {
     //console.log('serializer',serializer+'')
     FactoryGuy.getStore().serializerFor = function() {
       //console.log('using my serial', serializer+'');
-      return serializer; };
+      return serializer;
+    };
+    adapter.shouldBackgroundReloadAll = function() { return false; };
+    adapter.shouldBackgroundReloadRecord = function() { return false; };
+    adapter.shouldReloadRecord = function() { return false; };
+    adapter.shouldReloadAll = function() { return true; };
   }
   $.mockjaxSettings.logging = false;
   $.mockjaxSettings.responseTime = 0;

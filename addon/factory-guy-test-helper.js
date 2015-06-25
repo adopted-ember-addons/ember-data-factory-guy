@@ -228,14 +228,21 @@ var FactoryGuyTestHelper = Ember.Object.create({
     } else {
       records = [];
     }
-    //var store = this.getStore();
-    //var serializerD = this.get('container').lookup('serializer:-default')
-    //var serializer = store.serializerFor('application');
-    //console.log(serializer+'', serializerD+'', serializer.store+'')
+
     var json = records.map(function (record) {
-      return record.toJSON({includeId: true});
+      return record.serialize({includeId: true});
     });
-    var responseJson = this.mapFindAll(modelName, json);
+
+    var responseJson;
+    if (FactoryGuy.useJSONAPI()) {
+      json = json.map(function (data) {
+        return data.data;
+      });
+      responseJson = {data: json};
+    } else {
+      responseJson = this.mapFindAll(modelName, json);
+    }
+
     //console.log(modelName, responseJson)
     var url = this.buildURL(modelName);
     this.stubEndpointForHttpRequest(url, responseJson, {urlParams: searchParams});

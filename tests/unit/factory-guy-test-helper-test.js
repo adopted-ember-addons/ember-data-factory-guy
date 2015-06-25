@@ -22,38 +22,26 @@ module('FactoryGuyTestHelper with DS.RESTAdapter', {
   }
 });
 
-test("#buildURL without namespace", function () {
-  App = theUsualSetup('-rest');
-  equal(TestHelper.buildURL('project'), '/projects', 'has no namespace by default');
-});
-
-test("#buildURL with namespace and host", function () {
-  App = startApp();
-  var restAdapter = App.__container__.lookup('adapter:-rest');
-  store = FactoryGuy.getStore();
-  store.adapterFor = function () {
-    return restAdapter;
-  };
-
-  restAdapter.setProperties({
-    host: 'https://dude.com',
-    namespace: 'api/v1'
-  });
-
-  equal(TestHelper.buildURL('project'), 'https://dude.com/api/v1/projects');
-});
-
-
-module('FactoryGuyTestHelper with DS.RESTAdapter ', {
-  setup: function () {
-    App = theUsualSetup('-rest');
-    store = FactoryGuy.getStore();
-  },
-  teardown: function () {
-    theUsualTeardown(App);
-  }
-});
-
+//test("#buildURL without namespace", function () {
+//  App = theUsualSetup('-rest');
+//  equal(TestHelper.buildURL('project'), '/projects', 'has no namespace by default');
+//});
+//
+//test("#buildURL with namespace and host", function () {
+//  App = startApp();
+//  var restAdapter = App.__container__.lookup('adapter:-rest');
+//  var store = FactoryGuy.getStore();
+//  store.adapterFor = function () {
+//    return restAdapter;
+//  };
+//
+//  restAdapter.setProperties({
+//    host: 'https://dude.com',
+//    namespace: 'api/v1'
+//  });
+//
+//  equal(TestHelper.buildURL('project'), 'https://dude.com/api/v1/projects');
+//});
 
 
 
