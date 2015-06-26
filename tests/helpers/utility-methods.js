@@ -5,34 +5,32 @@ import startApp from '../helpers/start-app';
 // adapterType like -rest or -active-model, -json-api
 var theUsualSetup = function (adapterType) {
   var App = startApp();
-  // brute force setting the adapter on the store.
+
+  // brute force setting the adapter/serializer on the store.
   if (adapterType) {
-    //console.log('adapterType',adapterType)
-    var store = App.__container__.lookup('service:store');
+    var store = FactoryGuy.getStore();
     var adapter = App.__container__.lookup('adapter:'+adapterType);
-    adapter.store = store;
-    //console.log('adapter',adapter+'')
-    FactoryGuy.getStore().adapterFor = function() {
-      //console.log('using my adapt', adapter+'');
-      return adapter; };
     var serializer = App.__container__.lookup('serializer:'+adapterType);
-    serializer.store = store;
+
     if (adapterType === "-json-api") {
-      // the json api serializer is dasherizing keys
+      // the json api serializer dasherizes keys, and I don't want to
       serializer.keyForAttribute = function (key, method) {
         return key;
       };
     }
-    //console.log('serializer',serializer+'')
-    FactoryGuy.getStore().serializerFor = function() {
-      //console.log('using my serial', serializer+'');
-      return serializer;
-    };
+
+    store.adapterFor = function() { return adapter; };
+    store.serializerFor = function() { return serializer; };
+    // this is cheesy .. but it works
+    serializer.store = store;
+    adapter.store = store;
+
     adapter.shouldBackgroundReloadAll = function() { return false; };
     adapter.shouldBackgroundReloadRecord = function() { return false; };
     adapter.shouldReloadRecord = function() { return false; };
     adapter.shouldReloadAll = function() { return true; };
   }
+
   $.mockjaxSettings.logging = false;
   $.mockjaxSettings.responseTime = 0;
   return App;
