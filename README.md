@@ -735,10 +735,10 @@ chainable methods.
   TestHelper.handleCreate('project');
 
   // Matching some attributes
-  TestHelper.handleCreate('project').match({match: {name: "Moo"});
+  TestHelper.handleCreate('project').match({name: "Moo"});
 
   // Match all attributes
-  TestHelper.handleCreate('project').match({match: {name: "Moo", user: user});
+  TestHelper.handleCreate('project').match({name: "Moo", user: user});
 
   // Exactly matching attributes, and returning extra attributes
   TestHelper.handleCreate('project')
@@ -752,7 +752,7 @@ chainable methods.
 ```javascript
 
   // Mocking failure case is easy with chainable methods, just use #andFail
-  TestHelper.handleCreate('project').match({match: {name: "Moo"}).andFail();
+  TestHelper.handleCreate('project').match({name: "Moo"}).andFail();
 
   // Can optionally add a status code and/or errors to the response
   TestHelper.handleCreate('project').andFail({status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}});
