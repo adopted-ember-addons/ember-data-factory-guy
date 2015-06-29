@@ -799,9 +799,9 @@ chainable methods.
   var profile = FactoryGuy.make('profile');
 
   // set the succeed flag to 'false'
-  TestHelper.handleUpdate('profile', profile.id).andFail({status: 422, response: "{error: 'Invalid data'}"});
+  TestHelper.handleUpdate('profile', profile.id).andFail({status: 422, response: 'Invalid data'});
   // or
-  TestHelper.handleUpdate(profile).andFail({status: 422, response: "{error: 'Invalid data'}"});
+  TestHelper.handleUpdate(profile).andFail({status: 422, response: 'Invalid data'});
 
   profile.set('description', 'bad value');
   profile.save() //=> will fail
@@ -817,7 +817,7 @@ chainable methods.
   // or
   var mockUpdate = TestHelper.handleUpdate(profile);
 
-  mockUpdate.andFail({status: 422, response: "{error: 'Invalid data'}"});
+  mockUpdate.andFail({status: 422, response: 'Invalid data'});
 
   profile.set('description', 'bad value');
   profile.save() //=> will fail
