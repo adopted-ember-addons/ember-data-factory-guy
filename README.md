@@ -630,7 +630,6 @@ will look like this:
   - To handle reloading a model 
     - Pass in a record ( or a typeName and id )
     - Use andFail to mock failure
-  - Not advised to use this method to make models themselves ( just use make for that ) 
 
 *Passing in a record / model instance*
 
