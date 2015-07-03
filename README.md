@@ -610,7 +610,7 @@ controller action ) is going to make a call to the store for all records of
 a particular type:  
    
 ```javascript
-  store.find('user') // fires ajax request for all user records 
+  store.findAll('user') // fires ajax request for all user records 
 ```
 
 An Integration test ( to stub that ajax call and return factory guy data ) 
