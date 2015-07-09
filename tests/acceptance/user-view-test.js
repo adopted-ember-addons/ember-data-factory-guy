@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy, { make } from 'ember-data-factory-guy';
+import { make } from 'ember-data-factory-guy';
 import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 import startApp from '../helpers/start-app';
 
@@ -23,7 +23,8 @@ module('User View', {
 
 
 test("Creates new project", function () {
-  var user = make('user', 'with_projects'); // create a user with projects in the store
+  // create a user with projects ( which will be in the store )
+  var user = make('user', 'with_projects');
 
   visit('/user/' + user.id);
 
@@ -37,15 +38,16 @@ test("Creates new project", function () {
     TestHelper.handleCreate('project').match({title: newProjectTitle, user: user});
 
     /**
-     Let's say that clicking this 'button.add-project', triggers action in the view to
-     create project record and looks something like this:
+     Let's say that clicking this 'button:contains(Add New User)', triggers action in the
+     view to create project record and looks something like this:
 
      actions: {
-          addProject: function (user) {
-            var title = this.$('input.project-title').val();
-            var store = this.get('controller.store');
-            store.createRecord('project', {title: title, user: user}).save();
-          }
+       addProject: function (user) {
+         var title = this.$('input.project-title').val();
+         var store = this.get('controller.store');
+         store.createRecord('project', {title: title, user: user}).save();
+       }
+     }
 
     */
     click('button:contains(Add New User)');
