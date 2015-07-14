@@ -297,7 +297,7 @@ var FactoryGuy = function () {
     var args = Array.prototype.slice.call(arguments);
     var name = args.shift();
     var number = args.shift();
-    if (!name || !number) {
+    if (!name || Ember.isEmpty(number)) {
       throw new Error('buildList needs a name and a number ( at least ) to build with');
     }
     var opts = {};

@@ -153,6 +153,18 @@ SharedBehavior.handleFindAllTests = function () {
     });
   });
 
+  test("asking for no return records", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+      TestHelper.handleFindAll('user', 0);
+
+      FactoryGuy.getStore().findAll('user').then(function (profiles) {
+        ok(profiles.get('length') === 0);
+        done();
+      });
+    });
+  });
+
   test("with fixture options", function (assert) {
     Ember.run(function () {
       var done = assert.async();
