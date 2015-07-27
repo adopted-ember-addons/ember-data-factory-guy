@@ -470,6 +470,7 @@ var FactoryGuy = function () {
     Add the model to included array unless it's already there.
    */
   var addToIncluded = function (included, data) {
+    included = Ember.A(included);
     var found = included.find(function(model) {
       return model.id === data.id && model.type === data.type;
     });
