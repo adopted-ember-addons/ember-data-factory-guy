@@ -87,7 +87,8 @@ var ModelDefinition = function (model, config) {
     // deal with attributes that are functions or objects
     for (var attribute in fixture) {
       if (Ember.typeOf(fixture[attribute]) === 'function') {
-        // function might be a sequence or an association
+        // function might be a sequence, an inline attribute function or an association
+        //console.log(fixture[attribute])
         fixture[attribute] = fixture[attribute].call(this, fixture);
       } else if (Ember.typeOf(fixture[attribute]) === 'object') {
         // If it's an object and it's a model association attribute, build the json

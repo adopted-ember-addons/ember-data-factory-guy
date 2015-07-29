@@ -7,16 +7,77 @@ import User from 'dummy/models/user';
 
 var App = null;
 
+import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
+
+//module('FactoryGuy', inlineSetup(App, '-active-model'));
 module('FactoryGuy', inlineSetup(App, '-json-api'));
 
 test("has store set in initializer", function () {
   ok(FactoryGuy.getStore() instanceof DS.Store);
 });
 
-test("#make returns a model instance", function () {
+test("#make returns a model instance", function (assert) {
   var user = FactoryGuy.make('user');
   ok(user instanceof User);
 });
+
+//test("#make returns a model instance", function (assert) {
+  //Ember.run(function () {
+  //  var store = FactoryGuy.getStore();
+  //  var adapter = store.serializerFor('application');
+  //  var modelClass = store.modelFor('profile');
+  //  //var data = adapter.normalizeResponse(store, modelClass, {profile: {id:1, description:'adude', camelCaseDescription:'aDude', snake_case_description:'a_dude'}}, 1, 'findRecord');
+  //  var data = adapter.normalizeResponse(store, modelClass, {
+  //    profile: {
+  //      id: 1,
+  //      description: 'adude',
+  //      camel_case_description: 'aDude',
+  //      snake_case_description: 'a_dude',
+  //      company: {
+  //        id: 1, name: 'B'
+  //      }
+  //    }
+  //  }, 1, 'findRecord');
+  //  //console.log(adapter+'')
+  //  console.log(data.data)
+  //  console.log(data.data.attributes)
+  //  //var pro = FactoryGuy.make('profile');
+  //  var model = store.push(data);
+  //  console.log(model._internalModel._data)
+  //  ok(true);
+  //});
+  //var model = FactoryGuy.make('profile');
+  //console.log(model._internalModel._data);
+  //  ok(true);
+  //Ember.run(function () {
+  //  var done = assert.async();
+  //
+  //  TestHelper.handleFindAll('profile', 1);
+  //
+  //  FactoryGuy.getStore().findAll('profile').then(function (profiles) {
+  //    console.log(profiles.get('firstObject')._internalModel._data)
+  //    ok(profiles.get('firstObject.camelCaseDescription') === 'textGoesHere');
+  //    ok(profiles.get('firstObject.snake_case_description') === 'text_goes_here');
+  //    done();
+  //  });
+  //});
+  //
+  ////Ember.run(function () {
+  //  var done = assert.async();
+  //  var customDescription = "special description";
+  //
+  //  TestHelper.handleCreate('profile');
+  //
+  //  FactoryGuy.getStore().createRecord('profile', {
+  //    camelCaseDescription: 'description'
+  //  }).save().then(function (profile) {
+  //    console.log(profile._internalModel._data)
+  //    ok(profile.get('camelCaseDescription') === customDescription);
+  //    done();
+  //  });
+  //});
+
+//});
 
 test("exposes make method which is shortcut for FactoryGuy.make", function () {
   ok(make('user') instanceof User);

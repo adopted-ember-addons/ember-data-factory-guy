@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import FactoryGuy, { make, makeList, build, buildList } from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
+import JSONAPIConverter from 'ember-data-factory-guy/jsonapi-converter';
 
 import User from 'dummy/models/user';
 import BigHat from 'dummy/models/big-hat';
@@ -10,8 +11,10 @@ import Outfit from 'dummy/models/outfit';
 var SharedBehavior = {};
 
 var actual = function(modelName, json) {
+
   if (FactoryGuy.useJSONAPI()) {
-    return FactoryGuy.convertToJSONAPIFormat(modelName, json);
+    return new JSONAPIConverter(FactoryGuy.getStore()).convert(modelName, json);
+    //return FactoryGuy.convertToJSONAPIFormat(modelName, json);
   } else {
     return json;
   }
@@ -395,10 +398,10 @@ SharedBehavior.buildTests = function () {
 
     var json = build('funny_person');
     var expected = {id: 1, name: 'Bob', type: 'funny Bob'};
-    if (FactoryGuy.useJSONAPI()) {
-      expected = FactoryGuy.convertToJSONAPIFormat('person', expected);
-    }
-    deepEqual(json, expected, 'works when attribute exists');
+    //if (FactoryGuy.useJSONAPI()) {
+    //  expected = FactoryGuy.convertToJSONAPIFormat('person', expected);
+    //}
+    deepEqual(json, actual('person', expected), 'works when attribute exists');
 
     json = build('missing_person');
     expected = {id: 2, name: 'Bob', type: 'level undefined'};

@@ -14,9 +14,9 @@ var theUsualSetup = function (adapterType) {
 
     if (adapterType === "-json-api") {
       // the json api serializer dasherizes keys, and I don't want to
-      serializer.keyForAttribute = function (key, method) {
-        return key;
-      };
+      //serializer.keyForAttribute = function (key, method) {
+      //  return key;
+      //};
     }
 
     store.adapterFor = function() { return adapter; };
@@ -29,6 +29,7 @@ var theUsualSetup = function (adapterType) {
     adapter.shouldBackgroundReloadRecord = function() { return false; };
     adapter.shouldReloadRecord = function() { return false; };
     adapter.shouldReloadAll = function() { return true; };
+    FactoryGuy.setStore(store);
   }
 
   $.mockjaxSettings.logging = false;
