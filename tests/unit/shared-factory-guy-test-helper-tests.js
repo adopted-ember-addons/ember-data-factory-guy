@@ -704,6 +704,8 @@ SharedBehavior.handleCreateTests = function () {
     Ember.run(function () {
       var done = assert.async();
       TestHelper.handleCreate('profile').andFail({status: 422, response: {errors: {description: ['bad']} } });
+      // TODO Need to change the errors for json api style for that adapter
+      //TestHelper.handleCreate('profile').andFail({status: 422, response: {errors: [{detail: 'bad', source: { pointer:  "data/attributes/description"}, title: 'invalid description'}] } });
 
       var profile = FactoryGuy.getStore().createRecord('profile');
       profile.save()
