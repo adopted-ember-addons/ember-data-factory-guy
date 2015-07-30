@@ -32,7 +32,6 @@ ChangeLog: ( Notes about what has changed in each version )
   *- Do not use ember-data-factory-guy with ember-data-1.0.0-beta.19.2*
 
 
-
 ##### Never used ember-data-factory-guy before
   
  - ```ember install ember-data-factory-guy@1.13.3``` ( ember-data-1.13.5 + ) 
@@ -40,6 +39,7 @@ ChangeLog: ( Notes about what has changed in each version )
  - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 ) 
  - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )
    
+
 ##### Have a previous installation ( updating to new version )
 
 Clear npm:
