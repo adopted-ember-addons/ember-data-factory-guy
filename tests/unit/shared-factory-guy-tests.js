@@ -14,7 +14,6 @@ var actual = function(modelName, json) {
 
   if (FactoryGuy.useJSONAPI()) {
     return new JSONAPIConverter(FactoryGuy.getStore()).convert(modelName, json);
-    //return FactoryGuy.convertToJSONAPIFormat(modelName, json);
   } else {
     return json;
   }

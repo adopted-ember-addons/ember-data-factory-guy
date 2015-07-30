@@ -34,9 +34,7 @@ var MockGetRequest = function (url, modelName, id, mapFind) {
       //if (FactoryGuy.useJSONAPI()) {
         //responseJson = FactoryGuy.convertToJSONAPIFormat(modelName, responseJson[modelName]);
       //}
-      //console.log(responseJson)
       responseJson = FactoryGuy.getFixtureBuilder().convertForCreateRequest(modelName, responseJson[modelName]);
-      //console.log(responseJson)
       this.responseText = responseJson;
     }
   };

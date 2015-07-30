@@ -1,13 +1,28 @@
 import Ember from 'ember';
 import $ from 'jquery';
 
+/**
+ Attribute Transformer for ActiveModelSerializer
+ The default transform is to underscore.
+
+ @param store
+ @constructor
+ */
 var AmsAttributeTransformer = function (store) {
+
   var defaultTransformFn = ''.underscore;
 
+  /**
+   Transform attributes in fixture.
+
+   @param modelName
+   @param fixture
+   @returns {*} new copy of old fixture with transformed attributes
+   */
   this.transform = function (modelName, fixture) {
     var newFixture;
     if (Ember.typeOf(fixture) === 'array') {
-      newFixture = fixture.map(function(single) {
+      newFixture = fixture.map(function (single) {
         var copy = $.extend(true, {}, single);
         transformSingle(modelName, copy);
         return copy;
@@ -16,12 +31,13 @@ var AmsAttributeTransformer = function (store) {
       newFixture = $.extend(true, {}, fixture);
       transformSingle(modelName, newFixture);
     }
-    //console.log(newFixture)
     return newFixture;
   };
-
   /**
-   Recursively descend into the fixture json, looking for attributes that are
+   Transform single record
+
+   @param modelName
+   @param fixture
    */
   var transformSingle = function (modelName, fixture) {
     transformAttributes(modelName, fixture);
@@ -41,12 +57,14 @@ var AmsAttributeTransformer = function (store) {
     });
   };
 
-
+  /**
+   Recursively descend into the fixture json, looking for relationships
+   whose attributes need transforming
+   */
   var findRelationships = function (modelName, fixture) {
     store.modelFor(modelName).eachRelationship(function (key, relationship) {
       if (relationship.kind === 'belongsTo') {
         var belongsToRecord = fixture[relationship.key];
-        //console.log(key, relationship.type, relationship.key, fixture[relationship.key])
         if (belongsToRecord) {
           transformSingle(relationship.type, belongsToRecord);
         }

@@ -1,13 +1,25 @@
 import Ember from 'ember';
 import $ from 'jquery';
 
+/**
+ * Attribute Transformer for JSONAPISerializer
+ * The default transform is to dasherize.
+ *
+ * @constructor
+ */
 var JSONAPIAttributeTransformer = function () {
   var defaultTransformFn = ''.dasherize;
 
+  /**
+   * Transform attributes in fixture.
+   *
+   * @param fixture
+   * @returns {*} new copy of old fixture with transformed attributes
+   */
   this.transform = function (fixture) {
     var newFixture;
     if (Ember.typeOf(fixture.data) === 'array') {
-      newFixture = fixture.data.map(function(single) {
+      newFixture = fixture.data.map(function (single) {
         var copy = $.extend(true, {}, single);
         transformSingle(copy);
         return copy;
@@ -18,9 +30,11 @@ var JSONAPIAttributeTransformer = function () {
     }
     return {data: newFixture};
   };
-
   /**
-   Recursively descend into the fixture json, looking for attributes
+   Transform single record
+
+   @param modelName
+   @param fixture
    */
   var transformSingle = function (fixture) {
     transformAttributes(fixture);
@@ -43,13 +57,16 @@ var JSONAPIAttributeTransformer = function () {
     }
   };
 
-
+  /**
+   Recursively descend into the fixture json, looking for relationships
+   whose attributes need transforming
+   */
   var findRelationships = function (fixture) {
     var relationships = fixture.relationships;
     for (var relationship in relationships) {
       var data = relationship.data;
       if (Ember.typeOf(data) === 'array') {
-        for (var i = 0, len = data.length; i< len; i++ ) {
+        for (var i = 0, len = data.length; i < len; i++) {
           transformAttributes(data[i].attributes);
         }
       } else {
