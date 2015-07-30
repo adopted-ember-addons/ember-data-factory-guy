@@ -10,7 +10,6 @@ var JSONAPIConverter = function (store) {
    @returns {{data: {type: *, id: *, attributes}, included: Array}}
    */
   this.convert = function (modelName, fixture) {
-    //console.log('JSONAPIConverter#convert', modelName, fixture)
     var included = [];
     var data;
 
@@ -25,7 +24,6 @@ var JSONAPIConverter = function (store) {
     if (!Ember.isEmpty(included)) {
       jsonApiData.included = included;
     }
-    //console.log('jsonApiData', jsonApiData)
     return jsonApiData;
   };
 
@@ -100,6 +98,8 @@ var JSONAPIConverter = function (store) {
     }
   };
   /**
+   Descend into relationships looking for records to transform to jsonapi standard, or
+   record instances to convert to json
 
    @param modelName
    @param fixture
