@@ -86,7 +86,6 @@ var FactoryGuyTestHelper = Ember.Object.create({
   mapFind: function (modelName, json) {
     var responseJson = {};
     responseJson[modelName] = json;
-    //responseJson[Ember.String.pluralize(modelName)] = json;
     return responseJson;
   },
   /**
@@ -178,7 +177,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     var args = Array.prototype.slice.call(arguments);
     var modelName = args.shift();
     var json = FactoryGuy.buildList.apply(FactoryGuy, arguments);
-
+    json = FactoryGuy.getFixtureBuilder().convertForRequest(modelName, json);
     var responseJson;
     if (!FactoryGuy.useJSONAPI()) {
       responseJson = this.mapFindAll(modelName, json);

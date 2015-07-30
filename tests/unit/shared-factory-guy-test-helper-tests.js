@@ -153,6 +153,22 @@ SharedBehavior.handleFindAllTests = function () {
     });
   });
 
+  test("handles camelCase attributes", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+
+      TestHelper.handleFindAll('profile', 1);
+
+      FactoryGuy.getStore().findAll('profile').then(function (profiles) {
+        var profile = profiles.get('firstObject');
+        //console.log('profile', profile._internalModel._data)
+        ok(profiles.get('firstObject.camelCaseDescription') === 'textGoesHere');
+        ok(profiles.get('firstObject.snake_case_description') === 'text_goes_here');
+        done();
+      });
+    });
+  });
+
   test("asking for no return records", function (assert) {
     Ember.run(function () {
       var done = assert.async();
@@ -688,6 +704,8 @@ SharedBehavior.handleCreateTests = function () {
     Ember.run(function () {
       var done = assert.async();
       TestHelper.handleCreate('profile').andFail({status: 422, response: {errors: {description: ['bad']} } });
+      // TODO Need to change the errors for json api style for that adapter
+      //TestHelper.handleCreate('profile').andFail({status: 422, response: {errors: [{detail: 'bad', source: { pointer:  "data/attributes/description"}, title: 'invalid description'}] } });
 
       var profile = FactoryGuy.getStore().createRecord('profile');
       profile.save()
@@ -810,16 +828,15 @@ SharedBehavior.handleUpdateTests = function () {
       var done = assert.async();
       var profile = make('profile');
 
-      TestHelper.handleUpdate(profile, {succeed: false, status: 400, response: 'invalid data'});
+      TestHelper.handleUpdate(profile, {succeed: false, status: 400, response: {errors: {description: 'invalid data'}}});
 
       profile.set('description', 'new desc');
       profile.save().then(
         function () {
         },
         function (reason) {
-          var error = reason.errors[0];
-          equal(error.status, "400");
-          equal(error.details, "invalid data");
+          var errors = reason.errors;
+          equal(errors.description, "invalid data");
           done();
         }
       );
@@ -877,7 +894,7 @@ SharedBehavior.handleUpdateTests = function () {
 
       TestHelper.handleUpdate(profile).andFail({
         status: 400,
-        response: "invalid data"
+        response: {errors: {description: 'invalid data'}}
       });
 
       profile.set('description', 'new desc');
@@ -886,8 +903,8 @@ SharedBehavior.handleUpdateTests = function () {
         },
         function (reason) {
           var error = reason.errors[0];
-          equal(error.status, "400");
-          equal(error.details, "invalid data");
+          var errors = reason.errors;
+          equal(errors.description, "invalid data");
           done();
         }
       );
@@ -901,7 +918,7 @@ SharedBehavior.handleUpdateTests = function () {
 
       var updateMock = TestHelper.handleUpdate(profile).andFail({
         status: 400,
-        response: "invalid data"
+        response: {errors: {description: 'invalid data'}}
       });
 
       profile.set('description', 'new desc');
@@ -909,8 +926,8 @@ SharedBehavior.handleUpdateTests = function () {
         function () {
         },
         function (reason) {
-          var error = reason.errors[0];
-          equal(error.details, "invalid data", "Could not save model.");
+          var errors = reason.errors;
+          equal(errors.description, "invalid data", "Could not save model.");
         }
       ).then(function () {
           updateMock.andSucceed();
