@@ -198,21 +198,21 @@ test("traits are inherited", function () {
     }
   });
 
-  FactoryGuy.define('super-hero', {
+  FactoryGuy.define('villain', {
     extends: 'person',
     traits: {
-      super_name: {name: 'Super Man'}
+      super_name: {name: 'Joker'}
     },
     default: {
-      type: 'Super Duper'
+      type: 'Super Interesting'
     }
   });
 
   var json;
 
-  json = FactoryGuy.build('super-hero', 'super_name', 'lazy_type').data;
+  json = FactoryGuy.build('villain', 'super_name', 'lazy_type').data;
   equal(json.attributes.type, 'Super Lazy', 'inherits parent traits');
-  equal(json.attributes.name, 'Super Man', 'local traits are available');
+  equal(json.attributes.name, 'Joker', 'local traits are available');
 });
 
 

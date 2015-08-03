@@ -1,7 +1,6 @@
 import $ from 'jquery';
-import FactoryGuy from './factory-guy';
 
-var MockGetRequest = function (url, modelName, id, mapFind) {
+var MockGetRequest = function (url, modelName, responseJson) {
   var status = 200;
   var succeed = true;
   var response = {};
@@ -29,12 +28,6 @@ var MockGetRequest = function (url, modelName, id, mapFind) {
       this.responseText = response;
     } else {
       this.status = status;
-      var responseJson = mapFind(modelName, {id:id});
-      //  Convert to JSONAPI if appropriate
-      //if (FactoryGuy.useJSONAPI()) {
-        //responseJson = FactoryGuy.convertToJSONAPIFormat(modelName, responseJson[modelName]);
-      //}
-      responseJson = FactoryGuy.getFixtureBuilder().convertForCreateRequest(modelName, responseJson[modelName]);
       this.responseText = responseJson;
     }
   };

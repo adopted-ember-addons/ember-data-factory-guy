@@ -7,7 +7,7 @@ import $ from 'jquery';
  *
  * @constructor
  */
-var JSONAPIAttributeTransformer = function () {
+var JSONAPIAttributeTransformer = function (/*store*/) {
   var defaultTransformFn = ''.dasherize;
 
   /**
@@ -16,19 +16,30 @@ var JSONAPIAttributeTransformer = function () {
    * @param fixture
    * @returns {*} new copy of old fixture with transformed attributes
    */
-  this.transform = function (fixture) {
-    var newFixture;
+  this.transform = function (modelName, fixture) {
+    var newData, included = [];
     if (Ember.typeOf(fixture.data) === 'array') {
-      newFixture = fixture.data.map(function (single) {
+      newData = fixture.data.map(function (single) {
         var copy = $.extend(true, {}, single);
         transformSingle(copy);
         return copy;
       });
     } else {
-      newFixture = $.extend(true, {}, fixture.data);
-      transformSingle(newFixture);
+      newData = $.extend(true, {}, fixture.data);
+      transformSingle(newData);
     }
-    return {data: newFixture};
+    if (fixture.included) {
+      included = fixture.included.map(function (single) {
+        var copy = $.extend(true, {}, single);
+        transformSingle(copy);
+        return copy;
+      });
+    }
+    var newFixture = {data: newData};
+    if (!Ember.isEmpty(included)) {
+      newFixture.included = included;
+    }
+    return newFixture;
   };
   /**
    Transform single record
@@ -39,21 +50,20 @@ var JSONAPIAttributeTransformer = function () {
   var transformSingle = function (fixture) {
     transformAttributes(fixture);
     findRelationships(fixture);
-    if (fixture.included) {
-      fixture.included.forEach(function (included) {
-        transformAttributes(included);
-      });
-    }
   };
 
   var transformAttributes = function (fixture) {
-    var attributes = fixture.attributes;
-    for (var attribute in attributes) {
-      var attributeKey = attribute;
-      var value = attributes[attribute];
-      attributeKey = defaultTransformFn.call(attributeKey);
-      delete attributes[attribute];
-      attributes[attributeKey] = value;
+    if (fixture.attributes) {
+      transormObjectKeys(fixture.attributes);
+    }
+  };
+
+  var transormObjectKeys = function(object) {
+    for (var key in object) {
+      var value = object[key];
+      var newKey = defaultTransformFn.call(key);
+      delete object[key];
+      object[newKey] = value;
     }
   };
 
@@ -63,16 +73,17 @@ var JSONAPIAttributeTransformer = function () {
    */
   var findRelationships = function (fixture) {
     var relationships = fixture.relationships;
-    for (var relationship in relationships) {
-      var data = relationship.data;
+    for (var key in relationships) {
+      var data = relationships[key].data;
       if (Ember.typeOf(data) === 'array') {
         for (var i = 0, len = data.length; i < len; i++) {
-          transformAttributes(data[i].attributes);
+          transformAttributes(data[i]);
         }
       } else {
         transformAttributes(data);
       }
     }
+    transormObjectKeys(fixture.relationships);
   };
 };
 

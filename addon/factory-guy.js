@@ -258,6 +258,7 @@ var FactoryGuy = function () {
 
     return fixtureBuilder.convertForBuild(modelName, fixture);
   };
+
   this.buildSingle = function () {
     var args = extractArguments.apply(this, arguments);
 
@@ -328,8 +329,9 @@ var FactoryGuy = function () {
       " Use FactoryGuy.setStore(store) before making any fixtures", store
     );
 
-    var data = this.build.apply(this, arguments);
     var modelName = lookupModelForFixtureName(args.name);
+    var fixture = this.buildSingle.apply(this, arguments);
+    var data = fixtureBuilder.convertForMake(modelName, fixture);
 
     var model = makeModel.call(this, modelName, data);
 
@@ -348,12 +350,9 @@ var FactoryGuy = function () {
    */
   var makeModel = function (modelName, data) {
     var model;
-    // make should always convert data to JSONAPI format, since the
-    // store.push method expects that format, so if the data is not
-    // in JSONAPI format, do that now
-    var jsonApiFixture = fixtureBuilder.convertForMake(modelName, data);
+
     Ember.run(function () {
-      model = store.push(jsonApiFixture);
+      model = store.push(data);
     });
 
     return model;

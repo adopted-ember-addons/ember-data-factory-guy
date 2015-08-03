@@ -27,6 +27,9 @@ SharedAdapterBehavior.all = function (adapter, adapterType) {
   SharedFactoryGuyTestHelperBehavior.buildUrl();
 
 
+  module(title(adapter, 'FactoryGuyTestHelper#handleFind'), inlineSetup(App, adapterType));
+  SharedFactoryGuyTestHelperBehavior.handleFindTests();
+
   module(title(adapter, 'FactoryGuyTestHelper#handleReload'), inlineSetup(App, adapterType));
   SharedFactoryGuyTestHelperBehavior.handleReloadTests();
 

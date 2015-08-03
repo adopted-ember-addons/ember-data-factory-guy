@@ -12,6 +12,9 @@ FactoryGuy.define('profile', {
     },
     with_company: {
       company: FactoryGuy.belongsTo('company')
+    },
+    with_super_hero: {
+      superHero: FactoryGuy.belongsTo('super-hero')
     }
   }
 });

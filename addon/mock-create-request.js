@@ -23,12 +23,12 @@ var MockCreateRequest = function (url, modelName, options) {
 
     if (succeed) {
       var modelClass = store.modelFor(modelName);
-      responseJson[modelName] = $.extend({}, matchArgs, returnArgs);
+      responseJson = $.extend({}, matchArgs, returnArgs);
       // Remove belongsTo associations since they will already be set when you called
       // createRecord, so they don't need to be returned.
       Ember.get(modelClass, 'relationshipsByName').forEach(function (relationship) {
         if (relationship.kind === 'belongsTo') {
-          delete responseJson[modelName][relationship.key];
+          delete responseJson[relationship.key];
         }
       });
     }
@@ -116,8 +116,10 @@ var MockCreateRequest = function (url, modelName, options) {
       this.status = 200;
       // Setting the id at the very last minute, so that calling calculate
       // again and again does not mess with id, and it's reset for each call
-      finalResponseJson[modelName].id = modelId();
-      finalResponseJson = FactoryGuy.getFixtureBuilder().convertForCreateRequest(modelName, finalResponseJson[modelName]);
+      finalResponseJson.id = modelId();
+      //console.log('A',finalResponseJson)
+      finalResponseJson = FactoryGuy.getFixtureBuilder().convertForCreateRequest(modelName, finalResponseJson);
+      //console.log('B',finalResponseJson)
     } else {
       this.status = status;
     }

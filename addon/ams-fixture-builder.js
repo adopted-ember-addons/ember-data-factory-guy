@@ -6,22 +6,25 @@ import AmsAttributeTransformer from './ams-attribute-transformer';
  Fixture Builder for ActiveModelSerializer
  */
 var AmsFixtureBuilder = FixtureBuilder.extend({
+  converterClass: JSONAPIConverter,
+  transformerClass: AmsAttributeTransformer,
+
+  convertForBuild(modelName, fixture) {
+    return this.transformAttributes(modelName, fixture);
+  },
 
   convertForMake: function (modelName, fixture) {
-    return new JSONAPIConverter(this.get('store')).convert(modelName, fixture);
+    return this.convertFixture(modelName, fixture);
   },
 
-  convertForRequest: function (modelName, fixture) {
-    return new AmsAttributeTransformer(this.get('store')).transform(modelName, fixture);
+  convertForFindAllRequest: function (modelName, fixture) {
+    return this.transformAttributes(modelName, fixture);
   },
-
-  convertForCreateRequest: function (modelName, fixture) {
-    var transformed = this._super(modelName, fixture);
-    var finalJson = {};
-    finalJson[modelName] = transformed;
-    return finalJson;
+  convertForCreateRequest(modelName, fixture) {
+    var json = {};
+    json[modelName]=fixture;
+    return json;
   }
-
 });
 
 export default AmsFixtureBuilder;

@@ -1,15 +1,16 @@
 import FixtureBuilder from './fixture-builder';
 import JSONAPIConverter from './jsonapi-converter';
+import AmsAttributeTransformer from './ams-attribute-transformer';
 
 var RESTFixtureBuilder = FixtureBuilder.extend({
+  converterClass: JSONAPIConverter,
+  transformerClass: AmsAttributeTransformer,
 
   convertForMake: function (modelName, fixture) {
-    //convert to json api
-    var converter = new JSONAPIConverter(this.get('store'));
-    return converter.convert(modelName, fixture);
+    return this.convertFixture(modelName, fixture);
   },
 
-  //convertForRequest: function (modelName, fixture) {
+  //convertForFindRequest: function (modelName, fixture) {
   //  var transformer = new AmsAttributeTransformer(this.get('store'));
   //  return transformer.transform(modelName, fixture);
   //},

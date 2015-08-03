@@ -96,13 +96,16 @@ var FactoryGuyTestHelper = Ember.Object.create({
    // Typically you will use like:
 
    // To mock success
-   TestHelper.handleFind('user');
+   var userId = TestHelper.handleFind('user');
 
    // To mock failure case use method andFail
-   TestHelper.handleFind('user').andFail();
+   var userId = TestHelper.handleFind('user').andFail();
 
-   // To handle the case where you want to find a user model
-   store.find('user');
+   // Then to 'find' the user
+   store.find('user', userId);
+
+   // or in acceptance test
+   visit('/user'+userId);
    ```
 
    @param {String} name  name of the fixture ( or modelName ) to find
@@ -110,13 +113,16 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @param {Object} opts  optional fixture options
    */
   handleFind: function () {
-    //var args = Array.prototype.slice.call(arguments);
-    //var modelName = args.shift();
-    //var json = FactoryGuy.build.apply(FactoryGuy, arguments);
-    //
-    //
-    //var url = this.buildURL(modelName);
-    //return new MockGetRequest(url, modelName, this.mapFind);
+    var args = Array.prototype.slice.call(arguments);
+    var modelName = args.shift();
+    var json = FactoryGuy.build.apply(FactoryGuy, arguments);
+    var id = json.data ? json.data.id : json.id;
+
+    json = FactoryGuy.useJSONAPI() ? json : this.mapFind(modelName, json);
+
+    var url = this.buildURL(modelName, id);
+    new MockGetRequest(url, modelName, json);
+    return id;
   },
   /**
    Handling ajax GET for handling reloading a record
@@ -151,7 +157,11 @@ var FactoryGuyTestHelper = Ember.Object.create({
     Ember.assert("To handleFind pass in a model instance or a model type name and an id", modelName && id);
 
     var url = this.buildURL(modelName, id);
-    return new MockGetRequest(url, modelName, id, this.mapFind);
+
+    var json = FactoryGuy.getFixtureBuilder().convertForFindRequest(modelName, {id: id});
+    json = FactoryGuy.useJSONAPI() ? json : this.mapFind(modelName, json);
+
+    return new MockGetRequest(url, modelName, json);
   },
   /**
    Handling ajax GET for finding all records for a type of model.
@@ -177,7 +187,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     var args = Array.prototype.slice.call(arguments);
     var modelName = args.shift();
     var json = FactoryGuy.buildList.apply(FactoryGuy, arguments);
-    json = FactoryGuy.getFixtureBuilder().convertForRequest(modelName, json);
+    json = FactoryGuy.getFixtureBuilder().convertForFindAllRequest(modelName, json);
     var responseJson;
     if (!FactoryGuy.useJSONAPI()) {
       responseJson = this.mapFindAll(modelName, json);
