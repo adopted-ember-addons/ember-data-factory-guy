@@ -310,7 +310,7 @@ test("similar model type ids are created sequentially", function () {
 });
 
 test("dasherizes attributes and relationship keys", function () {
-  var json = build('profile', 'with_super_hero');
+  var json = build('profile', 'with_bat_man');
   deepEqual(json,
     {
       data: {

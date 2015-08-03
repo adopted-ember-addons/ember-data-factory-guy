@@ -9,7 +9,7 @@ var AmsFixtureBuilder = FixtureBuilder.extend({
   converterClass: JSONAPIConverter,
   transformerClass: AmsAttributeTransformer,
 
-  convertForBuild(modelName, fixture) {
+  convertForBuild: function(modelName, fixture) {
     return this.transformAttributes(modelName, fixture);
   },
 
@@ -20,7 +20,8 @@ var AmsFixtureBuilder = FixtureBuilder.extend({
   convertForFindAllRequest: function (modelName, fixture) {
     return this.transformAttributes(modelName, fixture);
   },
-  convertForCreateRequest(modelName, fixture) {
+
+  convertForCreateRequest: function(modelName, fixture) {
     var json = {};
     json[modelName]=fixture;
     return json;

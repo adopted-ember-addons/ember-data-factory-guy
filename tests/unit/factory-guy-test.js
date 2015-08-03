@@ -158,10 +158,10 @@ test("default values and sequences are inherited", function () {
     }
   });
 
-  FactoryGuy.define('super-hero', {
+  FactoryGuy.define('philosopher', {
     extends: 'person',
     default: {
-      type: 'super duper'
+      type: 'Super Thinker'
     }
   });
 
@@ -179,11 +179,11 @@ test("default values and sequences are inherited", function () {
   json = FactoryGuy.build('person').data;
   equal(json.attributes.name, 'person #1');
 
-  json = FactoryGuy.build('super-hero').data;
+  json = FactoryGuy.build('philosopher').data;
   // since the sequence ( personName ) that was inherited from person is owned by super hero,
   // the person# starts at 1 again, and is not person#2
   equal(json.attributes.name, 'person #1', 'inherits parent default attribute functions and sequences');
-  equal(json.attributes.type, 'super duper', 'local attributes override parent attributes');
+  equal(json.attributes.type, 'Super Thinker', 'local attributes override parent attributes');
 
   json = FactoryGuy.build('villain').data;
   equal(json.attributes.name, 'joker#1', 'uses local sequence with inherited parent default attribute function');
@@ -231,22 +231,22 @@ test("named types are not inherited", function () {
     }
   });
 
-  FactoryGuy.define('super-hero', {
+  FactoryGuy.define('villain', {
     extends: 'person',
     default: {
-      type: 'Super Duper'
+      type: 'Super Evil'
     },
-    super_man: {
-      name: 'Super Man'
+    joker: {
+      name: 'Joker'
     },
   });
 
   var json;
 
-  json = FactoryGuy.build('super_man').data;
-  equal(json.attributes.name, 'Super Man');
+  json = FactoryGuy.build('joker').data;
+  equal(json.attributes.name, 'Joker');
 
-  var definition = FactoryGuy.findModelDefinition('super-hero');
+  var definition = FactoryGuy.findModelDefinition('villain');
   equal(definition.matchesName('dude'), undefined);
 });
 

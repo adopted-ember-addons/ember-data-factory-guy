@@ -6,12 +6,12 @@ var JSONAPIJsonBuilder = FixtureBuilder.extend({
   converterClass: JSONAPIConverter,
   transformerClass: JSONAPIAttributeTransformer,
 
-  convertForBuild(modelName, fixture) {
+  convertForBuild: function(modelName, fixture) {
     var convertedFixture =  this.convertFixture(modelName, fixture);
     return this.transformAttributes(modelName, convertedFixture);
   },
 
-  convertForMake(modelName, fixture) {
+  convertForMake: function(modelName, fixture) {
     return this.convertFixture(modelName, fixture);
   }
 

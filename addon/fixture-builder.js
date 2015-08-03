@@ -4,12 +4,12 @@ export default Ember.Object.extend({
   init: function(store) {
     this.set('store', store);
   },
-  convertFixture(modelName, fixture) {
+  convertFixture: function(modelName, fixture) {
     var ConverterClass   = this.get('converterClass');
     var converter = new ConverterClass(this.store);
     return converter.convert(modelName, fixture);
   },
-  transformAttributes(modelName, fixture) {
+  transformAttributes: function(modelName, fixture) {
     var TransformerClass   = this.get('transformerClass');
     var transformer = new TransformerClass(this.store);
     return transformer.transform(modelName, fixture);
@@ -20,7 +20,7 @@ export default Ember.Object.extend({
    @param modelName
    @param fixture
    */
-  convertForBuild(modelName, fixture) {
+  convertForBuild: function(modelName, fixture) {
     return fixture;
   },
   /**
@@ -29,7 +29,7 @@ export default Ember.Object.extend({
    @param modelName
    @param fixture
    */
-  convertForMake(modelName, fixture) {
+  convertForMake: function(modelName, fixture) {
     return fixture;
   },
   /**
@@ -38,7 +38,7 @@ export default Ember.Object.extend({
    @param modelName
    @param fixture
    */
-  convertForFindAllRequest(modelName, fixture) {
+  convertForFindAllRequest: function(modelName, fixture) {
     return fixture;
   },
   /**
@@ -48,7 +48,7 @@ export default Ember.Object.extend({
    @param fixture
    @returns {{}}
    */
-  convertForFindRequest(modelName, fixture) {
+  convertForFindRequest: function(modelName, fixture) {
     return this.convertForBuild(modelName, fixture);
   },
   /**
@@ -58,7 +58,7 @@ export default Ember.Object.extend({
    @param fixture
    @returns {{}}
    */
-  convertForCreateRequest(modelName, fixture) {
+  convertForCreateRequest: function(modelName, fixture) {
     return this.convertForFindRequest(modelName, fixture);
   }
 });
