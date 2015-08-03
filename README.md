@@ -34,7 +34,7 @@ ChangeLog: ( Notes about what has changed in each version )
 
 ##### Never used ember-data-factory-guy before
   
- - ```ember install ember-data-factory-guy@1.13.3``` ( ember-data-1.13.5 + ) 
+ - ```ember install ember-data-factory-guy@1.13.4``` ( ember-data-1.13.5 + ) 
  - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + ) 
  - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 ) 
  - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )
@@ -539,8 +539,8 @@ You would use this to make models like:
 
 - Testing the models, controllers and components
   - FactoryGuy needs the application to startup in order to load the factories, and setup the store.
-  - That is why all the tests import startApp function from 'tests/helpers/start-app.js' ( a file
-    provided to you by ember cli )
+  - That is why all the tests (except model) import startApp function from 'tests/helpers/start-app.js' 
+    ( a file provided to you by ember cli )
 - Using FactoryGuy shortcut methods:
   - make
 - [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js) 
@@ -587,6 +587,7 @@ test('it has projects', function() {
 
 - Uses mockjax
 - Has helper methods
+  - handleFind
   - handleFindAll
   - handleReload
   - handleFindQuery
@@ -629,6 +630,34 @@ will look like this:
     ok(users.length === 2);
   });
 ```
+
+
+##### handleFind
+  - For dealing with finding one record of a particular type
+  - Can pass in arguments just like you would for make or build
+  
+If when visiting a route, some part of your application ( like router, or 
+controller action ) is going to make a call to the store to find a records of 
+a particular type:  
+   
+```javascript
+  store.find('user', userId) // fires ajax request for all user with id userId 
+```
+
+An Integration test ( to stub that ajax call and return factory guy data ) 
+will look like this:
+   
+```javascript
+  // can use traits and extra fixture options here as you would with FactoryGuy#make    
+  var userId = TestHelper.handleFind('user');
+  visit('/users/'+userId);
+  
+  andThen(function () {
+    var user = find('li.user');
+    ok(user.length === 1);
+  });
+```
+
 
  
 ##### handleReload
