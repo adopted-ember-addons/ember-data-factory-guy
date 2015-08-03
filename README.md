@@ -587,13 +587,13 @@ test('it has projects', function() {
 
 - Uses mockjax
 - Has helper methods
-  - handleFind
-  - handleFindAll
-  - handleReload
-  - handleFindQuery
-  - handleCreate
-  - handleUpdate
-  - handleDelete
+  - [handleFind](https://github.com/danielspaniel/ember-data-factory-guy#handlefind)
+  - [handleFindAll](https://github.com/danielspaniel/ember-data-factory-guy#handlefindall)
+  - [handleReload](https://github.com/danielspaniel/ember-data-factory-guy#handlereload)
+  - [handleFindQuery](https://github.com/danielspaniel/ember-data-factory-guy#handlefindquery)
+  - [handleCreate](https://github.com/danielspaniel/ember-data-factory-guy#handlecreate)
+  - [handleUpdate](https://github.com/danielspaniel/ember-data-factory-guy#handleupdate)
+  - [handleDelete](https://github.com/danielspaniel/ember-data-factory-guy#handledelete)
 - Override FactoryGuyTestHelper by 'reopeing' it.
 
 If you put models into the store ( with FactoryGuy#make ), the http GET call does not need to be mocked,
@@ -603,33 +603,6 @@ But what if you want to handle create, update, and delete? Or even reload or fin
 
 FactoryGuy assumes you want to stub ajax calls with the mockjax library,
 and this javascript library is already bundled for you when you install ember-data-factory-guy.
-
-##### handleFindAll
-  - For dealing with finding all records of a particular type
-  - [Sample acceptance test using handleFindAll (users-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
-
-If when visiting a route, some part of your application ( like router, or 
-controller action ) is going to make a call to the store for all records of 
-a particular type:  
-   
-```javascript
-  store.findAll('user') // fires ajax request for all user records 
-```
-
-An Integration test ( to stub that ajax call and return factory guy data ) 
-will look like this:
-   
-```javascript
-  // can use traits and extra fixture options here as you would with FactoryGuy#makeList    
-  TestHelper.handleFindAll('user', 2);
-      
-  visit('/users');
-  
-  andThen(function () {
-    var users = find('li.user');
-    ok(users.length === 2);
-  });
-```
 
 
 ##### handleFind
@@ -655,6 +628,35 @@ will look like this:
   andThen(function () {
     var user = find('li.user');
     ok(user.length === 1);
+  });
+```
+
+
+
+##### handleFindAll
+  - For dealing with finding all records of a particular type
+  - [Sample acceptance test using handleFindAll (users-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
+
+If when visiting a route, some part of your application ( like router, or 
+controller action ) is going to make a call to the store for all records of 
+a particular type:  
+   
+```javascript
+  store.findAll('user') // fires ajax request for all user records 
+```
+
+An Integration test ( to stub that ajax call and return factory guy data ) 
+will look like this:
+   
+```javascript
+  // can use traits and extra fixture options here as you would with FactoryGuy#makeList    
+  TestHelper.handleFindAll('user', 2);
+      
+  visit('/users');
+  
+  andThen(function () {
+    var users = find('li.user');
+    ok(users.length === 2);
   });
 ```
 
