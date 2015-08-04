@@ -50,7 +50,6 @@ var AmsAttributeTransformer = function (store) {
       var value = fixture[attribute];
       if (fixture.hasOwnProperty(attribute)) {
         attributeKey = defaultTransformFn.call(attributeKey);
-        //console.log(mode, attributeKey, value);
         delete fixture[attribute];
         fixture[attributeKey] = value;
       }
