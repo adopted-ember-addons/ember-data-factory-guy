@@ -59,6 +59,6 @@ export default Ember.Object.extend({
    @returns {{}}
    */
   convertForCreateRequest: function(modelName, fixture) {
-    return this.convertForFindRequest(modelName, fixture);
+    return this.convertForBuild(modelName, fixture);
   }
 });
