@@ -430,9 +430,6 @@ SharedBehavior.buildTests = function () {
 
     var json = build('funny_person');
     var expected = {id: 1, name: 'Bob', type: 'funny Bob'};
-    //if (FactoryGuy.useJSONAPI()) {
-    //  expected = FactoryGuy.convertToJSONAPIFormat('person', expected);
-    //}
     deepEqual(json, actual('person', expected), 'works when attribute exists');
 
     json = build('missing_person');
