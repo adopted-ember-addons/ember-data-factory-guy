@@ -2,6 +2,7 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import ModelDefinition from './model-definition';
 import FixtureBuilderFactory from './fixture-builder-factory';
+import ActiveModelAdapter from 'active-model-adapter';
 
 var FactoryGuy = function () {
   var modelDefinitions = {};
@@ -62,7 +63,7 @@ var FactoryGuy = function () {
     var adapter = store.adapterFor('application');
     var useJSONAPI = (adapter instanceof DS.JSONAPIAdapter);
     var isREST = (adapter instanceof DS.RESTAdapter) && !useJSONAPI;
-    var isAMS = (adapter instanceof DS.ActiveModelAdapter);
+    var isAMS = DS.ActiveModelAdapter && (adapter instanceof DS.ActiveModelAdapter) || (adapter instanceof ActiveModelAdapter);
     return !isAMS && !isREST;
   };
   /**
