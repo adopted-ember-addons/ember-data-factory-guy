@@ -2,11 +2,11 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import ModelDefinition from './model-definition';
 import FixtureBuilderFactory from './fixture-builder-factory';
-import ActiveModelAdapter from 'active-model-adapter';
 
 var FactoryGuy = function () {
   var modelDefinitions = {};
   var store = null;
+  var fixtureBuilderFactory = null;
   var fixtureBuilder = null;
   /**
    ```javascript
@@ -57,22 +57,19 @@ var FactoryGuy = function () {
     return modelDefinitions[model];
   };
   /*
-   Using JSONAPIAdapter ?
+   Using JSONAPI style data?
   */
   this.useJSONAPI = function () {
-    var adapter = store.adapterFor('application');
-    var useJSONAPI = (adapter instanceof DS.JSONAPIAdapter);
-    var isREST = (adapter instanceof DS.RESTAdapter) && !useJSONAPI;
-    var isAMS = DS.ActiveModelAdapter && (adapter instanceof DS.ActiveModelAdapter) || (adapter instanceof ActiveModelAdapter);
-    return !isAMS && !isREST;
+    return fixtureBuilderFactory.useJSONAPI();
   };
   /**
    Setting the store so FactoryGuy can do some model introspection.
+   Also setting the correct fixtureBuilderFactory and fixtureBuilder.
    */
   this.setStore = function (aStore) {
     Ember.assert("FactoryGuy#setStore needs a valid store instance.You passed in [" + aStore + "]", aStore instanceof DS.Store);
     store = aStore;
-    var fixtureBuilderFactory = new FixtureBuilderFactory(store);
+    fixtureBuilderFactory = new FixtureBuilderFactory(store);
     fixtureBuilder = fixtureBuilderFactory.getFixtureBuilder();
   };
   this.getStore = function () {

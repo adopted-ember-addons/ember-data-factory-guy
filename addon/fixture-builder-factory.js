@@ -6,8 +6,8 @@ import RESTFixtureBuilder from './rest-fixture-builder';
 var FixtureBuilderFactory = function (store) {
   var adapter = store.adapterFor('application');
   /*
-   Use JSONAPI Builder
- */
+   Using json api?
+   */
   this.useJSONAPI = function () {
     var useJSONAPI = usingJSONAPIAdapter();
     var isAMS = (usingActiveModelAdapter());
@@ -26,8 +26,10 @@ var FixtureBuilderFactory = function (store) {
   var usingRESTAdapter = function () {
     return usingAdapterType('RESTAdapter');
   };
-  this.getFixtureBuilder = function() {
-    //console.log('usingActiveModelAdapter()', usingActiveModelAdapter(), adapter+'', adapter instanceof DS['ActiveModelAdapter'])
+  /**
+   Return appropriate FixtureBuilder for the adapter type
+   */
+  this.getFixtureBuilder = function () {
     if (usingActiveModelAdapter()) {
       return new AmsFixtureBuilder(store);
     }
