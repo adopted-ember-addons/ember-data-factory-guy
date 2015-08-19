@@ -62,7 +62,7 @@ var JSONAPIAttributeTransformer = function (store) {
     var transformFunction = serializer.keyForAttribute || Ember.String.dasherize;
     for (var key in object) {
       var value = object[key];
-      var newKey = transformFunction.call(key);
+      var newKey = transformFunction(key);
       delete object[key];
       object[newKey] = value;
     }
@@ -84,8 +84,20 @@ var JSONAPIAttributeTransformer = function (store) {
         transformAttributes(modelName, data);
       }
     }
-    transformObjectKeys(modelName, fixture.relationships);
+    transformRelationshipObjectKeys(modelName, fixture.relationships);
   };
+
+  var transformRelationshipObjectKeys = function(modelName, object) {
+    var serializer = store.serializerFor(modelName);
+    var transformFunction = serializer.keyForRelationship || Ember.String.dasherize;
+    for (var key in object) {
+      var value = object[key];
+      var newKey = transformFunction(key);
+      delete object[key];
+      object[newKey] = value;
+    }
+  };
+
 };
 
 export default JSONAPIAttributeTransformer;
