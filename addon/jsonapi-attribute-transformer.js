@@ -7,8 +7,7 @@ import $ from 'jquery';
  *
  * @constructor
  */
-var JSONAPIAttributeTransformer = function (/*store*/) {
-  var defaultTransformFn = ''.dasherize;
+var JSONAPIAttributeTransformer = function (store) {
 
   /**
    * Transform attributes in fixture.
@@ -21,17 +20,17 @@ var JSONAPIAttributeTransformer = function (/*store*/) {
     if (Ember.typeOf(fixture.data) === 'array') {
       newData = fixture.data.map(function (single) {
         var copy = $.extend(true, {}, single);
-        transformSingle(copy);
+        transformSingle(modelName, copy);
         return copy;
       });
     } else {
       newData = $.extend(true, {}, fixture.data);
-      transformSingle(newData);
+      transformSingle(modelName, newData);
     }
     if (fixture.included) {
       included = fixture.included.map(function (single) {
         var copy = $.extend(true, {}, single);
-        transformSingle(copy);
+        transformSingle(modelName, copy);
         return copy;
       });
     }
@@ -47,21 +46,23 @@ var JSONAPIAttributeTransformer = function (/*store*/) {
    @param modelName
    @param fixture
    */
-  var transformSingle = function (fixture) {
-    transformAttributes(fixture);
-    findRelationships(fixture);
+  var transformSingle = function (modelName, fixture) {
+    transformAttributes(modelName, fixture);
+    findRelationships(modelName, fixture);
   };
 
-  var transformAttributes = function (fixture) {
+  var transformAttributes = function (modelName, fixture) {
     if (fixture.attributes) {
-      transormObjectKeys(fixture.attributes);
+      transformObjectKeys(modelName, fixture.attributes);
     }
   };
 
-  var transormObjectKeys = function(object) {
+  var transformObjectKeys = function(modelName, object) {
+    var serializer = store.serializerFor(modelName);
+    var transformFunction = serializer.keyForAttribute || Ember.String.dasherize;
     for (var key in object) {
       var value = object[key];
-      var newKey = defaultTransformFn.call(key);
+      var newKey = transformFunction.call(key);
       delete object[key];
       object[newKey] = value;
     }
@@ -71,19 +72,19 @@ var JSONAPIAttributeTransformer = function (/*store*/) {
    Recursively descend into the fixture json, looking for relationships
    whose attributes need transforming
    */
-  var findRelationships = function (fixture) {
+  var findRelationships = function (modelName, fixture) {
     var relationships = fixture.relationships;
     for (var key in relationships) {
       var data = relationships[key].data;
       if (Ember.typeOf(data) === 'array') {
         for (var i = 0, len = data.length; i < len; i++) {
-          transformAttributes(data[i]);
+          transformAttributes(modelName, data[i]);
         }
       } else {
-        transformAttributes(data);
+        transformAttributes(modelName, data);
       }
     }
-    transormObjectKeys(fixture.relationships);
+    transformObjectKeys(modelName, fixture.relationships);
   };
 };
 
