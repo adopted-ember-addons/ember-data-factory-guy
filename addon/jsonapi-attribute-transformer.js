@@ -47,19 +47,23 @@ var JSONAPIAttributeTransformer = function (store) {
    @param fixture
    */
   var transformSingle = function (modelName, fixture) {
-    transformAttributes(modelName, fixture);
+    transformAttributeObjectKeys(modelName, fixture);
     findRelationships(modelName, fixture);
   };
 
-  var transformAttributes = function (modelName, fixture) {
-    if (fixture.attributes) {
-      transformObjectKeys(modelName, fixture.attributes);
+  var transformAttributeObjectKeys = function(modelName, object) {
+    if (object.attributes) {
+      transformObjectKeys(modelName, object.attributes, 'Attribute');
     }
   };
 
-  var transformObjectKeys = function(modelName, object) {
+  var transformRelationshipObjectKeys = function(modelName, object) {
+    transformObjectKeys(modelName, object, 'Relationship');
+  };
+
+  var transformObjectKeys = function(modelName, object, keyType) {
     var serializer = store.serializerFor(modelName);
-    var transformFunction = serializer.keyForAttribute || Ember.String.dasherize;
+    var transformFunction = serializer['keyFor'+keyType] || Ember.String.dasherize;
     for (var key in object) {
       var value = object[key];
       var newKey = transformFunction(key);
@@ -78,24 +82,13 @@ var JSONAPIAttributeTransformer = function (store) {
       var data = relationships[key].data;
       if (Ember.typeOf(data) === 'array') {
         for (var i = 0, len = data.length; i < len; i++) {
-          transformAttributes(modelName, data[i]);
+          transformAttributeObjectKeys(modelName, data[i]);
         }
       } else {
-        transformAttributes(modelName, data);
+        transformAttributeObjectKeys(modelName, data);
       }
     }
     transformRelationshipObjectKeys(modelName, fixture.relationships);
-  };
-
-  var transformRelationshipObjectKeys = function(modelName, object) {
-    var serializer = store.serializerFor(modelName);
-    var transformFunction = serializer.keyForRelationship || Ember.String.dasherize;
-    for (var key in object) {
-      var value = object[key];
-      var newKey = transformFunction(key);
-      delete object[key];
-      object[newKey] = value;
-    }
   };
 
 };

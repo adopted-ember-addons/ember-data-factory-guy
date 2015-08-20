@@ -599,36 +599,24 @@ SharedBehavior.buildListTests = function () {
   test("basic", function () {
     var userList = buildList('user', 2);
     var expected = [{id: 1, name: 'User1'}, {id: 2, name: 'User2'}];
-    //if (FactoryGuy.useJSONAPI()) {
-    //  expected = FactoryGuy.convertToJSONAPIFormat('user', expected);
-    //}
     deepEqual(userList, actual('user',expected));
   });
 
   test("using custom attributes", function () {
     var userList = buildList('user', 2, {name: 'Crazy'});
     var expected = [{id: 1, name: 'Crazy'}, {id: 2, name: 'Crazy'}];
-    //if (FactoryGuy.useJSONAPI()) {
-    //  expected = FactoryGuy.convertToJSONAPIFormat('user', expected);
-    //}
     deepEqual(userList, actual('user',expected));
   });
 
   test("using traits", function () {
     var projectList = buildList('project', 2, 'big');
     var expected = [{id: 1, title: 'Big Project'}, {id: 2, title: 'Big Project'}];
-    //if (FactoryGuy.useJSONAPI()) {
-    //  expected = FactoryGuy.convertToJSONAPIFormat('project', expected);
-    //}
     deepEqual(projectList, actual('project',expected));
   });
 
   test("using traits and custom attributes", function () {
     var projectList = buildList('project', 2, 'big', {title: 'Really Big'});
     var expected = [{id: 1, title: 'Really Big'}, {id: 2, title: 'Really Big'}];
-    //if (FactoryGuy.useJSONAPI()) {
-    //  expected = FactoryGuy.convertToJSONAPIFormat('project', expected);
-    //}
     deepEqual(projectList, actual('project',expected));
   });
 

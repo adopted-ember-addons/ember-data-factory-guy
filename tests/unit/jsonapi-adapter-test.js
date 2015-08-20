@@ -309,7 +309,7 @@ test("similar model type ids are created sequentially", function () {
   equal(project.data.id, 1);
 });
 
-test("dasherizes attributes and relationship keys", function () {
+test("when no custom serialize keys functions exist, dasherizes attributes and relationship keys", function () {
   var json = build('profile', 'with_bat_man');
   deepEqual(json,
     {
@@ -323,6 +323,41 @@ test("dasherizes attributes and relationship keys", function () {
         },
         relationships: {
           'super-hero': {
+            data: {id: 1, type: 'super-hero'}
+          }
+        }
+      },
+      included: [
+        {
+          id: 1,
+          type: "super-hero",
+          attributes: {
+            name: "BatMan",
+            type: "SuperHero"
+          }
+        }
+      ]
+    });
+});
+
+test("uses custom serialize keys function for transforming attributes and relationship keys", function () {
+  var serializer = FactoryGuy.getStore().serializerFor();
+  serializer.keyForAttribute = Ember.String.underscore;
+  serializer.keyForRelationship = Ember.String.underscore;
+
+  var json = build('profile', 'with_bat_man');
+  deepEqual(json,
+    {
+      data: {
+        id: 1,
+        type: 'profile',
+        attributes: {
+          description: 'Text goes here',
+          'camel_case_description': 'textGoesHere',
+          'snake_case_description': 'text_goes_here'
+        },
+        relationships: {
+          'super_hero': {
             data: {id: 1, type: 'super-hero'}
           }
         }
