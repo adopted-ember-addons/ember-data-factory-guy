@@ -9,8 +9,7 @@ import $ from 'jquery';
  @constructor
  */
 var AmsAttributeTransformer = function (store) {
-
-  var defaultTransformFn = ''.underscore;
+  var defaultTransformFn = Ember.String.underscore;
 
   /**
    Transform attributes in fixture.
@@ -40,20 +39,33 @@ var AmsAttributeTransformer = function (store) {
    @param fixture
    */
   var transformSingle = function (modelName, fixture) {
-    transformAttributes(modelName, fixture);
+    transformAttributeObjectKeys(modelName, fixture);
     findRelationships(modelName, fixture);
   };
 
-  var transformAttributes = function (modelName, fixture) {
+  var transformAttributeObjectKeys = function (modelName, fixture) {
+    var serializer = store.serializerFor(modelName);
+    var transformFunction = serializer.keyForAttribute || defaultTransformFn;
     store.modelFor(modelName).eachAttribute(function (attribute) {
       var attributeKey = attribute;
       var value = fixture[attribute];
       if (fixture.hasOwnProperty(attribute)) {
-        attributeKey = defaultTransformFn.call(attributeKey);
+        attributeKey = transformFunction(attributeKey);
         delete fixture[attribute];
         fixture[attributeKey] = value;
       }
     });
+  };
+
+  var transformRelationshipObjectKey = function (modelName, fixture, key) {
+    var serializer = store.serializerFor(modelName);
+    var transformFunction = serializer.keyForRelationship || defaultTransformFn;
+    var value = fixture[key];
+    if (fixture.hasOwnProperty(key)) {
+      var relationshipKey = transformFunction(key);
+      delete fixture[key];
+      fixture[relationshipKey] = value;
+    }
   };
 
   /**
@@ -76,6 +88,7 @@ var AmsAttributeTransformer = function (store) {
           });
         }
       }
+      transformRelationshipObjectKey(modelName, fixture, key);
     });
   };
 };
