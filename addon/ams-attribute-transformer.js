@@ -47,24 +47,22 @@ var AmsAttributeTransformer = function (store) {
     var serializer = store.serializerFor(modelName);
     var transformFunction = serializer.keyForAttribute || defaultTransformFn;
     store.modelFor(modelName).eachAttribute(function (attribute) {
-      var attributeKey = attribute;
-      var value = fixture[attribute];
-      if (fixture.hasOwnProperty(attribute)) {
-        attributeKey = transformFunction(attributeKey);
-        delete fixture[attribute];
-        fixture[attributeKey] = value;
-      }
+      transformKey(fixture, attribute, transformFunction);
     });
   };
 
   var transformRelationshipObjectKey = function (modelName, fixture, key) {
     var serializer = store.serializerFor(modelName);
     var transformFunction = serializer.keyForRelationship || defaultTransformFn;
+    transformKey(fixture, key, transformFunction);
+  };
+
+  var transformKey = function(fixture, key, fn) {
     var value = fixture[key];
     if (fixture.hasOwnProperty(key)) {
-      var relationshipKey = transformFunction(key);
+      var newKey = fn(key);
       delete fixture[key];
-      fixture[relationshipKey] = value;
+      fixture[newKey] = value;
     }
   };
 
