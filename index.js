@@ -10,7 +10,7 @@ module.exports = {
   included: function(app) {
     this._super.included(app);
 
-    if (app.tests) {
+    if (app.env === 'test') {
       app.import(app.bowerDirectory + '/jquery-mockjax/dist/jquery.mockjax.js');
     }
   }
