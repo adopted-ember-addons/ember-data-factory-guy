@@ -1089,7 +1089,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
      var users = FactoryGuy.makeList('user', 2, 'with_hats');
 
      // Pass in the array of model instances as last argument
-     testHelper.handleFindQuery('user', ['name', 'age'], users);
+     testHelper.handleQuery('user', ['name', 'age'], users);
 
      store.findQuery('user', {name:'Bob', age: 10}}).then(function(userInstances){
         /// userInstances will be the same of the users that were passed in
@@ -1101,7 +1101,7 @@ var FactoryGuyTestMixin = Em.Mixin.create({
 
    ```js
    // Simulate a query that returns no results
-   testHelper.handleFindQuery('user', ['age']);
+   testHelper.handleQuery('user', ['age']);
 
    store.findQuery('user', {age: 10000}}).then(function(userInstances){
         /// userInstances will be empty
@@ -1112,8 +1112,8 @@ var FactoryGuyTestMixin = Em.Mixin.create({
    @param {String} searchParams  the parameters that will be queried
    @param {Array}  array of DS.Model records to be 'returned' by query
    */
-  handleFindQuery: function (modelName, searchParams, records) {
-    Ember.assert('The second argument of searchParams must be an array',Em.typeOf(searchParams) == 'array')
+  handleQuery: function (modelName, searchParams, records) {
+    Ember.assert('The second argument of searchParams must be an object',Em.typeOf(searchParams) == 'object')
     if (records) {
       Ember.assert('The third argument ( records ) must be an array - found type:' + Em.typeOf(records), Em.typeOf(records) == 'array')
     } else {

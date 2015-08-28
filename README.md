@@ -590,7 +590,7 @@ test('it has projects', function() {
   - [handleFind](https://github.com/danielspaniel/ember-data-factory-guy#handlefind)
   - [handleFindAll](https://github.com/danielspaniel/ember-data-factory-guy#handlefindall)
   - [handleReload](https://github.com/danielspaniel/ember-data-factory-guy#handlereload)
-  - [handleFindQuery](https://github.com/danielspaniel/ember-data-factory-guy#handlefindquery)
+  - [handleQuery](https://github.com/danielspaniel/ember-data-factory-guy#handlequery)
   - [handleCreate](https://github.com/danielspaniel/ember-data-factory-guy#handlecreate)
   - [handleUpdate](https://github.com/danielspaniel/ember-data-factory-guy#handleupdate)
   - [handleDelete](https://github.com/danielspaniel/ember-data-factory-guy#handledelete)
@@ -687,11 +687,11 @@ will look like this:
 ```
 
 
-##### handleFindQuery
+##### handleQuery
    - For dealing with finding all records for a type of model with query parameters.
      - Can pass in model instances or empty array
-
-
+   - Used to be called handleFindQuery ( which is now deprecated )
+   
 *Passing in array of model instances*
 
    ```js
@@ -699,19 +699,19 @@ will look like this:
      var users = FactoryGuy.makeList('user', 2, 'with_hats');
 
      // Pass in the array of model instances as last argument
-     TestHelper.handleFindQuery('user', ['name', 'age'], users);
+     TestHelper.handleQuery('user', {name:'Bob', age: 10}, users);
      
      // will stub a call to the store like this:
-     store.findQuery('user', {name:'Bob', age: 10}});
+     store.query('user', {name:'Bob', age: 10}});
    ```
 
 *Passing in nothing for last argument*
 
    ```js
      // This simulates a query that returns no results
-     TestHelper.handleFindQuery('user', ['age']);
+     TestHelper.handleQuery('user', {age: 10});
 
-     store.findQuery('user', {age: 10000}}).then(function(userInstances){
+     store.query('user', {age: 10}}).then(function(userInstances){
         /// userInstances will be empty
      })
    ```

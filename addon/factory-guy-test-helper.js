@@ -207,11 +207,11 @@ var FactoryGuyTestHelper = Ember.Object.create({
    var users = FactoryGuy.makeList('user', 2, 'with_hats');
 
    // Pass in the array of model instances as last argument
-   testHelper.handleFindQuery('user', ['name', 'age'], users);
+   testHelper.handleQuery('user', {name:'Bob', age: 10}, users);
 
-   store.findQuery('user', {name:'Bob', age: 10}}).then(function(userInstances){
-        /// userInstances will be the same of the users that were passed in
-     })
+   store.query('user', {name:'Bob', age: 10}}).then(function(userInstances){
+     // userInstances will be the same of the users that were passed in
+   })
    ```
 
    By omitting the last argument (pass in no records), this simulates a findQuery
@@ -219,19 +219,19 @@ var FactoryGuyTestHelper = Ember.Object.create({
 
    ```js
    // Simulate a query that returns no results
-   testHelper.handleFindQuery('user', ['age']);
+   testHelper.handleQuery('user', {age: 10000});
 
-   store.findQuery('user', {age: 10000}}).then(function(userInstances){
-        /// userInstances will be empty
-     })
+   store.query('user', {age: 10000}}).then(function(userInstances){
+     // userInstances will be empty
+   })
    ```
 
    @param {String} modelName  name of the mode like 'user' for User model type
    @param {String} searchParams  the parameters that will be queried
    @param {Array}  array of DS.Model records to be 'returned' by query
    */
-  handleFindQuery: function (modelName, searchParams, records) {
-    Ember.assert('The second argument of searchParams must be an array', Ember.typeOf(searchParams) === 'array');
+  handleQuery: function (modelName, searchParams, records) {
+    Ember.assert('The second argument of searchParams must be an object', Ember.typeOf(searchParams) === 'object');
     if (records) {
       Ember.assert('The third argument ( records ) must be an array - found type:' + Ember.typeOf(records), Ember.typeOf(records) === 'array');
     } else {
@@ -253,7 +253,11 @@ var FactoryGuyTestHelper = Ember.Object.create({
     }
 
     var url = this.buildURL(modelName);
-    this.stubEndpointForHttpRequest(url, responseJson, {urlParams: searchParams});
+    this.stubEndpointForHttpRequest(url, responseJson, {data: searchParams});
+  },
+  handleFindQuery: function (modelName, searchParams, records) {
+    Ember.deprecate("handleFindQuery is deprecated and will be removed in later versions, please use handleQuery");
+    return this.handleQuery(modelName, searchParams, records);
   },
   /**
    Handling ajax POST ( create record ) for a model.

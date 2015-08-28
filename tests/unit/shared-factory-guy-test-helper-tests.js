@@ -224,26 +224,24 @@ SharedBehavior.handleFindAllTests = function () {
 };
 
 
-/////// handleFindQuery //////////
+/////// handleQuery //////////
 
-SharedBehavior.handleFindQueryTests = function () {
+SharedBehavior.handleQueryTests = function () {
 
-  test("second argument should be an array", function (assert) {
+  test("json payload argument should be an object", function (assert) {
     assert.throws(function () {
-      TestHelper.handleFindQuery('user', 'name', {});
-    }, "second argument not correct type");
-  });
+      TestHelper.handleQuery('user', 'name', {});
+    }, "query argument should not be a string");
 
-  test("json payload argument should be an array", function (assert) {
     assert.throws(function () {
-      TestHelper.handleFindQuery('user', ['name'], {});
-    }, "payload argument is not an array");
+      TestHelper.handleQuery('user', ['name'], {});
+    }, "query argument should not be an array");
   });
 
   test("passing in nothing as last argument returns no results", function (assert) {
     Ember.run(function () {
       var done = assert.async();
-      TestHelper.handleFindQuery('user', ['name']);
+      TestHelper.handleQuery('user', {name: 'Bob'});
       FactoryGuy.getStore().query('user', {name: 'Bob'}).then(function (users) {
         equal(users.get('length'), 0);
         done();
@@ -256,7 +254,7 @@ SharedBehavior.handleFindQueryTests = function () {
     Ember.run(function () {
       var done = assert.async();
       var users = FactoryGuy.makeList('user', 2, 'with_hats');
-      TestHelper.handleFindQuery('user', ['name'], users);
+      TestHelper.handleQuery('user', {name: 'Bob'}, users);
 
       equal(FactoryGuy.getStore().peekAll('user').get('content.length'), 2, 'start out with 2 instances');
 
@@ -275,11 +273,11 @@ SharedBehavior.handleFindQueryTests = function () {
     Ember.run(function () {
       var done = assert.async();
       var users = FactoryGuy.makeList('company', 2, 'with_projects', 'with_profile');
-      TestHelper.handleFindQuery('company', ['name'], users);
+      TestHelper.handleQuery('company', {name: 'Dude Company'}, users);
 
       equal(FactoryGuy.getStore().peekAll('company').get('content.length'), 2, 'start out with 2 instances');
 
-      FactoryGuy.getStore().query('company', {name: 'Dude'}).then(function (companies) {
+      FactoryGuy.getStore().query('company', {name: 'Dude Company'}).then(function (companies) {
         equal(companies.get('length'), 2);
         ok(companies.get('firstObject.profile') instanceof Profile);
         equal(companies.get('firstObject.projects.length'), 2);
@@ -291,6 +289,26 @@ SharedBehavior.handleFindQueryTests = function () {
     });
   });
 
+  test("using different query params returns different results", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+
+      var companies1 = FactoryGuy.makeList('company', 2);
+      TestHelper.handleQuery('company', {name: 'Dude'}, companies1);
+
+      var companies2 = FactoryGuy.makeList('company', 2);
+      TestHelper.handleQuery('company', {type: 'Small'}, companies2);
+
+      FactoryGuy.getStore().query('company', {name: 'Dude'}).then(function (companies) {
+        equal(companies.mapBy('id')+'', companies1.mapBy('id')+'');
+
+        FactoryGuy.getStore().query('company', {type: 'Small'}).then(function (companies) {
+          equal(companies.mapBy('id')+'', companies2.mapBy('id')+'');
+          done();
+        });
+      });
+    });
+  });
 };
 
 
