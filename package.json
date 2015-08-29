@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "active-model-adapter": "^1.13.5",
+    "active-model-adapter": "^2.0.0",
     "broccoli-asset-rev": "^2.0.2",
     "ember-cli": "^1.13.8",
     "ember-cli-app-version": "0.3.3",

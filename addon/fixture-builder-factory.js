@@ -1,4 +1,3 @@
-import DS from 'ember-data';
 import JSONAPIFixtureBuilder from './jsonapi-fixture-builder';
 import AmsFixtureBuilder from './ams-fixture-builder';
 import RESTFixtureBuilder from './rest-fixture-builder';
@@ -7,6 +6,7 @@ var FixtureBuilderFactory = function (store) {
   var adapter = store.adapterFor('application');
   /*
    Using json api?
+   TODO: extract this to utility class, and fix some of the whacky logic
    */
   this.useJSONAPI = function () {
     var useJSONAPI = usingJSONAPIAdapter();
@@ -15,16 +15,16 @@ var FixtureBuilderFactory = function (store) {
     return !isAMS && !isREST;
   };
   var usingAdapterType = function (adapterType) {
-    return DS[adapterType] && adapter instanceof DS[adapterType];
+    return adapter && adapter.toString().match(adapterType);
   };
   var usingJSONAPIAdapter = function () {
-    return usingAdapterType('JSONAPIAdapter');
+    return usingAdapterType('json-api');
   };
   var usingActiveModelAdapter = function () {
-    return usingAdapterType('ActiveModelAdapter');
+    return usingAdapterType('active-model');
   };
   var usingRESTAdapter = function () {
-    return usingAdapterType('RESTAdapter');
+    return usingAdapterType('rest');
   };
   /**
    Return appropriate FixtureBuilder for the adapter type
