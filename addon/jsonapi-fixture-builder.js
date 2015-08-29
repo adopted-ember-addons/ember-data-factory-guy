@@ -2,6 +2,9 @@ import FixtureBuilder from './fixture-builder';
 import JSONAPIConverter from './jsonapi-converter';
 import JSONAPIAttributeTransformer from './jsonapi-attribute-transformer';
 
+/**
+ Fixture Builder for JSONAPISerializer
+ */
 var JSONAPIJsonBuilder = FixtureBuilder.extend({
   converterClass: JSONAPIConverter,
   transformerClass: JSONAPIAttributeTransformer,
