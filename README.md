@@ -44,7 +44,7 @@ ChangeLog: ( Notes about what has changed in each version )
 ##### Have a previous installation ( updating to new version )
 
 Clear npm:
- - remove 'ember-cli-data-factory-guy' or 'ember-data-factory-guy' from package.json
+ - remove 'ember-data-factory-guy' from package.json
  - ```npm prune ```
 
 then:
