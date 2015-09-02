@@ -465,9 +465,9 @@ the reverse 'user' belongsTo association is being setup for you on the project
 
 ```javascript
   var json = FactoryGuy.buildList('user', 2)
-  json.length // => 2
-  json[0] // => {id: 1, name: 'User1', style: 'normal'}
-  json[1] // => {id: 2, name: 'User2', style: 'normal'}
+  json.users.length // => 2
+  json.users[0] // => {id: 1, name: 'User1', style: 'normal'}
+  json.users[1] // => {id: 2, name: 'User2', style: 'normal'}
 
 ```
 
