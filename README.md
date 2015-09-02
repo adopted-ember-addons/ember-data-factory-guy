@@ -173,7 +173,10 @@ In other words, don't do this:
  - FactoryGuy.make or just make
    - Loads model instance into the store
  - FactoryGuy.build or just build
-   - Builds json
+   - Builds json in accordance with the adapters specifications
+     - [RESTAdapter](http://emberjs.com/api/data/classes/DS.RESTAdapter.html#toc_json-structure)   
+     - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
+     - [JSONAPIAdapter](http://jsonapi.org/format/) 
  - Can override default attributes by passing in a hash
  - Can add attributes with traits ( see traits section )
 
@@ -183,14 +186,14 @@ In other words, don't do this:
   
   // returns json
   var json = FactoryGuy.build('user');
-  json // => {id: 1, name: 'Dude', style: 'normal'}
+  json.user // => {id: 1, name: 'Dude', style: 'normal'}
 
   // returns a User instance that is loaded into your application's store
   var user = FactoryGuy.make('user');
   user.toJSON({includeId: true}) // => {id: 2, name: 'Dude', style: 'normal'}
 
   var json = build('admin');
-  json // => {id: 3, name: 'Admin', style: 'super'}
+  json.user // => {id: 3, name: 'Admin', style: 'super'}
 
   var user = make('admin');
   user.toJSON({includeId: true}) // => {id: 4, name: 'Admin', style: 'super'}
@@ -202,7 +205,7 @@ You can override the default attributes by passing in a hash
 ```javascript
 
   var json = build('user', {name: 'Fred'});
-  // json.name => 'Fred'
+  // json.user.name => 'Fred'
 
 ```
 
@@ -233,7 +236,7 @@ You can override the default attributes by passing in a hash
   });
 
   var json = FactoryGuy.build('user');
-  json.name // => 'User1'
+  json.user.name // => 'User1'
 
   var user = FactoryGuy.make('user');
   user.get('name') // => 'User2'
@@ -251,7 +254,7 @@ You can override the default attributes by passing in a hash
   });
 
   var json = FactoryGuy.build('special_project');
-  json.title // => 'Project #1'
+  json.project.title // => 'Project #1'
 
   var project = FactoryGuy.make('special_project');
   project.get('title') // => 'Project #2'
@@ -275,8 +278,8 @@ You can override the default attributes by passing in a hash
   });
 
   var json = FactoryGuy.build('funny_user');
-  json.name // => 'User1'
-  json.style // => 'funny User1'
+  json.user.name // => 'User1'
+  json.user.style // => 'funny User1'
 
   var user = FactoryGuy.make('funny_user');
   user.get('name') // => 'User2'
@@ -304,8 +307,8 @@ You can override the default attributes by passing in a hash
   });
 
   var json = FactoryGuy.build('user', 'big', 'friendly');
-  json.name // => 'Big Guy'
-  json.style // => 'Friendly'
+  json.user.name // => 'Big Guy'
+  json.user.style // => 'Friendly'
 
   var user = FactoryGuy.make('user', 'big', 'friendly');
   user.get('name') // => 'Big Guy'
@@ -354,12 +357,6 @@ attributes will override any trait attributes or default attributes
       user: FactoryGuy.belongsTo('admin')
     }
   });
-
-  var json = FactoryGuy.build('project_with_user');
-  json.user // => {id:1, name: 'Dude', style: 'normal'}
-
-  var json = FactoryGuy.build('project_with_bob');
-  json.user // => {id:1, name: 'Bob', style: 'normal'}
 
   var project = FactoryGuy.make('project_with_admin');
   project.get('user.name') // => 'Admin'
