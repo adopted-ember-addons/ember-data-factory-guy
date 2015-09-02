@@ -174,7 +174,7 @@ In other words, don't do this:
    - Loads model instance into the store
  - FactoryGuy.build or just build
    - Builds json in accordance with the adapters specifications
-     - [RESTAdapter](http://emberjs.com/api/data/classes/DS.RESTAdapter.html#toc_json-structure)  (*assume this adapter being used in most of the following examples*)   
+     - [RESTAdapter](http://guides.emberjs.com/v2.0.0/models/the-rest-adapter/#toc_json-conventions)  (*assume this adapter being used in most of the following examples*)   
      - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
      - [JSONAPIAdapter](http://jsonapi.org/format/) 
  - Can override default attributes by passing in a hash
