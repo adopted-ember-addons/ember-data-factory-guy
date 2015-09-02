@@ -5,7 +5,7 @@ var JSONAPIFixtureConverter = function (store) {
   /**
    Convert an initial fixture into JSONAPI document
 
-   NOTE: The main reason I need this custom class and can't use the build in
+   NOTE: The main reason I need this custom class and can't use the built in
    ember-data normalize functions to create the JSONAPI doc is that
    FactoryGuy allows for creating related models with other model instances.
    The raw fixture that FactoryGuy creates will therefore be incompatible with
