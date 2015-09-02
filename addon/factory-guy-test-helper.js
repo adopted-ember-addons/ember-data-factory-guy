@@ -116,9 +116,13 @@ var FactoryGuyTestHelper = Ember.Object.create({
     var args = Array.prototype.slice.call(arguments);
     var modelName = args.shift();
     var json = FactoryGuy.build.apply(FactoryGuy, arguments);
-    var id = json.data ? json.data.id : json.id;
+    var id;
 
-    json = FactoryGuy.useJSONAPI() ? json : this.mapFind(modelName, json);
+    if (FactoryGuy.useJSONAPI()) {
+      id = json.data.id;
+    } else {
+      id = json[modelName].id;
+    }
 
     var url = this.buildURL(modelName, id);
     new MockGetRequest(url, modelName, json);
@@ -158,8 +162,8 @@ var FactoryGuyTestHelper = Ember.Object.create({
 
     var url = this.buildURL(modelName, id);
 
-    var json = FactoryGuy.getFixtureBuilder().convertForFindRequest(modelName, {id: id});
-    json = FactoryGuy.useJSONAPI() ? json : this.mapFind(modelName, json);
+    var json = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, {id: id});
+    //json = FactoryGuy.useJSONAPI() ? json : this.mapFind(modelName, json);
 
     return new MockGetRequest(url, modelName, json);
   },
@@ -187,15 +191,9 @@ var FactoryGuyTestHelper = Ember.Object.create({
     var args = Array.prototype.slice.call(arguments);
     var modelName = args.shift();
     var json = FactoryGuy.buildList.apply(FactoryGuy, arguments);
-    json = FactoryGuy.getFixtureBuilder().convertForFindAllRequest(modelName, json);
-    var responseJson;
-    if (!FactoryGuy.useJSONAPI()) {
-      responseJson = this.mapFindAll(modelName, json);
-    } else {
-      responseJson = json;
-    }
+
     var url = this.buildURL(modelName);
-    this.stubEndpointForHttpRequest(url, responseJson);
+    this.stubEndpointForHttpRequest(url, json);
   },
   /**
    Handling ajax GET for finding all records for a type of model with query parameters.

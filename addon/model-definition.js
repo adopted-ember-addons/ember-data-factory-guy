@@ -22,7 +22,6 @@ var ModelDefinition = function (model, config) {
   var sequenceName = null;
   var modelName = this.modelName = model;
 
-
   /**
    Returns a model's full relationship if the field is a relationship.
 
@@ -94,7 +93,7 @@ var ModelDefinition = function (model, config) {
         // for the association and replace the attribute with that json
         var relationship = getRelationship(attribute);
         if (relationship) {
-          fixture[attribute] = FactoryGuy.buildSingle(relationship.type, fixture[attribute]);
+          fixture[attribute] = FactoryGuy.buildRaw(relationship.type, fixture[attribute]);
         }
       }
     }

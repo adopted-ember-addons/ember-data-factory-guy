@@ -342,7 +342,10 @@ test("when no custom serialize keys functions exist, dasherizes attributes and r
 
 test("using custom serialize keys function for transforming attributes and relationship keys", function () {
   var serializer = FactoryGuy.getStore().serializerFor();
+
+  var savedKeyForAttributeFn = serializer.keyForAttribute;
   serializer.keyForAttribute = Ember.String.underscore;
+  var savedKeyForRelationshipFn = serializer.keyForRelationship;
   serializer.keyForRelationship = Ember.String.underscore;
 
   var json = build('profile', 'with_bat_man');
@@ -373,6 +376,10 @@ test("using custom serialize keys function for transforming attributes and relat
         }
       ]
     });
+
+  serializer.keyForAttribute = savedKeyForAttributeFn;
+  serializer.keyForRelationship = savedKeyForRelationshipFn;
+
 });
 
 test("with (nested json fixture) belongsTo has a hasMany association which has a belongsTo", function () {
@@ -446,6 +453,7 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
   var projectJson = build('project', 'with_user_having_hats_belonging_to_outfit');
   deepEqual(projectJson.data, expectedData.data);
   deepEqual(projectJson.included, expectedData.included);
+
 });
 
 

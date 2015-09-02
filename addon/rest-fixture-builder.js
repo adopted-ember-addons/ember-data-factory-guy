@@ -1,25 +1,21 @@
 import FixtureBuilder from './fixture-builder';
-import JSONAPIConverter from './jsonapi-converter';
-import AmsAttributeTransformer from './ams-attribute-transformer';
+import RESTFixtureConverter from './rest-fixture-converter';
 
 /**
  Fixture Builder for RESTSerializer
  */
-var RESTFixtureBuilder = FixtureBuilder.extend({
-  converterClass: JSONAPIConverter,
-  transformerClass: AmsAttributeTransformer,
+var RESTFixtureBuilder = function(store) {
+  FixtureBuilder.call(this, store);
+  /**
+   Convert to the ember-data REST adapter specification
 
-  convertForMake: function (modelName, fixture) {
-    return this.convertFixture(modelName, fixture);
-  },
-
-  convertForCreateRequest: function (modelName, fixture) {
-    var transformed = this._super(modelName, fixture);
-    var finalJson = {};
-    finalJson[modelName] = transformed;
-    return finalJson;
-  }
-
-});
+   @param {String} modelName
+   @param {String} fixture
+   @returns {*} new converted fixture
+   */
+  this.convertForBuild = function(modelName, fixture) {
+    return new RESTFixtureConverter(store).convert(modelName, fixture);
+  };
+};
 
 export default RESTFixtureBuilder;

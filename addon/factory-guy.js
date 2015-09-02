@@ -8,6 +8,7 @@ var FactoryGuy = function () {
   var store = null;
   var fixtureBuilderFactory = null;
   var fixtureBuilder = null;
+  var self = this;
   /**
    ```javascript
 
@@ -143,7 +144,7 @@ var FactoryGuy = function () {
   this.belongsTo = function (fixtureName, opts) {
     var self = this;
     return function () {
-      return self.buildSingle(fixtureName, opts);
+      return self.buildRaw(fixtureName, opts);
     };
   };
   /**
@@ -176,7 +177,7 @@ var FactoryGuy = function () {
    */
   this.hasMany = function (fixtureName, number, opts) {
     return function () {
-      return buildSingleList(fixtureName, number, opts);
+      return self.buildRawList(fixtureName, number, opts);
     };
   };
   /**
@@ -251,13 +252,13 @@ var FactoryGuy = function () {
    */
   this.build = function () {
     var args = extractArguments.apply(this, arguments);
-    var fixture = this.buildSingle.apply(this, arguments);
+    var fixture = this.buildRaw.apply(this, arguments);
     var modelName = lookupModelForFixtureName(args.name);
 
     return fixtureBuilder.convertForBuild(modelName, fixture);
   };
 
-  this.buildSingle = function () {
+  this.buildRaw = function () {
     var args = extractArguments.apply(this, arguments);
 
     var definition = lookupDefinitionForFixtureName(args.name);
@@ -286,13 +287,13 @@ var FactoryGuy = function () {
   this.buildList = function () {
     var args = Array.prototype.slice.call(arguments);
     var name = args.shift();
-    var list = buildSingleList.apply(this, arguments);
+    var list = this.buildRawList.apply(this, arguments);
 
     var modelName = lookupModelForFixtureName(name);
     return fixtureBuilder.convertForBuild(modelName, list);
   };
 
-  var buildSingleList = function () {
+  this.buildRawList = function () {
     var args = Array.prototype.slice.call(arguments);
     var name = args.shift();
     var number = args.shift();
@@ -328,10 +329,10 @@ var FactoryGuy = function () {
     );
 
     var modelName = lookupModelForFixtureName(args.name);
-    var fixture = this.buildSingle.apply(this, arguments);
+    var fixture = this.buildRaw.apply(this, arguments);
     var data = fixtureBuilder.convertForMake(modelName, fixture);
 
-    var model = makeModel.call(this, modelName, data);
+    var model = makeModel(modelName, data);
 
     var definition = lookupDefinitionForFixtureName(args.name);
     if (definition.hasAfterMake()) {

@@ -1,12 +1,20 @@
 import Ember from 'ember';
 
-var JSONAPIConverter = function (store) {
+var JSONAPIFixtureConverter = function (store) {
 
   /**
    Convert an initial fixture into JSONAPI document
 
-   @param modelName
-   @param fixture
+   NOTE: The main reason I need this custom class and can't use the build in
+   ember-data normalize functions to create the JSONAPI doc is that
+   FactoryGuy allows for creating related models with other model instances.
+   The raw fixture that FactoryGuy creates will therefore be incompatible with
+   that normalize function since it disallows instances in the json.
+
+   TODO: Might want to transform keys at the same time as RESTConverter does
+
+   @param {String} modelName
+   @param {Object} fixture initial raw fixture
    @returns {{data: {type: *, id: *, attributes}, included: Array}}
    */
   this.convert = function (modelName, fixture) {
@@ -26,14 +34,13 @@ var JSONAPIConverter = function (store) {
     }
     return jsonApiData;
   };
-
   /**
    In order to conform to the way ember data expects to handle relationships
    in a json payload ( during deserialization ), convert a record ( model instance )
-   into an object with type and id, or convert object same way.
+   into an object with type and id.
 
-   @param record
-   @param relationship
+   @param {Object} record
+   @param {Object} relationship
    */
   var normalizeJSONAPIAssociation = function (record, relationship) {
     if (Ember.typeOf(record) === 'object') {
@@ -89,8 +96,7 @@ var JSONAPIConverter = function (store) {
    Add the model to included array unless it's already there.
    */
   var addToIncluded = function (included, data) {
-    included = Ember.A(included);
-    var found = included.find(function (model) {
+    var found = Ember.A(included).find(function (model) {
       return model.id === data.id && model.type === data.type;
     });
     if (!found) {
@@ -148,4 +154,4 @@ var JSONAPIConverter = function (store) {
 
 };
 
-export default JSONAPIConverter;
+export default JSONAPIFixtureConverter;

@@ -1,44 +1,34 @@
+import DS from 'ember-data';
 import JSONAPIFixtureBuilder from './jsonapi-fixture-builder';
-import AmsFixtureBuilder from './ams-fixture-builder';
 import RESTFixtureBuilder from './rest-fixture-builder';
 
 var FixtureBuilderFactory = function (store) {
   var adapter = store.adapterFor('application');
   /*
    Using json api?
-   TODO: extract this to utility class, and fix some of the whacky logic
+   TODO: extract this to utility class
    */
   this.useJSONAPI = function () {
-    var useJSONAPI = usingJSONAPIAdapter();
-    var isAMS = (usingActiveModelAdapter());
-    var isREST = (usingRESTAdapter()) && !useJSONAPI;
-    return !isAMS && !isREST;
-  };
-  var usingAdapterType = function (adapterType) {
-    return adapter && adapter.toString().match(adapterType);
+    return usingJSONAPIAdapter();
   };
   var usingJSONAPIAdapter = function () {
-    return usingAdapterType('json-api');
-  };
-  var usingActiveModelAdapter = function () {
-    return usingAdapterType('active-model');
+    return adapter && adapter instanceof DS.JSONAPIAdapter;
   };
   var usingRESTAdapter = function () {
-    return usingAdapterType('rest');
+    return adapter && adapter instanceof DS.RESTAdapter;
   };
   /**
    Return appropriate FixtureBuilder for the adapter type
    */
   this.getFixtureBuilder = function () {
-    if (usingActiveModelAdapter()) {
-      return new AmsFixtureBuilder(store);
+    if (usingJSONAPIAdapter()) {
+      return new JSONAPIFixtureBuilder(store);
     }
-    if ((usingRESTAdapter()) && !usingJSONAPIAdapter()) {
+    if (usingRESTAdapter()) {
       return new RESTFixtureBuilder(store);
     }
     return new JSONAPIFixtureBuilder(store);
   };
 };
-
 
 export default FixtureBuilderFactory;

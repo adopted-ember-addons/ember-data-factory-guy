@@ -30,7 +30,7 @@ SharedBehavior.buildUrl = function () {
 //////// handleFind /////////
 SharedBehavior.handleFindTests = function () {
 
-  test("#handleFind the basic returns id", function (assert) {
+  test("the basic returns id", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var profileId = TestHelper.handleFind('profile');
@@ -43,7 +43,7 @@ SharedBehavior.handleFindTests = function () {
     });
   });
 
-  test("#handleFind with fixture options", function (assert) {
+  test("with fixture options", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var profileId = TestHelper.handleFind('profile', {description: 'dude'});
@@ -55,7 +55,21 @@ SharedBehavior.handleFindTests = function () {
     });
   });
 
-  test("#handleFind with traits", function (assert) {
+  test("handles differently cased attributes", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+
+      var profileId = TestHelper.handleFind('profile', 1);
+
+      FactoryGuy.getStore().find('profile', profileId).then(function (profile) {
+        ok(profile.get('camelCaseDescription') === 'textGoesHere');
+        ok(profile.get('snake_case_description') === 'text_goes_here');
+        done();
+      });
+    });
+  });
+
+  test("with traits", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var profileId = TestHelper.handleFind('profile', 'goofy_description');
@@ -67,7 +81,7 @@ SharedBehavior.handleFindTests = function () {
     });
   });
 
-  test("#handleFind with traits and extra options", function (assert) {
+  test("with traits and extra options", function (assert) {
     Ember.run(function () {
       var done = assert.async();
       var profileId = TestHelper.handleFind('profile', 'goofy_description', {description: 'dude'});
@@ -80,31 +94,32 @@ SharedBehavior.handleFindTests = function () {
   });
 
 
-  // TODO: need to modify convert for active model serializer to sideload relationships
-  //test("#handleFind with belongsTo association", function (assert) {
-  //  Ember.run(function () {
-  //    var done = assert.async();
-  //    var profileId = TestHelper.handleFind('profile', 'with_company');
-  //
-  //    FactoryGuy.getStore().find('profile', profileId).then(function (profile) {
-  //      console.log('profileId=>', profile._internalModel._data)
-  //      console.log('profile desc', profile.get('company'))
-  //      ok(profile.get('company.name') === 'Silly corp');
-  //      done();
-  //    });
-  //  });
-  //});
+  test("with belongsTo association", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+      var profileId = TestHelper.handleFind('profile', 'with_company', 'with_bat_man');
 
-  //test("#handleFind with hasMany association", function (assert) {
-  //  var done = assert.async();
-  //  TestHelper.handleFind('profile', 2, 'goofy_description', {description: 'dude'});
-  //
-  //  FactoryGuy.getStore().find('profile').then(function (profile) {
-  //    ok(profile.get('length') === 2);
-  //    ok(profile.get('description') === 'dude');
-  //    done();
-  //  });
-  //});
+      FactoryGuy.getStore().find('profile', profileId).then(function (profile) {
+        ok(profile.get('company.name') === 'Silly corp');
+        ok(profile.get('superHero.name') === 'BatMan');
+        done();
+      });
+    });
+  });
+
+
+  test("with hasMany association", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+      var userId = TestHelper.handleFind('user', 'with_hats');
+
+      FactoryGuy.getStore().find('user', userId).then(function (user) {
+        ok(user.get('hats.length') === 2);
+        ok(user.get('hats.firstObject.type') === 'BigHat');
+        done();
+      });
+    });
+  });
 };
 
 //////// handleReload /////////
@@ -160,7 +175,7 @@ SharedBehavior.handleFindAllTests = function () {
     });
   });
 
-  test("handles camelCase attributes", function (assert) {
+  test("handles differently cased attributes", function (assert) {
     Ember.run(function () {
       var done = assert.async();
 
@@ -220,6 +235,37 @@ SharedBehavior.handleFindAllTests = function () {
       done();
     });
   });
+
+
+  test("with belongsTo association", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+      TestHelper.handleFindAll('profile', 2, 'with_company', 'with_bat_man');
+
+      FactoryGuy.getStore().findAll('profile').then(function (profiles) {
+        ok(profiles.get('length') === 2);
+        ok(profiles.get('firstObject.company.name') === 'Silly corp');
+        ok(profiles.get('lastObject.superHero.name') === 'BatMan');
+        done();
+      });
+    });
+  });
+
+
+  test("with hasMany association", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+      TestHelper.handleFindAll('user', 2, 'with_hats');
+
+      FactoryGuy.getStore().findAll('user').then(function (users) {
+        ok(users.get('length') === 2);
+        ok(users.get('lastObject.hats').mapBy('type')+'' === ['BigHat','BigHat']+'');
+        ok(users.get('lastObject.hats').mapBy('id')+'' === [3,4]+'');
+        done();
+      });
+    });
+  });
+
 
 };
 

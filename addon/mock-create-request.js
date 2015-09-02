@@ -117,7 +117,7 @@ var MockCreateRequest = function (url, modelName, options) {
       // Setting the id at the very last minute, so that calling calculate
       // again and again does not mess with id, and it's reset for each call
       finalResponseJson.id = modelId();
-      finalResponseJson = FactoryGuy.getFixtureBuilder().convertForCreateRequest(modelName, finalResponseJson);
+      finalResponseJson = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, finalResponseJson);
     } else {
       this.status = status;
     }

@@ -21,64 +21,6 @@ test("#make returns a model instance", function (assert) {
   ok(user instanceof User);
 });
 
-//test("#make returns a model instance", function (assert) {
-  //Ember.run(function () {
-  //  var store = FactoryGuy.getStore();
-  //  var adapter = store.serializerFor('application');
-  //  var modelClass = store.modelFor('profile');
-  //  //var data = adapter.normalizeResponse(store, modelClass, {profile: {id:1, description:'adude', camelCaseDescription:'aDude', snake_case_description:'a_dude'}}, 1, 'findRecord');
-  //  var data = adapter.normalizeResponse(store, modelClass, {
-  //    profile: {
-  //      id: 1,
-  //      description: 'adude',
-  //      camel_case_description: 'aDude',
-  //      snake_case_description: 'a_dude',
-  //      company: {
-  //        id: 1, name: 'B'
-  //      }
-  //    }
-  //  }, 1, 'findRecord');
-  //  //console.log(adapter+'')
-  //  console.log(data.data)
-  //  console.log(data.data.attributes)
-  //  //var pro = FactoryGuy.make('profile');
-  //  var model = store.push(data);
-  //  console.log(model._internalModel._data)
-  //  ok(true);
-  //});
-  //var model = FactoryGuy.make('profile');
-  //console.log(model._internalModel._data);
-  //  ok(true);
-  //Ember.run(function () {
-  //  var done = assert.async();
-  //
-  //  TestHelper.handleFindAll('profile', 1);
-  //
-  //  FactoryGuy.getStore().findAll('profile').then(function (profiles) {
-  //    console.log(profiles.get('firstObject')._internalModel._data)
-  //    ok(profiles.get('firstObject.camelCaseDescription') === 'textGoesHere');
-  //    ok(profiles.get('firstObject.snake_case_description') === 'text_goes_here');
-  //    done();
-  //  });
-  //});
-  //
-  ////Ember.run(function () {
-  //  var done = assert.async();
-  //  var customDescription = "special description";
-  //
-  //  TestHelper.handleCreate('profile');
-  //
-  //  FactoryGuy.getStore().createRecord('profile', {
-  //    camelCaseDescription: 'description'
-  //  }).save().then(function (profile) {
-  //    console.log(profile._internalModel._data)
-  //    ok(profile.get('camelCaseDescription') === customDescription);
-  //    done();
-  //  });
-  //});
-
-//});
-
 test("exposes make method which is shortcut for FactoryGuy.make", function () {
   ok(make('user') instanceof User);
 });
@@ -494,4 +436,270 @@ test("named types are not inherited", function () {
 //
 //});
 
+
+
+module('FactoryGuy#buildRaw', inlineSetup(App,'-json-api'));
+
+test("Using sequences", function () {
+
+  FactoryGuy.define('person', {
+    sequences: {
+      personName: function (num) {
+        return 'person #' + num;
+      },
+      personType: function (num) {
+        return 'person type #' + num;
+      }
+    },
+    default: {
+      type: 'normal',
+      name: FactoryGuy.generate('personName')
+    },
+    dude: {
+      type: FactoryGuy.generate('personType')
+    },
+    bro: {
+      type: FactoryGuy.generate('broType')
+    },
+    dude_inline: {
+      type: FactoryGuy.generate(function (num) {
+        return 'Dude #' + num;
+      })
+    }
+  });
+
+  var json = FactoryGuy.buildRaw('person');
+  var expected = {id: 1, name: 'person #1', type: 'normal'};
+  deepEqual(json, expected, 'in default attributes');
+
+  json = FactoryGuy.buildRaw('dude');
+  expected = {id: 2, name: 'person #2', type: 'person type #1'};
+  deepEqual(json, expected, 'in named attributes');
+
+  throws(function () {
+      FactoryGuy.buildRaw('bro');
+    },
+    MissingSequenceError,
+    "throws error when sequence name not found"
+  );
+
+  json = FactoryGuy.buildRaw('dude_inline');
+  expected = {id: 3, name: 'person #3', type: 'Dude #1'};
+  deepEqual(json, expected, 'as inline sequence function #1');
+
+
+  json = FactoryGuy.buildRaw('dude_inline');
+  expected = {id: 4, name: 'person #4', type: 'Dude #2'};
+  deepEqual(json, expected, 'as inline sequence function #2');
+});
+
+
+test("Referring to other attributes in attribute definition", function () {
+
+  FactoryGuy.define('person', {
+    default: {
+      name: 'Bob',
+      type: 'normal'
+    },
+    funny_person: {
+      type: function (f) {
+        return 'funny ' + f.name;
+      }
+    },
+    missing_person: {
+      type: function (f) {
+        return 'level ' + f.brain_size;
+      }
+    }
+  });
+
+  var json = FactoryGuy.buildRaw('funny_person');
+  var expected = {id: 1, name: 'Bob', type: 'funny Bob'};
+  deepEqual(json, expected, 'works when attribute exists');
+
+  json = FactoryGuy.buildRaw('missing_person');
+  expected = {id: 2, name: 'Bob', type: 'level undefined'};
+  deepEqual(json, expected, 'still works when attribute does not exists');
+});
+
+
+test("Using default belongsTo associations in attribute definition", function () {
+  var json = FactoryGuy.buildRaw('project_with_user');
+  var expected = {id: 1, title: 'Project1', user: {id: 1, name: 'User1'}};
+  deepEqual(json, expected);
+});
+
+test("creates association with optional attributes", function () {
+  var json = FactoryGuy.buildRaw('project_with_dude');
+  var expected = {
+    id: 1,
+    title: 'Project1',
+    user: {id: 1, name: 'Dude'}
+  };
+  deepEqual(json, expected);
+});
+
+
+test("creates association using named attribute", function () {
+  var json = FactoryGuy.buildRaw('project_with_admin');
+  var expected = {
+    id: 1,
+    title: 'Project1',
+    user: {id: 1, name: 'Admin'}
+  };
+  deepEqual(json, expected);
+});
+
+
+test("belongsTo association name differs from model name", function () {
+  var json = FactoryGuy.buildRaw('project_with_parent');
+  var expected = {
+    id: 2,
+    title: 'Project1',
+    parent: {id: 1, title: 'Project2'}
+  };
+  deepEqual(json, expected);
+});
+
+
+test("Using hasMany associations in attribute definition", function () {
+  var json = FactoryGuy.buildRaw('user_with_projects');
+  var expected = {
+    id: 1,
+    name: 'User1',
+    projects: [{id: 1, title: 'Project1'}, {id: 2, title: 'Project2'}]
+  };
+  deepEqual(json, expected);
+});
+
+
+test("with traits defining model attributes", function () {
+  var json = FactoryGuy.buildRaw('project', 'big');
+  var expected = {id: 1, title: 'Big Project'};
+  deepEqual(json, expected);
+});
+
+test("with traits defining belongsTo association", function () {
+  var json = FactoryGuy.buildRaw('project', 'with_user');
+  var expected = {
+    id: 1, title: 'Project1', user: {id: 1, name: 'User1'}
+  };
+  deepEqual(json, expected);
+});
+
+test("with more than one trait used", function () {
+  var json = FactoryGuy.buildRaw('project', 'big', 'with_user');
+  var expected = {
+    id: 1, title: 'Big Project',
+    user: {id: 1, name: 'User1'}
+  };
+  deepEqual(json, expected);
+});
+
+test("with more than one trait and custom attributes", function () {
+  var json = FactoryGuy.buildRaw('project', 'big', 'with_user', {title: 'Crazy Project'});
+  var expected = {
+    id: 1,
+    title: 'Crazy Project',
+    user: {id: 1, name: 'User1'}
+  };
+  deepEqual(json, expected);
+});
+
+test("with trait with custom belongsTo association object", function () {
+  var json = FactoryGuy.buildRaw('project', 'big', 'with_dude');
+  var expected = {
+    id: 1,
+    title: 'Big Project',
+    user: {id: 1, name: 'Dude'}
+  };
+  deepEqual(json, expected);
+});
+
+test("using trait with attribute using FactoryGuy.belongsTo method", function () {
+  var json = FactoryGuy.buildRaw('project', 'with_admin');
+  var expected = {
+    id: 1,
+    title: 'Project1',
+    user: {id: 1, name: 'Admin'}
+  };
+  deepEqual(json, expected);
+});
+
+test("with attribute using sequence", function () {
+  var json = FactoryGuy.buildRaw('project', 'with_title_sequence');
+  var expected = {id: 1, title: 'Project1'};
+  deepEqual(json, expected);
+});
+
+test("with trait defining hasMany association", function () {
+  var json = FactoryGuy.buildRaw('user', 'with_projects');
+  var expected = {
+    id: 1,
+    name: 'User1',
+    projects: [{id: 1, title: 'Project1'}, {id: 2, title: 'Project2'}]
+  };
+  deepEqual(json, expected);
+});
+
+test("creates default json for model", function () {
+  var json = FactoryGuy.buildRaw('user');
+  var expected = {id: 1, name: 'User1'};
+  deepEqual(json, expected);
+});
+
+
+test("can override default model attributes", function () {
+  var json = FactoryGuy.buildRaw('user', {name: 'bob'});
+  var expected = {id: 1, name: 'bob'};
+  deepEqual(json, expected);
+});
+
+
+test("with named model definition with custom attributes", function () {
+  var json = FactoryGuy.buildRaw('admin');
+  var expected = {id: 1, name: 'Admin'};
+  deepEqual(json, expected);
+});
+
+
+test("overrides named model attributes", function () {
+  var json = FactoryGuy.buildRaw('admin', {name: 'AdminGuy'});
+  var expected = {id: 1, name: 'AdminGuy'};
+  deepEqual(json, expected);
+});
+
+
+test("ignores transient attributes", function () {
+  var json = FactoryGuy.buildRaw('property');
+  var expected = {id: 1, name: 'Silly property'};
+  deepEqual(json, expected);
+});
+
+
+module('FactoryGuy#buildRawList', inlineSetup(App,'-json-api'));
+
+test("basic", function () {
+  var userList = FactoryGuy.buildRawList('user', 2);
+  var expected = [{id: 1, name: 'User1'}, {id: 2, name: 'User2'}];
+  deepEqual(userList, expected);
+});
+
+test("using custom attributes", function () {
+  var userList = FactoryGuy.buildRawList('user', 2, {name: 'Crazy'});
+  var expected = [{id: 1, name: 'Crazy'}, {id: 2, name: 'Crazy'}];
+  deepEqual(userList, expected);
+});
+
+test("using traits", function () {
+  var projectList = FactoryGuy.buildRawList('project', 2, 'big');
+  var expected = [{id: 1, title: 'Big Project'}, {id: 2, title: 'Big Project'}];
+  deepEqual(projectList, expected);
+});
+
+test("using traits and custom attributes", function () {
+  var projectList = FactoryGuy.buildRawList('project', 2, 'big', {title: 'Really Big'});
+  var expected = [{id: 1, title: 'Really Big'}, {id: 2, title: 'Really Big'}];
+  deepEqual(projectList, expected);
+});
 

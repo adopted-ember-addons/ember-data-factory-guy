@@ -1,23 +1,18 @@
 import FixtureBuilder from './fixture-builder';
-import JSONAPIConverter from './jsonapi-converter';
+import JSONAPIFixtureConverter from './jsonapi-fixture-converter';
 import JSONAPIAttributeTransformer from './jsonapi-attribute-transformer';
 
 /**
  Fixture Builder for JSONAPISerializer
  */
-var JSONAPIJsonBuilder = FixtureBuilder.extend({
-  converterClass: JSONAPIConverter,
-  transformerClass: JSONAPIAttributeTransformer,
+var JSONAPIJsonBuilder = function(store) {
+  FixtureBuilder.call(this,store);
 
-  convertForBuild: function(modelName, fixture) {
-    var convertedFixture =  this.convertFixture(modelName, fixture);
-    return this.transformAttributes(modelName, convertedFixture);
-  },
+  this.convertForBuild = function(modelName, fixture) {
+    var convertedFixture = new JSONAPIFixtureConverter(store).convert(modelName, fixture);
+    return new JSONAPIAttributeTransformer(store).transform(modelName, convertedFixture);
+  };
 
-  convertForMake: function(modelName, fixture) {
-    return this.convertFixture(modelName, fixture);
-  }
-
-});
+};
 
 export default JSONAPIJsonBuilder;

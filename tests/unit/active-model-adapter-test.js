@@ -12,7 +12,7 @@ var adapterType = '-active-model';
 
 SharedAdapterBehavior.all(adapter, adapterType);
 
-module(title(adapter, 'FactoryGuyTestHelper#handleCreate'), inlineSetup(App, adapterType));
+module(title(adapter, 'FactoryGuyTestHelper#handleCreate custom'), inlineSetup(App, adapterType));
 
 test("returns camelCase attributes", function (assert) {
   Ember.run(function () {
@@ -32,24 +32,86 @@ test("returns camelCase attributes", function (assert) {
   });
 });
 
-module(title(adapter, 'FactoryGuy#build'), inlineSetup(App, adapterType));
+module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, adapterType));
+
+
+test("sideloads belongsTo records", function () {
+
+  var buildJson = build('profile', 'with_bat_man');
+
+  var expectedJson = {
+    profile: {
+      id: 1,
+      description: 'Text goes here',
+      'camel_case_description': 'textGoesHere',
+      'snake_case_description': 'text_goes_here',
+      'super_hero_id': 1,
+    },
+    'super-heros': [
+      {
+        id: 1,
+        name: "BatMan",
+        type: "SuperHero"
+      }
+    ]
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+
+test("sideloads hasMany records", function () {
+
+  var buildJson = build('user', 'with_hats');
+
+  var expectedJson = {
+    user: {
+      id: 1,
+      name: 'User1',
+      hats: [
+        {type: 'big_hat', id:1},
+        {type: 'big_hat', id:2}
+      ],
+    },
+    'big-hats': [
+      {id: 1, type: "BigHat" },
+      {id: 2, type: "BigHat" }
+    ]
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
 
 test("using custom serialize keys function for transforming attributes and relationship keys", function () {
   var serializer = FactoryGuy.getStore().serializerFor();
+
+  var savedKeyForAttributeFn = serializer.keyForAttribute;
   serializer.keyForAttribute = Ember.String.dasherize;
+  var savedKeyForRelationshipFn = serializer.keyForRelationship;
   serializer.keyForRelationship = Ember.String.dasherize;
 
-  var json = build('profile', 'with_bat_man');
-  deepEqual(json,
-    {
+  var buildJson = build('profile', 'with_bat_man');
+
+  var expectedJson = {
+    profile: {
       id: 1,
       description: 'Text goes here',
       'camel-case-description': 'textGoesHere',
       'snake-case-description': 'text_goes_here',
-      'super-hero': {
+      'super-hero': 1,
+    },
+    'super-heros': [
+      {
         id: 1,
-        type: "SuperHero",
-        name: "BatMan"
+        name: "BatMan",
+        type: "SuperHero"
       }
-    });
+    ]
+  };
+
+  deepEqual(buildJson, expectedJson);
+
+  serializer.keyForAttribute = savedKeyForAttributeFn;
+  serializer.keyForRelationship = savedKeyForRelationshipFn;
 });
