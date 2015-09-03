@@ -1,6 +1,6 @@
 Users:
 <ul>
  {{#each users as |user|}}
-   <li class="user">{{user.name}}</li>
+ <li class="user">{{user.name}}<button {{action 'deleteUser' user}}>X</button></li>
  {{/each}}
 </ul>

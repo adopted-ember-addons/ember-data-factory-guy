@@ -646,7 +646,7 @@ will look like this:
 
 ##### handleFindAll
   - For dealing with finding all records of a particular type
-  - [Sample acceptance test using handleFindAll (users-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
+  - Sample acceptance tests using handleFindAll: [(users-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js) [(users-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-delete-test.js)
 
 If when visiting a route, some part of your application ( like router, or 
 controller action ) is going to make a call to the store for all records of 
@@ -683,6 +683,22 @@ will look like this:
     var users = find('li.user');
     ok(users.length === 2);
   });
+```
+
+If you would like to interact with the records created by handleFindAll (for example to update, delete, or find in the store)
+you must wait for the request for those records to resolve before they will be accessible:
+
+```javascript
+  TestHelper.handleFindAll('user', 2);
+
+  visit('/users');
+
+  andThen(function() {
+    FactoryGuy.handleDelete('user', '1');
+    click("li.user:first button:contains('Delete')");
+  });
+  var users = find('li.user');
+  ok(users.length == 1);
 ```
 
  
