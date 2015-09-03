@@ -694,12 +694,14 @@ you must wait on the request for those records to resolve before they will be lo
   visit('/users');
 
   andThen(function() {
-    //handleDelete must be after the model hook for the ('/users') route resolves
-    FactoryGuy.handleDelete('user', '1'); 
+    //handleDelete call must be after the model hook for the ('/users') route resolves
+    TestHelper.handleDelete('user', '1'); 
     click("li.user:first button:contains('Delete')");
   });
-  var users = find('li.user');
-  ok(users.length == 1);
+  andThen(function(){
+    var users = find('li.user');
+    ok(users.length === 1);
+  });
 ```
 
  
