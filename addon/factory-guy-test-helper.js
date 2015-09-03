@@ -179,7 +179,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
 
    store.findAll('user').then(function(users){
 
-     });
+   });
    ```
 
    @param {String} name  name of the fixture ( or model ) to find

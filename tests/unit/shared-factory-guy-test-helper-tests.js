@@ -168,8 +168,8 @@ SharedBehavior.handleFindAllTests = function () {
       var done = assert.async();
       TestHelper.handleFindAll('user', 2);
 
-      FactoryGuy.getStore().findAll('user').then(function (profiles) {
-        ok(profiles.get('length') === 2);
+      FactoryGuy.getStore().findAll('user').then(function (users) {
+        ok(users.get('length') === 2);
         done();
       });
     });
