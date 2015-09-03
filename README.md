@@ -629,7 +629,20 @@ will look like this:
   });
 ```
 
+*Note that you could also have done this:*
 
+```javascript
+  // can just make the model before you visit route    
+  var user = make('user');
+  visit('/users/'+user.id);
+  
+  andThen(function () {
+    var user = find('li.user');
+    ok(user.length === 1);
+  });
+```
+
+ 
 
 ##### handleFindAll
   - For dealing with finding all records of a particular type
@@ -658,6 +671,19 @@ will look like this:
   });
 ```
 
+
+*Note that you could also have done this:*
+
+```javascript
+  // can just make the models before you visit route    
+  var users = makeList('user', 2);
+  visit('/users');
+  
+  andThen(function () {
+    var users = find('li.user');
+    ok(users.length === 2);
+  });
+```
 
  
 ##### handleReload
