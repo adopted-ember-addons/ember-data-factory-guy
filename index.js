@@ -9,8 +9,9 @@ module.exports = {
 
   included: function(app) {
     this._super.included(app);
-
-    if (app.env === 'test') {
+    // need to load mockjax in development and test environment since ember tests
+    // can be run from browser in development mode
+    if (app.tests) {
       app.import(app.bowerDirectory + '/jquery-mockjax/dist/jquery.mockjax.js');
     }
   }
