@@ -539,10 +539,10 @@ You would use this to make models like:
   - Can use model instances to create relationships for making other models.
 
 Example: 
+ 
+  - Setup a scenario where a user has two projects and belongs to a company 
 
 ```javascript 
-   // To setup a scenario where a user has two projects and belongs to a company.
-   
    var company = make('company');
    var user = make('user', company: company);
    var projects = makeList('project', 2, user: user);
