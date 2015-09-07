@@ -18,6 +18,7 @@ Contents:
   - [Associations](https://github.com/danielspaniel/ember-data-factory-guy#associations)
   - [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
   - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
+  - [Testing - creating scenarios](https://github.com/danielspaniel/ember-data-factory-guy#testing-creating-scenarios)
   - [Testing models, controllers, components](https://github.com/danielspaniel/ember-data-factory-guy#testing-models-controllers-components)
   - [Integration/Acceptance Tests](https://github.com/danielspaniel/ember-data-factory-guy#integrationacceptance-tests)
 
@@ -533,14 +534,26 @@ You would use this to make models like:
 
 ```
                    
+### Testing - Creating Scenarios
+- Easy to create complex scenarios 
+  - FactoryGuy.make supports passing record instances to create other factories. 
+
+*If your application has models with relationships, FactoryGuy makes creating testing scenarios very easy, since 
+you can pass other records to create relationships for making other records*
+ 
+ Examples: 
+``` javascript 
+   var company = make('company');
+   var user = make('user', company: company);
+   var projects = makeList('project', 2, user: user);
+```
+
 ### Testing models, controllers, components
 
 - Testing the models, controllers and components
   - FactoryGuy needs the application to startup in order to load the factories, and setup the store.
   - That is why all the tests (except model) import startApp function from 'tests/helpers/start-app.js' 
     ( a file provided to you by ember cli )
-- Using FactoryGuy shortcut methods:
-  - make
 - [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js) 
   - Avoid using moduleForModel ( ember-qunit ), or describeModel ( ember-mocha ) test helper.
   - Don't need to startApp() to get new application
