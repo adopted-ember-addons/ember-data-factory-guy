@@ -535,7 +535,7 @@ You would use this to make models like:
 ```
                    
 ### Testing - Creating Scenarios
-- Easy to create complex scenarios involving multi layered relationships. 
+- Easy to create complex scenarios involving multi layered relationships.
   - FactoryGuy supports passing record instances to create relationships 
 for making other records.
 
