@@ -536,12 +536,9 @@ You would use this to make models like:
                    
 ### Testing - Creating Scenarios
 - Easy to create complex scenarios involving multi layered relationships. 
-  - FactoryGuy.make supports passing record instances to create other factories. 
+  - FactoryGuy supports passing record instances to create relationships for making other records.
 
-*If your application has models with relationships, FactoryGuy makes creating testing scenarios very easy, since 
-you can pass other records to create relationships for making other records.*
- 
- Examples: 
+ Example: 
 ``` javascript 
    var company = make('company');
    var user = make('user', company: company);
@@ -550,6 +547,8 @@ you can pass other records to create relationships for making other records.*
 
 *With this scenario setup, you have a user with two projects that belongs to a company.*
 
+You can use traits to help create the relationships as well, but this strategy allows you to 
+build up complex scenarios in a different way that has it's own benefits.   
 
 
 ### Testing models, controllers, components
