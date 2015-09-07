@@ -18,7 +18,7 @@ Contents:
   - [Associations](https://github.com/danielspaniel/ember-data-factory-guy#associations)
   - [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
   - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
-  - [Testing - creating scenarios](https://github.com/danielspaniel/ember-data-factory-guy#testing-creating-scenarios)
+  - [Testing - creating scenarios](https://github.com/danielspaniel/ember-data-factory-guy#testing---creating-scenarios)
   - [Testing models, controllers, components](https://github.com/danielspaniel/ember-data-factory-guy#testing-models-controllers-components)
   - [Integration/Acceptance Tests](https://github.com/danielspaniel/ember-data-factory-guy#integrationacceptance-tests)
 
