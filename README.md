@@ -536,16 +536,16 @@ You would use this to make models like:
                    
 ### Testing - Creating Scenarios
 - Easy to create complex scenarios involving multi layered relationships.
-  - Can user record instances to create relationships for making other records.
+  - Can use model instances to create relationships for making other models.
 
  Example: 
 ``` javascript 
+   // To setup a scenario where a user has two projects and belongs to a company.
+   
    var company = make('company');
    var user = make('user', company: company);
    var projects = makeList('project', 2, user: user);
 ```
-
-*With this scenario setup, you have a user with two projects that belongs to a company.*
 
 *You can use traits to help create the relationships as well, but this strategy allows you to 
 build up complex scenarios in a different way that has it's own benefits.*   
