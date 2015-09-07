@@ -538,8 +538,9 @@ You would use this to make models like:
 - Easy to create complex scenarios involving multi layered relationships.
   - Can use model instances to create relationships for making other models.
 
- Example: 
-``` javascript 
+Example: 
+
+```javascript 
    // To setup a scenario where a user has two projects and belongs to a company.
    
    var company = make('company');
