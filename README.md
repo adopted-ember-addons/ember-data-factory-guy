@@ -547,8 +547,8 @@ You would use this to make models like:
 
 *With this scenario setup, you have a user with two projects that belongs to a company.*
 
-You can use traits to help create the relationships as well, but this strategy allows you to 
-build up complex scenarios in a different way that has it's own benefits.   
+*You can use traits to help create the relationships as well, but this strategy allows you to 
+build up complex scenarios in a different way that has it's own benefits.*   
 
 
 ### Testing models, controllers, components
