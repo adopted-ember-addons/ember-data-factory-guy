@@ -70,7 +70,8 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @return {Object} responseJson
    */
   mapFindAll: function (modelName, json) {
-    return {[Ember.String.pluralize(modelName)]: json};
+    var modelKey = Ember.String.pluralize(modelName);
+    return {[modelKey]: json};
   },
   /**
    Map single object to response json.
