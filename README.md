@@ -224,17 +224,21 @@ Example:
 
 ```javascript
   
-  var json = FactoryGuy.build('user', 'with_hats');
+  var json = FactoryGuy.build('user', 'with_company', 'with_hats');
   json // =>  
     { 
       user: {
         id: 1,
         name: 'User1',
+        company: 1,
         hats: [
           {type: 'big_hat', id:1},
           {type: 'big_hat', id:2}
         ]
       },
+      companies: [
+        {id: 1, name: 'Silly corp'} 
+      ],
       'big-hats': [
         {id: 1, type: "BigHat" },
         {id: 2, type: "BigHat" }
