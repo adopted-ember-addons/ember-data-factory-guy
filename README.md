@@ -217,10 +217,13 @@ in the store.
 But you can also take the json from FactoryGuy.build and put it into the store yourself with the store's pushPayload 
 method, since the json will have the primary model's data and all sideloaded relationships properly prepared. 
 
-Example:
+Example: 
    
 
+**Assume the RESTAdapter is being used, but works the same with ActiveModel or JSONAPI adapters**  
+
 ```javascript
+  
   var json = FactoryGuy.build('user', 'with_hats');
   json // =>  
     { 
@@ -246,6 +249,7 @@ Example:
   user.get('name') // => 'User1' 
   user.get('hats.length') // => 2  
 ```  
+
 
 
 ### Sequences
