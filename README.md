@@ -212,9 +212,9 @@ You can override the default attributes by passing in a hash
 
 ##### Build vs. Make
   
-Most of the time you will make models with FactoryGuy.make, which creates models ( and/or their relationships ) 
+- Most of the time you will make models with FactoryGuy.make, which creates models ( and/or their relationships ) 
 in the store.
-But you can also take the json from FactoryGuy.build and put it into the store yourself with the store's pushPayload 
+- But you can also take the json from FactoryGuy.build and put it into the store yourself with the store's pushPayload 
 method, since the json will have the primary model's data and all sideloaded relationships properly prepared. 
 
 Example: 
