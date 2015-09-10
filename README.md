@@ -251,6 +251,7 @@ Example:
   
   var user = store.peekRecord('user', 1);
   user.get('name') // => 'User1' 
+  user.get('company.name') // => Silly Corp  
   user.get('hats.length') // => 2  
 ```  
 
