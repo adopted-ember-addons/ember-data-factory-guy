@@ -220,7 +220,7 @@ method, since the json will have the primary model's data and all sideloaded rel
 
 Example: 
    
-<sub>Assume the RESTAdapter is being used, but works the same with ActiveModel or JSONAPI adapters</sub>  
+<sub>Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters</sub>  
 
 ```javascript
   
