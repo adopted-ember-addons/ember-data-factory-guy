@@ -177,7 +177,7 @@ In other words, don't do this:
    - Builds json in accordance with the adapters specifications
      - [RESTAdapter](http://guides.emberjs.com/v2.0.0/models/the-rest-adapter/#toc_json-conventions)  (*assume this adapter being used in most of the following examples*)   
      - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
-     - [JSONAPIAdapter](http://jsonapi.org/format/) 
+     - [JSONAPIAdapter](http://jsonapi.org/format/)
  - Can override default attributes by passing in a hash
  - Can add attributes with traits ( see traits section )
 
@@ -209,6 +209,43 @@ You can override the default attributes by passing in a hash
   // json.user.name => 'Fred'
 
 ```
+
+##### Build vs. Make
+  
+Most of the time you will make models with FactoryGuy.make, which creates models ( and/or their relationships ) 
+in the store.
+But you can also take the json from FactoryGuy.build and put it into the store yourself with the store's pushPayload 
+method, since the json will have the primary model's data and all sideloaded relationships properly prepared. 
+
+Example:
+   
+
+```javascript
+  var json = FactoryGuy.build('user', 'with_hats');
+  json // =>  
+    { 
+      user: {
+        id: 1,
+        name: 'User1',
+        hats: [
+          {type: 'big_hat', id:1},
+          {type: 'big_hat', id:2}
+        ]
+      },
+      'big-hats': [
+        {id: 1, type: "BigHat" },
+        {id: 2, type: "BigHat" }
+      ]
+    }
+  
+  var store = FactoryGuy.getStore();
+  
+  store.pushPayload(json);
+  
+  var user = store.peekRecord('user', 1);
+  user.get('name') // => 'User1' 
+  user.get('hats.length') // => 2  
+```  
 
 
 ### Sequences
