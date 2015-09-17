@@ -161,9 +161,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     Ember.assert("To handleFind pass in a model instance or a model type name and an id", modelName && id);
 
     var url = this.buildURL(modelName, id);
-
     var json = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, {id: id});
-    //json = FactoryGuy.useJSONAPI() ? json : this.mapFind(modelName, json);
 
     return new MockGetRequest(url, modelName, json);
   },

@@ -1,6 +1,6 @@
 # Ember Data Factory Guy  
 
-[![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy) [![Ember Observer Score](http://emberobserver.com/badges/ember-data-factory-guy.svg)](http://emberobserver.com/addons/ember-data-factory-guy)
+[![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy) [![Ember Observer Score](http://emberobserver.com/badges/ember-data-factory-guy.svg)](http://emberobserver.com/addons/ember-data-factory-guy) [![npm version](https://badge.fury.io/js/ember-data-factory-guy.svg)](http://badge.fury.io/js/ember-data-factory-guy)
 
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
@@ -18,6 +18,7 @@ Contents:
   - [Associations](https://github.com/danielspaniel/ember-data-factory-guy#associations)
   - [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
   - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
+  - [Testing - creating scenarios](https://github.com/danielspaniel/ember-data-factory-guy#testing---creating-scenarios)
   - [Testing models, controllers, components](https://github.com/danielspaniel/ember-data-factory-guy#testing-models-controllers-components)
   - [Integration/Acceptance Tests](https://github.com/danielspaniel/ember-data-factory-guy#integrationacceptance-tests)
 
@@ -176,7 +177,7 @@ In other words, don't do this:
    - Builds json in accordance with the adapters specifications
      - [RESTAdapter](http://guides.emberjs.com/v2.0.0/models/the-rest-adapter/#toc_json-conventions)  (*assume this adapter being used in most of the following examples*)   
      - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
-     - [JSONAPIAdapter](http://jsonapi.org/format/) 
+     - [JSONAPIAdapter](http://jsonapi.org/format/)
  - Can override default attributes by passing in a hash
  - Can add attributes with traits ( see traits section )
 
@@ -208,6 +209,52 @@ You can override the default attributes by passing in a hash
   // json.user.name => 'Fred'
 
 ```
+
+##### Build vs. Make
+  
+Most of the time you will make models with FactoryGuy.make, which creates models ( and/or their relationships ) 
+in the store.
+<br>
+But you can also take the json from FactoryGuy.build and put it into the store yourself with the store's pushPayload 
+method, since the json will have the primary model's data and all sideloaded relationships properly prepared. 
+
+Example: 
+   
+<sub>Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters</sub>  
+
+```javascript
+  
+  var json = FactoryGuy.build('user', 'with_company', 'with_hats');
+  json // =>  
+    { 
+      user: {
+        id: 1,
+        name: 'User1',
+        company: 1,
+        hats: [
+          {type: 'big_hat', id:1},
+          {type: 'big_hat', id:2}
+        ]
+      },
+      companies: [
+        {id: 1, name: 'Silly corp'} 
+      ],
+      'big-hats': [
+        {id: 1, type: "BigHat" },
+        {id: 2, type: "BigHat" }
+      ]
+    }
+  
+  var store = FactoryGuy.getStore();
+  
+  store.pushPayload(json);
+  
+  var user = store.peekRecord('user', 1);
+  user.get('name') // => 'User1' 
+  user.get('company.name') // => Silly Corp  
+  user.get('hats.length') // => 2  
+```  
+
 
 
 ### Sequences
@@ -533,14 +580,30 @@ You would use this to make models like:
 
 ```
                    
+### Testing - Creating Scenarios
+- Easy to create complex scenarios involving multi layered relationships.
+  - Can use model instances to create relationships for making other models.
+
+Example: 
+ 
+  - Setup a scenario where a user has two projects and belongs to a company 
+
+```javascript 
+   var company = make('company');
+   var user = make('user', company: company);
+   var projects = makeList('project', 2, user: user);
+```
+
+*You can use traits to help create the relationships as well, but this strategy allows you to 
+build up complex scenarios in a different way that has it's own benefits.*   
+
+
 ### Testing models, controllers, components
 
 - Testing the models, controllers and components
   - FactoryGuy needs the application to startup in order to load the factories, and setup the store.
   - That is why all the tests (except model) import startApp function from 'tests/helpers/start-app.js' 
     ( a file provided to you by ember cli )
-- Using FactoryGuy shortcut methods:
-  - make
 - [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js) 
   - Avoid using moduleForModel ( ember-qunit ), or describeModel ( ember-mocha ) test helper.
   - Don't need to startApp() to get new application
@@ -592,7 +655,7 @@ test('it has projects', function() {
   - [handleCreate](https://github.com/danielspaniel/ember-data-factory-guy#handlecreate)
   - [handleUpdate](https://github.com/danielspaniel/ember-data-factory-guy#handleupdate)
   - [handleDelete](https://github.com/danielspaniel/ember-data-factory-guy#handledelete)
-- Override FactoryGuyTestHelper by 'reopeing' it.
+- Can override FactoryGuyTestHelper by 'reopeing' it ( if you need custom functionality.)
 
 If you put models into the store ( with FactoryGuy#make ), the http GET call does not need to be mocked,
 since that model is already in the store.
