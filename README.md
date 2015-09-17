@@ -171,9 +171,9 @@ In other words, don't do this:
 
 ### Using Factories
 
- - FactoryGuy.make or just make
+ - FactoryGuy.make 
    - Loads model instance into the store
- - FactoryGuy.build or just build
+ - FactoryGuy.build 
    - Builds json in accordance with the adapters specifications
      - [RESTAdapter](http://guides.emberjs.com/v2.0.0/models/the-rest-adapter/#toc_json-conventions)  (*assume this adapter being used in most of the following examples*)   
      - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
