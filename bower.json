@@ -28,17 +28,17 @@
   ],
   "dependencies": {
     "jquery-mockjax": "2.0.1",
-    "ember-data": "^2.0.0"
+    "ember-data": "2.1.0-beta.2"
   },
   "devDependencies": {
     "jquery": ">1.9.0",
-    "ember": "2.0.0",
-    "handlebars": "~1.3.0",
-    "ember-resolver": "~0.1.14",
-    "loader.js": "ember-cli/loader.js#3.2.0",
+    "ember": "2.1.0-beta.4",
+    "handlebars": "latest",
+    "ember-resolver": "latest",
+    "loader.js": "ember-cli/loader.js",
     "ember-cli-shims": "ember-cli/ember-cli-shims",
-    "ember-cli-test-loader": "ember-cli-test-loader#0.2.0",
-    "ember-load-initializers": "ember-cli/ember-load-initializers#0.1.6",
+    "ember-cli-test-loader": "latest",
+    "ember-load-initializers": "ember-cli/ember-load-initializers",
     "qunit": "latest",
     "ember-qunit": "latest",
     "ember-qunit-notifications": "latest",
