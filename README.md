@@ -623,22 +623,27 @@ build up complex scenarios in a different way that has it's own benefits.*
  
 ```javascript
 
-// file: tests/unit/models/user-test.js
+// file: tests/unit/models/profile-test.js
 
 import Ember from 'ember';
-import FactoryGuy, { make } from 'ember-data-factory-guy';
+import { make } from 'ember-data-factory-guy';
+import startApp from '../../helpers/start-app';
 
-module('User', {
+var App = null;
+
+module('Profile Model', {
+  beforeEach: function() {
+    App = startApp();
+  },
   afterEach: function() {
-    Ember.run(FactoryGuy, 'clearStore');
+    Ember.run(App, 'destroy');
   }
 });
 
-test('it has projects', function() {
-  var user = make('user', 'with_projects');
-  equal(user.get('projects.length'), 2);
+test('has company', function() {
+  var profile = make('profile', 'with_company');
+  ok(profile.get('company.profile') === profile);
 });
-
 
 ```
 
