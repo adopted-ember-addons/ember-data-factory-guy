@@ -645,6 +645,7 @@ test('has company', function() {
   ok(profile.get('company.profile') === profile);
 });
 
+
 ```
 
 
