@@ -602,9 +602,9 @@ build up complex scenarios in a different way that has it's own benefits.*
 
 - Testing the models, controllers and components
   - FactoryGuy needs the application to startup in order to load the factories, and setup the store.
-  - That is why all the tests (except model) import startApp function from 'tests/helpers/start-app.js' 
+  - That is why all the tests import startApp function from 'tests/helpers/start-app.js' 
     ( a file provided to you by ember cli )
-- [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js) 
+- [Sample model test (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js) 
   - Avoid using moduleForModel ( ember-qunit ), or describeModel ( ember-mocha ) test helper.
   - Don't need to startApp() to get new application
 - [Sample component test (translate-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/components/translate-test.js)
@@ -620,6 +620,7 @@ build up complex scenarios in a different way that has it's own benefits.*
   to get them imported. Furthermore you don't want a model handed to you, you want to make your own, 
   which is the whole point of factory guy.* 
 
+ 
 ```javascript
 
 // file: tests/unit/models/user-test.js
