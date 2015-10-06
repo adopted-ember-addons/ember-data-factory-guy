@@ -2,7 +2,7 @@ import Ember from 'ember';
 import FactoryGuy, { make, clearStore }  from 'ember-data-factory-guy';
 import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 import hbs from 'htmlbars-inline-precompile';
-import startApp from '../../helpers/start-app';
+import startApp from '../helpers/start-app';
 
 import { test, moduleForComponent } from 'ember-qunit';
 

@@ -1,6 +1,5 @@
 import FixtureBuilder from './fixture-builder';
 import RESTFixtureConverter from './rest-fixture-converter';
-
 /**
  Fixture Builder for REST based Serializer, like ActiveModelSerializer or
   RESTSerializer

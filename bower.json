@@ -28,7 +28,7 @@
   ],
   "dependencies": {
     "jquery-mockjax": "2.0.1",
-    "ember-data": "2.1.0-beta.2"
+    "ember-data": "2.1.0-beta.5"
   },
   "devDependencies": {
     "jquery": ">1.9.0",
@@ -36,7 +36,7 @@
     "handlebars": "latest",
     "ember-cli-shims": "ember-cli/ember-cli-shims#0.0.5",
     "ember-cli-test-loader": "ember-cli/ember-cli-test-loader#0.1.3",
-    "ember-data": "2.1.0-beta.2",
+    "ember-data": "2.1.0-beta.5",
     "ember-load-initializers": "ember-cli/ember-load-initializers#0.1.7",
     "ember-resolver": "0.1.21",
     "loader.js": "ember-cli/loader.js#3.3.0",

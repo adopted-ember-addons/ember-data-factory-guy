@@ -51,7 +51,8 @@ var MockCreateRequest = function (url, modelName, options) {
     succeed = false;
     status = options.status || 500;
     if (options.response) {
-      responseJson = options.response;
+      var errors = FactoryGuy.getFixtureBuilder().convertResponseErrors(options.response);
+      responseJson = errors;
     }
     return this;
   };
