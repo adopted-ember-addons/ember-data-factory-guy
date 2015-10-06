@@ -41,8 +41,8 @@ export default function(store) {
     var errors = object.errors;
     for (var key in errors) {
       var description = Ember.typeOf(errors[key]) === "array" ? errors[key][0] : errors[key];
-      var source = {pointer: `data/attributes/${key}`};
-      var newError = {detail: description, title: `invalid ${key}`, source: source};
+      var source = {pointer: "data/attributes/key"+key};
+      var newError = {detail: description, title: "invalid "+key, source: source};
       jsonAPIErrrors.push(newError);
     }
     return {errors: jsonAPIErrrors};
