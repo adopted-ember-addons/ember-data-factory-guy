@@ -1,4 +1,3 @@
-//import Ember from 'ember';
 import JSONAPIFixtureConverter from './jsonapi-fixture-converter';
 
 export default function(store) {
