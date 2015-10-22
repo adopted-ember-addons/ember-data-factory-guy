@@ -12,8 +12,8 @@ export default function(store) {
     return fixture;
   };
   /**
-   Convert to the ember-data JSONAPI adapter specification, since make pushes
-   jsonapi data into the store
+   Convert to the ember-data JSONAPI adapter specification, since FactoryGuy#make
+   pushes jsonapi data into the store
 
    @param {String} modelName
    @param {String} fixture
