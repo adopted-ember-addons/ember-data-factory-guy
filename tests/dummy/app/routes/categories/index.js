@@ -10,5 +10,6 @@ export default Ember.Route.extend({
   },
   model: function() {
     return this.store.query('category',{});
+    //return this.store.findAll('category',{}); // Using this causes the test to pass if the test also uses 'handleFindAll'
   }
 });

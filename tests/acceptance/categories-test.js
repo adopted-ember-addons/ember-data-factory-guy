@@ -49,8 +49,8 @@ test('visiting /categories with data', function(assert) {
 });
 
 test('create a new category', function(assert) {
-  //TestHelper.handleQuery('category', {}, []);
-  TestHelper.handleFindAll('category', 0);
+  TestHelper.handleQuery('category', {}, []);
+  //TestHelper.handleFindAll('category', 0); // This works if the route is changed to use findAll
   visit('/categories');
 
   andThen(function() {
