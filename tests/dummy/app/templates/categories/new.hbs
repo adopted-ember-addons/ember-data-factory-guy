@@ -1,0 +1,16 @@
+<header class="page-content-header has-actions">
+  <div class="page-content-header-actions">
+    {{#link-to "categories.index" class="btn btn-outline-alt btn-animate"}}
+      <i class="in-btn-icon fa fa-angle-left"></i>
+      Back to the list
+    {{/link-to}}
+  </div>
+
+  <h1 class="page-content-heading">
+    New Product <strong>Category</strong>
+  </h1>
+
+  {{form-hint-required}}
+</header>
+
+{{partial "categories/form"}}
