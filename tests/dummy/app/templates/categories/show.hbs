@@ -1,36 +1,5 @@
 
-{{#liquid-bind model use="toLeft" as |currentModel|}}
-<h1 class="category-name">{{currentModel.name}}</h1>
+<h1 class="category-name">{{model.name}}</h1>
 
-{{#if currentModel.products.length}}
-  <div class="product-group-list">
-    <div class="product-group-list-item featured-funnels">
-      <header class="product-group-list-item-header">
-        <h2 class="product-group-list-item-tab-heading">All Products</h2>
-      </header>
+<p>{{model.description}}</p>
 
-      <div class="product-group-list-item-body">
-        <!-- Product list -->
-        <div class="product-list-cards">
-          <div class="row">
-            {{#each currentModel.products as |product|}}
-              <div class="col-sm-6 col-md-4 col-lg-3">
-                {{product-list-item-card model=product}}
-              </div>
-            {{/each}}
-          </div>
-
-          <div class="product-group-actions text-centerize">
-            <button class="btn btn-light-outline load-more-btn" type="button">Load more <strong>Full Funnels</strong></button>
-          </div>
-        </div>
-        <!-- / Product list -->
-      </div>
-    </div>
-  </div>
-{{else}}
-  <p id="blankslate">
-    No Products found
-  </p>
-{{/if}}
-{{/liquid-bind}}
