@@ -78,10 +78,9 @@ var RestFixtureConverter = function (store) {
     var transformFunction = getTransformFunction(modelName, 'Attribute');
     store.modelFor(modelName).eachAttribute(function (attribute) {
       var attributeKey = transformFunction(attribute);
-      //console.log('attribute', attribute, attributeKey, fixture.hasOwnProperty(attribute), fixture.hasOwnProperty(attributeKey))
-      if (fixture[attribute]) {
+      if (fixture.hasOwnProperty(attribute)) {
         attributes[attributeKey] = fixture[attribute];
-      } else if (fixture[attributeKey]) {
+      } else if (fixture.hasOwnProperty(attributeKey)) {
         attributes[attributeKey] = fixture[attributeKey];
       }
     });

@@ -4,7 +4,8 @@ FactoryGuy.define('profile', {
   default: {
     description: 'Text goes here',
     camelCaseDescription: 'textGoesHere',
-    snake_case_description: 'text_goes_here'
+    snake_case_description: 'text_goes_here',
+    aBooleanField: false
   },
   traits: {
     goofy_description: {

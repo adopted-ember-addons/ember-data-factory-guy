@@ -43,6 +43,7 @@ test("sideloads belongsTo records", function () {
     profile: {
       id: 1,
       description: 'Text goes here',
+      'a_boolean_field': false,
       'camel_case_description': 'textGoesHere',
       'snake_case_description': 'text_goes_here',
       'super_hero_id': 1,
@@ -99,6 +100,7 @@ test("using custom serialize keys function for transforming attributes and relat
       description: 'Text goes here',
       'camel-case-description': 'textGoesHere',
       'snake-case-description': 'text_goes_here',
+      'a-boolean-field': false,
       'super-hero': 1,
     },
     'super-heros': [
