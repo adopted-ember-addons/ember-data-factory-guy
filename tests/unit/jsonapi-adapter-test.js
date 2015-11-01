@@ -319,7 +319,8 @@ test("when no custom serialize keys functions exist, dasherizes attributes and r
         attributes: {
           description: 'Text goes here',
           'camel-case-description': 'textGoesHere',
-          'snake-case-description': 'text_goes_here'
+          'snake-case-description': 'text_goes_here',
+          'a-boolean-field': true
         },
         relationships: {
           'super-hero': {
@@ -357,7 +358,8 @@ test("using custom serialize keys function for transforming attributes and relat
         attributes: {
           description: 'Text goes here',
           'camel_case_description': 'textGoesHere',
-          'snake_case_description': 'text_goes_here'
+          'snake_case_description': 'text_goes_here',
+          'a_boolean_field': true
         },
         relationships: {
           'super_hero': {
@@ -455,5 +457,3 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
   deepEqual(projectJson.included, expectedData.included);
 
 });
-
-

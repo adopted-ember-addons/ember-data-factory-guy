@@ -23,6 +23,7 @@ test("sideloads belongsTo records", function (assert) {
       description: 'Text goes here',
       camelCaseDescription: 'textGoesHere',
       snake_case_description: 'text_goes_here',
+      aBooleanField: true,
       superHero: 1,
     },
     'super-heros': [
@@ -74,6 +75,7 @@ test("sideloads belongsTo records", function (assert) {
         description: 'Text goes here',
         camelCaseDescription: 'textGoesHere',
         snake_case_description: 'text_goes_here',
+        aBooleanField: true,
         superHero: 1,
       },
       {
@@ -81,6 +83,7 @@ test("sideloads belongsTo records", function (assert) {
         description: 'Text goes here',
         camelCaseDescription: 'textGoesHere',
         snake_case_description: 'text_goes_here',
+        aBooleanField: true,
         superHero: 2,
       }
     ],
