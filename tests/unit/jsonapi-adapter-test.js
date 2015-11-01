@@ -320,7 +320,7 @@ test("when no custom serialize keys functions exist, dasherizes attributes and r
           description: 'Text goes here',
           'camel-case-description': 'textGoesHere',
           'snake-case-description': 'text_goes_here',
-          'a-boolean-field': true
+          'a-boolean-field': false
         },
         relationships: {
           'super-hero': {
@@ -359,7 +359,7 @@ test("using custom serialize keys function for transforming attributes and relat
           description: 'Text goes here',
           'camel_case_description': 'textGoesHere',
           'snake_case_description': 'text_goes_here',
-          'a_boolean_field': true
+          'a_boolean_field': false
         },
         relationships: {
           'super_hero': {
