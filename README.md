@@ -35,7 +35,7 @@ ChangeLog: ( Notes about what has changed in each version )
 
 ##### Never used ember-data-factory-guy before
   
- - ```ember install ember-data-factory-guy@2.1.0``` ( ember-data-1.13.5+ ) 
+ - ```ember install ember-data-factory-guy@2.1.1``` ( ember-data-1.13.5+ ) 
  - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + ) 
  - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 ) 
  - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )
@@ -866,6 +866,29 @@ you must wait on the request for those records to resolve before they will be lo
       
    ```
 
+*Reuse the handler to simulate the same query with different results
+   
+   ```js
+   
+     var store = FactoryGuy.getStore();
+
+     var bobQueryHander = TestHelper.handleQuery('user', {name: 'Bob'});
+
+     store.query('user', {name: 'Bob'}).then(function (users) {
+       //=> users.get('length') === 0;
+
+       var bob = store.make('user', {name: 'Bob});
+       
+       // reuse the same query handler since it's the same query
+       bobQueryHander.returnsModels([bob]);
+
+       store.query('user', {name: 'Bob'}).then(function (users) {
+         //=> users.get('length') === 1;
+         //=> users.get('firstObject') === bob;
+       });
+     });
+
+```
 
 
 ##### handleCreate
