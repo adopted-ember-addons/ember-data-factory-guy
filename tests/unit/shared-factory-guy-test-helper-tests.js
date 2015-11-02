@@ -295,12 +295,99 @@ SharedBehavior.handleQueryTests = function () {
     });
   });
 
-
-  test("passing in existing instances returns those and does not create new ones", function (assert) {
+  test("returnsModels with no models", function (assert) {
     Ember.run(function () {
       var done = assert.async();
+      TestHelper.handleQuery('user', {name: 'Bob'}).returnsModels([]);
+      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(function (users) {
+        equal(users.get('length'), 0);
+        done();
+      });
+    });
+  });
+
+
+  test("returnsModels returns your models, and does not create new ones", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+      var bob = FactoryGuy.make('user');
+
+      TestHelper.handleQuery('user', {name: 'Bob'}).returnsModels([bob]);
+
+      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(function (users) {
+        equal(users.get('length'), 1);
+        equal(users.get('firstObject'), bob);
+        // does not make another user
+        equal(FactoryGuy.getStore().peekAll('user').get('content').length, 1);
+        done();
+      });
+    });
+  });
+
+  test("returnsJSON returns and creates models from the query response", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+
+      var bobs = FactoryGuy.buildList('user',1);
+      TestHelper.handleQuery('user', {name: 'Bob'}).returnsJSON(bobs);
+      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(function (users) {
+        equal(users.get('length'), 1);
+        // makes the user after getting query response
+        equal(FactoryGuy.getStore().peekAll('user').get('content').length, 1);
+        done();
+      });
+    });
+  });
+
+  test("returnsExistingIds returns models based on the modelName and the ids provided", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+
+      var bob = FactoryGuy.make('user');
+
+      TestHelper.handleQuery('user', {name: 'Bob'}).returnsExistingIds([bob.id]);
+      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(function (users) {
+        equal(users.get('length'), 1);
+        equal(users.get('firstObject') , bob);
+        // does not create a new model
+        equal(FactoryGuy.getStore().peekAll('user').get('content').length, 1);
+        done();
+      });
+    });
+  });
+
+  // test created for issue #143
+  test("query for none than create then query again", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+      var store = FactoryGuy.getStore();
+
+      var bobQueryHander = TestHelper.handleQuery('user', {name: 'Bob'});
+
+      store.query('user', {name: 'Bob'}).then(function (users) {
+        equal(users.get('length'), 0);
+
+        TestHelper.handleCreate('user', {name: 'Bob'});
+        store.createRecord('user', {name: 'Bob'}).save().then(function(user){
+
+          bobQueryHander.returnsExistingIds([1]);
+
+          store.query('user', {name: 'Bob'}).then(function (users) {
+            equal(users.get('length'), 1);
+            done();
+          });
+        });
+      });
+    });
+  });
+
+
+  test("returnsModels with hasMany models", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+
       var users = FactoryGuy.makeList('user', 2, 'with_hats');
-      TestHelper.handleQuery('user', {name: 'Bob'}, users);
+      TestHelper.handleQuery('user', {name: 'Bob'}).returnsModels(users);
 
       equal(FactoryGuy.getStore().peekAll('user').get('content.length'), 2, 'start out with 2 instances');
 
@@ -315,11 +402,12 @@ SharedBehavior.handleQueryTests = function () {
     });
   });
 
-  test("passing in existing instances with hasMany and belongsTo", function (assert) {
+  test("returnsModels with hasMany and belongsTo", function (assert) {
     Ember.run(function () {
       var done = assert.async();
+
       var users = FactoryGuy.makeList('company', 2, 'with_projects', 'with_profile');
-      TestHelper.handleQuery('company', {name: 'Dude Company'}, users);
+      TestHelper.handleQuery('company', {name: 'Dude Company'}).returnsModels(users);
 
       equal(FactoryGuy.getStore().peekAll('company').get('content.length'), 2, 'start out with 2 instances');
 
@@ -340,10 +428,10 @@ SharedBehavior.handleQueryTests = function () {
       var done = assert.async();
 
       var companies1 = FactoryGuy.makeList('company', 2);
-      TestHelper.handleQuery('company', {name: 'Dude'}, companies1);
+      TestHelper.handleQuery('company', {name: 'Dude'}).returnsModels(companies1);
 
       var companies2 = FactoryGuy.makeList('company', 2);
-      TestHelper.handleQuery('company', {type: 'Small'}, companies2);
+      TestHelper.handleQuery('company', {type: 'Small'}).returnsModels(companies2);
 
       FactoryGuy.getStore().query('company', {name: 'Dude'}).then(function (companies) {
         equal(companies.mapBy('id')+'', companies1.mapBy('id')+'');

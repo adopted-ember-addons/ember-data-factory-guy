@@ -4,6 +4,7 @@ import $ from 'jquery';
 import FactoryGuy from './factory-guy';
 import MockUpdateRequest from './mock-update-request';
 import MockCreateRequest from './mock-create-request';
+import MockQueryRequest from './mock-query-request';
 import MockGetRequest from './mock-get-request';
 
 var FactoryGuyTestHelper = Ember.Object.create({
@@ -11,6 +12,9 @@ var FactoryGuyTestHelper = Ember.Object.create({
   setup: function () {
     $.mockjaxSettings.logging = false;
     $.mockjaxSettings.responseTime = 0;
+  },
+  teardown: function () {
+    $.mockjax.clear();
   },
   // Look up a controller from the current container
   controllerFor: function (name) {
@@ -47,7 +51,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
       request.data = options.data;
     }
 
-    $.mockjax(request);
+    return $.mockjax(request);
   },
   /**
    Build url for the mockjax call. Proxy to the adapters buildURL method.
@@ -223,37 +227,16 @@ var FactoryGuyTestHelper = Ember.Object.create({
    ```
 
    @param {String} modelName  name of the mode like 'user' for User model type
-   @param {String} searchParams  the parameters that will be queried
+   @param {String} queryParams  the parameters that will be queried
    @param {Array}  array of DS.Model records to be 'returned' by query
    */
-  handleQuery: function (modelName, searchParams, records) {
-    Ember.assert('The second argument of searchParams must be an object', Ember.typeOf(searchParams) === 'object');
-    if (records) {
-      Ember.assert('The third argument ( records ) must be an array - found type:' + Ember.typeOf(records), Ember.typeOf(records) === 'array');
-    } else {
-      records = [];
-    }
-
-    var json = records.map(function (record) {
-      return record.serialize({includeId: true});
-    });
-
-    var responseJson;
-    if (FactoryGuy.useJSONAPI()) {
-      json = json.map(function (data) {
-        return data.data;
-      });
-      responseJson = {data: json};
-    } else {
-      responseJson = this.mapFindAll(modelName, json);
+  handleQuery: function (modelName, queryParams) {
+    if (queryParams ) {
+      Ember.assert('The second argument ( queryParams ) must be an object', Ember.typeOf(queryParams) === 'object');
     }
 
     var url = this.buildURL(modelName);
-    this.stubEndpointForHttpRequest(url, responseJson, {data: searchParams});
-  },
-  handleFindQuery: function (modelName, searchParams, records) {
-    Ember.deprecate("handleFindQuery is deprecated and will be removed in later versions, please use handleQuery");
-    return this.handleQuery(modelName, searchParams, records);
+    return new MockQueryRequest(url, modelName, queryParams);
   },
   /**
    Handling ajax POST ( create record ) for a model.
@@ -299,6 +282,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
   handleCreate: function (modelName, options) {
     var url = this.buildURL(modelName);
     var opts = options === undefined ? {} : options;
+    
     return new MockCreateRequest(url, modelName, opts);
   },
 
@@ -365,9 +349,6 @@ var FactoryGuyTestHelper = Ember.Object.create({
     });
   },
 
-  teardown: function () {
-    $.mockjax.clear();
-  }
 });
 
 export default FactoryGuyTestHelper;
