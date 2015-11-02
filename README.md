@@ -866,7 +866,7 @@ you must wait on the request for those records to resolve before they will be lo
       
    ```
 
-*Reuse the handler to simulate the same query with different results
+*Reuse the handler to simulate the same query with different results*
    
    ```js
    
@@ -877,7 +877,7 @@ you must wait on the request for those records to resolve before they will be lo
      store.query('user', {name: 'Bob'}).then(function (users) {
        //=> users.get('length') === 0;
 
-       var bob = store.make('user', {name: 'Bob});
+       var bob = store.make('user', {name: 'Bob'});
        
        // reuse the same query handler since it's the same query
        bobQueryHander.returnsModels([bob]);
