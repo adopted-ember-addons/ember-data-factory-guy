@@ -801,23 +801,13 @@ you must wait on the request for those records to resolve before they will be lo
 
 ##### handleQuery
    - For dealing with finding all records for a type of model with query parameters.
-     - Can pass in model instances or empty array
-   - Used to be called handleFindQuery ( which is now deprecated )
+   - Takes modifier methods for controlling the response 
+    - returnsModels
+    - returnsJSON
+    - returnsExistingIds
+   - Can reuse the same handler again to simulate same query with different results
    
-*Passing in array of model instances*
-
-   ```js
-     // Create model instances
-     var users = FactoryGuy.makeList('user', 2, 'with_hats');
-
-     // Pass in the array of model instances as last argument
-     TestHelper.handleQuery('user', {name:'Bob', age: 10}, users);
-     
-     // will stub a call to the store like this:
-     store.query('user', {name:'Bob', age: 10}});
-   ```
-
-*Passing in nothing for last argument*
+*Using plain handleQuery returns no results*
 
    ```js
      // This simulates a query that returns no results
@@ -827,6 +817,55 @@ you must wait on the request for those records to resolve before they will be lo
         /// userInstances will be empty
      })
    ```
+   
+*Use returnsModles by passing in array of model instances*
+
+   ```js
+     // Create model instances
+     var users = FactoryGuy.makeList('user', 2, 'with_hats');
+
+     // Pass in the array of model instances as last argument
+     TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsModels(users);
+     
+     // will stub a call to the store like this:
+     store.query('user', {name:'Bob', age: 10}}).then(function(models) {
+        // models are the same as the users array  
+     });
+   ```
+
+
+*Use returnsJSON by passing in json*
+
+   ```js
+     // Create json with buildList
+     var usersJSON = FactoryGuy.buildList('user', 2, 'with_hats');
+
+     // use returnsJSON to pass in this response  
+     TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsJSON(usersJSON);
+     
+     store.query('user', {name:'Bob', age: 10}}).then(function(models) {
+        // these models were created from the usersJSON
+     });
+      
+   ```
+
+*Use returnsExistingIds by passing in array of ids of existing models*
+
+   ```js
+     // Create list of models
+     var users = FactoryGuy.makeList('user', 2, 'with_hats');
+     var user1 = users.get('firstObject');
+    
+     // use returnsExistingIds to pass in the users ids you want  
+     // in this case let's say you only want to pass back the first user
+     TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsExistingIds([user1.id]);
+     
+     store.query('user', {name:'Bob', age: 10}}).then(function(models) {
+        // models will be one model and it will be user1
+     });
+      
+   ```
+
 
 
 ##### handleCreate
