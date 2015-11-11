@@ -2,8 +2,9 @@ import DS from 'ember-data';
 import JSONAPIFixtureBuilder from './jsonapi-fixture-builder';
 import RESTFixtureBuilder from './rest-fixture-builder';
 
-var FixtureBuilderFactory = function (store) {
-  var adapter = store.adapterFor('application');
+var FixtureBuilderFactory = function (store, adapterFor) {
+
+  var adapter = store.adapterFor(adapterFor || 'application');
   /*
    Using json api?
    TODO: extract this to utility class
