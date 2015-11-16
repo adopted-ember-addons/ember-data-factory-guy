@@ -573,7 +573,7 @@ You would use this to make models like:
     var property = FactoryGuy.make('property');
     property.get('name'); // => 'Silly property(FOR SALE)')
 
-    var property = FactoryGuy.make('property', for_sale: false);
+    var property = FactoryGuy.make('property', {for_sale: false});
     property.get('name'); // => 'Silly property')
   });
 
@@ -589,8 +589,8 @@ Example:
 
 ```javascript 
    var company = make('company');
-   var user = make('user', company: company);
-   var projects = makeList('project', 2, user: user);
+   var user = make('user', {company: company});
+   var projects = makeList('project', 2, {user: user});
 ```
 
 *You can use traits to help create the relationships as well, but this strategy allows you to 
