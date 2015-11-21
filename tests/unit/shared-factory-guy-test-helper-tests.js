@@ -306,6 +306,20 @@ SharedBehavior.handleQueryTests = function () {
     });
   });
 
+  test("andFail works", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+      var errors = {errors: {name: ['wrong']}};
+      TestHelper.handleQuery('user', {name: 'Bob'}).andFail({status: 422, response: errors});
+      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(
+        function () {
+      }, function() {
+        ok(true);
+        done();
+      });
+    });
+  });
+
 
   test("returnsModels returns your models, and does not create new ones", function (assert) {
     Ember.run(function () {
