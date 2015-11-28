@@ -8,6 +8,7 @@ var FactoryGuy = function () {
   var store = null;
   var fixtureBuilderFactory = null;
   var fixtureBuilder = null;
+  var fixtureBuilders = {};
   var self = this;
   /**
    ```javascript
@@ -78,6 +79,15 @@ var FactoryGuy = function () {
   };
   this.getFixtureBuilder = function () {
     return fixtureBuilder;
+  };
+  this.getFixtureBuilderFor = function (modelName) {
+    if (!fixtureBuilders[modelName]) {
+      var factory = new FixtureBuilderFactory(store, modelName);
+
+      fixtureBuilders[modelName]  = factory.getFixtureBuilder();
+    }
+
+    return fixtureBuilders[modelName];
   };
   /**
    Used in model definitions to declare use of a sequence. For example:
@@ -255,7 +265,7 @@ var FactoryGuy = function () {
     var fixture = this.buildRaw.apply(this, arguments);
     var modelName = lookupModelForFixtureName(args.name);
 
-    return fixtureBuilder.convertForBuild(modelName, fixture);
+    return this.getFixtureBuilderFor(modelName).convertForBuild(modelName, fixture);
   };
 
   this.buildRaw = function () {
@@ -290,7 +300,7 @@ var FactoryGuy = function () {
     var list = this.buildRawList.apply(this, arguments);
 
     var modelName = lookupModelForFixtureName(name);
-    return fixtureBuilder.convertForBuild(modelName, list);
+    return this.getFixtureBuilderFor(modelName).convertForBuild(modelName, list);
   };
 
   this.buildRawList = function () {
@@ -330,7 +340,7 @@ var FactoryGuy = function () {
 
     var modelName = lookupModelForFixtureName(args.name);
     var fixture = this.buildRaw.apply(this, arguments);
-    var data = fixtureBuilder.convertForMake(modelName, fixture);
+    var data = this.getFixtureBuilderFor(modelName).convertForMake(modelName, fixture);
 
     var model = makeModel(modelName, data);
 
