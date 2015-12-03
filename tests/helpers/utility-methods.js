@@ -29,7 +29,7 @@ var theUsualSetup = function (adapterType) {
     adapter.shouldBackgroundReloadRecord = function() { return false; };
     adapter.shouldReloadRecord = function() { return false; };
     adapter.shouldReloadAll = function() { return true; };
-    FactoryGuy.setStore(store);
+    FactoryGuy.set('store', store);
   }
 
   $.mockjaxSettings.logging = false;
