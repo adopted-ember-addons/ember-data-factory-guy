@@ -1,5 +1,5 @@
 import Ember from 'ember';
-
+import { makeList } from 'ember-data-factory-guy';
 import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 import startApp from '../helpers/start-app';
 
