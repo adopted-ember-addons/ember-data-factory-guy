@@ -342,7 +342,7 @@ test("when no custom serialize keys functions exist, dasherizes attributes and r
 });
 
 test("using custom serialize keys function for transforming attributes and relationship keys", function () {
-  var serializer = FactoryGuy.getStore().serializerFor();
+  var serializer = FactoryGuy.get('store').serializerFor();
 
   var savedKeyForAttributeFn = serializer.keyForAttribute;
   serializer.keyForAttribute = Ember.String.underscore;

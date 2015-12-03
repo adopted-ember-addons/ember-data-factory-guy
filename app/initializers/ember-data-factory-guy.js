@@ -12,7 +12,7 @@ export default {
       application = arguments[1];
     }
     var container = application.__container__;
-    FactoryGuy.setStore(container.lookup('service:store'));
+    FactoryGuy.set('store', container.lookup('service:store'));
     FactoryGuyTestHelper.set('container', container);
     FactoryGuy.resetDefinitions();
 

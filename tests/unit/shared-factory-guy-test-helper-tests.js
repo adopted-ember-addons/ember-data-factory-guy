@@ -16,7 +16,7 @@ SharedBehavior.buildUrl = function () {
   });
 
   test("#buildURL with namespace and host", function () {
-    var adapter = FactoryGuy.getStore().adapterFor('application');
+    var adapter = FactoryGuy.get('store').adapterFor('application');
     adapter.setProperties({
       host: 'https://dude.com',
       namespace: 'api/v1'
@@ -35,7 +35,7 @@ SharedBehavior.handleFindTests = function () {
       var done = assert.async();
       var profileId = TestHelper.handleFind('profile');
 
-      FactoryGuy.getStore().find('profile', profileId).then(function (profile) {
+      FactoryGuy.get('store').find('profile', profileId).then(function (profile) {
         equal(profile.get('id'), profileId);
         equal(profile.get('description'), 'Text goes here');
         done();
@@ -48,7 +48,7 @@ SharedBehavior.handleFindTests = function () {
       var done = assert.async();
       var profileId = TestHelper.handleFind('profile', {description: 'dude'});
 
-      FactoryGuy.getStore().find('profile', profileId).then(function (profile) {
+      FactoryGuy.get('store').find('profile', profileId).then(function (profile) {
         ok(profile.get('description') === 'dude');
         done();
       });
@@ -61,7 +61,7 @@ SharedBehavior.handleFindTests = function () {
 
       var profileId = TestHelper.handleFind('profile', 1);
 
-      FactoryGuy.getStore().find('profile', profileId).then(function (profile) {
+      FactoryGuy.get('store').find('profile', profileId).then(function (profile) {
         ok(profile.get('camelCaseDescription') === 'textGoesHere');
         ok(profile.get('snake_case_description') === 'text_goes_here');
         done();
@@ -74,7 +74,7 @@ SharedBehavior.handleFindTests = function () {
       var done = assert.async();
       var profileId = TestHelper.handleFind('profile', 'goofy_description');
 
-      FactoryGuy.getStore().find('profile', profileId).then(function (profile) {
+      FactoryGuy.get('store').find('profile', profileId).then(function (profile) {
         ok(profile.get('description') === 'goofy');
         done();
       });
@@ -86,7 +86,7 @@ SharedBehavior.handleFindTests = function () {
       var done = assert.async();
       var profileId = TestHelper.handleFind('profile', 'goofy_description', {description: 'dude'});
 
-      FactoryGuy.getStore().find('profile', profileId).then(function (profile) {
+      FactoryGuy.get('store').find('profile', profileId).then(function (profile) {
         ok(profile.get('description') === 'dude');
         done();
       });
@@ -99,7 +99,7 @@ SharedBehavior.handleFindTests = function () {
       var done = assert.async();
       var profileId = TestHelper.handleFind('profile', 'with_company', 'with_bat_man');
 
-      FactoryGuy.getStore().find('profile', profileId).then(function (profile) {
+      FactoryGuy.get('store').find('profile', profileId).then(function (profile) {
         ok(profile.get('company.name') === 'Silly corp');
         ok(profile.get('superHero.name') === 'BatMan');
         done();
@@ -113,7 +113,7 @@ SharedBehavior.handleFindTests = function () {
       var done = assert.async();
       var userId = TestHelper.handleFind('user', 'with_hats');
 
-      FactoryGuy.getStore().find('user', userId).then(function (user) {
+      FactoryGuy.get('store').find('user', userId).then(function (user) {
         ok(user.get('hats.length') === 2);
         ok(user.get('hats.firstObject.type') === 'BigHat');
         done();
@@ -146,7 +146,7 @@ SharedBehavior.handleReloadTests = function () {
       var done = assert.async();
       TestHelper.handleReload('profile', 1).andFail();
 
-      FactoryGuy.getStore().find('profile', 1).then(
+      FactoryGuy.get('store').find('profile', 1).then(
         function () {
         },
         function () {
@@ -168,7 +168,7 @@ SharedBehavior.handleFindAllTests = function () {
       var done = assert.async();
       TestHelper.handleFindAll('user', 2);
 
-      FactoryGuy.getStore().findAll('user').then(function (users) {
+      FactoryGuy.get('store').findAll('user').then(function (users) {
         ok(users.get('length') === 2);
         done();
       });
@@ -181,7 +181,7 @@ SharedBehavior.handleFindAllTests = function () {
 
       TestHelper.handleFindAll('profile', 1);
 
-      FactoryGuy.getStore().findAll('profile').then(function (profiles) {
+      FactoryGuy.get('store').findAll('profile').then(function (profiles) {
         ok(profiles.get('firstObject.camelCaseDescription') === 'textGoesHere');
         ok(profiles.get('firstObject.snake_case_description') === 'text_goes_here');
         done();
@@ -194,7 +194,7 @@ SharedBehavior.handleFindAllTests = function () {
       var done = assert.async();
       TestHelper.handleFindAll('user', 0);
 
-      FactoryGuy.getStore().findAll('user').then(function (profiles) {
+      FactoryGuy.get('store').findAll('user').then(function (profiles) {
         ok(profiles.get('length') === 0);
         done();
       });
@@ -206,7 +206,7 @@ SharedBehavior.handleFindAllTests = function () {
       var done = assert.async();
       TestHelper.handleFindAll('profile', 2, {description: 'dude'});
 
-      FactoryGuy.getStore().findAll('profile').then(function (profiles) {
+      FactoryGuy.get('store').findAll('profile').then(function (profiles) {
         ok(profiles.get('length') === 2);
         ok(profiles.get('firstObject.description') === 'dude');
         done();
@@ -218,7 +218,7 @@ SharedBehavior.handleFindAllTests = function () {
     var done = assert.async();
     TestHelper.handleFindAll('profile', 2, 'goofy_description');
 
-    FactoryGuy.getStore().findAll('profile').then(function (profiles) {
+    FactoryGuy.get('store').findAll('profile').then(function (profiles) {
       ok(profiles.get('length') === 2);
       ok(profiles.get('firstObject.description') === 'goofy');
       done();
@@ -229,7 +229,7 @@ SharedBehavior.handleFindAllTests = function () {
     var done = assert.async();
     TestHelper.handleFindAll('profile', 2, 'goofy_description', {description: 'dude'});
 
-    FactoryGuy.getStore().findAll('profile').then(function (profiles) {
+    FactoryGuy.get('store').findAll('profile').then(function (profiles) {
       ok(profiles.get('length') === 2);
       ok(profiles.get('firstObject.description') === 'dude');
       done();
@@ -242,7 +242,7 @@ SharedBehavior.handleFindAllTests = function () {
       var done = assert.async();
       TestHelper.handleFindAll('profile', 2, 'with_company', 'with_bat_man');
 
-      FactoryGuy.getStore().findAll('profile').then(function (profiles) {
+      FactoryGuy.get('store').findAll('profile').then(function (profiles) {
         ok(profiles.get('length') === 2);
         ok(profiles.get('firstObject.company.name') === 'Silly corp');
         ok(profiles.get('lastObject.superHero.name') === 'BatMan');
@@ -257,7 +257,7 @@ SharedBehavior.handleFindAllTests = function () {
       var done = assert.async();
       TestHelper.handleFindAll('user', 2, 'with_hats');
 
-      FactoryGuy.getStore().findAll('user').then(function (users) {
+      FactoryGuy.get('store').findAll('user').then(function (users) {
         ok(users.get('length') === 2);
         ok(users.get('lastObject.hats').mapBy('type')+'' === ['BigHat','BigHat']+'');
         ok(users.get('lastObject.hats').mapBy('id')+'' === [3,4]+'');
@@ -288,7 +288,7 @@ SharedBehavior.handleQueryTests = function () {
     Ember.run(function () {
       var done = assert.async();
       TestHelper.handleQuery('user', {name: 'Bob'});
-      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(function (users) {
+      FactoryGuy.get('store').query('user', {name: 'Bob'}).then(function (users) {
         equal(users.get('length'), 0);
         done();
       });
@@ -299,7 +299,7 @@ SharedBehavior.handleQueryTests = function () {
     Ember.run(function () {
       var done = assert.async();
       TestHelper.handleQuery('user', {name: 'Bob'}).returnsModels([]);
-      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(function (users) {
+      FactoryGuy.get('store').query('user', {name: 'Bob'}).then(function (users) {
         equal(users.get('length'), 0);
         done();
       });
@@ -311,7 +311,7 @@ SharedBehavior.handleQueryTests = function () {
       var done = assert.async();
       var errors = {errors: {name: ['wrong']}};
       TestHelper.handleQuery('user', {name: 'Bob'}).andFail({status: 422, response: errors});
-      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(
+      FactoryGuy.get('store').query('user', {name: 'Bob'}).then(
         function () {
       }, function() {
         ok(true);
@@ -328,11 +328,11 @@ SharedBehavior.handleQueryTests = function () {
 
       TestHelper.handleQuery('user', {name: 'Bob'}).returnsModels([bob]);
 
-      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(function (users) {
+      FactoryGuy.get('store').query('user', {name: 'Bob'}).then(function (users) {
         equal(users.get('length'), 1);
         equal(users.get('firstObject'), bob);
         // does not make another user
-        equal(FactoryGuy.getStore().peekAll('user').get('content').length, 1);
+        equal(FactoryGuy.get('store').peekAll('user').get('content').length, 1);
         done();
       });
     });
@@ -344,10 +344,10 @@ SharedBehavior.handleQueryTests = function () {
 
       var bobs = FactoryGuy.buildList('user',1);
       TestHelper.handleQuery('user', {name: 'Bob'}).returnsJSON(bobs);
-      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(function (users) {
+      FactoryGuy.get('store').query('user', {name: 'Bob'}).then(function (users) {
         equal(users.get('length'), 1);
         // makes the user after getting query response
-        equal(FactoryGuy.getStore().peekAll('user').get('content').length, 1);
+        equal(FactoryGuy.get('store').peekAll('user').get('content').length, 1);
         done();
       });
     });
@@ -360,11 +360,11 @@ SharedBehavior.handleQueryTests = function () {
       var bob = FactoryGuy.make('user');
 
       TestHelper.handleQuery('user', {name: 'Bob'}).returnsExistingIds([bob.id]);
-      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(function (users) {
+      FactoryGuy.get('store').query('user', {name: 'Bob'}).then(function (users) {
         equal(users.get('length'), 1);
         equal(users.get('firstObject') , bob);
         // does not create a new model
-        equal(FactoryGuy.getStore().peekAll('user').get('content').length, 1);
+        equal(FactoryGuy.get('store').peekAll('user').get('content').length, 1);
         done();
       });
     });
@@ -374,7 +374,7 @@ SharedBehavior.handleQueryTests = function () {
   test("query for none than create then query again", function (assert) {
     Ember.run(function () {
       var done = assert.async();
-      var store = FactoryGuy.getStore();
+      var store = FactoryGuy.get('store');
 
       var bobQueryHander = TestHelper.handleQuery('user', {name: 'Bob'});
 
@@ -403,14 +403,14 @@ SharedBehavior.handleQueryTests = function () {
       var users = FactoryGuy.makeList('user', 2, 'with_hats');
       TestHelper.handleQuery('user', {name: 'Bob'}).returnsModels(users);
 
-      equal(FactoryGuy.getStore().peekAll('user').get('content.length'), 2, 'start out with 2 instances');
+      equal(FactoryGuy.get('store').peekAll('user').get('content.length'), 2, 'start out with 2 instances');
 
-      FactoryGuy.getStore().query('user', {name: 'Bob'}).then(function (users) {
+      FactoryGuy.get('store').query('user', {name: 'Bob'}).then(function (users) {
         equal(users.get('length'), 2);
         equal(users.get('firstObject.name'), 'User1');
         equal(users.get('firstObject.hats.length'), 2);
         equal(users.get('lastObject.name'), 'User2');
-        equal(FactoryGuy.getStore().peekAll('user').get('content.length'), 2, 'no new instances created');
+        equal(FactoryGuy.get('store').peekAll('user').get('content.length'), 2, 'no new instances created');
         done();
       });
     });
@@ -423,15 +423,15 @@ SharedBehavior.handleQueryTests = function () {
       var users = FactoryGuy.makeList('company', 2, 'with_projects', 'with_profile');
       TestHelper.handleQuery('company', {name: 'Dude Company'}).returnsModels(users);
 
-      equal(FactoryGuy.getStore().peekAll('company').get('content.length'), 2, 'start out with 2 instances');
+      equal(FactoryGuy.get('store').peekAll('company').get('content.length'), 2, 'start out with 2 instances');
 
-      FactoryGuy.getStore().query('company', {name: 'Dude Company'}).then(function (companies) {
+      FactoryGuy.get('store').query('company', {name: 'Dude Company'}).then(function (companies) {
         equal(companies.get('length'), 2);
         ok(companies.get('firstObject.profile') instanceof Profile);
         equal(companies.get('firstObject.projects.length'), 2);
         ok(companies.get('lastObject.profile') instanceof Profile);
         equal(companies.get('lastObject.projects.length'), 2);
-        equal(FactoryGuy.getStore().peekAll('company').get('content.length'), 2, 'no new instances created');
+        equal(FactoryGuy.get('store').peekAll('company').get('content.length'), 2, 'no new instances created');
         done();
       });
     });
@@ -447,10 +447,10 @@ SharedBehavior.handleQueryTests = function () {
       var companies2 = FactoryGuy.makeList('company', 2);
       TestHelper.handleQuery('company', {type: 'Small'}).returnsModels(companies2);
 
-      FactoryGuy.getStore().query('company', {name: 'Dude'}).then(function (companies) {
+      FactoryGuy.get('store').query('company', {name: 'Dude'}).then(function (companies) {
         equal(companies.mapBy('id')+'', companies1.mapBy('id')+'');
 
-        FactoryGuy.getStore().query('company', {type: 'Small'}).then(function (companies) {
+        FactoryGuy.get('store').query('company', {type: 'Small'}).then(function (companies) {
           equal(companies.mapBy('id')+'', companies2.mapBy('id')+'');
           done();
         });
@@ -472,11 +472,11 @@ SharedBehavior.handleCreateTests = function () {
       TestHelper.handleCreate('profile', {
         match: {description: customDescription}
       });
-      ok(FactoryGuy.getStore().peekAll('profile').get('content.length') === 0);
-      FactoryGuy.getStore().createRecord('profile', {
+      ok(FactoryGuy.get('store').peekAll('profile').get('content.length') === 0);
+      FactoryGuy.get('store').createRecord('profile', {
         description: customDescription
       }).save().then(function (profile) {
-        ok(FactoryGuy.getStore().peekAll('profile').get('content.length') === 1, 'No extra records created');
+        ok(FactoryGuy.get('store').peekAll('profile').get('content.length') === 1, 'No extra records created');
         ok(profile instanceof Profile, 'Creates the correct type of record');
         ok(profile.get('description') === customDescription, 'Passes along the match attributes');
         done();
@@ -491,7 +491,7 @@ SharedBehavior.handleCreateTests = function () {
       var done = assert.async();
       TestHelper.handleCreate('profile');
 
-      FactoryGuy.getStore().createRecord('profile', {description: 'whatever'}).save().then(function (profile) {
+      FactoryGuy.get('store').createRecord('profile', {description: 'whatever'}).save().then(function (profile) {
         ok(profile.id === "1");
         ok(profile.get('description') === 'whatever');
         done();
@@ -507,7 +507,7 @@ SharedBehavior.handleCreateTests = function () {
       TestHelper.handleCreate('profile');
 
       var promises = [1, 2, 3].map(function () {
-        return FactoryGuy.getStore().createRecord('profile', {description: 'whatever'}).save();
+        return FactoryGuy.get('store').createRecord('profile', {description: 'whatever'}).save();
       });
 
       Ember.RSVP.all(promises).then(function (profiles) {
@@ -532,7 +532,7 @@ SharedBehavior.handleCreateTests = function () {
 
       TestHelper.handleCreate('profile', {match: {description: customDescription}});
 
-      FactoryGuy.getStore().createRecord('profile', {
+      FactoryGuy.get('store').createRecord('profile', {
         description: customDescription, created_at: date
       }).save().then(function (profile) {
         ok(profile instanceof Profile);
@@ -553,7 +553,7 @@ SharedBehavior.handleCreateTests = function () {
         match: {description: customDescription, created_at: date}
       });
 
-      FactoryGuy.getStore().createRecord('profile', {
+      FactoryGuy.get('store').createRecord('profile', {
         description: customDescription, created_at: date
       }).save().then(function (profile) {
         ok(profile instanceof Profile);
@@ -575,7 +575,7 @@ SharedBehavior.handleCreateTests = function () {
         returns: {created_at: date, description: 'mano'}
       });
 
-      FactoryGuy.getStore().createRecord('profile').save().then(function (profile) {
+      FactoryGuy.get('store').createRecord('profile').save().then(function (profile) {
         ok(profile.get("created_at") + '' === date + '');
         done();
       });
@@ -588,7 +588,7 @@ SharedBehavior.handleCreateTests = function () {
       var company = make('company');
       TestHelper.handleCreate('profile', {match: {company: company}});
 
-      FactoryGuy.getStore().createRecord('profile', {company: company}).save().then(function (profile) {
+      FactoryGuy.get('store').createRecord('profile', {company: company}).save().then(function (profile) {
         ok(profile.get('company') === company);
         done();
       });
@@ -601,7 +601,7 @@ SharedBehavior.handleCreateTests = function () {
       var group = make('group');
       TestHelper.handleCreate('profile', {match: {group: group}});
 
-      FactoryGuy.getStore().createRecord('profile', {group: group}).save().then(function (profile) {
+      FactoryGuy.get('store').createRecord('profile', {group: group}).save().then(function (profile) {
         ok(profile.get('group') === group);
         done();
       });
@@ -622,7 +622,7 @@ SharedBehavior.handleCreateTests = function () {
         returns: {created_at: new Date()}
       });
 
-      FactoryGuy.getStore().createRecord('profile', {
+      FactoryGuy.get('store').createRecord('profile', {
         description: customDescription, company: company, group: group
       }).save().then(function (profile) {
         ok(profile.get('created_at').toString() === date.toString());
@@ -640,7 +640,7 @@ SharedBehavior.handleCreateTests = function () {
       var done = assert.async();
       TestHelper.handleCreate('profile', {succeed: false});
 
-      FactoryGuy.getStore().createRecord('profile').save()
+      FactoryGuy.get('store').createRecord('profile').save()
         .then(
         function () {
         },
@@ -659,7 +659,7 @@ SharedBehavior.handleCreateTests = function () {
       var errors = {errors: {description: ['bad']}};
       TestHelper.handleCreate('profile').andFail({status: 422, response: errors});
 
-      var profile = FactoryGuy.getStore().createRecord('profile');
+      var profile = FactoryGuy.get('store').createRecord('profile');
       profile.save()
         .then(
         function () {
@@ -688,7 +688,7 @@ SharedBehavior.handleCreateTests = function () {
         match: {description: description}, succeed: false
       });
 
-      FactoryGuy.getStore().createRecord('profile', {description: description}).save()
+      FactoryGuy.get('store').createRecord('profile', {description: description}).save()
         .then(
         function () {
         },
@@ -706,7 +706,7 @@ SharedBehavior.handleCreateTests = function () {
 
       TestHelper.handleCreate('profile', {match: {description: 'correct description'}});
 
-      FactoryGuy.getStore().createRecord('profile', {description: 'wrong description'}).save().then(
+      FactoryGuy.get('store').createRecord('profile', {description: 'wrong description'}).save().then(
         function () {
         },
         function () {
@@ -728,7 +728,7 @@ SharedBehavior.handleCreateTests = function () {
 
       TestHelper.handleCreate('profile').match({description: customDescription});
 
-      FactoryGuy.getStore().createRecord('profile', {
+      FactoryGuy.get('store').createRecord('profile', {
         description: customDescription, created_at: date
       }).save().then(function (profile) {
         ok(profile instanceof Profile);
@@ -747,7 +747,7 @@ SharedBehavior.handleCreateTests = function () {
 
       TestHelper.handleCreate('profile').match({description: customDescription, created_at: date});
 
-      FactoryGuy.getStore().createRecord('profile', {
+      FactoryGuy.get('store').createRecord('profile', {
         description: customDescription, created_at: date
       }).save().then(function (profile) {
         ok(profile instanceof Profile);
@@ -766,7 +766,7 @@ SharedBehavior.handleCreateTests = function () {
 
       TestHelper.handleCreate('profile').match({company: company});
 
-      FactoryGuy.getStore().createRecord('profile', {company: company}).save().then(function (profile) {
+      FactoryGuy.get('store').createRecord('profile', {company: company}).save().then(function (profile) {
         ok(profile.get('company') === company);
         done();
       });
@@ -779,7 +779,7 @@ SharedBehavior.handleCreateTests = function () {
       var group = make('group');
       TestHelper.handleCreate('profile').match({group: group});
 
-      FactoryGuy.getStore().createRecord('profile', {group: group}).save().then(function (profile) {
+      FactoryGuy.get('store').createRecord('profile', {group: group}).save().then(function (profile) {
         ok(profile.get('group') === group);
         done();
       });
@@ -794,7 +794,7 @@ SharedBehavior.handleCreateTests = function () {
 
       TestHelper.handleCreate('profile').andReturn({created_at: date});
 
-      FactoryGuy.getStore().createRecord('profile').save().then(function (profile) {
+      FactoryGuy.get('store').createRecord('profile').save().then(function (profile) {
         ok(profile.get('created_at').toString() === date.toString());
         done();
       });
@@ -809,7 +809,7 @@ SharedBehavior.handleCreateTests = function () {
 
       TestHelper.handleCreate('profile').andReturn({id: id});
 
-      FactoryGuy.getStore().createRecord('profile').save().then(function (profile) {
+      FactoryGuy.get('store').createRecord('profile').save().then(function (profile) {
         assert.equal(profile.get('id'), id);
         done();
       });
@@ -829,7 +829,7 @@ SharedBehavior.handleCreateTests = function () {
         .match({description: customDescription, company: company, group: group})
         .andReturn({created_at: new Date()});
 
-      FactoryGuy.getStore().createRecord('profile', {
+      FactoryGuy.get('store').createRecord('profile', {
         description: customDescription, company: company, group: group
       }).save().then(function (profile) {
         ok(profile.get('created_at').toString() === date.toString());
@@ -847,7 +847,7 @@ SharedBehavior.handleCreateTests = function () {
       var done = assert.async();
       TestHelper.handleCreate('profile').andFail();
 
-      FactoryGuy.getStore().createRecord('profile').save()
+      FactoryGuy.get('store').createRecord('profile').save()
         .then(
         function () {
         },
@@ -867,7 +867,7 @@ SharedBehavior.handleCreateTests = function () {
 
       TestHelper.handleCreate('profile').match({description: description}).andFail();
 
-      FactoryGuy.getStore().createRecord('profile', {description: description}).save()
+      FactoryGuy.get('store').createRecord('profile', {description: description}).save()
         .then(
         function () {
         },
@@ -886,7 +886,7 @@ SharedBehavior.handleCreateTests = function () {
       var errors = {errors: {description: ['bad']}};
       TestHelper.handleCreate('profile').andFail({status: 422, response: errors});
 
-      var profile = FactoryGuy.getStore().createRecord('profile');
+      var profile = FactoryGuy.get('store').createRecord('profile');
       profile.save()
         .then(
         function () {
@@ -1143,7 +1143,7 @@ SharedBehavior.handleDeleteTests = function () {
       TestHelper.handleDelete('profile', profile.id);
 
       profile.destroyRecord().then(function () {
-        equal(FactoryGuy.getStore().peekAll('profile').get('content.length'), 0);
+        equal(FactoryGuy.get('store').peekAll('profile').get('content.length'), 0);
         done();
       });
     });
