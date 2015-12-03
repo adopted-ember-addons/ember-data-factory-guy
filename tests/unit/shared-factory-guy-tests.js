@@ -17,7 +17,7 @@ SharedBehavior.makeTests = function () {
     var user = make('user');
     ok(user instanceof User);
 
-    var storeUser = FactoryGuy.getStore().peekRecord('user', user.id);
+    var storeUser = FactoryGuy.get('store').peekRecord('user', user.id);
     ok(storeUser === user);
   });
 
@@ -83,7 +83,7 @@ SharedBehavior.makeTests = function () {
     //  ]
     //}
     //Ember.run(function () {
-    //  var profile = FactoryGuy.getStore().push(data);
+    //  var profile = FactoryGuy.get('store').push(data);
     //  console.log(profile.get('camelCaseDescription'))
     //})
     ok(project.get('user') === user);
@@ -327,7 +327,7 @@ SharedBehavior.makeListTests = function () {
     equal(users.length, 2);
     ok(users[0] instanceof User);
     ok(users[1] instanceof User);
-    equal(FactoryGuy.getStore().peekAll('user').get('content').length, 2);
+    equal(FactoryGuy.get('store').peekAll('user').get('content').length, 2);
   });
 
   test("handles trait arguments", function () {

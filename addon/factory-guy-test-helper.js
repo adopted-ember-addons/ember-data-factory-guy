@@ -26,7 +26,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     controller.set(property, value);
   },
   getStore: function () {
-    return this.get('container').lookup('service:store');
+    return FactoryGuy.get('store');
   },
   /**
    Using mockjax to stub an http request.

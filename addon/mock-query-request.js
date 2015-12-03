@@ -30,7 +30,7 @@ var MockQueryRequest = function (url, modelName, queryParams) {
   };
 
   this.returnsExistingIds = function (ids) {
-    var store = FactoryGuy.getStore();
+    var store = FactoryGuy.get('store');
     var models = ids.map( function(id) { return store.peekRecord(modelName,id); });
     this.returnsModels(models);
     return this;

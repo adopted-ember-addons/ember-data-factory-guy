@@ -13,7 +13,7 @@ import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 module('FactoryGuy', inlineSetup(App, '-json-api'));
 
 test("has store set in initializer", function () {
-  ok(FactoryGuy.getStore() instanceof DS.Store);
+  ok(FactoryGuy.get('store') instanceof DS.Store);
 });
 
 test("#make returns a model instance", function (assert) {
@@ -30,7 +30,7 @@ test("#makeList returns an array of model instances", function () {
   equal(users.length, 2);
   ok(users[0] instanceof User);
   ok(users[1] instanceof User);
-  equal(FactoryGuy.getStore().peekAll('user').get('content').length, 2);
+  equal(FactoryGuy.get('store').peekAll('user').get('content').length, 2);
 });
 
 test("exposes makeList method which is shortcut for FactoryGuy.makeList", function () {
@@ -38,7 +38,7 @@ test("exposes makeList method which is shortcut for FactoryGuy.makeList", functi
   equal(users.length, 2);
   ok(users[0] instanceof User);
   ok(users[1] instanceof User);
-  equal(FactoryGuy.getStore().peekAll('user').get('content').length, 2);
+  equal(FactoryGuy.get('store').peekAll('user').get('content').length, 2);
 });
 
 test("exposes build method which is shortcut for FactoryGuy.build", function () {
@@ -55,7 +55,7 @@ test("exposes clearStore method which is a shortcut for FactoryGuy.clearStore", 
   Ember.run(function () {
     makeList('user', 2);
     clearStore();
-    equal(FactoryGuy.getStore().peekAll('user').get('content').length, 0);
+    equal(FactoryGuy.get('store').peekAll('user').get('content').length, 0);
   });
 });
 
@@ -73,8 +73,8 @@ test("#clearStore clears the store of models, and resets the model definition", 
 
     FactoryGuy.clearStore();
 
-    equal(FactoryGuy.getStore().peekAll('user').get('content.length'), 0);
-    equal(FactoryGuy.getStore().peekAll('project').get('content.length'), 0);
+    equal(FactoryGuy.get('store').peekAll('user').get('content.length'), 0);
+    equal(FactoryGuy.get('store').peekAll('project').get('content.length'), 0);
 
     for (model in FactoryGuy.modelDefinitions) {
       definition = FactoryGuy.modelDefinitions[model];

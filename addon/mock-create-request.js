@@ -9,7 +9,7 @@ var MockCreateRequest = function (url, modelName, options) {
   var returnArgs = options.returns;
   var responseJson = {};
   var expectedRequest = {};
-  var store = FactoryGuy.getStore();
+  var store = FactoryGuy.get('store');
 
   this.calculate = function () {
     if (matchArgs) {

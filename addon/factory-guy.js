@@ -135,16 +135,6 @@ var FactoryGuy =  Ember.Object.extend({
   useJSONAPI() {
     return this.get('fixtureBuilderFactory').useJSONAPI();
   },
-  /**
-   Setting the store so FactoryGuy can do some model introspection.
-   Also setting the correct fixtureBuilderFactory and fixtureBuilder.
-
-   The method has been kept for backward compatibility
-   Use `instance.set('store', aStore)` instead.
-   */
-  setStore(aStore) {
-    return this.set('store', aStore);
-  },
 
   /**
    The method has been kept for backward compatibility

@@ -245,7 +245,7 @@ Example:
       ]
     }
   
-  var store = FactoryGuy.getStore();
+  var store = FactoryGuy.get('store');
   
   store.pushPayload(json);
   
@@ -891,7 +891,7 @@ you must wait on the request for those records to resolve before they will be lo
    
    ```js
    
-     var store = FactoryGuy.getStore();
+     var store = FactoryGuy.get('store');
 
      var bobQueryHander = TestHelper.handleQuery('user', {name: 'Bob'});
 
