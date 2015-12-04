@@ -25,9 +25,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     var controller = this.controllerFor(controller_name);
     controller.set(property, value);
   },
-  getStore: function () {
-    return FactoryGuy.get('store');
-  },
+
   /**
    Using mockjax to stub an http request.
 
@@ -61,7 +59,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @return {String} url
    */
   buildURL: function (modelName, id) {
-    var adapter = this.getStore().adapterFor(modelName);
+    var adapter = FactoryGuy.get('store').adapterFor(modelName);
     return adapter.buildURL(modelName, id);
   },
   /**
@@ -282,7 +280,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
   handleCreate: function (modelName, options) {
     var url = this.buildURL(modelName);
     var opts = options === undefined ? {} : options;
-    
+
     return new MockCreateRequest(url, modelName, opts);
   },
 
@@ -316,7 +314,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     }
 
     var model, type, id;
-    var store = this.getStore();
+    var store = FactoryGuy.get('store');
 
     if (args[0] instanceof DS.Model) {
       model = args[0];
