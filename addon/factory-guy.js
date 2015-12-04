@@ -138,14 +138,6 @@ var FactoryGuy =  Ember.Object.extend({
 
   /**
    The method has been kept for backward compatibility
-   Use `instance.get('store')` instead.
-   */
-  getStore() {
-    return this.get('store');
-  },
-
-  /**
-   The method has been kept for backward compatibility
    Use `instance.get('fixtureBuilder')` instead.
    */
   getFixtureBuilder() {
