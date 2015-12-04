@@ -129,12 +129,6 @@ var FactoryGuy =  Ember.Object.extend({
   findModelDefinition(model) {
     return modelDefinitions[model];
   },
-  /*
-   Using JSONAPI style data?
-  */
-  useJSONAPI() {
-    return this.get('fixtureBuilderFactory').useJSONAPI();
-  },
 
   /**
    The method has been kept for backward compatibility

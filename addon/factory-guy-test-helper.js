@@ -120,7 +120,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     var json = FactoryGuy.build.apply(FactoryGuy, arguments);
     var id;
 
-    if (FactoryGuy.useJSONAPI()) {
+    if (FactoryGuy.get('fixtureBuilderFactory').useJSONAPI()) {
       id = json.data.id;
     } else {
       id = json[modelName].id;
