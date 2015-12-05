@@ -69,22 +69,16 @@ var FactoryGuy =  Ember.Object.extend({
       return aStore;
     }
   }),
-  fixtureBuilderFactory: Ember.computed('store', {
-    get() {
-      const store = this.get('store');
-      return FixtureBuilderFactory.create({ store });
-    }
+  fixtureBuilderFactory: Ember.computed('store', function() {
+    const store = this.get('store');
+    return FixtureBuilderFactory.create({ store });
   }),
-  fixtureBuilder: Ember.computed('fixtureBuilderFactory', {
-    get() {
-      const factory = this.get('fixtureBuilderFactory');
-      return factory.get('fixtureBuilder');
-    }
+  fixtureBuilder: Ember.computed('fixtureBuilderFactory', function() {
+    const factory = this.get('fixtureBuilderFactory');
+    return factory.get('fixtureBuilder');
   }),
-  updateHTTPMethod: Ember.computed('fixtureBuilder', {
-    get() {
-      return this.getWithDefault('fixtureBuilder.updateHTTPMethod', 'PUT');
-    }
+  updateHTTPMethod: Ember.computed('fixtureBuilder', function() {
+    return this.getWithDefault('fixtureBuilder.updateHTTPMethod', 'PUT');
   }),
   /**
    ```javascript
