@@ -1,7 +1,22 @@
 import $ from 'jquery';
 import FactoryGuy from './factory-guy';
 
-var MockUpdateRequest = function(url, model, mapFind, options) {
+/**
+ Map single object to response json.
+
+ Allows custom serializing mappings and meta data to be added to requests.
+
+ @param {String} modelName model name
+ @param {Object} json Json object from record.toJSON
+ @return {Object} responseJson
+ */
+function mapFind(modelName, json) {
+  var responseJson = {};
+  responseJson[modelName] = json;
+  return responseJson;
+}
+
+var MockUpdateRequest = function(url, model, options) {
   var status = options.status || 200;
   var succeed = true;
   var response = null;

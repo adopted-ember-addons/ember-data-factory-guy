@@ -63,34 +63,6 @@ var FactoryGuyTestHelper = Ember.Object.create({
     return adapter.buildURL(modelName, id);
   },
   /**
-   Map many json objects to response json.
-
-   Allows custom serializing mappings and meta data to be added to requests.
-
-   @param {String} modelName model name
-   @param {Object} json Json objects from records.map
-   @return {Object} responseJson
-   */
-  mapFindAll: function (modelName, json) {
-    var responseJson = {};
-    responseJson[Ember.String.pluralize(modelName)] = json;
-    return responseJson;
-  },
-  /**
-   Map single object to response json.
-
-   Allows custom serializing mappings and meta data to be added to requests.
-
-   @param {String} modelName model name
-   @param {Object} json Json object from record.toJSON
-   @return {Object} responseJson
-   */
-  mapFind: function (modelName, json) {
-    var responseJson = {};
-    responseJson[modelName] = json;
-    return responseJson;
-  },
-  /**
    Handling ajax GET for handling finding a model
    You can mock failed find by calling andFail
 
@@ -328,7 +300,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     Ember.assert("To handleUpdate pass in a model instance or a model type name and an id", type && id);
 
     var url = this.buildURL(type, id);
-    return new MockUpdateRequest(url, model, this.mapFind, options);
+    return new MockUpdateRequest(url, model, options);
   },
   /**
    Handling ajax DELETE ( delete record ) for a model type. You can mock
