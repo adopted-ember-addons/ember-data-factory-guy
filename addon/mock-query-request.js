@@ -2,11 +2,36 @@ import Ember from 'ember';
 import FactoryGuy from './factory-guy';
 import $ from 'jquery';
 
+// compare to object for loose equality
+function isEquivalent(a, b) {
+  var aProps = Object.keys(a);
+  var bProps = Object.keys(b);
+
+  if (aProps.length !== bProps.length) {
+    return false;
+  }
+
+  for (var i = 0; i < aProps.length; i++) {
+    var propName = aProps[i];
+
+    if (a[propName] !== b[propName]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 var MockQueryRequest = function (url, modelName, queryParams) {
   var succeed = true;
   var status = 200;
   var responseJson = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, []);
   var errors = {};
+  this.queryParams = queryParams;
+
+  this.withParams = function (queryParams) {
+    this.queryParams = queryParams;
+    return this;
+  };
 
   this.returnsModels = function (models) {
     if (models) {
@@ -31,7 +56,9 @@ var MockQueryRequest = function (url, modelName, queryParams) {
 
   this.returnsExistingIds = function (ids) {
     var store = FactoryGuy.get('store');
-    var models = ids.map( function(id) { return store.peekRecord(modelName,id); });
+    var models = ids.map(function (id) {
+      return store.peekRecord(modelName, id);
+    });
     this.returnsModels(models);
     return this;
   };
@@ -47,31 +74,24 @@ var MockQueryRequest = function (url, modelName, queryParams) {
     return this;
   };
 
-
-  this.handler = function(settings) {
-    if (succeed) {
-      if (queryParams) {
-        if (JSON.stringify(queryParams) !== JSON.stringify(settings.data)) {
-          return false;
+  var handler = function (settings) {
+    if (settings.url === url && settings.type === "GET") {
+      if (succeed) {
+        if (this.queryParams) {
+          if (!isEquivalent(this.queryParams, settings.data)) {
+            return false;
+          }
         }
+        return {status: 200, responseText: responseJson};
+      } else {
+        return {status: status, responseText: errors};
       }
-      this.status = 200;
-      this.responseText = responseJson;
     } else {
-      this.status = status;
-      this.responseText = errors;
+      return false;
     }
   };
 
-  var requestConfig = {
-    url: url,
-    dataType: 'json',
-    type: 'GET',
-    data: queryParams,
-    response: this.handler
-  };
-
-  $.mockjax(requestConfig);
+  $.mockjax(handler.bind(this));
 };
 
 export default MockQueryRequest;

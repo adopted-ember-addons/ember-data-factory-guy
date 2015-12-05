@@ -457,6 +457,57 @@ SharedBehavior.handleQueryTests = function () {
       });
     });
   });
+
+
+  test("using different query params returns same results", function (assert) {
+     Ember.run(function () {
+       var done = assert.async();
+       var expectedAssertions = 2;
+
+       function finalizeTest() {
+         --expectedAssertions;
+         if(expectedAssertions === 0) { done(); }
+       }
+
+       var companies = FactoryGuy.makeList('company', 2);
+
+       TestHelper.handleQuery('company', {name: 'Dude'}).returnsModels(companies);
+       TestHelper.handleQuery('company', {type: 'Small', name: 'Dude'}).returnsModels(companies);
+
+       var request1 = FactoryGuy.get('store').query('company', { name: 'Dude' });
+       var request2 = FactoryGuy.get('store').query('company', {type: 'Small', name: 'Dude'});
+
+       request1.then(function (returnedCompanies) {
+         equal(companies.mapBy('id')+'', returnedCompanies.mapBy('id')+'');
+         finalizeTest();
+       });
+
+       request2.then(function (returnedCompanies) {
+         equal(companies.mapBy('id')+'', returnedCompanies.mapBy('id')+'');
+         finalizeTest();
+       });
+     });
+   });
+
+  test("changing query params with withParams returns different results", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+
+      var companies1 = FactoryGuy.makeList('company', 2);
+      var companies2 = FactoryGuy.makeList('company', 2);
+
+      var queryHandler = TestHelper.handleQuery('company', {name: 'Dude'}).returnsModels(companies1);
+      FactoryGuy.get('store').query('company', {name: 'Dude'}).then(function (companies) {
+        equal(companies.mapBy('id')+'', companies1.mapBy('id')+'');
+
+        queryHandler.withParams({type: 'Small'}).returnsModels(companies2);
+        FactoryGuy.get('store').query('company', {type: 'Small'}).then(function (companies) {
+          equal(companies.mapBy('id')+'', companies2.mapBy('id')+'');
+          done();
+        });
+      });
+    });
+  });
 };
 
 
