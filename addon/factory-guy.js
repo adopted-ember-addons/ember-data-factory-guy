@@ -81,6 +81,11 @@ var FactoryGuy =  Ember.Object.extend({
       return factory.get('fixtureBuilder');
     }
   }),
+  updateHTTPMethod: Ember.computed('fixtureBuilder', {
+    get() {
+      return this.getWithDefault('fixtureBuilder.updateHTTPMethod', 'PUT');
+    }
+  }),
   /**
    ```javascript
 
@@ -128,12 +133,6 @@ var FactoryGuy =  Ember.Object.extend({
    */
   findModelDefinition(model) {
     return modelDefinitions[model];
-  },
-  /*
-   Using JSONAPI style data?
-  */
-  useJSONAPI() {
-    return this.get('fixtureBuilderFactory').useJSONAPI();
   },
 
   /**

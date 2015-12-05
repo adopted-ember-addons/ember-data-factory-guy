@@ -1,9 +1,9 @@
 import $ from 'jquery';
 import FactoryGuy from './factory-guy';
 
-var MockUpdateRequest = function(url, model, mapFind, options) {
-	var status = options.status || 200;
-	var succeed = true;
+var MockUpdateRequest = function(url, model, options) {
+  var status = options.status || 200;
+  var succeed = true;
   var response = null;
 
   if ('succeed' in options) {
@@ -14,43 +14,42 @@ var MockUpdateRequest = function(url, model, mapFind, options) {
     response = options.response;
   }
 
-	this.andSucceed = function(options) {
+  this.andSucceed = function(options) {
     succeed = true;
     status = options && options.status || 200;
-		return this;
-	};
+    return this;
+  };
 
-	this.andFail = function(options) {
-		succeed = false;
-		status = options.status || 500;
+  this.andFail = function(options) {
+    succeed = false;
+    status = options.status || 500;
     if ('response' in options) {
       response = options.response;
     }
-		return this;
-	};
+    return this;
+  };
 
-	this.handler = function() {
-		if (!succeed) {
-			this.status = status;
+  this.handler = function() {
+    if (!succeed) {
+      this.status = status;
       if (response !== null) {
         this.responseText = response;
       }
-		} else {
+    } else {
       // need to use serialize instead of toJSON to handle polymorphic belongsTo
       var json = model.serialize({includeId: true});
-      this.responseText = FactoryGuy.useJSONAPI() ? json : mapFind(model.constructor.modelName, json);
+      this.responseText = FactoryGuy.get('fixtureBuilder').normalize(model.constructor.modelName, json);
       this.status = 200;
-		}
-	};
-	var requestType = FactoryGuy.useJSONAPI() ? 'PATCH' : 'PUT';
-	var requestConfig = {
-		url: url,
-		dataType: 'json',
-		type: requestType,
-		response: this.handler
-	};
+    }
+  };
+  var requestConfig = {
+    url: url,
+    dataType: 'json',
+    type: FactoryGuy.get('updateHTTPMethod'),
+    response: this.handler
+  };
 
-	$.mockjax(requestConfig);
+  $.mockjax(requestConfig);
 };
 
 export default MockUpdateRequest;

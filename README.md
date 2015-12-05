@@ -1,4 +1,4 @@
-# Ember Data Factory Guy  
+# Ember Data Factory Guy
 
 [![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy) [![Ember Observer Score](http://emberobserver.com/badges/ember-data-factory-guy.svg)](http://emberobserver.com/addons/ember-data-factory-guy) [![npm version](https://badge.fury.io/js/ember-data-factory-guy.svg)](http://badge.fury.io/js/ember-data-factory-guy)
 
@@ -6,13 +6,13 @@ Feel the thrill and enjoyment of testing when using Factories instead of Fixture
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
 
-Contents: 
+Contents:
   - [Installation](https://github.com/danielspaniel/ember-data-factory-guy#installation)
   - [How This Works](https://github.com/danielspaniel/ember-data-factory-guy#how-this-works)
   - [Setup](https://github.com/danielspaniel/ember-data-factory-guy#setup)
   - [Defining Factories](https://github.com/danielspaniel/ember-data-factory-guy#defining-factories)
   - [Using Factories](https://github.com/danielspaniel/ember-data-factory-guy#using-factories)
-  - [Formatting the payloads](https://github.com/danielspaniel/ember-data-factory-guy#formatting-the-payloads)
+  - [Custom API formats](https://github.com/danielspaniel/ember-data-factory-guy#custom-api-formats)
   - [Sequences](https://github.com/danielspaniel/ember-data-factory-guy#sequences)
   - [Inline Function](https://github.com/danielspaniel/ember-data-factory-guy#inline-functions)
   - [Traits](https://github.com/danielspaniel/ember-data-factory-guy#traits)
@@ -25,22 +25,22 @@ Contents:
 
 ChangeLog: ( Notes about what has changed in each version )
   - [Release Notes](https://github.com/danielspaniel/ember-data-factory-guy/releases)
-  
+
 ### Installation
 
-**NOTES:** 
-  
-  *- If using ember 1.12+, make sure you have ember-cli/ember-load-initializers#0.1.4 in bower.json*  
+**NOTES:**
+
+  *- If using ember 1.12+, make sure you have ember-cli/ember-load-initializers#0.1.4 in bower.json*
   *- Do not use ember-data-factory-guy with ember-data-1.0.0-beta.19.2*
 
 
 ##### Never used ember-data-factory-guy before
-  
- - ```ember install ember-data-factory-guy@2.1.2``` ( ember-data-1.13.5+ ) 
- - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + ) 
- - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 ) 
+
+ - ```ember install ember-data-factory-guy@2.1.2``` ( ember-data-1.13.5+ )
+ - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + )
+ - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 )
  - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )
-   
+
 
 ##### Have a previous installation ( updating to new version )
 
@@ -49,7 +49,7 @@ Clear npm:
  - ```npm prune ```
 
 then:
-   
+
  - Follow ["Never used ember-data-factory-guy before"](https://github.com/danielspaniel/ember-data-factory-guy#never-used-ember-data-factory-guy-before) instructions
  - Move existing factories to tests/factories directory
 
@@ -91,21 +91,21 @@ In the following examples, assume the models look like this:
 ### Defining Factories
  - A factory has a name and a set of attributes.
  - The name should match the model type name. So, for 'User' model, the name would be 'user'
- - Create factory files in the tests/factories directory. 
- - Can use generator to create the outline of a factory file: 
-  ```ember g factory user``` This will create a file named user.js in the tests/factories directory. 
+ - Create factory files in the tests/factories directory.
+ - Can use generator to create the outline of a factory file:
+  ```ember g factory user``` This will create a file named user.js in the tests/factories directory.
 
-  
+
 
 ##### Standard models
 
 - [Sample full blown factory: (user.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js)
 
 ```javascript
-  
+
   // file tests/factories/user.js
   import FactoryGuy from 'ember-data-factory-guy';
-  
+
   FactoryGuy.define('user', {
     // Put default 'user' attributes in the default section
     default: {
@@ -126,22 +126,22 @@ In the following examples, assume the models look like this:
 
  - Define each polymorphic model in it's own typed definition
  - May want to extend parent factory here
-   - See [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions) 
+   - See [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
 
 ```javascript
-  
+
   // file tests/factories/small-hat.js
   import FactoryGuy from 'ember-data-factory-guy';
-  
+
   FactoryGuy.define('small-hat', {
     default: {
       type: 'SmallHat'
     }
   })
-  
+
   // file tests/factories/big-hat.js
   import FactoryGuy from 'ember-data-factory-guy';
-  
+
   FactoryGuy.define('big-hat', {
     default: {
       type: 'BigHat'
@@ -153,7 +153,7 @@ In the following examples, assume the models look like this:
 In other words, don't do this:
 
 ```javascript
-  // file tests/factories/hat.js  
+  // file tests/factories/hat.js
   import FactoryGuy from 'ember-data-factory-guy';
 
   FactoryGuy.define('hat', {
@@ -171,11 +171,11 @@ In other words, don't do this:
 
 ### Using Factories
 
- - FactoryGuy.make 
+ - FactoryGuy.make
    - Loads model instance into the store
- - FactoryGuy.build 
+ - FactoryGuy.build
    - Builds json in accordance with the adapters specifications
-     - [RESTAdapter](http://guides.emberjs.com/v2.0.0/models/the-rest-adapter/#toc_json-conventions)  (*assume this adapter being used in most of the following examples*)   
+     - [RESTAdapter](http://guides.emberjs.com/v2.0.0/models/the-rest-adapter/#toc_json-conventions)  (*assume this adapter being used in most of the following examples*)
      - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
      - [JSONAPIAdapter](http://jsonapi.org/format/)
  - Can override default attributes by passing in a hash
@@ -184,7 +184,7 @@ In other words, don't do this:
 ```javascript
 
   import FactoryGuy, { make, build } from 'ember-data-factory-guy';
-  
+
   // returns json
   var json = FactoryGuy.build('user');
   json.user // => {id: 1, name: 'Dude', style: 'normal'}
@@ -211,22 +211,22 @@ You can override the default attributes by passing in a hash
 ```
 
 ##### Build vs. Make
-  
-Most of the time you will make models with FactoryGuy.make, which creates models ( and/or their relationships ) 
+
+Most of the time you will make models with FactoryGuy.make, which creates models ( and/or their relationships )
 in the store.
 <br>
-But you can also take the json from FactoryGuy.build and put it into the store yourself with the store's pushPayload 
-method, since the json will have the primary model's data and all sideloaded relationships properly prepared. 
+But you can also take the json from FactoryGuy.build and put it into the store yourself with the store's pushPayload
+method, since the json will have the primary model's data and all sideloaded relationships properly prepared.
 
-Example: 
-   
-<sub>Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters</sub>  
+Example:
+
+<sub>Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters</sub>
 
 ```javascript
-  
+
   var json = FactoryGuy.build('user', 'with_company', 'with_hats');
-  json // =>  
-    { 
+  json // =>
+    {
       user: {
         id: 1,
         name: 'User1',
@@ -237,29 +237,34 @@ Example:
         ]
       },
       companies: [
-        {id: 1, name: 'Silly corp'} 
+        {id: 1, name: 'Silly corp'}
       ],
       'big-hats': [
         {id: 1, type: "BigHat" },
         {id: 2, type: "BigHat" }
       ]
     }
-  
+
   var store = FactoryGuy.get('store');
-  
+
   store.pushPayload(json);
-  
+
   var user = store.peekRecord('user', 1);
-  user.get('name') // => 'User1' 
-  user.get('company.name') // => Silly Corp  
-  user.get('hats.length') // => 2  
-```  
+  user.get('name') // => 'User1'
+  user.get('company.name') // => Silly Corp
+  user.get('hats.length') // => 2
+```
 
-### Formatting the payloads
+### Custom API formats
 
-If the JSON generated by `build` does not fit the format that the
-serializers of your application expect, you can always build a custom
-formatter.
+FactoryGuy handles JSON-API and RESTSerializer out of the box.
+In case your API doesn't follow either of these conventions, you can
+still build a custom formatter.
+
+Currently, a custom formatter __must__ implement the following interface:
+
+* `extractId(modelName, payload)`: Tells FactoryGuy where to find the ID of your payload
+* `convertForBuild(modelName, payload)`: Transforms a fixture into a JSON payload compatible with your API
 
 ```javascript
 // tests/acceptance/my_test.js
@@ -268,7 +273,9 @@ import Ember from 'ember';
 import FactoryGuy from 'ember-data-factory-guy/factory-guy';
 
 const builderClass = Ember.Object.extend({
-  // This method will be called to format the data returned by `build`
+  extractId(modelName, payload) {
+    return payload.id;
+  },
   convertForBuild(/* type, payload */) {
     return { convert: 'build' };
   }
@@ -554,14 +561,14 @@ the reverse 'user' belongsTo association is being setup for you on the project
     - traits
     - default attributes
   - Inheritance is fine grained, so in each section, any attribute that is local
-    will take precedence over an inherited one. So you can override some 
+    will take precedence over an inherited one. So you can override some
     attributes in the default section ( for example ), and inherit the rest
-  
-  - [Sample Factory using inheritance (big-group.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/big-group.js)  
-  
+
+  - [Sample Factory using inheritance (big-group.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/big-group.js)
+
 ### Callbacks
  - afterMake
-  - Uses transient attributes 
+  - Uses transient attributes
 
 Assuming the factory-guy model definition defines afterMake function:
 
@@ -570,12 +577,12 @@ Assuming the factory-guy model definition defines afterMake function:
     default: {
       name: 'Silly property'
     },
-    
+
     // optionally set transient attributes, that will be passed in to afterMake function
     transient: {
       for_sale: true
     },
-    
+
     // The attributes passed to after make will include any optional attributes you
     // passed in to make, and the transient attributes defined in this definition
     afterMake: function(model, attributes) {
@@ -587,7 +594,7 @@ Assuming the factory-guy model definition defines afterMake function:
 ```
 
 You would use this to make models like:
-  
+
 ```javascript
   Ember.run(function () {
 
@@ -599,48 +606,48 @@ You would use this to make models like:
   });
 
 ```
-                   
+
 ### Testing - Creating Scenarios
 - Easy to create complex scenarios involving multi layered relationships.
   - Can use model instances to create relationships for making other models.
 
-Example: 
- 
-  - Setup a scenario where a user has two projects and belongs to a company 
+Example:
 
-```javascript 
+  - Setup a scenario where a user has two projects and belongs to a company
+
+```javascript
    var company = make('company');
    var user = make('user', {company: company});
    var projects = makeList('project', 2, {user: user});
 ```
 
-*You can use traits to help create the relationships as well, but this strategy allows you to 
-build up complex scenarios in a different way that has it's own benefits.*   
+*You can use traits to help create the relationships as well, but this strategy allows you to
+build up complex scenarios in a different way that has it's own benefits.*
 
 
 ### Testing models, controllers, components
 
 - Testing the models, controllers and components
   - FactoryGuy needs the application to startup in order to load the factories, and setup the store.
-  - That is why all the tests import startApp function from 'tests/helpers/start-app.js' 
+  - That is why all the tests import startApp function from 'tests/helpers/start-app.js'
     ( a file provided to you by ember cli )
-- [Sample model test (profile-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js) 
+- [Sample model test (profile-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
   - Avoid using moduleForModel ( ember-qunit ), or describeModel ( ember-mocha ) test helper.
   - Don't need to startApp() to get new application
 - [Sample component test (dude-translator-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/dude-translator-test.js)
-  - Using 'moduleForComponent' because in it is easier in this case to get the component and render it with this 
+  - Using 'moduleForComponent' because in it is easier in this case to get the component and render it with this
     helper
   - Need to start a new application with startApp() before each test.
 
-**Note** 
-  
- *In the following model test, it's not necessary or helpful to use the ember-qunit moduleForModel
-  helper, since the premise for that helper is to setup an isolated container with the minimal 
-  requirements ( that model ) loaded. So, if you have many relationships, it's tedious to "needs: []" them all,
-  to get them imported. Furthermore you don't want a model handed to you, you want to make your own, 
-  which is the whole point of factory guy.* 
+**Note**
 
- 
+ *In the following model test, it's not necessary or helpful to use the ember-qunit moduleForModel
+  helper, since the premise for that helper is to setup an isolated container with the minimal
+  requirements ( that model ) loaded. So, if you have many relationships, it's tedious to "needs: []" them all,
+  to get them imported. Furthermore you don't want a model handed to you, you want to make your own,
+  which is the whole point of factory guy.*
+
+
 ```javascript
 
 // file: tests/unit/models/profile-test.js
@@ -696,23 +703,23 @@ and this javascript library is already bundled for you when you install ember-da
 ##### handleFind
   - For dealing with finding one record of a particular type
   - Can pass in arguments just like you would for make or build
-  
-If when visiting a route, some part of your application ( like router, or 
-controller action ) is going to make a call to the store to find a records of 
-a particular type:  
-   
+
+If when visiting a route, some part of your application ( like router, or
+controller action ) is going to make a call to the store to find a records of
+a particular type:
+
 ```javascript
-  store.find('user', userId) // fires ajax request for user with id userId 
+  store.find('user', userId) // fires ajax request for user with id userId
 ```
 
-An acceptance test ( to stub that ajax call and return factory guy data ) 
+An acceptance test ( to stub that ajax call and return factory guy data )
 will look like this:
-   
+
 ```javascript
-  // can use traits and extra fixture options here as you would with FactoryGuy#make    
+  // can use traits and extra fixture options here as you would with FactoryGuy#make
   var userId = TestHelper.handleFind('user');
   visit('/users/'+userId);
-  
+
   andThen(function () {
     var user = find('li.user');
     ok(user.length === 1);
@@ -722,39 +729,39 @@ will look like this:
 *Note that you could also have done this:*
 
 ```javascript
-  // can just make the model before you visit route    
+  // can just make the model before you visit route
   var user = make('user');
   visit('/users/'+user.id);
-  
+
   andThen(function () {
     var user = find('li.user');
     ok(user.length === 1);
   });
 ```
 
- 
+
 
 ##### handleFindAll
   - For dealing with finding all records of a particular type
   - Sample acceptance tests using handleFindAll: [(users-view-test.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js) [(users-delete-test.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-delete-test.js)
 
-If when visiting a route, some part of your application ( like router, or 
-controller action ) is going to make a call to the store for all records of 
-a particular type:  
-   
+If when visiting a route, some part of your application ( like router, or
+controller action ) is going to make a call to the store for all records of
+a particular type:
+
 ```javascript
-  store.findAll('user') // fires ajax request for all user records 
+  store.findAll('user') // fires ajax request for all user records
 ```
 
-An acceptance test ( to stub that ajax call and return factory guy data ) 
+An acceptance test ( to stub that ajax call and return factory guy data )
 will look like this:
-   
+
 ```javascript
-  // can use traits and extra fixture options here as you would with FactoryGuy#makeList    
+  // can use traits and extra fixture options here as you would with FactoryGuy#makeList
   TestHelper.handleFindAll('user', 2);
-      
+
   visit('/users');
-  
+
   andThen(function () {
     var users = find('li.user');
     ok(users.length === 2);
@@ -765,10 +772,10 @@ will look like this:
 *Note that you could also have done this:*
 
 ```javascript
-  // can just make the models before you visit route    
+  // can just make the models before you visit route
   var users = makeList('user', 2);
   visit('/users');
-  
+
   andThen(function () {
     var users = find('li.user');
     ok(users.length === 2);
@@ -785,7 +792,7 @@ you must wait on the request for those records to resolve before they will be lo
 
   andThen(function() {
     //handleDelete call must be after the model hook for the ('/users') route resolves
-    TestHelper.handleDelete('user', '1'); 
+    TestHelper.handleDelete('user', '1');
     click("li.user:first button:contains('Delete')");
   });
   andThen(function(){
@@ -794,9 +801,9 @@ you must wait on the request for those records to resolve before they will be lo
   });
 ```
 
- 
+
 ##### handleReload
-  - To handle reloading a model 
+  - To handle reloading a model
     - Pass in a record ( or a typeName and id )
     - Use andFail to mock failure
 
@@ -804,7 +811,7 @@ you must wait on the request for those records to resolve before they will be lo
 
 ```javascript
     var profile = FactoryGuy.make('profile')
-    // Using handleFind   
+    // Using handleFind
     TestHelper.handleReload(profile);
 
     // will stub a call to reload that profile
@@ -816,7 +823,7 @@ you must wait on the request for those records to resolve before they will be lo
 ```javascript
 
     TestHelper.handleReload('profile', 1).andFail();
-    
+
 ```
 
 
@@ -828,7 +835,7 @@ you must wait on the request for those records to resolve before they will be lo
     - returnsJSON
     - returnsExistingIds
    - Can reuse the same handler again to simulate same query with different results
-   
+
 *Using plain handleQuery returns no results*
 
    ```js
@@ -839,7 +846,7 @@ you must wait on the request for those records to resolve before they will be lo
         /// userInstances will be empty
      })
    ```
-   
+
 *Use returnsModles by passing in array of model instances*
 
    ```js
@@ -848,10 +855,10 @@ you must wait on the request for those records to resolve before they will be lo
 
      // Pass in the array of model instances as last argument
      TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsModels(users);
-     
+
      // will stub a call to the store like this:
      store.query('user', {name:'Bob', age: 10}}).then(function(models) {
-        // models are the same as the users array  
+        // models are the same as the users array
      });
    ```
 
@@ -862,13 +869,13 @@ you must wait on the request for those records to resolve before they will be lo
      // Create json with buildList
      var usersJSON = FactoryGuy.buildList('user', 2, 'with_hats');
 
-     // use returnsJSON to pass in this response  
+     // use returnsJSON to pass in this response
      TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsJSON(usersJSON);
-     
+
      store.query('user', {name:'Bob', age: 10}}).then(function(models) {
         // these models were created from the usersJSON
      });
-      
+
    ```
 
 *Use returnsExistingIds by passing in array of ids of existing models*
@@ -877,21 +884,21 @@ you must wait on the request for those records to resolve before they will be lo
      // Create list of models
      var users = FactoryGuy.makeList('user', 2, 'with_hats');
      var user1 = users.get('firstObject');
-    
-     // use returnsExistingIds to pass in the users ids you want  
+
+     // use returnsExistingIds to pass in the users ids you want
      // in this case let's say you only want to pass back the first user
      TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsExistingIds([user1.id]);
-     
+
      store.query('user', {name:'Bob', age: 10}}).then(function(models) {
         // models will be one model and it will be user1
      });
-      
+
    ```
 
 *Reuse the handler to simulate the same query with different results*
-   
+
    ```js
-   
+
      var store = FactoryGuy.get('store');
 
      var bobQueryHander = TestHelper.handleQuery('user', {name: 'Bob'});
@@ -900,7 +907,7 @@ you must wait on the request for those records to resolve before they will be lo
        //=> users.get('length') === 0;
 
        var bob = store.make('user', {name: 'Bob'});
-       
+
        // reuse the same query handler since it's the same query
        bobQueryHander.returnsModels([bob]);
 
@@ -913,19 +920,19 @@ you must wait on the request for those records to resolve before they will be lo
 ```
 
 *Reuse the handler to simulate different query params that returns different results*
-   
+
    ```js
-   
+
      var store = FactoryGuy.get('store');
      var bob = store.make('user', {name: 'Bob'});
      var dude = store.make('user', {name: 'Dude'});
-     
+
      var userQueryHander = TestHelper.handleQuery('user', {name: 'Bob'}).returnsModels([bob]);
 
      store.query('user', {name: 'Bob'}).then(function (users) {
        //=> users.get('length') === 1;
-       
-       // reuse the same user query handler but change the expected query parms 
+
+       // reuse the same user query handler but change the expected query parms
        userQueryHander.withParams({name: 'Dude'}).returnsModels([dude]);
 
        store.query('user', {name: 'Dude'}).then(function (users) {
@@ -942,14 +949,14 @@ you must wait on the request for those records to resolve before they will be lo
   - Use chainable methods to build the response
     - match
       - Attributes that must be in request json
-    - andReturns 
+    - andReturns
       - Attributes to include in response json
-    - andFail 
+    - andFail
       - Request will fail
       - Takes a hash of options:
         - status - HTTP status code, defaults to 500.
         - response - error response message, or an errors hash for 422 status
-  
+
   - Need to wrap tests using handleCreate with: Ember.run.function() { 'your test' })
 
 **Note**
@@ -1021,12 +1028,12 @@ chainable methods.
   - handleUpdate(model)
     - Single argument ( the model instance that will be updated )
   - handleUpdate(modelType, id)
-    - Two arguments: modelType ( like 'profile' ) , and the profile id that will updated 
+    - Two arguments: modelType ( like 'profile' ) , and the profile id that will updated
   - Use chainable methods to help build response:
-    - andFail 
-      - Request will fail 
+    - andFail
+      - Request will fail
       - Optional arguments ( status and response text )
-    - andSucceed 
+    - andSucceed
       - Update should succeed, this is the default behavior
       - Can even use this after an ```andFail``` call to simulate failure with
         invalid properties and then success after valid ones.
@@ -1077,13 +1084,13 @@ chainable methods.
   profile.set('description', 'bad value');
   profile.save() //=> will fail
 
-  // After setting valid value 
+  // After setting valid value
   profile.set('description', 'good value');
-  
+
   // Now expecting success
   mockUpdate.andSucceed();
-  
-  // Try that update again   
+
+  // Try that update again
   profile.save() //=> will succeed!
 ````
 
@@ -1133,7 +1140,7 @@ module('User View', {
   setup: function () {
     Ember.run(function () {
       App = startApp();
-      TestHelper.setup(); 
+      TestHelper.setup();
     });
   },
   teardown: function () {

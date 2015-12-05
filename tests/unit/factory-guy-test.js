@@ -703,3 +703,14 @@ test("using traits and custom attributes", function () {
   deepEqual(projectList, expected);
 });
 
+module('FactoryGuy and JSONAPI', inlineSetup(App, '-json-api'));
+test('it knows how to update with JSON-API', function (assert) {
+  const method = FactoryGuy.get('updateHTTPMethod');
+  assert.equal(method, 'PATCH');
+});
+
+module('FactoryGuy and REST', inlineSetup(App, '-rest'));
+test('it knows how to update with RESTSerializer', function (assert) {
+  const method = FactoryGuy.get('updateHTTPMethod');
+  assert.equal(method, 'PUT');
+});
