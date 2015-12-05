@@ -36,7 +36,7 @@ ChangeLog: ( Notes about what has changed in each version )
 
 ##### Never used ember-data-factory-guy before
   
- - ```ember install ember-data-factory-guy@2.1.1``` ( ember-data-1.13.5+ ) 
+ - ```ember install ember-data-factory-guy@2.1.2``` ( ember-data-1.13.5+ ) 
  - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + ) 
  - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 ) 
  - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )
@@ -822,7 +822,8 @@ you must wait on the request for those records to resolve before they will be lo
 
 ##### handleQuery
    - For dealing with finding all records for a type of model with query parameters.
-   - Takes modifier methods for controlling the response 
+   - Takes modifier methods for controlling the response
+    - withParams
     - returnsModels
     - returnsJSON
     - returnsExistingIds
@@ -906,6 +907,30 @@ you must wait on the request for those records to resolve before they will be lo
        store.query('user', {name: 'Bob'}).then(function (users) {
          //=> users.get('length') === 1;
          //=> users.get('firstObject') === bob;
+       });
+     });
+
+```
+
+*Reuse the handler to simulate different query params that returns different results*
+   
+   ```js
+   
+     var store = FactoryGuy.get('store');
+     var bob = store.make('user', {name: 'Bob'});
+     var dude = store.make('user', {name: 'Dude'});
+     
+     var userQueryHander = TestHelper.handleQuery('user', {name: 'Bob'}).returnsModels([bob]);
+
+     store.query('user', {name: 'Bob'}).then(function (users) {
+       //=> users.get('length') === 1;
+       
+       // reuse the same user query handler but change the expected query parms 
+       userQueryHander.withParams({name: 'Dude'}).returnsModels([dude]);
+
+       store.query('user', {name: 'Dude'}).then(function (users) {
+         //=> users.get('length') === 1;
+         //=> users.get('firstObject') === dude;
        });
      });
 
