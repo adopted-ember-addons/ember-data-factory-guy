@@ -26,10 +26,10 @@ var MockQueryRequest = function (url, modelName, queryParams) {
   var status = 200;
   var responseJson = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, []);
   var errors = {};
-  this.queryParams = queryParams;
+  var currentQueryParams = queryParams;
 
   this.withParams = function (queryParams) {
-    this.queryParams = queryParams;
+    currentQueryParams = queryParams;
     return this;
   };
 
@@ -77,8 +77,8 @@ var MockQueryRequest = function (url, modelName, queryParams) {
   var handler = function (settings) {
     if (settings.url === url && settings.type === "GET") {
       if (succeed) {
-        if (this.queryParams) {
-          if (!isEquivalent(this.queryParams, settings.data)) {
+        if (currentQueryParams) {
+          if (!isEquivalent(currentQueryParams, settings.data)) {
             return false;
           }
         }
@@ -91,7 +91,7 @@ var MockQueryRequest = function (url, modelName, queryParams) {
     }
   };
 
-  $.mockjax(handler.bind(this));
+  $.mockjax(handler);
 };
 
 export default MockQueryRequest;
