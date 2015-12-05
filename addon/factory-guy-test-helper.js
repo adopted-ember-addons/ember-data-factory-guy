@@ -90,13 +90,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     var args = Array.prototype.slice.call(arguments);
     var modelName = args.shift();
     var json = FactoryGuy.build.apply(FactoryGuy, arguments);
-    var id;
-
-    if (FactoryGuy.get('fixtureBuilderFactory').useJSONAPI()) {
-      id = json.data.id;
-    } else {
-      id = json[modelName].id;
-    }
+    var id = FactoryGuy.get('fixtureBuilder').extractId(modelName, json);
 
     var url = this.buildURL(modelName, id);
     new MockGetRequest(url, modelName, json);

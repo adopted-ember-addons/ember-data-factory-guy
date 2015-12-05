@@ -23,13 +23,6 @@ export default Ember.Object.extend({
   didInitialize: function() {
     this.set('adapter', this.get('store').adapterFor('application'));
   }.on('init'),
-  /*
-   Using json api?
-   TODO: extract this to utility class
-   */
-  useJSONAPI() {
-    return this.usingJSONAPIAdapter();
-  },
   usingJSONAPIAdapter() {
     const adapter = this.get('adapter');
     return adapter && adapter instanceof DS.JSONAPIAdapter;

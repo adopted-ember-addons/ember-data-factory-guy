@@ -3,6 +3,24 @@ import Ember from 'ember';
 
 export default function(store) {
   /**
+   Normalizes the serialized model to the expected API format
+
+   @param modelName
+   @param payload
+   */
+  this.normalize = function (modelName, payload) {
+    return payload;
+  };
+  /**
+   Returns the ID for the model payload
+
+   @param modelName
+   @param payload
+   */
+  this.extractId = function (modelName, payload) {
+    return payload.id;
+  };
+  /**
    Convert fixture for FactoryGuy.build
 
    @param modelName
