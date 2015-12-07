@@ -689,7 +689,7 @@ test('has company', function() {
   - [handleCreate](https://github.com/danielspaniel/ember-data-factory-guy#handlecreate)
   - [handleUpdate](https://github.com/danielspaniel/ember-data-factory-guy#handleupdate)
   - [handleDelete](https://github.com/danielspaniel/ember-data-factory-guy#handledelete)
-- Can override FactoryGuyTestHelper by 'reopeing' it ( if you need custom functionality.)
+- Can override FactoryGuyTestHelper by 'reopening' it ( if you need custom functionality.)
 
 If you put models into the store ( with FactoryGuy#make ), the http GET call does not need to be mocked,
 since that model is already in the store.
