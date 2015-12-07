@@ -633,7 +633,7 @@ build up complex scenarios in a different way that has it's own benefits.*
     ( a file provided to you by ember cli )
 - [Sample model test (profile-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
   - Avoid using moduleForModel ( ember-qunit ), or describeModel ( ember-mocha ) test helper.
-  - Might be able to get away with model tests that don't need to startApp() - [user-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js)
+  - Might be able to get away with model tests that don't need to startApp() as in this test: [user-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js)
 - [Sample component test (dude-translator-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/dude-translator-test.js)
   - Using 'moduleForComponent' because in it is easier in this case to get the component and render it with this
     helper
