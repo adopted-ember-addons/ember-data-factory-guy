@@ -35,6 +35,18 @@ var lookupDefinitionForFixtureName = function (name) {
   }
 };
 
+var extractArgumentsShort = function() {
+  var args = Array.prototype.slice.call(arguments);
+
+  var opts = {};
+  if (Ember.typeOf(args[args.length - 1]) === 'object') {
+    opts = args.pop();
+  }
+  // whatever is left are traits
+  var traits = Ember.A(args).compact();
+  return {opts: opts, traits: traits};
+};
+
 /**
   extract arguments for build and make function
   @param {String} name  fixture name
@@ -44,19 +56,11 @@ var lookupDefinitionForFixtureName = function (name) {
   */
 var extractArguments = function () {
   var args = Array.prototype.slice.call(arguments);
-
-  var opts = {};
   var name = args.shift();
   if (!name) {
     throw new Error('Build needs a factory name to build');
   }
-  if (Ember.typeOf(args[args.length - 1]) === 'object') {
-    opts = args.pop();
-  }
-
-  // whatever is left are traits
-  var traits = Ember.A(args).compact();
-  return {name: name, opts: opts, traits: traits};
+  return Ember.merge({name: name}, extractArgumentsShort.apply(this, args));
 };
 
 var FactoryGuy =  Ember.Object.extend({
@@ -303,22 +307,28 @@ var FactoryGuy =  Ember.Object.extend({
 
   buildRawList() {
     var args = Array.prototype.slice.call(arguments);
-    var name = args.shift();
-    var number = args.shift();
-    if (!name || Ember.isEmpty(number)) {
+    if (args.length < 2) {
       throw new Error('buildList needs a name and a number ( at least ) to build with');
     }
-    var opts = {};
-    if (Ember.typeOf(args[args.length - 1]) === 'object') {
-      opts = args.pop();
-    }
-    // whatever is left are traits
-    var traits = Ember.A(args).compact();
+    var name = args.shift();
     var definition = lookupDefinitionForFixtureName(name);
     if (!definition) {
       throw new Error("Can't find that factory named [" + name + "]");
     }
-    return definition.buildList(name, number, traits, opts);
+    if (typeof(args[0]) === 'number') {
+      var number = args.shift();
+      var parts = extractArgumentsShort.apply(this, args);
+      return definition.buildList(name, number, parts.traits, parts.opts);
+    }
+    else {
+      return args.map(function(innerArgs) {
+        if(Ember.typeOf(innerArgs) !== 'array') {
+          innerArgs = [innerArgs];
+        }
+        var parts = extractArgumentsShort.apply(this, innerArgs);
+        return definition.build(name, parts.opts, parts.traits);
+      });
+    }
   },
   /**
    Make new fixture and save to store.
