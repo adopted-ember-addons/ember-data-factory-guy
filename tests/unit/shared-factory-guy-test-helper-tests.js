@@ -266,6 +266,24 @@ SharedBehavior.handleFindAllTests = function () {
     });
   });
 
+  test("with diverse models", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+      TestHelper.handleFindAll('profile', 'goofy_description', {description: 'foo'}, ['goofy_description', {aBooleanField: true}]);
+
+      FactoryGuy.get('store').findAll('profile').then(function (profiles) {
+        ok(profiles.get('length') === 3);
+        ok(profiles.objectAt(0).get('description') === 'goofy');
+        ok(profiles.objectAt(0).get('aBooleanField') === false);
+        ok(profiles.objectAt(1).get('description') === 'foo');
+        ok(profiles.objectAt(1).get('aBooleanField') === false);
+        ok(profiles.objectAt(2).get('description') === 'goofy');
+        ok(profiles.objectAt(2).get('aBooleanField') === true);
+        done();
+      });
+    });
+  });
+
 
 };
 
