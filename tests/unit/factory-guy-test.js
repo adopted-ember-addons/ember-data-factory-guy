@@ -703,6 +703,12 @@ test("using traits and custom attributes", function () {
   deepEqual(projectList, expected);
 });
 
+test("using diverse attributes", function() {
+  var projectList = FactoryGuy.buildRawList('project', 'big', {title: 'Really Big'}, ['with_dude', {title: 'I have a dude'}]);
+  var expected = [{id: 1, title: 'Big Project'}, {id: 2, title: 'Really Big'}, {id: 3, title: 'I have a dude', user: {id: 1, name: 'Dude'}}];
+  deepEqual(projectList, expected);
+});
+
 module('FactoryGuy and JSONAPI', inlineSetup(App, '-json-api'));
 test('it knows how to update with JSON-API', function (assert) {
   const method = FactoryGuy.get('updateHTTPMethod');

@@ -745,6 +745,19 @@ will look like this:
   - For dealing with finding all records of a particular type
   - Sample acceptance tests using handleFindAll: [(users-view-test.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js) [(users-delete-test.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-delete-test.js)
 
+Usage:
+
+```javascript
+  // The mock API can return several different models
+  TestHelper.handleFindAll('user', {name: 'Bob'}, ['admin', {name: 'Jane'}]); // findAll('user') will return a user named Bob and an admin user named Jane
+
+  // Or it can return multiple of the same model (other than ids and sequences)
+  TestHelper.handleFindAll('user', 2);
+  TestHelper.handleFindAll('user', 2, 'admin'); // You can specify traits
+  TestHelper.handleFindAll('user', 2, {name: 'Bob'}); // Or attributes
+  TestHelper.handleFindAll('user', 2, 'admin', {name: 'Bob'}); // Or both
+```
+
 If when visiting a route, some part of your application ( like router, or
 controller action ) is going to make a call to the store for all records of
 a particular type:
@@ -781,6 +794,8 @@ will look like this:
     ok(users.length === 2);
   });
 ```
+
+
 
 If you would like to interact with the records created by handleFindAll (for example to update, delete, or find in the store)
 you must wait on the request for those records to resolve before they will be loaded in the store:
