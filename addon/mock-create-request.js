@@ -46,8 +46,7 @@ var MockCreateRequest = function (url, modelName, options) {
     return this;
   };
 
-  this.andFail = function (options) {
-    options = options || {};
+  this.andFail = function (options = {}) {
     succeed = false;
     status = options.status || 500;
     if (options.response) {
@@ -58,14 +57,15 @@ var MockCreateRequest = function (url, modelName, options) {
   };
 
   // for supporting older ( non chaining methods ) style of passing in options
+  Ember.deprecate(
+    `[ember-data-factory-guy] TestHelper.handleCreate - options.succeed has been deprecated.
+      Use chainable methods with \`andFail()\` method instead`,
+    !options.hasOwnProperty('succeed'),
+    { id: 'ember-data-factory-guy.handle-create', until: '3.0.0' }
+  );
   if (succeed) {
     this.calculate();
   } else {
-    Ember.deprecate(
-      `[ember-data-factory-guy] TestHelper.handleCreate - options.succeed has been deprecated.
-        Use chainable methods with \`andFail()\` method instead`,
-      { id: 'ember-data-factory-guy.handle-create', until: '3.0.0' }
-    );
     this.andFail(options);
   }
 

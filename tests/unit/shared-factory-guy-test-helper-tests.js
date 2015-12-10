@@ -689,7 +689,7 @@ SharedBehavior.handleCreateTests = function () {
   test("failure", function (assert) {
     Ember.run(function () {
       var done = assert.async();
-      TestHelper.handleCreate('profile', {succeed: false});
+      TestHelper.handleCreate('profile').andFail();
 
       FactoryGuy.get('store').createRecord('profile').save()
         .then(
@@ -736,8 +736,8 @@ SharedBehavior.handleCreateTests = function () {
       var description = "special description";
 
       TestHelper.handleCreate('profile', {
-        match: {description: description}, succeed: false
-      });
+        match: { description: description }
+      }).andFail();
 
       FactoryGuy.get('store').createRecord('profile', {description: description}).save()
         .then(
@@ -1024,7 +1024,7 @@ SharedBehavior.handleUpdateTests = function () {
       var done = assert.async();
       var profile = make('profile');
 
-      TestHelper.handleUpdate('profile', profile.id, {succeed: false, status: 500});
+      TestHelper.handleUpdate('profile', profile.id).andFail({ status: 500 });
 
       profile.set('description', 'new desc');
       profile.save().then(
@@ -1043,7 +1043,7 @@ SharedBehavior.handleUpdateTests = function () {
       var done = assert.async();
       var profile = make('profile');
 
-      TestHelper.handleUpdate(profile, {succeed: false, status: 500});
+      TestHelper.handleUpdate(profile).andFail({ status: 500 });
 
       profile.set('description', 'new desc');
       profile.save().then(
@@ -1062,8 +1062,7 @@ SharedBehavior.handleUpdateTests = function () {
       var done = assert.async();
       var profile = make('profile');
 
-      TestHelper.handleUpdate(profile, {
-        succeed: false,
+      TestHelper.handleUpdate(profile).andFail({
         status: 400,
         response: {errors: {description: 'invalid data'}}
       });
