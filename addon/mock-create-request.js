@@ -61,6 +61,11 @@ var MockCreateRequest = function (url, modelName, options) {
   if (succeed) {
     this.calculate();
   } else {
+    Ember.deprecate(
+      `[ember-data-factory-guy] TestHelper.handleCreate - options.succeed has been deprecated.
+        Use chainable methods with \`andFail()\` method instead`,
+      { id: 'ember-data-factory-guy.handle-create', until: '3.0.0' }
+    );
     this.andFail(options);
   }
 
