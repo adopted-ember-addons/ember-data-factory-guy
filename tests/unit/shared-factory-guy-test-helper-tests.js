@@ -889,14 +889,14 @@ SharedBehavior.handleCreateTests = function () {
   test("match attributes and return attributes with match and andReturn methods", function (assert) {
     Ember.run(function () {
       var done = assert.async();
-      var date = new Date();
+      var date = new Date(2015,1,2,3,4,5);
       var customDescription = "special description";
       var company = make('company');
       var group = make('big-group');
 
       TestHelper.handleCreate('profile')
         .match({description: customDescription, company: company, group: group})
-        .andReturn({created_at: new Date()});
+        .andReturn({created_at: date});
 
       FactoryGuy.get('store').createRecord('profile', {
         description: customDescription, company: company, group: group
