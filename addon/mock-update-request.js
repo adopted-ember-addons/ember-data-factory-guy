@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import $ from 'jquery';
 import FactoryGuy from './factory-guy';
 
@@ -7,6 +8,12 @@ var MockUpdateRequest = function(url, model, options) {
   var response = null;
 
   if ('succeed' in options) {
+    Ember.deprecate(
+      `[ember-data-factory-guy] TestHelper.handleUpdate - options.succeed has been deprecated.
+        Use chainable methods with \`andFail()\` method instead`,
+      options.hasOwnProperty('succeed'),
+      { id: 'ember-data-factory-guy.handle-update', until: '3.0.0' }
+    );
     succeed = options.succeed;
   }
 
