@@ -65,9 +65,6 @@ var extractArguments = function () {
 
 var FactoryGuy =  Ember.Object.extend({
   store: Ember.computed({
-    get() {
-      return null;
-    },
     set(_, aStore) {
       Ember.assert("FactoryGuy#set('store') needs a valid store instance.You passed in [" + aStore + "]", aStore instanceof DS.Store);
       return aStore;
