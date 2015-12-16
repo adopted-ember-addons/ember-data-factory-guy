@@ -306,6 +306,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
    should succeed ( default is true )
    */
   handleDelete: function (type, id, succeed) {
+    // TODO Turn this into a MockClass so it provides `andSuccess`, `andFail`, `returns`...
     succeed = succeed === undefined ? true : succeed;
     this.stubEndpointForHttpRequest(this.buildURL(type, id), null, {
       type: 'DELETE',
