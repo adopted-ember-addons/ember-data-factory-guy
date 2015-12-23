@@ -59,6 +59,8 @@ then:
     - put them in tests/factories directory
   - Then you use them to create models in your tests.
 
+[![Thumbnail of Introduction to ember-data-factory-guy](https://i.vimeocdn.com/video/545504017.png?mw=1920&mh=1080)](https://vimeo.com/album/3607049/video/146964694)
+
 ### Setup
 
 In the following examples, assume the models look like this:
