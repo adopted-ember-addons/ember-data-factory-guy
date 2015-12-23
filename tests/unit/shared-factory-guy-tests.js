@@ -318,6 +318,38 @@ SharedBehavior.makeTests = function () {
     });
   });
 
+  test("hasMany associations passed to make", function () {
+    var project1 = make('project', {id: 1, title: 'Project One'});
+    var project2 = make('project', {id: 2, title: 'Project Two'});
+    var user = make('user', {projects: [1, 2]});
+    equal(project2.get('user'), user);
+    equal(user.get('projects').objectAt(0), project1);
+    equal(user.get('projects.lastObject.title'), 'Project Two');
+  });
+
+  test("belongsTo association pass to make", function () {
+    var user = make('user', {id: 1});
+    var project = make('project', {title: 'The Project', user: 1});
+    equal(project.get('user'), user);
+    equal(user.get('projects').objectAt(0), project);
+    equal(user.get('projects.firstObject.title'), 'The Project');
+  });
+
+  test("hasMany associations passed to make throws error with polymorphic relationships", function () {
+    var smallHat = make('small-hat', {id: 1});
+    var bigHat = make('big-hat', {id: 2});
+    throws(function () {
+      var user = make('user', {hats: [1, 2]});
+    });
+  });
+
+  test("belongsTo association passed to make does not work with polymorphic relationship", function () {
+    var parentHat = make('hat', {id: 1});
+    throws(function () {
+      var childHat = make('hat', {hat: 1});
+    });
+  });
+
 };
 
 SharedBehavior.makeListTests = function () {
