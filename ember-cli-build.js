@@ -5,7 +5,7 @@ module.exports = function (defaults) {
   var app = new EmberAddon(defaults, {
     // Any other options
     babel: {
-      //includePolyfill: true
+      includePolyfill: true
     }
   });
 
