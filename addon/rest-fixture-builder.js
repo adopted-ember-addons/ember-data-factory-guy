@@ -18,9 +18,6 @@ var RESTFixtureBuilder = function(store) {
    @return {Object} responseJson
    */
   this.normalize = function(modelName, payload) {
-    //var responseJson = {};
-    //responseJson[modelName] = payload;
-    //return responseJson;
     return {[modelName]: payload};
   };
 

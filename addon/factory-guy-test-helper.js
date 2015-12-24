@@ -33,8 +33,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @param {Object} json response
    @param {Object} options ajax request options
    */
-  stubEndpointForHttpRequest: function (url, json, options) {
-    options = options || {};
+  stubEndpointForHttpRequest: function (url, json, options={}) {
     var request = {
       url: url,
       dataType: 'json',
@@ -245,8 +244,6 @@ var FactoryGuyTestHelper = Ember.Object.create({
    */
   handleCreate: function (modelName, opts={}) {
     var url = this.buildURL(modelName);
-    //var opts = options === undefined ? {} : options;
-
     return new MockCreateRequest(url, modelName, opts);
   },
 

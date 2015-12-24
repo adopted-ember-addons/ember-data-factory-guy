@@ -65,7 +65,6 @@ var MockQueryRequest = function (url, modelName, queryParams) {
 
   // TODO .. test this is working
   this.andFail = function (options={}) {
-    //options = options || {};
     succeed = false;
     status = options.status || 500;
     if (options.response) {

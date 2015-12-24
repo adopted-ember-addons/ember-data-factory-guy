@@ -13,7 +13,6 @@ var MockGetRequest = function (url, modelName, responseJson) {
   };
 
   this.andFail = function (options={}) {
-    //options = options || {};
     succeed = false;
     status = options.status || 500;
     response = options.response || {};
