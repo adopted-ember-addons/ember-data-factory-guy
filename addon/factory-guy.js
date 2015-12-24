@@ -466,27 +466,11 @@ var FactoryGuy =  Ember.Object.extend({
 
 var factoryGuy = FactoryGuy.create();
 
-//To accomodate for phantomjs ( older versions do not recognise bind method )
 var make = factoryGuy.make.bind(factoryGuy);
 var makeList = factoryGuy.makeList.bind(factoryGuy);
 var build = factoryGuy.build.bind(factoryGuy);
 var buildList = factoryGuy.buildList.bind(factoryGuy);
 var clearStore = factoryGuy.clearStore.bind(factoryGuy);
-//var make = function () {
-//  return factoryGuy.make.apply(factoryGuy, arguments);
-//};
-//var makeList = function () {
-//  return factoryGuy.makeList.apply(factoryGuy, arguments);
-//};
-//var build = function () {
-//  return factoryGuy.build.apply(factoryGuy, arguments);
-//};
-//var buildList = function () {
-//  return factoryGuy.buildList.apply(factoryGuy, arguments);
-//};
-//var clearStore = function () {
-//  return factoryGuy.clearStore.apply(factoryGuy, arguments);
-//};
 
 export { make, makeList, build, buildList, clearStore };
 export default factoryGuy;

@@ -12,8 +12,8 @@ var MockGetRequest = function (url, modelName, responseJson) {
     return this;
   };
 
-  this.andFail = function (options) {
-    options = options || {};
+  this.andFail = function (options={}) {
+    //options = options || {};
     succeed = false;
     status = options.status || 500;
     response = options.response || {};
@@ -22,7 +22,6 @@ var MockGetRequest = function (url, modelName, responseJson) {
   };
 
   this.handler = function () {
-
     if (succeed === false) {
       this.status = status;
       this.responseText = response;

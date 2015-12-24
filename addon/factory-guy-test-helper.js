@@ -243,9 +243,9 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @param {String} modelName  name of model your creating like 'profile' for Profile
    @param {Object} options  hash of options for handling request
    */
-  handleCreate: function (modelName, options) {
+  handleCreate: function (modelName, opts={}) {
     var url = this.buildURL(modelName);
-    var opts = options === undefined ? {} : options;
+    //var opts = options === undefined ? {} : options;
 
     return new MockCreateRequest(url, modelName, opts);
   },
@@ -305,9 +305,9 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @param {Boolean} succeed  optional flag to indicate if the request
    should succeed ( default is true )
    */
-  handleDelete: function (type, id, succeed) {
+  handleDelete: function (type, id, succeed=true) {
     // TODO Turn this into a MockClass so it provides `andSuccess`, `andFail`, `returns`...
-    succeed = succeed === undefined ? true : succeed;
+    //succeed = succeed === undefined ? true : succeed;
     this.stubEndpointForHttpRequest(this.buildURL(type, id), null, {
       type: 'DELETE',
       status: succeed ? 200 : 500
