@@ -21,7 +21,7 @@ var RESTFixtureBuilder = function(store) {
     //var responseJson = {};
     //responseJson[modelName] = payload;
     //return responseJson;
-    return {[modelName]: payload}
+    return {[modelName]: payload};
   };
 
   this.extractId = function(modelName, payload) {
