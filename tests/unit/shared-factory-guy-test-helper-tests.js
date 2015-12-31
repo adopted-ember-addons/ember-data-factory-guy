@@ -526,8 +526,21 @@ SharedBehavior.handleQueryTests = function () {
       });
     });
   });
-};
 
+  test("Nested search params are ok", function (assert) {
+    Ember.run(function () {
+      var done = assert.async();
+
+      var madeCompanies = FactoryGuy.makeList('company', 2);
+
+      var queryHandler = TestHelper.handleQuery('company', {name: { like: 'Dude*' }}).returnsModels(madeCompanies);
+      FactoryGuy.get('store').query('company', {name: { like: 'Dude*' } }).then(function (companies) {
+        equal(companies.mapBy('id')+'', madeCompanies.mapBy('id')+'');
+        done();
+      });
+    });
+  });
+};
 
 /////// handleCreate //////////
 
