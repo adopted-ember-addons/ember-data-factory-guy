@@ -384,6 +384,24 @@ test("using custom serialize keys function for transforming attributes and relat
 
 });
 
+test("serializes attributes with custom type", function () {
+  var info = {first: 1};
+  var json = build('user', {info: info});
+
+  deepEqual(json,
+    {
+      data: {
+        id: 1,
+        type: 'user',
+        attributes: {
+          name: 'User1',
+          info: '{"first":1}'
+        }
+      }
+    }
+  );
+});
+
 test("with (nested json fixture) belongsTo has a hasMany association which has a belongsTo", function () {
 
   var expectedData = {
