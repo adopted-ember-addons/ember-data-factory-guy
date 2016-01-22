@@ -117,3 +117,18 @@ test("using custom serialize keys function for transforming attributes and relat
   serializer.keyForAttribute = savedKeyForAttributeFn;
   serializer.keyForRelationship = savedKeyForRelationshipFn;
 });
+
+test("serializes attributes with custom type", function () {
+  var info = {first: 1};
+  var buildJson = build('user', {info: info});
+
+  var expectedJson = {
+    user: {
+      id: 1,
+      name: 'User1',
+      info: '{"first":1}'
+    }
+  };
+
+  deepEqual(buildJson, expectedJson);
+});

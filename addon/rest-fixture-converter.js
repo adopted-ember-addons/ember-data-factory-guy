@@ -16,7 +16,8 @@ import Ember from 'ember';
  */
 var RestFixtureConverter = function (store) {
   var self = this;
-  var defaultTransformFn = Ember.String.underscore;
+  var defaultKeyTransformFn = Ember.String.underscore;
+  var defaultValueTransformFn = function(x) { return x; };
   /**
    Transform attributes in fixture.
 
@@ -75,17 +76,22 @@ var RestFixtureConverter = function (store) {
    */
   var extractAttributes = function (modelName, fixture) {
     var attributes = {};
-    var transformFunction = getTransformFunction(modelName, 'Attribute');
-    store.modelFor(modelName).eachAttribute(function (attribute) {
-      var attributeKey = transformFunction(attribute);
+    var transformKeyFunction = getTransformKeyFunction(modelName, 'Attribute');
+
+    store.modelFor(modelName).eachAttribute(function (attribute, meta) {
+      var attributeKey = transformKeyFunction(attribute);
+      var transformValueFunction = getTransformValueFunction(meta.type);
+
       if (fixture.hasOwnProperty(attribute)) {
-        attributes[attributeKey] = fixture[attribute];
+        attributes[attributeKey] = transformValueFunction(fixture[attribute]);
       } else if (fixture.hasOwnProperty(attributeKey)) {
-        attributes[attributeKey] = fixture[attributeKey];
+        attributes[attributeKey] = transformValueFunction(fixture[attributeKey]);
       }
     });
     return attributes;
   };
+
+
   /**
     Add the model to included array unless it's already there.
 
@@ -110,7 +116,7 @@ var RestFixtureConverter = function (store) {
 
 
   this.transformRelationshipKey = function (relationship) {
-    var transformFn = getTransformFunction(relationship.type, 'Relationship');
+    var transformFn = getTransformKeyFunction(relationship.type, 'Relationship');
     var transformedKey = transformFn(relationship.key, relationship.kind);
     if (relationship.options.polymorphic) {
       transformedKey = transformedKey.replace('_id', '');
@@ -118,10 +124,15 @@ var RestFixtureConverter = function (store) {
     return transformedKey;
   };
 
-  var getTransformFunction = function(modelName, type) {
+  var getTransformKeyFunction = function(modelName, type) {
     var serializer = store.serializerFor(modelName);
-    return serializer['keyFor'+type] || defaultTransformFn;
+    return serializer['keyFor'+type] || defaultKeyTransformFn;
   };
+
+  var getTransformValueFunction = function (type) {
+    return type ? store.container.lookup('transform:' + type).serialize : defaultValueTransformFn;
+  };
+
   /**
 
    @param {Object} record

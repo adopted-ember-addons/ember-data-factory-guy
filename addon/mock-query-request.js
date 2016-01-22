@@ -13,6 +13,11 @@ function isEquivalent(a, b) {
 
   for (var i = 0; i < aProps.length; i++) {
     var propName = aProps[i];
+    var aEntry = a[propName];
+    var bEntry = b[propName];
+    if (Ember.typeOf(aEntry) === 'object' && Ember.typeOf(bEntry) === 'object') {
+      return isEquivalent(aEntry, bEntry);
+    }
 
     if (a[propName] !== b[propName]) {
       return false;

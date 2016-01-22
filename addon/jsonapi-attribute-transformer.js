@@ -8,6 +8,7 @@ import $ from 'jquery';
  * @constructor
  */
 var JSONAPIAttributeTransformer = function (store) {
+  var defaultValueTransformFn = function(x) { return x; };
 
   /**
    * Transform attributes in fixture.
@@ -47,12 +48,13 @@ var JSONAPIAttributeTransformer = function (store) {
    @param fixture
    */
   var transformSingle = function (modelName, fixture) {
-    transformAttributeObjectKeys(modelName, fixture);
+    transformAttributes(modelName, fixture);
     findRelationships(modelName, fixture);
   };
 
-  var transformAttributeObjectKeys = function(modelName, object) {
+  var transformAttributes = function(modelName, object) {
     if (object.attributes) {
+      transformObjectValues(modelName, object.attributes);
       transformObjectKeys(modelName, object.attributes, 'Attribute');
     }
   };
@@ -73,6 +75,31 @@ var JSONAPIAttributeTransformer = function (store) {
   };
 
   /**
+   Apply value transformers to attributes with custom type
+
+   @param modelName
+   @param object
+   */
+  var transformObjectValues = function(modelName, object) {
+    var model = store.modelFor(modelName);
+    for (var key in object) {
+      var attributeType = Ember.get(model, 'transformedAttributes').get(key);
+      var transformValue = getTransformValueFunction(attributeType);
+      var value = object[key];
+      object[key] = transformValue(value);
+    }
+  };
+
+  /**
+   Return a transform function for a custom attribute type (or the identity function otherwise).
+
+   @param type
+   */
+  var getTransformValueFunction = function(type) {
+    return type ? store.container.lookup('transform:' + type).serialize : defaultValueTransformFn;
+  };
+
+  /**
    Recursively descend into the fixture json, looking for relationships
    whose attributes need transforming
    */
@@ -82,10 +109,10 @@ var JSONAPIAttributeTransformer = function (store) {
       var data = relationships[key].data;
       if (Ember.typeOf(data) === 'array') {
         for (var i = 0, len = data.length; i < len; i++) {
-          transformAttributeObjectKeys(modelName, data[i]);
+          transformAttributes(modelName, data[i]);
         }
       } else {
-        transformAttributeObjectKeys(modelName, data);
+        transformAttributes(modelName, data);
       }
     }
     transformRelationshipObjectKeys(modelName, fixture.relationships);
