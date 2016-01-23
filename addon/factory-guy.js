@@ -64,20 +64,24 @@ var extractArguments = function () {
 };
 
 var FactoryGuy =  Ember.Object.extend({
+
   store: Ember.computed({
     set(_, aStore) {
       Ember.assert("FactoryGuy#set('store') needs a valid store instance.You passed in [" + aStore + "]", aStore instanceof DS.Store);
       return aStore;
     }
   }),
+
   fixtureBuilderFactory: Ember.computed('store', function() {
     const store = this.get('store');
     return FixtureBuilderFactory.create({ store });
   }),
+
   fixtureBuilder: Ember.computed('fixtureBuilderFactory', function() {
     const factory = this.get('fixtureBuilderFactory');
     return factory.get('fixtureBuilder');
   }),
+
   updateHTTPMethod: Ember.computed('fixtureBuilder', function() {
     return this.getWithDefault('fixtureBuilder.updateHTTPMethod', 'PUT');
   }),

@@ -633,21 +633,24 @@ build up complex scenarios in a different way that has it's own benefits.*
   - FactoryGuy needs the application to startup in order to load the factories, and setup the store.
   - That is why all the tests import startApp function from 'tests/helpers/start-app.js'
     ( a file provided to you by ember cli )
-- [Sample model test (profile-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
-  - Avoid using moduleForModel ( ember-qunit ), or describeModel ( ember-mocha ) test helper.
-  - Might be able to get away with model tests that don't need to startApp() as in this test: [user-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js)
-- [Sample component test (dude-translator-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/dude-translator-test.js)
-  - Using 'moduleForComponent' because it is easier in this case to get the component and render it with this
-    helper
+
+- [Sample model test #1 (profile-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
+  - Does NOT use 'moduleForModel' ( ember-qunit ), or 'describeModel' ( ember-mocha ) test helper.
+  - Uses startApp() to load an application and factory guy, so it's a bit slower ( but foolproof )
+
+- [Sample model test #2 (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js)  
+  - Uses 'moduleForModel' ( ember-qunit ), or describeModel ( ember-mocha ) test helper ( with integration mode )
+  - Does NOT load application, and manually sets up Factory guy ( so it's faster )
+  - Need ember 2.3 or getOwner polyfill for this to work
+
+- [Sample component test #1 (dude-translator-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/dude-translator-test.js)
+  - Using 'moduleForComponent' ( ember-qunit ), or describeComponent ( ember-mocha ) helper
   - Need to start a new application with startApp() before each test.
 
-**Note**
-
- *In the following model test, it's not necessary or helpful to use the ember-qunit moduleForModel
-  helper, since the premise for that helper is to setup an isolated container with the minimal
-  requirements ( that model ) loaded. So, if you have many relationships, it's tedious to "needs: []" them all,
-  to get them imported. Furthermore you don't want a model handed to you, you want to make your own,
-  which is the whole point of factory guy.*
+- [Sample component test #2 (dude-translator-manual-setup-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/dude-translator-manual-setup-test.js)
+  - Using 'moduleForComponent' ( ember-qunit ), or describeComponent ( ember-mocha ) helper
+  - Does NOT load application and manually sets up Factory guy ( so it's faster )
+  - Need ember 2.3 or getOwner polyfill for this to work
 
 
 ```javascript
