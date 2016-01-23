@@ -130,7 +130,8 @@ var RestFixtureConverter = function (store) {
   };
 
   var getTransformValueFunction = function (type) {
-    return type ? store.container.lookup('transform:' + type).serialize : defaultValueTransformFn;
+    var container = Ember.getOwner ? Ember.getOwner(store) : store.container;
+    return type ? container.lookup('transform:' + type).serialize : defaultValueTransformFn;
   };
 
   /**

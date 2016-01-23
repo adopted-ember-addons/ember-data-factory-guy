@@ -16,10 +16,12 @@ var FactoryGuyTestHelper = Ember.Object.create({
   teardown: function () {
     $.mockjax.clear();
   },
+
   // Look up a controller from the current container
   controllerFor: function (name) {
     return this.get('container').lookup('controller:' + name);
   },
+
   // Set a property on a controller in the current container
   setControllerProp: function (controller_name, property, value) {
     var controller = this.controllerFor(controller_name);

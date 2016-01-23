@@ -22,7 +22,6 @@ module('Users View', {
 
 
 test("Showing all users", function () {
-
   TestHelper.handleFindAll('user', 2);
   visit('/users');
 

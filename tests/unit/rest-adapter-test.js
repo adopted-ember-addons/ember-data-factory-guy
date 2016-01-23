@@ -8,7 +8,6 @@ var App = null;
 var adapter = 'DS.RESTAdapter';
 var adapterType = '-rest';
 
-
 SharedAdapterBehavior.all(adapter, adapterType);
 
 module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, adapterType));
@@ -134,6 +133,21 @@ test("sideloads hasMany records", function () {
       {id: 3, type: "BigHat" },
       {id: 4, type: "BigHat" }
     ]
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+test("serializes attributes with custom type", function () {
+  var info = {first: 1};
+  var buildJson = build('user', {info: info});
+
+  var expectedJson = {
+    user: {
+      id: 1,
+      name: 'User1',
+      info: '{"first":1}'
+    }
   };
 
   deepEqual(buildJson, expectedJson);
