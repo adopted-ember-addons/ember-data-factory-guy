@@ -1,23 +1,19 @@
 import Ember from 'ember';
-import FactoryGuy, { make }  from 'ember-data-factory-guy';
+import FactoryGuy, { make, manualSetup }  from 'ember-data-factory-guy';
 import hbs from 'htmlbars-inline-precompile';
-import startApp from '../helpers/start-app';
 
 import { test, moduleForComponent } from 'ember-qunit';
 
-var App = null;
-
-moduleForComponent('dude-translator', {
+moduleForComponent('dude-translator', 'dude-translator manualSetup', {
   integration: true,
 
   setup: function () {
-    Ember.run(function () {
-      App = startApp();
-    });
+    // you need ember 2.3 for this to work or the ember-getowner-polyfill installed
+    manualSetup(Ember.getOwner(this));
   },
 
   teardown: function () {
-    Ember.run(App,'destroy');
+    Ember.run(FactoryGuy, 'clearStore');
   }
 });
 
