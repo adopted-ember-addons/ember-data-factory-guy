@@ -681,7 +681,7 @@ test('has company', function() {
 ```
 
 
-### Integration/Acceptance Tests
+### Acceptance Tests
 
 ##### With FactoryGuyTestHelper
 
