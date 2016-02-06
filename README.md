@@ -301,7 +301,7 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
   FactoryGuy.define('user', {
     sequences: {
       userName: function(num) {
-        return 'User' + num;
+        return `User${num}`;
       }
     },
 
@@ -325,7 +325,7 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
 
   FactoryGuy.define('project', {
     special_project: {
-      title: FactoryGuy.generate(function(num) { return 'Project #' + num})
+      title: FactoryGuy.generate(function(num) { return `Project #${num}`; })
     },
   });
 
