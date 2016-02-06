@@ -349,7 +349,7 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
     // from the user definition in: "Declaring sequences in sequences hash" section.
 
     funny_user: {
-      style: function(f) { return 'funny '  + f.name }
+      style: function(f) { return `funny ${f.name}`; }
     }
   });
 
