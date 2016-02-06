@@ -181,7 +181,7 @@ In other words, don't do this:
      - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
      - [JSONAPIAdapter](http://jsonapi.org/format/)
  - Can override default attributes by passing in a hash
- - Can add attributes with traits ( see traits section )
+ - Can add attributes with [traits](https://github.com/danielspaniel/ember-data-factory-guy#traits)
 
 ```javascript
 
@@ -222,7 +222,7 @@ method, since the json will have the primary model's data and all sideloaded rel
 
 Example:
 
-<sub>Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters</sub>
+**Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters**
 
 ```javascript
 
@@ -1139,9 +1139,7 @@ chainable methods.
 ````
 
 
-##### Sample Integration/Acceptance test
-
-- [Sample acceptance test (user-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
+##### Sample Acceptance test [(user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
 
 ```javascript
