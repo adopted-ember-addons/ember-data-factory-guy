@@ -1139,7 +1139,7 @@ chainable methods.
 ````
 
 
-##### Sample Acceptance test [(user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
+##### Sample Acceptance test [(user-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
 
 ```javascript
