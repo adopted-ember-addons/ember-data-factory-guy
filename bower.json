@@ -35,8 +35,6 @@
     "handlebars": "latest",
     "ember-cli-shims": "0.1.0",
     "ember-cli-test-loader": "0.2.1",
-    "ember-load-initializers": "ember-cli/ember-load-initializers#0.1.7",
-    "loader.js": "ember-cli/loader.js#3.5.0",
     "qunit": "latest",
     "ember-qunit": "latest",
     "ember-qunit-notifications": "latest",

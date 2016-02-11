@@ -641,7 +641,6 @@ build up complex scenarios in a different way that has it's own benefits.*
 - [Sample model test #2 (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js)  
   - Uses 'moduleForModel' ( ember-qunit ), or describeModel ( ember-mocha ) test helper ( with integration mode )
   - Does NOT load application, and manually sets up Factory guy ( so it's faster )
-  - Need ember 2.3 or getOwner polyfill for this to work
 
 - [Sample component test #1 (dude-translator-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/dude-translator-test.js)
   - Using 'moduleForComponent' ( ember-qunit ), or describeComponent ( ember-mocha ) helper
