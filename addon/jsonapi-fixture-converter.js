@@ -129,6 +129,9 @@ var JSONAPIFixtureConverter = function (store) {
             relationships[relationship.key] = {data: normalizeJSONAPIAssociation(data, relationship)};
           } else if (Ember.typeOf(belongsToRecord) === 'instance') {
             relationships[relationship.key] = {data: normalizeJSONAPIAssociation(belongsToRecord, relationship)};
+          } else if (typeof belongsToRecord === 'string' || typeof belongsToRecord === 'number') {
+            Ember.assert('Polymorphic relationships cannot be specified by ID', !isPolymorphic);
+            relationships[relationship.key] = {data: normalizeJSONAPIAssociation({id: belongsToRecord, type: relationship.type}, relationship)};
           }
         } else if (relationship.kind === 'hasMany') {
           var hasManyRecords = fixture[relationship.key];
@@ -142,6 +145,9 @@ var JSONAPIFixtureConverter = function (store) {
                 return normalizeJSONAPIAssociation(data, relationship);
               } else if (Ember.typeOf(hasManyRecord) === 'instance') {
                 return normalizeJSONAPIAssociation(hasManyRecord, relationship);
+              } else if (typeof hasManyRecord === 'string' || typeof hasManyRecord === 'number') {
+                Ember.assert('Polymorphic relationships cannot be specified by ID', !isPolymorphic);
+                return normalizeJSONAPIAssociation({id: hasManyRecord, type: relationship.type}, relationship);
               }
             });
             relationships[relationship.key] = {data: records};
