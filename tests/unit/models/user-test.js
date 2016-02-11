@@ -22,8 +22,7 @@ moduleForModel('user', {
  integration:true,
 
  setup: function () {
-    // you need ember 2.3 or the ember-getowner-polyfill addon installed for this to work
-    manualSetup(Ember.getOwner(this));
+    manualSetup(this.container);
   },
 
   teardown: function () {

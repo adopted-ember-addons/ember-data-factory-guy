@@ -8,8 +8,7 @@ moduleForComponent('dude-translator', 'dude-translator manualSetup', {
   integration: true,
 
   setup: function () {
-    // you need ember 2.3 for this to work or the ember-getowner-polyfill installed
-    manualSetup(Ember.getOwner(this));
+    manualSetup(this.container);
   },
 
   teardown: function () {

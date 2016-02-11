@@ -98,7 +98,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     return id;
   },
   /**
-   Handling ajax GET for handling reloading a record
+   Handling ajax GET for reloading a record
    You can mock failed find by calling andFail
 
    ```js
