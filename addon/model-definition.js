@@ -31,7 +31,7 @@ var ModelDefinition = function (model, config) {
   var getRelationship = function (field) {
     var modelClass = FactoryGuy.get('store').modelFor(modelName);
     var relationship = Ember.get(modelClass, 'relationshipsByName').get(field);
-    return !!relationship ? relationship : null;
+    return relationship || null;
   };
   /**
    @param {String} name model name like 'user' or named type like 'admin'
