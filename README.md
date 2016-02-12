@@ -21,7 +21,7 @@ Contents:
   - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
   - [Testing - creating scenarios](https://github.com/danielspaniel/ember-data-factory-guy#testing---creating-scenarios)
   - [Testing models, controllers, components](https://github.com/danielspaniel/ember-data-factory-guy#testing-models-controllers-components)
-  - [Acceptance Tests](https://github.com/danielspaniel/ember-data-factory-guy#integrationacceptance-tests)
+  - [Acceptance Tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
 
 ChangeLog: ( Notes about what has changed in each version )
   - [Release Notes](https://github.com/danielspaniel/ember-data-factory-guy/releases)
