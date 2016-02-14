@@ -34,7 +34,7 @@
     "ember-cli-htmlbars": "latest",
     "ember-cli-htmlbars-inline-precompile": "0.3.1",
     "ember-cli-ic-ajax": "latest",
-    "ember-cli-qunit": "latest",
+    "ember-cli-qunit": "1.2.1",
     "ember-cli-sri": "^1.2.0",
     "ember-cli-uglify": "1.2.0",
     "ember-data": "2.3.3",
