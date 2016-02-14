@@ -6,13 +6,13 @@ import FixtureBuilderFactory from './fixture-builder-factory';
 var modelDefinitions = {};
 
 /**
-  Given a fixture name like 'person' or 'dude' determine what model this name
-  refers to. In this case it's 'person' for each one.
+ Given a fixture name like 'person' or 'dude' determine what model this name
+ refers to. In this case it's 'person' for each one.
 
-  @param {String} name  a fixture name could be model name like 'person'
-  or a named person in model definition like 'dude'
-  @returns {String} model  name associated with fixture name or undefined if not found
-  */
+ @param {String} name  a fixture name could be model name like 'person'
+ or a named person in model definition like 'dude'
+ @returns {String} model  name associated with fixture name or undefined if not found
+ */
 var lookupModelForFixtureName = function (name) {
   var definition = lookupDefinitionForFixtureName(name);
   if (definition) {
@@ -22,10 +22,10 @@ var lookupModelForFixtureName = function (name) {
 
 /**
 
-  @param {String} name a fixture name could be model name like 'person'
-  or a named person in model definition like 'dude'
-  @returns {ModelDefinition} ModelDefinition associated with model or undefined if not found
-  */
+ @param {String} name a fixture name could be model name like 'person'
+ or a named person in model definition like 'dude'
+ @returns {ModelDefinition} ModelDefinition associated with model or undefined if not found
+ */
 var lookupDefinitionForFixtureName = function (name) {
   for (var model in modelDefinitions) {
     var definition = modelDefinitions[model];
@@ -35,9 +35,7 @@ var lookupDefinitionForFixtureName = function (name) {
   }
 };
 
-var extractArgumentsShort = function() {
-  var args = Array.prototype.slice.call(arguments);
-
+var extractArgumentsShort = function (...args) {
   var opts = {};
   if (Ember.typeOf(args[args.length - 1]) === 'object') {
     opts = args.pop();
@@ -48,14 +46,13 @@ var extractArgumentsShort = function() {
 };
 
 /**
-  extract arguments for build and make function
-  @param {String} name  fixture name
-  @param {String} trait  optional trait names ( one or more )
-  @param {Object} opts  optional fixture options that will override default fixture values
-  @returns {Object} json fixture
-  */
-var extractArguments = function () {
-  var args = Array.prototype.slice.call(arguments);
+ extract arguments for build and make function
+ @param {String} name  fixture name
+ @param {String} trait  optional trait names ( one or more )
+ @param {Object} opts  optional fixture options that will override default fixture values
+ @returns {Object} json fixture
+ */
+var extractArguments = function (...args) {
   var name = args.shift();
   if (!name) {
     throw new Error('Build needs a factory name to build');
@@ -63,7 +60,7 @@ var extractArguments = function () {
   return Ember.merge({name: name}, extractArgumentsShort.apply(this, args));
 };
 
-var FactoryGuy =  Ember.Object.extend({
+var FactoryGuy = Ember.Object.extend({
 
   store: Ember.computed({
     set(_, aStore) {
@@ -72,17 +69,17 @@ var FactoryGuy =  Ember.Object.extend({
     }
   }),
 
-  fixtureBuilderFactory: Ember.computed('store', function() {
+  fixtureBuilderFactory: Ember.computed('store', function () {
     const store = this.get('store');
-    return FixtureBuilderFactory.create({ store });
+    return FixtureBuilderFactory.create({store});
   }),
 
-  fixtureBuilder: Ember.computed('fixtureBuilderFactory', function() {
+  fixtureBuilder: Ember.computed('fixtureBuilderFactory', function () {
     const factory = this.get('fixtureBuilderFactory');
     return factory.get('fixtureBuilder');
   }),
 
-  updateHTTPMethod: Ember.computed('fixtureBuilder', function() {
+  updateHTTPMethod: Ember.computed('fixtureBuilder', function () {
     return this.getWithDefault('fixtureBuilder.updateHTTPMethod', 'PUT');
   }),
   /**
@@ -123,12 +120,12 @@ var FactoryGuy =  Ember.Object.extend({
    @param {String} model the model to define
    @param {Object} config your model definition
    */
-  define(model, config) {
+    define(model, config) {
     modelDefinitions[model] = new ModelDefinition(model, config);
   },
   /*
-    @param model name of named fixture type like: 'admin' or model name like 'user'
-    @returns {ModelDefinition} if there is one matching that name
+   @param model name of named fixture type like: 'admin' or model name like 'user'
+   @returns {ModelDefinition} if there is one matching that name
    */
   findModelDefinition(model) {
     return modelDefinitions[model];
@@ -138,7 +135,7 @@ var FactoryGuy =  Ember.Object.extend({
    The method has been kept for backward compatibility
    Use `instance.get('fixtureBuilder')` instead.
    */
-  getFixtureBuilder() {
+    getFixtureBuilder() {
     return this.get('fixtureBuilder');
   },
 
@@ -165,7 +162,7 @@ var FactoryGuy =  Ember.Object.extend({
    @returns {Function} wrapper function that is called by the model
    definition containing the sequence
    */
-  generate(nameOrFunction) {
+    generate(nameOrFunction) {
     var sortaRandomName = Math.floor((1 + Math.random()) * 65536).toString(16) + Date.now();
     return function () {
       // this function will be called by ModelDefinition, which has it's own generate method
@@ -204,7 +201,7 @@ var FactoryGuy =  Ember.Object.extend({
    @param   {Object} opts options
    @returns {Function} wrapper function that will build the association json
    */
-  belongsTo(fixtureName, opts) {
+    belongsTo(fixtureName, opts) {
     return ()=> {
       return this.buildRaw(fixtureName, opts);
     };
@@ -237,7 +234,7 @@ var FactoryGuy =  Ember.Object.extend({
    @param   {Object} opts options
    @returns {Function} wrapper function that will build the association json
    */
-  hasMany(fixtureName, number, opts) {
+    hasMany(fixtureName, number, opts) {
     return ()=> {
       return this.buildRawList(fixtureName, number, opts);
     };
@@ -263,7 +260,7 @@ var FactoryGuy =  Ember.Object.extend({
    @param {Object} opts  optional fixture options that will override default fixture values
    @returns {Object} json fixture
    */
-  build() {
+    build() {
     var args = extractArguments.apply(this, arguments);
     var fixture = this.buildRaw.apply(this, arguments);
     var modelName = lookupModelForFixtureName(args.name);
@@ -297,8 +294,7 @@ var FactoryGuy =  Ember.Object.extend({
    @param {Object} opts  optional fixture options that will override default fixture values
    @returns {Array} list of fixtures
    */
-  buildList() {
-    var args = Array.prototype.slice.call(arguments);
+    buildList(...args) {
     var name = args.shift();
     var list = this.buildRawList.apply(this, arguments);
 
@@ -306,8 +302,7 @@ var FactoryGuy =  Ember.Object.extend({
     return this.get('fixtureBuilder').convertForBuild(modelName, list);
   },
 
-  buildRawList() {
-    var args = Array.prototype.slice.call(arguments);
+  buildRawList(...args) {
     if (args.length < 2) {
       throw new Error('buildList needs a name and a number ( at least ) to build with');
     }
@@ -322,8 +317,8 @@ var FactoryGuy =  Ember.Object.extend({
       return definition.buildList(name, number, parts.traits, parts.opts);
     }
     else {
-      return args.map(function(innerArgs) {
-        if(Ember.typeOf(innerArgs) !== 'array') {
+      return args.map(function (innerArgs) {
+        if (Ember.typeOf(innerArgs) !== 'array') {
           innerArgs = [innerArgs];
         }
         var parts = extractArgumentsShort.apply(this, innerArgs);
@@ -339,7 +334,7 @@ var FactoryGuy =  Ember.Object.extend({
    @param {Object} options  optional fixture options that will override default fixture values
    @returns {DS.Model} record
    */
-  make() {
+    make() {
     var args = extractArguments.apply(this, arguments);
 
     Ember.assert(
@@ -351,7 +346,7 @@ var FactoryGuy =  Ember.Object.extend({
     var fixture = this.buildRaw.apply(this, arguments);
     var data = this.get('fixtureBuilder').convertForMake(modelName, fixture);
 
-    const model = Ember.run(()=> this.get('store').push(data) );
+    const model = Ember.run(()=> this.get('store').push(data));
 
     var definition = lookupDefinitionForFixtureName(args.name);
     if (definition.hasAfterMake()) {
@@ -369,11 +364,10 @@ var FactoryGuy =  Ember.Object.extend({
    @param {Object} options  optional fixture options that will override default fixture values
    @returns {Array} list of json fixtures or records depending on the adapter type
    */
-  makeList() {
+    makeList(...args) {
     Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.set('store', store) before making any fixtures", this.get('store'));
 
     var arr = [];
-    var args = Array.prototype.slice.call(arguments);
     Ember.assert("makeList needs at least 2 arguments, a name and a number", args.length >= 2);
     var number = args.splice(1, 1)[0];
     Ember.assert("Second argument to makeList should be a number (of fixtures to make.)", typeof number === 'number');
@@ -387,7 +381,7 @@ var FactoryGuy =  Ember.Object.extend({
    Clear model instances from store cache.
    Reset the id sequence for the models back to zero.
    */
-  clearStore() {
+    clearStore() {
     this.resetDefinitions();
     this.clearModels();
   },
@@ -395,7 +389,7 @@ var FactoryGuy =  Ember.Object.extend({
   /**
    Reset the id sequence for the models back to zero.
    */
-  resetDefinitions() {
+    resetDefinitions() {
     for (var model in modelDefinitions) {
       var definition = modelDefinitions[model];
       definition.reset();
@@ -405,7 +399,7 @@ var FactoryGuy =  Ember.Object.extend({
   /**
    Clear model instances from store cache.
    */
-  clearModels() {
+    clearModels() {
     this.get('store').unloadAll();
   },
 
@@ -417,7 +411,7 @@ var FactoryGuy =  Ember.Object.extend({
    @param {Object} fixture the fixture to add
    @returns {Object} json fixture data
    */
-  pushFixture(modelClass, fixture) {
+    pushFixture(modelClass, fixture) {
     var index;
     if (!modelClass.FIXTURES) {
       modelClass.FIXTURES = [];
@@ -443,7 +437,7 @@ var FactoryGuy =  Ember.Object.extend({
    @param {String|Integer} id of fixture to find
    @returns {Object} fixture
    */
-  indexOfFixture(fixtures, fixture) {
+    indexOfFixture(fixtures, fixture) {
     var index = -1,
       id = fixture.id + '';
     Ember.A(fixtures).find(function (r, i) {
@@ -460,12 +454,28 @@ var FactoryGuy =  Ember.Object.extend({
   /**
    Clears all model definitions
    */
-  clearDefinitions(opts) {
+    clearDefinitions(opts) {
     if (!opts) {
       modelDefinitions = {};
     }
-  }
+  },
 
+  /**
+   Change reload behavior to only used cached models for find/findAll.
+   You still have to handle query calls, since they always ajax for data.
+   */
+  cacheOnlyMode() {
+    var store = this.get('store');
+    var findAdapter = store.adapterFor.bind(store);
+    store.adapterFor = function (name) {
+      var adapter = findAdapter(name);
+      adapter.shouldBackgroundReloadAll = ()=>false;
+      adapter.shouldBackgroundReloadRecord = ()=>false;
+      adapter.shouldReloadRecord = ()=>false;
+      adapter.shouldReloadAll = ()=>false;
+      return adapter;
+    };
+  }
 });
 
 var factoryGuy = FactoryGuy.create();
