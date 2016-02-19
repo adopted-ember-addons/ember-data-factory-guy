@@ -2,10 +2,10 @@ import SharedFactoryGuyBehavior from './shared-factory-guy-tests';
 import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
 import { title, inlineSetup } from '../helpers/utility-methods';
 
-var SharedAdapterBehavior = {};
+let SharedAdapterBehavior = {};
 
 SharedAdapterBehavior.all = function (adapter, adapterType) {
-  var App = null;
+  let App = null;
 
   module(title(adapter, 'FactoryGuy#make'), inlineSetup(App, adapterType));
   SharedFactoryGuyBehavior.makeTests();

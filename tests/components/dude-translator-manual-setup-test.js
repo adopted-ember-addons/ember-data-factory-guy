@@ -18,7 +18,7 @@ moduleForComponent('dude-translator', 'dude-translator manualSetup', {
 
 
 test("can translate original word", function () {
-  var user = make('user', {name: 'Rob'});
+  let user = make('user', {name: 'Rob'});
 
   this.render(hbs`{{dude-translator original=name}}`);
   this.set('name', user.get('name'));

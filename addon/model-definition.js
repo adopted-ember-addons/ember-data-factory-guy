@@ -11,16 +11,16 @@ import $ from 'jquery';
  @param config
  @constructor
  */
-var ModelDefinition = function (model, config) {
-  var sequences = {};
-  var traits = {};
-  var transient = {};
-  var afterMake = null;
-  var defaultAttributes = {};
-  var namedModels = {};
-  var modelId = 1;
-  var sequenceName = null;
-  var modelName = this.modelName = model;
+let ModelDefinition = function (model, config) {
+  let sequences = {};
+  let traits = {};
+  let transient = {};
+  let afterMake = null;
+  let defaultAttributes = {};
+  let namedModels = {};
+  let modelId = 1;
+  let sequenceName = null;
+  let modelName = this.modelName = model;
 
   /**
    Returns a model's full relationship if the field is a relationship.
@@ -28,9 +28,9 @@ var ModelDefinition = function (model, config) {
    @param {String} field  field you want to relationship info for
    @returns {DS.Relationship} relationship object if the field is a relationship, null if not
    */
-  var getRelationship = function (field) {
-    var modelClass = FactoryGuy.get('store').modelFor(modelName);
-    var relationship = Ember.get(modelClass, 'relationshipsByName').get(field);
+  let getRelationship = function (field) {
+    let modelClass = FactoryGuy.get('store').modelFor(modelName);
+    let relationship = Ember.get(modelClass, 'relationshipsByName').get(field);
     return relationship || null;
   };
   /**
@@ -61,7 +61,7 @@ var ModelDefinition = function (model, config) {
         sequences[name] = new Sequence(sequenceFn);
       }
     }
-    var sequence = sequences[name];
+    let sequence = sequences[name];
     if (!sequence) {
       throw new MissingSequenceError('Can not find that sequence named [' + sequenceName + '] in \'' + model + '\' definition');
     }
@@ -76,31 +76,23 @@ var ModelDefinition = function (model, config) {
    @returns {Object} json
    */
   this.build = function (name, opts, traitArgs) {
-    var traitsObj = {};
+    let traitsObj = {};
     traitArgs.forEach(function (trait) {
       $.extend(traitsObj, traits[trait]);
     });
-    var modelAttributes = namedModels[name] || {};
+    let modelAttributes = namedModels[name] || {};
     // merge default, modelAttributes, traits and opts to get the rough fixture
-    var fixture = $.extend({}, defaultAttributes, modelAttributes, traitsObj, opts);
+    let fixture = $.extend({}, defaultAttributes, modelAttributes, traitsObj, opts);
     // deal with attributes that are functions or objects
-    for (var attribute in fixture) {
-      if (Ember.typeOf(fixture[attribute]) === 'function') {
-        // function might be a sequence, an inline attribute function or an association
-        fixture[attribute] = fixture[attribute].call(this, fixture);
-      } else if (Ember.typeOf(fixture[attribute]) === 'object') {
-        // If it's an object and it's a model association attribute, build the json
-        // for the association and replace the attribute with that json
-        var relationship = getRelationship(attribute);
-        if (relationship) {
-          let payload = fixture[attribute];
-          if (payload.unwrap) {
-            // FactoryGuy already built this it's already built json
-            fixture[attribute] = payload.unwrap();
-          } else {
-            fixture[attribute] = FactoryGuy.buildRaw(relationship.type, payload);
-          }
-        }
+    for (let attribute in fixture) {
+      let attributeType = Ember.typeOf(fixture[attribute]);
+      if ( attributeType === 'array') {
+        this.addArrayAtribute(fixture, attribute);
+      }
+      if (attributeType === 'function') {
+        this.addFunctionAttribute(fixture, attribute);
+      } else if (attributeType === 'object') {
+        this.addObjectAtribute(fixture, attribute);
       }
     }
     // set the id, unless it was already set in opts
@@ -108,6 +100,36 @@ var ModelDefinition = function (model, config) {
       fixture.id = this.nextId();
     }
     return fixture;
+  };
+
+  // function might be a sequence, an inline attribute function or an association
+  this.addFunctionAttribute = function(fixture, attribute) {
+    fixture[attribute] = fixture[attribute].call(this, fixture);
+  };
+
+  this.addArrayAtribute = function(fixture, attribute) {
+    let relationship = getRelationship(attribute);
+    if (relationship) {
+      let payload = fixture[attribute];
+      fixture[attribute] = payload.map((json)=>{
+        return json.unwrap ? json.unwrap() : json;
+      });
+    }
+  };
+
+  this.addObjectAtribute = function(fixture, attribute) {
+    // If it's an object and it's a model association attribute, build the json
+    // for the association and replace the attribute with that json
+    let relationship = getRelationship(attribute);
+    if (relationship) {
+      let payload = fixture[attribute];
+      if (payload.unwrap) {
+        // FactoryGuy already built this it's already built json
+        fixture[attribute] = payload.unwrap();
+      } else {
+        fixture[attribute] = FactoryGuy.buildRaw(relationship.type, payload);
+      }
+    }
   };
   /**
    Build a list of fixtures
@@ -119,8 +141,8 @@ var ModelDefinition = function (model, config) {
    @returns array of fixtures
    */
   this.buildList = function (name, number, traits, opts) {
-    var arr = [];
-    for (var i = 0; i < number; i++) {
+    let arr = [];
+    for (let i = 0; i < number; i++) {
       arr.push(this.build(name, opts, traits));
     }
     return arr;
@@ -128,7 +150,7 @@ var ModelDefinition = function (model, config) {
   // Set the modelId back to 1, and reset the sequences
   this.reset = function () {
     modelId = 1;
-    for (var name in sequences) {
+    for (let name in sequences) {
       sequences[name].reset();
     }
   };
@@ -140,7 +162,7 @@ var ModelDefinition = function (model, config) {
   this.applyAfterMake = function (model, opts) {
     if (afterMake) {
       // passed in options override transient setting
-      var options = $.extend({}, transient, opts);
+      let options = $.extend({}, transient, opts);
       afterMake(model, options);
     }
   };
@@ -152,8 +174,8 @@ var ModelDefinition = function (model, config) {
    @param otherConfig
    @param section
    */
-  var mergeSection = function (config, otherConfig, section) {
-    var attr;
+  let mergeSection = function (config, otherConfig, section) {
+    let attr;
     if (otherConfig[section]) {
       if (!config[section]) {
         config[section] = {};
@@ -172,17 +194,17 @@ var ModelDefinition = function (model, config) {
    @param {Object} config
    @param {ModelDefinition} otherDefinition
    */
-  var merge = function (config, otherDefinition) {
-    var otherConfig = $.extend(true, {}, otherDefinition.originalConfig);
+  let merge = function (config, otherDefinition) {
+    let otherConfig = $.extend(true, {}, otherDefinition.originalConfig);
     delete otherConfig.extends;
     mergeSection(config, otherConfig, 'sequences');
     mergeSection(config, otherConfig, 'default');
     mergeSection(config, otherConfig, 'traits');
   };
 
-  var mergeConfig = function (config) {
-    var extending = config.extends;
-    var definition = FactoryGuy.findModelDefinition(extending);
+  let mergeConfig = function (config) {
+    let extending = config.extends;
+    let definition = FactoryGuy.findModelDefinition(extending);
     Ember.assert(
       "You are trying to extend [" + model + "] with [ " + extending + " ]." +
       " But FactoryGuy can't find that definition [ " + extending + " ] " +
@@ -191,31 +213,31 @@ var ModelDefinition = function (model, config) {
     merge(config, definition);
   };
 
-  var parseDefault = function (config) {
+  let parseDefault = function (config) {
     defaultAttributes = config.default;
     delete config.default;
   };
 
-  var parseTraits = function (config) {
+  let parseTraits = function (config) {
     traits = config.traits;
     delete config.traits;
   };
 
-  var parseTransient = function (config) {
+  let parseTransient = function (config) {
     transient = config.transient;
     delete config.transient;
   };
 
-  var parseCallBacks = function (config) {
+  let parseCallBacks = function (config) {
     afterMake = config.afterMake;
     delete config.afterMake;
   };
 
-  var parseSequences = function (config) {
+  let parseSequences = function (config) {
     sequences = config.sequences || {};
     delete config.sequences;
     for (sequenceName in sequences) {
-      var sequenceFn = sequences[sequenceName];
+      let sequenceFn = sequences[sequenceName];
       if (Ember.typeOf(sequenceFn) !== 'function') {
         throw new Error(
           'Problem with [' + sequenceName + '] sequence definition. ' +
@@ -225,7 +247,7 @@ var ModelDefinition = function (model, config) {
     }
   };
 
-  var parseConfig = function (config) {
+  let parseConfig = function (config) {
     if (config.extends) {
       mergeConfig.call(this, config);
     }

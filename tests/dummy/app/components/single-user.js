@@ -5,8 +5,8 @@ export default Ember.Component.extend({
 
   actions: {
     addProject: function (user) {
-      var title = this.$('input.project-title').val();
-      var store = this.get('controller.store');
+      let title = this.$('input.project-title').val();
+      let store = this.get('controller.store');
       this.get('store').createRecord('project', {title: title, user: user}).save();
     }
   }

@@ -6,7 +6,7 @@ import RESTFixtureConverter from './rest-fixture-converter';
   RESTSerializer
 
  */
-var RESTFixtureBuilder = function(store) {
+let RESTFixtureBuilder = function(store) {
   FixtureBuilder.call(this, store);
   /**
    Map single object to response json.

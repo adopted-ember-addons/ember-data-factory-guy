@@ -16,11 +16,11 @@ moduleForAcceptance('Acceptance | User View', {
 
 test("Creates new project", function () {
   // create a user with projects ( which will be in the store )
-  var user = make('user', 'with_projects');
+  let user = make('user', 'with_projects');
 
   visit('/user/' + user.id);
 
-  var newProjectTitle = "Gonzo Project";
+  let newProjectTitle = "Gonzo Project";
 
   andThen(function () {
     fillIn('input.project-title', newProjectTitle);
@@ -35,8 +35,8 @@ test("Creates new project", function () {
 
      actions: {
        addProject: function (user) {
-         var title = this.$('input.project-title').val();
-         var store = this.get('controller.store');
+         let title = this.$('input.project-title').val();
+         let store = this.get('controller.store');
          store.createRecord('project', {title: title, user: user}).save();
        }
      }
@@ -45,7 +45,7 @@ test("Creates new project", function () {
     click('button:contains(Add New User)');
 
     andThen(function () {
-      var newProjectDiv = find('li.project:contains(' + newProjectTitle + ')');
+      let newProjectDiv = find('li.project:contains(' + newProjectTitle + ')');
       ok(newProjectDiv[0] !== undefined);
     });
   });

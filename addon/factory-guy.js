@@ -333,8 +333,8 @@ let FactoryGuy = Ember.Object.extend({
    @param {String} trait  optional trait names ( one or more )
    @param {Object} options  optional fixture options that will override default fixture values
    @returns {DS.Model} record
-   */
-    make() {
+  */
+  make() {
     let args = extractArguments.apply(this, arguments);
 
     Ember.assert(
@@ -364,7 +364,7 @@ let FactoryGuy = Ember.Object.extend({
    @param {Object} options  optional fixture options that will override default fixture values
    @returns {Array} list of json fixtures or records depending on the adapter type
    */
-    makeList(...args) {
+  makeList(...args) {
     Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.set('store', store) before making any fixtures", this.get('store'));
 
     let arr = [];
@@ -381,7 +381,7 @@ let FactoryGuy = Ember.Object.extend({
    Clear model instances from store cache.
    Reset the id sequence for the models back to zero.
    */
-    clearStore() {
+  clearStore() {
     this.resetDefinitions();
     this.clearModels();
   },
@@ -389,7 +389,7 @@ let FactoryGuy = Ember.Object.extend({
   /**
    Reset the id sequence for the models back to zero.
    */
-    resetDefinitions() {
+  resetDefinitions() {
     for (let model in modelDefinitions) {
       let definition = modelDefinitions[model];
       definition.reset();
@@ -399,7 +399,7 @@ let FactoryGuy = Ember.Object.extend({
   /**
    Clear model instances from store cache.
    */
-    clearModels() {
+  clearModels() {
     this.get('store').unloadAll();
   },
 
@@ -411,7 +411,7 @@ let FactoryGuy = Ember.Object.extend({
    @param {Object} fixture the fixture to add
    @returns {Object} json fixture data
    */
-    pushFixture(modelClass, fixture) {
+  pushFixture(modelClass, fixture) {
     let index;
     if (!modelClass.FIXTURES) {
       modelClass.FIXTURES = [];
@@ -437,7 +437,7 @@ let FactoryGuy = Ember.Object.extend({
    @param {String|Integer} id of fixture to find
    @returns {Object} fixture
    */
-    indexOfFixture(fixtures, fixture) {
+  indexOfFixture(fixtures, fixture) {
     let index = -1,
       id = fixture.id + '';
     Ember.A(fixtures).find(function (r, i) {

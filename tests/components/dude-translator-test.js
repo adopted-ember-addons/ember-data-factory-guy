@@ -5,7 +5,7 @@ import startApp from '../helpers/start-app';
 
 import { test, moduleForComponent } from 'ember-qunit';
 
-var App = null;
+let App = null;
 
 moduleForComponent('dude-translator', {
   integration: true,
@@ -23,7 +23,7 @@ moduleForComponent('dude-translator', {
 
 
 test("can translate original word", function () {
-  var user = make('user', {name: 'Rob'});
+  let user = make('user', {name: 'Rob'});
 
   this.render(hbs`{{dude-translator original=name}}`);
   this.set('name', user.get('name'));

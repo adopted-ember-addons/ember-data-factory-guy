@@ -5,9 +5,9 @@ import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 import SharedAdapterBehavior from './shared-adapter-tests';
 import { title, inlineSetup } from '../helpers/utility-methods';
 
-var App = null;
-var adapter = 'DS.ActiveModelAdapter';
-var adapterType = '-active-model';
+let App = null;
+let adapter = 'DS.ActiveModelAdapter';
+let adapterType = '-active-model';
 
 
 SharedAdapterBehavior.all(adapter, adapterType);
@@ -16,8 +16,8 @@ module(title(adapter, 'FactoryGuyTestHelper#handleCreate custom'), inlineSetup(A
 
 test("returns camelCase attributes", function (assert) {
   Ember.run(function () {
-    var done = assert.async();
-    var customDescription = "special description";
+    let done = assert.async();
+    let customDescription = "special description";
 
     TestHelper.handleCreate('profile', {
       returns: {camel_case_description: customDescription}
@@ -37,10 +37,10 @@ module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, adapterType))
 
 test("sideloads belongsTo records which are built from fixture definition", function () {
 
-  var buildJson = build('profile', 'with_bat_man');
+  let buildJson = build('profile', 'with_bat_man');
   delete buildJson.unwrap;
 
-  var expectedJson = {
+  let expectedJson = {
     profile: {
       id: 1,
       description: 'Text goes here',
@@ -63,11 +63,11 @@ test("sideloads belongsTo records which are built from fixture definition", func
 
 test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () {
 
-  var batMan = build('bat_man');
-  var buildJson = build('profile', {superHero: batMan});
+  let batMan = build('bat_man');
+  let buildJson = build('profile', {superHero: batMan});
   delete buildJson.unwrap;
 
-  var expectedJson = {
+  let expectedJson = {
     profile: {
       id: 1,
       description: 'Text goes here',
@@ -90,10 +90,10 @@ test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () 
 
 test("sideloads hasMany records built from fixture definition", function () {
 
-  var buildJson = build('user', 'with_hats');
+  let buildJson = build('user', 'with_hats');
   delete buildJson.unwrap;
 
-  var expectedJson = {
+  let expectedJson = {
     user: {
       id: 1,
       name: 'User1',
@@ -111,13 +111,40 @@ test("sideloads hasMany records built from fixture definition", function () {
   deepEqual(buildJson, expectedJson);
 });
 
-test("sideloads hasMany records passed as ( prebuilt ) attribute", function () {
 
-  var hats = buildList('big-hat', 2);
-  var buildJson = build('user', {hats: hats});
+test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", function () {
+
+  let hats = buildList('big-hat', 2);
+  let buildJson = build('user', {hats: hats});
   delete buildJson.unwrap;
 
-  var expectedJson = {
+  let expectedJson = {
+    user: {
+      id: 1,
+      name: 'User1',
+      hats: [
+        {type: 'big_hat', id:1},
+        {type: 'big_hat', id:2}
+      ],
+    },
+    'big-hats': [
+      {id: 1, type: "BigHat" },
+      {id: 2, type: "BigHat" }
+    ]
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+
+test("sideloads hasMany records passed as prebuilt ( array of build ) attribute", function () {
+
+  let hat1 = build('big-hat');
+  let hat2 = build('big-hat');
+  let buildJson = build('user', {hats: [hat1, hat2]});
+  delete buildJson.unwrap;
+
+  let expectedJson = {
     user: {
       id: 1,
       name: 'User1',
@@ -137,17 +164,17 @@ test("sideloads hasMany records passed as ( prebuilt ) attribute", function () {
 
 
 test("using custom serialize keys function for transforming attributes and relationship keys", function () {
-  var serializer = FactoryGuy.get('store').serializerFor();
+  let serializer = FactoryGuy.get('store').serializerFor();
 
-  var savedKeyForAttributeFn = serializer.keyForAttribute;
+  let savedKeyForAttributeFn = serializer.keyForAttribute;
   serializer.keyForAttribute = Ember.String.dasherize;
-  var savedKeyForRelationshipFn = serializer.keyForRelationship;
+  let savedKeyForRelationshipFn = serializer.keyForRelationship;
   serializer.keyForRelationship = Ember.String.dasherize;
 
-  var buildJson = build('profile', 'with_bat_man');
+  let buildJson = build('profile', 'with_bat_man');
   delete buildJson.unwrap;
 
-  var expectedJson = {
+  let expectedJson = {
     profile: {
       id: 1,
       description: 'Text goes here',
@@ -172,11 +199,11 @@ test("using custom serialize keys function for transforming attributes and relat
 });
 
 test("serializes attributes with custom type", function () {
-  var info = {first: 1};
-  var buildJson = build('user', {info: info});
+  let info = {first: 1};
+  let buildJson = build('user', {info: info});
   delete buildJson.unwrap;
 
-  var expectedJson = {
+  let expectedJson = {
     user: {
       id: 1,
       name: 'User1',

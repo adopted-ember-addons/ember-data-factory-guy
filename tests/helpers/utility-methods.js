@@ -3,14 +3,14 @@ import FactoryGuy from 'ember-data-factory-guy';
 import startApp from '../helpers/start-app';
 
 // adapterType like -rest or -active-model, -json-api
-var theUsualSetup = function (adapterType) {
-  var App = startApp();
+let theUsualSetup = function (adapterType) {
+  let App = startApp();
 
   // brute force setting the adapter/serializer on the store.
   if (adapterType) {
-    var store = FactoryGuy.get('store');
-    var adapter = App.__container__.lookup('adapter:'+adapterType);
-    var serializer = App.__container__.lookup('serializer:'+adapterType);
+    let store = FactoryGuy.get('store');
+    let adapter = App.__container__.lookup('adapter:'+adapterType);
+    let serializer = App.__container__.lookup('serializer:'+adapterType);
 
     if (adapterType === "-json-api") {
       // the json api serializer dasherizes keys, and I don't want to
@@ -37,14 +37,14 @@ var theUsualSetup = function (adapterType) {
   return App;
 };
 
-var theUsualTeardown = function (App) {
+let theUsualTeardown = function (App) {
   Ember.run(function() {
     App.destroy();
     $.mockjax.clear();
   });
 };
 
-var inlineSetup = function (App,adapterType) {
+let inlineSetup = function (App,adapterType) {
   return {
     beforeEach: function () {
       App = theUsualSetup(adapterType);
@@ -55,7 +55,7 @@ var inlineSetup = function (App,adapterType) {
   };
 };
 
-var title = function (adapter, testName) {
+let title = function (adapter, testName) {
   return [adapter, testName].join(' ');
 };
 

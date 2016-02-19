@@ -15,7 +15,7 @@ test("Showing all users", function () {
   visit('/users');
 
   andThen(function () {
-    var users = find('li.user');
+    let users = find('li.user');
     ok(users.length === 2);
   });
 });

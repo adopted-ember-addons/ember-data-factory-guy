@@ -2,7 +2,7 @@
 /*jslint node: true */
 
 export default function () {
-  var factoryFileRegExp = new RegExp('/tests/factories');
+  let factoryFileRegExp = new RegExp('/tests/factories');
 
   Object.keys(requirejs._eak_seen).filter(function (key) {
     return factoryFileRegExp.test(key);

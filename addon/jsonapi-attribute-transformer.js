@@ -7,8 +7,8 @@ import $ from 'jquery';
  *
  * @constructor
  */
-var JSONAPIAttributeTransformer = function (store) {
-  var defaultValueTransformFn = function(x) { return x; };
+let JSONAPIAttributeTransformer = function (store) {
+  let defaultValueTransformFn = function(x) { return x; };
 
   /**
    * Transform attributes in fixture.
@@ -17,10 +17,10 @@ var JSONAPIAttributeTransformer = function (store) {
    * @returns {*} new copy of old fixture with transformed attributes
    */
   this.transform = function (modelName, fixture) {
-    var newData, included = [];
+    let newData, included = [];
     if (Ember.typeOf(fixture.data) === 'array') {
       newData = fixture.data.map(function (single) {
-        var copy = $.extend(true, {}, single);
+        let copy = $.extend(true, {}, single);
         transformSingle(modelName, copy);
         return copy;
       });
@@ -30,12 +30,12 @@ var JSONAPIAttributeTransformer = function (store) {
     }
     if (fixture.included) {
       included = fixture.included.map(function (single) {
-        var copy = $.extend(true, {}, single);
+        let copy = $.extend(true, {}, single);
         transformSingle(modelName, copy);
         return copy;
       });
     }
-    var newFixture = {data: newData};
+    let newFixture = {data: newData};
     if (!Ember.isEmpty(included)) {
       newFixture.included = included;
     }
@@ -47,28 +47,28 @@ var JSONAPIAttributeTransformer = function (store) {
    @param modelName
    @param fixture
    */
-  var transformSingle = function (modelName, fixture) {
+  let transformSingle = function (modelName, fixture) {
     transformAttributes(modelName, fixture);
     findRelationships(modelName, fixture);
   };
 
-  var transformAttributes = function(modelName, object) {
+  let transformAttributes = function(modelName, object) {
     if (object.attributes) {
       transformObjectValues(modelName, object.attributes);
       transformObjectKeys(modelName, object.attributes, 'Attribute');
     }
   };
 
-  var transformRelationshipObjectKeys = function(modelName, object) {
+  let transformRelationshipObjectKeys = function(modelName, object) {
     transformObjectKeys(modelName, object, 'Relationship');
   };
 
   var transformObjectKeys = function(modelName, object, keyType) {
-    var serializer = store.serializerFor(modelName);
-    var transformFunction = serializer['keyFor'+keyType] || Ember.String.dasherize;
-    for (var key in object) {
-      var value = object[key];
-      var newKey = transformFunction(key);
+    let serializer = store.serializerFor(modelName);
+    let transformFunction = serializer['keyFor'+keyType] || Ember.String.dasherize;
+    for (let key in object) {
+      let value = object[key];
+      let newKey = transformFunction(key);
       delete object[key];
       object[newKey] = value;
     }
@@ -80,12 +80,12 @@ var JSONAPIAttributeTransformer = function (store) {
    @param modelName
    @param object
    */
-  var transformObjectValues = function(modelName, object) {
-    var model = store.modelFor(modelName);
-    for (var key in object) {
-      var attributeType = Ember.get(model, 'transformedAttributes').get(key);
-      var transformValue = getTransformValueFunction(attributeType);
-      var value = object[key];
+  let transformObjectValues = function(modelName, object) {
+    let model = store.modelFor(modelName);
+    for (let key in object) {
+      let attributeType = Ember.get(model, 'transformedAttributes').get(key);
+      let transformValue = getTransformValueFunction(attributeType);
+      let value = object[key];
       object[key] = transformValue(value);
     }
   };
@@ -95,8 +95,8 @@ var JSONAPIAttributeTransformer = function (store) {
 
    @param type
    */
-  var getTransformValueFunction = function(type) {
-    var container = Ember.getOwner ? Ember.getOwner(store) : store.container;
+  let getTransformValueFunction = function(type) {
+    let container = Ember.getOwner ? Ember.getOwner(store) : store.container;
     return type ? container.lookup('transform:' + type).serialize : defaultValueTransformFn;
   };
 
@@ -104,12 +104,12 @@ var JSONAPIAttributeTransformer = function (store) {
    Recursively descend into the fixture json, looking for relationships
    whose attributes need transforming
    */
-  var findRelationships = function (modelName, fixture) {
-    var relationships = fixture.relationships;
-    for (var key in relationships) {
-      var data = relationships[key].data;
+  let findRelationships = function (modelName, fixture) {
+    let relationships = fixture.relationships;
+    for (let key in relationships) {
+      let data = relationships[key].data;
       if (Ember.typeOf(data) === 'array') {
-        for (var i = 0, len = data.length; i < len; i++) {
+        for (let i = 0, len = data.length; i < len; i++) {
           transformAttributes(modelName, data[i]);
         }
       } else {

@@ -7,7 +7,7 @@ import MockCreateRequest from './mock-create-request';
 import MockQueryRequest from './mock-query-request';
 import MockGetRequest from './mock-get-request';
 
-var FactoryGuyTestHelper = Ember.Object.create({
+let FactoryGuyTestHelper = Ember.Object.create({
 
   setup: function () {
     $.mockjaxSettings.logging = false;
@@ -24,7 +24,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
 
   // Set a property on a controller in the current container
   setControllerProp: function (controller_name, property, value) {
-    var controller = this.controllerFor(controller_name);
+    let controller = this.controllerFor(controller_name);
     controller.set(property, value);
   },
 
@@ -36,7 +36,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @param {Object} options ajax request options
    */
   stubEndpointForHttpRequest: function (url, json, options={}) {
-    var request = {
+    let request = {
       url: url,
       dataType: 'json',
       responseText: json,
@@ -60,7 +60,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @return {String} url
    */
   buildURL: function (modelName, id) {
-    var adapter = FactoryGuy.get('store').adapterFor(modelName);
+    let adapter = FactoryGuy.get('store').adapterFor(modelName);
     return adapter.buildURL(modelName, id);
   },
   /**
@@ -71,10 +71,10 @@ var FactoryGuyTestHelper = Ember.Object.create({
    // Typically you will use like:
 
    // To mock success
-   var userId = TestHelper.handleFind('user');
+   let userId = TestHelper.handleFind('user');
 
    // To mock failure case use method andFail
-   var userId = TestHelper.handleFind('user').andFail();
+   let userId = TestHelper.handleFind('user').andFail();
 
    // Then to 'find' the user
    store.find('user', userId);
@@ -88,12 +88,12 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @param {Object} opts  optional fixture options
    */
   handleFind: function () {
-    var args = Array.prototype.slice.call(arguments);
-    var modelName = args.shift();
-    var json = FactoryGuy.build.apply(FactoryGuy, arguments);
-    var id = FactoryGuy.get('fixtureBuilder').extractId(modelName, json);
+    let args = Array.prototype.slice.call(arguments);
+    let modelName = args.shift();
+    let json = FactoryGuy.build.apply(FactoryGuy, arguments);
+    let id = FactoryGuy.get('fixtureBuilder').extractId(modelName, json);
 
-    var url = this.buildURL(modelName, id);
+    let url = this.buildURL(modelName, id);
     new MockGetRequest(url, modelName, json);
     return id;
   },
@@ -103,7 +103,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
 
    ```js
    // Typically you will make a model
-   var user = make('user');
+   let user = make('user');
    // and then to handle reload, use the testHelper.handleFind call to mock a reload
    testHelper.handleReload(user);
 
@@ -115,11 +115,11 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @param {String} id  id of record to find
    */
   handleReload: function () {
-    var args = Array.prototype.slice.call(arguments);
+    let args = Array.prototype.slice.call(arguments);
 
-    var modelName, id;
+    let modelName, id;
     if (args[0] instanceof DS.Model) {
-      var record = args[0];
+      let record = args[0];
       modelName = record.constructor.modelName;
       id = record.id;
     } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
@@ -129,8 +129,8 @@ var FactoryGuyTestHelper = Ember.Object.create({
 
     Ember.assert("To handleFind pass in a model instance or a model type name and an id", modelName && id);
 
-    var url = this.buildURL(modelName, id);
-    var json = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, {id: id});
+    let url = this.buildURL(modelName, id);
+    let json = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, {id: id});
 
     return new MockGetRequest(url, modelName, json);
   },
@@ -155,11 +155,11 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @param {Object} opts  optional fixture options
    */
   handleFindAll: function () {
-    var args = Array.prototype.slice.call(arguments);
-    var modelName = args.shift();
-    var json = FactoryGuy.buildList.apply(FactoryGuy, arguments);
+    let args = Array.prototype.slice.call(arguments);
+    let modelName = args.shift();
+    let json = FactoryGuy.buildList.apply(FactoryGuy, arguments);
 
-    var url = this.buildURL(modelName);
+    let url = this.buildURL(modelName);
     this.stubEndpointForHttpRequest(url, json);
   },
   /**
@@ -169,7 +169,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
    ```js
 
    // Create model instances
-   var users = FactoryGuy.makeList('user', 2, 'with_hats');
+   let users = FactoryGuy.makeList('user', 2, 'with_hats');
 
    // Pass in the array of model instances as last argument
    testHelper.handleQuery('user', {name:'Bob', age: 10}, users);
@@ -200,7 +200,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
       Ember.assert('The second argument ( queryParams ) must be an object', Ember.typeOf(queryParams) === 'object');
     }
 
-    var url = this.buildURL(modelName);
+    let url = this.buildURL(modelName);
     return new MockQueryRequest(url, modelName, queryParams);
   },
   /**
@@ -245,7 +245,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @param {Object} options  hash of options for handling request
    */
   handleCreate: function (modelName, opts={}) {
-    var url = this.buildURL(modelName);
+    let url = this.buildURL(modelName);
     return new MockCreateRequest(url, modelName, opts);
   },
 
@@ -255,7 +255,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
 
    ```js
    // Typically you will make a model
-   var user = make('user');
+   let user = make('user');
    // and then to handle update, use the testHelper.handleUpdate call to mock a update
    testHelper.handleUpdate(user);
    or
@@ -270,16 +270,16 @@ var FactoryGuyTestHelper = Ember.Object.create({
    @param {Object} options options object
    */
   handleUpdate: function () {
-    var args = Array.prototype.slice.call(arguments);
+    let args = Array.prototype.slice.call(arguments);
     Ember.assert("To handleUpdate pass in a model instance or a type and an id", args.length > 0);
 
-    var options = {};
+    let options = {};
     if (args.length > 1 && typeof args[args.length - 1] === 'object') {
       options = args.pop();
     }
 
-    var model, type, id;
-    var store = FactoryGuy.get('store');
+    let model, type, id;
+    let store = FactoryGuy.get('store');
 
     if (args[0] instanceof DS.Model) {
       model = args[0];
@@ -292,7 +292,7 @@ var FactoryGuyTestHelper = Ember.Object.create({
     }
     Ember.assert("To handleUpdate pass in a model instance or a model type name and an id", type && id);
 
-    var url = this.buildURL(type, id);
+    let url = this.buildURL(type, id);
     return new MockUpdateRequest(url, model, options);
   },
   /**

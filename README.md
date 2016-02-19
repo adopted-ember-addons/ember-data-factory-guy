@@ -182,17 +182,17 @@ In other words, don't do this:
   import FactoryGuy, { make, build } from 'ember-data-factory-guy';
 
   // returns json
-  var json = FactoryGuy.build('user');
+  let json = FactoryGuy.build('user');
   json.user // => {id: 1, name: 'Dude', style: 'normal'}
 
   // returns a User instance that is loaded into your application's store
-  var user = FactoryGuy.make('user');
+  let user = FactoryGuy.make('user');
   user.toJSON({includeId: true}) // => {id: 2, name: 'Dude', style: 'normal'}
 
-  var json = build('admin');
+  let json = build('admin');
   json.user // => {id: 3, name: 'Admin', style: 'super'}
 
-  var user = make('admin');
+  let user = make('admin');
   user.toJSON({includeId: true}) // => {id: 4, name: 'Admin', style: 'super'}
 
 ```
@@ -201,7 +201,7 @@ You can override the default attributes by passing in a hash
 
 ```javascript
 
-  var json = build('user', {name: 'Fred'});
+  let json = build('user', {name: 'Fred'});
   // json.user.name => 'Fred'
 
 ```
@@ -220,7 +220,7 @@ Example:
 
 ```javascript
 
-  var json = FactoryGuy.build('user', 'with_company', 'with_hats');
+  let json = FactoryGuy.build('user', 'with_company', 'with_hats');
   json // =>
     {
       user: {
@@ -241,11 +241,11 @@ Example:
       ]
     }
 
-  var store = FactoryGuy.get('store');
+  let store = FactoryGuy.get('store');
 
   store.pushPayload(json);
 
-  var user = store.peekRecord('user', 1);
+  let user = store.peekRecord('user', 1);
   user.get('name') // => 'User1'
   user.get('company.name') // => Silly Corp
   user.get('hats.length') // => 2
@@ -303,10 +303,10 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
     }
   });
 
-  var json = FactoryGuy.build('user');
+  let json = FactoryGuy.build('user');
   json.user.name // => 'User1'
 
-  var user = FactoryGuy.make('user');
+  let user = FactoryGuy.make('user');
   user.get('name') // => 'User2'
 
 ```
@@ -321,10 +321,10 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
     },
   });
 
-  var json = FactoryGuy.build('special_project');
+  let json = FactoryGuy.build('special_project');
   json.project.title // => 'Project #1'
 
-  var project = FactoryGuy.make('special_project');
+  let project = FactoryGuy.make('special_project');
   project.get('title') // => 'Project #2'
 
 ```
@@ -345,11 +345,11 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
     }
   });
 
-  var json = FactoryGuy.build('funny_user');
+  let json = FactoryGuy.build('funny_user');
   json.user.name // => 'User1'
   json.user.style // => 'funny User1'
 
-  var user = FactoryGuy.make('funny_user');
+  let user = FactoryGuy.make('funny_user');
   user.get('name') // => 'User2'
   user.get('style') // => 'funny User2'
 
@@ -374,11 +374,11 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
     }
   });
 
-  var json = FactoryGuy.build('user', 'big', 'friendly');
+  let json = FactoryGuy.build('user', 'big', 'friendly');
   json.user.name // => 'Big Guy'
   json.user.style // => 'Friendly'
 
-  var user = FactoryGuy.make('user', 'big', 'friendly');
+  let user = FactoryGuy.make('user', 'big', 'friendly');
   user.get('name') // => 'Big Guy'
   user.get('style') // => 'Friendly'
 
@@ -389,7 +389,7 @@ attributes will override any trait attributes or default attributes
 
 ```javascript
 
-  var user = FactoryGuy.make('user', 'big', 'friendly', {name: 'Dave'});
+  let user = FactoryGuy.make('user', 'big', 'friendly', {name: 'Dave'});
   user.get('name') // => 'Dave'
   user.get('style') // => 'Friendly'
 
@@ -426,7 +426,7 @@ attributes will override any trait attributes or default attributes
     }
   });
 
-  var project = FactoryGuy.make('project_with_admin');
+  let project = FactoryGuy.make('project_with_admin');
   project.get('user.name') // => 'Admin'
   project.get('user.style') // => 'super'
 
@@ -443,7 +443,7 @@ attributes will override any trait attributes or default attributes
     }
   });
 
-  var user = FactoryGuy.make('project', 'with_user');
+  let user = FactoryGuy.make('project', 'with_user');
   project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
 
 ```
@@ -452,8 +452,8 @@ attributes will override any trait attributes or default attributes
 ##### Setup belongsTo associations manually
 
 ```javascript
-  var user = FactoryGuy.make('user');
-  var project = FactoryGuy.make('project', {user: user});
+  let user = FactoryGuy.make('user');
+  let project = FactoryGuy.make('project', {user: user});
 
   project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
 ```
@@ -475,7 +475,7 @@ the reverse user hasMany 'projects' association is being setup for you on the us
     user_with_projects: { projects: FactoryGuy.hasMany('project', 2) }
   });
 
-  var user = FactoryGuy.make('user_with_projects');
+  let user = FactoryGuy.make('user_with_projects');
   user.get('projects.length') // => 2
 
 ```
@@ -492,7 +492,7 @@ the reverse user hasMany 'projects' association is being setup for you on the us
     }
   });
 
-  var user = FactoryGuy.make('user', 'with_projects');
+  let user = FactoryGuy.make('user', 'with_projects');
   user.get('projects.length') // => 2
 
 ```
@@ -500,14 +500,14 @@ the reverse user hasMany 'projects' association is being setup for you on the us
 ##### Setup hasMany associations manually
 
 ```javascript
-  var project1 = FactoryGuy.make('project');
-  var project2 = FactoryGuy.make('project');
-  var user = FactoryGuy.make('user', {projects: [project1,project2]});
+  let project1 = FactoryGuy.make('project');
+  let project2 = FactoryGuy.make('project');
+  let user = FactoryGuy.make('user', {projects: [project1,project2]});
   user.get('projects.length') // => 2
 
   // or
-  var projects = FactoryGuy.makeList('project', 2);
-  var user = FactoryGuy.make('user', {projects: projects});
+  let projects = FactoryGuy.makeList('project', 2);
+  let user = FactoryGuy.make('user', {projects: projects});
   user.get('projects.length') // => 2
 
 ```
@@ -532,7 +532,7 @@ the reverse 'user' belongsTo association is being setup for you on the project
 ##### Building json array
 
 ```javascript
-  var json = FactoryGuy.buildList('user', 2)
+  let json = FactoryGuy.buildList('user', 2)
   json.users.length // => 2
   json.users[0] // => {id: 1, name: 'User1', style: 'normal'}
   json.users[1] // => {id: 2, name: 'User2', style: 'normal'}
@@ -542,7 +542,7 @@ the reverse 'user' belongsTo association is being setup for you on the project
 ##### Building model instances
 
 ```javascript
-  var users = FactoryGuy.makeList('user', 2)
+  let users = FactoryGuy.makeList('user', 2)
   users.get('length') // => 2
   users[0].toJSON({includeId: true}) // => {id: 3, name: 'User3', style: 'normal'}
   users[1].toJSON({includeId: true}) // => {id: 4, name: 'User4', style: 'normal'}
@@ -592,10 +592,10 @@ You would use this to make models like:
 ```javascript
   Ember.run(function () {
 
-    var property = FactoryGuy.make('property');
+    let property = FactoryGuy.make('property');
     property.get('name'); // => 'Silly property(FOR SALE)')
 
-    var property = FactoryGuy.make('property', {for_sale: false});
+    let property = FactoryGuy.make('property', {for_sale: false});
     property.get('name'); // => 'Silly property')
   });
 
@@ -610,9 +610,9 @@ Example:
   - Setup a scenario where a user has two projects and belongs to a company
 
 ```javascript
-   var company = make('company');
-   var user = make('user', {company: company});
-   var projects = makeList('project', 2, {user: user});
+   let company = make('company');
+   let user = make('user', {company: company});
+   let projects = makeList('project', 2, {user: user});
 ```
 
 *You can use traits to help create the relationships as well, but this strategy allows you to
@@ -650,7 +650,7 @@ import Ember from 'ember';
 import { make } from 'ember-data-factory-guy';
 import startApp from '../../helpers/start-app';
 
-var App = null;
+let App = null;
 
 module('Profile Model', {
   beforeEach: function() {
@@ -662,7 +662,7 @@ module('Profile Model', {
 });
 
 test('has company', function() {
-  var profile = make('profile', 'with_company');
+  let profile = make('profile', 'with_company');
   ok(profile.get('company.profile') === profile);
 });
 
@@ -711,11 +711,11 @@ will look like this:
 
 ```javascript
   // can use traits and extra fixture options here as you would with FactoryGuy#make
-  var userId = TestHelper.handleFind('user');
+  let userId = TestHelper.handleFind('user');
   visit('/users/'+userId);
 
   andThen(function () {
-    var user = find('li.user');
+    let user = find('li.user');
     ok(user.length === 1);
   });
 ```
@@ -724,11 +724,11 @@ will look like this:
 
 ```javascript
   // can just make the model before you visit route
-  var user = make('user');
+  let user = make('user');
   visit('/users/'+user.id);
 
   andThen(function () {
-    var user = find('li.user');
+    let user = find('li.user');
     ok(user.length === 1);
   });
 ```
@@ -770,7 +770,7 @@ will look like this:
   visit('/users');
 
   andThen(function () {
-    var users = find('li.user');
+    let users = find('li.user');
     ok(users.length === 2);
   });
 ```
@@ -780,11 +780,11 @@ will look like this:
 
 ```javascript
   // can just make the models before you visit route
-  var users = makeList('user', 2);
+  let users = makeList('user', 2);
   visit('/users');
 
   andThen(function () {
-    var users = find('li.user');
+    let users = find('li.user');
     ok(users.length === 2);
   });
 ```
@@ -805,7 +805,7 @@ you must wait on the request for those records to resolve before they will be lo
     click("li.user:first button:contains('Delete')");
   });
   andThen(function(){
-    var users = find('li.user');
+    let users = find('li.user');
     ok(users.length === 1);
   });
 ```
@@ -819,7 +819,7 @@ you must wait on the request for those records to resolve before they will be lo
 *Passing in a record / model instance*
 
 ```javascript
-    var profile = FactoryGuy.make('profile')
+    let profile = FactoryGuy.make('profile')
     // Using handleFind
     TestHelper.handleReload(profile);
 
@@ -860,7 +860,7 @@ you must wait on the request for those records to resolve before they will be lo
 
    ```js
      // Create model instances
-     var users = FactoryGuy.makeList('user', 2, 'with_hats');
+     let users = FactoryGuy.makeList('user', 2, 'with_hats');
 
      // Pass in the array of model instances as last argument
      TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsModels(users);
@@ -876,7 +876,7 @@ you must wait on the request for those records to resolve before they will be lo
 
    ```js
      // Create json with buildList
-     var usersJSON = FactoryGuy.buildList('user', 2, 'with_hats');
+     let usersJSON = FactoryGuy.buildList('user', 2, 'with_hats');
 
      // use returnsJSON to pass in this response
      TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsJSON(usersJSON);
@@ -891,8 +891,8 @@ you must wait on the request for those records to resolve before they will be lo
 
    ```js
      // Create list of models
-     var users = FactoryGuy.makeList('user', 2, 'with_hats');
-     var user1 = users.get('firstObject');
+     let users = FactoryGuy.makeList('user', 2, 'with_hats');
+     let user1 = users.get('firstObject');
 
      // use returnsExistingIds to pass in the users ids you want
      // in this case let's say you only want to pass back the first user
@@ -908,14 +908,14 @@ you must wait on the request for those records to resolve before they will be lo
 
    ```js
 
-     var store = FactoryGuy.get('store');
+     let store = FactoryGuy.get('store');
 
-     var bobQueryHander = TestHelper.handleQuery('user', {name: 'Bob'});
+     let bobQueryHander = TestHelper.handleQuery('user', {name: 'Bob'});
 
      store.query('user', {name: 'Bob'}).then(function (users) {
        //=> users.get('length') === 0;
 
-       var bob = store.make('user', {name: 'Bob'});
+       let bob = store.make('user', {name: 'Bob'});
 
        // reuse the same query handler since it's the same query
        bobQueryHander.returnsModels([bob]);
@@ -932,11 +932,11 @@ you must wait on the request for those records to resolve before they will be lo
 
    ```js
 
-     var store = FactoryGuy.get('store');
-     var bob = store.make('user', {name: 'Bob'});
-     var dude = store.make('user', {name: 'Dude'});
+     let store = FactoryGuy.get('store');
+     let bob = store.make('user', {name: 'Bob'});
+     let dude = store.make('user', {name: 'Dude'});
 
-     var userQueryHander = TestHelper.handleQuery('user', {name: 'Bob'}).returnsModels([bob]);
+     let userQueryHander = TestHelper.handleQuery('user', {name: 'Bob'}).returnsModels([bob]);
 
      store.query('user', {name: 'Bob'}).then(function (users) {
        //=> users.get('length') === 1;
@@ -985,8 +985,8 @@ Realistically, you will have code in a view action or controller action that wil
   // most actions that create a record look something like this:
   action: {
     addProject: function (user) {
-      var name = this.$('button.project-name').val();
-      var store = this.get('controller.store');
+      let name = this.$('button.project-name').val();
+      let store = this.get('controller.store');
       store.createRecord('project', {name: name, user: user}).save();
     }
   }
@@ -1051,7 +1051,7 @@ chainable methods.
 *success case is the default*
 
 ```javascript
-  var profile = FactoryGuy.make('profile');
+  let profile = FactoryGuy.make('profile');
 
   // Pass in the model that will be updated ( if you have it available )
   TestHelper.handleUpdate(profile);
@@ -1067,7 +1067,7 @@ chainable methods.
 *mocking a failed update*
 
 ```javascript
-  var profile = FactoryGuy.make('profile');
+  let profile = FactoryGuy.make('profile');
 
   // set the succeed flag to 'false'
   TestHelper.handleUpdate('profile', profile.id).andFail({status: 422, response: 'Invalid data'});
@@ -1081,12 +1081,12 @@ chainable methods.
 *mocking a failed update and retry with succees*
 
 ```javascript
-  var profile = FactoryGuy.make('profile');
+  let profile = FactoryGuy.make('profile');
 
   // set the succeed flag to 'false'
-  var mockUpdate = TestHelper.handleUpdate('profile', profile.id);
+  let mockUpdate = TestHelper.handleUpdate('profile', profile.id);
   // or
-  var mockUpdate = TestHelper.handleUpdate(profile);
+  let mockUpdate = TestHelper.handleUpdate(profile);
 
   mockUpdate.andFail({status: 422, response: 'Invalid data'});
 
@@ -1111,7 +1111,7 @@ chainable methods.
 *success case is the default*
 
 ```javascript
-  var profile = FactoryGuy.make('profile');
+  let profile = FactoryGuy.make('profile');
   TestHelper.handleDelete('profile', profile.id);
 
   profile.destroyRecord() // => will succeed
@@ -1120,7 +1120,7 @@ chainable methods.
 *mocking a failed delete*
 
 ```javascript
-  var profile = FactoryGuy.make('profile');
+  let profile = FactoryGuy.make('profile');
   // set the succeed flag to 'false'
   TestHelper.handleDelete('profile', profile.id, false);
 
@@ -1150,11 +1150,11 @@ moduleForAcceptance('Acceptance | User View', {
 });
 
 test("Creates new project", function () {
-  var user = make('user', 'with_projects'); // create a user with projects in the store
+  let user = make('user', 'with_projects'); // create a user with projects in the store
   visit('/user/'+user.id);
 
   andThen(function () {
-    var newProjectName = "Gonzo Project";
+    let newProjectName = "Gonzo Project";
 
     fillIn('input.project-name', newProjectName);
 
@@ -1167,15 +1167,15 @@ test("Creates new project", function () {
      create project record and looks something like this:
      actions: {
         addProject: function (user) {
-          var name = this.$('input.project-name').val();
-          var store = this.get('controller.store');
+          let name = this.$('input.project-name').val();
+          let store = this.get('controller.store');
           store.createRecord('project', {name: name, user: user}).save();
         }
     */
     click('button:contains(Add New User)');
 
     andThen(function () {
-      var newProjectDiv = find('li.project:contains(' + newProjectName + ')');
+      let newProjectDiv = find('li.project:contains(' + newProjectName + ')');
       ok(newProjectDiv[0] !== undefined);
     });
   });

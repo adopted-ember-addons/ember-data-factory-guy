@@ -4,16 +4,16 @@ import FactoryGuy, { build, buildList } from 'ember-data-factory-guy';
 import SharedAdapterBehavior from './shared-adapter-tests';
 import { title, inlineSetup } from '../helpers/utility-methods';
 
-var App = null;
-var adapter = 'DS.JSONAPIAdapter';
-var adapterType = '-json-api';
+let App = null;
+let adapter = 'DS.JSONAPIAdapter';
+let adapterType = '-json-api';
 
 SharedAdapterBehavior.all(adapter, adapterType);
 
 module(title(adapter, 'FactoryGuy#build'), inlineSetup(App, adapterType));
 
 test("with traits defining model attributes", function () {
-  var json = build('project', 'big').data;
+  let json = build('project', 'big').data;
   deepEqual(json, {
     id: 1,
     type: 'project',
@@ -24,7 +24,7 @@ test("with traits defining model attributes", function () {
 });
 
 test("sideloads belongsTo records which are built from fixture definition", function () {
-  var json = build('project', 'with_user');
+  let json = build('project', 'with_user');
   delete json.unwrap;
   deepEqual(json,
     {
@@ -55,7 +55,7 @@ test("sideloads belongsTo records which are built from fixture definition", func
 
 test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () {
   let user = build('user');
-  var project = build('project', {user: user});
+  let project = build('project', {user: user});
   delete project.unwrap;
   deepEqual(project,
     {
@@ -86,7 +86,7 @@ test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () 
 
 
 test("sideloads many belongsTo records which are built from fixture definition", function () {
-  var json = build('project', 'big', 'with_user');
+  let json = build('project', 'big', 'with_user');
   delete json.unwrap;
   deepEqual(json,
     {
@@ -116,7 +116,7 @@ test("sideloads many belongsTo records which are built from fixture definition",
 });
 
 test("with more than one trait and custom attributes", function () {
-  var json = build('project', 'big', 'with_user', {title: 'Crazy Project'});
+  let json = build('project', 'big', 'with_user', {title: 'Crazy Project'});
   delete json.unwrap;
   deepEqual(json,
     {
@@ -146,7 +146,7 @@ test("with more than one trait and custom attributes", function () {
 });
 
 test("with trait with custom belongsTo association object", function () {
-  var json = build('project', 'big', 'with_dude');
+  let json = build('project', 'big', 'with_dude');
   delete json.unwrap;
   deepEqual(json,
     {
@@ -175,7 +175,7 @@ test("with trait with custom belongsTo association object", function () {
 });
 
 test("using trait with attribute using FactoryGuy.belongsTo method", function () {
-  var json = build('project', 'with_admin');
+  let json = build('project', 'with_admin');
   delete json.unwrap;
   deepEqual(json,
     {
@@ -206,7 +206,7 @@ test("using trait with attribute using FactoryGuy.belongsTo method", function ()
 
 
 test("with attribute using sequence", function () {
-  var json = build('project', 'with_title_sequence');
+  let json = build('project', 'with_title_sequence');
   delete json.unwrap;
 
   deepEqual(json,
@@ -222,7 +222,7 @@ test("with attribute using sequence", function () {
 });
 
 test("sideloads hasMany records built from fixture definition", function () {
-  var json = build('user', 'with_projects');
+  let json = build('user', 'with_projects');
   delete json.unwrap;
 
   deepEqual(json,
@@ -261,9 +261,51 @@ test("sideloads hasMany records built from fixture definition", function () {
     });
 });
 
-test("sideloads hasMany records passed as ( prebuilt ) attribute", function () {
-  var projects = buildList('project', 2);
-  var user = build('user', {projects: projects});
+test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", function () {
+  let projects = buildList('project', 2);
+  let user = build('user', {projects: projects});
+  delete user.unwrap;
+
+  deepEqual(user,
+    {
+      data: {
+        id: 1,
+        type: 'user',
+        attributes: {
+          name: 'User1'
+        },
+        relationships: {
+          projects: {
+            data: [
+              {id: 1, type: 'project'},
+              {id: 2, type: 'project'}
+            ]
+          }
+        }
+      },
+      included: [
+        {
+          id: 1,
+          type: "project",
+          attributes: {
+            title: "Project1"
+          }
+        },
+        {
+          id: 2,
+          type: "project",
+          attributes: {
+            title: "Project2"
+          }
+        }
+      ]
+    });
+});
+
+test("sideloads hasMany records passed as prebuilt ( array of build ) attribute", function () {
+  let project1 = build('project');
+  let project2 = build('project');
+  let user = build('user', {projects: [project1, project2]});
   delete user.unwrap;
 
   deepEqual(user,
@@ -303,7 +345,7 @@ test("sideloads hasMany records passed as ( prebuilt ) attribute", function () {
 });
 
 test("creates default json for model", function () {
-  var json = build('user');
+  let json = build('user');
   delete json.unwrap;
 
   deepEqual(json,
@@ -321,7 +363,7 @@ test("creates default json for model", function () {
 
 
 test("can override default model attributes", function () {
-  var json = build('user', {name: 'bob'});
+  let json = build('user', {name: 'bob'});
   delete json.unwrap;
 
   deepEqual(json,
@@ -339,7 +381,7 @@ test("can override default model attributes", function () {
 
 
 test("can have named model definition with custom attributes", function () {
-  var json = build('admin');
+  let json = build('admin');
   delete json.unwrap;
 
   deepEqual(json,
@@ -357,7 +399,7 @@ test("can have named model definition with custom attributes", function () {
 
 
 test("can override named model attributes", function () {
-  var json = build('admin', {name: 'AdminGuy'});
+  let json = build('admin', {name: 'AdminGuy'});
   delete json.unwrap;
 
   deepEqual(json,
@@ -375,7 +417,7 @@ test("can override named model attributes", function () {
 
 
 test("ignores transient attributes", function () {
-  var json = build('property');
+  let json = build('property');
   delete json.unwrap;
 
   deepEqual(json,
@@ -393,16 +435,16 @@ test("ignores transient attributes", function () {
 
 
 test("similar model type ids are created sequentially", function () {
-  var user1 = build('user');
-  var user2 = build('user');
-  var project = build('project');
+  let user1 = build('user');
+  let user2 = build('user');
+  let project = build('project');
   equal(user1.data.id, 1);
   equal(user2.data.id, 2);
   equal(project.data.id, 1);
 });
 
 test("when no custom serialize keys functions exist, dasherizes attributes and relationship keys", function () {
-  var json = build('profile', 'with_bat_man');
+  let json = build('profile', 'with_bat_man');
   delete json.unwrap;
 
   deepEqual(json,
@@ -436,14 +478,14 @@ test("when no custom serialize keys functions exist, dasherizes attributes and r
 });
 
 test("using custom serialize keys function for transforming attributes and relationship keys", function () {
-  var serializer = FactoryGuy.get('store').serializerFor();
+  let serializer = FactoryGuy.get('store').serializerFor();
 
-  var savedKeyForAttributeFn = serializer.keyForAttribute;
+  let savedKeyForAttributeFn = serializer.keyForAttribute;
   serializer.keyForAttribute = Ember.String.underscore;
-  var savedKeyForRelationshipFn = serializer.keyForRelationship;
+  let savedKeyForRelationshipFn = serializer.keyForRelationship;
   serializer.keyForRelationship = Ember.String.underscore;
 
-  var json = build('profile', 'with_bat_man');
+  let json = build('profile', 'with_bat_man');
   delete json.unwrap;
 
   deepEqual(json,
@@ -481,8 +523,8 @@ test("using custom serialize keys function for transforming attributes and relat
 });
 
 test("serializes attributes with custom type", function () {
-  var info = {first: 1};
-  var json = build('user', {info: info});
+  let info = {first: 1};
+  let json = build('user', {info: info});
   delete json.unwrap;
 
   deepEqual(json,
@@ -501,7 +543,7 @@ test("serializes attributes with custom type", function () {
 
 test("with (nested json fixture) belongsTo has a hasMany association which has a belongsTo", function () {
 
-  var expectedData = {
+  let expectedData = {
     "data": {
       "type": "project",
       "id": 1,
@@ -567,7 +609,7 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
     ]
   };
 
-  var projectJson = build('project', 'with_user_having_hats_belonging_to_outfit');
+  let projectJson = build('project', 'with_user_having_hats_belonging_to_outfit');
   deepEqual(projectJson.data, expectedData.data);
   deepEqual(projectJson.included, expectedData.included);
 

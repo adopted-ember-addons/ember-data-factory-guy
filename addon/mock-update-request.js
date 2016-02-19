@@ -2,10 +2,10 @@ import Ember from 'ember';
 import $ from 'jquery';
 import FactoryGuy from './factory-guy';
 
-var MockUpdateRequest = function(url, model, options) {
-  var status = options.status || 200;
-  var succeed = true;
-  var response = null;
+let MockUpdateRequest = function(url, model, options) {
+  let status = options.status || 200;
+  let succeed = true;
+  let response = null;
 
   if ('succeed' in options) {
     Ember.deprecate(
@@ -44,12 +44,12 @@ var MockUpdateRequest = function(url, model, options) {
       }
     } else {
       // need to use serialize instead of toJSON to handle polymorphic belongsTo
-      var json = model.serialize({includeId: true});
+      let json = model.serialize({includeId: true});
       this.responseText = FactoryGuy.get('fixtureBuilder').normalize(model.constructor.modelName, json);
       this.status = 200;
     }
   };
-  var requestConfig = {
+  let requestConfig = {
     url: url,
     dataType: 'json',
     type: FactoryGuy.get('updateHTTPMethod'),

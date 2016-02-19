@@ -14,10 +14,10 @@ import Ember from 'ember';
  @param store
  @constructor
  */
-var RestFixtureConverter = function (store) {
-  var self = this;
-  var defaultKeyTransformFn = Ember.String.underscore;
-  var defaultValueTransformFn = function(x) { return x; };
+let RestFixtureConverter = function (store) {
+  let self = this;
+  let defaultKeyTransformFn = Ember.String.underscore;
+  let defaultValueTransformFn = function(x) { return x; };
   /**
    Transform attributes in fixture.
 
@@ -26,9 +26,9 @@ var RestFixtureConverter = function (store) {
    @returns {*} converted fixture
    */
   this.convert = function (modelName, fixture) {
-    var included = Ember.A([]);
+    let included = Ember.A([]);
 
-    var newFixture;
+    let newFixture;
     if (Ember.typeOf(fixture) === 'array') {
       newFixture = fixture.map(function (single) {
         return convertSingle(modelName, single, included);
@@ -38,7 +38,7 @@ var RestFixtureConverter = function (store) {
       newFixture = convertSingle(modelName, fixture, included);
     }
 
-    var finalFixture = {};
+    let finalFixture = {};
     finalFixture[modelName] = newFixture;
 
 
@@ -54,10 +54,10 @@ var RestFixtureConverter = function (store) {
    @param {String} modelName
    @param {Object} fixture
    */
-  var convertSingle = function (modelName, fixture, included) {
-    var data = {};
-    var attributes = extractAttributes(modelName, fixture);
-    var relationships = extractRelationships(modelName, fixture, included);
+  let convertSingle = function (modelName, fixture, included) {
+    let data = {};
+    let attributes = extractAttributes(modelName, fixture);
+    let relationships = extractRelationships(modelName, fixture, included);
     Object.keys(attributes).forEach(function(key) {
       data[key] = attributes[key];
     });
@@ -74,13 +74,13 @@ var RestFixtureConverter = function (store) {
    @param {Object} fixture
    @returns {*}
    */
-  var extractAttributes = function (modelName, fixture) {
-    var attributes = {};
-    var transformKeyFunction = getTransformKeyFunction(modelName, 'Attribute');
+  let extractAttributes = function (modelName, fixture) {
+    let attributes = {};
+    let transformKeyFunction = getTransformKeyFunction(modelName, 'Attribute');
 
     store.modelFor(modelName).eachAttribute(function (attribute, meta) {
-      var attributeKey = transformKeyFunction(attribute);
-      var transformValueFunction = getTransformValueFunction(meta.type);
+      let attributeKey = transformKeyFunction(attribute);
+      let transformValueFunction = getTransformValueFunction(meta.type);
 
       if (fixture.hasOwnProperty(attribute)) {
         attributes[attributeKey] = transformValueFunction(fixture[attribute]);
@@ -99,10 +99,10 @@ var RestFixtureConverter = function (store) {
     @param {String} modelKey
     @param {Object} data
    */
-  var addToIncluded = function (included, modelKey, data) {
-    var relationshipKey = Ember.String.pluralize(modelKey.dasherize());
+  let addToIncluded = function (included, modelKey, data) {
+    let relationshipKey = Ember.String.pluralize(modelKey.dasherize());
 
-    var typeFound = Object.keys(included).find(function(includedKey) {
+    let typeFound = Object.keys(included).find(function(includedKey) {
       return relationshipKey === includedKey;
     });
 
@@ -116,8 +116,8 @@ var RestFixtureConverter = function (store) {
 
 
   this.transformRelationshipKey = function (relationship) {
-    var transformFn = getTransformKeyFunction(relationship.type, 'Relationship');
-    var transformedKey = transformFn(relationship.key, relationship.kind);
+    let transformFn = getTransformKeyFunction(relationship.type, 'Relationship');
+    let transformedKey = transformFn(relationship.key, relationship.kind);
     if (relationship.options.polymorphic) {
       transformedKey = transformedKey.replace('_id', '');
     }
@@ -125,12 +125,12 @@ var RestFixtureConverter = function (store) {
   };
 
   var getTransformKeyFunction = function(modelName, type) {
-    var serializer = store.serializerFor(modelName);
+    let serializer = store.serializerFor(modelName);
     return serializer['keyFor'+type] || defaultKeyTransformFn;
   };
 
-  var getTransformValueFunction = function (type) {
-    var container = Ember.getOwner ? Ember.getOwner(store) : store.container;
+  let getTransformValueFunction = function (type) {
+    let container = Ember.getOwner ? Ember.getOwner(store) : store.container;
     return type ? container.lookup('transform:' + type).serialize : defaultValueTransformFn;
   };
 
@@ -139,7 +139,7 @@ var RestFixtureConverter = function (store) {
    @param {Object} record
    @param {Object} relationship
    */
-  var normalizeRESTAssociation = function (record, relationship) {
+  let normalizeRESTAssociation = function (record, relationship) {
     if (Ember.typeOf(record) === 'object') {
       if (relationship.options.polymorphic) {
         return {type: Ember.String.underscore(record.type), id: record.id};
@@ -160,40 +160,40 @@ var RestFixtureConverter = function (store) {
    @param {Array} included
    @returns {{}}
    */
-  var extractRelationships = function (modelName, fixture, included) {
-    var relationships = {},
+  let extractRelationships = function (modelName, fixture, included) {
+    let relationships = {},
         normalizedRelationshipKey;
 
     store.modelFor(modelName).eachRelationship(function (key, relationship) {
-      var isPolymorphic = relationship.options.polymorphic;
+      let isPolymorphic = relationship.options.polymorphic;
       if (fixture.hasOwnProperty(key)) {
         if (relationship.kind === 'belongsTo') {
-          var belongsToRecord = fixture[relationship.key];
+          let belongsToRecord = fixture[relationship.key];
           normalizedRelationshipKey = self.transformRelationshipKey(relationship);
           if (Ember.typeOf(belongsToRecord) === 'object') {
-            var embeddedFixture = belongsToRecord;
+            let embeddedFixture = belongsToRecord;
 
             // find possibly more embedded fixtures
-            var relationshipType = isPolymorphic ? Ember.String.underscore(embeddedFixture.type) : relationship.type;
+            let relationshipType = isPolymorphic ? Ember.String.underscore(embeddedFixture.type) : relationship.type;
             relationships[normalizedRelationshipKey] = normalizeRESTAssociation(embeddedFixture, relationship);
 
-            var data = convertSingle(relationshipType, embeddedFixture, included);
+            let data = convertSingle(relationshipType, embeddedFixture, included);
 
             addToIncluded(included, relationshipType, data);
           } else if (Ember.typeOf(belongsToRecord) === 'instance') {
             relationships[normalizedRelationshipKey] = normalizeRESTAssociation(belongsToRecord, relationship);
           }
         } else if (relationship.kind === 'hasMany') {
-          var hasManyRecords = fixture[relationship.key];
+          let hasManyRecords = fixture[relationship.key];
           normalizedRelationshipKey = self.transformRelationshipKey(relationship);
           if (Ember.typeOf(hasManyRecords) === 'array') {
-            var records = hasManyRecords.map(function (hasManyRecord) {
+            let records = hasManyRecords.map(function (hasManyRecord) {
               if (Ember.typeOf(hasManyRecord) === 'object') {
-                var embeddedFixture = hasManyRecord;
+                let embeddedFixture = hasManyRecord;
 
-                var relationshipType = isPolymorphic ? Ember.String.underscore(embeddedFixture.type) : relationship.type;
+                let relationshipType = isPolymorphic ? Ember.String.underscore(embeddedFixture.type) : relationship.type;
 
-                var data = convertSingle(relationshipType, embeddedFixture, included);
+                let data = convertSingle(relationshipType, embeddedFixture, included);
 
                 addToIncluded(included, relationshipType, data);
 

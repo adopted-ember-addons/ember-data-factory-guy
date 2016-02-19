@@ -54,13 +54,13 @@ export default function(store) {
    @returns {{}}  JSONAPI formatted errors
    */
   this.convertResponseErrors = function (object) {
-    var jsonAPIErrrors = [];
+    let jsonAPIErrrors = [];
     Ember.assert('Your error REST Adapter style response must have an errors key. The errors hash format is: {errors: {description: ["bad"]}}', object.errors);
-    var errors = object.errors;
-    for (var key in errors) {
-      var description = Ember.typeOf(errors[key]) === "array" ? errors[key][0] : errors[key];
-      var source = {pointer: "data/attributes/key"+key};
-      var newError = {detail: description, title: "invalid "+key, source: source};
+    let errors = object.errors;
+    for (let key in errors) {
+      let description = Ember.typeOf(errors[key]) === "array" ? errors[key][0] : errors[key];
+      let source = {pointer: "data/attributes/key"+key};
+      let newError = {detail: description, title: "invalid "+key, source: source};
       jsonAPIErrrors.push(newError);
     }
     return {errors: jsonAPIErrrors};

@@ -20,7 +20,7 @@ test("Deleting a user", function () {
     click('li.user:first button');
   });
   andThen(function(){
-    var users = find('li.user');
+    let users = find('li.user');
     ok(users.length === 1);
   });
 });

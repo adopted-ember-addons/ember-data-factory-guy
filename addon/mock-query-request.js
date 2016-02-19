@@ -4,17 +4,17 @@ import $ from 'jquery';
 
 // compare to object for loose equality
 function isEquivalent(a, b) {
-  var aProps = Object.keys(a);
-  var bProps = Object.keys(b);
+  let aProps = Object.keys(a);
+  let bProps = Object.keys(b);
 
   if (aProps.length !== bProps.length) {
     return false;
   }
 
-  for (var i = 0; i < aProps.length; i++) {
-    var propName = aProps[i];
-    var aEntry = a[propName];
-    var bEntry = b[propName];
+  for (let i = 0; i < aProps.length; i++) {
+    let propName = aProps[i];
+    let aEntry = a[propName];
+    let bEntry = b[propName];
     if (Ember.typeOf(aEntry) === 'object' && Ember.typeOf(bEntry) === 'object') {
       return isEquivalent(aEntry, bEntry);
     }
@@ -26,12 +26,12 @@ function isEquivalent(a, b) {
   return true;
 }
 
-var MockQueryRequest = function (url, modelName, queryParams) {
-  var succeed = true;
-  var status = 200;
-  var responseJson = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, []);
-  var errors = {};
-  var currentQueryParams = queryParams;
+let MockQueryRequest = function (url, modelName, queryParams) {
+  let succeed = true;
+  let status = 200;
+  let responseJson = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, []);
+  let errors = {};
+  let currentQueryParams = queryParams;
 
   this.withParams = function (queryParams) {
     currentQueryParams = queryParams;
@@ -45,7 +45,7 @@ var MockQueryRequest = function (url, modelName, queryParams) {
       models = [];
     }
 
-    var json = models.map(function (model) {
+    let json = models.map(function (model) {
       return {id: model.id, type: model.constructor.modelName};
     });
 
@@ -60,8 +60,8 @@ var MockQueryRequest = function (url, modelName, queryParams) {
   };
 
   this.returnsExistingIds = function (ids) {
-    var store = FactoryGuy.get('store');
-    var models = ids.map(function (id) {
+    let store = FactoryGuy.get('store');
+    let models = ids.map(function (id) {
       return store.peekRecord(modelName, id);
     });
     this.returnsModels(models);
@@ -78,7 +78,7 @@ var MockQueryRequest = function (url, modelName, queryParams) {
     return this;
   };
 
-  var handler = function (settings) {
+  let handler = function (settings) {
     if (settings.url === url && settings.type === "GET") {
       if (succeed) {
         if (currentQueryParams) {

@@ -12,7 +12,7 @@ let createAttrs = (data) => {
 /**
  Fixture Builder for JSONAPISerializer
  */
-var JSONAPIJsonBuilder = function (store) {
+let JSONAPIJsonBuilder = function (store) {
   FixtureBuilder.call(this, store);
 
   this.updateHTTPMethod = 'PATCH';
@@ -30,7 +30,7 @@ var JSONAPIJsonBuilder = function (store) {
   };
 
   this.convertForBuild = function (modelName, fixture) {
-    var convertedFixture = new JSONAPIFixtureConverter(store).convert(modelName, fixture);
+    let convertedFixture = new JSONAPIFixtureConverter(store).convert(modelName, fixture);
     let json = new JSONAPIAttributeTransformer(store).transform(modelName, convertedFixture);
     json.unwrap = this.unwrap.bind(json);
     return json;

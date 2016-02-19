@@ -31,11 +31,11 @@ moduleForModel('user', {
 });
 
 test('has funny name', function () {
-  var user = make('user', {name: 'Dude'});
+  let user = make('user', {name: 'Dude'});
   equal(user.get('funnyName'), 'funny Dude');
 });
 
 test('has projects', function () {
-  var user = make('user', 'with_projects');
+  let user = make('user', 'with_projects');
   equal(user.get('projects.length'), 2);
 });

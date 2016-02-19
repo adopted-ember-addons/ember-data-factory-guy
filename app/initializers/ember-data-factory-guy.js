@@ -8,7 +8,7 @@ export default {
     if (arguments.length > 1) {
       application = arguments[1];
     }
-    var container =  application.__container__;
+    let container =  application.__container__;
     manualSetup(container);
   }
 };

@@ -1,9 +1,9 @@
 import $ from 'jquery';
 
-var MockGetRequest = function (url, modelName, responseJson) {
-  var status = 200;
-  var succeed = true;
-  var response = {};
+let MockGetRequest = function (url, modelName, responseJson) {
+  let status = 200;
+  let succeed = true;
+  let response = {};
 
   this.andSucceed = function (options) {
     succeed = true;
@@ -30,7 +30,7 @@ var MockGetRequest = function (url, modelName, responseJson) {
     }
   };
 
-  var requestConfig = {
+  let requestConfig = {
     url: url,
     dataType: 'json',
     type: 'GET',
