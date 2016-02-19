@@ -95,7 +95,7 @@ var ModelDefinition = function (model, config) {
         if (relationship) {
           let payload = fixture[attribute];
           if (payload.unwrap) {
-            // FactoryGuy already built this json
+            // FactoryGuy already built this it's already built json
             fixture[attribute] = payload.unwrap();
           } else {
             fixture[attribute] = FactoryGuy.buildRaw(relationship.type, payload);

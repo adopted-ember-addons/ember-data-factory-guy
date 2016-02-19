@@ -265,9 +265,7 @@ let FactoryGuy = Ember.Object.extend({
     let fixture = this.buildRaw.apply(this, arguments);
     let modelName = lookupModelForFixtureName(args.name);
 
-    let json = this.get('fixtureBuilder').convertForBuild(modelName, fixture);
-    json.unwrap = ()=> { return json[modelName]; };
-    return json;
+    return this.get('fixtureBuilder').convertForBuild(modelName, fixture);
   },
 
   buildRaw() {
@@ -301,10 +299,7 @@ let FactoryGuy = Ember.Object.extend({
     let list = this.buildRawList.apply(this, arguments);
 
     let modelName = lookupModelForFixtureName(name);
-    let json = this.get('fixtureBuilder').convertForBuild(modelName, list);
-    json.unwrap = ()=> { return json[Object.getOwnPropertyNames(json)[0]]; };
-    return json;
-    
+    return this.get('fixtureBuilder').convertForBuild(modelName, list);
   },
 
   buildRawList(...args) {

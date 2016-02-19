@@ -33,7 +33,9 @@ var RESTFixtureBuilder = function(store) {
    @returns {*} new converted fixture
    */
   this.convertForBuild = function(modelName, fixture) {
-    return new RESTFixtureConverter(store).convert(modelName, fixture);
+    let json = new RESTFixtureConverter(store).convert(modelName, fixture);
+    json.unwrap = ()=> { return json[Object.getOwnPropertyNames(json)[0]]; };
+    return json;
   };
 };
 

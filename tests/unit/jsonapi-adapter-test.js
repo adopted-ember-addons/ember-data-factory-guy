@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy, { build } from 'ember-data-factory-guy';
+import FactoryGuy, { build, buildList } from 'ember-data-factory-guy';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
 import { title, inlineSetup } from '../helpers/utility-methods';
@@ -10,7 +10,7 @@ var adapterType = '-json-api';
 
 SharedAdapterBehavior.all(adapter, adapterType);
 
-module(title(adapter, 'FactoryGuy#buildJSONAPI'), inlineSetup(App, adapterType));
+module(title(adapter, 'FactoryGuy#build'), inlineSetup(App, adapterType));
 
 test("with traits defining model attributes", function () {
   var json = build('project', 'big').data;
@@ -23,7 +23,7 @@ test("with traits defining model attributes", function () {
   });
 });
 
-test("with traits defining belongsTo association", function () {
+test("sideloads belongsTo records which are built from fixture definition", function () {
   var json = build('project', 'with_user');
   delete json.unwrap;
   deepEqual(json,
@@ -53,7 +53,39 @@ test("with traits defining belongsTo association", function () {
     });
 });
 
-test("with more than one trait used", function () {
+test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () {
+  let user = build('user');
+  var project = build('project', {user: user});
+  delete project.unwrap;
+  deepEqual(project,
+    {
+      data: {
+        id: 1,
+        type: 'project',
+        attributes: {
+          title: 'Project1'
+        },
+        relationships: {
+          user: {
+            data: {id: 1, type: 'user'}
+          }
+
+        }
+      },
+      included: [
+        {
+          id: 1,
+          type: "user",
+          attributes: {
+            name: "User1"
+          }
+        }
+      ]
+    });
+});
+
+
+test("sideloads many belongsTo records which are built from fixture definition", function () {
   var json = build('project', 'big', 'with_user');
   delete json.unwrap;
   deepEqual(json,
@@ -189,11 +221,52 @@ test("with attribute using sequence", function () {
     });
 });
 
-test("with trait defining hasMany association", function () {
+test("sideloads hasMany records built from fixture definition", function () {
   var json = build('user', 'with_projects');
   delete json.unwrap;
 
   deepEqual(json,
+    {
+      data: {
+        id: 1,
+        type: 'user',
+        attributes: {
+          name: 'User1'
+        },
+        relationships: {
+          projects: {
+            data: [
+              {id: 1, type: 'project'},
+              {id: 2, type: 'project'}
+            ]
+          }
+        }
+      },
+      included: [
+        {
+          id: 1,
+          type: "project",
+          attributes: {
+            title: "Project1"
+          }
+        },
+        {
+          id: 2,
+          type: "project",
+          attributes: {
+            title: "Project2"
+          }
+        }
+      ]
+    });
+});
+
+test("sideloads hasMany records passed as ( prebuilt ) attribute", function () {
+  var projects = buildList('project', 2);
+  var user = build('user', {projects: projects});
+  delete user.unwrap;
+
+  deepEqual(user,
     {
       data: {
         id: 1,
