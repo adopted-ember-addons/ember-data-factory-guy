@@ -294,9 +294,7 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
 
   FactoryGuy.define('user', {
     sequences: {
-      userName: function(num) {
-        return `User${num}`;
-      }
+      userName: (num)=> `User${num}`
     },
 
     default: {
@@ -319,7 +317,7 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
 
   FactoryGuy.define('project', {
     special_project: {
-      title: FactoryGuy.generate(function(num) { return `Project #${num}`; })
+      title: FactoryGuy.generate((num)=> `Project #${num}`)
     },
   });
 
@@ -343,7 +341,7 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
     // from the user definition in: "Declaring sequences in sequences hash" section.
 
     funny_user: {
-      style: function(f) { return `funny ${f.name}`; }
+      style: (f)=> `funny ${f.name}`
     }
   });
 
