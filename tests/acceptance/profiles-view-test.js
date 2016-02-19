@@ -1,29 +1,19 @@
-import Ember from 'ember';
+import fgHelper from 'ember-data-factory-guy/factory-guy-test-helper';
+import moduleForAcceptance from '../helpers/module-for-acceptance';
 
-import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
-import startApp from '../helpers/start-app';
-
-var App;
-
-module('Profiles View', {
+moduleForAcceptance('Acceptance | Profiles View', {
   beforeEach: function () {
-    Ember.run(function () {
-      App = startApp();
-      TestHelper.setup();
-    });
+    fgHelper.setup();
   },
   afterEach: function () {
-    Ember.run(function () {
-      TestHelper.teardown();
-      App.destroy();
-    });
+    fgHelper.teardown();
   }
 });
 
 
 test("Handles differently cased attributes", function () {
 
-  TestHelper.handleFindAll('profile', 2);
+  fgHelper.handleFindAll('profile', 2);
   visit('/profiles');
 
   andThen(function () {

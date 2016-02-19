@@ -1,6 +1,6 @@
 import { module } from 'qunit';
-import startApp from '../helpers/start-app';
-import destroyApp from '../helpers/destroy-app';
+import startApp from './start-app';
+import destroyApp from './destroy-app';
 
 export default function(name, options = {}) {
   module(name, {

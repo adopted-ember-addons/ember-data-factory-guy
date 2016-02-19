@@ -1,32 +1,22 @@
-import Ember from 'ember';
+import fgHelper from 'ember-data-factory-guy/factory-guy-test-helper';
+import moduleForAcceptance from '../helpers/module-for-acceptance';
 
-import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
-import startApp from '../helpers/start-app';
-
-var App;
-
-module('Users Delete', {
+moduleForAcceptance('Acceptance | Users Delete', {
   beforeEach: function () {
-    Ember.run(function () {
-      App = startApp();
-      TestHelper.setup();
-    });
+    fgHelper.setup();
   },
   afterEach: function () {
-    Ember.run(function () {
-      TestHelper.teardown();
-      App.destroy();
-    });
+    fgHelper.teardown();
   }
 });
 
 
 test("Deleting a user", function () {
-  TestHelper.handleFindAll('user', 2);
+  fgHelper.handleFindAll('user', 2);
   visit('/users');
 
   andThen(function () {
-    TestHelper.handleDelete('user', '1');
+    fgHelper.handleDelete('user', '1');
     click('li.user:first button');
   });
   andThen(function(){
