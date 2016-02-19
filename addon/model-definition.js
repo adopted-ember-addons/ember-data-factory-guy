@@ -93,7 +93,13 @@ var ModelDefinition = function (model, config) {
         // for the association and replace the attribute with that json
         var relationship = getRelationship(attribute);
         if (relationship) {
-          fixture[attribute] = FactoryGuy.buildRaw(relationship.type, fixture[attribute]);
+          let payload = fixture[attribute];
+          if (payload.unwrap) {
+            // FactoryGuy already built this json
+            fixture[attribute] = payload.unwrap();
+          } else {
+            fixture[attribute] = FactoryGuy.buildRaw(relationship.type, payload);
+          }
         }
       }
     }

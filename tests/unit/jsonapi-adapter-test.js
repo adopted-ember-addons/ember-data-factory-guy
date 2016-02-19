@@ -25,6 +25,7 @@ test("with traits defining model attributes", function () {
 
 test("with traits defining belongsTo association", function () {
   var json = build('project', 'with_user');
+  delete json.unwrap;
   deepEqual(json,
     {
       data: {
@@ -54,6 +55,7 @@ test("with traits defining belongsTo association", function () {
 
 test("with more than one trait used", function () {
   var json = build('project', 'big', 'with_user');
+  delete json.unwrap;
   deepEqual(json,
     {
       data: {
@@ -83,6 +85,7 @@ test("with more than one trait used", function () {
 
 test("with more than one trait and custom attributes", function () {
   var json = build('project', 'big', 'with_user', {title: 'Crazy Project'});
+  delete json.unwrap;
   deepEqual(json,
     {
       data: {
@@ -112,6 +115,7 @@ test("with more than one trait and custom attributes", function () {
 
 test("with trait with custom belongsTo association object", function () {
   var json = build('project', 'big', 'with_dude');
+  delete json.unwrap;
   deepEqual(json,
     {
       data: {
@@ -140,6 +144,7 @@ test("with trait with custom belongsTo association object", function () {
 
 test("using trait with attribute using FactoryGuy.belongsTo method", function () {
   var json = build('project', 'with_admin');
+  delete json.unwrap;
   deepEqual(json,
     {
       data: {
@@ -170,6 +175,8 @@ test("using trait with attribute using FactoryGuy.belongsTo method", function ()
 
 test("with attribute using sequence", function () {
   var json = build('project', 'with_title_sequence');
+  delete json.unwrap;
+
   deepEqual(json,
     {
       data: {
@@ -184,6 +191,8 @@ test("with attribute using sequence", function () {
 
 test("with trait defining hasMany association", function () {
   var json = build('user', 'with_projects');
+  delete json.unwrap;
+
   deepEqual(json,
     {
       data: {
@@ -222,6 +231,8 @@ test("with trait defining hasMany association", function () {
 
 test("creates default json for model", function () {
   var json = build('user');
+  delete json.unwrap;
+
   deepEqual(json,
     {
       data: {
@@ -238,6 +249,8 @@ test("creates default json for model", function () {
 
 test("can override default model attributes", function () {
   var json = build('user', {name: 'bob'});
+  delete json.unwrap;
+
   deepEqual(json,
     {
       data: {
@@ -254,6 +267,8 @@ test("can override default model attributes", function () {
 
 test("can have named model definition with custom attributes", function () {
   var json = build('admin');
+  delete json.unwrap;
+
   deepEqual(json,
     {
       data: {
@@ -270,6 +285,8 @@ test("can have named model definition with custom attributes", function () {
 
 test("can override named model attributes", function () {
   var json = build('admin', {name: 'AdminGuy'});
+  delete json.unwrap;
+
   deepEqual(json,
     {
       data: {
@@ -286,6 +303,8 @@ test("can override named model attributes", function () {
 
 test("ignores transient attributes", function () {
   var json = build('property');
+  delete json.unwrap;
+
   deepEqual(json,
     {
       data: {
@@ -311,6 +330,8 @@ test("similar model type ids are created sequentially", function () {
 
 test("when no custom serialize keys functions exist, dasherizes attributes and relationship keys", function () {
   var json = build('profile', 'with_bat_man');
+  delete json.unwrap;
+
   deepEqual(json,
     {
       data: {
@@ -350,6 +371,8 @@ test("using custom serialize keys function for transforming attributes and relat
   serializer.keyForRelationship = Ember.String.underscore;
 
   var json = build('profile', 'with_bat_man');
+  delete json.unwrap;
+
   deepEqual(json,
     {
       data: {
@@ -387,6 +410,7 @@ test("using custom serialize keys function for transforming attributes and relat
 test("serializes attributes with custom type", function () {
   var info = {first: 1};
   var json = build('user', {info: info});
+  delete json.unwrap;
 
   deepEqual(json,
     {
