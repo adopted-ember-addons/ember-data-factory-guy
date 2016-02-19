@@ -1134,30 +1134,20 @@ chainable methods.
 ```javascript
 // file: tests/acceptance/user-view-test.js
 
-import Ember from 'ember';
-
 import { make } from 'ember-data-factory-guy';
-import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
+import fgHelper from 'ember-data-factory-guy/factory-guy-test-helper';
+import moduleForAcceptance from '../helpers/module-for-acceptance';
 
-import startApp from '../helpers/start-app';
-
-var App;
-
-module('User View', {
-  setup: function () {
-    Ember.run(function () {
-      App = startApp();
-      TestHelper.setup();
-    });
+moduleForAcceptance('Acceptance | User View', {
+  beforeEach: function () {
+    // TestHelper.setup sets $.mockjaxSettings response time to zero ( speeds up tests )
+    fgHelper.setup();
   },
-  teardown: function () {
-    Ember.run(function () {
-      TestHelper.teardown();
-      App.destroy();
-    });
+  afterEach: function () {
+      // TestHelper.teardown calls $.mockjax.clear() which resets all the mockjax handlers
+    fgHelper.teardown();
   }
 });
-
 
 test("Creates new project", function () {
   var user = make('user', 'with_projects'); // create a user with projects in the store
@@ -1170,7 +1160,7 @@ test("Creates new project", function () {
 
     // Remember, this is for handling an exact match, if you did not care about
     // matching attributes, you could just do: TestHelper.handleCreate('project')
-    TestHelper.handleCreate('project', {match: {name: newProjectName, user: user}});
+    fgHelper.handleCreate('project', {match: {name: newProjectName, user: user}});
 
     /**
      Let's say that clicking this 'button.add-project', triggers action in the view to
