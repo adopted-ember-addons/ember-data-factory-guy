@@ -7,7 +7,7 @@ import MockCreateRequest from './mock-create-request';
 import MockQueryRequest from './mock-query-request';
 import MockGetRequest from './mock-get-request';
 
-let FactoryGuyTestHelper = Ember.Object.create({
+let MockServer = Ember.Object.extend({
 
   setup: function () {
     $.mockjaxSettings.logging = false;
@@ -315,4 +315,12 @@ let FactoryGuyTestHelper = Ember.Object.create({
 
 });
 
-export default FactoryGuyTestHelper;
+let mockServer = MockServer.create();
+
+//let handleFind = mockServer.handleFind.bind(mockServer);
+//let handleFindAll = mockServer.handleFindAll.bind(mockServer);
+//let build = mockServer.handleCreate.bind(mockServer);
+//let buildList = mockServer.handleUpdate.bind(mockServer);
+//let clearStore = mockServer.clearStore.bind(mockServer);
+
+export default mockServer;
