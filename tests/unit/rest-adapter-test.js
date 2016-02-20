@@ -10,12 +10,43 @@ let adapterType = '-rest';
 
 SharedAdapterBehavior.all(adapter, adapterType);
 
+module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, adapterType));
+
+test("returns all attributes with no key", function () {
+  let user = build('user');
+  deepEqual(user.get(), {id: 1, name: 'User1'});
+  equal(user.get().id, 1);
+  equal(user.get().name, 'User1');
+});
+
+test("returns an attribute with a key", function () {
+  let user = build('user');
+  equal(user.get('id'), 1);
+  equal(user.get('name'), 'User1');
+});
+
+module(title(adapter, 'FactoryGuy#buildList get'), inlineSetup(App, adapterType));
+
+test("returns array of all attributes with no key", function () {
+  let users = buildList('user', 2);
+  deepEqual(users.get(), [{id: 1, name: 'User1'}, {id: 2, name: 'User2'}]);
+});
+
+test("returns an attribute with a key", function () {
+  let users = buildList('user', 2);
+  deepEqual(users.get(0), {id: 1, name: 'User1'});
+  equal(users.get(0).id, 1);
+  deepEqual(users.get(1), {id: 2, name: 'User2'});
+  equal(users.get(1).name, 'User2');
+});
+
+
 module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, adapterType));
 
 test("sideloads belongsTo records which are built from fixture definition", function () {
 
   let buildJson = build('profile', 'with_bat_man');
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     profile: {
@@ -42,7 +73,7 @@ test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () 
 
   let batMan = build('bat_man');
   let buildJson = build('profile', {superHero: batMan});
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     profile: {
@@ -68,7 +99,7 @@ test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () 
 test("sideloads hasMany records which are built from fixture definition", function () {
 
   let buildJson = build('user', 'with_hats');
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     user: {
@@ -92,7 +123,7 @@ test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", fun
 
   let hats = buildList('big-hat', 2);
   let buildJson = build('user', {hats: hats});
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     user: {
@@ -118,7 +149,7 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) attribute"
   let hat1 = build('big-hat');
   let hat2 = build('big-hat');
   let buildJson = build('user', {hats: [hat1, hat2]});
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     user: {
@@ -144,7 +175,7 @@ module(title(adapter, 'FactoryGuy#buildList custom'), inlineSetup(App, adapterTy
 test("sideloads belongsTo records", function () {
 
   let buildJson = buildList('profile', 2, 'with_bat_man');
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     profiles: [
@@ -186,7 +217,7 @@ test("sideloads belongsTo records", function () {
 test("sideloads hasMany records", function () {
 
   let buildJson = buildList('user', 2, 'with_hats');
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     users: [
@@ -221,7 +252,7 @@ test("sideloads hasMany records", function () {
 test("serializes attributes with custom type", function () {
   let info = {first: 1};
   let buildJson = build('user', {info: info});
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     user: {

@@ -112,7 +112,8 @@ let ModelDefinition = function (model, config) {
     if (relationship) {
       let payload = fixture[attribute];
       fixture[attribute] = payload.map((json)=>{
-        return json.unwrap ? json.unwrap() : json;
+        let isInstance = Ember.typeOf(json) === "instance";
+        return !isInstance && json.get ? json.get() : json;
       });
     }
   };
@@ -123,9 +124,9 @@ let ModelDefinition = function (model, config) {
     let relationship = getRelationship(attribute);
     if (relationship) {
       let payload = fixture[attribute];
-      if (payload.unwrap) {
+      if (payload.get) {
         // FactoryGuy already built this it's already built json
-        fixture[attribute] = payload.unwrap();
+        fixture[attribute] = payload.get();
       } else {
         fixture[attribute] = FactoryGuy.buildRaw(relationship.type, payload);
       }

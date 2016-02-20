@@ -38,7 +38,7 @@ module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, adapterType))
 test("sideloads belongsTo records which are built from fixture definition", function () {
 
   let buildJson = build('profile', 'with_bat_man');
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     profile: {
@@ -65,7 +65,7 @@ test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () 
 
   let batMan = build('bat_man');
   let buildJson = build('profile', {superHero: batMan});
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     profile: {
@@ -91,7 +91,7 @@ test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () 
 test("sideloads hasMany records built from fixture definition", function () {
 
   let buildJson = build('user', 'with_hats');
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     user: {
@@ -116,7 +116,7 @@ test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", fun
 
   let hats = buildList('big-hat', 2);
   let buildJson = build('user', {hats: hats});
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     user: {
@@ -142,7 +142,7 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) attribute"
   let hat1 = build('big-hat');
   let hat2 = build('big-hat');
   let buildJson = build('user', {hats: [hat1, hat2]});
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     user: {
@@ -172,7 +172,7 @@ test("using custom serialize keys function for transforming attributes and relat
   serializer.keyForRelationship = Ember.String.dasherize;
 
   let buildJson = build('profile', 'with_bat_man');
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     profile: {
@@ -201,7 +201,7 @@ test("using custom serialize keys function for transforming attributes and relat
 test("serializes attributes with custom type", function () {
   let info = {first: 1};
   let buildJson = build('user', {info: info});
-  delete buildJson.unwrap;
+  delete buildJson.get;
 
   let expectedJson = {
     user: {

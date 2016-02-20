@@ -6,6 +6,30 @@ import RESTFixtureConverter from './rest-fixture-converter';
   RESTSerializer
 
  */
+
+let getCommand = function(key) {
+  let attrs = this[Object.getOwnPropertyNames(this)[0]];
+  if (attrs === "array") {
+    if (Ember.isEmpty(key)) {
+      return attrs;
+    }
+    if (typeof key === 'number') {
+      return attrs[key];
+    }
+    if (key === 'firstObject') {
+      return attrs[0];
+    }
+    if (key === 'lastObject') {
+      return attrs[attrs.length-1];
+    }
+  } else {
+    if (Ember.isEmpty(key)) {
+      return attrs;
+    }
+    return attrs[key];
+  }
+};
+
 let RESTFixtureBuilder = function(store) {
   FixtureBuilder.call(this, store);
   /**
@@ -34,7 +58,7 @@ let RESTFixtureBuilder = function(store) {
    */
   this.convertForBuild = function(modelName, fixture) {
     let json = new RESTFixtureConverter(store).convert(modelName, fixture);
-    json.unwrap = ()=> { return json[Object.getOwnPropertyNames(json)[0]]; };
+    json.get = getCommand.bind(json);
     return json;
   };
 };

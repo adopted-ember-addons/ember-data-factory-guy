@@ -47,7 +47,7 @@ test("exposes build method which is shortcut for FactoryGuy.build", function () 
 });
 
 test("exposes buildList method which is shortcut for FactoryGuy.buildList", function () {
-  let userList = FactoryGuy.buildList('user', 2);
+  let userList = buildList('user', 2);
   ok(userList.data.length === 2);
 });
 
@@ -83,6 +83,14 @@ test("#clearStore clears the store of models, and resets the model definition", 
     }
   });
 });
+
+//module('FactoryGuy#build', inlineSetup(App,'-json-api'));
+
+//test("when composing associations enforces has many model type", function () {
+//  let profile = build('profile');
+//  let user = build('user', {company: profile});
+//  console.log(user.get());
+//});
 
 
 module('FactoryGuy#define extending another definition', inlineSetup(App,'-json-api'));
