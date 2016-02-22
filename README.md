@@ -620,7 +620,7 @@ the reverse user hasMany 'projects' association is being setup for you on the us
 
 ```javascript
 
-  FactoryGuy.define('project', {
+  FactoryGuy.define('user', {
     traits: {
       with_projects: {
         projects: FactoryGuy.hasMany('project', 2)
@@ -747,9 +747,15 @@ the store with your custom scenario.
   - FactoryGuy needs to setup the factories before the test run.
     - use manualSetup function to set up FactoryGuy in unit/component tests
 
+<<<<<<< 9fa84bb8b823655e2ab1a493f1c676899fdeace3
 - [Sample model test (profile-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
   - Use 'moduleForModel' ( ember-qunit ), or describeModel ( ember-mocha ) test helper
   - manually set up Factory guy 
+=======
+- [Sample model test #2 (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js)
+  - Uses 'moduleForModel' ( ember-qunit ), or describeModel ( ember-mocha ) test helper ( with integration mode )
+  - Does NOT load application, and manually sets up Factory guy ( so it's faster )
+>>>>>>> fix(typo): change projet to user for hasMany
 
 - [Sample component test #1 (dude-translator-manual-setup-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/dude-translator-manual-setup-test.js)
   - Using 'moduleForComponent' ( ember-qunit ), or describeComponent ( ember-mocha ) helper
