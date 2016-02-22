@@ -65,7 +65,7 @@ In the following examples, assume the models look like this:
     name:     DS.attr('string'),
     style:    DS.attr('string'),
     projects: DS.hasMany('project'),
-    hats: DS.hasMany('hat', {polymorphic: true})
+    hats: DS.hasMany('hat', { polymorphic: true })
   });
 
   Project = DS.Model.extend({
@@ -183,17 +183,17 @@ In other words, don't do this:
 
   // returns json
   let json = FactoryGuy.build('user');
-  json.user // => {id: 1, name: 'Dude', style: 'normal'}
+  json.user // => { id: 1, name: 'Dude', style: 'normal' }
 
   // returns a User instance that is loaded into your application's store
   let user = FactoryGuy.make('user');
-  user.toJSON({includeId: true}) // => {id: 2, name: 'Dude', style: 'normal'}
+  user.toJSON({ includeId: true }) // => { id: 2, name: 'Dude', style: 'normal' }
 
   let json = build('admin');
-  json.user // => {id: 3, name: 'Admin', style: 'super'}
+  json.user // => { id: 3, name: 'Admin', style: 'super' }
 
   let user = make('admin');
-  user.toJSON({includeId: true}) // => {id: 4, name: 'Admin', style: 'super'}
+  user.toJSON({ includeId: true }) // => { id: 4, name: 'Admin', style: 'super' }
 
 ```
 
@@ -201,7 +201,7 @@ You can override the default attributes by passing in a hash
 
 ```javascript
 
-  let json = build('user', {name: 'Fred'});
+  let json = build('user', { name: 'Fred'});
   // json.user.name => 'Fred'
 
 ```
@@ -228,16 +228,16 @@ Example:
         name: 'User1',
         company: 1,
         hats: [
-          {type: 'big_hat', id:1},
-          {type: 'big_hat', id:2}
+          { type: 'big_hat', id: 1 },
+          { type: 'big_hat', id: 2 }
         ]
       },
       companies: [
-        {id: 1, name: 'Silly corp'}
+        { id: 1, name: 'Silly corp'}
       ],
       'big-hats': [
-        {id: 1, type: "BigHat" },
-        {id: 2, type: "BigHat" }
+        { id: 1, type: 'BigHat' },
+        { id: 2, type: 'BigHat' }
       ]
     }
 
@@ -389,7 +389,7 @@ attributes will override any trait attributes or default attributes
 
 ```javascript
 
-  let user = FactoryGuy.make('user', 'big', 'friendly', {name: 'Dave'});
+  let user = FactoryGuy.make('user', 'big', 'friendly', { name: 'Dave' });
   user.get('name') // => 'Dave'
   user.get('style') // => 'Friendly'
 
@@ -418,7 +418,7 @@ attributes will override any trait attributes or default attributes
     },
     project_with_bob: {
       // create user model with custom attributes
-      user: {name: 'Bob'}
+      user: { name: 'Bob' }
     },
     project_with_admin: {
       // create a named user model with the FactoryGuy.belongsTo helper method
@@ -444,7 +444,7 @@ attributes will override any trait attributes or default attributes
   });
 
   let user = FactoryGuy.make('project', 'with_user');
-  project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
+  project.get('user').toJSON({ includeId: true }) // => { id:1, name: 'Dude', style: 'normal' }
 
 ```
 
@@ -453,9 +453,9 @@ attributes will override any trait attributes or default attributes
 
 ```javascript
   let user = FactoryGuy.make('user');
-  let project = FactoryGuy.make('project', {user: user});
+  let project = FactoryGuy.make('project', { user: user });
 
-  project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
+  project.get('user').toJSON({ includeId: true }) // => { id:1, name: 'Dude', style: 'normal' }
 ```
 
 *Note that though you are setting the 'user' belongsTo association on a project,
@@ -502,12 +502,12 @@ the reverse user hasMany 'projects' association is being setup for you on the us
 ```javascript
   let project1 = FactoryGuy.make('project');
   let project2 = FactoryGuy.make('project');
-  let user = FactoryGuy.make('user', {projects: [project1,project2]});
+  let user = FactoryGuy.make('user', { projects: [project1, project2] });
   user.get('projects.length') // => 2
 
   // or
   let projects = FactoryGuy.makeList('project', 2);
-  let user = FactoryGuy.make('user', {projects: projects});
+  let user = FactoryGuy.make('user', { projects: projects });
   user.get('projects.length') // => 2
 
 ```
@@ -534,8 +534,8 @@ the reverse 'user' belongsTo association is being setup for you on the project
 ```javascript
   let json = FactoryGuy.buildList('user', 2)
   json.users.length // => 2
-  json.users[0] // => {id: 1, name: 'User1', style: 'normal'}
-  json.users[1] // => {id: 2, name: 'User2', style: 'normal'}
+  json.users[0] // => { id: 1, name: 'User1', style: 'normal' }
+  json.users[1] // => { id: 2, name: 'User2', style: 'normal' }
 
 ```
 
@@ -544,8 +544,8 @@ the reverse 'user' belongsTo association is being setup for you on the project
 ```javascript
   let users = FactoryGuy.makeList('user', 2)
   users.get('length') // => 2
-  users[0].toJSON({includeId: true}) // => {id: 3, name: 'User3', style: 'normal'}
-  users[1].toJSON({includeId: true}) // => {id: 4, name: 'User4', style: 'normal'}
+  users[0].toJSON({ includeId: true }) // => { id: 3, name: 'User3', style: 'normal' }
+  users[1].toJSON({ includeId: true }) // => { id: 4, name: 'User4', style: 'normal' }
 
 ```
 
@@ -595,7 +595,7 @@ You would use this to make models like:
     let property = FactoryGuy.make('property');
     property.get('name'); // => 'Silly property(FOR SALE)')
 
-    let property = FactoryGuy.make('property', {for_sale: false});
+    let property = FactoryGuy.make('property', { for_sale: false });
     property.get('name'); // => 'Silly property')
   });
 
@@ -611,8 +611,8 @@ Example:
 
 ```javascript
    let company = make('company');
-   let user = make('user', {company: company});
-   let projects = makeList('project', 2, {user: user});
+   let user = make('user', { company: company });
+   let projects = makeList('project', 2, { user: user });
 ```
 
 *You can use traits to help create the relationships as well, but this strategy allows you to
@@ -743,13 +743,13 @@ Usage:
 
 ```javascript
   // The mock API can return several different models
-  TestHelper.handleFindAll('user', {name: 'Bob'}, ['admin', {name: 'Jane'}]); // findAll('user') will return a user named Bob and an admin user named Jane
+  TestHelper.handleFindAll('user', { name: 'Bob' }, ['admin', { name: 'Jane' }]); // findAll('user') will return a user named Bob and an admin user named Jane
 
   // Or it can return multiple of the same model (other than ids and sequences)
   TestHelper.handleFindAll('user', 2);
   TestHelper.handleFindAll('user', 2, 'admin'); // You can specify traits
-  TestHelper.handleFindAll('user', 2, {name: 'Bob'}); // Or attributes
-  TestHelper.handleFindAll('user', 2, 'admin', {name: 'Bob'}); // Or both
+  TestHelper.handleFindAll('user', 2, { name: 'Bob' }); // Or attributes
+  TestHelper.handleFindAll('user', 2, 'admin', { name: 'Bob' }); // Or both
 ```
 
 If when visiting a route, some part of your application ( like router, or
@@ -849,9 +849,9 @@ you must wait on the request for those records to resolve before they will be lo
 
    ```js
      // This simulates a query that returns no results
-     TestHelper.handleQuery('user', {age: 10});
+     TestHelper.handleQuery('user',  10 });
 
-     store.query('user', {age: 10}}).then(function(userInstances){
+     store.query('user', { age: 10 }}).then(function(userInstances){
         /// userInstances will be empty
      })
    ```
@@ -863,10 +863,10 @@ you must wait on the request for those records to resolve before they will be lo
      let users = FactoryGuy.makeList('user', 2, 'with_hats');
 
      // Pass in the array of model instances as last argument
-     TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsModels(users);
+     TestHelper.handleQuery('user', { name:'Bob', age: 10 }).returnsModels(users);
 
      // will stub a call to the store like this:
-     store.query('user', {name:'Bob', age: 10}}).then(function(models) {
+     store.query('user', { name:'Bob', age: 10 }}).then(function(models) {
         // models are the same as the users array
      });
    ```
@@ -879,9 +879,9 @@ you must wait on the request for those records to resolve before they will be lo
      let usersJSON = FactoryGuy.buildList('user', 2, 'with_hats');
 
      // use returnsJSON to pass in this response
-     TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsJSON(usersJSON);
+     TestHelper.handleQuery('user', { name:'Bob', age: 10 }).returnsJSON(usersJSON);
 
-     store.query('user', {name:'Bob', age: 10}}).then(function(models) {
+     store.query('user', { name:'Bob', age: 10 }}).then(function(models) {
         // these models were created from the usersJSON
      });
 
@@ -896,9 +896,9 @@ you must wait on the request for those records to resolve before they will be lo
 
      // use returnsExistingIds to pass in the users ids you want
      // in this case let's say you only want to pass back the first user
-     TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsExistingIds([user1.id]);
+     TestHelper.handleQuery('user', { name:'Bob', age: 10  }).returnsExistingIds([user1.id]);
 
-     store.query('user', {name:'Bob', age: 10}}).then(function(models) {
+     store.query('user', { name:'Bob', age: 10 }}).then(function(models) {
         // models will be one model and it will be user1
      });
 
@@ -910,17 +910,17 @@ you must wait on the request for those records to resolve before they will be lo
 
      let store = FactoryGuy.get('store');
 
-     let bobQueryHander = TestHelper.handleQuery('user', {name: 'Bob'});
+     let bobQueryHander = TestHelper.handleQuery('user', { name: 'Bob' });
 
-     store.query('user', {name: 'Bob'}).then(function (users) {
+     store.query('user', { name: 'Bob' }).then(function (users) {
        //=> users.get('length') === 0;
 
-       let bob = store.make('user', {name: 'Bob'});
+       let bob = store.make('user', { name: 'Bob' });
 
        // reuse the same query handler since it's the same query
        bobQueryHander.returnsModels([bob]);
 
-       store.query('user', {name: 'Bob'}).then(function (users) {
+       store.query('user', { name: 'Bob' }).then(function (users) {
          //=> users.get('length') === 1;
          //=> users.get('firstObject') === bob;
        });
@@ -933,18 +933,18 @@ you must wait on the request for those records to resolve before they will be lo
    ```js
 
      let store = FactoryGuy.get('store');
-     let bob = store.make('user', {name: 'Bob'});
-     let dude = store.make('user', {name: 'Dude'});
+     let bob = store.make('user', { name: 'Bob' });
+     let dude = store.make('user', { name: 'Dude' });
 
-     let userQueryHander = TestHelper.handleQuery('user', {name: 'Bob'}).returnsModels([bob]);
+     let userQueryHander = TestHelper.handleQuery('user', { name: 'Bob' }).returnsModels([bob]);
 
-     store.query('user', {name: 'Bob'}).then(function (users) {
+     store.query('user', { name: 'Bob' }).then(function (users) {
        //=> users.get('length') === 1;
 
        // reuse the same user query handler but change the expected query parms
-       userQueryHander.withParams({name: 'Dude'}).returnsModels([dude]);
+       userQueryHander.withParams({ name: 'Dude' }).returnsModels([dude]);
 
-       store.query('user', {name: 'Dude'}).then(function (users) {
+       store.query('user', { name: 'Dude' }).then(function (users) {
          //=> users.get('length') === 1;
          //=> users.get('firstObject') === dude;
        });
@@ -987,7 +987,7 @@ Realistically, you will have code in a view action or controller action that wil
     addProject: function (user) {
       let name = this.$('button.project-name').val();
       let store = this.get('controller.store');
-      store.createRecord('project', {name: name, user: user}).save();
+      store.createRecord('project', { name: name, user: user }).save();
     }
   }
 
@@ -1006,14 +1006,14 @@ chainable methods.
   TestHelper.handleCreate('project');
 
   // Matching some attributes
-  TestHelper.handleCreate('project').match({name: "Moo"});
+  TestHelper.handleCreate('project').match({ name: "Moo" });
 
   // Match all attributes
-  TestHelper.handleCreate('project').match({name: "Moo", user: user});
+  TestHelper.handleCreate('project').match({ name: "Moo", user: user });
 
   // Exactly matching attributes, and returning extra attributes
   TestHelper.handleCreate('project')
-    .match({name: "Moo", user: user})
+    .match({ name: "Moo", user: user })
     .andReturn({created_at: new Date()});
 
 ```
@@ -1023,12 +1023,12 @@ chainable methods.
 ```javascript
 
   // Mocking failure case is easy with chainable methods, just use #andFail
-  TestHelper.handleCreate('project').match({name: "Moo"}).andFail();
+  TestHelper.handleCreate('project').match({ name: "Moo" }).andFail();
 
   // Can optionally add a status code and/or errors to the response
-  TestHelper.handleCreate('project').andFail({status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}});
+  TestHelper.handleCreate('project').andFail({ status: 422, response: { errors: { name: ['Moo bad, Bahh better'] } } });
 
-  store.createRecord('project', {name: "Moo"}).save(); //=> fails
+  store.createRecord('project', { name: "Moo" }).save(); //=> fails
 ```
 
 
@@ -1070,9 +1070,9 @@ chainable methods.
   let profile = FactoryGuy.make('profile');
 
   // set the succeed flag to 'false'
-  TestHelper.handleUpdate('profile', profile.id).andFail({status: 422, response: 'Invalid data'});
+  TestHelper.handleUpdate('profile', profile.id).andFail({ status: 422, response: 'Invalid data' });
   // or
-  TestHelper.handleUpdate(profile).andFail({status: 422, response: 'Invalid data'});
+  TestHelper.handleUpdate(profile).andFail({ status: 422, response: 'Invalid data' });
 
   profile.set('description', 'bad value');
   profile.save() //=> will fail
@@ -1160,7 +1160,7 @@ test("Creates new project", function () {
 
     // Remember, this is for handling an exact match, if you did not care about
     // matching attributes, you could just do: TestHelper.handleCreate('project')
-    fgHelper.handleCreate('project', {match: {name: newProjectName, user: user}});
+    fgHelper.handleCreate('project', {match: { name: newProjectName, user: user }});
 
     /**
      Let's say that clicking this 'button.add-project', triggers action in the view to
@@ -1169,7 +1169,7 @@ test("Creates new project", function () {
         addProject: function (user) {
           let name = this.$('input.project-name').val();
           let store = this.get('controller.store');
-          store.createRecord('project', {name: name, user: user}).save();
+          store.createRecord('project', { name: name, user: user }).save();
         }
     */
     click('button:contains(Add New User)');
@@ -1182,4 +1182,3 @@ test("Creates new project", function () {
 });
 
 ```
-
