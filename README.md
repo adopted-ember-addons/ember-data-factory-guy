@@ -626,46 +626,43 @@ build up complex scenarios in a different way that has it's own benefits.*
   - That is why all the tests import startApp function from 'tests/helpers/start-app.js'
     ( a file provided to you by ember cli )
 
-- [Sample model test #1 (profile-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
-  - Does NOT use 'moduleForModel' ( ember-qunit ), or 'describeModel' ( ember-mocha ) test helper.
-  - Uses startApp() to load an application and factory guy, so it's a bit slower ( but foolproof )
+- [Sample model test (profile-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
+  - Use 'moduleForModel' ( ember-qunit ), or describeModel ( ember-mocha ) test helper
+  - manually set up Factory guy 
 
-- [Sample model test #2 (user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js)  
-  - Uses 'moduleForModel' ( ember-qunit ), or describeModel ( ember-mocha ) test helper ( with integration mode )
-  - Does NOT load application, and manually sets up Factory guy ( so it's faster )
-
-- [Sample component test #1 (dude-translator-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/dude-translator-test.js)
+- [Sample component test #1 (dude-translator-manual-setup-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/dude-translator-manual-setup-test.js)
   - Using 'moduleForComponent' ( ember-qunit ), or describeComponent ( ember-mocha ) helper
-  - Need to start a new application with startApp() before each test.
+  - Manually sets up Factory guy ( so it's faster )
 
-- [Sample component test #2 (dude-translator-manual-setup-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/dude-translator-manual-setup-test.js)
+- [Sample component test #2 (dude-translator-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/dude-translator-test.js)
   - Using 'moduleForComponent' ( ember-qunit ), or describeComponent ( ember-mocha ) helper
-  - Does NOT load application and manually sets up Factory guy ( so it's faster )
+  - Starts a new application with startApp() before each test  ( slower )
+
 
 ```javascript
 
-// file: tests/unit/models/profile-test.js
+// Sample Unit Test for Profile Model => file: tests/unit/models/profile-test.js
 
-import Ember from 'ember';
-import { make } from 'ember-data-factory-guy';
-import startApp from '../../helpers/start-app';
+import { manualSetup, make } from 'ember-data-factory-guy';
+import { test, moduleForModel } from 'ember-qunit';
 
-let App = null;
+moduleForModel('profile', 'Unit | Model | profile', {
+  needs: ['model:company', 'model:super-hero', 'model:group'],
 
-module('Profile Model', {
   beforeEach: function() {
-    App = startApp();
-  },
-  afterEach: function() {
-    Ember.run(App, 'destroy');
+    manualSetup(this.container);
   }
 });
 
-test('has company', function() {
+test('using only make for profile with company association', function() {
   let profile = make('profile', 'with_company');
   ok(profile.get('company.profile') === profile);
 });
 
+test('using this.subject for profile and make for company associaion', function() {
+  let profile = this.subject({company: make('company')});
+  ok(profile.get('company.profile') === profile);
+});
 
 ```
 

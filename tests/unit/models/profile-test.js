@@ -1,19 +1,20 @@
-import Ember from 'ember';
-import FactoryGuy, { make } from 'ember-data-factory-guy';
-import startApp from '../../helpers/start-app';
+import { manualSetup, make } from 'ember-data-factory-guy';
+import { test, moduleForModel } from 'ember-qunit';
 
-let App = null;
+moduleForModel('profile', 'Unit | Model | profile', {
+  needs: ['model:company', 'model:super-hero', 'model:group'],
 
-module('Profile Model', {
   beforeEach: function() {
-    App = startApp();
-  },
-  afterEach: function() {
-    Ember.run(App, 'destroy');
+    manualSetup(this.container);
   }
 });
 
-test('has company', function() {
+test('using only make for profile with company association', function() {
   let profile = make('profile', 'with_company');
+  ok(profile.get('company.profile') === profile);
+});
+
+test('using this.subject for profile and make for company associaion', function() {
+  let profile = this.subject({company: make('company')});
   ok(profile.get('company.profile') === profile);
 });
