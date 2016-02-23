@@ -622,9 +622,9 @@ build up complex scenarios in a different way that has it's own benefits.*
 ### Testing models, controllers, components
 
 - Testing the models, controllers and components
-  - FactoryGuy needs the application to startup in order to load the factories, and setup the store.
-  - That is why all the tests import startApp function from 'tests/helpers/start-app.js'
-    ( a file provided to you by ember cli )
+
+  - FactoryGuy needs to setup the factories before the test run.
+    - use manualSetup function to set up FactoryGuy in unit/component tests
 
 - [Sample model test (profile-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
   - Use 'moduleForModel' ( ember-qunit ), or describeModel ( ember-mocha ) test helper
