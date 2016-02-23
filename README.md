@@ -726,8 +726,8 @@ will look like this:
   });
 ```
 
-*Note that you could also populated the store first:*
-*Might need to set: [FactoryGuy.cacheOnlyMode())](https://github.com/danielspaniel/ember-data-factory-guy#cacheonlymode)
+*Note that you could also populated the store first: 
+ (may need to use [FactoryGuy.cacheOnlyMode())](https://github.com/danielspaniel/ember-data-factory-guy#cacheonlymode) )
 
 ```javascript
   // make the model which poplates the store before you visit route
