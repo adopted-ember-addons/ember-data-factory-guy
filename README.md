@@ -618,8 +618,8 @@ Example:
 *You can use traits to help create the relationships as well, but this strategy allows you to
 build up complex scenarios in a different way that has it's own benefits.*
 
-##cacheOnlyMode
-- FactoryGuy.chacheOnlyMode
+####cacheOnlyMode
+- FactoryGuy.cacheOnlyMode
  - allows you to setup the adapters to only reload data when there is nothing in the store
    - for collections you don't even have to preload at all.
    
