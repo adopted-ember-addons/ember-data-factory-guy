@@ -604,7 +604,7 @@ You would use this to make models like:
 ### Testing - Creating Scenarios
 - Easy to create complex scenarios involving multi layered relationships.
   - Can use model instances to create relationships for making other models.
-
+  
 Example:
 
   - Setup a scenario where a user has two projects and belongs to a company
@@ -618,7 +618,16 @@ Example:
 *You can use traits to help create the relationships as well, but this strategy allows you to
 build up complex scenarios in a different way that has it's own benefits.*
 
+##cacheOnlyMode
+- FactoryGuy.chacheOnlyMode
+ - allows you to setup the adapters to only reload data when there is nothing in the store
+   - for collections you don't even have to preload at all.
+   
+This is helpful, when you want to set up the test data with make/makeList, and then prevent
+calls like store.find or findAll from fetching more data, since you have already setup
+the store with your custom scenario. 
 
+  
 ### Testing models, controllers, components
 
 - Testing the models, controllers and components
@@ -708,8 +717,8 @@ will look like this:
 
 ```javascript
   // can use traits and extra fixture options here as you would with FactoryGuy#make
-  let userId = TestHelper.handleFind('user');
-  visit('/users/'+userId);
+  let userId = TestHelper.handleFind('user', {first_name: 'Binky');
+  visit(`/users/${userId}`);
 
   andThen(function () {
     let user = find('li.user');
@@ -717,10 +726,11 @@ will look like this:
   });
 ```
 
-*Note that you could also have done this:*
+*Note that you could also populated the store first:*
 
 ```javascript
-  // can just make the model before you visit route
+  // might need to set => [FactoryGuy.cacheOnlyMode())](https://github.com/danielspaniel/ember-data-factory-guy#cacheonlymode)
+  // make the model which poplates the store before you visit route
   let user = make('user');
   visit('/users/'+user.id);
 
