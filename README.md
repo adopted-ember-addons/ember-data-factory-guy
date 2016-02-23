@@ -727,9 +727,9 @@ will look like this:
 ```
 
 *Note that you could also populated the store first:*
+*Might need to set: [FactoryGuy.cacheOnlyMode())](https://github.com/danielspaniel/ember-data-factory-guy#cacheonlymode)
 
 ```javascript
-  // might need to set => [FactoryGuy.cacheOnlyMode())](https://github.com/danielspaniel/ember-data-factory-guy#cacheonlymode)
   // make the model which poplates the store before you visit route
   let user = make('user');
   visit('/users/'+user.id);
