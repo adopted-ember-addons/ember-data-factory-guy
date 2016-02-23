@@ -730,7 +730,7 @@ will look like this:
  (may need to use [FactoryGuy.cacheOnlyMode())](https://github.com/danielspaniel/ember-data-factory-guy#cacheonlymode) )
 
 ```javascript
-  // make the model which poplates the store before you visit route
+  // make the model which populates the store before you visit route
   let user = make('user');
   visit('/users/'+user.id);
 
