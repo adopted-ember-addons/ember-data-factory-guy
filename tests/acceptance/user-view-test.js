@@ -1,18 +1,9 @@
-import { make } from 'ember-data-factory-guy';
-import fgHelper from 'ember-data-factory-guy/factory-guy-test-helper';
+import { make, mockCreate } from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
-moduleForAcceptance('Acceptance | User View', {
-  beforeEach: function () {
-    // TestHelper.setup sets $.mockjaxSettings response time to zero ( speeds up tests )
-    fgHelper.setup();
-  },
-  afterEach: function () {
-      // TestHelper.teardown calls $.mockjax.clear() which resets all the mockjax handlers
-    fgHelper.teardown();
-  }
-});
-
+moduleForAcceptance('Acceptance | User View');
+// NOTE
+// FactoryGuy before and after setup is in moduleForAcceptance helper
 
 test("Creates new project", function () {
   // create a user with projects ( which will be in the store )
@@ -26,8 +17,8 @@ test("Creates new project", function () {
     fillIn('input.project-title', newProjectTitle);
 
     // Remember, this is for handling an exact match, if you did not care about
-    // matching attributes, you could just do: TestHelper.handleCreate('project')
-    fgHelper.handleCreate('project').match({title: newProjectTitle, user: user});
+    // matching attributes, you could just do: TestHelper.mockCreate('project')
+    mockCreate('project').match({title: newProjectTitle, user: user});
 
     /**
      Let's say that clicking this 'button:contains(Add New User)', triggers action in the

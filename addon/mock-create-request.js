@@ -48,7 +48,7 @@ let MockCreateRequest = function (url, modelName, options) {
 
   this.andReturn = function (returns) {
     Ember.deprecate(
-      `[ember-data-factory-guy] handleCreate.andReturn method has been deprecated.
+      `[ember-data-factory-guy] mockCreate.andReturn method has been deprecated.
         Use chainable method \`returns()\` instead`,
       !options.hasOwnProperty('succeed'),
       { id: 'ember-data-factory-guy.handle-create-and-return', until: '2.4.0' }
@@ -74,19 +74,19 @@ let MockCreateRequest = function (url, modelName, options) {
 
   // for supporting older ( non chaining methods ) style of passing in options
   Ember.deprecate(
-    `[ember-data-factory-guy] TestHelper.handleCreate - options.succeed has been deprecated.
+    `[ember-data-factory-guy] TestHelper.mockCreate - options.succeed has been deprecated.
       Use chainable method \`andFail()\` instead`,
     !options.hasOwnProperty('succeed'),
     { id: 'ember-data-factory-guy.handle-create-succeed-options', until: '2.4.0' }
   );
   Ember.deprecate(
-    `[ember-data-factory-guy] TestHelper.handleCreate - options.match has been deprecated.
+    `[ember-data-factory-guy] TestHelper.mockCreate - options.match has been deprecated.
       Use chainable method \`match()\` instead`,
     !options.hasOwnProperty('match'),
     { id: 'ember-data-factory-guy.handle-create-match-options', until: '2.4.0' }
   );
   Ember.deprecate(
-    `[ember-data-factory-guy] TestHelper.handleCreate - options.returns has been deprecated.
+    `[ember-data-factory-guy] TestHelper.mockCreate - options.returns has been deprecated.
       Use chainable method \`returns()\` instead`,
     !options.hasOwnProperty('returns'),
     { id: 'ember-data-factory-guy.handle-create-returns-options', until: '2.4.0' }
@@ -94,7 +94,7 @@ let MockCreateRequest = function (url, modelName, options) {
   if (succeed) {
     this.calculate();
   } else {
-    this.andFail(options);
+    this.fails(options);
   }
 
   let attributesMatch = function (requestData, expectedData) {

@@ -9,7 +9,7 @@ let MockUpdateRequest = function(url, model, options) {
 
   if ('succeed' in options) {
     Ember.deprecate(
-      `[ember-data-factory-guy] TestHelper.handleUpdate - options.succeed has been deprecated.
+      `[ember-data-factory-guy] TestHelper.mockUpdate - options.succeed has been deprecated.
         Use chainable method \`succeeds(options)\` method instead`,
       options.hasOwnProperty('succeed'),
       { id: 'ember-data-factory-guy.handle-update', until: '2.4.0' }

@@ -64,16 +64,16 @@ let MockServer = Ember.Object.extend({
    // Typically you will use like:
 
    // To return default factory 'user'
-   let mockFind = TestHelper.handleFind('user');
+   let mockFind = TestHelper.mockFind('user');
    let userId = mockFind.get('id');
 
    // or to return custom factory built json object
    let json = FactoryGuy.build('user', 'with_whacky_name', {isDude: true});
-   let mockFind = TestHelper.handleFind('user').returns({json});
+   let mockFind = TestHelper.mockFind('user').returns({json});
    let userId = json.get('id');
 
-   // To mock failure case use method andFail
-   TestHelper.handleFind('user').fails();
+   // To mock failure case use method fails
+   TestHelper.mockFind('user').fails();
 
    // Then to 'find' the user
    store.find('user', userId);
@@ -86,31 +86,38 @@ let MockServer = Ember.Object.extend({
    @param {String} trait  optional traits (one or more)
    @param {Object} opts  optional fixture options
    */
-  handleFind: function () {
-    let args = Array.prototype.slice.call(arguments);
-    let modelName = args.shift();
+  mockFind: function(...args) {
+    let modelName = args[0];
+
+    Ember.assert(`[ember-data-factory-guy] mockFind requires at least a model
+     name as first parameter`, args.length > 0);
 
     let json = FactoryGuy.build.apply(FactoryGuy, arguments);
     return new MockFindRequest(modelName).returns({json});
   },
+  handleFind: function() {
+    Ember.deprecate("`handleFind` - has been deprecated. Use `mockFind` method instead`",
+      false, { id: 'ember-data-factory-guy.handle-find', until: '2.4.0' });
+    return this.mockFind.apply(this, arguments);
+  },
   /**
    Handling ajax GET for reloading a record
-   You can mock failed find by calling andFail
+   You can mock failed find by calling fails
 
    ```js
    // Typically you will make a model
    let user = make('user');
-   // and then to handle reload, use the testHelper.handleFind call to mock a reload
-   testHelper.handleReload(user);
+   // and then to handle reload, use the testHelper.mockReload call to mock a reload
+   testHelper.mockReload(user);
 
-   // to mock failure case use method andFail
-   testHelper.handleReload(user).andFail();
+   // to mock failure case use method fails
+   testHelper.mockReload(user).fails();
    ```
 
    @param {String} type  model type like 'user' for User model, or a model instance
    @param {String} id  id of record to find
    */
-  handleReload: function() {
+  mockReload: function() {
     let args = Array.prototype.slice.call(arguments);
 
     let modelName, id;
@@ -129,6 +136,11 @@ let MockServer = Ember.Object.extend({
     let json = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, { id: id });
     return new MockReloadRequest(modelName).returns({ json });
   },
+  handleReload: function () {
+    Ember.deprecate("`handleReload` - has been deprecated. Use `mockReload` method instead`",
+      false, { id: 'ember-data-factory-guy.handle-reload', until: '2.4.0' });
+    return this.mockReload.apply(this, arguments);
+  },
   /**
    Handling ajax GET for finding all records for a type of model.
    You can mock failed find by passing in success argument as false.
@@ -137,11 +149,11 @@ let MockServer = Ember.Object.extend({
    // Pass in the parameters you would normally pass into FactoryGuy.makeList,
    // like fixture name, number of fixtures to make, and optional traits,
    // or fixture options
-   let mockFindAll = testHelper.handleFindAll('user', 2, 'with_hats');
+   let mockFindAll = testHelper.mockFindAll('user', 2, 'with_hats');
 
    // or to return custom FactoryGuy built json object
    let json = FactoryGuy.buildList('user', 'with_whacky_name', {isDude: true});
-   let mockFind = TestHelper.handleFind('user').returns({json});
+   let mockFindAll = TestHelper.mockFindAll('user').returns({json});
 
    store.findAll('user').then(function(users){
       // 2 users, fisrt with whacky name, second isDude
@@ -153,10 +165,10 @@ let MockServer = Ember.Object.extend({
    @param {String} trait  optional traits (one or more)
    @param {Object} opts  optional fixture options
    */
-  handleFindAll: function (...args) {
+  mockFindAll: function (...args) {
     let modelName = args[0];
 
-    Ember.assert(`[ember-data-factory-guy] handleFindAll requires at least a model
+    Ember.assert(`[ember-data-factory-guy] mockFindAll requires at least a model
      name as first parameter`, args.length > 0);
 
     let mockFindAll = new MockFindAllRequest(modelName);
@@ -166,6 +178,11 @@ let MockServer = Ember.Object.extend({
       mockFindAll.returns({json});
     }
     return mockFindAll;
+  },
+  handleFindAll: function () {
+    Ember.deprecate("`handleFindAll` - has been deprecated. Use `mockFindAll` method instead`",
+      false, { id: 'ember-data-factory-guy.handle-find-all', until: '2.4.0' });
+    return this.mockFindAll.apply(this, arguments);
   },
   /**
    Handling ajax GET for finding all records for a type of model with query parameters.
@@ -177,7 +194,7 @@ let MockServer = Ember.Object.extend({
    let users = FactoryGuy.makeList('user', 2, 'with_hats');
 
    // Pass in the array of model instances as last argument
-   testHelper.handleQuery('user', {name:'Bob', age: 10}).returns({models: users});
+   testHelper.mockQuery('user', {name:'Bob', age: 10}).returns({models: users});
 
    store.query('user', {name:'Bob', age: 10}}).then(function(userInstances){
      // userInstances will be the same of the users that were passed in
@@ -189,7 +206,7 @@ let MockServer = Ember.Object.extend({
 
    ```js
    // Simulate a query that returns no results
-   testHelper.handleQuery('user', {age: 10000});
+   testHelper.mockQuery('user', {age: 10000});
 
    store.query('user', {age: 10000}}).then(function(userInstances){
      // userInstances will be empty
@@ -200,12 +217,17 @@ let MockServer = Ember.Object.extend({
    @param {String} queryParams  the parameters that will be queried
    @param {Array}  array of DS.Model records to be 'returned' by query
    */
-  handleQuery: function (modelName, queryParams) {
+  mockQuery: function (modelName, queryParams) {
     if (queryParams ) {
       Ember.assert('The second argument ( queryParams ) must be an object', Ember.typeOf(queryParams) === 'object');
     }
 
     return new MockQueryRequest(modelName, queryParams);
+  },
+  handleQuery: function () {
+    Ember.deprecate("`handleQuery` - has been deprecated. Use `mockQuery` method instead`",
+      false, { id: 'ember-data-factory-guy.handle-query', until: '2.4.0' });
+    return this.mockQuery.apply(this, arguments);
   },
   /**
    Handling ajax GET for finding one record for a type of model with query parameters.
@@ -217,7 +239,7 @@ let MockServer = Ember.Object.extend({
    let json = FactoryGuy.build('user');
 
    // Pass in the json in a returns method
-   testHelper.handleQueryRecord('user', {name:'Bob', age: 10}).returns({json});
+   testHelper.mockQueryRecord('user', {name:'Bob', age: 10}).returns({json});
 
    store.query('user', {name:'Bob', age: 10}}).then(function(userInstance){
      // userInstance will be created from the json payload
@@ -230,7 +252,7 @@ let MockServer = Ember.Object.extend({
    let user = FactoryGuy.make('user');
 
    // Pass in the array of model instances in the returns method
-   testHelper.handleQueryRecord('user', {name:'Bob', age: 10}).returns({model:user});
+   testHelper.mockQueryRecord('user', {name:'Bob', age: 10}).returns({model:user});
 
    store.query('user', {name:'Bob', age: 10}}).then(function(userInstance){
      // userInstance will be the same of the users that were passed in
@@ -242,7 +264,7 @@ let MockServer = Ember.Object.extend({
 
    ```js
    // Simulate a store.queryRecord that returns no results
-   testHelper.handleQueryRecord('user', {age: 10000});
+   testHelper.mockQueryRecord('user', {age: 10000});
 
    store.queryRecord('user', {age: 10000}}).then(function(userInstance){
      // userInstance will be empty
@@ -253,31 +275,36 @@ let MockServer = Ember.Object.extend({
    @param {String} queryParams  the parameters that will be queried
    @param {Object|DS.Model}  JSON object or DS.Model record to be 'returned' by query
    */
-  handleQueryRecord: function (modelName, queryParams) {
+  mockQueryRecord: function (modelName, queryParams) {
     if (queryParams ) {
       Ember.assert('The second argument ( queryParams ) must be an object', Ember.typeOf(queryParams) === 'object');
     }
 
     return new MockQueryRecordRequest(modelName, queryParams);
   },
+  handleQueryRecord: function () {
+    Ember.deprecate("`handleQueryRecord` - has been deprecated. Use `mockQueryRecord` method instead`",
+      false, { id: 'ember-data-factory-guy.handle-query-record', until: '2.4.0' });
+    return this.mockQueryRecord.apply(this, arguments);
+  },
   /**
    Handling ajax POST ( create record ) for a model.
 
    ```js
-   handleCreate('post')
-   handleCreate('post').match({title: 'foo'});
-   handleCreate('post').match({title: 'foo', user: user});
-   handleCreate('post').andReturn({createdAt: new Date()});
-   handleCreate('post').match({title: 'foo'}).andReturn({createdAt: new Date()});
-   handleCreate('post').match({title: 'foo'}.andFail();
+   mockCreate('post')
+   mockCreate('post').match({title: 'foo'});
+   mockCreate('post').match({title: 'foo', user: user});
+   mockCreate('post').andReturn({createdAt: new Date()});
+   mockCreate('post').match({title: 'foo'}).andReturn({createdAt: new Date()});
+   mockCreate('post').match({title: 'foo'}.fails();
    ```
 
    match - attributes that must be in request json,
    andReturn - attributes to include in response json,
-   andFail - can include optional status and response attributes
+   fails - can include optional status and response attributes
 
    ```js
-   TestHelper.handleCreate('project').andFail({
+   TestHelper.mockCreate('project').fails({
         status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}
       });
    ```
@@ -291,7 +318,7 @@ let MockServer = Ember.Object.extend({
    createRecord call, but you don't have to match them all. For example:
 
    ```js
-   handleCreate('post').match({title: 'foo'});
+   mockCreate('post').match({title: 'foo'});
    store.createRecord('post', {title: 'foo', created_at: new Date()})
    ```
 
@@ -301,34 +328,38 @@ let MockServer = Ember.Object.extend({
    @param {String} modelName  name of model your creating like 'profile' for Profile
    @param {Object} options  hash of options for handling request
    */
-  handleCreate: function (modelName, opts={}) {
+  mockCreate: function (modelName, opts={}) {
     let url = FactoryGuy.buildURL(modelName);
     return new MockCreateRequest(url, modelName, opts);
   },
-
+  handleCreate: function () {
+    Ember.deprecate("`handleCreate` - has been deprecated. Use `mockCreate` method instead`",
+      false, { id: 'ember-data-factory-guy.handle-create', until: '2.4.0' });
+    return this.mockCreate.apply(this, arguments);
+  },
   /**
    Handling ajax PUT ( update record ) for a model type. You can mock
-   failed update by calling 'andFail' method after setting up the mock
+   failed update by calling 'fails' method after setting up the mock
 
    ```js
    // Typically you will make a model
    let user = make('user');
-   // and then to handle update, use the testHelper.handleUpdate call to mock a update
-   testHelper.handleUpdate(user);
+   // and then to handle update, use the testHelper.mockUpdate call to mock a update
+   testHelper.mockUpdate(user);
    or
-   // testHelper.handleUpdate('user', user.id);
+   // testHelper.mockUpdate('user', user.id);
 
-   // and to mock failure case use method andFail
-   testHelper.handleFind(user).andFail();
+   // and to mock failure case use method fails
+   testHelper.mockUpdate(user).fails();
    ```
 
    @param {String} type  model type like 'user' for User model, or a model instance
    @param {String} id  id of record to update
    @param {Object} options options object
    */
-  handleUpdate: function () {
+  mockUpdate: function () {
     let args = Array.prototype.slice.call(arguments);
-    Ember.assert("To handleUpdate pass in a model instance or a type and an id", args.length > 0);
+    Ember.assert("To mockUpdate pass in a model instance or a type and an id", args.length > 0);
 
     let options = {};
     if (args.length > 1 && typeof args[args.length - 1] === 'object') {
@@ -347,10 +378,15 @@ let MockServer = Ember.Object.extend({
       id = args[1];
       model = store.peekRecord(type, id);
     }
-    Ember.assert("To handleUpdate pass in a model instance or a model type name and an id", type && id);
+    Ember.assert("To mockUpdate pass in a model instance or a model type name and an id", type && id);
 
     let url = FactoryGuy.buildURL(type, id);
     return new MockUpdateRequest(url, model, options);
+  },
+  handleUpdate: function () {
+    Ember.deprecate("`handleUpdate` - has been deprecated. Use `mockUpdate` method instead`",
+      false, { id: 'ember-data-factory-guy.handle-update', until: '2.4.0' });
+    return this.mockUpdate.apply(this, arguments);
   },
   /**
    Handling ajax DELETE ( delete record ) for a model type. You can mock
@@ -361,25 +397,40 @@ let MockServer = Ember.Object.extend({
    @param {Boolean} succeed  optional flag to indicate if the request
    should succeed ( default is true )
    */
-  handleDelete: function (type, id, succeed=true) {
-    // TODO Turn this into a MockClass so it provides `andSuccess`, `andFail`, `returns`...
+  mockDelete: function (type, id, succeed=true) {
+    // TODO Turn this into a MockClass so it provides `andSuccess`, `fails`, `returns`...
     //succeed = succeed === undefined ? true : succeed;
     this.stubEndpointForHttpRequest(FactoryGuy.buildURL(type, id), null, {
       type: 'DELETE',
       status: succeed ? 200 : 500
     });
   },
+  handleDelete: function () {
+    Ember.deprecate("`handleDelete` - has been deprecated. Use `mockDelete` method instead`",
+      false, { id: 'ember-data-factory-guy.handle-delete', until: '2.4.0' });
+    return this.mockDelete.apply(this, arguments);
+  },
 
 });
 
 let mockServer = MockServer.create();
 
-//let mockFind = mockServer.handleFind.bind(mockServer);
-//let mockFindAll = mockServer.handleFindAll.bind(mockServer);
-//let mockQuery = mockServer.handleQuery.bind(mockServer);
-//let mockQueryRecord = mockServer.handleQueryRecord.bind(mockServer);
-//let mockCreate = mockServer.handleCreate.bind(mockServer);
-//let mockUpdate = mockServer.handleUpdate.bind(mockServer);
-//let mockDelete = mockServer.handleDelete.bind(mockServer);
+let mockSetup = mockServer.setup.bind(mockServer);
+let mockTeardown = mockServer.teardown.bind(mockServer);
+
+let mockFind = mockServer.mockFind.bind(mockServer);
+let mockFindAll = mockServer.mockFindAll.bind(mockServer);
+let mockReload = mockServer.mockReload.bind(mockServer);
+let mockQuery = mockServer.mockQuery.bind(mockServer);
+let mockQueryRecord = mockServer.mockQueryRecord.bind(mockServer);
+let mockCreate = mockServer.mockCreate.bind(mockServer);
+let mockUpdate = mockServer.mockUpdate.bind(mockServer);
+let mockDelete = mockServer.mockDelete.bind(mockServer);
+
+export {
+  mockSetup, mockTeardown,
+  mockFind, mockFindAll, mockReload, mockQuery,
+  mockQueryRecord, mockCreate, mockUpdate, mockDelete
+};
 
 export default mockServer;

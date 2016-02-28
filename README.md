@@ -682,13 +682,13 @@ test('using this.subject for profile and make for company associaion', function(
 
 - Uses mockjax
 - Has helper methods
-  - [handleFind](https://github.com/danielspaniel/ember-data-factory-guy#handlefind)
-  - [handleFindAll](https://github.com/danielspaniel/ember-data-factory-guy#handlefindall)
-  - [handleReload](https://github.com/danielspaniel/ember-data-factory-guy#handlereload)
-  - [handleQuery](https://github.com/danielspaniel/ember-data-factory-guy#handlequery)
-  - [handleCreate](https://github.com/danielspaniel/ember-data-factory-guy#handlecreate)
-  - [handleUpdate](https://github.com/danielspaniel/ember-data-factory-guy#handleupdate)
-  - [handleDelete](https://github.com/danielspaniel/ember-data-factory-guy#handledelete)
+  - [mockFind](https://github.com/danielspaniel/ember-data-factory-guy#handlefind)
+  - [mockFindAll](https://github.com/danielspaniel/ember-data-factory-guy#handlefindall)
+  - [mockReload](https://github.com/danielspaniel/ember-data-factory-guy#handlereload)
+  - [mockQuery](https://github.com/danielspaniel/ember-data-factory-guy#handlequery)
+  - [mockCreate](https://github.com/danielspaniel/ember-data-factory-guy#handlecreate)
+  - [mockUpdate](https://github.com/danielspaniel/ember-data-factory-guy#handleupdate)
+  - [mockDelete](https://github.com/danielspaniel/ember-data-factory-guy#handledelete)
 - Can override FactoryGuyTestHelper by 'reopening' it ( if you need custom functionality.)
 
 If you put models into the store ( with FactoryGuy#make ), the http GET call does not need to be mocked,
@@ -700,7 +700,7 @@ FactoryGuy assumes you want to stub ajax calls with the mockjax library,
 and this javascript library is already bundled for you when you install ember-data-factory-guy.
 
 
-##### handleFind
+##### mockFind
   - For dealing with finding one record of a particular type
   - Can pass in arguments just like you would for make or build
 
@@ -717,7 +717,7 @@ will look like this:
 
 ```javascript
   // can use traits and extra fixture options here as you would with FactoryGuy#make
-  let userId = TestHelper.handleFind('user', {first_name: 'Binky');
+  let userId = TestHelper.mockFind('user', {first_name: 'Binky');
   visit(`/users/${userId}`);
 
   andThen(function () {
@@ -742,21 +742,21 @@ will look like this:
 
 
 
-##### handleFindAll
+##### mockFindAll
   - For dealing with finding all records of a particular type
-  - Sample acceptance tests using handleFindAll: [(users-view-test.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js) [(users-delete-test.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-delete-test.js)
+  - Sample acceptance tests using mockFindAll: [(users-view-test.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js) [(users-delete-test.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-delete-test.js)
 
 Usage:
 
 ```javascript
   // The mock API can return several different models
-  TestHelper.handleFindAll('user', {name: 'Bob'}, ['admin', {name: 'Jane'}]); // findAll('user') will return a user named Bob and an admin user named Jane
+  TestHelper.mockFindAll('user', {name: 'Bob'}, ['admin', {name: 'Jane'}]); // findAll('user') will return a user named Bob and an admin user named Jane
 
   // Or it can return multiple of the same model (other than ids and sequences)
-  TestHelper.handleFindAll('user', 2);
-  TestHelper.handleFindAll('user', 2, 'admin'); // You can specify traits
-  TestHelper.handleFindAll('user', 2, {name: 'Bob'}); // Or attributes
-  TestHelper.handleFindAll('user', 2, 'admin', {name: 'Bob'}); // Or both
+  TestHelper.mockFindAll('user', 2);
+  TestHelper.mockFindAll('user', 2, 'admin'); // You can specify traits
+  TestHelper.mockFindAll('user', 2, {name: 'Bob'}); // Or attributes
+  TestHelper.mockFindAll('user', 2, 'admin', {name: 'Bob'}); // Or both
 ```
 
 If when visiting a route, some part of your application ( like router, or
@@ -772,7 +772,7 @@ will look like this:
 
 ```javascript
   // can use traits and extra fixture options here as you would with FactoryGuy#makeList
-  TestHelper.handleFindAll('user', 2);
+  TestHelper.mockFindAll('user', 2);
 
   visit('/users');
 
@@ -798,17 +798,17 @@ will look like this:
 
 
 
-If you would like to interact with the records created by handleFindAll (for example to update, delete, or find in the store)
+If you would like to interact with the records created by mockFindAll (for example to update, delete, or find in the store)
 you must wait on the request for those records to resolve before they will be loaded in the store:
 
 ```javascript
-  TestHelper.handleFindAll('user', 2);
+  TestHelper.mockFindAll('user', 2);
 
   visit('/users');
 
   andThen(function() {
-    //handleDelete call must be after the model hook for the ('/users') route resolves
-    TestHelper.handleDelete('user', '1');
+    //mockDelete call must be after the model hook for the ('/users') route resolves
+    TestHelper.mockDelete('user', '1');
     click("li.user:first button:contains('Delete')");
   });
   andThen(function(){
@@ -818,17 +818,17 @@ you must wait on the request for those records to resolve before they will be lo
 ```
 
 
-##### handleReload
+##### mockReload
   - To handle reloading a model
     - Pass in a record ( or a typeName and id )
-    - Use andFail to mock failure
+    - Use fails to mock failure
 
 *Passing in a record / model instance*
 
 ```javascript
     let profile = FactoryGuy.make('profile')
-    // Using handleFind
-    TestHelper.handleReload(profile);
+    // Using mockFind
+    TestHelper.mockReload(profile);
 
     // will stub a call to reload that profile
     profile.reload()
@@ -838,12 +838,12 @@ you must wait on the request for those records to resolve before they will be lo
 
 ```javascript
 
-    TestHelper.handleReload('profile', 1).andFail();
+    TestHelper.mockReload('profile', 1).fails();
 
 ```
 
 
-##### handleQuery
+##### mockQuery
    - For dealing with finding all records for a type of model with query parameters.
    - Takes modifier methods for controlling the response
     - withParams
@@ -852,11 +852,11 @@ you must wait on the request for those records to resolve before they will be lo
     - returnsExistingIds
    - Can reuse the same handler again to simulate same query with different results
 
-*Using plain handleQuery returns no results*
+*Using plain mockQuery returns no results*
 
    ```js
      // This simulates a query that returns no results
-     TestHelper.handleQuery('user', {age: 10});
+     TestHelper.mockQuery('user', {age: 10});
 
      store.query('user', {age: 10}}).then(function(userInstances){
         /// userInstances will be empty
@@ -870,7 +870,7 @@ you must wait on the request for those records to resolve before they will be lo
      let users = FactoryGuy.makeList('user', 2, 'with_hats');
 
      // Pass in the array of model instances as last argument
-     TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsModels(users);
+     TestHelper.mockQuery('user', {name:'Bob', age: 10}).returnsModels(users);
 
      // will stub a call to the store like this:
      store.query('user', {name:'Bob', age: 10}}).then(function(models) {
@@ -886,7 +886,7 @@ you must wait on the request for those records to resolve before they will be lo
      let usersJSON = FactoryGuy.buildList('user', 2, 'with_hats');
 
      // use returnsJSON to pass in this response
-     TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsJSON(usersJSON);
+     TestHelper.mockQuery('user', {name:'Bob', age: 10}).returnsJSON(usersJSON);
 
      store.query('user', {name:'Bob', age: 10}}).then(function(models) {
         // these models were created from the usersJSON
@@ -903,7 +903,7 @@ you must wait on the request for those records to resolve before they will be lo
 
      // use returnsExistingIds to pass in the users ids you want
      // in this case let's say you only want to pass back the first user
-     TestHelper.handleQuery('user', {name:'Bob', age: 10}).returnsExistingIds([user1.id]);
+     TestHelper.mockQuery('user', {name:'Bob', age: 10}).returnsExistingIds([user1.id]);
 
      store.query('user', {name:'Bob', age: 10}}).then(function(models) {
         // models will be one model and it will be user1
@@ -917,7 +917,7 @@ you must wait on the request for those records to resolve before they will be lo
 
      let store = FactoryGuy.get('store');
 
-     let bobQueryHander = TestHelper.handleQuery('user', {name: 'Bob'});
+     let bobQueryHander = TestHelper.mockQuery('user', {name: 'Bob'});
 
      store.query('user', {name: 'Bob'}).then(function (users) {
        //=> users.get('length') === 0;
@@ -943,7 +943,7 @@ you must wait on the request for those records to resolve before they will be lo
      let bob = store.make('user', {name: 'Bob'});
      let dude = store.make('user', {name: 'Dude'});
 
-     let userQueryHander = TestHelper.handleQuery('user', {name: 'Bob'}).returnsModels([bob]);
+     let userQueryHander = TestHelper.mockQuery('user', {name: 'Bob'}).returnsModels([bob]);
 
      store.query('user', {name: 'Bob'}).then(function (users) {
        //=> users.get('length') === 1;
@@ -960,20 +960,20 @@ you must wait on the request for those records to resolve before they will be lo
 ```
 
 
-##### handleCreate
+##### mockCreate
 
   - Use chainable methods to build the response
     - match
       - Attributes that must be in request json
     - andReturns
       - Attributes to include in response json
-    - andFail
+    - fails
       - Request will fail
       - Takes a hash of options:
         - status - HTTP status code, defaults to 500.
         - response - error response message, or an errors hash for 422 status
 
-  - Need to wrap tests using handleCreate with: Ember.run.function() { 'your test' })
+  - Need to wrap tests using mockCreate with: Ember.run.function() { 'your test' })
 
 **Note**
 
@@ -1010,16 +1010,16 @@ chainable methods.
 ```javascript
   // Simplest case
   // Don't care about a match just handle createRecord for any project
-  TestHelper.handleCreate('project');
+  TestHelper.mockCreate('project');
 
   // Matching some attributes
-  TestHelper.handleCreate('project').match({name: "Moo"});
+  TestHelper.mockCreate('project').match({name: "Moo"});
 
   // Match all attributes
-  TestHelper.handleCreate('project').match({name: "Moo", user: user});
+  TestHelper.mockCreate('project').match({name: "Moo", user: user});
 
   // Exactly matching attributes, and returning extra attributes
-  TestHelper.handleCreate('project')
+  TestHelper.mockCreate('project')
     .match({name: "Moo", user: user})
     .andReturn({created_at: new Date()});
 
@@ -1029,31 +1029,31 @@ chainable methods.
 
 ```javascript
 
-  // Mocking failure case is easy with chainable methods, just use #andFail
-  TestHelper.handleCreate('project').match({name: "Moo"}).andFail();
+  // Mocking failure case is easy with chainable methods, just use #fails
+  TestHelper.mockCreate('project').match({name: "Moo"}).fails();
 
   // Can optionally add a status code and/or errors to the response
-  TestHelper.handleCreate('project').andFail({status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}});
+  TestHelper.mockCreate('project').fails({status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}});
 
   store.createRecord('project', {name: "Moo"}).save(); //=> fails
 ```
 
 
-##### handleUpdate
+##### mockUpdate
 
-  - handleUpdate(model)
+  - mockUpdate(model)
     - Single argument ( the model instance that will be updated )
-  - handleUpdate(modelType, id)
+  - mockUpdate(modelType, id)
     - Two arguments: modelType ( like 'profile' ) , and the profile id that will updated
   - Use chainable methods to help build response:
-    - andFail
+    - fails
       - Request will fail
       - Optional arguments ( status and response text )
-    - andSucceed
+    - succeeds
       - Update should succeed, this is the default behavior
-      - Can even use this after an ```andFail``` call to simulate failure with
+      - Can even use this after an ```fails``` call to simulate failure with
         invalid properties and then success after valid ones.
-  - Need to wrap tests using handleUpdate with: Ember.run.function() { 'your test' })
+  - Need to wrap tests using mockUpdate with: Ember.run.function() { 'your test' })
 
 *success case is the default*
 
@@ -1061,11 +1061,11 @@ chainable methods.
   let profile = FactoryGuy.make('profile');
 
   // Pass in the model that will be updated ( if you have it available )
-  TestHelper.handleUpdate(profile);
+  TestHelper.mockUpdate(profile);
 
   // If the model is not available, pass in the modelType and the id of
   // the model that will be updated
-  TestHelper.handleUpdate('profile', 1);
+  TestHelper.mockUpdate('profile', 1);
 
   profile.set('description', 'good value');
   profile.save() //=> will succeed
@@ -1077,9 +1077,9 @@ chainable methods.
   let profile = FactoryGuy.make('profile');
 
   // set the succeed flag to 'false'
-  TestHelper.handleUpdate('profile', profile.id).andFail({status: 422, response: 'Invalid data'});
+  TestHelper.mockUpdate('profile', profile.id).fails({status: 422, response: 'Invalid data'});
   // or
-  TestHelper.handleUpdate(profile).andFail({status: 422, response: 'Invalid data'});
+  TestHelper.mockUpdate(profile).fails({status: 422, response: 'Invalid data'});
 
   profile.set('description', 'bad value');
   profile.save() //=> will fail
@@ -1091,11 +1091,11 @@ chainable methods.
   let profile = FactoryGuy.make('profile');
 
   // set the succeed flag to 'false'
-  let mockUpdate = TestHelper.handleUpdate('profile', profile.id);
+  let mockUpdate = TestHelper.mockUpdate('profile', profile.id);
   // or
-  let mockUpdate = TestHelper.handleUpdate(profile);
+  let mockUpdate = TestHelper.mockUpdate(profile);
 
-  mockUpdate.andFail({status: 422, response: 'Invalid data'});
+  mockUpdate.fails({status: 422, response: 'Invalid data'});
 
   profile.set('description', 'bad value');
   profile.save() //=> will fail
@@ -1104,7 +1104,7 @@ chainable methods.
   profile.set('description', 'good value');
 
   // Now expecting success
-  mockUpdate.andSucceed();
+  mockUpdate.succeeds();
 
   // Try that update again
   profile.save() //=> will succeed!
@@ -1112,14 +1112,14 @@ chainable methods.
 
 
 
-##### handleDelete
-  - Need to wrap tests using handleDelete with: Ember.run.function() { 'your test' })
+##### mockDelete
+  - Need to wrap tests using mockDelete with: Ember.run.function() { 'your test' })
 
 *success case is the default*
 
 ```javascript
   let profile = FactoryGuy.make('profile');
-  TestHelper.handleDelete('profile', profile.id);
+  TestHelper.mockDelete('profile', profile.id);
 
   profile.destroyRecord() // => will succeed
 ````
@@ -1129,7 +1129,7 @@ chainable methods.
 ```javascript
   let profile = FactoryGuy.make('profile');
   // set the succeed flag to 'false'
-  TestHelper.handleDelete('profile', profile.id, false);
+  TestHelper.mockDelete('profile', profile.id, false);
 
   profile.destroyRecord() // => will fail
 ````
@@ -1166,8 +1166,8 @@ test("Creates new project", function () {
     fillIn('input.project-name', newProjectName);
 
     // Remember, this is for handling an exact match, if you did not care about
-    // matching attributes, you could just do: TestHelper.handleCreate('project')
-    fgHelper.handleCreate('project', {match: {name: newProjectName, user: user}});
+    // matching attributes, you could just do: TestHelper.mockCreate('project')
+    fgHelper.mockCreate('project', {match: {name: newProjectName, user: user}});
 
     /**
      Let's say that clicking this 'button.add-project', triggers action in the view to

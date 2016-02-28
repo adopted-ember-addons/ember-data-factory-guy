@@ -1,19 +1,13 @@
-import fgHelper from 'ember-data-factory-guy/factory-guy-test-helper';
+import { mockFindAll } from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
-moduleForAcceptance('Acceptance | Profiles View', {
-  beforeEach: function () {
-    fgHelper.setup();
-  },
-  afterEach: function () {
-    fgHelper.teardown();
-  }
-});
-
+moduleForAcceptance('Acceptance | Profiles View');
+// NOTE
+// FactoryGuy before and after setup is in moduleForAcceptance helper
 
 test("Handles differently cased attributes", function () {
 
-  fgHelper.handleFindAll('profile', 2);
+  mockFindAll('profile', 2);
   visit('/profiles');
 
   andThen(function () {

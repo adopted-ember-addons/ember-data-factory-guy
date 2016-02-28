@@ -12,14 +12,14 @@ let adapterType = '-active-model';
 
 SharedAdapterBehavior.all(adapter, adapterType);
 
-module(title(adapter, 'FactoryGuyTestHelper#handleCreate custom'), inlineSetup(App, adapterType));
+module(title(adapter, 'FactoryGuyTestHelper#mockCreate custom'), inlineSetup(App, adapterType));
 
 test("returns camelCase attributes", function (assert) {
   Ember.run(function () {
     let done = assert.async();
     let customDescription = "special description";
 
-    TestHelper.handleCreate('profile', {
+    TestHelper.mockCreate('profile', {
       returns: {camel_case_description: customDescription}
     });
 
