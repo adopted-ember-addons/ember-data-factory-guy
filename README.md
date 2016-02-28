@@ -188,10 +188,10 @@ In other words, don't do this:
   
 ```javascript
 
-  import FactoryGuy, { make, makeList } from 'ember-data-factory-guy';
+  import { make, makeList } from 'ember-data-factory-guy';
   
   // make basic user with the default attributes in user factory
-  let user = FactoryGuy.make('user');
+  let user = make('user');
   user.toJSON({includeId: true}) // => {id: 1, name: 'User1', style: 'normal'}
   
   // make user with default attributes plus those defined as 'admin' in user factory
@@ -199,14 +199,14 @@ In other words, don't do this:
   user.toJSON({includeId: true}) // => {id: 2, name: 'Admin', style: 'super'}
 
   // make user with default attributes plus these extra attributes
-  let user = build('user', {name: 'Fred'});
+  let user = make('user', {name: 'Fred'});
   user.toJSON({includeId: true}) // => {id: 3, name: 'Fred', style: 'normal'}
 
   // make admin defined user with these extra attributes
-  let user = build('admin', {name: 'Fred'});
+  let user = make('admin', {name: 'Fred'});
   user.toJSON({includeId: true}) // => {id: 4, name: 'Fred', style: 'super'}
   
-  // build default user with traits and with extra attributes
+  // make default user with traits and with extra attributes
   let user = make('user', 'silly', {name: 'Fred'});
   user.toJSON({includeId: true}) // => {id: 5, name: 'Fred', style: 'silly'}
 
