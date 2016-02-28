@@ -283,8 +283,12 @@ let FactoryGuy = Ember.Object.extend({
 
    ```
 
-   FactoryGuy.buildList('user', 2) for 2 User models
-   FactoryGuy.build('bob', 2) for 2 User model with bob attributes
+   FactoryGuy.buildList('user') // for 0 User models
+   FactoryGuy.buildList('user', 2) // for 2 User models
+   FactoryGuy.build('bob', 2) // for 2 User model with bob attributes
+   FactoryGuy.build('bob', 'with_car', ['with_car',{name: "Dude"}])
+    // 2 User model with bob attributes, where the first also has 'with_car' trait
+    // the last has 'with_car' trait and name of "Dude"
 
    ```
 
@@ -295,24 +299,23 @@ let FactoryGuy = Ember.Object.extend({
    @returns {Array} list of fixtures
    */
     buildList(...args) {
-    let name = args.shift();
+    Ember.assert("buildList needs at least a name ( of model or named factory definition )", args.length > 0);
+
     let list = this.buildRawList.apply(this, arguments);
 
+    let name = args.shift();
     let modelName = lookupModelForFixtureName(name);
     return this.get('fixtureBuilder').convertForBuild(modelName, list);
   },
 
   buildRawList(...args) {
-    if (args.length < 2) {
-      throw new Error('buildList needs a name and a number ( at least ) to build with');
-    }
     let name = args.shift();
     let definition = lookupDefinitionForFixtureName(name);
     if (!definition) {
       throw new Error("Can't find that factory named [" + name + "]");
     }
-    if (typeof(args[0]) === 'number') {
-      let number = args.shift();
+    let number = args[0] || 0;
+    if (typeof number === 'number') {
       let parts = extractArgumentsShort.apply(this, args);
       return definition.buildList(name, number, parts.traits, parts.opts);
     }
@@ -356,7 +359,20 @@ let FactoryGuy = Ember.Object.extend({
   },
 
   /**
-   Make a list of Fixtures
+   Make a list of model instances
+
+   ```
+    FactoryGuy.makeList('bob') // makes 0 bob's
+
+    FactoryGuy.makeList('bob', 2) // makes 2 bob's
+
+    FactoryGuy.makeList('bob', 2, 'with_car' , {name: "Dude"})
+    // makes 2 bob's that have 'with_car' trait and name of "Dude"
+
+    FactoryGuy.makeList('bob', 'with_car', ['with_car',{name: "Dude"}])
+    // 2 User model with bob attributes, where the first also has 'with_car' trait
+    // the last has 'with_car' trait and name of "Dude"
+   ```
 
    @param {String} name name of fixture
    @param {Number} number number to create
@@ -365,17 +381,30 @@ let FactoryGuy = Ember.Object.extend({
    @returns {Array} list of json fixtures or records depending on the adapter type
    */
   makeList(...args) {
-    Ember.assert("FactoryGuy does not have the application's store. Use FactoryGuy.set('store', store) before making any fixtures", this.get('store'));
+    Ember.assert(`FactoryGuy does not have the application's store.
+      Use FactoryGuy.set('store', store) before making any fixtures`, this.get('store'));
 
-    let arr = [];
-    Ember.assert("makeList needs at least 2 arguments, a name and a number", args.length >= 2);
-    let number = args.splice(1, 1)[0];
-    Ember.assert("Second argument to makeList should be a number (of fixtures to make.)", typeof number === 'number');
+    Ember.assert("makeList needs at least a name ( of model or named factory definition )", args.length >= 1);
 
-    for (let i = 0; i < number; i++) {
-      arr.push(this.make.apply(this, args));
+    let name = args.shift();
+    let definition = lookupDefinitionForFixtureName(name);
+    Ember.assert("Can't find that factory named [" + name + "]" , !!definition);
+
+    let number = args[0] || 0;
+    if (typeof number === 'number') {
+      let arr = [];
+      for (let i = 0; i < number; i++) {
+        arr.push(this.make.apply(this, arguments));
+      }
+      return arr;
     }
-    return arr;
+
+    return args.map((innerArgs)=> {
+      if (Ember.typeOf(innerArgs) !== 'array') {
+        innerArgs = [innerArgs];
+      }
+      return this.make(...[name, ...innerArgs]);
+    });
   },
   /**
    Clear model instances from store cache.
@@ -459,20 +488,37 @@ let FactoryGuy = Ember.Object.extend({
       modelDefinitions = {};
     }
   },
+  /**
+   Build url's for the mockjax calls. Proxy to the adapters buildURL method.
 
+   @param {String} typeName model type name like 'user' for User model
+   @param {String} id
+   @return {String} url
+   */
+  buildURL(modelName, id = null) {
+    const adapter = this.get('store').adapterFor(modelName);
+    return adapter.buildURL(modelName, id);
+  },
   /**
    Change reload behavior to only used cached models for find/findAll.
    You still have to handle query calls, since they always ajax for data.
    */
-  cacheOnlyMode() {
+  cacheOnlyMode(except=[]) {
     let store = this.get('store');
     let findAdapter = store.adapterFor.bind(store);
+
     store.adapterFor = function (name) {
       let adapter = findAdapter(name);
-      adapter.shouldBackgroundReloadAll = ()=>false;
-      adapter.shouldBackgroundReloadRecord = ()=>false;
-      adapter.shouldReloadRecord = ()=>false;
-      adapter.shouldReloadAll = ()=>false;
+      let shouldCache = ()=> {
+        if (Ember.isPresent(except)) {
+           return (except.contains(name));
+        }
+        return false;
+      };
+      adapter.shouldBackgroundReloadAll = shouldCache;
+      adapter.shouldBackgroundReloadRecord = shouldCache;
+      adapter.shouldReloadRecord = shouldCache;
+      adapter.shouldReloadAll = shouldCache;
       return adapter;
     };
   }

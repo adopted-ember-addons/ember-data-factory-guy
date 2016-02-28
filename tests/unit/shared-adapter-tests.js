@@ -33,6 +33,8 @@ SharedAdapterBehavior.all = function (adapter, adapterType) {
   module(title(adapter, 'FactoryGuyTestHelper#handleQuery'), inlineSetup(App, adapterType));
   SharedFactoryGuyTestHelperBehavior.handleQueryTests();
 
+  module(title(adapter, 'FactoryGuyTestHelper#handleQueryRecord'), inlineSetup(App, adapterType));
+  SharedFactoryGuyTestHelperBehavior.handleQueryRecordTests();
 
   module(title(adapter, 'FactoryGuyTestHelper#handleCreate'), inlineSetup(App, adapterType));
   SharedFactoryGuyTestHelperBehavior.handleCreateTests();

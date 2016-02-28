@@ -40,13 +40,29 @@ let MockCreateRequest = function (url, modelName, options) {
     return this;
   };
 
-  this.andReturn = function (returns) {
+  this.returns = function (returns) {
     returnArgs = returns;
     this.calculate();
     return this;
   };
 
-  this.andFail = function (options = {}) {
+  this.andReturn = function (returns) {
+    Ember.deprecate(
+      `[ember-data-factory-guy] handleCreate.andReturn method has been deprecated.
+        Use chainable method \`returns()\` instead`,
+      !options.hasOwnProperty('succeed'),
+      { id: 'ember-data-factory-guy.handle-create-and-return', until: '2.4.0' }
+    );
+    return this.returns(returns);
+  };
+
+  this.andFail = function(options = {}) {
+    Ember.deprecate("`andFail` - has been deprecated. Use `fails(options)` method instead`",
+      false, { id: 'ember-data-factory-guy.and-fail', until: '2.4.0' });
+    return this.fails(options);
+  };
+
+  this.fails = function (options = {}) {
     succeed = false;
     status = options.status || 500;
     if (options.response) {
@@ -59,9 +75,21 @@ let MockCreateRequest = function (url, modelName, options) {
   // for supporting older ( non chaining methods ) style of passing in options
   Ember.deprecate(
     `[ember-data-factory-guy] TestHelper.handleCreate - options.succeed has been deprecated.
-      Use chainable methods with \`andFail()\` method instead`,
+      Use chainable method \`andFail()\` instead`,
     !options.hasOwnProperty('succeed'),
-    { id: 'ember-data-factory-guy.handle-create', until: '3.0.0' }
+    { id: 'ember-data-factory-guy.handle-create-succeed-options', until: '2.4.0' }
+  );
+  Ember.deprecate(
+    `[ember-data-factory-guy] TestHelper.handleCreate - options.match has been deprecated.
+      Use chainable method \`match()\` instead`,
+    !options.hasOwnProperty('match'),
+    { id: 'ember-data-factory-guy.handle-create-match-options', until: '2.4.0' }
+  );
+  Ember.deprecate(
+    `[ember-data-factory-guy] TestHelper.handleCreate - options.returns has been deprecated.
+      Use chainable method \`returns()\` instead`,
+    !options.hasOwnProperty('returns'),
+    { id: 'ember-data-factory-guy.handle-create-returns-options', until: '2.4.0' }
   );
   if (succeed) {
     this.calculate();

@@ -25,14 +25,6 @@ test("exposes make method which is shortcut for FactoryGuy.make", function () {
   ok(make('user') instanceof User);
 });
 
-test("#makeList returns an array of model instances", function () {
-  let users = FactoryGuy.makeList('user', 2);
-  equal(users.length, 2);
-  ok(users[0] instanceof User);
-  ok(users[1] instanceof User);
-  equal(FactoryGuy.get('store').peekAll('user').get('content').length, 2);
-});
-
 test("exposes makeList method which is shortcut for FactoryGuy.makeList", function () {
   let users = makeList('user', 2);
   equal(users.length, 2);
@@ -59,7 +51,6 @@ test("exposes clearStore method which is a shortcut for FactoryGuy.clearStore", 
   });
 });
 
-
 test("#clearStore clears the store of models, and resets the model definition", function () {
   Ember.run(function () {
     let project = make('project');
@@ -84,7 +75,52 @@ test("#clearStore clears the store of models, and resets the model definition", 
   });
 });
 
-//module('FactoryGuy#build', inlineSetup(App,'-json-api'));
+module('FactoryGuy#buildList', inlineSetup(App,'-rest'));
+
+test("without a number returns a empty json payload", function () {
+  let users = buildList('user');
+  equal(users.get().length, 0);
+});
+
+test("without a number but with options returns array with diverse attributes", function () {
+  let profiles = buildList('profile', 'goofy_description', ['with_company', {description: 'Noodles'}], 'with_bat_man');
+  equal(profiles.get().length, 3);
+  ok(profiles.get(0).description === 'goofy');
+  ok(profiles.get(1).company === 1);
+  ok(profiles.get(1).description === 'Noodles');
+  ok(profiles.get(2).superHero === 1);
+});
+
+module('FactoryGuy#makeList', inlineSetup(App,'-json-api'));
+
+test("returns an array of model instances", function () {
+  let users = makeList('user', 2);
+  equal(users.length, 2);
+  ok(users[0] instanceof User);
+  ok(users[1] instanceof User);
+  equal(FactoryGuy.get('store').peekAll('user').get('content').length, 2);
+});
+
+test("with number as 0 returns an empty array of model instances", function () {
+  let users = makeList('user', 0);
+  equal(users.length, 0);
+});
+
+test("without a number returns an array of 0 model instances", function () {
+  let users = makeList('user');
+  equal(users.length, 0);
+});
+
+test("without a number but with options returns array of models", function () {
+  let profiles = makeList('profile', 'goofy_description', ['with_company', {description: 'Noodles'}], 'with_bat_man');
+  equal(profiles.length, 3);
+  ok(profiles.objectAt(0).get('description') === 'goofy');
+  ok(profiles.objectAt(1).get('company.name') === 'Silly corp');
+  ok(profiles.objectAt(1).get('description') === 'Noodles');
+  ok(profiles.objectAt(2).get('superHero.name') === 'BatMan');
+  equal(FactoryGuy.get('store').peekAll('profile').get('content').length, 3);
+});
+
 
 //test("when composing associations enforces has many model type", function () {
 //  let profile = build('profile');
