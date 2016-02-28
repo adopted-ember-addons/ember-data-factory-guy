@@ -14,7 +14,7 @@ module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, adapterType));
 
 test("returns all attributes with no key", function () {
   let user = build('user');
-  deepEqual(user.get(), {id: 1, name: 'User1'});
+  deepEqual(user.get(), {id: 1, name: 'User1', style: "normal"});
   equal(user.get().id, 1);
   equal(user.get().name, 'User1');
 });
@@ -29,14 +29,14 @@ module(title(adapter, 'FactoryGuy#buildList get'), inlineSetup(App, adapterType)
 
 test("returns array of all attributes with no key", function () {
   let users = buildList('user', 2);
-  deepEqual(users.get(), [{id: 1, name: 'User1'}, {id: 2, name: 'User2'}]);
+  deepEqual(users.get(), [{id: 1, name: 'User1', style: "normal"}, {id: 2, name: 'User2', style: "normal"}]);
 });
 
 test("returns an attribute with a key", function () {
   let users = buildList('user', 2);
-  deepEqual(users.get(0), {id: 1, name: 'User1'});
+  deepEqual(users.get(0), {id: 1, name: 'User1', style: "normal"});
   equal(users.get(0).id, 1);
-  deepEqual(users.get(1), {id: 2, name: 'User2'});
+  deepEqual(users.get(1), {id: 2, name: 'User2', style: "normal"});
   equal(users.get(1).name, 'User2');
 });
 
@@ -105,6 +105,7 @@ test("sideloads hasMany records which are built from fixture definition", functi
     user: {
       id: 1,
       name: 'User1',
+      style: "normal",
       hats: [
         {type: 'big_hat', id:1},
         {type: 'big_hat', id:2}
@@ -129,6 +130,7 @@ test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", fun
     user: {
       id: 1,
       name: 'User1',
+      style: "normal",
       hats: [
         {type: 'big_hat', id:1},
         {type: 'big_hat', id:2}
@@ -155,6 +157,7 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) attribute"
     user: {
       id: 1,
       name: 'User1',
+      style: "normal",
       hats: [
         {type: 'big_hat', id:1},
         {type: 'big_hat', id:2}
@@ -224,6 +227,7 @@ test("sideloads hasMany records", function () {
       {
         id: 1,
         name: 'User1',
+        style: "normal",
         hats: [
           {type: 'big_hat', id:1},
           {type: 'big_hat', id:2}
@@ -232,6 +236,7 @@ test("sideloads hasMany records", function () {
       {
         id: 2,
         name: 'User2',
+        style: "normal",
         hats: [
           {type: 'big_hat', id:3},
           {type: 'big_hat', id:4}
@@ -258,6 +263,7 @@ test("serializes attributes with custom type", function () {
     user: {
       id: 1,
       name: 'User1',
+      style: "normal",
       info: '{"first":1}'
     }
   };

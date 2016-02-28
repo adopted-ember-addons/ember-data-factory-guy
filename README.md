@@ -224,7 +224,6 @@ In other words, don't do this:
 
 ```
 
-You can override the default attributes by passing in a hash
 
 ##### build/buildList
   - getting info from json with get() method
@@ -234,7 +233,7 @@ You can override the default attributes by passing in a hash
   import FactoryGuy, { build, buildList } from 'ember-data-factory-guy';  
   
   // build basic user with the default attributes in user factory
-  let json = FactoryGuy.build('user');
+  let json = build('user');
   json.get() // => {id: 1, name: 'User1', style: 'normal'}
 
   // build user with default attributes plus those defined as 'admin' in user factory  

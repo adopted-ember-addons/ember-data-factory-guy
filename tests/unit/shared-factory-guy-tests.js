@@ -336,17 +336,17 @@ SharedBehavior.makeTests = function () {
   });
 
   test("hasMany associations assigned with id's throws error if relationship is polymorphic", function () {
-    let smallHat = make('small-hat', {id: 1});
-    let bigHat = make('big-hat', {id: 2});
+    make('small-hat', {id: 1});
+     make('big-hat', {id: 2});
     throws(function () {
-      let user = make('user', {hats: [1, 2]});
+      make('user', {hats: [1, 2]});
     });
   });
 
   test("belongsTo association by id throws error if relationship is polymorphic", function () {
-    let parentHat = make('hat', {id: 1});
+    make('hat', {id: 1});
     throws(function () {
-      let childHat = make('hat', {hat: 1});
+      make('hat', {hat: 1});
     });
   });
 
@@ -386,14 +386,16 @@ SharedBehavior.buildListJSONAPITests = function () {
         id: 1,
         type: 'user',
         attributes: {
-          name: 'User1'
+          name: 'User1',
+          style: "normal"
         }
       },
         {
           id: 2,
           type: 'user',
           attributes: {
-            name: 'User2'
+            name: 'User2',
+            style: "normal"
           }
         }]
     });
@@ -406,7 +408,8 @@ SharedBehavior.buildListJSONAPITests = function () {
           id: 1,
           type: 'user',
           attributes: {
-            name: 'Crazy'
+            name: 'Crazy',
+            style: "normal"
           }
         },
         ]

@@ -97,6 +97,7 @@ test("sideloads hasMany records built from fixture definition", function () {
     user: {
       id: 1,
       name: 'User1',
+      style: "normal",
       hats: [
         {type: 'big_hat', id:1},
         {type: 'big_hat', id:2}
@@ -122,6 +123,7 @@ test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", fun
     user: {
       id: 1,
       name: 'User1',
+      style: "normal",
       hats: [
         {type: 'big_hat', id:1},
         {type: 'big_hat', id:2}
@@ -148,6 +150,7 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) attribute"
     user: {
       id: 1,
       name: 'User1',
+      style: "normal",
       hats: [
         {type: 'big_hat', id:1},
         {type: 'big_hat', id:2}
@@ -207,6 +210,7 @@ test("serializes attributes with custom type", function () {
     user: {
       id: 1,
       name: 'User1',
+      style: "normal",
       info: '{"first":1}'
     }
   };

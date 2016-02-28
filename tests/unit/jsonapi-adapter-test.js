@@ -14,7 +14,7 @@ module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, adapterType));
 
 test("returns all attributes with no key", function () {
   let user = build('user');
-  deepEqual(user.get(), {id: 1, name: 'User1'});
+  deepEqual(user.get(), {id: 1, name: 'User1', style: 'normal'});
   equal(user.get().id, 1);
   equal(user.get().name, 'User1');
 });
@@ -29,14 +29,14 @@ module(title(adapter, 'FactoryGuy#buildList get'), inlineSetup(App, adapterType)
 
 test("returns array of all attributes with no key", function () {
   let users = buildList('user', 2);
-  deepEqual(users.get(), [{id: 1, name: 'User1'}, {id: 2, name: 'User2'}]);
+  deepEqual(users.get(), [{id: 1, name: 'User1',style: "normal"}, {id: 2, name: 'User2',style: "normal"}]);
 });
 
 test("returns an attribute with a key", function () {
   let users = buildList('user', 2);
-  deepEqual(users.get(0), {id: 1, name: 'User1'});
+  deepEqual(users.get(0), {id: 1, name: 'User1', style: "normal"});
   equal(users.get(0).id, 1);
-  deepEqual(users.get(1), {id: 2, name: 'User2'});
+  deepEqual(users.get(1), {id: 2, name: 'User2', style: "normal"});
   equal(users.get(1).name, 'User2');
 });
 
@@ -76,7 +76,8 @@ test("sideloads belongsTo records which are built from fixture definition", func
           id: 1,
           type: "user",
           attributes: {
-            name: "User1"
+            name: "User1",
+            style: "normal"
           }
         }
       ]
@@ -107,7 +108,8 @@ test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () 
           id: 1,
           type: "user",
           attributes: {
-            name: "User1"
+            name: "User1",
+            style: "normal"
           }
         }
       ]
@@ -138,7 +140,8 @@ test("sideloads many belongsTo records which are built from fixture definition",
           id: 1,
           type: "user",
           attributes: {
-            name: "User1"
+            name: "User1",
+            style: "normal"
           }
         }
       ]
@@ -168,7 +171,8 @@ test("with more than one trait and custom attributes", function () {
           id: 1,
           type: "user",
           attributes: {
-            name: "User1"
+            name: "User1",
+            style: "normal"
           }
         }
       ]
@@ -197,7 +201,8 @@ test("with trait with custom belongsTo association object", function () {
           id: 1,
           type: "user",
           attributes: {
-            name: "Dude"
+            name: "Dude",
+            style: "normal"
           }
         }
       ]
@@ -227,7 +232,8 @@ test("using trait with attribute using FactoryGuy.belongsTo method", function ()
           id: 1,
           type: "user",
           attributes: {
-            name: "Admin"
+            name: "Admin",
+            style: "super"
           }
         }
       ]
@@ -261,7 +267,8 @@ test("sideloads hasMany records built from fixture definition", function () {
         id: 1,
         type: 'user',
         attributes: {
-          name: 'User1'
+          name: 'User1',
+          style: "normal"
         },
         relationships: {
           projects: {
@@ -302,7 +309,8 @@ test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", fun
         id: 1,
         type: 'user',
         attributes: {
-          name: 'User1'
+          name: 'User1',
+          style: "normal"
         },
         relationships: {
           projects: {
@@ -344,7 +352,8 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) attribute"
         id: 1,
         type: 'user',
         attributes: {
-          name: 'User1'
+          name: 'User1',
+          style: "normal"
         },
         relationships: {
           projects: {
@@ -384,7 +393,8 @@ test("creates default json for model", function () {
         id: 1,
         type: 'user',
         attributes: {
-          name: 'User1'
+          name: 'User1',
+          style: "normal"
         }
       }
     }
@@ -402,7 +412,8 @@ test("can override default model attributes", function () {
         id: 1,
         type: 'user',
         attributes: {
-          name: 'bob'
+          name: 'bob',
+          style: "normal"
         }
       }
     }
@@ -420,7 +431,8 @@ test("can have named model definition with custom attributes", function () {
         id: 1,
         type: 'user',
         attributes: {
-          name: 'Admin'
+          name: 'Admin',
+          style: "super"
         }
       }
     }
@@ -438,7 +450,8 @@ test("can override named model attributes", function () {
         id: 1,
         type: 'user',
         attributes: {
-          name: 'AdminGuy'
+          name: 'AdminGuy',
+          style: "super"
         }
       }
     }
@@ -564,6 +577,7 @@ test("serializes attributes with custom type", function () {
         type: 'user',
         attributes: {
           name: 'User1',
+          style: "normal",
           info: '{"first":1}'
         }
       }
@@ -574,64 +588,65 @@ test("serializes attributes with custom type", function () {
 test("with (nested json fixture) belongsTo has a hasMany association which has a belongsTo", function () {
 
   let expectedData = {
-    "data": {
-      "type": "project",
-      "id": 1,
-      "attributes": {
-        "title": "Project1"
+    data: {
+      type: "project",
+      id: 1,
+      attributes: {
+        title: "Project1"
       },
-      "relationships": {
-        "user": {
-          "data": {"id": 1, "type": "user"},
+      relationships: {
+        user: {
+          data: {id: 1, type: "user"},
         }
       }
     },
     "included": [
       {
-        "type": "outfit",
-        "id": 1,
-        "attributes": {
-          "name": "Outfit1"
+        type: "outfit",
+        id: 1,
+        attributes: {
+          name: "Outfit1"
         },
       }, {
-        "type": "big-hat",
-        "id": 1,
-        "attributes": {
-          "type": "BigHat"
+        type: "big-hat",
+        id: 1,
+        attributes: {
+          type: "BigHat"
         },
-        "relationships": {
-          "outfit": {
+        relationships: {
+          outfit: {
             data: {id: 1, type: 'outfit'}
           }
         }
       }, {
-        "type": "outfit",
-        "id": 2,
-        "attributes": {
-          "name": "Outfit2"
+        type: "outfit",
+        id: 2,
+        attributes: {
+          name: "Outfit2"
         },
       }, {
-        "type": "big-hat",
-        "id": 2,
-        "attributes": {
-          "type": "BigHat"
+        type: "big-hat",
+        id: 2,
+        attributes: {
+          type: "BigHat"
         },
-        "relationships": {
-          "outfit": {
+        relationships: {
+          outfit: {
             data: {id: 2, type: 'outfit'}
           }
         }
       }, {
-        "type": "user",
-        "id": 1,
-        "attributes": {
-          "name": "User1",
+        type: "user",
+        id: 1,
+        attributes: {
+          name: "User1",
+          style: "normal"
         },
-        "relationships": {
-          "hats": {
+        relationships: {
+          hats: {
             data: [
-              {"type": "big-hat", "id": 1},
-              {"type": "big-hat", "id": 2}
+              {type: "big-hat", id: 1},
+              {type: "big-hat", id: 2}
             ]
           }
         }

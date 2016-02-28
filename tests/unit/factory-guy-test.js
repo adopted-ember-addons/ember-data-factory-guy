@@ -561,7 +561,7 @@ test("Referring to other attributes in attribute definition", function () {
 
 test("Using default belongsTo associations in attribute definition", function () {
   let json = FactoryGuy.buildRaw('project_with_user');
-  let expected = {id: 1, title: 'Project1', user: {id: 1, name: 'User1'}};
+  let expected = {id: 1, title: 'Project1', user: {id: 1, name: 'User1', style: "normal"}};
   deepEqual(json, expected);
 });
 
@@ -570,7 +570,7 @@ test("creates association with optional attributes", function () {
   let expected = {
     id: 1,
     title: 'Project1',
-    user: {id: 1, name: 'Dude'}
+    user: {id: 1, name: 'Dude', style: "normal"}
   };
   deepEqual(json, expected);
 });
@@ -581,7 +581,7 @@ test("creates association using named attribute", function () {
   let expected = {
     id: 1,
     title: 'Project1',
-    user: {id: 1, name: 'Admin'}
+    user: {id: 1, name: 'Admin', style: "super"}
   };
   deepEqual(json, expected);
 });
@@ -603,6 +603,7 @@ test("Using hasMany associations in attribute definition", function () {
   let expected = {
     id: 1,
     name: 'User1',
+    style: "normal",
     projects: [{id: 1, title: 'Project1'}, {id: 2, title: 'Project2'}]
   };
   deepEqual(json, expected);
@@ -618,7 +619,7 @@ test("with traits defining model attributes", function () {
 test("with traits defining belongsTo association", function () {
   let json = FactoryGuy.buildRaw('project', 'with_user');
   let expected = {
-    id: 1, title: 'Project1', user: {id: 1, name: 'User1'}
+    id: 1, title: 'Project1', user: {id: 1, name: 'User1', style: "normal"}
   };
   deepEqual(json, expected);
 });
@@ -627,7 +628,7 @@ test("with more than one trait used", function () {
   let json = FactoryGuy.buildRaw('project', 'big', 'with_user');
   let expected = {
     id: 1, title: 'Big Project',
-    user: {id: 1, name: 'User1'}
+    user: {id: 1, name: 'User1', style: "normal"}
   };
   deepEqual(json, expected);
 });
@@ -637,7 +638,7 @@ test("with more than one trait and custom attributes", function () {
   let expected = {
     id: 1,
     title: 'Crazy Project',
-    user: {id: 1, name: 'User1'}
+    user: {id: 1, name: 'User1', style: "normal"}
   };
   deepEqual(json, expected);
 });
@@ -647,7 +648,7 @@ test("with trait with custom belongsTo association object", function () {
   let expected = {
     id: 1,
     title: 'Big Project',
-    user: {id: 1, name: 'Dude'}
+    user: {id: 1, name: 'Dude', style: "normal"}
   };
   deepEqual(json, expected);
 });
@@ -657,7 +658,7 @@ test("using trait with attribute using FactoryGuy.belongsTo method", function ()
   let expected = {
     id: 1,
     title: 'Project1',
-    user: {id: 1, name: 'Admin'}
+    user: {id: 1, name: 'Admin', style: "super"}
   };
   deepEqual(json, expected);
 });
@@ -673,6 +674,7 @@ test("with trait defining hasMany association", function () {
   let expected = {
     id: 1,
     name: 'User1',
+    style: "normal",
     projects: [{id: 1, title: 'Project1'}, {id: 2, title: 'Project2'}]
   };
   deepEqual(json, expected);
@@ -680,28 +682,28 @@ test("with trait defining hasMany association", function () {
 
 test("creates default json for model", function () {
   let json = FactoryGuy.buildRaw('user');
-  let expected = {id: 1, name: 'User1'};
+  let expected = {id: 1, name: 'User1',style: "normal"};
   deepEqual(json, expected);
 });
 
 
 test("can override default model attributes", function () {
   let json = FactoryGuy.buildRaw('user', {name: 'bob'});
-  let expected = {id: 1, name: 'bob'};
+  let expected = {id: 1, name: 'bob',style: "normal"};
   deepEqual(json, expected);
 });
 
 
 test("with named model definition with custom attributes", function () {
   let json = FactoryGuy.buildRaw('admin');
-  let expected = {id: 1, name: 'Admin'};
+  let expected = {id: 1, name: 'Admin',style: "super"};
   deepEqual(json, expected);
 });
 
 
 test("overrides named model attributes", function () {
   let json = FactoryGuy.buildRaw('admin', {name: 'AdminGuy'});
-  let expected = {id: 1, name: 'AdminGuy'};
+  let expected = {id: 1, name: 'AdminGuy',style: "super"};
   deepEqual(json, expected);
 });
 
@@ -717,13 +719,13 @@ module('FactoryGuy#buildRawList', inlineSetup(App,'-json-api'));
 
 test("basic", function () {
   let userList = FactoryGuy.buildRawList('user', 2);
-  let expected = [{id: 1, name: 'User1'}, {id: 2, name: 'User2'}];
+  let expected = [{id: 1, name: 'User1',style: "normal"}, {id: 2, name: 'User2',style: "normal"}];
   deepEqual(userList, expected);
 });
 
 test("using custom attributes", function () {
   let userList = FactoryGuy.buildRawList('user', 2, {name: 'Crazy'});
-  let expected = [{id: 1, name: 'Crazy'}, {id: 2, name: 'Crazy'}];
+  let expected = [{id: 1, name: 'Crazy',style: "normal"}, {id: 2, name: 'Crazy',style: "normal"}];
   deepEqual(userList, expected);
 });
 
@@ -741,7 +743,10 @@ test("using traits and custom attributes", function () {
 
 test("using diverse attributes", function() {
   let projectList = FactoryGuy.buildRawList('project', 'big', {title: 'Really Big'}, ['with_dude', {title: 'I have a dude'}]);
-  let expected = [{id: 1, title: 'Big Project'}, {id: 2, title: 'Really Big'}, {id: 3, title: 'I have a dude', user: {id: 1, name: 'Dude'}}];
+  let expected = [
+    {id: 1, title: 'Big Project'},
+    {id: 2, title: 'Really Big'},
+    {id: 3, title: 'I have a dude', user: {id: 1, name: 'Dude', style: "normal"}}];
   deepEqual(projectList, expected);
 });
 
