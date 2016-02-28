@@ -43,7 +43,26 @@ test("returns an attribute with a key", function () {
 
 module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, adapterType));
 
-test("sideloads belongsTo records which are built from fixture definition", function () {
+test("sideloads belongsTo records which are built from fixture definition that just has empty object {}", function () {
+  let buildJson = build('user', 'with_company');
+  delete buildJson.get;
+
+  let expectedJson = {
+    user: {
+      id: 1,
+      name: 'User1',
+      style: "normal",
+      company: {id: 1, type: 'company'}
+    },
+    companies: [
+      {id: 1, type: 'Company', name: "Silly corp" }
+    ]
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+test("sideloads belongsTo records which are built from fixture definition with FactoryGuy.belongsTo", function () {
 
   let buildJson = build('profile', 'with_bat_man');
   delete buildJson.get;

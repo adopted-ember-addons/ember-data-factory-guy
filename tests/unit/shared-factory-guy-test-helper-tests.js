@@ -145,6 +145,7 @@ SharedBehavior.handleFindTests = function() {
       let done = assert.async();
 
       let json = build('profile', 'with_company', 'with_bat_man');
+
       mockFind('profile').returns({json});
       let profileId = json.get('id');
 

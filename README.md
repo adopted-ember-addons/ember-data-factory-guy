@@ -273,7 +273,7 @@ Example: what json looks like
 
 ```javascript
 
-  let json = FactoryGuy.build('user', 'with_company', 'with_hats');
+  let json = build('user', 'with_company', 'with_hats');
   json // =>
     {
       user: {
@@ -293,6 +293,18 @@ Example: what json looks like
         {id: 2, type: "BigHat" }
       ]
     }
+
+```
+
+##### using get() method
+  - for inspecting contents of json payload
+    - get() returns all attributes of top level model 
+    - get(attribute) gives you attribute in top level model
+    
+```javascript
+
+  let json = build('user', 'with_company', 'with_hats');
+  json.get() //=> {id: 1, name: 'User1', style: 'normal'}
 
 ```
 
