@@ -227,7 +227,8 @@ In other words, don't do this:
 
 ##### build/buildList
   - getting info from json with get() method
-    
+  - used to pass json payload to [Acceptance Tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
+  
 ```javascript
   
   import FactoryGuy, { build, buildList } from 'ember-data-factory-guy';  
@@ -266,15 +267,7 @@ In other words, don't do this:
   
 ```
 
-##### Build vs. Make
-
-Most of the time you will make models with FactoryGuy.make, which creates models ( and/or their relationships )
-in the store.
-<br>
-But you can also take the json from FactoryGuy.build and put it into the store yourself with the store's pushPayload
-method, since the json will have the primary model's data and all sideloaded relationships properly prepared.
-
-Example:
+Example: what json looks like
 
 *Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters*
 
@@ -301,14 +294,6 @@ Example:
       ]
     }
 
-  let store = FactoryGuy.get('store');
-
-  store.pushPayload(json);
-
-  let user = store.peekRecord('user', 1);
-  user.get('name') // => 'User1'
-  user.get('company.name') // => Silly Corp
-  user.get('hats.length') // => 2
 ```
 
 ### Custom API formats
@@ -364,7 +349,7 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
   });
 
   let json = FactoryGuy.build('user');
-  json.user.name // => 'User1'
+  json.get('name') // => 'User1'
 
   let user = FactoryGuy.make('user');
   user.get('name') // => 'User2'
@@ -382,7 +367,7 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
   });
 
   let json = FactoryGuy.build('special_project');
-  json.project.title // => 'Project #1'
+  json.get('title') // => 'Project #1'
 
   let project = FactoryGuy.make('special_project');
   project.get('title') // => 'Project #2'
@@ -406,8 +391,8 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
   });
 
   let json = FactoryGuy.build('funny_user');
-  json.user.name // => 'User1'
-  json.user.style // => 'funny User1'
+  json.get('name') // => 'User1'
+  json.get('style') // => 'funny User1'
 
   let user = FactoryGuy.make('funny_user');
   user.get('name') // => 'User2'
