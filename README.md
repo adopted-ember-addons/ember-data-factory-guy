@@ -169,41 +169,102 @@ In other words, don't do this:
 
  - FactoryGuy.make
    - Loads model instance into the store
+ - FactoryGuy.makeList
+   - Loads zero to many model instances into the store
  - FactoryGuy.build
    - Builds json in accordance with the adapters specifications
      - [RESTAdapter](http://guides.emberjs.com/v2.0.0/models/the-rest-adapter/#toc_json-conventions)  (*assume this adapter being used in most of the following examples*)
      - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
      - [JSONAPIAdapter](http://jsonapi.org/format/)
- - Can override default attributes by passing in a hash
- - Can add attributes with [traits](https://github.com/danielspaniel/ember-data-factory-guy#traits)
+ - FactoryGuy.buildList
+   - Builds json with list of zero or more items in accordance with the adapters specifications
+ - Can override default attributes by passing in an object of options
+ - Can add attributes or relationships with [traits](https://github.com/danielspaniel/ember-data-factory-guy#traits)
+ - Can compose relationships 
+    - By passing in other objects you've made with build/buildList or make/makeList 
 
+##### make/makeList
+  - all instances loaded into the ember data store
+  
 ```javascript
 
-  import FactoryGuy, { make, build } from 'ember-data-factory-guy';
-
-  // returns json
-  let json = FactoryGuy.build('user');
-  json.user // => {id: 1, name: 'Dude', style: 'normal'}
-
-  // returns a User instance that is loaded into your application's store
+  import FactoryGuy, { make, makeList } from 'ember-data-factory-guy';
+  
+  // make basic user with the default attributes in user factory
   let user = FactoryGuy.make('user');
-  user.toJSON({includeId: true}) // => {id: 2, name: 'Dude', style: 'normal'}
-
-  let json = build('admin');
-  json.user // => {id: 3, name: 'Admin', style: 'super'}
-
+  user.toJSON({includeId: true}) // => {id: 1, name: 'User1', style: 'normal'}
+  
+  // make user with default attributes plus those defined as 'admin' in user factory
   let user = make('admin');
-  user.toJSON({includeId: true}) // => {id: 4, name: 'Admin', style: 'super'}
+  user.toJSON({includeId: true}) // => {id: 2, name: 'Admin', style: 'super'}
+
+  // make user with default attributes plus these extra attributes
+  let user = build('user', {name: 'Fred'});
+  user.toJSON({includeId: true}) // => {id: 3, name: 'Fred', style: 'normal'}
+
+  // make admin defined user with these extra attributes
+  let user = build('admin', {name: 'Fred'});
+  user.toJSON({includeId: true}) // => {id: 4, name: 'Fred', style: 'super'}
+  
+  // build default user with traits and with extra attributes
+  let user = make('user', 'silly', {name: 'Fred'});
+  user.toJSON({includeId: true}) // => {id: 5, name: 'Fred', style: 'silly'}
+
+  // make user with hats relationship ( hasMany ) composed of a few pre 'made' hats
+  let hat1 = make('big-hat');
+  let hat2 = make('big-hat');
+  let user = make('user', {hats: [hat1, hat2]});
+  // note that hats are polymorphic. if they weren't, the hats array would be a list of ids: [1,2]
+  user.toJSON({includeId: true})  // => {id: 6, name: 'User2', style: 'normal', hats: [{id:1, type:"big_hat"},{id:1, type:"big_hat"}]}
+
+  // make user with company relationship ( belongsTo ) composed of a pre 'made' company
+  let company = make('company');
+  let user = make('user', {company: company});
+  user.toJSON({includeId: true})  // => {id: 7, name: 'User3', style: 'normal', company: 1} 
 
 ```
 
 You can override the default attributes by passing in a hash
 
+##### build/buildList
+  - getting info from json with get() method
+    
 ```javascript
+  
+  import FactoryGuy, { build, buildList } from 'ember-data-factory-guy';  
+  
+  // build basic user with the default attributes in user factory
+  let json = FactoryGuy.build('user');
+  json.get() // => {id: 1, name: 'User1', style: 'normal'}
 
+  // build user with default attributes plus those defined as 'admin' in user factory  
+  let json = build('admin');
+  json.get() // => {id: 2, name: 'Admin', style: 'super'}
+  
+  // build user with default attributes plus these extra attributes
   let json = build('user', {name: 'Fred'});
-  // json.user.name => 'Fred'
+  json.get() // => {id: 3, name: 'Fred', style: 'normal'}
 
+  // build admin defined user with extra attributes
+  let json = build('admin', {name: 'Fred'});
+  json.get() // => {id: 4, name: 'Fred', style: 'super'}
+
+  // build default user with traits and with extra attributes
+  let json = build('user', 'silly', {name: 'Fred'});
+  json.get() // => {id: 5, name: 'Fred', style: 'silly'}
+
+  // build user with hats relationship ( hasMany ) composed of a few pre 'built' hats 
+  let hat1 = build('big-hat');
+  let hat2 = build('big-hat');
+  let json = build('user', {hats: [hat1, hat2]});
+  // note that hats are polymorphic. if they weren't, the hats array would be a list of ids: [1,2]
+  json.get() // => {id: 6, name: 'User2', style: 'normal', hats: [{id:1, type:"big_hat"},{id:1, type:"big_hat"}]}
+  
+  // build user with company relationship ( belongsTo ) composed of a pre 'built' company
+  let company = build('company');
+  let json = build('user', {company: company});
+  json.get() // => {id: 7, name: 'User3', style: 'normal', company: 1} 
+  
 ```
 
 ##### Build vs. Make
@@ -360,7 +421,7 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
 
 
 ### Traits
-
+- Used with build, buildList, make, or makeList
 - For grouping attributes together
 - Can use one or more traits in a row
  - The last trait included overrides any values in traits before it
@@ -375,8 +436,8 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
   });
 
   let json = FactoryGuy.build('user', 'big', 'friendly');
-  json.user.name // => 'Big Guy'
-  json.user.style // => 'Friendly'
+  json.get('name') // => 'Big Guy'
+  json.get('style') // => 'Friendly'
 
   let user = FactoryGuy.make('user', 'big', 'friendly');
   user.get('name') // => 'Big Guy'

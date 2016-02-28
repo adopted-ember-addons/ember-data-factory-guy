@@ -15,7 +15,7 @@ SharedAdapterBehavior.all = function (adapter, adapterType) {
   SharedFactoryGuyBehavior.makeListTests();
 
 
-  module(title(adapter, 'FactoryGuyTestHelper#buildUrl'), inlineSetup(App, adapterType));
+  module(title(adapter, 'FactoryGuy#buildUrl'), inlineSetup(App, adapterType));
   SharedFactoryGuyTestHelperBehavior.buildUrl();
 
 

@@ -6,17 +6,22 @@ FactoryGuy.define('user', {
   },
   // default values for 'user' attributes
   default: {
+    style: 'normal',
     name: FactoryGuy.generate('name')
   },
   // named 'user' type with custom attributes
   admin: {
-    name: 'Admin'
+    name: 'Admin',
+    style: 'super'
   },
   // can accomplish this with traits ( see 'with_projects' trait below )
   user_with_projects: {
     projects: FactoryGuy.hasMany('project', 2)
   },
   traits: {
+    silly: {
+      style: 'silly'
+    },
     with_company: {
       company: {}
     },

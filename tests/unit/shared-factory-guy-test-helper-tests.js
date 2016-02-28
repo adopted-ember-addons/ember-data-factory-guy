@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy, { make, makeList } from 'ember-data-factory-guy';
+import FactoryGuy, { make, makeList, build, buildList } from 'ember-data-factory-guy';
 import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 import {
   mockSetup, mockTeardown,
@@ -144,13 +144,31 @@ SharedBehavior.handleFindTests = function() {
     Ember.run(function() {
       let done = assert.async();
 
-      let json = FactoryGuy.build('profile', 'with_company', 'with_bat_man');
-      let profile = mockFind('profile').returns({json});
-      let profileId = profile.get('id');
+      let json = build('profile', 'with_company', 'with_bat_man');
+      mockFind('profile').returns({json});
+      let profileId = json.get('id');
 
       FactoryGuy.get('store').find('profile', profileId).then(function(profile) {
         ok(profile.get('company.name') === 'Silly corp');
         ok(profile.get('superHero.name') === 'BatMan');
+        done();
+      });
+    });
+  });
+
+  test("using returns with json with composed hasMany association", function(assert) {
+    Ember.run(function() {
+      let done = assert.async();
+
+      let hat1 = build('big-hat');
+      let hat2 = build('big-hat');
+      let json = build('user', {hats: [hat1, hat2]});
+
+      mockFind('user').returns({json});
+
+      FactoryGuy.get('store').find('user', json.get('id')).then(function(user) {
+        ok(user.get('hats.firstObject.id') === hat1.get('id') +'');
+        ok(user.get('hats.lastObject.id')  === hat2.get('id') +'');
         done();
       });
     });
@@ -361,7 +379,7 @@ SharedBehavior.handleFindAllTests = function() {
     Ember.run(function() {
       let done = assert.async();
 
-      let json = FactoryGuy.buildList('profile', 'with_company', 'with_bat_man');
+      let json = buildList('profile', 'with_company', 'with_bat_man');
       mockFindAll('profile').returns({json});
 
       FactoryGuy.get('store').findAll('profile').then(function(profiles) {
@@ -577,7 +595,7 @@ SharedBehavior.handleQueryTests = function() {
     Ember.run(function() {
       let done = assert.async();
 
-      let json = FactoryGuy.buildList('user', 1);
+      let json = buildList('user', 1);
       mockQuery('user', { name: 'Bob' }).returns({ json });
       FactoryGuy.get('store').query('user', { name: 'Bob' }).then(function(users) {
         equal(users.get('length'), 1);
@@ -803,7 +821,7 @@ SharedBehavior.handleQueryRecordTests = function() {
     Ember.run(function() {
       let done = assert.async();
 
-      let bob = FactoryGuy.build('user', { name: 'Bob' });
+      let bob = build('user', { name: 'Bob' });
       mockQueryRecord('user', { name: 'Bob' }).returns({ json: bob });
       FactoryGuy.get('store').queryRecord('user', { name: 'Bob' }).then(function(user) {
         equal(user.id, bob.get('id'));
@@ -849,10 +867,10 @@ SharedBehavior.handleQueryRecordTests = function() {
     Ember.run(function() {
       let done = assert.async();
 
-      let company1 = FactoryGuy.build('company');
+      let company1 = build('company');
       mockQueryRecord('company', { name: 'Dude' }).returns({ json: company1 });
 
-      let company2 = FactoryGuy.build('company');
+      let company2 = build('company');
       mockQueryRecord('company', { type: 'Small' }).returns({ json: company2 });
 
       FactoryGuy.get('store').queryRecord('company', { name: 'Dude' }).then(function(company) {
@@ -870,8 +888,8 @@ SharedBehavior.handleQueryRecordTests = function() {
     Ember.run(function() {
       let done = assert.async();
 
-      let company1 = FactoryGuy.build('company');
-      let company2 = FactoryGuy.build('company');
+      let company1 = build('company');
+      let company2 = build('company');
 
       let mockQuery = mockQueryRecord('company', { name: 'Dude' }).returns({ json: company1 });
       FactoryGuy.get('store').queryRecord('company', { name: 'Dude' }).then(function(company) {
