@@ -2,23 +2,22 @@ import FactoryGuy from './factory-guy';
 import { isEquivalent } from './utils/helper-functions';
 import MockGetRequest from './mock-get-request';
 
-let MockQueryRequest = function(modelName, queryParams = {}) {
-  MockGetRequest.call(this, modelName);
+export default class MockQueryRequest extends MockGetRequest {
 
-  this.setResponseJson(FactoryGuy.getFixtureBuilder().convertForBuild(modelName, []));
-  this.setValidReturnsKeys(['models', 'json', 'ids', 'headers']);
+  constructor(modelName, queryParams = {}) {
+    super(modelName);
+    this.setResponseJson(FactoryGuy.getFixtureBuilder().convertForBuild(modelName, []));
+    this.setValidReturnsKeys('models json ids headers'.w());
+    this.currentQueryParams = queryParams;
+  }
 
-  let currentQueryParams = queryParams;
-
-  this.withParams = function(queryParams) {
-    currentQueryParams = queryParams;
+  withParams(queryParams) {
+    this.currentQueryParams = queryParams;
     return this;
-  };
+  }
 
-  this.paramsMatch = function(settings) {
-    return isEquivalent(currentQueryParams, settings.data);
-  };
+  paramsMatch(settings) {
+    return isEquivalent(this.currentQueryParams, settings.data);
+  }
 
-};
-
-export default MockQueryRequest;
+}

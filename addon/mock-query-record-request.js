@@ -1,9 +1,10 @@
 import MockQueryRequest from './mock-query-request';
 
-let MockQueryRecordRequest = function(modelName, queryParams={}) {
-  MockQueryRequest.call(this, modelName, queryParams);
+export default class MockQueryRecordRequest extends MockQueryRequest {
 
-  this.setValidReturnsKeys(['model', 'json', 'id', 'headers']);
-};
+  constructor(modelName, queryParams={}) {
+    super(modelName, queryParams);
+    this.setValidReturnsKeys('model json id headers'.w());
+  }
 
-export default MockQueryRecordRequest;
+}

@@ -1,9 +1,10 @@
 import MockFindRequest from './mock-find-request';
 
-let MockFindAllRequest = function (modelName) {
-  MockFindRequest.call(this, modelName);
+export default class MockFindAllRequest extends MockFindRequest {
 
-  this.setValidReturnsKeys(['models', 'json', 'ids', 'headers']);
-};
+  constructor(modelName) {
+    super(modelName);
+    this.setValidReturnsKeys('models json ids headers'.w());
+  }
 
-export default MockFindAllRequest;
+}

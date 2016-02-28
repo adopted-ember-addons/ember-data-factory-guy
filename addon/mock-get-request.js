@@ -3,46 +3,51 @@ import FactoryGuy from './factory-guy';
 import DS from 'ember-data';
 import $ from 'jquery';
 
-let MockGetRequest = function(modelName) {
-  let status = 200;
-  let succeed = true;
-  let responseHeaders = {};
-  let responseJson = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, {});
-  let validReturnsKeys = [];
+class MockGetRequest {
 
-  this.setValidReturnsKeys = function(validKeys) {
-    validReturnsKeys = validKeys;
-  };
+  constructor(modelName) {
+    this.modelName = modelName;
+    this.status = 200;
+    this.succeed = true;
+    this.responseHeaders = {};
+    this.responseJson = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, {});
+    this.validReturnsKeys = [];
+    this.handler = this.setupHandler();
+  }
 
-  this.validateReturnsOptions = function(options) {
+  setValidReturnsKeys(validKeys) {
+    this.validReturnsKeys = validKeys;
+  }
+
+  validateReturnsOptions(options) {
     const responseKeys = Object.keys(options);
     Ember.assert(`[ember-data-factory-guy] You can pass zero or one one output key to 'returns',
                 you passed these keys: ${responseKeys}`, responseKeys.length <= 1);
 
     const [ responseKey ] = responseKeys;
     Ember.assert(`[ember-data-factory-guy] You passed an invalid key for 'returns' function.
-      Valid keys are ${validReturnsKeys}. You used this key: ${responseKey}`,
-      validReturnsKeys.contains(responseKey));
+      Valid keys are ${this.validReturnsKeys}. You used this key: ${responseKey}`,
+      this.validReturnsKeys.contains(responseKey));
 
     return responseKey;
-  };
+  }
 
-  this.returns = function(options = {}) {
+  returns(options = {}) {
     let responseKey = this.validateReturnsOptions(options);
     this._setReturns(responseKey, options);
     return this;
-  };
+  }
 
-  this._setReturns = function(responseKey, options) {
+  _setReturns(responseKey, options) {
     let json, model, models;
     switch (responseKey) {
 
       case 'id':
-         model = FactoryGuy.get('store').peekRecord(modelName, options.id);
+         model = FactoryGuy.get('store').peekRecord(this.modelName, options.id);
 
-        Ember.assert(`argument ( id ) should refer to a model of type ${modelName} that is in
-         the store. But no ${modelName} with id ${options.id} was found in the store`,
-          (model instanceof DS.Model && model.constructor.modelName === modelName));
+        Ember.assert(`argument ( id ) should refer to a model of type ${this.modelName} that is in
+         the store. But no ${this.modelName} with id ${options.id} was found in the store`,
+          (model instanceof DS.Model && model.constructor.modelName === this.modelName));
 
         return this.returns({ model });
 
@@ -53,13 +58,12 @@ let MockGetRequest = function(modelName) {
           ${Ember.typeOf(model)}`, (model instanceof DS.Model));
 
         json = { id: model.id, type: model.constructor.modelName };
-        responseJson = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, json);
+        this.responseJson = FactoryGuy.getFixtureBuilder().convertForBuild(this.modelName, json);
         break;
 
       case 'ids':
-        models = options.ids.map(function(id) {
-          return FactoryGuy.get('store').peekRecord(modelName, id);
-        });
+        const store = FactoryGuy.get('store');
+        models = options.ids.map((id)=> store.peekRecord(this.modelName, id));
         return this.returns({ models });
 
       case 'models':
@@ -71,115 +75,124 @@ let MockGetRequest = function(modelName) {
           return { id: model.id, type: model.constructor.modelName };
         });
 
-        json = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, json);
+        json = FactoryGuy.getFixtureBuilder().convertForBuild(this.modelName, json);
         this.setResponseJson(json);
         break;
 
       case 'json':
-        responseJson = options.json;
+        this.responseJson = options.json;
+        break;
+
+      case 'attrs':
+        let currentId = this.responseJson.get('id');
+        let modelParams = Ember.merge({id: currentId}, options.attrs);
+        json = FactoryGuy.getFixtureBuilder().convertForBuild(this.modelName, modelParams);
+        this.setResponseJson(json);
         break;
 
       case 'headers':
         this.addResponseHeaders(options.headers);
         break;
     }
-  };
+  }
 
-  this.getUrl = function() {
-    return FactoryGuy.buildURL(modelName);
-  };
+  getUrl() {
+    return FactoryGuy.buildURL(this.modelName);
+  }
 
-  this.setResponseJson = function(json) {
-    responseJson = json;
-  };
+  setResponseJson(json) {
+    this.responseJson = json;
+  }
 
-  this.addResponseHeaders = function(headers) {
-    Ember.merge(responseHeaders, headers);
-  };
+  addResponseHeaders(headers) {
+    Ember.merge(this.responseHeaders, headers);
+  }
 
-  this.succeeds = function(options) {
-    succeed = true;
-    status = options && options.status || 200;
+  succeeds(options) {
+    this.succeed = true;
+    this.status = options && options.status || 200;
     return this;
-  };
+  }
 
-  this.fails = function (options = {}) {
-    succeed = false;
-    status = options.status || 500;
+  fails(options = {}) {
+    this.succeed = false;
+    this.status = options.status || 500;
     if (options.response) {
       let errors = FactoryGuy.getFixtureBuilder().convertResponseErrors(options.response);
-      responseJson = errors;
+      this.responseJson = errors;
     }
     return this;
-  };
+  }
 
-  this.getSucceed = function() {
-    return succeed;
-  };
+  getSucceed() {
+    return this.succeed;
+  }
 
-  this.getResponseJson = function() {
-    return responseJson;
-  };
+  getResponseJson() {
+    return this.responseJson;
+  }
 
-  this.getResponse = function() {
+  getResponse() {
     return {
-      responseText: responseJson,
-      headers: responseHeaders,
-      status: status
+      responseText: this.responseJson,
+      headers: this.responseHeaders,
+      status: this.status
     };
-  };
+  }
 
-  this.paramsMatch = function() {
+  paramsMatch() {
     return true;
-  };
+  }
 
   //////////////  common handler for all get requests ////////////
-  let self = this;
-  let handler = function(settings) {
-    let url = self.getUrl();
-    if (!(settings.url === url && settings.type === "GET")) {
-      return false;
-    }
-    if (self.getSucceed() && !self.paramsMatch(settings)) {
-      return false;
-    }
-    return self.getResponse();
-  };
+  setupHandler() {
+    let handler = function(settings) {
+      if (!(settings.url === this.getUrl() && settings.type === "GET")) {
+        return false;
+      }
+      if (this.getSucceed() && !this.paramsMatch(settings)) {
+        return false;
+      }
+      return this.getResponse();
+    }.bind(this);
 
-  $.mockjax(handler);
+    $.mockjax(handler);
+
+    return handler;
+  }
 
   //////////////////  deprecated /////////////////////
-  this.returnsModels = function(models) {
+  returnsModels(models) {
     Ember.deprecate("`returnsModel` has been deprecated. Use `returns({ model })` instead.",
       false, { id: 'ember-data-factory-guy.returns-models', until: '2.4.0' });
     return this.returns({ models });
-  };
+  }
 
-  this.returnsJSON = function(json) {
+  returnsJSON(json) {
     Ember.deprecate("`returnsJSON - has been deprecated. Use `returns({ json })` instead", false,
       { id: 'ember-data-factory-guy.returns-json', until: '2.4.0' });
     return this.returns({ json });
-  };
+  }
 
-  this.returnsExistingIds = function(ids) {
+  returnsExistingIds(ids) {
     Ember.deprecate("`returnsExistingIds` - has been deprecated. Use `returns({ ids })` method instead`",
       false, { id: 'ember-data-factory-guy.returns-json', until: '2.4.0' });
 
     return this.returns({ ids });
-  };
+  }
 
-  this.andFail = function(options = {}) {
+  andFail(options = {}) {
     Ember.deprecate("`andFail` - has been deprecated. Use `fails(options)` method instead`",
       false, { id: 'ember-data-factory-guy.and-fail', until: '2.4.0' });
     return this.fails(options);
-  };
+  }
 
-  this.andSucceed = function(options) {
+  andSucceed(options) {
     Ember.deprecate("`andSucceed` - has been deprecated. Use `succeeds(options)` method instead`",
       false, { id: 'ember-data-factory-guy.and-succeed', until: '2.4.0' });
     return this.succeeds(options);
-  };
+  }
 
-};
+}
 
 export default MockGetRequest;

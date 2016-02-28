@@ -93,14 +93,6 @@ test("without a number but with options returns array with diverse attributes", 
 
 module('FactoryGuy#makeList', inlineSetup(App,'-json-api'));
 
-test("returns an array of model instances", function () {
-  let users = makeList('user', 2);
-  equal(users.length, 2);
-  ok(users[0] instanceof User);
-  ok(users[1] instanceof User);
-  equal(FactoryGuy.get('store').peekAll('user').get('content').length, 2);
-});
-
 test("with number as 0 returns an empty array of model instances", function () {
   let users = makeList('user', 0);
   equal(users.length, 0);

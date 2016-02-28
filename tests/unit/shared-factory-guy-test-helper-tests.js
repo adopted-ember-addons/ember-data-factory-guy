@@ -30,6 +30,11 @@ SharedBehavior.buildUrl = function() {
 //////// handleFind /////////
 SharedBehavior.handleFindTests = function() {
 
+  test("have access to handler being used by mockjack", function() {
+    let mock = TestHelper.handleQueryRecord('user');
+    ok(mock.handler);
+  });
+
   test("the basic returns id", function(assert) {
     Ember.run(function() {
       let done = assert.async();
@@ -174,14 +179,29 @@ SharedBehavior.handleReloadTests = function() {
       let profile = FactoryGuy.make('profile', { description: "whatever" });
       TestHelper.handleReload(profile);
 
-      profile.reload().then(function(profile2) {
-        ok(profile2.id === profile.id);
-        ok(profile2.get('description') === profile.get('description'));
+      profile.reload().then(function(reloaded) {
+        ok(reloaded.id === profile.id);
+        ok(reloaded.get('description') === profile.get('description'));
         done();
       });
     });
   });
 
+  test("can change the attributes returned using returns method", function(assert) {
+    let done = assert.async();
+    Ember.run(function() {
+      let profile = FactoryGuy.make('profile', { description: "whatever", camelCaseDescription: "noodles" });
+
+      TestHelper.handleReload(profile).returns({attrs: {description: "moo"}});
+
+      profile.reload().then(function(reloaded) {
+        ok(reloaded.id === profile.id);
+        ok(reloaded.get('description') === "moo", "attribute changed");
+        ok(reloaded.get('camelCaseDescription') === "noodles", "other attributes are same");
+        done();
+      });
+    });
+  });
 
   test("failure with andFail method", function(assert) {
     Ember.run(function() {
@@ -204,6 +224,11 @@ SharedBehavior.handleReloadTests = function() {
 /////// handleFindAll //////////
 
 SharedBehavior.handleFindAllTests = function() {
+
+  test("have access to handler being used by mockjack", function() {
+    let mock = TestHelper.handleQueryRecord('user');
+    ok(mock.handler);
+  });
 
   test("the basic", function(assert) {
     Ember.run(function() {
@@ -415,6 +440,11 @@ SharedBehavior.handleQueryTests = function() {
     }, "can't pass a DS.Model instance to mock query");
   });
 
+  test("have access to handler being used by mockjack", function() {
+    let mock = TestHelper.handleQuery('user');
+    ok(mock.handler);
+  });
+
   test("not using returns", function(assert) {
     Ember.run(function() {
       let done = assert.async();
@@ -441,7 +471,22 @@ SharedBehavior.handleQueryTests = function() {
     });
   });
 
-  test("Nested search params are ok", function(assert) {
+  test("using returns with headers adds the headers to the response", function(assert) {
+    var done = assert.async();
+    const queryParams = { name: 'MyCompany' };
+    const handler = TestHelper.handleQuery('company', queryParams);
+    handler.returns({ headers: { 'X-Testing': 'absolutely' } });
+
+    $(document).ajaxComplete(function(event, xhr) {
+      assert.equal(xhr.getResponseHeader('X-Testing'), 'absolutely');
+      $(document).off('ajaxComplete');
+      done();
+    });
+
+    FactoryGuy.get('store').query('company', queryParams);
+  });
+
+  test("using nested search params", function(assert) {
     Ember.run(function() {
       let done = assert.async();
 
@@ -455,7 +500,7 @@ SharedBehavior.handleQueryTests = function() {
     });
   });
 
-  test("mock query using returns with empty array", function(assert) {
+  test("using returns with empty array", function(assert) {
     Ember.run(function() {
       let done = assert.async();
       TestHelper.handleQuery('user', { name: 'Bob' }).returns({ models: [] });
@@ -466,7 +511,7 @@ SharedBehavior.handleQueryTests = function() {
     });
   });
 
-  test("mock query using returns with model instances returns your models, and does not create new ones", function(assert) {
+  test("using returns with model instances returns your models, and does not create new ones", function(assert) {
     Ember.run(function() {
       let done = assert.async();
       let bob = FactoryGuy.make('user');
@@ -482,7 +527,7 @@ SharedBehavior.handleQueryTests = function() {
     });
   });
 
-  test("mock query using returns with model instances having hasMany models", function(assert) {
+  test("using returns with model instances having hasMany models", function(assert) {
     Ember.run(function() {
       let done = assert.async();
 
@@ -502,7 +547,7 @@ SharedBehavior.handleQueryTests = function() {
     });
   });
 
-  test("mock query using returns with model instances with hasMany and belongsTo relationships", function(assert) {
+  test("using returns with model instances with hasMany and belongsTo relationships", function(assert) {
     Ember.run(function() {
       let done = assert.async();
 
@@ -523,7 +568,7 @@ SharedBehavior.handleQueryTests = function() {
     });
   });
 
-  test("mock query using returns with json returns and creates models", function(assert) {
+  test("using returns with json returns and creates models", function(assert) {
     Ember.run(function() {
       let done = assert.async();
 
@@ -538,7 +583,7 @@ SharedBehavior.handleQueryTests = function() {
     });
   });
 
-  test("returnsExistingIds returns models based on the modelName and the ids provided", function(assert) {
+  test("using returns with model ids returns those models and does not create new ones", function(assert) {
     Ember.run(function() {
       let done = assert.async();
 
@@ -581,7 +626,7 @@ SharedBehavior.handleQueryTests = function() {
     });
   });
 
-  test("reusing mock query using returns with different params returns different results", function(assert) {
+  test("reusing mock query using returns with differnet models and different params returns different results", function(assert) {
     Ember.run(function() {
       let done = assert.async();
 
@@ -603,7 +648,7 @@ SharedBehavior.handleQueryTests = function() {
   });
 
 
-  test("mock query using returns with different query params returns same results", function(assert) {
+  test("using returns with same json and different query params returns same results", function(assert) {
     Ember.run(function() {
       let done = assert.async();
       let expectedAssertions = 2;
@@ -635,7 +680,7 @@ SharedBehavior.handleQueryTests = function() {
     });
   });
 
-  test("reusing mock query using returns and withParams with different params and differnt items returns different results", function(assert) {
+  test("reusing mock query using returns with differnt models and withParams with different params returns different results", function(assert) {
     Ember.run(function() {
       let done = assert.async();
 
@@ -653,21 +698,6 @@ SharedBehavior.handleQueryTests = function() {
         });
       });
     });
-  });
-
-  test("mock query using returns with headers adds the headers to the response", function(assert) {
-    var done = assert.async();
-    const queryParams = { name: 'MyCompany' };
-    const handler = TestHelper.handleQuery('company', queryParams);
-    handler.returns({ headers: { 'X-Testing': 'absolutely' } });
-
-    $(document).ajaxComplete(function(event, xhr) {
-      assert.equal(xhr.getResponseHeader('X-Testing'), 'absolutely');
-      $(document).off('ajaxComplete');
-      done();
-    });
-
-    FactoryGuy.get('store').query('company', queryParams);
   });
 
 
@@ -722,6 +752,11 @@ SharedBehavior.handleQueryRecordTests = function() {
     });
   });
 
+  test("have access to handler being used by mockjack", function() {
+    let mock = TestHelper.handleQueryRecord('user');
+    ok(mock.handler);
+  });
+
   test("using fails makes the request fail", function(assert) {
     Ember.run(function() {
       let done = assert.async();
@@ -736,14 +771,30 @@ SharedBehavior.handleQueryRecordTests = function() {
     });
   });
 
-  test("mock queryRecord using returns 'model' with array of DS.Models throws error", function(assert) {
+  test("using returns with headers adds the headers to the response", function(assert) {
+    var done = assert.async();
+
+    const queryParams = { name: 'MyCompany' };
+    const handler = TestHelper.handleQueryRecord('company', queryParams);
+    handler.returns({ headers: { 'X-Testing': 'absolutely' } });
+
+    $(document).ajaxComplete(function(event, xhr) {
+      assert.equal(xhr.getResponseHeader('X-Testing'), 'absolutely');
+      $(document).off('ajaxComplete');
+      done();
+    });
+
+    FactoryGuy.get('store').query('company', queryParams);
+  });
+
+  test("using returns 'model' with array of DS.Models throws error", function(assert) {
     assert.throws(function() {
       let bobs = FactoryGuy.makeList('user', 2, { name: 'Bob' });
       TestHelper.handleQueryRecord('user', { name: 'Bob' }).returns({ model: bobs });
     }, "can't pass array of models to mock queryRecord");
   });
 
-  test("mock queryRecord using returns with json returns and creates model", function(assert) {
+  test("using returns with json returns and creates model", function(assert) {
     Ember.run(function() {
       let done = assert.async();
 
@@ -759,8 +810,7 @@ SharedBehavior.handleQueryRecordTests = function() {
     });
   });
 
-
-  test("mock queryRecord using returns with model instance returns your model, and does not create new one", function(assert) {
+  test("using returns with model instance returns that model, and does not create new one", function(assert) {
     Ember.run(function() {
       let done = assert.async();
 
@@ -768,17 +818,70 @@ SharedBehavior.handleQueryRecordTests = function() {
       TestHelper.handleQueryRecord('user', { name: 'Bob' }).returns({ model: bob });
 
       FactoryGuy.get('store').queryRecord('user', { name: 'Bob' }).then(function(user) {
-        equal(user.get('id'), bob.id);
-        equal(user.get('name'), bob.get('name'));
-        // does not make another user
-        equal(FactoryGuy.get('store').peekAll('user').get('content').length, 1);
+        equal(user, bob, "returns the same user");
+        equal(FactoryGuy.get('store').peekAll('user').get('content').length, 1, "does not create a new model");
         done();
       });
     });
   });
 
-}
-;
+  test("using returns with model id returns that model, and does not create new one", function(assert) {
+    Ember.run(function() {
+      let done = assert.async();
+
+      let bob = FactoryGuy.make('user');
+      TestHelper.handleQueryRecord('user', { name: 'Bob' }).returns({ id: bob.id });
+
+      FactoryGuy.get('store').queryRecord('user', { name: 'Bob' }).then(function(user) {
+        equal(user, bob, "returns the same user");
+        equal(FactoryGuy.get('store').peekAll('user').get('content').length, 1, "does not create a new model");
+        done();
+      });
+    });
+  });
+
+  test("twice using returns with differnet json and different params returns different results", function(assert) {
+    Ember.run(function() {
+      let done = assert.async();
+
+      let company1 = FactoryGuy.build('company');
+      TestHelper.handleQueryRecord('company', { name: 'Dude' }).returns({ json: company1 });
+
+      let company2 = FactoryGuy.build('company');
+      TestHelper.handleQueryRecord('company', { type: 'Small' }).returns({ json: company2 });
+
+      FactoryGuy.get('store').queryRecord('company', { name: 'Dude' }).then(function(company) {
+        equal(company.get('id'), company1.get('id'));
+
+        FactoryGuy.get('store').queryRecord('company', { type: 'Small' }).then(function(company) {
+          equal(company.get('id'), company2.get('id'));
+          done();
+        });
+      });
+    });
+  });
+
+  test("reusing mock using returns with differnt json and withParams with different params returns different results", function(assert) {
+    Ember.run(function() {
+      let done = assert.async();
+
+      let company1 = FactoryGuy.build('company');
+      let company2 = FactoryGuy.build('company');
+
+      let mockQuery = TestHelper.handleQueryRecord('company', { name: 'Dude' }).returns({ json: company1 });
+      FactoryGuy.get('store').queryRecord('company', { name: 'Dude' }).then(function(company) {
+        equal(company.get('id'), company1.get('id'));
+
+        mockQuery.withParams({ type: 'Small' }).returns({ json: company2 });
+        FactoryGuy.get('store').queryRecord('company', { type: 'Small' }).then(function(company) {
+          equal(company.get('id'), company2.get('id'));
+          done();
+        });
+      });
+    });
+  });
+
+};
 
 /////// handleCreate //////////
 
@@ -1339,7 +1442,7 @@ SharedBehavior.handleUpdateTests = function() {
           equal(errors.description, "invalid data", "Could not save model.");
         }
       ).then(function() {
-          updateMock.andSucceed();
+          updateMock.succeeds();
 
           ok(!profile.get('valid'), "Profile is invalid.");
 

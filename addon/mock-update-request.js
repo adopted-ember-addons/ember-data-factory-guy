@@ -10,9 +10,9 @@ let MockUpdateRequest = function(url, model, options) {
   if ('succeed' in options) {
     Ember.deprecate(
       `[ember-data-factory-guy] TestHelper.handleUpdate - options.succeed has been deprecated.
-        Use chainable methods with \`andFail()\` method instead`,
+        Use chainable method \`succeeds(options)\` method instead`,
       options.hasOwnProperty('succeed'),
-      { id: 'ember-data-factory-guy.handle-update', until: '3.0.0' }
+      { id: 'ember-data-factory-guy.handle-update', until: '2.4.0' }
     );
     succeed = options.succeed;
   }
@@ -22,12 +22,24 @@ let MockUpdateRequest = function(url, model, options) {
   }
 
   this.andSucceed = function(options) {
+    Ember.deprecate("`andSucceed` - has been deprecated. Use `succeeds(options)` method instead`",
+      false, { id: 'ember-data-factory-guy.and-succeed', until: '2.4.0' });
+    return this.succeeds(options);
+  };
+
+  this.succeeds = function(options) {
     succeed = true;
     status = options && options.status || 200;
     return this;
   };
 
-  this.andFail = function(options) {
+  this.andFail = function(options = {}) {
+    Ember.deprecate("`andFail` - has been deprecated. Use `fails(options)` method instead`",
+      false, { id: 'ember-data-factory-guy.and-fail', until: '2.4.0' });
+    return this.fails(options);
+  };
+
+  this.fails = function(options) {
     succeed = false;
     status = options.status || 500;
     if ('response' in options) {

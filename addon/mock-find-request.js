@@ -1,20 +1,19 @@
 import FactoryGuy from './factory-guy';
 import MockGetRequest from './mock-get-request';
 
-let MockFindRequest = function (modelName) {
-  MockGetRequest.call(this, modelName);
+export default class MockFindRequest extends MockGetRequest {
 
-  this.setValidReturnsKeys(['model', 'json', 'id', 'headers']);
-  let self = this;
+  constructor(modelName) {
+    super(modelName);
+    this.setValidReturnsKeys('model json id headers'.w());
+  }
 
-  this.get = function(args) {
-    let json = self.getResponseJson();
+  get(args) {
+    let json = this.getResponseJson();
     if (json.get) { return json.get(args); }
-  };
+  }
 
-  this.getUrl = function() {
-    return FactoryGuy.buildURL(modelName, self.get('id'));
-  };
-};
-
-export default MockFindRequest;
+  getUrl() {
+    return FactoryGuy.buildURL(this.modelName, this.get('id'));
+  }
+}

@@ -7,6 +7,7 @@ import MockCreateRequest from './mock-create-request';
 import MockQueryRequest from './mock-query-request';
 import MockQueryRecordRequest from './mock-query-record-request';
 import MockFindRequest from './mock-find-request';
+import MockReloadRequest from './mock-reload-request';
 import MockFindAllRequest from './mock-find-all-request';
 
 let MockServer = Ember.Object.extend({
@@ -109,7 +110,7 @@ let MockServer = Ember.Object.extend({
    @param {String} type  model type like 'user' for User model, or a model instance
    @param {String} id  id of record to find
    */
-  handleReload: function () {
+  handleReload: function() {
     let args = Array.prototype.slice.call(arguments);
 
     let modelName, id;
@@ -122,10 +123,11 @@ let MockServer = Ember.Object.extend({
       id = args[1];
     }
 
-    Ember.assert("To handleFind pass in a model instance or a model type name and an id", modelName && id);
+    Ember.assert("To handleFind pass in a model instance or a model type name and an id",
+      modelName && id);
 
-    let json = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, {id: id});
-    return new MockFindRequest(modelName).returns({json});
+    let json = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, { id: id });
+    return new MockReloadRequest(modelName).returns({ json });
   },
   /**
    Handling ajax GET for finding all records for a type of model.
@@ -175,7 +177,7 @@ let MockServer = Ember.Object.extend({
    let users = FactoryGuy.makeList('user', 2, 'with_hats');
 
    // Pass in the array of model instances as last argument
-   testHelper.handleQuery('user', {name:'Bob', age: 10}, users);
+   testHelper.handleQuery('user', {name:'Bob', age: 10}).returns({models: users});
 
    store.query('user', {name:'Bob', age: 10}}).then(function(userInstances){
      // userInstances will be the same of the users that were passed in
@@ -212,13 +214,13 @@ let MockServer = Ember.Object.extend({
    ```js
 
    // Create json payload
-   let userJSON = FactoryGuy.build('user');
+   let json = FactoryGuy.build('user');
 
    // Pass in the json in a returns method
-   testHelper.handleQueryRecord('user', {name:'Bob', age: 10}).returns(userJSON);
+   testHelper.handleQueryRecord('user', {name:'Bob', age: 10}).returns({json});
 
    store.query('user', {name:'Bob', age: 10}}).then(function(userInstance){
-     // userInstance will be created from the userJSON
+     // userInstance will be created from the json payload
    })
    ```
 
@@ -228,7 +230,7 @@ let MockServer = Ember.Object.extend({
    let user = FactoryGuy.make('user');
 
    // Pass in the array of model instances in the returns method
-   testHelper.handleQueryRecord('user', {name:'Bob', age: 10}).returns(user);
+   testHelper.handleQueryRecord('user', {name:'Bob', age: 10}).returns({model:user});
 
    store.query('user', {name:'Bob', age: 10}}).then(function(userInstance){
      // userInstance will be the same of the users that were passed in
