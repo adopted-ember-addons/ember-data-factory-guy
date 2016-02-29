@@ -214,8 +214,9 @@ In other words, don't do this:
   let hat1 = make('big-hat');
   let hat2 = make('big-hat');
   let user = make('user', {hats: [hat1, hat2]});
+  user.toJSON({includeId: true})  
+  // => {id: 6, name: 'User2', style: 'normal', hats: [{id:1, type:"big_hat"},{id:1, type:"big_hat"}]}
   // note that hats are polymorphic. if they weren't, the hats array would be a list of ids: [1,2]
-  user.toJSON({includeId: true})  // => {id: 6, name: 'User2', style: 'normal', hats: [{id:1, type:"big_hat"},{id:1, type:"big_hat"}]}
 
   // make user with company relationship ( belongsTo ) composed of a pre 'made' company
   let company = make('company');
@@ -226,8 +227,8 @@ In other words, don't do this:
 
 
 ##### build/buildList
-  - getting info from json with get() method
-  - used to pass json payload to [Acceptance Tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
+  - for building json that you can pass json payload in [acceptance tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
+  - to inspect the json use the get() method
   
 ```javascript
   
@@ -300,11 +301,34 @@ Example: what json looks like
   - for inspecting contents of json payload
     - get() returns all attributes of top level model 
     - get(attribute) gives you attribute in top level model
+    - get(index) gives you the info for hasMany relationship at that index
+    - get(relationships) gives you just id or type ( if polymorphic )
+      - better to compose the build relationships by hand if you need more info
     
 ```javascript
 
   let json = build('user', 'with_company', 'with_hats');
   json.get() //=> {id: 1, name: 'User1', style: 'normal'}
+  // to get hats info
+  json.get('hats') //=> [{id: 1, type: "big_hat"},{id: 1, type: "big_hat"}]
+  // to get company info
+  json.get('company') //=> {id: 1, type: "company"}
+
+```
+
+* by composing the relationships you can get the full attributes of those associations
+
+```javascript
+
+  let company = build('company');
+  let hats = buildList('big-hats');
+  let user = build('user', {company: company, hats: hats});
+  user.get() //=> {id: 1, name: 'User1', style: 'normal'}
+  // to get hats info from hats json 
+  hats.get(0) //=> {id: 1, type: "BigHat", plus .. any other attributes}
+  hats.get(1) //=> {id: 2, type: "BigHat", plus .. any other attributes}
+  // to get company info
+  company.get() //=> {id: 1, type: "Company", name: "Silly corp"}
 
 ```
 
@@ -385,6 +409,7 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
   project.get('title') // => 'Project #2'
 
 ```
+
 
 ### Inline Functions
 
@@ -578,33 +603,6 @@ the reverse 'user' belongsTo association is being setup for you on the project
 ```
 
 
-#### Building many models at once
-
-- FactoryGuy.makeList
-    - Loads one or more instances into store
-- FactoryGuy.buildList
-    - Builds an array of one or more json objects
-
-
-##### Building json array
-
-```javascript
-  let json = FactoryGuy.buildList('user', 2)
-  json.users.length // => 2
-  json.users[0] // => {id: 1, name: 'User1', style: 'normal'}
-  json.users[1] // => {id: 2, name: 'User2', style: 'normal'}
-
-```
-
-##### Building model instances
-
-```javascript
-  let users = FactoryGuy.makeList('user', 2)
-  users.get('length') // => 2
-  users[0].toJSON({includeId: true}) // => {id: 3, name: 'User3', style: 'normal'}
-  users[1].toJSON({includeId: true}) // => {id: 4, name: 'User4', style: 'normal'}
-
-```
 
 ### Extending Other Definitions
   - Extending another definition will inherit these sections:
@@ -677,8 +675,11 @@ build up complex scenarios in a different way that has it's own benefits.*
 
 ####cacheOnlyMode
 - FactoryGuy.cacheOnlyMode
- - allows you to setup the adapters to only reload data when there is nothing in the store
-   - for collections you don't even have to preload at all.
+ - allows you to setup the adapters to prevent them from fetching data with ajax call 
+   - for single models ( find ) you have to put something in the store
+   - for collections ( findAll ) you don't even have to put anything in the store.
+ - takes except parameter as a list of models you don't want to cache. 
+    these model requests will go to server with ajax call and need to be mocked.
    
 This is helpful, when you want to set up the test data with make/makeList, and then prevent
 calls like store.find or findAll from fetching more data, since you have already setup
@@ -738,23 +739,17 @@ test('using this.subject for profile and make for company associaion', function(
 ##### With FactoryGuyTestHelper
 
 - Uses mockjax
+  - to mock the ajax calls made by ember-data.
+  - library is already bundled for you when you install ember-data-factory-guy.
 - Has helper methods
-  - [mockFind](https://github.com/danielspaniel/ember-data-factory-guy#handlefind)
-  - [mockFindAll](https://github.com/danielspaniel/ember-data-factory-guy#handlefindall)
-  - [mockReload](https://github.com/danielspaniel/ember-data-factory-guy#handlereload)
-  - [mockQuery](https://github.com/danielspaniel/ember-data-factory-guy#handlequery)
-  - [mockCreate](https://github.com/danielspaniel/ember-data-factory-guy#handlecreate)
-  - [mockUpdate](https://github.com/danielspaniel/ember-data-factory-guy#handleupdate)
-  - [mockDelete](https://github.com/danielspaniel/ember-data-factory-guy#handledelete)
+  - [mockFind](https://github.com/danielspaniel/ember-data-factory-guy#mockfind)
+  - [mockFindAll](https://github.com/danielspaniel/ember-data-factory-guy#mockfindall)
+  - [mockReload](https://github.com/danielspaniel/ember-data-factory-guy#mockreload)
+  - [mockQuery](https://github.com/danielspaniel/ember-data-factory-guy#mockquery)
+  - [mockCreate](https://github.com/danielspaniel/ember-data-factory-guy#mockcreate)
+  - [mockUpdate](https://github.com/danielspaniel/ember-data-factory-guy#mockupdate)
+  - [mockDelete](https://github.com/danielspaniel/ember-data-factory-guy#mockdelete)
 - Can override FactoryGuyTestHelper by 'reopening' it ( if you need custom functionality.)
-
-If you put models into the store ( with FactoryGuy#make ), the http GET call does not need to be mocked,
-since that model is already in the store.
-
-But what if you want to handle create, update, and delete? Or even reload or findAll records?
-
-FactoryGuy assumes you want to stub ajax calls with the mockjax library,
-and this javascript library is already bundled for you when you install ember-data-factory-guy.
 
 
 ##### mockFind
@@ -766,7 +761,22 @@ controller action ) is going to make a call to the store to find a records of
 a particular type:
 
 ```javascript
-  store.find('user', userId) // fires ajax request for user with id userId
+   // Typically you will use like:
+   import { build, mockFind } from 'ember-data-factory-guy';
+
+   // To return default factory 'user'
+   let mock = mockFind('user');
+   let userId = mock.get('id');
+
+   // or to return custom factory built json object using returns method
+   let json = build('user', 'with_whacky_name', {isDude: true});
+   let mock = mockFind('user').returns({json});
+   let userId = json.get('id');
+
+   // To mock failure case use method fails
+   mockFind('user').fails();
+
+   store.find('user', userId) // fires ajax request for user with id userId
 ```
 
 An acceptance test ( to stub that ajax call and return factory guy data )
