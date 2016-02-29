@@ -1,0 +1,20 @@
+<form {{action "save" on="submit"}}>
+   
+   <div>
+    <label>
+      Name
+      {{input type="text" value=model.name}}
+    </label>
+  </div>
+  <div>
+    <label>
+      Description
+      {{input type="text" value=model.description}}
+    </label>
+  </div>
+
+  <div class="form-buttons">
+    <button type="submit" class="btn btn-primary submit-btn">Save</button>
+    {{link-to "Cancel" 'categories.index' class="btn btn-link"}}
+  </div>
+</form>

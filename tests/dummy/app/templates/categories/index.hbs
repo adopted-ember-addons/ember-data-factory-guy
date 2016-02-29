@@ -1,0 +1,68 @@
+<header class="page-content-header has-actions">
+  <div class="page-content-header-actions">
+    {{#link-to "categories.new" class="btn btn-outline-alt btn-animate"}}
+      <span class="in-btn-icon">+</span>
+      New Category
+    {{/link-to}}
+  </div>
+
+  <h1 class="page-content-heading">
+    Product <strong>Categories</strong>
+  </h1>
+
+  <div class="page-content-subheading">
+    Manage the product categories so that they are organized better
+  </div>
+</header>
+
+
+{{#if model.length}}
+  <table class='table table-stripped'>
+    <thead>
+      <tr>
+        <th class="table-col-main">
+          Name
+        </th>
+        <th>
+          Actions
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each model as |category|}}
+        <tr>
+          <td>
+            {{category.name}}
+          </td>
+          <td class="nowrap">
+            <div class="list-item-actions text-right">
+              {{#link-to "categories.edit" category class="btn btn-light btn-sm list-item-action-btn category-list-item-edit-btn"}}
+                <i class="in-btn-icon fa fa-pencil"></i>
+                Edit
+              {{/link-to}}
+
+              <button type="button" class="btn btn-sm btn-danger list-item-action-btn category-list-item-delete-btn" {{action "remove" category}}>
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <div class="empty-block" id="blankslate">
+    <div class="empty-block-icon">
+      <i class="fa fa-list"></i>
+    </div>
+
+    <div class="empty-block-msg">
+      No <strong>categories</strong> are found
+    </div>
+
+    <div class="empty-block-note">
+      You can use the button above to add one
+    </div>
+  </div>
+{{/if}}
