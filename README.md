@@ -764,7 +764,8 @@ test('using this.subject for profile and make for company associaion', function(
 ##### mockFind
   - For dealing with finding one record of a particular type
   - Can pass in arguments just like you would for make or build
-
+  - Sample test [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
+  
 If when visiting a route, some part of your application ( like router, or
 controller action ) is going to make a call to the store to find a records of
 a particular type:
@@ -778,10 +779,14 @@ a particular type:
    let userId = mock.get('id');
 
    // or to return custom factory built json object using returns method
-   let json = build('user', 'with_whacky_name', {isDude: true});
-   let mock = mockFind('user').returns({json});
-   let userId = json.get('id');
+   let user1 = build('user', 'with_whacky_name', {isDude: true});
+   let mock = mockFind('user').returns({ json: user1 });
+   let userId = user1.get('id');
 
+   // and to reuse the mock
+   let user2 = build('user', {style: "boring"});
+   mock.returns({ json: user2 });
+   
    // To mock failure case use method fails
    mockFind('user').fails();
 
