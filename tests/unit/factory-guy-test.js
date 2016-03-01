@@ -93,7 +93,6 @@ test("without a number but with options returns array with diverse attributes", 
 
 test("with a number and extra options", function () {
   let heros = buildList('super-hero', 2, {name: "Bob"});
-  console.log(heros.get())
   equal(heros.get().length, 2);
   equal(heros.get(0).name, "Bob");
   equal(heros.get(1).name, "Bob");
