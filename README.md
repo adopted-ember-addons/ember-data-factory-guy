@@ -751,7 +751,8 @@ test('using this.subject for profile and make for company associaion', function(
     - the are cumulative so you can add as many as you like
     - Example: 
     ```javascript
-      mockFindAll('user').returns({headers: {X-Man: "Wolverine"}); 
+      let mock = mockFindAll('user').returns({headers: {X-Man: "Wolverine"}); 
+      mock.returns({headers: {X-Weapon: "Claws"}); 
     ```
   - these mocks are are reusable
     - so you can simulate making the same ajax call ( url ) and return a different payload
