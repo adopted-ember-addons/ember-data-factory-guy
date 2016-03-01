@@ -790,7 +790,6 @@ a particular type:
    // To mock failure case use method fails
    mockFind('user').fails();
 
-   store.find('user', userId) // fires ajax request for user with id userId
 ```
 
 An acceptance test ( to stub that ajax call and return factory guy data )

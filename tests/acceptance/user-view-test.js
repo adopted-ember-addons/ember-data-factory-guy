@@ -17,7 +17,7 @@ test("Show user by make(ing) a model and using returns with that model", functio
     ok(find('.name').text().match(user.get('name')));
     ok(find('li.project:first').text().match(projects.get('firstObject.title')));
     ok(find('li.project:last').text().match(projects.get('lastObject.title')));
-  })
+  });
 });
 
 test("Show user with projects by build(ing) json and using returns with json", function () {
@@ -32,7 +32,7 @@ test("Show user with projects by build(ing) json and using returns with json", f
     ok(find('.name').text().match(user.get('name')));
     ok(find('li.project:first').text().match(projects.get(0).title));
     ok(find('li.project:last').text().match(projects.get(1).title));
-  })
+  });
 });
 
 test("Add a project to a user with mockCreate", function () {
