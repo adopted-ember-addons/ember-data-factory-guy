@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import FactoryGuy, { make, makeList, build, buildList } from 'ember-data-factory-guy';
-import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
+import TestHelper from 'ember-data-factory-guy';
 import {
   mockSetup, mockTeardown,
   mockFind, mockFindAll, mockReload, mockQuery,
@@ -480,6 +480,16 @@ SharedBehavior.handleQueryTests = function() {
     });
   });
 
+  test("with no parameters matches query with any parameters", function(assert) {
+    var done = assert.async();
+    mockQuery('user');
+    FactoryGuy.get('store').query('user', { name: 'Bob' })
+      .then(()=> {
+        ok(true);
+        done();
+      });
+  });
+
   test("using fails makes the request fail", function(assert) {
     Ember.run(function() {
       let done = assert.async();
@@ -809,6 +819,16 @@ SharedBehavior.handleQueryRecordTests = function() {
     });
 
     FactoryGuy.get('store').query('company', queryParams);
+  });
+
+  test("with no parameters matches queryRequest with any parameters", function(assert) {
+    var done = assert.async();
+    mockQueryRecord('user');
+    FactoryGuy.get('store').queryRecord('user', { name: 'Bob' })
+      .then(()=> {
+        ok(true);
+        done();
+      });
   });
 
   test("using returns 'model' with array of DS.Models throws error", function(assert) {
