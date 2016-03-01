@@ -91,6 +91,15 @@ test("without a number but with options returns array with diverse attributes", 
   ok(profiles.get(2).superHero === 1);
 });
 
+test("with a number and extra options", function () {
+  let heros = buildList('super-hero', 2, {name: "Bob"});
+  console.log(heros.get())
+  equal(heros.get().length, 2);
+  equal(heros.get(0).name, "Bob");
+  equal(heros.get(1).name, "Bob");
+});
+
+
 module('FactoryGuy#makeList', inlineSetup(App,'-json-api'));
 
 test("with number as 0 returns an empty array of model instances", function () {

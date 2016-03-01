@@ -316,6 +316,7 @@ let FactoryGuy = Ember.Object.extend({
     }
     let number = args[0] || 0;
     if (typeof number === 'number') {
+      args.shift();
       let parts = extractArgumentsShort.apply(this, args);
       return definition.buildList(name, number, parts.traits, parts.opts);
     }
