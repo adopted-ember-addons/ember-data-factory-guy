@@ -503,7 +503,7 @@ let FactoryGuy = Ember.Object.extend({
    Change reload behavior to only used cached models for find/findAll.
    You still have to handle query calls, since they always ajax for data.
    */
-  cacheOnlyMode(except=[]) {
+  cacheOnlyMode({except=[]}) {
     let store = this.get('store');
     let findAdapter = store.adapterFor.bind(store);
 
