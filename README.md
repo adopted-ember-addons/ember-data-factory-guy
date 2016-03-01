@@ -736,11 +736,11 @@ test('using this.subject for profile and make for company associaion', function(
 
 ### Acceptance Tests
 
-##### With mock methods
+##### Using mock methods
 
 - Uses mockjax
-  - to mock the ajax calls made by ember-data.
-  - library is installed with ember-data-factory-guy.
+  - for mocking the ajax calls made by ember-data.
+  - this library is installed with ember-data-factory-guy.
 - http GET mocks
   - [mockFind](https://github.com/danielspaniel/ember-data-factory-guy#mockfind)
   - [mockFindAll](https://github.com/danielspaniel/ember-data-factory-guy#mockfindall)
@@ -749,7 +749,7 @@ test('using this.subject for profile and make for company associaion', function(
   - [mockQueryRecord](https://github.com/danielspaniel/ember-data-factory-guy#mockqueryrecord)
   - these mocks are are reusable
     - so you can simulate making the same ajax call ( url ) and return a different payload
-- the rest
+- http POST/PUT/DELETE
   - [mockCreate](https://github.com/danielspaniel/ember-data-factory-guy#mockcreate)
   - [mockUpdate](https://github.com/danielspaniel/ember-data-factory-guy#mockupdate)
   - [mockDelete](https://github.com/danielspaniel/ember-data-factory-guy#mockdelete)
@@ -757,7 +757,9 @@ test('using this.subject for profile and make for company associaion', function(
 
 
 ##### setup and teardown
-  - use mockSetup/mockTeardown on your own or set them up in [module-for-acceptance.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/helpers/module-for-acceptance.js)
+  - Use ```mockSetup()``` in test setup/beforeEach 
+  - Use ```mockTeardown()``` in test teardown/afterEach
+  - Easiest is to set them up in [module-for-acceptance.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/helpers/module-for-acceptance.js)
 
 ##### mockFind
   - For dealing with finding one record of a particular type
