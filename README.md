@@ -736,21 +736,28 @@ test('using this.subject for profile and make for company associaion', function(
 
 ### Acceptance Tests
 
-##### With FactoryGuyTestHelper
+##### With mock methods
 
 - Uses mockjax
   - to mock the ajax calls made by ember-data.
-  - library is already bundled for you when you install ember-data-factory-guy.
-- Has helper methods
+  - library is installed with ember-data-factory-guy.
+- http GET mocks
   - [mockFind](https://github.com/danielspaniel/ember-data-factory-guy#mockfind)
   - [mockFindAll](https://github.com/danielspaniel/ember-data-factory-guy#mockfindall)
   - [mockReload](https://github.com/danielspaniel/ember-data-factory-guy#mockreload)
   - [mockQuery](https://github.com/danielspaniel/ember-data-factory-guy#mockquery)
+  - [mockQueryRecord](https://github.com/danielspaniel/ember-data-factory-guy#mockqueryrecord)
+  - these mocks are are reusable
+    - so you can simulate making the same ajax call ( url ) and return a different payload
+- the rest
   - [mockCreate](https://github.com/danielspaniel/ember-data-factory-guy#mockcreate)
   - [mockUpdate](https://github.com/danielspaniel/ember-data-factory-guy#mockupdate)
   - [mockDelete](https://github.com/danielspaniel/ember-data-factory-guy#mockdelete)
 - Can override FactoryGuyTestHelper by 'reopening' it ( if you need custom functionality.)
 
+
+##### setup and teardown
+  - use mockSetup/mockTeardown on your own or set them up in [module-for-acceptance.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/helpers/module-for-acceptance.js)
 
 ##### mockFind
   - For dealing with finding one record of a particular type
