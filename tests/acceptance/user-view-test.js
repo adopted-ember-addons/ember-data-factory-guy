@@ -43,7 +43,7 @@ test("Add a project to a user with mockCreate", function () {
 
   let newProjectTitle = "Gonzo Project";
 
-  andThen(function () {
+  andThen(()=> {
     // should be no projects
     equal(find('li.project').length, 0);
 
@@ -68,7 +68,7 @@ test("Add a project to a user with mockCreate", function () {
     */
     click('button:contains(Add New User)');
 
-    andThen(function () {
+    andThen(()=> {
       let newProjectDiv = find('li.project:contains(' + newProjectTitle + ')');
       ok(newProjectDiv[0]);
     });

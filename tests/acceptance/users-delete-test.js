@@ -9,11 +9,12 @@ test("Deleting a user", function () {
   mockFindAll('user', 2);
   visit('/users');
 
-  andThen(function () {
+  andThen(()=> {
     mockDelete('user', '1');
     click('li.user:first button');
   });
-  andThen(function(){
+
+  andThen(()=>{
     let users = find('li.user');
     ok(users.length === 1);
   });
