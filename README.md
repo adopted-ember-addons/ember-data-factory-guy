@@ -764,12 +764,8 @@ test('using this.subject for profile and make for company associaion', function(
 ##### mockFind
   - For dealing with finding one record of a particular type
   - Can pass in arguments just like you would for make or build
-  - Sample test [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
+  - Sample acceptance tests using mockFind [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
   
-If when visiting a route, some part of your application ( like router, or
-controller action ) is going to make a call to the store to find a records of
-a particular type:
-
 ```javascript
    // Typically you will use like:
    import { build, mockFind } from 'ember-data-factory-guy';
@@ -792,39 +788,9 @@ a particular type:
 
 ```
 
-An acceptance test ( to stub that ajax call and return factory guy data )
-will look like this:
-
-```javascript
-  // can use traits and extra fixture options here as you would with FactoryGuy#make
-  let userId = TestHelper.mockFind('user', {first_name: 'Binky');
-  visit(`/users/${userId}`);
-
-  andThen(function () {
-    let user = find('li.user');
-    ok(user.length === 1);
-  });
-```
-
-*Note that you could also populated the store first: 
- (may need to use [FactoryGuy.cacheOnlyMode())](https://github.com/danielspaniel/ember-data-factory-guy#cacheonlymode) )
-
-```javascript
-  // make the model which populates the store before you visit route
-  let user = make('user');
-  visit('/users/'+user.id);
-
-  andThen(function () {
-    let user = find('li.user');
-    ok(user.length === 1);
-  });
-```
-
-
-
 ##### mockFindAll
   - For dealing with finding all records of a particular type
-  - Sample acceptance tests using mockFindAll: [(users-view-test.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js) [(users-delete-test.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-delete-test.js)
+  - Sample acceptance tests using mockFindAll: [(users-view-test.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js) [(users-delete-test.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
 
 Usage:
 
@@ -838,44 +804,6 @@ Usage:
   TestHelper.mockFindAll('user', 2, {name: 'Bob'}); // Or attributes
   TestHelper.mockFindAll('user', 2, 'admin', {name: 'Bob'}); // Or both
 ```
-
-If when visiting a route, some part of your application ( like router, or
-controller action ) is going to make a call to the store for all records of
-a particular type:
-
-```javascript
-  store.findAll('user') // fires ajax request for all user records
-```
-
-An acceptance test ( to stub that ajax call and return factory guy data )
-will look like this:
-
-```javascript
-  // can use traits and extra fixture options here as you would with FactoryGuy#makeList
-  TestHelper.mockFindAll('user', 2);
-
-  visit('/users');
-
-  andThen(function () {
-    let users = find('li.user');
-    ok(users.length === 2);
-  });
-```
-
-
-*Note that you could also have done this:*
-
-```javascript
-  // can just make the models before you visit route
-  let users = makeList('user', 2);
-  visit('/users');
-
-  andThen(function () {
-    let users = find('li.user');
-    ok(users.length === 2);
-  });
-```
-
 
 
 If you would like to interact with the records created by mockFindAll (for example to update, delete, or find in the store)
