@@ -747,6 +747,8 @@ test('using this.subject for profile and make for company associaion', function(
   - [mockReload](https://github.com/danielspaniel/ember-data-factory-guy#mockreload)
   - [mockQuery](https://github.com/danielspaniel/ember-data-factory-guy#mockquery)
   - [mockQueryRecord](https://github.com/danielspaniel/ember-data-factory-guy#mockqueryrecord)
+  - can pass custom headers to `returns()` method
+    - Example: ```javascript mockFindAll('user').returns({headers: {X-Man: "Wolverine"}); ```
   - these mocks are are reusable
     - so you can simulate making the same ajax call ( url ) and return a different payload
 - http POST/PUT/DELETE
