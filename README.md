@@ -748,6 +748,7 @@ test('using this.subject for profile and make for company associaion', function(
   - [mockQuery](https://github.com/danielspaniel/ember-data-factory-guy#mockquery)
   - [mockQueryRecord](https://github.com/danielspaniel/ember-data-factory-guy#mockqueryrecord)
   - can pass custom headers to `returns()` method
+    - the are cumulative so you can add as many as you like
     - Example: 
     ```javascript
       mockFindAll('user').returns({headers: {X-Man: "Wolverine"}); 
