@@ -783,7 +783,7 @@ test('using this.subject for profile and make for company associaion', function(
    let user2 = build('user', {style: "boring"});
    mock.returns({ json: user2 });
    
-   // To mock failure case use method fails
+   // To mock failure case use `fails` method
    mockFind('user').fails();
 
 ```
@@ -795,14 +795,23 @@ test('using this.subject for profile and make for company associaion', function(
 Usage:
 
 ```javascript
-  // The mock API can return several different models
-  TestHelper.mockFindAll('user', {name: 'Bob'}, ['admin', {name: 'Jane'}]); // findAll('user') will return a user named Bob and an admin user named Jane
+   // Typically you will use like:
+   import { buildList, mockFindAll } from 'ember-data-factory-guy';
 
-  // Or it can return multiple of the same model (other than ids and sequences)
-  TestHelper.mockFindAll('user', 2);
-  TestHelper.mockFindAll('user', 2, 'admin'); // You can specify traits
-  TestHelper.mockFindAll('user', 2, {name: 'Bob'}); // Or attributes
-  TestHelper.mockFindAll('user', 2, 'admin', {name: 'Bob'}); // Or both
+   // To mock store.findAll but return no users
+   let mock = mockFindAll('user');
+
+   // To return custom factory built json object using returns method
+   let users1 = buildList('user', 'with_whacky_name', {isDude: true});
+   let mock = mockFindAll('user').returns({ json: users1 });
+
+   // and to reuse the mock
+   let users2 = buildList('user', 3);
+   mock.returns({ json: user2 });
+   
+   // To mock failure case use `fails` method 
+   mockFindAll('user').fails();
+
 ```
 
 
