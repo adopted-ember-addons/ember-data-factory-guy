@@ -815,26 +815,6 @@ Usage:
 ```
 
 
-If you would like to interact with the records created by mockFindAll (for example to update, delete, or find in the store)
-you must wait on the request for those records to resolve before they will be loaded in the store:
-
-```javascript
-  TestHelper.mockFindAll('user', 2);
-
-  visit('/users');
-
-  andThen(function() {
-    //mockDelete call must be after the model hook for the ('/users') route resolves
-    TestHelper.mockDelete('user', '1');
-    click("li.user:first button:contains('Delete')");
-  });
-  andThen(function(){
-    let users = find('li.user');
-    ok(users.length === 1);
-  });
-```
-
-
 ##### mockReload
   - To handle reloading a model
     - Pass in a record ( or a typeName and id )
@@ -843,9 +823,8 @@ you must wait on the request for those records to resolve before they will be lo
 *Passing in a record / model instance*
 
 ```javascript
-    let profile = FactoryGuy.make('profile')
-    // Using mockFind
-    TestHelper.mockReload(profile);
+    let profile = make('profile');
+    mockReload(profile);
 
     // will stub a call to reload that profile
     profile.reload()
@@ -855,7 +834,7 @@ you must wait on the request for those records to resolve before they will be lo
 
 ```javascript
 
-    TestHelper.mockReload('profile', 1).fails();
+    mockReload('profile', 1).fails();
 
 ```
 
@@ -864,16 +843,13 @@ you must wait on the request for those records to resolve before they will be lo
    - For dealing with finding all records for a type of model with query parameters.
    - Takes modifier methods for controlling the response
     - withParams
-    - returnsModels
-    - returnsJSON
-    - returnsExistingIds
-   - Can reuse the same handler again to simulate same query with different results
+    - returns( models / json / ids )
 
 *Using plain mockQuery returns no results*
 
    ```js
      // This simulates a query that returns no results
-     TestHelper.mockQuery('user', {age: 10});
+     mockQuery('user', {age: 10});
 
      store.query('user', {age: 10}}).then(function(userInstances){
         /// userInstances will be empty
