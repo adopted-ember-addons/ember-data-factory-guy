@@ -1175,21 +1175,21 @@ chainable methods.
 ##### mockDelete
   - Need to wrap tests using mockDelete with: Ember.run.function() { 'your test' })
 
-*success case is the default*
+Usage: 
 
 ```javascript
-  let profile = FactoryGuy.make('profile');
-  TestHelper.mockDelete('profile', profile.id);
+  import { make, mockDelete } from 'ember-data-factory-guy';
+  
+  let profile = make('profile');
+  mockDelete('profile', profile.id);
 
   profile.destroyRecord() // => will succeed
 ````
 
-*mocking a failed delete*
+  - mocking a failed delete
 
 ```javascript
-  let profile = FactoryGuy.make('profile');
-  // set the succeed flag to 'false'
-  TestHelper.mockDelete('profile', profile.id, false);
+  mockDelete('profile', profile.id, false);
 
   profile.destroyRecord() // => will fail
 ````
@@ -1201,18 +1201,17 @@ chainable methods.
 ```javascript
 // file: tests/acceptance/user-view-test.js
 
-import { make } from 'ember-data-factory-guy';
-import fgHelper from 'ember-data-factory-guy/factory-guy-test-helper';
+import { make, mockCreate, mockSetup, mockTeardown } from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
 moduleForAcceptance('Acceptance | User View', {
   beforeEach: function () {
     // TestHelper.setup sets $.mockjaxSettings response time to zero ( speeds up tests )
-    fgHelper.setup();
+    mockSetup();
   },
   afterEach: function () {
       // TestHelper.teardown calls $.mockjax.clear() which resets all the mockjax handlers
-    fgHelper.teardown();
+    mockTeardown();
   }
 });
 
@@ -1227,7 +1226,7 @@ test("Creates new project", function () {
 
     // Remember, this is for handling an exact match, if you did not care about
     // matching attributes, you could just do: TestHelper.mockCreate('project')
-    fgHelper.mockCreate('project', {match: {name: newProjectName, user: user}});
+    mockCreate('project', {match: {name: newProjectName, user: user}});
 
     /**
      Let's say that clicking this 'button.add-project', triggers action in the view to
