@@ -106,6 +106,12 @@ test("with number as 0 returns an empty array of model instances", function () {
   equal(users.length, 0);
 });
 
+test("with number returns that many model instances", function () {
+  // important to test on model with NO traits
+  let users = makeList('outfit', 2);
+  equal(users.length, 2);
+});
+
 test("without a number returns an array of 0 model instances", function () {
   let users = makeList('user');
   equal(users.length, 0);

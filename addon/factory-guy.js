@@ -393,9 +393,10 @@ let FactoryGuy = Ember.Object.extend({
 
     let number = args[0] || 0;
     if (typeof number === 'number') {
+      args.shift();
       let arr = [];
       for (let i = 0; i < number; i++) {
-        arr.push(this.make.apply(this, arguments));
+        arr.push(this.make.apply(this, [name, ...args]));
       }
       return arr;
     }
