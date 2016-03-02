@@ -344,7 +344,7 @@ Example: what json looks like
   json.get(0) //=> {id: 1, name: 'User1', style: 'normal'}
   json.get(1) //=> {id: 2, name: 'User2', style: 'normal'}
 
-  let json = buildList('user', 'boblike', 'adminlike);
+  let json = buildList('user', 'boblike', 'adminlike');
   json.get(0) //=> {id: 1, name: 'Bob', style: 'boblike'}
   json.get(1) //=> {id: 2, name: 'Admin', style: 'super'}
 
