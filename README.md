@@ -329,17 +329,15 @@ Example: what json looks like
     - get(relationships) gives you just id or type ( if polymorphic )
       - better to compose the build relationships by hand if you need more info
   - check out [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'boblike' and 'adminlike' user traits
-    
+
 ```javascript
 
-  let json = build('user', 'with_company', 'with_hats');
+  let json = build('user');
   json.get() //=> {id: 1, name: 'User1', style: 'normal'}
-  // to get hats (hasMany relationship) info
-  json.get('hats') //=> [{id: 1, type: "big_hat"},{id: 1, type: "big_hat"}]
-  // to get company ( belongsTo relationship ) info
-  json.get('company') //=> {id: 1, type: "company"}
-  
-  
+```
+
+```javascript
+
   let json = buildList('user', 2);
   json.get(0) //=> {id: 1, name: 'User1', style: 'normal'}
   json.get(1) //=> {id: 2, name: 'User2', style: 'normal'}
@@ -350,17 +348,35 @@ Example: what json looks like
 
 ```
 
+* building relationships inline
+  
+```javascript
+
+  let json = build('user', 'with_company', 'with_hats');
+  json.get() //=> {id: 1, name: 'User1', style: 'normal'}
+  
+  // to get hats (hasMany relationship) info
+  json.get('hats') //=> [{id: 1, type: "big_hat"},{id: 1, type: "big_hat"}]
+  
+  // to get company ( belongsTo relationship ) info
+  json.get('company') //=> {id: 1, type: "company"}
+
+```
+
 * by composing the relationships you can get the full attributes of those associations
 
 ```javascript
 
   let company = build('company');
   let hats = buildList('big-hats');
+
   let user = build('user', {company: company, hats: hats});
   user.get() //=> {id: 1, name: 'User1', style: 'normal'}
+
   // to get hats info from hats json 
   hats.get(0) //=> {id: 1, type: "BigHat", plus .. any other attributes}
   hats.get(1) //=> {id: 2, type: "BigHat", plus .. any other attributes}
+
   // to get company info
   company.get() //=> {id: 1, type: "Company", name: "Silly corp"}
 
