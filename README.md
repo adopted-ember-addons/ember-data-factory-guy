@@ -999,6 +999,7 @@ Usage:
   
   store.query('user', {name: 'Bob'}).then(function (users) {
    //=> users.get('length') === 1;
+   //=> users.get('firstObject') === bob;
   
    // reuse the same user query handler but change the expected query parms
    mockUserQuery.withParams({name: 'Dude'}).returns({models:[dude]});
