@@ -227,7 +227,7 @@ In other words, don't do this:
 ```
 
 ##### makeList
-  - check out [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'bob' user and trait 'with_car' 
+  - check out [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'bob' user and 'with_car' trait  
 
 ```javascript
 
