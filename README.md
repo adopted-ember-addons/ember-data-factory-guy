@@ -928,7 +928,7 @@ Usage:
   })
 ```
 
-*Use returns( models )
+  - with returns( models )
 ```js
   // Create model instances
   let users = makeList('user', 2, 'with_hats');
@@ -940,7 +940,7 @@ Usage:
   });
 ```
 
-*Use returns ( json )
+  - with returns ( json )
 ``` js
   // Create json with buildList
   let users = buildList('user', 2, 'with_hats');
@@ -952,9 +952,9 @@ Usage:
   });
 ```
 
-*Use returns(ids)
+  - with returns(ids)
 
-```
+```js
   // Create list of models
   let users = buildList('user', 2, 'with_hats');
   let user1 = users.get(0);
@@ -969,9 +969,9 @@ Usage:
 
 ```
 
-*Reuse the handler to simulate the same query with different results
+ - Reuse the handler to simulate the same query with different results
 
-```
+```js
 
   let bobQueryHander = mockQuery('user', {name: 'Bob'});
   
@@ -991,7 +991,7 @@ Usage:
 
 ```
 
-*Reuse the handler to simulate different query params that returns different results
+  - Reuse the handler to simulate different query params that returns different results
 
 ```js
   import FactoryGuy, { make, mockQuery } from 'ember-data-factory-guy';
