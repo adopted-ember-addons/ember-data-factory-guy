@@ -914,115 +914,106 @@ Usage:
     - returns( models / json / ids )
     - withParams
 
-*Using plain mockQuery returns no results*
+Usage: 
 
-   ```js
-     // This simulates a query that returns no results
-     mockQuery('user', {age: 10});
+```js
+  import FactoryGuy, { make, build, buildList, mockQuery } from 'ember-data-factory-guy';
+  let store = FactoryGuy.get('store');
 
-     store.query('user', {age: 10}}).then(function(userInstances){
-        /// userInstances will be empty
-     })
-   ```
+  // This simulates a query that returns no results
+  mockQuery('user', {age: 10});
 
-*Use returnsModles by passing in array of model instances*
+  store.query('user', {age: 10}}).then((userInstances) => {
+    /// userInstances will be empty
+  })
+```
 
-   ```js
-     // Create model instances
-     let users = makeList('user', 2, 'with_hats');
+*Use returns( models )
+```js
+  // Create model instances
+  let users = makeList('user', 2, 'with_hats');
+  
+  mockQuery('user', {name:'Bob', age: 10}).returns({models: users});
+  
+  store.query('user', {name:'Bob', age: 10}}).then((models)=> {
+    // models are the same as the users array
+  });
+```
 
-     // Pass in the array of model instances as last argument
-     mockQuery('user', {name:'Bob', age: 10}).returns({models: users});
+*Use returns ( json )
+``` js
+  // Create json with buildList
+  let users = buildList('user', 2, 'with_hats');
+  
+  mockQuery('user', {name:'Bob', age: 10}).returns({json: users});
+  
+  store.query('user', {name:'Bob', age: 10}}).then((models)=> {
+    // these models were created from the users json
+  });
+```
 
-     // will stub a call to the store like this:
-     store.query('user', {name:'Bob', age: 10}}).then(function(models) {
-        // models are the same as the users array
-     });
-   ```
+*Use returns(ids)
 
-
-*Use returnsJSON by passing in json*
-
-   ```js
-     // Create json with buildList
-     let users = buildList('user', 2, 'with_hats');
-
-     // use returnsJSON to pass in this response
-     mockQuery('user', {name:'Bob', age: 10}).returns({json: users});
-
-     store.query('user', {name:'Bob', age: 10}}).then(function(models) {
-        // these models were created from the users json
-     });
-
-   ```
-
-*Use returnsExistingIds by passing in array of ids of existing models*
-
-   ```js
-     import { buildList, mockQuery } from 'ember-data-factory-guy';
-    
-     // Create list of models
-     let users = buildList('user', 2, 'with_hats');
-     let user1 = users.get(0);
-
-     // use returnsExistingIds to pass in the users ids you want
-     // in this case let's say you only want to pass back the first user
-     mockQuery('user', {name:'Bob', age: 10}).returns({ids: [user1.id]});
-
-     store.query('user', {name:'Bob', age: 10}}).then(function(models) {
-        // models will be one model and it will be user1
-     });
-
-   ```
-
-*Reuse the handler to simulate the same query with different results*
-
-   ```js
-     import FactoryGuy, { make, mockQuery } from 'ember-data-factory-guy';
-     
-     let store = FactoryGuy.get('store');
-
-     let bobQueryHander = mockQuery('user', {name: 'Bob'});
-
-     store.query('user', {name: 'Bob'}).then(function (users) {
-       //=> users.get('length') === 0;
-
-       let bob = make('user', {name: 'Bob'});
-
-       // reuse the same query handler since it's the same query
-       bobQueryHander.returns({models:[bob]});
-
-       store.query('user', {name: 'Bob'}).then(function (users) {
-         //=> users.get('length') === 1;
-         //=> users.get('firstObject') === bob;
-       });
-     });
+```
+  // Create list of models
+  let users = buildList('user', 2, 'with_hats');
+  let user1 = users.get(0);
+  
+  // use returnsExistingIds to pass in the users ids you want
+  // in this case let's say you only want to pass back the first user
+  mockQuery('user', {name:'Bob', age: 10}).returns({ids: [user1.id]});
+  
+  store.query('user', {name:'Bob', age: 10}}).then(function(models) {
+    // models will be one model and it will be user1
+  });
 
 ```
 
-*Reuse the handler to simulate different query params that returns different results*
+*Reuse the handler to simulate the same query with different results
 
-   ```js
-     import FactoryGuy, { make, mockQuery } from 'ember-data-factory-guy';
-     
-     let store = FactoryGuy.get('store');
-     
-     let bob = make('user', {name: 'Bob'});
-     let dude = make('user', {name: 'Dude'});
+```
 
-     let userQueryHander = mockQuery('user', {name: 'Bob'}).returns({models:[bob]});
+  let bobQueryHander = mockQuery('user', {name: 'Bob'});
+  
+  store.query('user', {name: 'Bob'}).then(function (users) {
+   //=> users.get('length') === 0;
+  
+   let bob = make('user', {name: 'Bob'});
+  
+   // reuse the same query handler since it's the same query
+   bobQueryHander.returns({models:[bob]});
+  
+   store.query('user', {name: 'Bob'}).then(function (users) {
+     //=> users.get('length') === 1;
+     //=> users.get('firstObject') === bob;
+   });
+  });
 
-     store.query('user', {name: 'Bob'}).then(function (users) {
-       //=> users.get('length') === 1;
+```
 
-       // reuse the same user query handler but change the expected query parms
-       userQueryHander.withParams({name: 'Dude'}).returns({models:[dude]});
+*Reuse the handler to simulate different query params that returns different results
 
-       store.query('user', {name: 'Dude'}).then(function (users) {
-         //=> users.get('length') === 1;
-         //=> users.get('firstObject') === dude;
-       });
-     });
+```js
+  import FactoryGuy, { make, mockQuery } from 'ember-data-factory-guy';
+  
+  let store = FactoryGuy.get('store');
+  
+  let bob = make('user', {name: 'Bob'});
+  let dude = make('user', {name: 'Dude'});
+  
+  let userQueryHander = mockQuery('user', {name: 'Bob'}).returns({models:[bob]});
+  
+  store.query('user', {name: 'Bob'}).then(function (users) {
+   //=> users.get('length') === 1;
+  
+   // reuse the same user query handler but change the expected query parms
+   userQueryHander.withParams({name: 'Dude'}).returns({models:[dude]});
+  
+   store.query('user', {name: 'Dude'}).then(function (users) {
+     //=> users.get('length') === 1;
+     //=> users.get('firstObject') === dude;
+   });
+  });
 
 ```
 
