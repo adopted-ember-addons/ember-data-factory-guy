@@ -829,7 +829,7 @@ test('using this.subject for profile and make for company associaion', function(
 
 ##### mockFind
   - For dealing with finding one record of a particular type
-  - Can pass in arguments just like you would for [make](https://github.com/danielspaniel/ember-data-factory-guy#make) or build
+  - Can pass in arguments just like you would for [make](https://github.com/danielspaniel/ember-data-factory-guy#make) or [build](https://github.com/danielspaniel/ember-data-factory-guy#build)
     - mockFind( fixture or model name, optional traits, optional attributes object)
   - Takes modifier method `returns()` for controlling the response payload
     - returns( model / json / id )
