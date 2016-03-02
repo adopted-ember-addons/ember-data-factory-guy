@@ -248,10 +248,9 @@ In other words, don't do this:
   
 
 ```
-##### build/buildList
+##### build
   - for building json that you can pass json payload in [acceptance tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
   - build takes same arguments as make 
-  - buildList takes same arguments as makeList 
   - to inspect the json use the get() method
   
 ```javascript
@@ -291,10 +290,8 @@ In other words, don't do this:
   json.get() // => {id: 7, name: 'User3', style: 'normal', company: 1} 
   
 ```
-
-Example: what json looks like
-
-*Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters*
+- Example: what json payload from build looks like
+ - Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters
 
 ```javascript
 
@@ -320,6 +317,13 @@ Example: what json looks like
     }
 
 ```
+
+#####buildList
+  - for building json that you can pass json payload in [acceptance tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
+  - buildList takes same arguments as makeList 
+  - to inspect the json use the get() method
+
+
 
 ##### using get() method
   - for inspecting contents of json payload
@@ -825,9 +829,10 @@ test('using this.subject for profile and make for company associaion', function(
 
 ##### mockFind
   - For dealing with finding one record of a particular type
-  - Can pass in arguments just like you would for make or build
+  - Can pass in arguments just like you would for [make](https://github.com/danielspaniel/ember-data-factory-guy#make) or build
     - mockFind( fixture or model name, optional traits, optional attributes object)
-  - Can return payload with `returns()` method and modfiers: [model, json, id]
+  - Takes modifier method `returns()` for controlling the response payload
+    - returns( model / json / id )
   - Sample acceptance tests using mockFind: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
   
 ```javascript
@@ -855,8 +860,9 @@ test('using this.subject for profile and make for company associaion', function(
 ##### mockFindAll
   - For dealing with finding all records of a particular type
   - takes same parameters as [makeList](https://github.com/danielspaniel/ember-data-factory-guy#makelist)
-  - Can return payload with `returns()` method and modfiers: [models, json, ids]
     - mockFindAll( fixture or model name, optional number, optional traits, optional attributes object)
+  - Takes modifier method `returns()` for controlling the response payload
+    - returns( models / json / ids )
   - Sample acceptance tests using mockFindAll: [users-view-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js) 
 
 Usage:
@@ -910,9 +916,10 @@ Usage:
 
 ##### mockQuery
    - For dealing with finding all records for a type of model with query parameters.
-   - Takes modifier methods for controlling the response
+   - Takes modifier method `returns()` for controlling the response payload
     - returns( models / json / ids )
-    - withParams
+   - Takes modifier methods for matching the query params
+    - withParams( object )
 
 Usage: 
 
