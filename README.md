@@ -959,8 +959,6 @@ Usage:
   let users = buildList('user', 2, 'with_hats');
   let user1 = users.get(0);
   
-  // use returnsExistingIds to pass in the users ids you want
-  // in this case let's say you only want to pass back the first user
   mockQuery('user', {name:'Bob', age: 10}).returns({ids: [user1.id]});
   
   store.query('user', {name:'Bob', age: 10}}).then(function(models) {
