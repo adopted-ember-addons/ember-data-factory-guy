@@ -10,12 +10,12 @@ test("Deleting a user", function () {
   visit('/users');
 
   andThen(()=> {
+    ok(find('li.user').length === 2);
     mockDelete('user', '1');
     click('li.user:first button');
   });
 
   andThen(()=>{
-    let users = find('li.user');
-    ok(users.length === 1);
+    ok(find('li.user').length === 1);
   });
 });
