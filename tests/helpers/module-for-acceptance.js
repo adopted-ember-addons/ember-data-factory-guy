@@ -8,6 +8,7 @@ export default function(name, options = {}) {
     beforeEach() {
       this.application = startApp();
 
+      // Adding FactoryGuy mockSetup call
       mockSetup();
 
       if (options.beforeEach) {
@@ -18,6 +19,7 @@ export default function(name, options = {}) {
     afterEach() {
       destroyApp(this.application);
 
+      // Adding FactoryGuy mockTeardown call
       mockTeardown();
 
       if (options.afterEach) {
