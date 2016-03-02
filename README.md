@@ -952,7 +952,7 @@ Usage:
   });
 ```
 
-  - with returns(ids)
+  - with returns( ids )
 
 ```js
   // Create list of models
@@ -1023,7 +1023,7 @@ Usage:
   - Use chainable methods to build the response
     - match
       - Attributes that must be in request json
-    - andReturns
+    - returns
       - Attributes to include in response json
     - fails
       - Request will fail
