@@ -970,8 +970,7 @@ Usage:
  - Reuse the handler to simulate the same query with different results
 
 ```js
-
-  let bobQueryHander = mockQuery('user', {name: 'Bob'});
+  let mockBobQuery = mockQuery('user', {name: 'Bob'});
   
   store.query('user', {name: 'Bob'}).then(function (users) {
    //=> users.get('length') === 0;
@@ -979,7 +978,7 @@ Usage:
    let bob = make('user', {name: 'Bob'});
   
    // reuse the same query handler since it's the same query
-   bobQueryHander.returns({models:[bob]});
+   mockBobQuery.returns({models:[bob]});
   
    store.query('user', {name: 'Bob'}).then(function (users) {
      //=> users.get('length') === 1;
@@ -992,20 +991,17 @@ Usage:
   - Reuse the handler to simulate different query params that returns different results
 
 ```js
-  import FactoryGuy, { make, mockQuery } from 'ember-data-factory-guy';
-  
-  let store = FactoryGuy.get('store');
   
   let bob = make('user', {name: 'Bob'});
   let dude = make('user', {name: 'Dude'});
   
-  let userQueryHander = mockQuery('user', {name: 'Bob'}).returns({models:[bob]});
+  let mockUserQuery = mockQuery('user', {name: 'Bob'}).returns({models:[bob]});
   
   store.query('user', {name: 'Bob'}).then(function (users) {
    //=> users.get('length') === 1;
   
    // reuse the same user query handler but change the expected query parms
-   userQueryHander.withParams({name: 'Dude'}).returns({models:[dude]});
+   mockUserQuery.withParams({name: 'Dude'}).returns({models:[dude]});
   
    store.query('user', {name: 'Dude'}).then(function (users) {
      //=> users.get('length') === 1;
