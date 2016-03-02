@@ -342,7 +342,7 @@ Example: what json looks like
   json.get(0) //=> {id: 1, name: 'User1', style: 'normal'}
   json.get(1) //=> {id: 2, name: 'User2', style: 'normal'}
 
-  // boblike and adminlike are traits in [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js)
+  # boblike and adminlike are traits in [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js)
   let json = buildList('user', 'boblike', 'adminlike);
   json.get(0) //=> {id: 1, name: 'Bob', style: 'boblike'}
   json.get(1) //=> {id: 2, name: 'Admin', style: 'super'}
