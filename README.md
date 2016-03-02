@@ -812,10 +812,10 @@ test('using this.subject for profile and make for company associaion', function(
   - [mockDelete](https://github.com/danielspaniel/ember-data-factory-guy#mockdelete)
 - can use method `fails()` to simulate failure, and then `succeeds()` to simulate success
   - to customize failure, fails method takes optional object with status and errors.
-    - Example: 
-    ```javascript
-      let mock = mockFindAll('user').fails({status: 401, errors: {description: "Unauthorized"}}); 
-    ```
+  - Example: 
+  ```javascript
+    let mock = mockFindAll('user').fails({status: 401, errors: {description: "Unauthorized"}}); 
+  ```
   
 
 ##### setup and teardown
