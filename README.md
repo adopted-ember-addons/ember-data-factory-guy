@@ -911,8 +911,8 @@ Usage:
 ##### mockQuery
    - For dealing with finding all records for a type of model with query parameters.
    - Takes modifier methods for controlling the response
-    - withParams
     - returns( models / json / ids )
+    - withParams
 
 *Using plain mockQuery returns no results*
 
@@ -929,10 +929,10 @@ Usage:
 
    ```js
      // Create model instances
-     let users = FactoryGuy.makeList('user', 2, 'with_hats');
+     let users = makeList('user', 2, 'with_hats');
 
      // Pass in the array of model instances as last argument
-     TestHelper.mockQuery('user', {name:'Bob', age: 10}).returnsModels(users);
+     mockQuery('user', {name:'Bob', age: 10}).returns({models: users});
 
      // will stub a call to the store like this:
      store.query('user', {name:'Bob', age: 10}}).then(function(models) {
@@ -945,13 +945,13 @@ Usage:
 
    ```js
      // Create json with buildList
-     let usersJSON = FactoryGuy.buildList('user', 2, 'with_hats');
+     let users = buildList('user', 2, 'with_hats');
 
      // use returnsJSON to pass in this response
-     TestHelper.mockQuery('user', {name:'Bob', age: 10}).returnsJSON(usersJSON);
+     mockQuery('user', {name:'Bob', age: 10}).returns({json: users});
 
      store.query('user', {name:'Bob', age: 10}}).then(function(models) {
-        // these models were created from the usersJSON
+        // these models were created from the users json
      });
 
    ```
@@ -959,13 +959,15 @@ Usage:
 *Use returnsExistingIds by passing in array of ids of existing models*
 
    ```js
+     import { buildList, mockQuery } from 'ember-data-factory-guy';
+    
      // Create list of models
-     let users = FactoryGuy.makeList('user', 2, 'with_hats');
-     let user1 = users.get('firstObject');
+     let users = buildList('user', 2, 'with_hats');
+     let user1 = users.get(0);
 
      // use returnsExistingIds to pass in the users ids you want
      // in this case let's say you only want to pass back the first user
-     TestHelper.mockQuery('user', {name:'Bob', age: 10}).returnsExistingIds([user1.id]);
+     mockQuery('user', {name:'Bob', age: 10}).returns({ids: [user1.id]});
 
      store.query('user', {name:'Bob', age: 10}}).then(function(models) {
         // models will be one model and it will be user1
@@ -976,18 +978,19 @@ Usage:
 *Reuse the handler to simulate the same query with different results*
 
    ```js
-
+     import FactoryGuy, { make, mockQuery } from 'ember-data-factory-guy';
+     
      let store = FactoryGuy.get('store');
 
-     let bobQueryHander = TestHelper.mockQuery('user', {name: 'Bob'});
+     let bobQueryHander = mockQuery('user', {name: 'Bob'});
 
      store.query('user', {name: 'Bob'}).then(function (users) {
        //=> users.get('length') === 0;
 
-       let bob = store.make('user', {name: 'Bob'});
+       let bob = make('user', {name: 'Bob'});
 
        // reuse the same query handler since it's the same query
-       bobQueryHander.returnsModels([bob]);
+       bobQueryHander.returns({models:[bob]});
 
        store.query('user', {name: 'Bob'}).then(function (users) {
          //=> users.get('length') === 1;
@@ -1000,18 +1003,20 @@ Usage:
 *Reuse the handler to simulate different query params that returns different results*
 
    ```js
-
+     import FactoryGuy, { make, mockQuery } from 'ember-data-factory-guy';
+     
      let store = FactoryGuy.get('store');
-     let bob = store.make('user', {name: 'Bob'});
-     let dude = store.make('user', {name: 'Dude'});
+     
+     let bob = make('user', {name: 'Bob'});
+     let dude = make('user', {name: 'Dude'});
 
-     let userQueryHander = TestHelper.mockQuery('user', {name: 'Bob'}).returnsModels([bob]);
+     let userQueryHander = mockQuery('user', {name: 'Bob'}).returns({models:[bob]});
 
      store.query('user', {name: 'Bob'}).then(function (users) {
        //=> users.get('length') === 1;
 
        // reuse the same user query handler but change the expected query parms
-       userQueryHander.withParams({name: 'Dude'}).returnsModels([dude]);
+       userQueryHander.withParams({name: 'Dude'}).returns({models:[dude]});
 
        store.query('user', {name: 'Dude'}).then(function (users) {
          //=> users.get('length') === 1;
