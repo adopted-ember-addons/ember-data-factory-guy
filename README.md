@@ -185,10 +185,11 @@ In other words, don't do this:
 
 ##### make/makeList
   - all instances loaded into the ember data store
-  
+
+##### make  
 ```javascript
 
-  import { make, makeList } from 'ember-data-factory-guy';
+  import { make } from 'ember-data-factory-guy';
   
   // make basic user with the default attributes in user factory
   let user = make('user');
@@ -225,9 +226,31 @@ In other words, don't do this:
 
 ```
 
+##### makeList
 
+```javascript
+
+  import { make, makeList } from 'ember-data-factory-guy';
+  
+  // Let's say bob is a named type in the [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js)
+  makeList('bob') // makes 0 bob's
+
+  makeList('bob', 2) // makes 2 bob's
+
+  makeList('bob', 2, 'with_car' , {name: "Dude"})
+  // makes 2 bob's that have 'with_car' trait and name of "Dude"
+  // In other words, applies the traits and options to every bob made  
+
+  makeList('bob', 'with_car', ['with_car',{name: "Dude"}])
+  // 2 User models with bob attributes, where the first also has 'with_car' trait
+  // the last has 'with_car' trait and name of "Dude", so you get 2 different bob's
+  
+
+```
 ##### build/buildList
   - for building json that you can pass json payload in [acceptance tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
+  - build takes same arguments as make 
+  - buildList takes same arguments as makeList 
   - to inspect the json use the get() method
   
 ```javascript
@@ -309,10 +332,20 @@ Example: what json looks like
 
   let json = build('user', 'with_company', 'with_hats');
   json.get() //=> {id: 1, name: 'User1', style: 'normal'}
-  // to get hats info
+  // to get hats (hasMany relationship) info
   json.get('hats') //=> [{id: 1, type: "big_hat"},{id: 1, type: "big_hat"}]
-  // to get company info
+  // to get company ( belongsTo relationship ) info
   json.get('company') //=> {id: 1, type: "company"}
+  
+  
+  let json = buildList('user', 2);
+  json.get(0) //=> {id: 1, name: 'User1', style: 'normal'}
+  json.get(1) //=> {id: 2, name: 'User2', style: 'normal'}
+
+  // boblike and adminlike are traits in [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js)
+  let json = buildList('user', 'boblike', 'adminlike);
+  json.get(0) //=> {id: 1, name: 'Bob', style: 'boblike'}
+  json.get(1) //=> {id: 2, name: 'Admin', style: 'super'}
 
 ```
 
@@ -760,8 +793,13 @@ test('using this.subject for profile and make for company associaion', function(
   - [mockCreate](https://github.com/danielspaniel/ember-data-factory-guy#mockcreate)
   - [mockUpdate](https://github.com/danielspaniel/ember-data-factory-guy#mockupdate)
   - [mockDelete](https://github.com/danielspaniel/ember-data-factory-guy#mockdelete)
-- Can override FactoryGuyTestHelper by 'reopening' it ( if you need custom functionality.)
-
+- can use method `fails()` to simulate failure, and then `succeeds()` to simulate success
+  - to customize failure, fails method takes optional object with status and errors.
+    - Example: 
+    ```javascript
+      let mock = mockFindAll('user').fails({status: 401, errors: {description: "Unauthorized"}}); 
+    ```
+  
 
 ##### setup and teardown
   - Use ```mockSetup()``` in test setup/beforeEach 
@@ -771,6 +809,7 @@ test('using this.subject for profile and make for company associaion', function(
 ##### mockFind
   - For dealing with finding one record of a particular type
   - Can pass in arguments just like you would for make or build
+    - mockFind( fixture or model name, optional traits, optional attributes object)
   - Can return payload with `returns()` method and modfiers: [model, json, id]
   - Sample acceptance tests using mockFind: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
   
@@ -798,7 +837,9 @@ test('using this.subject for profile and make for company associaion', function(
 
 ##### mockFindAll
   - For dealing with finding all records of a particular type
+  - takes same parameters as [makeList](https://github.com/danielspaniel/ember-data-factory-guy#makelist)
   - Can return payload with `returns()` method and modfiers: [models, json, ids]
+    - mockFindAll( fixture or model name, optional number, optional traits, optional attributes object)
   - Sample acceptance tests using mockFindAll: [users-view-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js) 
 
 Usage:
@@ -807,18 +848,21 @@ Usage:
    // Typically you will use like:
    import { buildList, mockFindAll } from 'ember-data-factory-guy';
 
-   // To mock store.findAll but return no users
+   // To mock store.findAll and return no users
    let mock = mockFindAll('user');
 
    // To return custom factory built json object using returns method
+   // that has 2 different users:
    let users1 = buildList('user', 'with_whacky_name', {isDude: true});
    let mock = mockFindAll('user').returns({ json: users1 });
-
-   // and to reuse the mock
+   // or  
+   let mock = mockFindAll('user', 'with_whacky_name', {isDude: true}) 
+   
+   // and to reuse the mock and return different payload
    let users2 = buildList('user', 3);
    mock.returns({ json: user2 });
    
-   // To mock failure case use `fails` method 
+   // To mock failure case use `fails()` method 
    mockFindAll('user').fails();
 
 ```
@@ -827,7 +871,6 @@ Usage:
 ##### mockReload
   - To handle reloading a model
     - Pass in a record ( or a typeName and id )
-    - Use fails to mock failure
 
 *Passing in a record / model instance*
 

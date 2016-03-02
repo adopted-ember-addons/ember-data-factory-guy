@@ -14,6 +14,11 @@ FactoryGuy.define('user', {
     name: 'Admin',
     style: 'super'
   },
+  // 'bob' user with it's custom attributes
+  bob: {
+    name: 'Bob',
+    style: 'boblike'
+  },
   // can accomplish this with traits ( see 'with_projects' trait below )
   user_with_projects: {
     projects: FactoryGuy.hasMany('project', 2)
@@ -21,6 +26,14 @@ FactoryGuy.define('user', {
   traits: {
     silly: {
       style: 'silly'
+    },
+    boblike: {
+      name: 'Bob',
+      style: 'boblike'
+    },
+    adminlike: {
+      name: 'Admin',
+      style: 'super'
     },
     with_company: {
       company: {}
