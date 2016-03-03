@@ -1080,35 +1080,37 @@ to a particular user. To mock this createRecord call here are a few ways to do t
 chainable methods.
 
 
-###### Using chainable methods
+Usage:
 
 ```javascript
+  import { mockCreate } from 'ember-data-factory-guy';
+  
   // Simplest case
   // Don't care about a match just handle createRecord for any project
-  TestHelper.mockCreate('project');
+  mockCreate('project');
 
   // Matching some attributes
-  TestHelper.mockCreate('project').match({name: "Moo"});
+  mockCreate('project').match({name: "Moo"});
 
   // Match all attributes
-  TestHelper.mockCreate('project').match({name: "Moo", user: user});
+  mockCreate('project').match({name: "Moo", user: user});
 
   // Exactly matching attributes, and returning extra attributes
-  TestHelper.mockCreate('project')
+  mockCreate('project')
     .match({name: "Moo", user: user})
     .andReturn({created_at: new Date()});
 
 ```
 
-*mocking a failed create*
+  - mocking a failed create
 
 ```javascript
 
   // Mocking failure case is easy with chainable methods, just use #fails
-  TestHelper.mockCreate('project').match({name: "Moo"}).fails();
+  mockCreate('project').match({name: "Moo"}).fails();
 
   // Can optionally add a status code and/or errors to the response
-  TestHelper.mockCreate('project').fails({status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}});
+  mockCreate('project').fails({status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}});
 
   store.createRecord('project', {name: "Moo"}).save(); //=> fails
 ```
@@ -1130,31 +1132,33 @@ chainable methods.
         invalid properties and then success after valid ones.
   - Need to wrap tests using mockUpdate with: Ember.run.function() { 'your test' })
 
-*success case is the default*
+Usage:
 
 ```javascript
-  let profile = FactoryGuy.make('profile');
+  import { make, mockUpdate } from 'ember-data-factory-guy';
+  
+  let profile = make('profile');
 
   // Pass in the model that will be updated ( if you have it available )
-  TestHelper.mockUpdate(profile);
+  mockUpdate(profile);
 
   // If the model is not available, pass in the modelType and the id of
   // the model that will be updated
-  TestHelper.mockUpdate('profile', 1);
+  mockUpdate('profile', 1);
 
   profile.set('description', 'good value');
   profile.save() //=> will succeed
 ````
 
-*mocking a failed update*
+ - mocking a failed update
 
 ```javascript
-  let profile = FactoryGuy.make('profile');
+  let profile = make('profile');
 
   // set the succeed flag to 'false'
-  TestHelper.mockUpdate('profile', profile.id).fails({status: 422, response: 'Invalid data'});
+  mockUpdate('profile', profile.id).fails({status: 422, response: 'Invalid data'});
   // or
-  TestHelper.mockUpdate(profile).fails({status: 422, response: 'Invalid data'});
+  mockUpdate(profile).fails({status: 422, response: 'Invalid data'});
 
   profile.set('description', 'bad value');
   profile.save() //=> will fail
@@ -1163,12 +1167,9 @@ chainable methods.
 *mocking a failed update and retry with succees*
 
 ```javascript
-  let profile = FactoryGuy.make('profile');
+  let profile = make('profile');
 
-  // set the succeed flag to 'false'
-  let mockUpdate = TestHelper.mockUpdate('profile', profile.id);
-  // or
-  let mockUpdate = TestHelper.mockUpdate(profile);
+  let mockUpdate = mockUpdate(profile);
 
   mockUpdate.fails({status: 422, response: 'Invalid data'});
 
@@ -1221,18 +1222,18 @@ import moduleForAcceptance from '../helpers/module-for-acceptance';
 
 moduleForAcceptance('Acceptance | User View', {
   beforeEach: function () {
-    // TestHelper.setup sets $.mockjaxSettings response time to zero ( speeds up tests )
+    // mockSetup sets $.mockjaxSettings response time to zero ( speeds up tests )
     mockSetup();
   },
   afterEach: function () {
-      // TestHelper.teardown calls $.mockjax.clear() which resets all the mockjax handlers
+      // mockTeardown calls $.mockjax.clear() which resets all the mockjax handlers
     mockTeardown();
   }
 });
 
 test("Creates new project", function () {
-  let user = make('user', 'with_projects'); // create a user with projects in the store
-  visit('/user/'+user.id);
+  let user = build('user', 'with_projects'); // build user payload
+  visit('/user/'+ user.get('id'));
 
   andThen(function () {
     let newProjectName = "Gonzo Project";
