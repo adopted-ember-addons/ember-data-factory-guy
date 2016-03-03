@@ -915,11 +915,12 @@ Usage:
 
 
 ##### mockQuery
-   - For dealing with finding all records for a type of model with query parameters.
-   - Takes modifier method `returns()` for controlling the response payload
+  - For dealing with finding all records for a type of model with query parameters.
+    - Takes modifier method `returns()` for controlling the response payload
     - returns( models / json / ids )
    - Takes modifier methods for matching the query params
     - withParams( object )
+  - Sample acceptance tests using mockQuery: [user-search-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-search-test.js)
 
 Usage: 
 
@@ -974,51 +975,65 @@ Usage:
 
 ```
 
- - Reuse the handler to simulate the same query with different results
+##### mockQueryRecord
+  - For dealing with finding one record for a type of model with query parameters.
+    - Takes modifier method `returns()` for controlling the response payload
+    - returns( model / json / id )
+   - Takes modifier methods for matching the query params
+    - withParams( object )
+
+
+Usage: 
 
 ```js
-  let mockBobQuery = mockQuery('user', {name: 'Bob'});
+  import FactoryGuy, { make, build, mockQueryRecord } from 'ember-data-factory-guy';
+  let store = FactoryGuy.get('store');
+
+  // This simulates a query that returns no results
+  mockQueryRecord('user', {age: 10});
+
+  store.queryRecord('user', {age: 10}}).then((userInstance) => {
+    /// userInstance will be empty
+  })
+```
+
+  - with returns( models )
+```js
+  // Create model instances
+  let user = make('user');
   
-  store.query('user', {name: 'Bob'}).then(function (users) {
-   //=> users.get('length') === 0;
+  mockQueryRecord('user', {name:'Bob', age: 10}).returns({model: user});
   
-   let bob = make('user', {name: 'Bob'});
+  store.queryRecord('user', {name:'Bob', age: 10}}).then((model)=> {
+    // model is the same as the user you made
+  });
+```
+
+  - with returns ( json )
+``` js
+  // Create json with buildList
+  let user = build('user');
   
-   // reuse the same query handler since it's the same query
-   mockBobQuery.returns({models:[bob]});
+  mockQueryRecord('user', {name:'Bob', age: 10}).returns({json: user});
   
-   store.query('user', {name: 'Bob'}).then(function (users) {
-     //=> users.get('length') === 1;
-     //=> users.get('firstObject') === bob;
-   });
+  store.queryRecord('user', {name:'Bob', age: 10}}).then((model)=> {
+    // user model created from the user json
+  });
+```
+
+  - with returns( ids )
+
+```js
+  // Create list of models
+  let user = build('user', 'with_hats');
+  
+  mockQueryRecord('user', {name:'Bob', age: 10}).returns({id: user.get('id')});
+  
+  store.queryRecord('user', {name:'Bob', age: 10}}).then(function(model) {
+    // model will be one model and it will be user1
   });
 
 ```
-
-  - Reuse the handler to simulate different query params that returns different results
-
-```js
-  
-  let bob = make('user', {name: 'Bob'});
-  let dude = make('user', {name: 'Dude'});
-  
-  let mockUserQuery = mockQuery('user', {name: 'Bob'}).returns({models:[bob]});
-  
-  store.query('user', {name: 'Bob'}).then(function (users) {
-   //=> users.get('length') === 1;
-   //=> users.get('firstObject') === bob;
-  
-   // reuse the same user query handler but change the expected query parms
-   mockUserQuery.withParams({name: 'Dude'}).returns({models:[dude]});
-  
-   store.query('user', {name: 'Dude'}).then(function (users) {
-     //=> users.get('length') === 1;
-     //=> users.get('firstObject') === dude;
-   });
-  });
-
-```
-
 
 ##### mockCreate
 

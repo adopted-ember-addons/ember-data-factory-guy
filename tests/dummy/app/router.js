@@ -9,6 +9,9 @@ Router.map(function() {
   this.route('users');
   this.route('profiles');
   this.route('user', {path: '/user/:user_id'});
+  this.route('search', {path: '/search'}, function() {
+    this.route('results', {path: ':name'});
+  });
 });
 
 export default Router;

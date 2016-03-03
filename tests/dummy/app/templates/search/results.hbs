@@ -1,0 +1,6 @@
+{{#each model as |user|}}
+  {{single-user user=user}}
+{{/each}}
+{{#if model.errors}}
+  <div>Errors {{model.message}}</div>
+{{/if}}
