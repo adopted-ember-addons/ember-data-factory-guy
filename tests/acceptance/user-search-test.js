@@ -3,6 +3,9 @@ import moduleForAcceptance from '../helpers/module-for-acceptance';
 
 moduleForAcceptance('Acceptance | User Search');
 
+// NOTE
+// FactoryGuy before and after setup is in moduleForAcceptance helper
+
 var search = function(name) {
   andThen(()=> {
     fillIn('input.user-name', name);

@@ -43,3 +43,23 @@ test("Show users by make(ing) list of models and using returns with those models
 
 });
 
+test("reuse mockFindAll to show return different users", function() {
+  let mock = mockFindAll('user'); // returns no users
+
+  visit('/users');
+
+  andThen(()=> {
+    equal(find('li.user').length, 0);
+    let sillyPeople = makeList('user', { name: "Bo" }, { name: "Bif" });
+    mock.returns({ models: sillyPeople });
+    visit('/users');
+  });
+
+  andThen(()=> {
+    equal(find('.user').length, 2);
+    ok(find('.user:first').text().match("Bo"));
+    ok(find('.user:last').text().match("Bif"));
+  });
+
+});
+
