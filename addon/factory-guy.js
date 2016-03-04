@@ -60,33 +60,24 @@ let extractArguments = function (...args) {
   return Ember.merge({name: name}, extractArgumentsShort.apply(this, args));
 };
 
-let FactoryGuy = Ember.Object.extend({
-  theStore: null,
+class FactoryGuy {
 
-  // this is stupid .. should not have allowed this to happen in the first place
-  // will fix by making FactoryGuy a class object once and for all
-  store: Ember.computed({
-    get(key) { return this.theStore; },
-    set(_, aStore) {
-      Ember.assert("FactoryGuy#set('store') needs a valid store instance.You passed in [" + aStore + "]", aStore instanceof DS.Store);
-      this.theStore = aStore;
-      return aStore;
-    }
-  }),
+  setStore(aStore) {
+    Ember.assert("FactoryGuy#set('store') needs a valid store instance.You passed in [" + aStore + "]", aStore instanceof DS.Store);
+    this.store = aStore;
+    const fixtureBuilderFactory = new FixtureBuilderFactory(this.store);
+    this.fixtureBuilder = fixtureBuilderFactory.fixtureBuilder();
+  }
 
-  fixtureBuilderFactory: Ember.computed('store', function () {
-    const store = this.get('store');
-    return FixtureBuilderFactory.create({store});
-  }),
+  //fixtureBuilder() {
+  //  const factory = this.get('fixtureBuilderFactory');
+  //  return factory.fixtureBuilder();
+  //}),
 
-  fixtureBuilder: Ember.computed('fixtureBuilderFactory', function () {
-    const factory = this.get('fixtureBuilderFactory');
-    return factory.get('fixtureBuilder');
-  }),
+  updateHTTPMethod() {
+    return this.fixtureBuilder.updateHTTPMethod || 'PUT';
+  }
 
-  updateHTTPMethod: Ember.computed('fixtureBuilder', function () {
-    return this.getWithDefault('fixtureBuilder.updateHTTPMethod', 'PUT');
-  }),
   /**
    ```javascript
 
@@ -125,24 +116,25 @@ let FactoryGuy = Ember.Object.extend({
    @param {String} model the model to define
    @param {Object} config your model definition
    */
-    define(model, config) {
+  define(model, config) {
     modelDefinitions[model] = new ModelDefinition(model, config);
-  },
+  }
+
   /*
    @param model name of named fixture type like: 'admin' or model name like 'user'
    @returns {ModelDefinition} if there is one matching that name
    */
   findModelDefinition(model) {
     return modelDefinitions[model];
-  },
+  }
 
-  /**
-   The method has been kept for backward compatibility
-   Use `instance.get('fixtureBuilder')` instead.
-   */
-    getFixtureBuilder() {
-    return this.get('fixtureBuilder');
-  },
+  ///**
+  // The method has been kept for backward compatibility
+  // Use `instance.get('fixtureBuilder')` instead.
+  // */
+  //  fixtureBuilder {
+  //  return this.get('fixtureBuilder');
+  //}
 
   /**
    Used in model definitions to declare use of a sequence. For example:
@@ -177,7 +169,7 @@ let FactoryGuy = Ember.Object.extend({
         return this.generate(nameOrFunction);
       }
     };
-  },
+  }
   /**
    Used in model definitions to define a belongsTo association attribute.
    For example:
@@ -210,7 +202,7 @@ let FactoryGuy = Ember.Object.extend({
     return ()=> {
       return this.buildRaw(fixtureName, opts);
     };
-  },
+  }
   /**
    Used in model definitions to define a hasMany association attribute.
    For example:
@@ -243,7 +235,7 @@ let FactoryGuy = Ember.Object.extend({
     return ()=> {
       return this.buildRawList(fixtureName, number, opts);
     };
-  },
+  }
 
   /**
    Build fixtures for model or specific fixture name.
@@ -270,8 +262,8 @@ let FactoryGuy = Ember.Object.extend({
     let fixture = this.buildRaw.apply(this, arguments);
     let modelName = lookupModelForFixtureName(args.name);
 
-    return this.get('fixtureBuilder').convertForBuild(modelName, fixture);
-  },
+    return this.fixtureBuilder.convertForBuild(modelName, fixture);
+  }
 
   buildRaw() {
     let args = extractArguments.apply(this, arguments);
@@ -282,7 +274,7 @@ let FactoryGuy = Ember.Object.extend({
     }
 
     return definition.build(args.name, args.opts, args.traits);
-  },
+  }
   /**
    Build list of fixtures for model or specific fixture name. For example:
 
@@ -310,8 +302,8 @@ let FactoryGuy = Ember.Object.extend({
 
     let name = args.shift();
     let modelName = lookupModelForFixtureName(name);
-    return this.get('fixtureBuilder').convertForBuild(modelName, list);
-  },
+    return this.fixtureBuilder.convertForBuild(modelName, list);
+  }
 
   buildRawList(...args) {
     let name = args.shift();
@@ -334,7 +326,7 @@ let FactoryGuy = Ember.Object.extend({
         return definition.build(name, parts.opts, parts.traits);
       });
     }
-  },
+  }
   /**
    Make new fixture and save to store.
 
@@ -349,21 +341,21 @@ let FactoryGuy = Ember.Object.extend({
     Ember.assert(
       `FactoryGuy does not have the application's store.
        Use manualSetup(this.container) in model/component test
-       before using make/makeList`, this.get('store')
+       before using make/makeList`, this.store
     );
 
     let modelName = lookupModelForFixtureName(args.name);
     let fixture = this.buildRaw.apply(this, arguments);
-    let data = this.get('fixtureBuilder').convertForMake(modelName, fixture);
+    let data = this.fixtureBuilder.convertForMake(modelName, fixture);
 
-    const model = Ember.run(()=> this.get('store').push(data));
+    const model = Ember.run(()=> this.store.push(data));
 
     let definition = lookupDefinitionForFixtureName(args.name);
     if (definition.hasAfterMake()) {
       definition.applyAfterMake(model, args.opts);
     }
     return model;
-  },
+  }
 
   /**
    Make a list of model instances
@@ -391,7 +383,7 @@ let FactoryGuy = Ember.Object.extend({
     Ember.assert(
       `FactoryGuy does not have the application's store.
        Use manualSetup(this.container) in model/component test
-       before using make/makeList`, this.get('store')
+       before using make/makeList`, this.store
     );
 
     Ember.assert("makeList needs at least a name ( of model or named factory definition )", args.length >= 1);
@@ -416,7 +408,7 @@ let FactoryGuy = Ember.Object.extend({
       }
       return this.make(...[name, ...innerArgs]);
     });
-  },
+  }
   /**
    Clear model instances from store cache.
    Reset the id sequence for the models back to zero.
@@ -424,7 +416,7 @@ let FactoryGuy = Ember.Object.extend({
   clearStore() {
     this.resetDefinitions();
     this.clearModels();
-  },
+  }
 
   /**
    Reset the id sequence for the models back to zero.
@@ -434,14 +426,14 @@ let FactoryGuy = Ember.Object.extend({
       let definition = modelDefinitions[model];
       definition.reset();
     }
-  },
+  }
 
   /**
    Clear model instances from store cache.
    */
   clearModels() {
-    this.get('store').unloadAll();
-  },
+    this.store.unloadAll();
+  }
 
   /**
    Push fixture to model's FIXTURES array.
@@ -466,7 +458,7 @@ let FactoryGuy = Ember.Object.extend({
     modelClass.FIXTURES.push(fixture);
 
     return fixture;
-  },
+  }
 
   /**
    Used in compliment with pushFixture in order to
@@ -489,16 +481,16 @@ let FactoryGuy = Ember.Object.extend({
       }
     });
     return index;
-  },
+  }
 
   /**
    Clears all model definitions
    */
     clearDefinitions(opts) {
     if (!opts) {
-      modelDefinitions = {};
+      this.modelDefinitions = {};
     }
-  },
+  }
   /**
    Build url's for the mockjax calls. Proxy to the adapters buildURL method.
 
@@ -507,15 +499,15 @@ let FactoryGuy = Ember.Object.extend({
    @return {String} url
    */
   buildURL(modelName, id = null) {
-    const adapter = this.get('store').adapterFor(modelName);
+    const adapter = this.store.adapterFor(modelName);
     return adapter.buildURL(modelName, id);
-  },
+  }
   /**
    Change reload behavior to only used cached models for find/findAll.
    You still have to handle query calls, since they always ajax for data.
    */
   cacheOnlyMode({except=[]}) {
-    let store = this.get('store');
+    let store = this.store;
     let findAdapter = store.adapterFor.bind(store);
 
     store.adapterFor = function (name) {
@@ -533,9 +525,9 @@ let FactoryGuy = Ember.Object.extend({
       return adapter;
     };
   }
-});
+}
 
-let factoryGuy = FactoryGuy.create();
+let factoryGuy = new FactoryGuy();
 
 let make = factoryGuy.make.bind(factoryGuy);
 let makeList = factoryGuy.makeList.bind(factoryGuy);

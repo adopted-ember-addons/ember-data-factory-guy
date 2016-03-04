@@ -24,29 +24,3 @@ test('using this.subject for profile and make for company associaion', function(
   let profile = this.subject({company: make('company')});
   ok(profile.get('company.profile') === profile);
 });
-
-
-moduleForModel('profile', 'Unit | Model | profile with no FactoryGuy setup', {
-  needs: ['model:company'],
-
-  beforeEach: function() {
-    // ooops ..forgot to setup FactoryGuy with manualSetup(this.container)
-  }
-});
-
-test('make throws excpetion because there is NO store setup', function(assert) {
-  assert.throws(function() {
-    make('profile');
-  },
-    /FactoryGuy does not have the application's store/
-  );
-});
-
-test('makeList throws excpetion because there is NO store setup', function(assert) {
-  assert.throws(function() {
-    makeList('profile');
-  },
-    /FactoryGuy does not have the application's store/
-  );
-});
-

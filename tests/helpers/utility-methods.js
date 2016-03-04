@@ -8,7 +8,7 @@ let theUsualSetup = function (adapterType) {
 
   // brute force setting the adapter/serializer on the store.
   if (adapterType) {
-    let store = FactoryGuy.get('store');
+    let store = FactoryGuy.store;
     let adapter = App.__container__.lookup('adapter:'+adapterType);
     let serializer = App.__container__.lookup('serializer:'+adapterType);
 
@@ -29,7 +29,7 @@ let theUsualSetup = function (adapterType) {
     adapter.shouldBackgroundReloadRecord = function() { return false; };
     adapter.shouldReloadRecord = function() { return false; };
     adapter.shouldReloadAll = function() { return true; };
-    FactoryGuy.set('store', store);
+    FactoryGuy.setStore(store);
   }
 
   $.mockjaxSettings.logging = false;

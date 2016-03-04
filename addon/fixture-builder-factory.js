@@ -1,34 +1,32 @@
-import Ember from 'ember';
 import DS from 'ember-data';
 import JSONAPIFixtureBuilder from './jsonapi-fixture-builder';
 import RESTFixtureBuilder from './rest-fixture-builder';
 
-export default Ember.Object.extend({
-  store: null,
-  adapter: null,
+export default class {
+
+  constructor(store) {
+    this.store = store;
+    this.adapter = store.adapterFor('application');
+  }
+
   /**
    Return appropriate FixtureBuilder for the adapter type
    */
-  fixtureBuilder: Ember.computed('store', {
-    get() {
-      if (this.usingJSONAPIAdapter()) {
-        return new JSONAPIFixtureBuilder(this.get('store'));
-      }
-      if (this.usingRESTAdapter()) {
-        return new RESTFixtureBuilder(this.get('store'));
-      }
-      return new JSONAPIFixtureBuilder(this.get('store'));
+  fixtureBuilder() {
+    if (this.usingJSONAPIAdapter()) {
+      return new JSONAPIFixtureBuilder(this.store);
     }
-  }),
-  didInitialize: function() {
-    this.set('adapter', this.get('store').adapterFor('application'));
-  }.on('init'),
-  usingJSONAPIAdapter() {
-    const adapter = this.get('adapter');
-    return adapter && adapter instanceof DS.JSONAPIAdapter;
-  },
-  usingRESTAdapter() {
-    const adapter = this.get('adapter');
-    return adapter && adapter instanceof DS.RESTAdapter;
+    if (this.usingRESTAdapter()) {
+      return new RESTFixtureBuilder(this.store);
+    }
+    return new JSONAPIFixtureBuilder(this.store);
   }
-});
+
+  usingJSONAPIAdapter() {
+    return this.adapter && this.adapter instanceof DS.JSONAPIAdapter;
+  }
+
+  usingRESTAdapter() {
+    return this.adapter && this.adapter instanceof DS.RESTAdapter;
+  }
+}

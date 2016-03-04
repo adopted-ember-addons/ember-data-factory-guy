@@ -133,7 +133,7 @@ let MockServer = Ember.Object.extend({
     Ember.assert("To handleFind pass in a model instance or a model type name and an id",
       modelName && id);
 
-    let json = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, { id: id });
+    let json = FactoryGuy.fixtureBuilder.convertForBuild(modelName, { id: id });
     return new MockReloadRequest(modelName).returns({ json });
   },
   handleReload: function () {
@@ -367,7 +367,7 @@ let MockServer = Ember.Object.extend({
     }
 
     let model, type, id;
-    let store = FactoryGuy.get('store');
+    let store = FactoryGuy.store;
 
     if (args[0] instanceof DS.Model) {
       model = args[0];

@@ -21,7 +21,7 @@ SharedBehavior.buildUrl = function() {
   });
 
   test("#buildURL with namespace and host", function() {
-    let adapter = FactoryGuy.get('store').adapterFor('application');
+    let adapter = FactoryGuy.store.adapterFor('application');
     adapter.setProperties({
       host: 'https://dude.com',
       namespace: 'api/v1'
@@ -35,7 +35,7 @@ SharedBehavior.buildUrl = function() {
 //////// mockFind /////////
 SharedBehavior.handleFindTests = function() {
 
-  test("have access to handler being used by mockjack", function() {
+  test("have access to handler being used by mockjax", function() {
     let mock = mockFind('user');
     ok(mock.handler);
   });
@@ -46,7 +46,7 @@ SharedBehavior.handleFindTests = function() {
       let profile = mockFind('profile');
       let profileId = profile.get('id');
 
-      FactoryGuy.get('store').find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.find('profile', profileId).then(function(profile) {
         equal(profile.get('id'), profileId);
         equal(profile.get('description'), 'Text goes here');
         done();
@@ -60,7 +60,7 @@ SharedBehavior.handleFindTests = function() {
       let profile = mockFind('profile', { description: 'dude' });
       let profileId = profile.get('id');
 
-      FactoryGuy.get('store').find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.find('profile', profileId).then(function(profile) {
         ok(profile.get('description') === 'dude');
         done();
       });
@@ -74,7 +74,7 @@ SharedBehavior.handleFindTests = function() {
       let profile = mockFind('profile');
       let profileId = profile.get('id');
 
-      FactoryGuy.get('store').find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.find('profile', profileId).then(function(profile) {
         ok(profile.get('camelCaseDescription') === 'textGoesHere');
         ok(profile.get('snake_case_description') === 'text_goes_here');
         done();
@@ -89,7 +89,7 @@ SharedBehavior.handleFindTests = function() {
       let profile = mockFind('profile', 'goofy_description');
       let profileId = profile.get('id');
 
-      FactoryGuy.get('store').find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.find('profile', profileId).then(function(profile) {
         ok(profile.get('description') === 'goofy');
         done();
       });
@@ -103,7 +103,7 @@ SharedBehavior.handleFindTests = function() {
       let profile = mockFind('profile', 'goofy_description', { description: 'dude' });
       let profileId = profile.get('id');
 
-      FactoryGuy.get('store').find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.find('profile', profileId).then(function(profile) {
         ok(profile.get('description') === 'dude');
         done();
       });
@@ -117,7 +117,7 @@ SharedBehavior.handleFindTests = function() {
       let profile = mockFind('profile', 'with_company', 'with_bat_man');
       let profileId = profile.get('id');
 
-      FactoryGuy.get('store').find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.find('profile', profileId).then(function(profile) {
         ok(profile.get('company.name') === 'Silly corp');
         ok(profile.get('superHero.name') === 'BatMan');
         done();
@@ -132,7 +132,7 @@ SharedBehavior.handleFindTests = function() {
       let user = mockFind('user', 'with_hats');
       let userId = user.get('id');
 
-      FactoryGuy.get('store').find('user', userId).then(function(user) {
+      FactoryGuy.store.find('user', userId).then(function(user) {
         ok(user.get('hats.length') === 2);
         ok(user.get('hats.firstObject.type') === 'BigHat');
         done();
@@ -149,7 +149,7 @@ SharedBehavior.handleFindTests = function() {
       mockFind('profile').returns({json});
       let profileId = json.get('id');
 
-      FactoryGuy.get('store').find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.find('profile', profileId).then(function(profile) {
         ok(profile.get('company.name') === 'Silly corp');
         ok(profile.get('superHero.name') === 'BatMan');
         done();
@@ -167,7 +167,7 @@ SharedBehavior.handleFindTests = function() {
 
       mockFind('user').returns({json});
 
-      FactoryGuy.get('store').find('user', json.get('id')).then(function(user) {
+      FactoryGuy.store.find('user', json.get('id')).then(function(user) {
         ok(user.get('hats.firstObject.id') === hat1.get('id') +'');
         ok(user.get('hats.lastObject.id')  === hat2.get('id') +'');
         done();
@@ -183,10 +183,10 @@ SharedBehavior.handleFindTests = function() {
       let profile = mockFind('profile').returns({model});
       let profileId = profile.get('id');
 
-      FactoryGuy.get('store').find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.find('profile', profileId).then(function(profile) {
         ok(profile.get('company.name') === 'Silly corp');
         ok(profile.get('superHero.name') === 'BatMan');
-        equal(FactoryGuy.get('store').peekAll('profile').get('content').length, 1, "does not make another profile");
+        equal(FactoryGuy.store.peekAll('profile').get('content').length, 1, "does not make another profile");
         done();
       });
     });
@@ -232,7 +232,7 @@ SharedBehavior.handleReloadTests = function() {
       let done = assert.async();
       mockReload('profile', 1).fails();
 
-      FactoryGuy.get('store').find('profile', 1).then(
+      FactoryGuy.store.find('profile', 1).then(
         function() {
         },
         function() {
@@ -249,7 +249,7 @@ SharedBehavior.handleReloadTests = function() {
 
 SharedBehavior.handleFindAllTests = function() {
 
-  test("have access to handler being used by mockjack", function() {
+  test("have access to handler being used by mockjax", function() {
     let mock = mockFindAll('user');
     ok(mock.handler);
   });
@@ -259,7 +259,7 @@ SharedBehavior.handleFindAllTests = function() {
       let done = assert.async();
       mockFindAll('user', 2);
 
-      FactoryGuy.get('store').findAll('user').then(function(users) {
+      FactoryGuy.store.findAll('user').then(function(users) {
         ok(users.get('length') === 2);
         done();
       });
@@ -272,7 +272,7 @@ SharedBehavior.handleFindAllTests = function() {
 
       mockFindAll('profile', 1);
 
-      FactoryGuy.get('store').findAll('profile').then(function(profiles) {
+      FactoryGuy.store.findAll('profile').then(function(profiles) {
         ok(profiles.get('firstObject.camelCaseDescription') === 'textGoesHere');
         ok(profiles.get('firstObject.snake_case_description') === 'text_goes_here');
         done();
@@ -285,7 +285,7 @@ SharedBehavior.handleFindAllTests = function() {
       let done = assert.async();
       mockFindAll('user', 0);
 
-      FactoryGuy.get('store').findAll('user').then(function(profiles) {
+      FactoryGuy.store.findAll('user').then(function(profiles) {
         ok(profiles.get('length') === 0);
         done();
       });
@@ -297,7 +297,7 @@ SharedBehavior.handleFindAllTests = function() {
       let done = assert.async();
       mockFindAll('profile', 2, { description: 'dude' });
 
-      FactoryGuy.get('store').findAll('profile').then(function(profiles) {
+      FactoryGuy.store.findAll('profile').then(function(profiles) {
         ok(profiles.get('length') === 2);
         ok(profiles.get('firstObject.description') === 'dude');
         done();
@@ -309,7 +309,7 @@ SharedBehavior.handleFindAllTests = function() {
     let done = assert.async();
     mockFindAll('profile', 2, 'goofy_description');
 
-    FactoryGuy.get('store').findAll('profile').then(function(profiles) {
+    FactoryGuy.store.findAll('profile').then(function(profiles) {
       ok(profiles.get('length') === 2);
       ok(profiles.get('firstObject.description') === 'goofy');
       done();
@@ -320,7 +320,7 @@ SharedBehavior.handleFindAllTests = function() {
     let done = assert.async();
     mockFindAll('profile', 2, 'goofy_description', { description: 'dude' });
 
-    FactoryGuy.get('store').findAll('profile').then(function(profiles) {
+    FactoryGuy.store.findAll('profile').then(function(profiles) {
       ok(profiles.get('length') === 2);
       ok(profiles.get('firstObject.description') === 'dude');
       done();
@@ -333,7 +333,7 @@ SharedBehavior.handleFindAllTests = function() {
       let done = assert.async();
       mockFindAll('profile', 2, 'with_company', 'with_bat_man');
 
-      FactoryGuy.get('store').findAll('profile').then(function(profiles) {
+      FactoryGuy.store.findAll('profile').then(function(profiles) {
         ok(profiles.get('length') === 2);
         ok(profiles.get('firstObject.company.name') === 'Silly corp');
         ok(profiles.get('lastObject.superHero.name') === 'BatMan');
@@ -349,7 +349,7 @@ SharedBehavior.handleFindAllTests = function() {
 
       mockFindAll('user', 2, 'with_hats');
 
-      FactoryGuy.get('store').findAll('user').then(function(users) {
+      FactoryGuy.store.findAll('user').then(function(users) {
         ok(users.get('length') === 2);
         ok(users.get('lastObject.hats').mapBy('type') + '' === ['BigHat', 'BigHat'] + '');
         ok(users.get('lastObject.hats').mapBy('id') + '' === [3, 4] + '');
@@ -363,7 +363,7 @@ SharedBehavior.handleFindAllTests = function() {
       let done = assert.async();
       mockFindAll('profile', 'goofy_description', { description: 'foo' }, ['goofy_description', { aBooleanField: true }]);
 
-      FactoryGuy.get('store').findAll('profile').then(function(profiles) {
+      FactoryGuy.store.findAll('profile').then(function(profiles) {
         ok(profiles.get('length') === 3);
         ok(profiles.objectAt(0).get('description') === 'goofy');
         ok(profiles.objectAt(0).get('aBooleanField') === false);
@@ -383,7 +383,7 @@ SharedBehavior.handleFindAllTests = function() {
       let json = buildList('profile', 'with_company', 'with_bat_man');
       mockFindAll('profile').returns({json});
 
-      FactoryGuy.get('store').findAll('profile').then(function(profiles) {
+      FactoryGuy.store.findAll('profile').then(function(profiles) {
         ok(profiles.get('firstObject.company.name') === 'Silly corp');
         ok(profiles.get('lastObject.superHero.name') === 'BatMan');
         done();
@@ -398,10 +398,10 @@ SharedBehavior.handleFindAllTests = function() {
       let models = makeList('profile', 'with_company', 'with_bat_man');
       mockFindAll('profile').returns({models});
 
-      FactoryGuy.get('store').findAll('profile').then(function(profiles) {
+      FactoryGuy.store.findAll('profile').then(function(profiles) {
         ok(profiles.get('firstObject.company.name') === 'Silly corp');
         ok(profiles.get('lastObject.superHero.name') === 'BatMan');
-        equal(FactoryGuy.get('store').peekAll('profile').get('content').length, 2, "does not make new profiles");
+        equal(FactoryGuy.store.peekAll('profile').get('content').length, 2, "does not make new profiles");
         done();
       });
     });
@@ -464,7 +464,7 @@ SharedBehavior.handleQueryTests = function() {
     }, "can't pass a DS.Model instance to mock query");
   });
 
-  test("have access to handler being used by mockjack", function() {
+  test("have access to handler being used by mockjax", function() {
     let mock = mockQuery('user');
     ok(mock.handler);
   });
@@ -473,7 +473,7 @@ SharedBehavior.handleQueryTests = function() {
     Ember.run(function() {
       let done = assert.async();
       mockQuery('user', { name: 'Bob' });
-      FactoryGuy.get('store').query('user', { name: 'Bob' }).then(function(users) {
+      FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
         equal(users.get('length'), 0, "nothing returned");
         done();
       });
@@ -483,7 +483,7 @@ SharedBehavior.handleQueryTests = function() {
   test("with no parameters matches query with any parameters", function(assert) {
     var done = assert.async();
     mockQuery('user');
-    FactoryGuy.get('store').query('user', { name: 'Bob' })
+    FactoryGuy.store.query('user', { name: 'Bob' })
       .then(()=> {
         ok(true);
         done();
@@ -497,7 +497,7 @@ SharedBehavior.handleQueryTests = function() {
       let errors = { errors: { name: ['wrong'] } };
 
       mockQuery('user').fails({ status: 422, response: errors });
-      FactoryGuy.get('store').query('user',{}).catch(
+      FactoryGuy.store.query('user',{}).catch(
         ()=> {
           ok(true);
           done();
@@ -517,7 +517,7 @@ SharedBehavior.handleQueryTests = function() {
       done();
     });
 
-    FactoryGuy.get('store').query('company', queryParams);
+    FactoryGuy.store.query('company', queryParams);
   });
 
   test("using nested search params", function(assert) {
@@ -527,7 +527,7 @@ SharedBehavior.handleQueryTests = function() {
       let models = makeList('company', 2);
 
       mockQuery('company', { name: { like: 'Dude*' } }).returns({ models });
-      FactoryGuy.get('store').query('company', { name: { like: 'Dude*' } }).then(function(companies) {
+      FactoryGuy.store.query('company', { name: { like: 'Dude*' } }).then(function(companies) {
         equal(companies.mapBy('id') + '', models.mapBy('id') + '');
         done();
       });
@@ -538,7 +538,7 @@ SharedBehavior.handleQueryTests = function() {
     Ember.run(function() {
       let done = assert.async();
       mockQuery('user', { name: 'Bob' }).returns({ models: [] });
-      FactoryGuy.get('store').query('user', { name: 'Bob' }).then(function(users) {
+      FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
         equal(users.get('length'), 0, "nothing returned");
         done();
       });
@@ -552,10 +552,10 @@ SharedBehavior.handleQueryTests = function() {
 
       mockQuery('user', { name: 'Bob' }).returns({ models: [bob] });
 
-      FactoryGuy.get('store').query('user', { name: 'Bob' }).then(function(users) {
+      FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
         equal(users.get('length'), 1);
         equal(users.get('firstObject'), bob);
-        equal(FactoryGuy.get('store').peekAll('user').get('content').length, 1, "does not make another user");
+        equal(FactoryGuy.store.peekAll('user').get('content').length, 1, "does not make another user");
         done();
       });
     });
@@ -568,14 +568,14 @@ SharedBehavior.handleQueryTests = function() {
       let models = makeList('user', 2, 'with_hats');
       mockQuery('user', { name: 'Bob' }).returns({ models });
 
-      equal(FactoryGuy.get('store').peekAll('user').get('content.length'), 2, 'start out with 2 instances');
+      equal(FactoryGuy.store.peekAll('user').get('content.length'), 2, 'start out with 2 instances');
 
-      FactoryGuy.get('store').query('user', { name: 'Bob' }).then(function(users) {
+      FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
         equal(users.get('length'), 2);
         equal(users.get('firstObject.name'), 'User1');
         equal(users.get('firstObject.hats.length'), 2);
         equal(users.get('lastObject.name'), 'User2');
-        equal(FactoryGuy.get('store').peekAll('user').get('content.length'), 2, 'no new instances created');
+        equal(FactoryGuy.store.peekAll('user').get('content.length'), 2, 'no new instances created');
         done();
       });
     });
@@ -588,15 +588,15 @@ SharedBehavior.handleQueryTests = function() {
       let models = makeList('company', 2, 'with_projects', 'with_profile');
       mockQuery('company', { name: 'Dude Company' }).returns({ models });
 
-      equal(FactoryGuy.get('store').peekAll('company').get('content.length'), 2, 'start out with 2 instances');
+      equal(FactoryGuy.store.peekAll('company').get('content.length'), 2, 'start out with 2 instances');
 
-      FactoryGuy.get('store').query('company', { name: 'Dude Company' }).then(function(companies) {
+      FactoryGuy.store.query('company', { name: 'Dude Company' }).then(function(companies) {
         equal(companies.get('length'), 2);
         ok(companies.get('firstObject.profile') instanceof Profile);
         equal(companies.get('firstObject.projects.length'), 2);
         ok(companies.get('lastObject.profile') instanceof Profile);
         equal(companies.get('lastObject.projects.length'), 2);
-        equal(FactoryGuy.get('store').peekAll('company').get('content.length'), 2, 'no new instances created');
+        equal(FactoryGuy.store.peekAll('company').get('content.length'), 2, 'no new instances created');
         done();
       });
     });
@@ -608,10 +608,10 @@ SharedBehavior.handleQueryTests = function() {
 
       let json = buildList('user', 1);
       mockQuery('user', { name: 'Bob' }).returns({ json });
-      FactoryGuy.get('store').query('user', { name: 'Bob' }).then(function(users) {
+      FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
         equal(users.get('length'), 1);
         // makes the user after getting query response
-        equal(FactoryGuy.get('store').peekAll('user').get('content').length, 1);
+        equal(FactoryGuy.store.peekAll('user').get('content').length, 1);
         done();
       });
     });
@@ -625,11 +625,11 @@ SharedBehavior.handleQueryTests = function() {
       let ids = [bob.id];
       mockQuery('user', { name: 'Bob' }).returns({ ids });
 
-      FactoryGuy.get('store').query('user', { name: 'Bob' }).then(function(users) {
+      FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
         equal(users.get('length'), 1);
         equal(users.get('firstObject'), bob);
         // does not create a new model
-        equal(FactoryGuy.get('store').peekAll('user').get('content').length, 1);
+        equal(FactoryGuy.store.peekAll('user').get('content').length, 1);
         done();
       });
     });
@@ -639,7 +639,7 @@ SharedBehavior.handleQueryTests = function() {
   test("reuse mock query to first return nothing then use returns to return something", function(assert) {
     Ember.run(function() {
       let done = assert.async();
-      let store = FactoryGuy.get('store');
+      let store = FactoryGuy.store;
 
       let bobQueryHander = mockQuery('user', { name: 'Bob' });
 
@@ -670,10 +670,10 @@ SharedBehavior.handleQueryTests = function() {
       let companies2 = makeList('company', 2);
       mockQuery('company', { type: 'Small' }).returns({ models: companies2 });
 
-      FactoryGuy.get('store').query('company', { name: 'Dude' }).then(function(companies) {
+      FactoryGuy.store.query('company', { name: 'Dude' }).then(function(companies) {
         equal(companies.mapBy('id') + '', companies1.mapBy('id') + '');
 
-        FactoryGuy.get('store').query('company', { type: 'Small' }).then(function(companies) {
+        FactoryGuy.store.query('company', { type: 'Small' }).then(function(companies) {
           equal(companies.mapBy('id') + '', companies2.mapBy('id') + '');
           done();
         });
@@ -699,8 +699,8 @@ SharedBehavior.handleQueryTests = function() {
       mockQuery('company', { name: 'Dude' }).returns({ models: companies });
       mockQuery('company', { type: 'Small', name: 'Dude' }).returns({ models: companies });
 
-      let request1 = FactoryGuy.get('store').query('company', { name: 'Dude' });
-      let request2 = FactoryGuy.get('store').query('company', { type: 'Small', name: 'Dude' });
+      let request1 = FactoryGuy.store.query('company', { name: 'Dude' });
+      let request2 = FactoryGuy.store.query('company', { type: 'Small', name: 'Dude' });
 
       request1.then(function(returnedCompanies) {
         equal(companies.mapBy('id') + '', returnedCompanies.mapBy('id') + '');
@@ -722,11 +722,11 @@ SharedBehavior.handleQueryTests = function() {
       let companies2 = makeList('company', 2);
 
       let queryHandler = mockQuery('company', { name: 'Dude' }).returns({ models: companies1 });
-      FactoryGuy.get('store').query('company', { name: 'Dude' }).then(function(companies) {
+      FactoryGuy.store.query('company', { name: 'Dude' }).then(function(companies) {
         equal(companies.mapBy('id') + '', companies1.mapBy('id') + '');
 
         queryHandler.withParams({ type: 'Small' }).returns({ models: companies2 });
-        FactoryGuy.get('store').query('company', { type: 'Small' }).then(function(companies) {
+        FactoryGuy.store.query('company', { type: 'Small' }).then(function(companies) {
           equal(companies.mapBy('id') + '', companies2.mapBy('id') + '');
           done();
         });
@@ -786,7 +786,7 @@ SharedBehavior.handleQueryRecordTests = function() {
     });
   });
 
-  test("have access to handler being used by mockjack", function() {
+  test("have access to handler being used by mockjax", function() {
     let mock = mockQueryRecord('user');
     ok(mock.handler);
   });
@@ -796,7 +796,7 @@ SharedBehavior.handleQueryRecordTests = function() {
       let done = assert.async();
 
       mockQueryRecord('user').fails();
-      FactoryGuy.get('store').queryRecord('user', {})
+      FactoryGuy.store.queryRecord('user', {})
         .catch(()=> {
           ok(true);
           done();
@@ -818,13 +818,13 @@ SharedBehavior.handleQueryRecordTests = function() {
       done();
     });
 
-    FactoryGuy.get('store').query('company', queryParams);
+    FactoryGuy.store.query('company', queryParams);
   });
 
   test("with no parameters matches queryRequest with any parameters", function(assert) {
     var done = assert.async();
     mockQueryRecord('user');
-    FactoryGuy.get('store').queryRecord('user', { name: 'Bob' })
+    FactoryGuy.store.queryRecord('user', { name: 'Bob' })
       .then(()=> {
         ok(true);
         done();
@@ -844,11 +844,11 @@ SharedBehavior.handleQueryRecordTests = function() {
 
       let bob = build('user', { name: 'Bob' });
       mockQueryRecord('user', { name: 'Bob' }).returns({ json: bob });
-      FactoryGuy.get('store').queryRecord('user', { name: 'Bob' }).then(function(user) {
+      FactoryGuy.store.queryRecord('user', { name: 'Bob' }).then(function(user) {
         equal(user.id, bob.get('id'));
         equal(user.get('name'), bob.get('name'));
         // makes the user after getting query response
-        equal(FactoryGuy.get('store').peekAll('user').get('content').length, 1);
+        equal(FactoryGuy.store.peekAll('user').get('content').length, 1);
         done();
       });
     });
@@ -861,9 +861,9 @@ SharedBehavior.handleQueryRecordTests = function() {
       let bob = make('user');
       mockQueryRecord('user', { name: 'Bob' }).returns({ model: bob });
 
-      FactoryGuy.get('store').queryRecord('user', { name: 'Bob' }).then(function(user) {
+      FactoryGuy.store.queryRecord('user', { name: 'Bob' }).then(function(user) {
         equal(user, bob, "returns the same user");
-        equal(FactoryGuy.get('store').peekAll('user').get('content').length, 1, "does not create a new model");
+        equal(FactoryGuy.store.peekAll('user').get('content').length, 1, "does not create a new model");
         done();
       });
     });
@@ -876,9 +876,9 @@ SharedBehavior.handleQueryRecordTests = function() {
       let bob = make('user');
       mockQueryRecord('user', { name: 'Bob' }).returns({ id: bob.id });
 
-      FactoryGuy.get('store').queryRecord('user', { name: 'Bob' }).then(function(user) {
+      FactoryGuy.store.queryRecord('user', { name: 'Bob' }).then(function(user) {
         equal(user, bob, "returns the same user");
-        equal(FactoryGuy.get('store').peekAll('user').get('content').length, 1, "does not create a new model");
+        equal(FactoryGuy.store.peekAll('user').get('content').length, 1, "does not create a new model");
         done();
       });
     });
@@ -894,10 +894,10 @@ SharedBehavior.handleQueryRecordTests = function() {
       let company2 = build('company');
       mockQueryRecord('company', { type: 'Small' }).returns({ json: company2 });
 
-      FactoryGuy.get('store').queryRecord('company', { name: 'Dude' }).then(function(company) {
+      FactoryGuy.store.queryRecord('company', { name: 'Dude' }).then(function(company) {
         equal(company.get('id'), company1.get('id'));
 
-        FactoryGuy.get('store').queryRecord('company', { type: 'Small' }).then(function(company) {
+        FactoryGuy.store.queryRecord('company', { type: 'Small' }).then(function(company) {
           equal(company.get('id'), company2.get('id'));
           done();
         });
@@ -913,11 +913,11 @@ SharedBehavior.handleQueryRecordTests = function() {
       let company2 = build('company');
 
       let mockQuery = mockQueryRecord('company', { name: 'Dude' }).returns({ json: company1 });
-      FactoryGuy.get('store').queryRecord('company', { name: 'Dude' }).then(function(company) {
+      FactoryGuy.store.queryRecord('company', { name: 'Dude' }).then(function(company) {
         equal(company.get('id'), company1.get('id'));
 
         mockQuery.withParams({ type: 'Small' }).returns({ json: company2 });
-        FactoryGuy.get('store').queryRecord('company', { type: 'Small' }).then(function(company) {
+        FactoryGuy.store.queryRecord('company', { type: 'Small' }).then(function(company) {
           equal(company.get('id'), company2.get('id'));
           done();
         });
@@ -939,11 +939,11 @@ SharedBehavior.handleCreateTests = function() {
       mockCreate('profile', {
         match: { description: customDescription }
       });
-      ok(FactoryGuy.get('store').peekAll('profile').get('content.length') === 0);
-      FactoryGuy.get('store').createRecord('profile', {
+      ok(FactoryGuy.store.peekAll('profile').get('content.length') === 0);
+      FactoryGuy.store.createRecord('profile', {
         description: customDescription
       }).save().then(function(profile) {
-        ok(FactoryGuy.get('store').peekAll('profile').get('content.length') === 1, 'No extra records created');
+        ok(FactoryGuy.store.peekAll('profile').get('content.length') === 1, 'No extra records created');
         ok(profile instanceof Profile, 'Creates the correct type of record');
         ok(profile.get('description') === customDescription, 'Passes along the match attributes');
         done();
@@ -958,7 +958,7 @@ SharedBehavior.handleCreateTests = function() {
       let done = assert.async();
       mockCreate('profile');
 
-      FactoryGuy.get('store').createRecord('profile', { description: 'whatever' }).save().then(function(profile) {
+      FactoryGuy.store.createRecord('profile', { description: 'whatever' }).save().then(function(profile) {
         ok(profile.id === "1");
         ok(profile.get('description') === 'whatever');
         done();
@@ -974,7 +974,7 @@ SharedBehavior.handleCreateTests = function() {
       mockCreate('profile');
 
       let promises = [1, 2, 3].map(function() {
-        return FactoryGuy.get('store').createRecord('profile', { description: 'whatever' }).save();
+        return FactoryGuy.store.createRecord('profile', { description: 'whatever' }).save();
       });
 
       Ember.RSVP.all(promises).then(function(profiles) {
@@ -999,7 +999,7 @@ SharedBehavior.handleCreateTests = function() {
 
       mockCreate('profile', { match: { description: customDescription } });
 
-      FactoryGuy.get('store').createRecord('profile', {
+      FactoryGuy.store.createRecord('profile', {
         description: customDescription, created_at: date
       }).save().then(function(profile) {
         ok(profile instanceof Profile);
@@ -1020,7 +1020,7 @@ SharedBehavior.handleCreateTests = function() {
         match: { description: customDescription, created_at: date }
       });
 
-      FactoryGuy.get('store').createRecord('profile', {
+      FactoryGuy.store.createRecord('profile', {
         description: customDescription, created_at: date
       }).save().then(function(profile) {
         ok(profile instanceof Profile);
@@ -1042,7 +1042,7 @@ SharedBehavior.handleCreateTests = function() {
         returns: { created_at: date, description: 'mano' }
       });
 
-      FactoryGuy.get('store').createRecord('profile').save().then(function(profile) {
+      FactoryGuy.store.createRecord('profile').save().then(function(profile) {
         ok(profile.get("created_at") + '' === date + '');
         done();
       });
@@ -1055,7 +1055,7 @@ SharedBehavior.handleCreateTests = function() {
       let company = make('company');
       mockCreate('profile', { match: { company: company } });
 
-      FactoryGuy.get('store').createRecord('profile', { company: company }).save().then(function(profile) {
+      FactoryGuy.store.createRecord('profile', { company: company }).save().then(function(profile) {
         ok(profile.get('company') === company);
         done();
       });
@@ -1068,7 +1068,7 @@ SharedBehavior.handleCreateTests = function() {
       let group = make('group');
       mockCreate('profile', { match: { group: group } });
 
-      FactoryGuy.get('store').createRecord('profile', { group: group }).save().then(function(profile) {
+      FactoryGuy.store.createRecord('profile', { group: group }).save().then(function(profile) {
         ok(profile.get('group') === group);
         done();
       });
@@ -1089,7 +1089,7 @@ SharedBehavior.handleCreateTests = function() {
         returns: { created_at: new Date() }
       });
 
-      FactoryGuy.get('store').createRecord('profile', {
+      FactoryGuy.store.createRecord('profile', {
         description: customDescription, company: company, group: group
       }).save().then(function(profile) {
         ok(profile.get('created_at').toString() === date.toString());
@@ -1107,7 +1107,7 @@ SharedBehavior.handleCreateTests = function() {
       let done = assert.async();
       mockCreate('profile').fails();
 
-      FactoryGuy.get('store').createRecord('profile').save()
+      FactoryGuy.store.createRecord('profile').save()
         .catch(()=> {
           ok(true);
           done();
@@ -1122,7 +1122,7 @@ SharedBehavior.handleCreateTests = function() {
       let errors = { errors: { description: ['bad'] } };
       mockCreate('profile').fails({ status: 422, response: errors });
 
-      let profile = FactoryGuy.get('store').createRecord('profile');
+      let profile = FactoryGuy.store.createRecord('profile');
       profile.save()
         .catch(()=> {
           //let errors = invalidError.errors[0];
@@ -1147,7 +1147,7 @@ SharedBehavior.handleCreateTests = function() {
         match: { description: description }
       }).fails();
 
-      FactoryGuy.get('store').createRecord('profile', { description: description }).save()
+      FactoryGuy.store.createRecord('profile', { description: description }).save()
         .catch(()=> {
           ok(true);
           done();
@@ -1161,7 +1161,7 @@ SharedBehavior.handleCreateTests = function() {
 
       mockCreate('profile', { match: { description: 'correct description' } });
 
-      FactoryGuy.get('store').createRecord('profile', { description: 'wrong description' }).save()
+      FactoryGuy.store.createRecord('profile', { description: 'wrong description' }).save()
         .catch(()=> {
           ok(true);
           done();
@@ -1181,7 +1181,7 @@ SharedBehavior.handleCreateTests = function() {
 
       mockCreate('profile').match({ description: customDescription });
 
-      FactoryGuy.get('store').createRecord('profile', {
+      FactoryGuy.store.createRecord('profile', {
         description: customDescription, created_at: date
       }).save().then(function(profile) {
         ok(profile instanceof Profile);
@@ -1200,7 +1200,7 @@ SharedBehavior.handleCreateTests = function() {
 
       mockCreate('profile').match({ description: customDescription, created_at: date });
 
-      FactoryGuy.get('store').createRecord('profile', {
+      FactoryGuy.store.createRecord('profile', {
         description: customDescription, created_at: date
       }).save().then(function(profile) {
         ok(profile instanceof Profile);
@@ -1219,7 +1219,7 @@ SharedBehavior.handleCreateTests = function() {
 
       mockCreate('profile').match({ company: company });
 
-      FactoryGuy.get('store').createRecord('profile', { company: company }).save().then(function(profile) {
+      FactoryGuy.store.createRecord('profile', { company: company }).save().then(function(profile) {
         ok(profile.get('company') === company);
         done();
       });
@@ -1232,7 +1232,7 @@ SharedBehavior.handleCreateTests = function() {
       let group = make('group');
       mockCreate('profile').match({ group: group });
 
-      FactoryGuy.get('store').createRecord('profile', { group: group }).save().then(function(profile) {
+      FactoryGuy.store.createRecord('profile', { group: group }).save().then(function(profile) {
         ok(profile.get('group') === group);
         done();
       });
@@ -1247,7 +1247,7 @@ SharedBehavior.handleCreateTests = function() {
 
       mockCreate('profile').returns({ created_at: date });
 
-      FactoryGuy.get('store').createRecord('profile').save().then(function(profile) {
+      FactoryGuy.store.createRecord('profile').save().then(function(profile) {
         ok(profile.get('created_at').toString() === date.toString());
         done();
       });
@@ -1262,7 +1262,7 @@ SharedBehavior.handleCreateTests = function() {
 
       mockCreate('profile').returns({ id: id });
 
-      FactoryGuy.get('store').createRecord('profile').save().then(function(profile) {
+      FactoryGuy.store.createRecord('profile').save().then(function(profile) {
         assert.equal(profile.get('id'), id);
         done();
       });
@@ -1282,7 +1282,7 @@ SharedBehavior.handleCreateTests = function() {
         .match({ description: customDescription, company: company, group: group })
         .andReturn({ created_at: date });
 
-      FactoryGuy.get('store').createRecord('profile', {
+      FactoryGuy.store.createRecord('profile', {
         description: customDescription, company: company, group: group
       }).save().then(function(profile) {
         ok(profile.get('created_at').toString() === date.toString());
@@ -1300,7 +1300,7 @@ SharedBehavior.handleCreateTests = function() {
       let done = assert.async();
       mockCreate('profile').fails();
 
-      FactoryGuy.get('store').createRecord('profile').save()
+      FactoryGuy.store.createRecord('profile').save()
         .catch(()=> {
           ok(true);
           done();
@@ -1316,7 +1316,7 @@ SharedBehavior.handleCreateTests = function() {
 
       mockCreate('profile').match({ description: description }).fails();
 
-      FactoryGuy.get('store').createRecord('profile', { description: description }).save()
+      FactoryGuy.store.createRecord('profile', { description: description }).save()
         .catch(()=> {
           ok(true);
           done();
@@ -1331,7 +1331,7 @@ SharedBehavior.handleCreateTests = function() {
       let errors = { errors: { description: ['bad'] } };
       mockCreate('profile').fails({ status: 422, response: errors });
 
-      let profile = FactoryGuy.get('store').createRecord('profile');
+      let profile = FactoryGuy.store.createRecord('profile');
       profile.save()
         .catch(()=> {
           //let errors = profile.get('errors.messages')[0];
@@ -1512,7 +1512,7 @@ SharedBehavior.handleDeleteTests = function() {
       mockDelete('profile', profile.id);
 
       profile.destroyRecord().then(function() {
-        equal(FactoryGuy.get('store').peekAll('profile').get('content.length'), 0);
+        equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
         done();
       });
     });

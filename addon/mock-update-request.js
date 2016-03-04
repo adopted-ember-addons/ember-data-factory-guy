@@ -57,14 +57,14 @@ let MockUpdateRequest = function(url, model, options) {
     } else {
       // need to use serialize instead of toJSON to handle polymorphic belongsTo
       let json = model.serialize({includeId: true});
-      this.responseText = FactoryGuy.get('fixtureBuilder').normalize(model.constructor.modelName, json);
+      this.responseText = FactoryGuy.fixtureBuilder.normalize(model.constructor.modelName, json);
       this.status = 200;
     }
   };
   let requestConfig = {
     url: url,
     dataType: 'json',
-    type: FactoryGuy.get('updateHTTPMethod'),
+    type: FactoryGuy.updateHTTPMethod(),
     response: this.handler
   };
 

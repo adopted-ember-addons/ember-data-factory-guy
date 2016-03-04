@@ -5,7 +5,7 @@ import FactoryGuyTestHelper from '../factory-guy-test-helper';
 import loadFactories from './load-factories';
 
 export default function(container) {
-  FactoryGuy.set('store', container.lookup('service:store'));
+  FactoryGuy.setStore(container.lookup('service:store'));
   FactoryGuyTestHelper.set('container', container);
   FactoryGuy.resetDefinitions();
   loadFactories();

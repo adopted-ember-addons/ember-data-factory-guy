@@ -13,7 +13,29 @@ import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 module('FactoryGuy', inlineSetup(App, '-json-api'));
 
 test("has store set in initializer", function () {
-  ok(FactoryGuy.get('store') instanceof DS.Store);
+  ok(FactoryGuy.store instanceof DS.Store);
+});
+
+test('make throws excpetion if there is NO store setup', function(assert) {
+  FactoryGuy.store = null;
+  assert.throws(
+    function() {
+      make('profile');
+    },
+    function( err ) {
+      return !!err.toString().match(/Use manualSetup\(this.container\) in model\/component test/);
+    });
+});
+
+test('makeList throws excpetion if there is NO store setup', function(assert) {
+  FactoryGuy.store = null;
+  assert.throws(
+    function() {
+      makeList('profile');
+    },
+    function( err ) {
+      return !!err.toString().match(/Use manualSetup\(this.container\) in model\/component test/);
+    });
 });
 
 test("#make returns a model instance", function (assert) {
@@ -30,7 +52,7 @@ test("exposes makeList method which is shortcut for FactoryGuy.makeList", functi
   equal(users.length, 2);
   ok(users[0] instanceof User);
   ok(users[1] instanceof User);
-  equal(FactoryGuy.get('store').peekAll('user').get('content').length, 2);
+  equal(FactoryGuy.store.peekAll('user').get('content').length, 2);
 });
 
 test("exposes build method which is shortcut for FactoryGuy.build", function () {
@@ -47,7 +69,7 @@ test("exposes clearStore method which is a shortcut for FactoryGuy.clearStore", 
   Ember.run(function () {
     makeList('user', 2);
     clearStore();
-    equal(FactoryGuy.get('store').peekAll('user').get('content').length, 0);
+    equal(FactoryGuy.store.peekAll('user').get('content').length, 0);
   });
 });
 
@@ -64,8 +86,8 @@ test("#clearStore clears the store of models, and resets the model definition", 
 
     FactoryGuy.clearStore();
 
-    equal(FactoryGuy.get('store').peekAll('user').get('content.length'), 0);
-    equal(FactoryGuy.get('store').peekAll('project').get('content.length'), 0);
+    equal(FactoryGuy.store.peekAll('user').get('content.length'), 0);
+    equal(FactoryGuy.store.peekAll('project').get('content.length'), 0);
 
     for (model in FactoryGuy.modelDefinitions) {
       definition = FactoryGuy.modelDefinitions[model];
@@ -148,7 +170,7 @@ test("without a number but with options returns array of models", function () {
   ok(profiles.objectAt(1).get('company.name') === 'Silly corp');
   ok(profiles.objectAt(1).get('description') === 'Noodles');
   ok(profiles.objectAt(2).get('superHero.name') === 'BatMan');
-  equal(FactoryGuy.get('store').peekAll('profile').get('content').length, 3);
+  equal(FactoryGuy.store.peekAll('profile').get('content').length, 3);
 });
 
 
@@ -790,12 +812,12 @@ test("using diverse attributes", function() {
 
 module('FactoryGuy and JSONAPI', inlineSetup(App, '-json-api'));
 test('it knows how to update with JSON-API', function (assert) {
-  const method = FactoryGuy.get('updateHTTPMethod');
+  const method = FactoryGuy.updateHTTPMethod();
   assert.equal(method, 'PATCH');
 });
 
 module('FactoryGuy and REST', inlineSetup(App, '-rest'));
 test('it knows how to update with RESTSerializer', function (assert) {
-  const method = FactoryGuy.get('updateHTTPMethod');
+  const method = FactoryGuy.updateHTTPMethod();
   assert.equal(method, 'PUT');
 });

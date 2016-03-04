@@ -6,7 +6,7 @@ export default class MockFindAllRequest extends MockFindRequest {
   constructor(modelName) {
     super(modelName);
     this.setValidReturnsKeys('models json ids headers'.w());
-    this.setResponseJson(FactoryGuy.getFixtureBuilder().convertForBuild(modelName, []));
+    this.setResponseJson(FactoryGuy.fixtureBuilder.convertForBuild(modelName, []));
   }
 
 }

@@ -926,7 +926,7 @@ Usage:
 
 ```js
   import FactoryGuy, { make, build, buildList, mockQuery } from 'ember-data-factory-guy';
-  let store = FactoryGuy.get('store');
+  let store = FactoryGuy.store;
 
   // This simulates a query that returns no results
   mockQuery('user', {age: 10});
@@ -987,7 +987,7 @@ Usage:
 
 ```js
   import FactoryGuy, { make, build, mockQueryRecord } from 'ember-data-factory-guy';
-  let store = FactoryGuy.get('store');
+  let store = FactoryGuy.store;
 
   // This simulates a query that returns no results
   mockQueryRecord('user', {age: 10});

@@ -10,7 +10,7 @@ class MockGetRequest {
     this.status = 200;
     this.succeed = true;
     this.responseHeaders = {};
-    this.responseJson = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, {});
+    this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(modelName, {});
     this.validReturnsKeys = [];
     this.handler = this.setupHandler();
   }
@@ -43,7 +43,7 @@ class MockGetRequest {
     switch (responseKey) {
 
       case 'id':
-         model = FactoryGuy.get('store').peekRecord(this.modelName, options.id);
+         model = FactoryGuy.store.peekRecord(this.modelName, options.id);
 
         Ember.assert(`argument ( id ) should refer to a model of type ${this.modelName} that is in
          the store. But no ${this.modelName} with id ${options.id} was found in the store`,
@@ -58,11 +58,11 @@ class MockGetRequest {
           ${Ember.typeOf(model)}`, (model instanceof DS.Model));
 
         json = { id: model.id, type: model.constructor.modelName };
-        this.responseJson = FactoryGuy.getFixtureBuilder().convertForBuild(this.modelName, json);
+        this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
         break;
 
       case 'ids':
-        const store = FactoryGuy.get('store');
+        const store = FactoryGuy.store;
         models = options.ids.map((id)=> store.peekRecord(this.modelName, id));
         return this.returns({ models });
 
@@ -75,7 +75,7 @@ class MockGetRequest {
           return { id: model.id, type: model.constructor.modelName };
         });
 
-        json = FactoryGuy.getFixtureBuilder().convertForBuild(this.modelName, json);
+        json = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
         this.setResponseJson(json);
         break;
 
@@ -86,7 +86,7 @@ class MockGetRequest {
       case 'attrs':
         let currentId = this.responseJson.get('id');
         let modelParams = Ember.merge({id: currentId}, options.attrs);
-        json = FactoryGuy.getFixtureBuilder().convertForBuild(this.modelName, modelParams);
+        json = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, modelParams);
         this.setResponseJson(json);
         break;
 
@@ -118,7 +118,7 @@ class MockGetRequest {
     this.succeed = false;
     this.status = options.status || 500;
     if (options.response) {
-      let errors = FactoryGuy.getFixtureBuilder().convertResponseErrors(options.response);
+      let errors = FactoryGuy.fixtureBuilder.convertResponseErrors(options.response);
       this.responseJson = errors;
     }
     return this;

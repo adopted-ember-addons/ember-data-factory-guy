@@ -29,7 +29,7 @@ let ModelDefinition = function (model, config) {
    @returns {DS.Relationship} relationship object if the field is a relationship, null if not
    */
   let getRelationship = function (field) {
-    let modelClass = FactoryGuy.get('store').modelFor(modelName);
+    let modelClass = FactoryGuy.store.modelFor(modelName);
     let relationship = Ember.get(modelClass, 'relationshipsByName').get(field);
     return relationship || null;
   };

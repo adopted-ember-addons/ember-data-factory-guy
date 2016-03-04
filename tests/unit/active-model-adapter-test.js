@@ -23,7 +23,7 @@ test("returns camelCase attributes", function (assert) {
       returns: {camel_case_description: customDescription}
     });
 
-    FactoryGuy.get('store').createRecord('profile', {
+    FactoryGuy.store.createRecord('profile', {
       camel_case_description: 'description'
     }).save().then(function (profile) {
       ok(profile.get('camelCaseDescription') === customDescription);
@@ -167,7 +167,7 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) attribute"
 
 
 test("using custom serialize keys function for transforming attributes and relationship keys", function () {
-  let serializer = FactoryGuy.get('store').serializerFor();
+  let serializer = FactoryGuy.store.serializerFor();
 
   let savedKeyForAttributeFn = serializer.keyForAttribute;
   serializer.keyForAttribute = Ember.String.dasherize;

@@ -9,7 +9,7 @@ let MockCreateRequest = function (url, modelName, options) {
   let returnArgs = options.returns;
   let responseJson = {};
   let expectedRequest = {};
-  let store = FactoryGuy.get('store');
+  let store = FactoryGuy.store;
 
   this.calculate = function () {
     if (matchArgs) {
@@ -66,7 +66,7 @@ let MockCreateRequest = function (url, modelName, options) {
     succeed = false;
     status = options.status || 500;
     if (options.response) {
-      let errors = FactoryGuy.getFixtureBuilder().convertResponseErrors(options.response);
+      let errors = FactoryGuy.fixtureBuilder.convertResponseErrors(options.response);
       responseJson = errors;
     }
     return this;
@@ -151,7 +151,7 @@ let MockCreateRequest = function (url, modelName, options) {
       // Setting the id at the very last minute, so that calling calculate
       // again and again does not mess with id, and it's reset for each call
       finalResponseJson.id = modelId();
-      finalResponseJson = FactoryGuy.getFixtureBuilder().convertForBuild(modelName, finalResponseJson);
+      finalResponseJson = FactoryGuy.fixtureBuilder.convertForBuild(modelName, finalResponseJson);
     } else {
       this.status = status;
     }
