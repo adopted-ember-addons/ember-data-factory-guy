@@ -61,10 +61,15 @@ let extractArguments = function (...args) {
 };
 
 let FactoryGuy = Ember.Object.extend({
+  theStore: null,
 
+  // this is stupid .. should not have allowed this to happen in the first place
+  // will fix by making FactoryGuy a class object once and for all
   store: Ember.computed({
+    get(key) { return this.theStore; },
     set(_, aStore) {
       Ember.assert("FactoryGuy#set('store') needs a valid store instance.You passed in [" + aStore + "]", aStore instanceof DS.Store);
+      this.theStore = aStore;
       return aStore;
     }
   }),
@@ -342,8 +347,9 @@ let FactoryGuy = Ember.Object.extend({
     let args = extractArguments.apply(this, arguments);
 
     Ember.assert(
-      "FactoryGuy does not have the application's store." +
-      " Use FactoryGuy.set('store', store) before making any fixtures", this.get('store')
+      `FactoryGuy does not have the application's store.
+       Use manualSetup(this.container) in model/component test
+       before using make/makeList`, this.get('store')
     );
 
     let modelName = lookupModelForFixtureName(args.name);
@@ -382,8 +388,11 @@ let FactoryGuy = Ember.Object.extend({
    @returns {Array} list of json fixtures or records depending on the adapter type
    */
   makeList(...args) {
-    Ember.assert(`FactoryGuy does not have the application's store.
-      Use FactoryGuy.set('store', store) before making any fixtures`, this.get('store'));
+    Ember.assert(
+      `FactoryGuy does not have the application's store.
+       Use manualSetup(this.container) in model/component test
+       before using make/makeList`, this.get('store')
+    );
 
     Ember.assert("makeList needs at least a name ( of model or named factory definition )", args.length >= 1);
 
