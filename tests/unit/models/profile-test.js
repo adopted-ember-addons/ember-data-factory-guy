@@ -15,7 +15,7 @@ test('using only make for profile with company association', function() {
 });
 
 test('composing a profile with a company association by making both', function() {
-  let company = make('company')
+  let company = make('company');
   let profile = make('profile', {company: company});
   ok(profile.get('company.profile') === profile);
 });
