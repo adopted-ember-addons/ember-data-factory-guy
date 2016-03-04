@@ -75,6 +75,30 @@ test("#clearStore clears the store of models, and resets the model definition", 
   });
 });
 
+module('FactoryGuy#build', inlineSetup(App,'-rest'));
+
+test("with one level of hasMany relationship", function () {
+  let hats = buildList('big-hat', 2);
+  let user = build('user', {hats: hats});
+
+  ok(user['user']);
+  equal(user['big-hats'].length, 2);
+});
+
+//test("with two level of relationship", function () {
+  //let outfit = build('outfit');
+  //let hats = buildList('big-hat', {outfit: outfit});
+  //let user = build('user', {hats: hats});
+
+  //console.log(make('small-company')+'')
+  //console.log(user);
+  //console.log(hats);
+  //ok(user['user']);
+  //equal(user['big-hats'].length, 1);
+  //equal(user['outfit'].length, 1);
+//});
+
+
 module('FactoryGuy#buildList', inlineSetup(App,'-rest'));
 
 test("without a number returns a empty json payload", function () {

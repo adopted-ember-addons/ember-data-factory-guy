@@ -25,6 +25,12 @@ test("returns an attribute with a key", function () {
   equal(user.get('name'), 'User1');
 });
 
+//test("returns an attribute with a key", function () {
+//  let user = build('user');
+//  equal(user.get('id'), 1);
+//  equal(user.get('name'), 'User1');
+//});
+
 module(title(adapter, 'FactoryGuy#buildList get'), inlineSetup(App, adapterType));
 
 test("returns array of all attributes with no key", function () {
