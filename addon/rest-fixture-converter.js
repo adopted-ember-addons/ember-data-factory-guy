@@ -1,8 +1,8 @@
 import Ember from 'ember';
 
 const {
-        String: { underscore }
-        } = Ember;
+  String: { underscore }
+} = Ember;
 
 /**
  Convert base fixture to a REST format fixture, and while it's converting

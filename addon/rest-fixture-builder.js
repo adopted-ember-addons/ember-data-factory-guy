@@ -1,45 +1,16 @@
 import Ember from 'ember';
 import FixtureBuilder from './fixture-builder';
 import RESTFixtureConverter from './rest-fixture-converter';
+import RESTJson from './rest-json';
 /**
  Fixture Builder for REST based Serializer, like ActiveModelSerializer or
  RESTSerializer
 
  */
-
-class GetClass {
-
-  constructor(modelName, json) {
-    this.modelName = modelName;
-    this.json = json;
+class RESTFixtureBuilder extends FixtureBuilder {
+  constructor(store) {
+    super(store);
   }
-
-  get(key) {
-    let attrs = this.json[Object.getOwnPropertyNames(this.json)[0]];
-    if (attrs === "array") {
-      if (Ember.isEmpty(key)) {
-        return attrs;
-      }
-      if (typeof key === 'number') {
-        return attrs[key];
-      }
-      if (key === 'firstObject') {
-        return attrs[0];
-      }
-      if (key === 'lastObject') {
-        return attrs[attrs.length - 1];
-      }
-    } else {
-      if (Ember.isEmpty(key)) {
-        return attrs;
-      }
-      return attrs[key];
-    }
-  }
-}
-
-let RESTFixtureBuilder = function(store) {
-  FixtureBuilder.call(this, store);
   /**
    Map single object to response json.
 
@@ -49,13 +20,13 @@ let RESTFixtureBuilder = function(store) {
    @param {Object} json Json object from record.toJSON
    @return {Object} responseJson
    */
-  this.normalize = function(modelName, payload) {
+  normalize(modelName, payload) {
     return { [modelName]: payload };
-  };
+  }
 
-  this.extractId = function(modelName, payload) {
+  extractId(modelName, payload) {
     return Ember.get(payload, `${modelName}.id`);
-  };
+  }
 
   /**
    Convert to the ember-data REST adapter specification
@@ -64,13 +35,13 @@ let RESTFixtureBuilder = function(store) {
    @param {String} fixture
    @returns {*} new converted fixture
    */
-  this.convertForBuild = function(modelName, fixture) {
-    let json = new RESTFixtureConverter(store).convert(modelName, fixture);
-    let proxy = new GetClass(modelName, json);
+  convertForBuild(modelName, fixture) {
+    let json = (new RESTFixtureConverter(this.store)).convert(modelName, fixture);
+    let proxy = new RESTJson(modelName, json);
     //json.proxy = proxy;
     json.get = (key)=>proxy.get(key);
     return json;
-  };
-};
+  }
+}
 
 export default RESTFixtureBuilder;

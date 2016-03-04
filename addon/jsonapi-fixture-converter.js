@@ -1,7 +1,10 @@
 import Ember from 'ember';
 
-let JSONAPIFixtureConverter = function (store) {
+class JSONAPIFixtureConverter {
 
+  constructor(store) {
+    this.store = store;
+  }
   /**
    Convert an initial fixture into JSONAPI document
 
@@ -17,23 +20,23 @@ let JSONAPIFixtureConverter = function (store) {
    @param {Object} fixture initial raw fixture
    @returns {{data: {type: *, id: *, attributes}, included: Array}}
    */
-  this.convert = function (modelName, fixture) {
+  convert(modelName, fixture) {
     let included = [];
     let data;
 
     if (Ember.typeOf(fixture) === 'array') {
-      data = fixture.map(function (single) {
-        return convertSingle(modelName, single, included);
+      data = fixture.map((single)=> {
+        return this.convertSingle(modelName, single, included);
       });
     } else {
-      data = convertSingle(modelName, fixture, included);
+      data = this.convertSingle(modelName, fixture, included);
     }
     let jsonApiData = {data: data};
     if (!Ember.isEmpty(included)) {
       jsonApiData.included = included;
     }
     return jsonApiData;
-  };
+  }
   /**
    In order to conform to the way ember data expects to handle relationships
    in a json payload ( during deserialization ), convert a record ( model instance )
@@ -42,7 +45,7 @@ let JSONAPIFixtureConverter = function (store) {
    @param {Object} record
    @param {Object} relationship
    */
-  let normalizeJSONAPIAssociation = function (record, relationship) {
+  normalizeJSONAPIAssociation(record, relationship) {
     if (Ember.typeOf(record) === 'object') {
       if (relationship.options.polymorphic) {
         return {type: Ember.String.dasherize(record.type), id: record.id};
@@ -52,7 +55,7 @@ let JSONAPIFixtureConverter = function (store) {
     } else {
       return {type: record.constructor.modelName, id: record.id};
     }
-  };
+  }
   /**
    Recursively descend into the fixture json, looking for relationships that are
    either record instances or other fixture objects that need to be normalized
@@ -63,18 +66,18 @@ let JSONAPIFixtureConverter = function (store) {
    @param included
    @returns {{type: *, id: *, attributes}}
    */
-  let convertSingle = function (modelName, fixture, included) {
+  convertSingle(modelName, fixture, included) {
     let data = {
       type: modelName,
       id: fixture.id,
-      attributes: extractAttributes(modelName, fixture),
+      attributes: this.extractAttributes(modelName, fixture),
     };
-    let relationships = extractRelationships(modelName, fixture, included);
+    let relationships = this.extractRelationships(modelName, fixture, included);
     if (Object.getOwnPropertyNames(relationships).length > 0) {
       data.relationships = relationships;
     }
     return data;
-  };
+  }
   /*
    Find the attributes in the fixture.
 
@@ -82,27 +85,27 @@ let JSONAPIFixtureConverter = function (store) {
    @param fixture
    @returns {{}}
    */
-  let extractAttributes = function (modelName, fixture) {
+  extractAttributes(modelName, fixture) {
     let attributes = {};
-    store.modelFor(modelName).eachAttribute(function (attribute) {
+    this.store.modelFor(modelName).eachAttribute((attribute)=> {
       let attributeKey = attribute;
       if (fixture.hasOwnProperty(attribute)) {
         attributes[attributeKey] = fixture[attribute];
       }
     });
     return attributes;
-  };
+  }
   /*
    Add the model to included array unless it's already there.
    */
-  let addToIncluded = function (included, data) {
-    let found = Ember.A(included).find(function (model) {
+  addToIncluded(included, data) {
+    let found = Ember.A(included).find((model)=> {
       return model.id === data.id && model.type === data.type;
     });
     if (!found) {
       included.push(data);
     }
-  };
+  }
   /**
    Descend into relationships looking for records to transform to jsonapi standard, or
    record instances to convert to json
@@ -112,10 +115,10 @@ let JSONAPIFixtureConverter = function (store) {
    @param included
    @returns {{}}
    */
-  let extractRelationships = function (modelName, fixture, included) {
+  extractRelationships(modelName, fixture, included) {
     let relationships = {};
 
-    store.modelFor(modelName).eachRelationship(function (key, relationship) {
+    this.store.modelFor(modelName).eachRelationship((key, relationship)=> {
       let isPolymorphic = relationship.options.polymorphic;
       if (fixture.hasOwnProperty(key)) {
         if (relationship.kind === 'belongsTo') {
@@ -124,30 +127,30 @@ let JSONAPIFixtureConverter = function (store) {
             let embeddedFixture = belongsToRecord;
             // find possibly more embedded fixtures
             let relationshipType = isPolymorphic ? Ember.String.dasherize(embeddedFixture.type) : relationship.type;
-            let data = convertSingle(relationshipType, embeddedFixture, included);
-            addToIncluded(included, data);
-            relationships[relationship.key] = {data: normalizeJSONAPIAssociation(data, relationship)};
+            let data = this.convertSingle(relationshipType, embeddedFixture, included);
+            this.addToIncluded(included, data);
+            relationships[relationship.key] = {data: this.normalizeJSONAPIAssociation(data, relationship)};
           } else if (Ember.typeOf(belongsToRecord) === 'instance') {
-            relationships[relationship.key] = {data: normalizeJSONAPIAssociation(belongsToRecord, relationship)};
+            relationships[relationship.key] = {data: this.normalizeJSONAPIAssociation(belongsToRecord, relationship)};
           } else if (typeof belongsToRecord === 'string' || typeof belongsToRecord === 'number') {
             Ember.assert('Polymorphic relationships cannot be specified by ID', !isPolymorphic);
-            relationships[relationship.key] = {data: normalizeJSONAPIAssociation({id: belongsToRecord, type: relationship.type}, relationship)};
+            relationships[relationship.key] = {data: this.normalizeJSONAPIAssociation({id: belongsToRecord, type: relationship.type}, relationship)};
           }
         } else if (relationship.kind === 'hasMany') {
           let hasManyRecords = fixture[relationship.key];
           if (Ember.typeOf(hasManyRecords) === 'array') {
-            let records = hasManyRecords.map(function (hasManyRecord) {
+            let records = hasManyRecords.map((hasManyRecord)=> {
               if (Ember.typeOf(hasManyRecord) === 'object') {
                 let embeddedFixture = hasManyRecord;
                 let relationshipType = isPolymorphic ? Ember.String.dasherize(embeddedFixture.type) : relationship.type;
-                let data = convertSingle(relationshipType, embeddedFixture, included);
-                addToIncluded(included, data);
-                return normalizeJSONAPIAssociation(data, relationship);
+                let data = this.convertSingle(relationshipType, embeddedFixture, included);
+                this.addToIncluded(included, data);
+                return this.normalizeJSONAPIAssociation(data, relationship);
               } else if (Ember.typeOf(hasManyRecord) === 'instance') {
-                return normalizeJSONAPIAssociation(hasManyRecord, relationship);
+                return this.normalizeJSONAPIAssociation(hasManyRecord, relationship);
               } else if (typeof hasManyRecord === 'string' || typeof hasManyRecord === 'number') {
                 Ember.assert('Polymorphic relationships cannot be specified by ID', !isPolymorphic);
-                return normalizeJSONAPIAssociation({id: hasManyRecord, type: relationship.type}, relationship);
+                return this.normalizeJSONAPIAssociation({id: hasManyRecord, type: relationship.type}, relationship);
               }
             });
             relationships[relationship.key] = {data: records};
@@ -156,8 +159,8 @@ let JSONAPIFixtureConverter = function (store) {
       }
     });
     return relationships;
-  };
+  }
 
-};
+}
 
 export default JSONAPIFixtureConverter;

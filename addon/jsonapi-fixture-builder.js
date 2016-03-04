@@ -40,21 +40,23 @@ let getCommand = function(key) {
 /**
  Fixture Builder for JSONAPISerializer
  */
-let JSONAPIJsonBuilder = function(store) {
-  FixtureBuilder.call(this, store);
+class JSONAPIJsonBuilder extends FixtureBuilder {
 
-  this.updateHTTPMethod = 'PATCH';
+  constructor(store) {
+    super(store);
+    this.updateHTTPMethod = 'PATCH';
+  }
 
-  this.extractId = function(modelName, payload) {
+  extractId(modelName, payload) {
     return Ember.get(payload, 'data.id');
-  };
+  }
 
-  this.convertForBuild = function(modelName, fixture) {
-    let convertedFixture = new JSONAPIFixtureConverter(store).convert(modelName, fixture);
-    let json = new JSONAPIAttributeTransformer(store).transform(modelName, convertedFixture);
+  convertForBuild(modelName, fixture) {
+    let convertedFixture = (new JSONAPIFixtureConverter(this.store)).convert(modelName, fixture);
+    let json = new JSONAPIAttributeTransformer(this.store).transform(modelName, convertedFixture);
     json.get = getCommand.bind(json);
     return json;
-  };
-};
+  }
+}
 
 export default JSONAPIJsonBuilder;

@@ -1,34 +1,38 @@
 import JSONAPIFixtureConverter from './jsonapi-fixture-converter';
 import Ember from 'ember';
 
-export default function(store) {
+export default class {
+
+  constructor(store) {
+    this.store = store;
+  }
   /**
    Normalizes the serialized model to the expected API format
 
    @param modelName
    @param payload
    */
-  this.normalize = function (modelName, payload) {
+  normalize(modelName, payload) {
     return payload;
-  };
+  }
   /**
    Returns the ID for the model payload
 
    @param modelName
    @param payload
    */
-  this.extractId = function (modelName, payload) {
+  extractId(modelName, payload) {
     return payload.id;
-  };
+  }
   /**
    Convert fixture for FactoryGuy.build
 
    @param modelName
    @param fixture
    */
-  this.convertForBuild = function(modelName, fixture) {
+  convertForBuild(modelName, fixture) {
     return fixture;
-  };
+  }
   /**
    Convert to the ember-data JSONAPI adapter specification, since FactoryGuy#make
    pushes jsonapi data into the store
@@ -37,9 +41,9 @@ export default function(store) {
    @param {String} fixture
    @returns {*} new converted fixture
    */
-  this.convertForMake = function (modelName, fixture) {
-    return new JSONAPIFixtureConverter(store).convert(modelName, fixture);
-  };
+  convertForMake(modelName, fixture) {
+    return new JSONAPIFixtureConverter(this.store).convert(modelName, fixture);
+  }
 
   /**
    Convert simple ( older ember data format ) error hash:
@@ -53,7 +57,7 @@ export default function(store) {
    @param errors simple error hash
    @returns {{}}  JSONAPI formatted errors
    */
-  this.convertResponseErrors = function (object) {
+  convertResponseErrors(object) {
     let jsonAPIErrrors = [];
     Ember.assert('Your error REST Adapter style response must have an errors key. The errors hash format is: {errors: {description: ["bad"]}}', object.errors);
     let errors = object.errors;
@@ -64,5 +68,5 @@ export default function(store) {
       jsonAPIErrrors.push(newError);
     }
     return {errors: jsonAPIErrrors};
-  };
+  }
 }
