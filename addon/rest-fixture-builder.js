@@ -3,32 +3,40 @@ import FixtureBuilder from './fixture-builder';
 import RESTFixtureConverter from './rest-fixture-converter';
 /**
  Fixture Builder for REST based Serializer, like ActiveModelSerializer or
-  RESTSerializer
+ RESTSerializer
 
  */
 
-let getCommand = function(key) {
-  let attrs = this[Object.getOwnPropertyNames(this)[0]];
-  if (attrs === "array") {
-    if (Ember.isEmpty(key)) {
-      return attrs;
-    }
-    if (typeof key === 'number') {
+class GetClass {
+
+  constructor(modelName, json) {
+    this.modelName = modelName;
+    this.json = json;
+  }
+
+  get(key) {
+    let attrs = this.json[Object.getOwnPropertyNames(this.json)[0]];
+    if (attrs === "array") {
+      if (Ember.isEmpty(key)) {
+        return attrs;
+      }
+      if (typeof key === 'number') {
+        return attrs[key];
+      }
+      if (key === 'firstObject') {
+        return attrs[0];
+      }
+      if (key === 'lastObject') {
+        return attrs[attrs.length - 1];
+      }
+    } else {
+      if (Ember.isEmpty(key)) {
+        return attrs;
+      }
       return attrs[key];
     }
-    if (key === 'firstObject') {
-      return attrs[0];
-    }
-    if (key === 'lastObject') {
-      return attrs[attrs.length-1];
-    }
-  } else {
-    if (Ember.isEmpty(key)) {
-      return attrs;
-    }
-    return attrs[key];
   }
-};
+}
 
 let RESTFixtureBuilder = function(store) {
   FixtureBuilder.call(this, store);
@@ -42,7 +50,7 @@ let RESTFixtureBuilder = function(store) {
    @return {Object} responseJson
    */
   this.normalize = function(modelName, payload) {
-    return {[modelName]: payload};
+    return { [modelName]: payload };
   };
 
   this.extractId = function(modelName, payload) {
@@ -58,7 +66,9 @@ let RESTFixtureBuilder = function(store) {
    */
   this.convertForBuild = function(modelName, fixture) {
     let json = new RESTFixtureConverter(store).convert(modelName, fixture);
-    json.get = getCommand.bind(json);
+    let proxy = new GetClass(modelName, json);
+    //json.proxy = proxy;
+    json.get = (key)=>proxy.get(key);
     return json;
   };
 };

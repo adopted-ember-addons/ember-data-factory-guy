@@ -111,6 +111,7 @@ let ModelDefinition = function (model, config) {
     let relationship = getRelationship(attribute);
     if (relationship) {
       let payload = fixture[attribute];
+
       fixture[attribute] = payload.map((json)=>{
         let isInstance = Ember.typeOf(json) === "instance";
         return !isInstance && json.get ? json.get() : json;
@@ -125,6 +126,7 @@ let ModelDefinition = function (model, config) {
     if (relationship) {
       let payload = fixture[attribute];
       if (payload.get) {
+        //console.log('here2', 'attribute:', attribute, fixture[attribute], payload.get());
         // FactoryGuy already built this it's already built json
         fixture[attribute] = payload.get();
       } else {
