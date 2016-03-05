@@ -2,18 +2,19 @@ import DS from 'ember-data';
 import Ember from 'ember';
 
 export default DS.Transform.extend({
-  serialize: function(deserialized) {
-    return deserialized ? JSON.stringify(deserialized) : '{}';
+  serialize: function(value) {
+    console.log('serialize', value);
+    return value ? JSON.stringify(value) : '{}';
   },
-  deserialize: function(serialized) {
-    if (Ember.isEmpty(serialized)) {
+  deserialize: function(value) {
+    if (Ember.isEmpty(value)) {
       return {};
     }
-    if (Ember.typeOf(serialized) === "object") {
-      return serialized;
+    if (Ember.typeOf(value) === "object") {
+      return value;
     }
-    if (Ember.typeOf(serialized) === 'string') {
-      return JSON.parse(serialized);
+    if (Ember.typeOf(value) === 'string') {
+      return JSON.parse(value);
     }
   }
 });

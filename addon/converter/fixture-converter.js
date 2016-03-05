@@ -11,7 +11,6 @@ export default class {
   }
 
   transformRelationshipKey(relationship) {
-    if (!this.transformKeys) { return this.noTransformFn }
     let transformFn = this.getTransformKeyFunction(relationship.type, 'Relationship');
     return transformFn(relationship.key, relationship.kind);
   }
@@ -22,14 +21,16 @@ export default class {
   }
 
   getTransformKeyFunction(modelName, type) {
-    if (!this.transformKeys) { return this.noTransformFn }
+    if (!this.transformKeys) { return this.noTransformFn; }
     let serializer = this.store.serializerFor(modelName);
     return serializer['keyFor' + type] || this.defaultKeyTransformFn;
   }
 
   getTransformValueFunction(type) {
+    if (!this.transformKeys) { return this.noTransformFn; }
+    if (!type) { return this.defaultValueTransformFn; }
     let container = Ember.getOwner ? Ember.getOwner(this.store) : this.store.container;
-    return type ? container.lookup('transform:' + type).serialize : this.defaultValueTransformFn;
+    return container.lookup('transform:' + type).serialize;
   }
 
   extractAttributes(modelName, fixture) {
@@ -99,8 +100,8 @@ export default class {
         data = this.normalizeAssociation(belongsToRecord, relationship);
         break;
 
-      case 'string':
       case 'number':
+      case 'string':
         Ember.assert(
           `Polymorphic relationships cannot be specified by id you
           need to supply an object with id and type`, !relationship.options.polymorphic
@@ -124,7 +125,7 @@ export default class {
     }
 
     let relationshipKey = this.transformRelationshipKey(relationship);
-     console.log('relationshipKey:',relationship.key, relationshipKey);
+
     let records = hasManyRecords.map((hasManyRecord)=> {
       if (Ember.typeOf(hasManyRecord) === 'object') {
         if (hasManyRecord.isProxy) {
@@ -133,6 +134,13 @@ export default class {
         return this.addData(hasManyRecord, relationship);
       } else if (Ember.typeOf(hasManyRecord) === 'instance') {
         return this.normalizeAssociation(hasManyRecord, relationship);
+      } else if (Ember.typeOf(hasManyRecord) === 'number') {
+        Ember.assert(
+          `Polymorphic relationships cannot be specified by id you
+          need to supply an object with id and type`, !relationship.options.polymorphic
+        );
+        let record = { id: hasManyRecord, type: relationship.type };
+        return this.normalizeAssociation(record, relationship);
       }
     });
     relationships[relationshipKey] = this.assignHasManyRecords(records);

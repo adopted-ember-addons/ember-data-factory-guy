@@ -17,8 +17,8 @@ export default class extends JSONPayload {
   includeKeys() {
     return Object.keys(this.json)
         .reject(key => this.modelName === key)
-        .reject(key=> this.reserved.contains(key))
-      || [];
+        .reject(key=> this.reserved.contains(key)) ||
+        [];
   }
 
   getInclude(modelType) {

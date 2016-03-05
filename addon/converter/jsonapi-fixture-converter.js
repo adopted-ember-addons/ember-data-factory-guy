@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import Converter from './fixture-converter';
-const { String: { dasherize, pluralize } } = Ember;
+const { String: { dasherize } } = Ember;
 
 class JSONAPIFixtureConverter extends Converter {
 

@@ -25,6 +25,7 @@ SharedBehavior.makeTests = function () {
   test("handles custom attribute type attributes", function () {
     let info = {first: 1};
     let user = make('user', {info: info});
+    console.log(user);
     ok(user.get('info') === info);
   });
 
