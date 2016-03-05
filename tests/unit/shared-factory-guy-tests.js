@@ -366,6 +366,7 @@ SharedBehavior.makeListTests = function () {
   test("handles trait arguments", function () {
     let users = FactoryGuy.makeList('user', 2, 'with_hats');
     equal(users.length, 2);
+    console.log(users.mapBy('hat'));
     equal(users[0].get('hats.length') === 2, true);
   });
 

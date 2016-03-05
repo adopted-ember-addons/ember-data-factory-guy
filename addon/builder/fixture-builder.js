@@ -42,7 +42,7 @@ export default class {
    @returns {*} new converted fixture
    */
   convertForMake(modelName, fixture) {
-    return (new JSONAPIFixtureConverter(this.store)).convert(modelName, fixture);
+    return (new JSONAPIFixtureConverter(this.store, false)).convert(modelName, fixture);
   }
 
   /**

@@ -104,6 +104,7 @@ let ModelDefinition = function (model, config) {
 
   // function might be a sequence, an inline attribute function or an association
   this.addFunctionAttribute = function(fixture, attribute) {
+    //console.log(attribute, 'fixture[attribute].call(this, fixture):',fixture[attribute].call(this, fixture));
     fixture[attribute] = fixture[attribute].call(this, fixture);
   };
 

@@ -2,13 +2,16 @@ import Ember from 'ember';
 
 export default class {
 
-  constructor(store) {
+  constructor(store, transformKeys = true) {
+    this.transformKeys = transformKeys;
     this.store = store;
     this.listType = false;
-    this.defaultValueTransformFn = (x)=> x;
+    this.noTransformFn = (x)=> x;
+    this.defaultValueTransformFn = this.noTransformFn;
   }
 
   transformRelationshipKey(relationship) {
+    if (!this.transformKeys) { return this.noTransformFn }
     let transformFn = this.getTransformKeyFunction(relationship.type, 'Relationship');
     return transformFn(relationship.key, relationship.kind);
   }
@@ -19,6 +22,7 @@ export default class {
   }
 
   getTransformKeyFunction(modelName, type) {
+    if (!this.transformKeys) { return this.noTransformFn }
     let serializer = this.store.serializerFor(modelName);
     return serializer['keyFor' + type] || this.defaultKeyTransformFn;
   }
@@ -34,7 +38,6 @@ export default class {
 
     this.store.modelFor(modelName).eachAttribute((attribute, meta)=> {
       let attributeKey = transformKeyFunction(attribute);
-      console.log(attribute, attributeKey);
       let transformValueFunction = this.getTransformValueFunction(meta.type);
 
       if (fixture.hasOwnProperty(attribute)) {
@@ -121,7 +124,7 @@ export default class {
     }
 
     let relationshipKey = this.transformRelationshipKey(relationship);
-
+     console.log('relationshipKey:',relationship.key, relationshipKey);
     let records = hasManyRecords.map((hasManyRecord)=> {
       if (Ember.typeOf(hasManyRecord) === 'object') {
         if (hasManyRecord.isProxy) {
@@ -132,7 +135,6 @@ export default class {
         return this.normalizeAssociation(hasManyRecord, relationship);
       }
     });
-
     relationships[relationshipKey] = this.assignHasManyRecords(records);
   }
 

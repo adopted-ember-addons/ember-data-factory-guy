@@ -273,6 +273,7 @@ class FactoryGuy {
       throw new Error('Can\'t find that factory named [' + args.name + ']');
     }
 
+    console.log('buildRaw', args);
     return definition.build(args.name, args.opts, args.traits);
   }
   /**
@@ -345,6 +346,7 @@ class FactoryGuy {
     );
 
     let modelName = lookupModelForFixtureName(args.name);
+    console.log();
     let fixture = this.buildRaw.apply(this, arguments);
     let data = this.fixtureBuilder.convertForMake(modelName, fixture);
 

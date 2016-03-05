@@ -4,8 +4,8 @@ const { String: { dasherize, pluralize } } = Ember;
 
 class JSONAPIFixtureConverter extends Converter {
 
-  constructor(store) {
-    super(store);
+  constructor(store, transformKeys = true) {
+    super(store, transformKeys);
     this.defaultKeyTransformFn = dasherize;
     this.polymorphicTypeTransformFn = dasherize;
     this.included = [];
