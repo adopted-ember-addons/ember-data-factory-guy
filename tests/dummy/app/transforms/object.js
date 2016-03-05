@@ -3,7 +3,6 @@ import Ember from 'ember';
 
 export default DS.Transform.extend({
   serialize: function(value) {
-    console.log('serialize', value);
     return value ? JSON.stringify(value) : '{}';
   },
   deserialize: function(value) {

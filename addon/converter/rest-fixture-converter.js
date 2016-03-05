@@ -77,31 +77,6 @@ class RestFixtureConverter extends Converter {
     return data;
   }
 
-  /*
-   Find the attributes in the fixture.
-
-   @param {String} modelName
-   @param {Object} fixture
-   @returns {*}
-   */
-  extractAttributes(modelName, fixture) {
-    let attributes = {};
-    let transformKeyFunction = this.getTransformKeyFunction(modelName, 'Attribute');
-
-    this.store.modelFor(modelName).eachAttribute((attribute, meta)=> {
-      let attributeKey = transformKeyFunction(attribute);
-      let transformValueFunction = this.getTransformValueFunction(meta.type);
-
-      if (fixture.hasOwnProperty(attribute)) {
-        attributes[attributeKey] = transformValueFunction(fixture[attribute]);
-      } else if (fixture.hasOwnProperty(attributeKey)) {
-        attributes[attributeKey] = transformValueFunction(fixture[attributeKey]);
-      }
-    });
-    return attributes;
-  }
-
-
   /**
    Add the model to included array unless it's already there.
 
@@ -161,60 +136,6 @@ class RestFixtureConverter extends Converter {
       return record.id;
     }
   }
-
-  //extractHasMany(fixture, relationship, relationships) {
-  //  let hasManyRecords = fixture[relationship.key];
-  //
-  //  if (hasManyRecords.isProxy) {
-  //    return this.addListProxyData(hasManyRecords, relationship, relationships);
-  //  }
-  //
-  //  if (Ember.typeOf(hasManyRecords) !== 'array') {
-  //    return;
-  //  }
-  //
-  //  let relationshipKey = this.transformRelationshipKey(relationship);
-  //
-  //  let records = hasManyRecords.map((hasManyRecord)=> {
-  //    if (Ember.typeOf(hasManyRecord) === 'object') {
-  //      if (hasManyRecord.isProxy) {
-  //        return this.addProxyData(hasManyRecord, relationship);
-  //      }
-  //      return this.addData(hasManyRecord, relationship);
-  //    } else if (Ember.typeOf(hasManyRecord) === 'instance') {
-  //      return this.normalizeAssociation(hasManyRecord, relationship);
-  //    }
-  //  });
-  //
-  //  relationships[relationshipKey] = records;
-  //}
-  //
-  //addData(embeddedFixture, relationship) {
-  //  let relationshipType = this.getRelationshipType(relationship, embeddedFixture);
-  //  // find possibly more embedded fixtures
-  //  let data = this.convertSingle(relationshipType, embeddedFixture);
-  //  this.addToIncluded(data, relationshipType);
-  //  return this.normalizeAssociation(data, relationship);
-  //}
-  //
-  //addProxyData(jsonProxy, relationship) {
-  //  let data = jsonProxy.get();
-  //  let relationshipType = this.getRelationshipType(relationship, data);
-  //  this.addToIncluded(data, relationshipType);
-  //  this.addToIncludedFromProxy(jsonProxy);
-  //  return this.normalizeAssociation(data, relationship);
-  //}
-  //
-  //addListProxyData(jsonProxy, relationship, relationships) {
-  //  let relationshipKey = this.transformRelationshipKey(relationship);
-  //  let records = jsonProxy.get().map((data)=> {
-  //    let relationshipType = this.getRelationshipType(relationship, data);
-  //    this.addToIncluded(data, relationshipType);
-  //    return this.normalizeAssociation(data, relationship);
-  //  });
-  //  this.addToIncludedFromProxy(jsonProxy);
-  //  relationships[relationshipKey] = records;
-  //}
 }
 
 export default RestFixtureConverter;

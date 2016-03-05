@@ -25,13 +25,11 @@ SharedBehavior.makeTests = function () {
   test("handles custom attribute type attributes", function () {
     let info = {first: 1};
     let user = make('user', {info: info});
-    console.log(user);
     ok(user.get('info') === info);
   });
 
   test("handles camelCase attributes", function () {
     let profile = make('profile', {camelCaseDescription: 'description'});
-    console.log(profile, profile.get('camelCaseDescription'));
     ok(profile.get('camelCaseDescription') === 'description');
   });
 
@@ -367,7 +365,6 @@ SharedBehavior.makeListTests = function () {
   test("handles trait arguments", function () {
     let users = FactoryGuy.makeList('user', 2, 'with_hats');
     equal(users.length, 2);
-    console.log(users.mapBy('hat'));
     equal(users[0].get('hats.length') === 2, true);
   });
 

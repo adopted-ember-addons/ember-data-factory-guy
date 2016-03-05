@@ -80,35 +80,11 @@ export default class {
    @param relationship
    @param relationships
    */
-
   extractBelongsTo(fixture, relationship, relationships) {
     let belongsToRecord = fixture[relationship.key];
     let relationshipKey = this.transformRelationshipKey(relationship);
 
-    let data;
-    switch (Ember.typeOf(belongsToRecord)) {
-
-      case 'object':
-        if (belongsToRecord.isProxy) {
-           data = this.addProxyData(belongsToRecord, relationship);
-        } else {
-          data = this.addData(belongsToRecord, relationship);
-        }
-        break;
-
-      case 'instance':
-        data = this.normalizeAssociation(belongsToRecord, relationship);
-        break;
-
-      case 'number':
-      case 'string':
-        Ember.assert(
-          `Polymorphic relationships cannot be specified by id you
-          need to supply an object with id and type`, !relationship.options.polymorphic
-        );
-        belongsToRecord = { id: belongsToRecord, type: relationship.type };
-        data = this.normalizeAssociation(belongsToRecord, relationship);
-    }
+    let data = this.extractSingleRecord(belongsToRecord, relationship);
 
     relationships[relationshipKey] = this.assignBelongsToRecord(data);
   }
@@ -127,23 +103,38 @@ export default class {
     let relationshipKey = this.transformRelationshipKey(relationship);
 
     let records = hasManyRecords.map((hasManyRecord)=> {
-      if (Ember.typeOf(hasManyRecord) === 'object') {
-        if (hasManyRecord.isProxy) {
-          return this.addProxyData(hasManyRecord, relationship);
+      return this.extractSingleRecord(hasManyRecord, relationship);
+    });
+    relationships[relationshipKey] = this.assignHasManyRecords(records);
+  }
+
+  extractSingleRecord(record, relationship) {
+    let data;
+    switch (Ember.typeOf(record)) {
+
+      case 'object':
+        if (record.isProxy) {
+          data = this.addProxyData(record, relationship);
+        } else {
+          data = this.addData(record, relationship);
         }
-        return this.addData(hasManyRecord, relationship);
-      } else if (Ember.typeOf(hasManyRecord) === 'instance') {
-        return this.normalizeAssociation(hasManyRecord, relationship);
-      } else if (Ember.typeOf(hasManyRecord) === 'number') {
+        break;
+
+      case 'instance':
+        data = this.normalizeAssociation(record, relationship);
+        break;
+
+      case 'number':
+      case 'string':
         Ember.assert(
           `Polymorphic relationships cannot be specified by id you
           need to supply an object with id and type`, !relationship.options.polymorphic
         );
-        let record = { id: hasManyRecord, type: relationship.type };
-        return this.normalizeAssociation(record, relationship);
-      }
-    });
-    relationships[relationshipKey] = this.assignHasManyRecords(records);
+        record = { id: record, type: relationship.type };
+        data = this.normalizeAssociation(record, relationship);
+    }
+
+    return data;
   }
 
   assignBelongsToRecord(record) {
@@ -162,6 +153,7 @@ export default class {
     return this.normalizeAssociation(data, relationship);
   }
 
+  // proxy data is data that was build with FactoryGuy.build method
   addProxyData(jsonProxy, relationship) {
     let data = jsonProxy.getModelPayload();
     let relationshipType = this.getRelationshipType(relationship, data);
@@ -170,6 +162,7 @@ export default class {
     return this.normalizeAssociation(data, relationship);
   }
 
+  // listProxy data is data that was build with FactoryGuy.buildList method
   addListProxyData(jsonProxy, relationship, relationships) {
     let relationshipKey = this.transformRelationshipKey(relationship);
     let records = jsonProxy.getModelPayload().map((data)=> {
