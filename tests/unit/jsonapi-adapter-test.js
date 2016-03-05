@@ -41,8 +41,8 @@ test("returns an attribute with a key", function () {
 });
 
 let removeFunctions = function(json) {
-  delete json.includeKeys;
-  delete json.getInclude;
+  delete json.getModelPayload;
+  delete json.includes;
   delete json.isProxy;
   delete json.get;
 };
@@ -91,10 +91,13 @@ test("sideloads belongsTo records which are built from fixture definition", func
     });
 });
 
-test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () {
+test("sideloads belongsTo record passed as ( prebuilt ) json", function () {
   let user = build('user');
+  console.log('user', user);
   let json = build('project', {user: user});
   removeFunctions(json);
+
+  console.log(json);
   deepEqual(json,
     {
       data: {

@@ -30,6 +30,7 @@ SharedBehavior.makeTests = function () {
 
   test("handles camelCase attributes", function () {
     let profile = make('profile', {camelCaseDescription: 'description'});
+    console.log(profile, profile.get('camelCaseDescription'));
     ok(profile.get('camelCaseDescription') === 'description');
   });
 

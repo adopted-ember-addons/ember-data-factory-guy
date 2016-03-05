@@ -2,6 +2,8 @@ import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define('hat', {
   traits: {
+    round: {shape: "round"},
+    square: {shape: "square"},
     with_user: { user: {} },
     belonging_to_user: { user: {} },
     with_outfit: { outfit: {} },

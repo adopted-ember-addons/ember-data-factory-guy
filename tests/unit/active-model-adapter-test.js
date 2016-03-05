@@ -37,6 +37,7 @@ module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, adapterType))
 let removeFunctions = function(json) {
   delete json.includeKeys;
   delete json.getInclude;
+  delete json.getModelPayload;
   delete json.isProxy;
   delete json.get;
 };

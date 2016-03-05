@@ -49,6 +49,7 @@ test("returns an attribute with a key", function () {
 let removeFunctions = function(json) {
   delete json.includeKeys;
   delete json.getInclude;
+  delete json.getModelPayload;
   delete json.isProxy;
   delete json.get;
 };
@@ -100,7 +101,7 @@ test("sideloads belongsTo records which are built from fixture definition with F
   deepEqual(buildJson, expectedJson);
 });
 
-test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () {
+test("sideloads belongsTo record passed as ( prebuilt ) json", function () {
 
   let batMan = build('bat_man');
   let buildJson = build('profile', {superHero: batMan});
@@ -127,6 +128,123 @@ test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () 
   deepEqual(buildJson, expectedJson);
 });
 
+test("sideloads 2 levels of relationships ( build => belongsTo , build => belongsTo )", function () {
+
+  let company = build('company');
+  let user = build('user', { company });
+  let buildJson = build('project', { user });
+  removeFunctions(buildJson);
+
+  let expectedJson = {
+    project: {
+      id: 1,
+      title: 'Project1',
+      user: 1,
+    },
+    users: [
+      {
+        id: 1,
+        name: "User1",
+        company: {id: 1, type: "company"},
+        style: "normal"
+      }
+    ],
+    companies: [
+      {
+        id: 1,
+        type: 'Company',
+        name: "Silly corp"
+      }
+    ]
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+
+test("sideloads 2 levels of records ( buildList => hasMany , build => belongsTo )", function () {
+  let hats = buildList('big-hat', 2, 'square');
+  let user = build('user', { hats });
+  let buildJson = build('project', { user });
+  removeFunctions(buildJson);
+
+  let expectedJson = {
+    project: {
+      id: 1,
+      title: 'Project1',
+      user: 1
+    },
+    users: [
+      {
+        id: 1,
+        name: "User1",
+        hats: [{id: 1, type: "big_hat"},{id: 2, type: "big_hat"}],
+        style: "normal"
+      }
+    ],
+    'big-hats': [
+      {
+        id: 1,
+        type: 'BigHat',
+        shape: 'square'
+      },
+      {
+        id: 2,
+        type: 'BigHat',
+        shape: 'square'
+      }
+    ]
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+
+test("sideloads 2 levels of records ( build => belongsTo,  buildList => hasMany )", function () {
+  let company1 = build('company', {name: 'A Corp'});
+  let company2 = build('company', {name: 'B Corp'});
+  let owners = buildList('user', { company:company1 }, { company:company2 });
+  let buildJson = build('property', { owners });
+  removeFunctions(buildJson);
+
+  let expectedJson = {
+    property: {
+      id: 1,
+      name: 'Silly property',
+      owners: [1,2]
+    },
+    users: [
+      {
+        id: 1,
+        name: "User1",
+        company: {id: 1, type: "company"},
+        style: "normal"
+      },
+      {
+        id: 2,
+        name: "User2",
+        company: {id: 2, type: "company"},
+        style: "normal"
+      }
+    ],
+    companies: [
+      {
+        id: 1,
+        type: 'Company',
+        name: "A Corp"
+      },
+      {
+        id: 2,
+        type: 'Company',
+        name: "B Corp"
+      }
+    ]
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+
 test("sideloads hasMany records which are built from fixture definition", function () {
 
   let buildJson = build('user', 'with_hats');
@@ -151,7 +269,7 @@ test("sideloads hasMany records which are built from fixture definition", functi
   deepEqual(buildJson, expectedJson);
 });
 
-test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", function () {
+test("sideloads hasMany records passed as prebuilt ( buildList ) json", function () {
 
   let hats = buildList('big-hat', 2);
   let buildJson = build('user', {hats: hats});
@@ -177,7 +295,7 @@ test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", fun
 });
 
 
-test("sideloads hasMany records passed as prebuilt ( array of build ) attribute", function () {
+test("sideloads hasMany records passed as prebuilt ( array of build ) json", function () {
 
   let hat1 = build('big-hat');
   let hat2 = build('big-hat');

@@ -1,10 +1,17 @@
+import Ember from 'ember';
 import JSONPayload from './json-payload';
 
 export default class extends JSONPayload {
 
   constructor(modelName, json, listType) {
     super(modelName, json, listType);
+    json.includes = ()=>this.includes();
     this.data = json.data;
+    this.addReservedKeys("includes".w());
+  }
+
+  getModelPayload() {
+    return this.data;
   }
 
   createAttrs(data) {
@@ -13,12 +20,8 @@ export default class extends JSONPayload {
     return attrs;
   }
 
-  includeKeys() {
-    return this.json.includes;
-  }
-
-  getInclude(modelType) {
-    return this.json[modelType];
+  includes() {
+    return this.json.included || [];
   }
 
   getObjectKeys(key) {

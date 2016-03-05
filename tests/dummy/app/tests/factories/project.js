@@ -2,7 +2,7 @@ import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define("project", {
   sequences: {
-    title: function(num) {return 'Project' + num;}
+    title: (num)=> `Project${num}`
   },
   traits: {
     big: { title: 'Big Project' },
