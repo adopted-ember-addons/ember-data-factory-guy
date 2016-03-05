@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import FixtureBuilder from './fixture-builder';
 import JSONAPIFixtureConverter from '../converter/jsonapi-fixture-converter';
-//import JSONAPIAttributeTransformer from '../jsonapi-attribute-transformer';
 import JSONAPIPayload from '../payload/json-api-payload';
 
 /**
@@ -21,8 +20,6 @@ class JSONAPIJsonBuilder extends FixtureBuilder {
   convertForBuild(modelName, fixture) {
     let converter = new JSONAPIFixtureConverter(this.store);
     let json =  converter.convert(modelName, fixture);
-    //let json = convertedFixture;
-    //let json = (new JSONAPIAttributeTransformer(this.store)).transform(modelName, convertedFixture);
     new JSONAPIPayload(modelName, json, converter.listType);
     return json;
   }

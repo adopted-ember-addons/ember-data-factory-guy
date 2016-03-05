@@ -3,6 +3,13 @@ const { String: { pluralize } } = Ember;
 
 export default class {
 
+  /**
+   * Wrapper class for getting access to the json payload
+   *
+   * @param modelName
+   * @param json json being proxied
+   * @param listType boolean true if buildList payload
+   */
   constructor(modelName, json, listType = false) {
     this.modelName = modelName;
     this.json = json;

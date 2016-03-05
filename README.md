@@ -1264,4 +1264,3 @@ test("Creates new project", function () {
 });
 
 ```
-

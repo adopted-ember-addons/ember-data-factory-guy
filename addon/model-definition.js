@@ -86,9 +86,6 @@ let ModelDefinition = function (model, config) {
     // deal with attributes that are functions or objects
     for (let attribute in fixture) {
       let attributeType = Ember.typeOf(fixture[attribute]);
-      if ( attributeType === 'array') {
-        this.addArrayAtribute(fixture, attribute);
-      }
       if (attributeType === 'function') {
         this.addFunctionAttribute(fixture, attribute);
       } else if (attributeType === 'object') {
@@ -104,20 +101,7 @@ let ModelDefinition = function (model, config) {
 
   // function might be a sequence, an inline attribute function or an association
   this.addFunctionAttribute = function(fixture, attribute) {
-    //console.log(attribute, 'fixture[attribute].call(this, fixture):',fixture[attribute].call(this, fixture));
     fixture[attribute] = fixture[attribute].call(this, fixture);
-  };
-
-  this.addArrayAtribute = function(fixture, attribute) {
-    let relationship = getRelationship(attribute);
-    if (relationship) {
-      //let payload = fixture[attribute];
-
-      //fixture[attribute] = payload;//.map((json)=>{
-        //let isInstance = Ember.typeOf(json) === "instance";
-        //return !isInstance && json.isProxy ? json.get() : json;
-      //});
-    }
   };
 
   this.addObjectAtribute = function(fixture, attribute) {
@@ -126,11 +110,7 @@ let ModelDefinition = function (model, config) {
     let relationship = getRelationship(attribute);
     if (relationship) {
       let payload = fixture[attribute];
-      if (payload.isProxy) {
-        //console.log('here2', 'attribute:', attribute, fixture[attribute], payload.get());
-        // FactoryGuy already built this it's already built json
-        //fixture[attribute] = payload.get();
-      } else {
+      if (!payload.isProxy) {
         fixture[attribute] = FactoryGuy.buildRaw(relationship.type, payload);
       }
     }
