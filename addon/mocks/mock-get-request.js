@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy from './factory-guy';
+import FactoryGuy from '../factory-guy';
 import DS from 'ember-data';
 import $ from 'jquery';
 

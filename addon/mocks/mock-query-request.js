@@ -1,5 +1,5 @@
-import FactoryGuy from './factory-guy';
-import { isEquivalent } from './utils/helper-functions';
+import FactoryGuy from '../factory-guy';
+import { isEquivalent } from '../utils/helper-functions';
 import MockGetRequest from './mock-get-request';
 import $ from 'jquery';
 

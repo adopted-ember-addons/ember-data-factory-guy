@@ -2,13 +2,13 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import $ from 'jquery';
 import FactoryGuy from './factory-guy';
-import MockUpdateRequest from './mock-update-request';
-import MockCreateRequest from './mock-create-request';
-import MockQueryRequest from './mock-query-request';
-import MockQueryRecordRequest from './mock-query-record-request';
-import MockFindRequest from './mock-find-request';
-import MockReloadRequest from './mock-reload-request';
-import MockFindAllRequest from './mock-find-all-request';
+import MockUpdateRequest from './mocks/mock-update-request';
+import MockCreateRequest from './mocks/mock-create-request';
+import MockQueryRequest from './mocks/mock-query-request';
+import MockQueryRecordRequest from './mocks/mock-query-record-request';
+import MockFindRequest from './mocks/mock-find-request';
+import MockReloadRequest from './mocks/mock-reload-request';
+import MockFindAllRequest from './mocks/mock-find-all-request';
 
 let MockServer = Ember.Object.extend({
 

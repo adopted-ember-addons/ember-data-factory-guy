@@ -110,12 +110,12 @@ let ModelDefinition = function (model, config) {
   this.addArrayAtribute = function(fixture, attribute) {
     let relationship = getRelationship(attribute);
     if (relationship) {
-      let payload = fixture[attribute];
+      //let payload = fixture[attribute];
 
-      fixture[attribute] = payload.map((json)=>{
-        let isInstance = Ember.typeOf(json) === "instance";
-        return !isInstance && json.get ? json.get() : json;
-      });
+      //fixture[attribute] = payload;//.map((json)=>{
+        //let isInstance = Ember.typeOf(json) === "instance";
+        //return !isInstance && json.isProxy ? json.get() : json;
+      //});
     }
   };
 
@@ -125,10 +125,10 @@ let ModelDefinition = function (model, config) {
     let relationship = getRelationship(attribute);
     if (relationship) {
       let payload = fixture[attribute];
-      if (payload.get) {
+      if (payload.isProxy) {
         //console.log('here2', 'attribute:', attribute, fixture[attribute], payload.get());
         // FactoryGuy already built this it's already built json
-        fixture[attribute] = payload.get();
+        //fixture[attribute] = payload.get();
       } else {
         fixture[attribute] = FactoryGuy.buildRaw(relationship.type, payload);
       }

@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy from './factory-guy';
+import FactoryGuy from '../factory-guy';
 import $ from 'jquery';
 
 let MockCreateRequest = function (url, modelName, options) {

@@ -1,4 +1,4 @@
-import FactoryGuy from './factory-guy';
+import FactoryGuy from '../factory-guy';
 import MockGetRequest from './mock-get-request';
 
 export default class MockFindRequest extends MockGetRequest {

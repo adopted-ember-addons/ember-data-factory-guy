@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 import ModelDefinition from './model-definition';
-import FixtureBuilderFactory from './fixture-builder-factory';
+import FixtureBuilderFactory from './builder/fixture-builder-factory';
 
 let modelDefinitions = {};
 

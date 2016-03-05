@@ -47,7 +47,9 @@ test("returns an attribute with a key", function () {
 });
 
 let removeFunctions = function(json) {
-  delete json.proxy;
+  delete json.includeKeys;
+  delete json.getInclude;
+  delete json.isProxy;
   delete json.get;
 };
 

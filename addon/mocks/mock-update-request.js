@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import $ from 'jquery';
-import FactoryGuy from './factory-guy';
+import FactoryGuy from '../factory-guy';
 
 let MockUpdateRequest = function(url, model, options) {
   let status = options.status || 200;

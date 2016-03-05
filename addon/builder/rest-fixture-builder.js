@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import FixtureBuilder from './fixture-builder';
-import RESTFixtureConverter from './rest-fixture-converter';
-import RESTJson from './rest-json';
+import RESTFixtureConverter from '../converter/rest-fixture-converter';
+import RESTPayload from '../payload/rest-payload';
 /**
  Fixture Builder for REST based Serializer, like ActiveModelSerializer or
  RESTSerializer
@@ -36,10 +36,9 @@ class RESTFixtureBuilder extends FixtureBuilder {
    @returns {*} new converted fixture
    */
   convertForBuild(modelName, fixture) {
-    let json = (new RESTFixtureConverter(this.store)).convert(modelName, fixture);
-    let proxy = new RESTJson(modelName, json);
-    //json.proxy = proxy;
-    json.get = (key)=>proxy.get(key);
+    let converter = new RESTFixtureConverter(this.store);
+    let json = converter.convert(modelName, fixture);
+    new RESTPayload(modelName, json, converter.listType);
     return json;
   }
 }

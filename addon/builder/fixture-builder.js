@@ -1,4 +1,4 @@
-import JSONAPIFixtureConverter from './jsonapi-fixture-converter';
+import JSONAPIFixtureConverter from '../converter/jsonapi-fixture-converter';
 import Ember from 'ember';
 
 export default class {
@@ -42,7 +42,7 @@ export default class {
    @returns {*} new converted fixture
    */
   convertForMake(modelName, fixture) {
-    return new JSONAPIFixtureConverter(this.store).convert(modelName, fixture);
+    return (new JSONAPIFixtureConverter(this.store)).convert(modelName, fixture);
   }
 
   /**

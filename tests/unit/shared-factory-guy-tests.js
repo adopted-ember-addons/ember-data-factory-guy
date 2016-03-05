@@ -1,8 +1,8 @@
 import Ember from 'ember';
 import FactoryGuy, { make, makeList, build, buildList } from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
-import JSONAPIFixtureConverter from 'ember-data-factory-guy/jsonapi-fixture-converter';
-import RESTFixtureConverter from 'ember-data-factory-guy/rest-fixture-converter';
+import JSONAPIFixtureConverter from 'ember-data-factory-guy/converter/jsonapi-fixture-converter';
+import RESTFixtureConverter from 'ember-data-factory-guy/converter/rest-fixture-converter';
 
 import User from 'dummy/models/user';
 import BigHat from 'dummy/models/big-hat';
