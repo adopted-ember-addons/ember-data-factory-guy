@@ -7,7 +7,7 @@ export default class extends JSONPayload {
     super(modelName, json, listType);
     json.includeKeys = ()=>this.includeKeys();
     json.getInclude = (modelType)=>this.getInclude(modelType);
-    this.addReservedKeys("includeKeys getInclude".w());
+    this.addProxyMethods("includeKeys getInclude".w());
   }
 
   getModelPayload() {
@@ -17,7 +17,7 @@ export default class extends JSONPayload {
   includeKeys() {
     return Object.keys(this.json)
         .reject(key => this.modelName === key)
-        .reject(key=> this.reserved.contains(key)) ||
+        .reject(key=> this.proxyMethods.contains(key)) ||
         [];
   }
 

@@ -7,7 +7,7 @@ export default class extends JSONPayload {
     super(modelName, json, listType);
     json.includes = ()=>this.includes();
     this.data = json.data;
-    this.addReservedKeys("includes".w());
+    this.addProxyMethods("includes".w());
   }
 
   getModelPayload() {

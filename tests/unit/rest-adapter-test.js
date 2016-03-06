@@ -46,19 +46,11 @@ test("returns an attribute with a key", function () {
   equal(users.get(1).name, 'User2');
 });
 
-let removeFunctions = function(json) {
-  delete json.includeKeys;
-  delete json.getInclude;
-  delete json.getModelPayload;
-  delete json.isProxy;
-  delete json.get;
-};
-
 module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, adapterType));
 
 test("sideloads belongsTo records which are built from fixture definition that just has empty object {}", function () {
   let buildJson = build('user', 'with_company');
-  removeFunctions(buildJson);
+  buildJson.unwrap();
 
   let expectedJson = {
     user: {
@@ -78,7 +70,7 @@ test("sideloads belongsTo records which are built from fixture definition that j
 test("sideloads belongsTo records which are built from fixture definition with FactoryGuy.belongsTo", function () {
 
   let buildJson = build('profile', 'with_bat_man');
-  removeFunctions(buildJson);
+  buildJson.unwrap();
 
   let expectedJson = {
     profile: {
@@ -105,7 +97,7 @@ test("sideloads belongsTo record passed as ( prebuilt ) json", function () {
 
   let batMan = build('bat_man');
   let buildJson = build('profile', {superHero: batMan});
-  removeFunctions(buildJson);
+  buildJson.unwrap();
 
   let expectedJson = {
     profile: {
@@ -133,7 +125,7 @@ test("sideloads 2 levels of relationships ( build => belongsTo , build => belong
   let company = build('company');
   let user = build('user', { company });
   let buildJson = build('project', { user });
-  removeFunctions(buildJson);
+  buildJson.unwrap();
 
   let expectedJson = {
     project: {
@@ -166,7 +158,7 @@ test("sideloads 2 levels of records ( buildList => hasMany , build => belongsTo 
   let hats = buildList('big-hat', 2, 'square');
   let user = build('user', { hats });
   let buildJson = build('project', { user });
-  removeFunctions(buildJson);
+  buildJson.unwrap();
 
   let expectedJson = {
     project: {
@@ -205,7 +197,7 @@ test("sideloads 2 levels of records ( build => belongsTo,  buildList => hasMany 
   let company2 = build('company', {name: 'B Corp'});
   let owners = buildList('user', { company:company1 }, { company:company2 });
   let buildJson = build('property', { owners });
-  removeFunctions(buildJson);
+  buildJson.unwrap();
 
   let expectedJson = {
     property: {
@@ -248,7 +240,7 @@ test("sideloads 2 levels of records ( build => belongsTo,  buildList => hasMany 
 test("sideloads hasMany records which are built from fixture definition", function () {
 
   let buildJson = build('user', 'with_hats');
-  removeFunctions(buildJson);
+  buildJson.unwrap();
 
   let expectedJson = {
     user: {
@@ -273,7 +265,7 @@ test("sideloads hasMany records passed as prebuilt ( buildList ) json", function
 
   let hats = buildList('big-hat', 2);
   let buildJson = build('user', {hats: hats});
-  removeFunctions(buildJson);
+  buildJson.unwrap();
 
   let expectedJson = {
     user: {
@@ -300,7 +292,7 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) json", fun
   let hat1 = build('big-hat');
   let hat2 = build('big-hat');
   let buildJson = build('user', {hats: [hat1, hat2]});
-  removeFunctions(buildJson);
+  buildJson.unwrap();
 
   let expectedJson = {
     user: {
@@ -327,7 +319,7 @@ module(title(adapter, 'FactoryGuy#buildList custom'), inlineSetup(App, adapterTy
 test("sideloads belongsTo records", function () {
 
   let buildJson = buildList('profile', 2, 'with_bat_man');
-  removeFunctions(buildJson);
+  buildJson.unwrap();
 
   let expectedJson = {
     profiles: [
@@ -369,7 +361,7 @@ test("sideloads belongsTo records", function () {
 test("sideloads hasMany records", function () {
 
   let buildJson = buildList('user', 2, 'with_hats');
-  removeFunctions(buildJson);
+  buildJson.unwrap();
 
   let expectedJson = {
     users: [
@@ -406,7 +398,7 @@ test("sideloads hasMany records", function () {
 test("serializes attributes with custom type", function () {
   let info = {first: 1};
   let buildJson = build('user', {info: info});
-  removeFunctions(buildJson);
+  buildJson.unwrap();
 
   let expectedJson = {
     user: {

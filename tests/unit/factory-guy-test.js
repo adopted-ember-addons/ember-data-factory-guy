@@ -540,12 +540,8 @@ test("Using sequences", function () {
 
   FactoryGuy.define('person', {
     sequences: {
-      personName: function (num) {
-        return 'person #' + num;
-      },
-      personType: function (num) {
-        return 'person type #' + num;
-      }
+      personName: (num)=> `person #${num}`,
+      personType: (num)=> `person type #${num}`
     },
     default: {
       type: 'normal',
@@ -598,23 +594,26 @@ test("Referring to other attributes in attribute definition", function () {
       type: 'normal'
     },
     funny_person: {
-      type: function (f) {
-        return 'funny ' + f.name;
-      }
+      type: (f)=> `funny ${f.name}`
+    },
+    index_name: {
+      name: (f)=> `Person ${f.id}`
     },
     missing_person: {
-      type: function (f) {
-        return 'level ' + f.brain_size;
-      }
+      type: (f)=> `level ${f.brain_size}`
     }
   });
 
-  let json = FactoryGuy.buildRaw('funny_person');
-  let expected = {id: 1, name: 'Bob', type: 'funny Bob'};
+  let json = FactoryGuy.buildRaw('index_name');
+  let expected = {id: 1, name: 'Person 1', type: 'normal'};
+  deepEqual(json, expected, 'id is available');
+
+  json = FactoryGuy.buildRaw('funny_person');
+  expected = {id: 2, name: 'Bob', type: 'funny Bob'};
   deepEqual(json, expected, 'works when attribute exists');
 
   json = FactoryGuy.buildRaw('missing_person');
-  expected = {id: 2, name: 'Bob', type: 'level undefined'};
+  expected = {id: 3, name: 'Bob', type: 'level undefined'};
   deepEqual(json, expected, 'still works when attribute does not exists');
 });
 
@@ -650,9 +649,9 @@ test("creates association using named attribute", function () {
 test("belongsTo association name differs from model name", function () {
   let json = FactoryGuy.buildRaw('project_with_parent');
   let expected = {
-    id: 2,
+    id: 1,
     title: 'Project1',
-    parent: {id: 1, title: 'Project2'}
+    parent: {id: 2, title: 'Project2'}
   };
   deepEqual(json, expected);
 });

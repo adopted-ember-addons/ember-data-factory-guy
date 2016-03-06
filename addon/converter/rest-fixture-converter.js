@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import Converter from './fixture-converter';
-const { String: { underscore, pluralize } } = Ember;
+const { underscore, pluralize } = Ember.String;
 
 /**
  Convert base fixture to a REST format fixture, and while it's converting
