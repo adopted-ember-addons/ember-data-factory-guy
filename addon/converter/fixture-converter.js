@@ -86,7 +86,7 @@ export default class {
 
     let data = this.extractSingleRecord(belongsToRecord, relationship);
 
-    relationships[relationshipKey] = this.assignBelongsToRecord(data);
+    relationships[relationshipKey] = this.assignRelationship(data);
   }
 
   extractHasMany(fixture, relationship, relationships) {
@@ -105,7 +105,8 @@ export default class {
     let records = hasManyRecords.map((hasManyRecord)=> {
       return this.extractSingleRecord(hasManyRecord, relationship);
     });
-    relationships[relationshipKey] = this.assignHasManyRecords(records);
+
+    relationships[relationshipKey] = this.assignRelationship(records);
   }
 
   extractSingleRecord(record, relationship) {
@@ -137,12 +138,8 @@ export default class {
     return data;
   }
 
-  assignBelongsToRecord(record) {
-    return record;
-  }
-
-  assignHasManyRecords(records) {
-    return records;
+  assignRelationship(object) {
+    return object;
   }
 
   addData(embeddedFixture, relationship) {
@@ -165,13 +162,15 @@ export default class {
   // listProxy data is data that was build with FactoryGuy.buildList method
   addListProxyData(jsonProxy, relationship, relationships) {
     let relationshipKey = this.transformRelationshipKey(relationship);
+
     let records = jsonProxy.getModelPayload().map((data)=> {
       let relationshipType = this.getRelationshipType(relationship, data);
       this.addToIncluded(data, relationshipType);
       return this.normalizeAssociation(data, relationship);
     });
     this.addToIncludedFromProxy(jsonProxy);
-    relationships[relationshipKey] = this.assignHasManyRecords(records);
+
+    relationships[relationshipKey] = this.assignRelationship(records);
   }
 
 }

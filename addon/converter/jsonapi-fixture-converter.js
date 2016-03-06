@@ -101,13 +101,10 @@ class JSONAPIFixtureConverter extends Converter {
     });
   }
 
-  assignBelongsToRecord(record) {
-    return { data: record };
+  assignRelationship(object) {
+    return { data: object };
   }
 
-  assignHasManyRecords(records) {
-    return { data: records };
-  }
 }
 
 export default JSONAPIFixtureConverter;
