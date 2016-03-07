@@ -331,14 +331,15 @@ In other words, don't do this:
   - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
 
+
 ```js
   import { build, buildList } from 'ember-data-factory-guy';
-  // build list of 2 
+  
   let owners = buildList('bob', 2);  // builds 2 Bob's
   
-  let owners = buildList('bob', 2, {name: 'Rob'); // builds 2 Robs
+  let owners = buildList('bob', 2, {name: 'Rob'); // builds 2 Bob's with name of 'Rob'
   
-  // 2 User models, one with name 'Bob' , the next with name 'Rob'  
+  // builds 2 users, one with name 'Bob' , the next with name 'Rob'  
   let owners = buildList('user', { name:'Bob' }, { name:'Rob' });
 
 
@@ -485,26 +486,29 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
 ### Inline Functions
 
 - Declare a function for an attribute
-  - Can reference other attributes
+  - Can reference all other attributes, even id
 
 ```javascript
 
   FactoryGuy.define('user', {
-    // Assume that this definition includes the same sequences and default section
-    // from the user definition in: "Declaring sequences in sequences hash" section.
-
-    funny_user: {
-      style: (f)=> `funny ${f.name}`
+    
+    traits: {
+      boringStyle: {
+        style: (f)=> `${f.id} boring `
+      }
+      funnyUser: {
+        style: (f)=> `funny ${f.name}`
+      }
     }
   });
 
-  let json = FactoryGuy.build('funny_user');
+  let json = FactoryGuy.build('user', 'funny');
   json.get('name') // => 'User1'
   json.get('style') // => 'funny User1'
 
-  let user = FactoryGuy.make('funny_user');
-  user.get('name') // => 'User2'
-  user.get('style') // => 'funny User2'
+  let user = FactoryGuy.make('user', 'boring');
+  user.get('id') // => 2
+  user.get('style') // => '2 boring'
 
 ```
 
@@ -554,8 +558,9 @@ attributes will override any trait attributes or default attributes
 - Can setup belongsTo or hasMany associations in factory definitions
     - As inline attribute definition
     - With traits
-- Can setup belongsTo or hasMany associations manually
-- The inverse association is being set up for you
+- Can setup belongsTo or hasMany associations manually 
+  - With [build](https://github.com/danielspaniel/ember-data-factory-guy#build) / [buildList](https://github.com/danielspaniel/ember-data-factory-guy#buildlist) and [make](https://github.com/danielspaniel/ember-data-factory-guy#make) / [makeList](https://github.com/danielspaniel/ember-data-factory-guy#makelist) 
+    - Can compose relationships to any level 
 
 ##### Setup belongsTo associations in Factory Definition
 
@@ -746,11 +751,11 @@ build up complex scenarios in a different way that has it's own benefits.*
 
 ####cacheOnlyMode
 - FactoryGuy.cacheOnlyMode
- - allows you to setup the adapters to prevent them from fetching data with ajax call 
+ - Allows you to setup the adapters to prevent them from fetching data with ajax call 
    - for single models ( find ) you have to put something in the store
    - for collections ( findAll ) you don't even have to put anything in the store.
- - takes except parameter as a list of models you don't want to cache. 
-    these model requests will go to server with ajax call and need to be mocked.
+ - Takes except parameter as a list of models you don't want to cache. 
+    - These model requests will go to server with ajax call and need to be mocked.
    
 This is helpful, when you want to set up the test data with make/makeList, and then prevent
 calls like store.find or findAll from fetching more data, since you have already setup
@@ -851,6 +856,8 @@ test('using this.subject for profile and make for company associaion', function(
   - Takes modifier method `returns()` for controlling the response payload
     - returns( model / json / id )
   - Sample acceptance tests using mockFind: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
+
+Usage:
   
 ```javascript
    // Typically you will use like:
