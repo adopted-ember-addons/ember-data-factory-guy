@@ -499,7 +499,12 @@ FactoryGuy.set('fixtureBuilder', builderClass.create());
 ```javascript
 
   FactoryGuy.define('user', {
-    
+    sequences: {
+      userName: (num)=> `User${num}`
+    },
+    default: { 
+      name: FactoryGuy.generate('userName') 
+    },
     traits: {
       boringStyle: {
         style: (f)=> `${f.id} boring `
