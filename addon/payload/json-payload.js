@@ -4,7 +4,8 @@ const { pluralize } = Ember.String;
 export default class {
 
   /**
-   Wrapper class for getting access to the json payload
+   Proxy class for getting access to a json payload.
+   Used to proxy for json built from build and buildList methods.
 
    @param modelName
    @param json json being proxied
@@ -22,7 +23,7 @@ export default class {
     json.unwrap = ()=> this.unwrap();
   }
 
-  // each subclass has unique methods to add
+  // each subclass has unique proxy methods to add to the basic
   addProxyMethods(keys) {
     this.proxyMethods = this.proxyMethods.concat(keys);
   }

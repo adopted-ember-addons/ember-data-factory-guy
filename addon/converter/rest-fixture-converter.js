@@ -120,6 +120,12 @@ class RestFixtureConverter extends Converter {
     this.included[relationshipKey].add(data);
   }
 
+  /**
+    Add proxied json to this payload, by taking all included models and
+    adding them to this payloads includes
+
+    @param proxy json payload proxy
+   */
   addToIncludedFromProxy(proxy) {
     proxy.includeKeys().forEach((modelKey)=> {
       let includedModels = proxy.getInclude(modelKey);
