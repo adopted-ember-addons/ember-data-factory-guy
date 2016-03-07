@@ -56,7 +56,6 @@ class RestFixtureConverter extends Converter {
 
     return finalFixture;
   }
-
   /**
    Convert single record
 
@@ -77,6 +76,30 @@ class RestFixtureConverter extends Converter {
     return data;
   }
 
+  transformRelationshipKey(relationship) {
+    let transformedKey = super.transformRelationshipKey(relationship);
+    if (relationship.options.polymorphic) {
+      transformedKey = transformedKey.replace('_id', '');
+    }
+    return transformedKey;
+  }
+
+  /**
+
+   @param {Object} record
+   @param {Object} relationship
+   */
+  normalizeAssociation(record, relationship) {
+    if (Ember.typeOf(record) === 'object') {
+      if (relationship.options.polymorphic) {
+        return { type: underscore(record.type), id: record.id };
+      } else {
+        return record.id;
+      }
+    } else {
+      return record.id;
+    }
+  }
   /**
    Add the model to included array unless it's already there.
 
@@ -106,36 +129,6 @@ class RestFixtureConverter extends Converter {
     });
   }
 
-  transformRelationshipKey(relationship) {
-    let transformFn = this.getTransformKeyFunction(relationship.type, 'Relationship');
-    let transformedKey = transformFn(relationship.key, relationship.kind);
-    if (relationship.options.polymorphic) {
-      transformedKey = transformedKey.replace('_id', '');
-    }
-    return transformedKey;
-  }
-
-  //getTransformValueFunction(type) {
-  //  let container = Ember.getOwner ? Ember.getOwner(this.store) : this.store.container;
-  //  return type ? container.lookup('transform:' + type).serialize : this.defaultValueTransformFn;
-  //}
-
-  /**
-
-   @param {Object} record
-   @param {Object} relationship
-   */
-  normalizeAssociation(record, relationship) {
-    if (Ember.typeOf(record) === 'object') {
-      if (relationship.options.polymorphic) {
-        return { type: underscore(record.type), id: record.id };
-      } else {
-        return record.id;
-      }
-    } else {
-      return record.id;
-    }
-  }
 }
 
 export default RestFixtureConverter;
