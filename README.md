@@ -186,6 +186,8 @@ In other words, don't do this:
 ##### make/makeList
   - all instances loaded into the ember data store
 
+Usage:
+
 ##### make  
 ```javascript
 
@@ -229,6 +231,8 @@ In other words, don't do this:
 ##### makeList
   - check out [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'bob' user and 'with_car' trait  
 
+Usage:
+
 ```javascript
 
   import { make, makeList } from 'ember-data-factory-guy';
@@ -254,6 +258,8 @@ In other words, don't do this:
   - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
   
+Usage: 
+
 ```javascript
   
   import { build, buildList } from 'ember-data-factory-guy';  
@@ -325,12 +331,14 @@ In other words, don't do this:
 
 ```
 
-#####buildList
+##### buildList
   - for building json that you can pass json payload in [acceptance tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
-  - buildList takes same arguments as makeList
+  - buildList takes the same arguments as makeList
   - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
+    - can use get(index) to get to items in the list
 
+Usage: 
 
 ```js
   import { build, buildList } from 'ember-data-factory-guy';
@@ -343,7 +351,7 @@ In other words, don't do this:
   let owners = buildList('user', { name:'Bob' }, { name:'Rob' });
 
 
-##### using get() method
+##### Using get() method 
   - for inspecting contents of json payload
     - get() returns all attributes of top level model 
     - get(attribute) gives you attribute in top level model
