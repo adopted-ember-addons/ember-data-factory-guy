@@ -92,7 +92,6 @@ In the following examples, assume the models look like this:
   ```ember g factory user``` This will create a file named user.js in the tests/factories directory.
 
 
-
 ##### Standard models
 
 - [Sample full blown factory: (user.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js)
