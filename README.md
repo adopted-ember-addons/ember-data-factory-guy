@@ -251,6 +251,7 @@ In other words, don't do this:
 ##### build
   - for building json that you can pass json payload in [acceptance tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
   - build takes same arguments as make 
+  - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
   
 ```javascript
@@ -288,6 +289,7 @@ In other words, don't do this:
   let company = build('company');
   let json = build('user', {company: company});
   json.get() // => {id: 7, name: 'User3', style: 'normal', company: 1} 
+
   
 ```
 - Example: what json payload from build looks like
@@ -320,7 +322,8 @@ In other words, don't do this:
 
 #####buildList
   - for building json that you can pass json payload in [acceptance tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
-  - buildList takes same arguments as makeList 
+  - buildList takes same arguments as makeList
+  - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
 
 
