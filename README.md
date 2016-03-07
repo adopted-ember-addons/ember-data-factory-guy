@@ -256,7 +256,7 @@ In other words, don't do this:
   
 ```javascript
   
-  import FactoryGuy, { build, buildList } from 'ember-data-factory-guy';  
+  import { build, buildList } from 'ember-data-factory-guy';  
   
   // build basic user with the default attributes in user factory
   let json = build('user');
@@ -290,7 +290,12 @@ In other words, don't do this:
   let json = build('user', {company: company});
   json.get() // => {id: 7, name: 'User3', style: 'normal', company: 1} 
 
-  
+  // build and compose relationships to unlimited degree
+  let company1 = build('company', {name: 'A Corp'});
+  let company2 = build('company', {name: 'B Corp'});
+  let owners = buildList('user', { company:company1 }, { company:company2 });
+  let buildJson = build('property', { owners });
+
 ```
 - Example: what json payload from build looks like
  - Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters
@@ -326,6 +331,15 @@ In other words, don't do this:
   - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
 
+```js
+  import { build, buildList } from 'ember-data-factory-guy';
+  // build list of 2 
+  let owners = buildList('bob', 2);  // builds 2 Bob's
+  
+  let owners = buildList('bob', 2, {name: 'Rob'); // builds 2 Robs
+  
+  // 2 User models, one with name 'Bob' , the next with name 'Rob'  
+  let owners = buildList('user', { name:'Bob' }, { name:'Rob' });
 
 
 ##### using get() method
