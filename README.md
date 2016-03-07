@@ -616,6 +616,7 @@ attributes will override any trait attributes or default attributes
 
 
 ##### Setup belongsTo associations manually
+  - See [build](https://github.com/danielspaniel/ember-data-factory-guy#build) / [buildList](https://github.com/danielspaniel/ember-data-factory-guy#buildlist) and [make](https://github.com/danielspaniel/ember-data-factory-guy#make) / [makeList](https://github.com/danielspaniel/ember-data-factory-guy#makelist) for more ideas 
 
 ```javascript
   let user = FactoryGuy.make('user');
@@ -664,7 +665,8 @@ the reverse user hasMany 'projects' association is being setup for you on the us
 ```
 
 ##### Setup hasMany associations manually
-
+  - See [build](https://github.com/danielspaniel/ember-data-factory-guy#build) / [buildList](https://github.com/danielspaniel/ember-data-factory-guy#buildlist) and [make](https://github.com/danielspaniel/ember-data-factory-guy#make) / [makeList](https://github.com/danielspaniel/ember-data-factory-guy#makelist) for more ideas
+  
 ```javascript
   let project1 = FactoryGuy.make('project');
   let project2 = FactoryGuy.make('project');
