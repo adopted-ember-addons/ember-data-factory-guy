@@ -51,7 +51,7 @@ class RestFixtureConverter extends Converter {
 
 
     Object.keys(this.included).forEach((key)=> {
-      finalFixture[key] = Array.from(this.included[key]);
+      finalFixture[key] = this.included[key];
     });
 
     return finalFixture;
@@ -109,15 +109,19 @@ class RestFixtureConverter extends Converter {
   addToIncluded(data, modelKey) {
     let relationshipKey = pluralize(modelKey.dasherize());
 
-    let typeFound = Object.keys(this.included).find((includedKey)=> {
-      return relationshipKey === includedKey;
-    });
-
-    if (!typeFound) {
-      this.included[relationshipKey] = new Set();
+    if (!this.included[relationshipKey]) {
+      this.included[relationshipKey] = [];
     }
 
-    this.included[relationshipKey].add(data);
+    let modelRelationships = this.included[relationshipKey];
+
+    let found = Ember.A(modelRelationships).find((existing)=> {
+      return existing.id === data.id;
+    });
+
+    if (!found) {
+      modelRelationships.push(data);
+    }
   }
 
   /**
