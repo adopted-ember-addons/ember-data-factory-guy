@@ -361,7 +361,7 @@ Usage:
   - check out [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'boblike' and 'adminlike' user traits
 
 
-```javascript
+```js
 
   let json = build('user');
   json.get() //=> {id: 1, name: 'User1', style: 'normal'}
