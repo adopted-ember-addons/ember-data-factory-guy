@@ -351,17 +351,16 @@ Usage:
   let owners = buildList('user', { name:'Bob' }, { name:'Rob' });
 ```
 
+```js
 ##### Using get() method 
   - for inspecting contents of json payload
-  ```
     - get() returns all attributes of top level model 
     - get(attribute) gives you attribute in top level model
     - get(index) gives you the info for hasMany relationship at that index
     - get(relationships) gives you just id or type ( if polymorphic )
       - better to compose the build relationships by hand if you need more info
- ```     
+```     
   - check out [user factory:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'boblike' and 'adminlike' user traits
-
 ```js 
   let json = build('user');
   json.get() //=> {id: 1, name: 'User1', style: 'normal'}
