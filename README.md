@@ -844,7 +844,7 @@ test('using this.subject for profile and make for company associaion', function(
         let mock = mockFindAll('user').returns({headers: {'X-Man': "Wolverine"}); 
         mock.returns({headers: {'X-Weapon': "Claws"}); 
       ```
-  - These mocks are are reusable
+  - these mocks are are reusable
     - so you can simulate making the same ajax call ( url ) and return a different payload
 - http POST/PUT/DELETE
   - [mockCreate](https://github.com/danielspaniel/ember-data-factory-guy#mockcreate)
