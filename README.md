@@ -358,11 +358,9 @@ Usage:
     - get(index) gives you the info for hasMany relationship at that index
     - get(relationships) gives you just id or type ( if polymorphic )
       - better to compose the build relationships by hand if you need more info
-  - check out [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'boblike' and 'adminlike' user traits
+  - check out [user factory:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'boblike' and 'adminlike' user traits
 
-
-```js
-
+```javascript 
   let json = build('user');
   json.get() //=> {id: 1, name: 'User1', style: 'normal'}
   json.get('id') // => 1
@@ -374,7 +372,6 @@ Usage:
   let json = buildList('user', 'boblike', 'adminlike');
   json.get(0) //=> {id: 1, name: 'Bob', style: 'boblike'}
   json.get(1) //=> {id: 2, name: 'Admin', style: 'super'}
-
 ```
 
 * building relationships inline
