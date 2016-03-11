@@ -364,9 +364,7 @@ Usage:
 
   let json = build('user');
   json.get() //=> {id: 1, name: 'User1', style: 'normal'}
-```
-
-```javascript
+  json.get('id') // => 1
 
   let json = buildList('user', 2);
   json.get(0) //=> {id: 1, name: 'User1', style: 'normal'}
