@@ -836,13 +836,14 @@ test('using this.subject for profile and make for company associaion', function(
   - [mockReload](https://github.com/danielspaniel/ember-data-factory-guy#mockreload)
   - [mockQuery](https://github.com/danielspaniel/ember-data-factory-guy#mockquery)
   - [mockQueryRecord](https://github.com/danielspaniel/ember-data-factory-guy#mockqueryrecord)
-  - can pass custom headers to `returns()` method
-    - the are cumulative so you can add as many as you like
-    - Example: 
-    ```javascript
-      let mock = mockFindAll('user').returns({headers: {'X-Man': "Wolverine"}); 
-      mock.returns({headers: {'X-Weapon': "Claws"}); 
-    ```
+  - Takes modifier method `returns()` for setting the payload response
+    - can pass custom headers 
+      - they are cumulative so you can add as many as you like
+      - Example: 
+      ```javascript
+        let mock = mockFindAll('user').returns({headers: {'X-Man': "Wolverine"}); 
+        mock.returns({headers: {'X-Weapon': "Claws"}); 
+      ```
   - these mocks are are reusable
     - so you can simulate making the same ajax call ( url ) and return a different payload
 - http POST/PUT/DELETE
