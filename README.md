@@ -779,10 +779,8 @@ the store with your custom scenario.
   
 ### Testing models, controllers, components
 
-- Testing the models, controllers and components
-
-  - FactoryGuy needs to setup the factories before the test run.
-    - use manualSetup function to set up FactoryGuy in unit/component tests
+- FactoryGuy needs to setup the factories before the test run.
+  - use manualSetup function to set up FactoryGuy in unit/component tests
 
 - [Sample model test (profile-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
   - Use 'moduleForModel' ( ember-qunit ), or describeModel ( ember-mocha ) test helper
