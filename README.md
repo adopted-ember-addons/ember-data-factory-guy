@@ -349,7 +349,7 @@ Usage:
   
   // builds 2 users, one with name 'Bob' , the next with name 'Rob'  
   let owners = buildList('user', { name:'Bob' }, { name:'Rob' });
-
+```
 
 ##### Using get() method 
   - for inspecting contents of json payload
@@ -358,9 +358,9 @@ Usage:
     - get(index) gives you the info for hasMany relationship at that index
     - get(relationships) gives you just id or type ( if polymorphic )
       - better to compose the build relationships by hand if you need more info
-  - check out [user factory:]
+  - check out [user factory:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'boblike' and 'adminlike' user traits
 
-```javascript 
+```js 
   let json = build('user');
   json.get() //=> {id: 1, name: 'User1', style: 'normal'}
   json.get('id') // => 1
