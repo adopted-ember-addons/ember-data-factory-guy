@@ -16,19 +16,30 @@ export default class {
     this.json = json;
     this.listType = listType;
     this.payloadKey = listType ? pluralize(modelName) : modelName;
-    json.getModelPayload = this.getModelPayload;
-    json.isProxy = ()=>true;
-    json.get = (key)=>this.get(key);
     this.proxyMethods = "getModelPayload isProxy get unwrap".w();
-    json.unwrap = ()=> this.unwrap();
+    this.wrap(this.proxyMethods);
+  }
+
+  // marker function for saying "I am a proxy"
+  isProxy() {}
+
+  // get the top level model from the json payload
+  getModelPayload() {
+    return this.get();
   }
 
   // each subclass has unique proxy methods to add to the basic
-  addProxyMethods(keys) {
-    this.proxyMethods = this.proxyMethods.concat(keys);
+  addProxyMethods(methods) {
+    this.proxyMethods = this.proxyMethods.concat(methods);
+    this.wrap(methods);
   }
 
-  // remove all proxied methods
+  // add proxy methods to json object
+  wrap(methods) {
+    methods.forEach( method => this.json[method] = this[method].bind(this));
+  }
+
+  // remove proxy methods to json object
   unwrap() {
     this.proxyMethods.forEach((method)=> {
       delete this.json[method];

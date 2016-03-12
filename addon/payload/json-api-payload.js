@@ -5,7 +5,6 @@ export default class extends JSONPayload {
 
   constructor(modelName, json, listType) {
     super(modelName, json, listType);
-    json.includes = ()=>this.includes();
     this.data = json.data;
     this.addProxyMethods("includes".w());
   }
