@@ -5,11 +5,11 @@ export default class {
 
   /**
    Proxy class for getting access to a json payload.
-   Used to proxy for json built from build and buildList methods.
+   Adds methods to json built from build and buildList methods.
 
-   @param modelName
-   @param json json being proxied
-   @param listType boolean true if buildList payload
+   @param {String} modelName name of model for payload
+   @param {Object} json json payload being proxied
+   @param {Boolean} listType true if it's a buildList payload
    */
   constructor(modelName, json, listType = false) {
     this.modelName = modelName;
@@ -21,7 +21,8 @@ export default class {
   }
 
   // marker function for saying "I am a proxy"
-  isProxy() {}
+  isProxy() {
+  }
 
   // get the top level model from the json payload
   getModelPayload() {
@@ -36,14 +37,12 @@ export default class {
 
   // add proxy methods to json object
   wrap(methods) {
-    methods.forEach( method => this.json[method] = this[method].bind(this));
+    methods.forEach(method => this.json[method] = this[method].bind(this));
   }
 
   // remove proxy methods to json object
   unwrap() {
-    this.proxyMethods.forEach((method)=> {
-      delete this.json[method];
-    });
+    this.proxyMethods.forEach(method => delete this.json[method]);
   }
 
   /**
