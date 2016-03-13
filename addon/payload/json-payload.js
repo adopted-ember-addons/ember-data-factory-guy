@@ -40,7 +40,7 @@ export default class {
     methods.forEach(method => this.json[method] = this[method].bind(this));
   }
 
-  // remove proxy methods to json object
+  // remove proxy methods from json object
   unwrap() {
     this.proxyMethods.forEach(method => delete this.json[method]);
   }
