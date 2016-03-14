@@ -29,30 +29,18 @@ ChangeLog: ( Notes about what has changed in each version )
 
 ### Installation
 
-##### Never used ember-data-factory-guy before
-
  - ```ember install ember-data-factory-guy@2.4.1``` ( ember-data-1.13.5+ )
  - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + )
  - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 )
  - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )
-
-
-##### Have a previous installation ( updating to new version )
-
-Clear npm:
- - remove 'ember-data-factory-guy' from package.json
- - ```npm prune ```
-
-then:
-
- - Follow ["Never used ember-data-factory-guy before"](https://github.com/danielspaniel/ember-data-factory-guy#never-used-ember-data-factory-guy-before) instructions
- - Move existing factories to tests/factories directory
 
 ### How this works
 
   - You create factories for you models.
     - put them in tests/factories directory
   - Then you use them to create models in your tests.
+    - You can make records that persist in the store
+    - Or you can build a json payload used for mocking an ajax call's payload
 
 [![Thumbnail of Introduction to ember-data-factory-guy](https://i.vimeocdn.com/video/545504017.png?mw=1920&mh=1080)](https://vimeo.com/album/3607049/video/146964694)
 
