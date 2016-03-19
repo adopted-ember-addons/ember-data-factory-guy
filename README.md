@@ -750,16 +750,61 @@ build up complex scenarios in a different way that has it's own benefits.*
 
 ####cacheOnlyMode
 - FactoryGuy.cacheOnlyMode
+ - takes `except` parameter for models you don't want to label as 'cached'
  - Allows you to setup the adapters to prevent them from fetching data with ajax call 
    - for single models ( find ) you have to put something in the store
-   - for collections ( findAll ) you don't even have to put anything in the store.
+   - for collections ( findAll ) you don't have to put anything in the store.
  - Takes except parameter as a list of models you don't want to cache. 
     - These model requests will go to server with ajax call and need to be mocked.
    
-This is helpful, when you want to set up the test data with make/makeList, and then prevent
-calls like store.find or findAll from fetching more data, since you have already setup
-the store with your custom scenario. 
+This is helpful, when: 
+  - you want to set up the test data with make/makeList, and then prevent
+    calls like store.find or findAll from fetching more data, since you have 
+    already setup the store with make/makeList data. 
+  - you have an application that starts up and loads data that is not relevant
+    to the test page you are working on. 
 
+Usage:
+
+```
+import FactoryGuy, { makeList } from 'ember-data-factory-guy';
+import moduleForAcceptance from '../helpers/module-for-acceptance';
+
+moduleForAcceptance('Acceptance | Profiles View');
+
+test("Using FactoryGuy.cacheOnlyMode", function() {
+  FactoryGuy.cacheOnlyMode();
+  // the store.find call for the user will go out unless there is a user
+  // in the store
+  make('user', {name: 'current'});
+  // the application starts up and makes calls to findAll a few things, but
+  // those can be ignored because of the cacheOnlyMode
+  
+  // for this test I care about just testing profiles
+  makeList("profile", 2);
+
+  visit('/profiles');
+
+  andThen(()=> {
+    // test stuff
+  });
+});
+
+test("Using FactoryGuy.cacheOnlyMode with except", function() {
+  FactoryGuy.cacheOnlyMode({except: ['profile']});
+
+  make('user', {name: 'current'});
+  
+  // this time I want to allow the ajax call so I can return built json payload
+  mockFindAll("profile", 2);
+
+  visit('/profiles');
+
+  andThen(()=> {
+    // test stuff
+  });
+});
+```
   
 ### Testing models, controllers, components
 
