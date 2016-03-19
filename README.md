@@ -37,7 +37,7 @@ ChangeLog: ( Notes about what has changed in each version )
 ### Upgrade
  -  remove ember-data-factory-guy from package.json
  - ```npm prune```
- - ```ember install ember-data-factory-guy``` ( latest release )
+ - ```ember install ember-data-factory-guy  ( for latest release )``` 
  
 ### How this works
 
