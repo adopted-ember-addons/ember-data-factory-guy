@@ -35,9 +35,9 @@ ChangeLog: ( Notes about what has changed in each version )
  - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )
 
 ### Upgrade
- - remove ember-data-factory-guy from package.json
+ -  remove ember-data-factory-guy from package.json
  - ```npm prune```
- - ```ember install ember-data-factory-guy@2.4.2```
+ - ```ember install ember-data-factory-guy``` ( latest release )
  
 ### How this works
 
