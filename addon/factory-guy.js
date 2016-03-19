@@ -505,8 +505,10 @@ class FactoryGuy {
   /**
    Change reload behavior to only used cached models for find/findAll.
    You still have to handle query calls, since they always ajax for data.
+
+   @params {Array} except list of models you don't want to mark as cached
    */
-  cacheOnlyMode({except=[]}) {
+  cacheOnlyMode({except=[]}={}) {
     let store = this.store;
     let findAdapter = store.adapterFor.bind(store);
 

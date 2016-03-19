@@ -34,8 +34,8 @@ class RestFixtureConverter extends Converter {
    @returns {*} converted fixture
    */
   convert(modelName, fixture) {
-
     let newFixture;
+
     if (Ember.typeOf(fixture) === 'array') {
       this.listType = true;
       newFixture = fixture.map((single)=> {
@@ -48,7 +48,6 @@ class RestFixtureConverter extends Converter {
 
     let finalFixture = {};
     finalFixture[modelName] = newFixture;
-
 
     Object.keys(this.included).forEach((key)=> {
       finalFixture[key] = this.included[key];
@@ -105,6 +104,7 @@ class RestFixtureConverter extends Converter {
 
    @param {String} modelKey
    @param {Object} data
+   @param {Object} includeObject
    */
   addToIncluded(data, modelKey) {
     let relationshipKey = pluralize(modelKey.dasherize());

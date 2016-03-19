@@ -9,15 +9,26 @@ export default class {
 
    @param {String} modelName name of model for payload
    @param {Object} json json payload being proxied
-   @param {Boolean} listType true if it's a buildList payload
+   @param {Boolean} converter the converter that built this json
    */
-  constructor(modelName, json, listType = false) {
+  constructor(modelName, json, converter) {
     this.modelName = modelName;
     this.json = json;
-    this.listType = listType;
-    this.payloadKey = listType ? pluralize(modelName) : modelName;
-    this.proxyMethods = "getModelPayload isProxy get unwrap".w();
+    this.converter = converter;
+    this.listType = converter.listType || false;
+    this.payloadKey = this.listType ? pluralize(modelName) : modelName;
+    this.proxyMethods = "getModelPayload isProxy get add unwrap".w();
     this.wrap(this.proxyMethods);
+  }
+
+  /**
+    Add another json payload to this one.
+    Adds the main model payload and all it's includes to this json
+
+    @param {Object} json built from FactoryGuy buildList build
+    @returns {Object} the current json payload
+   */
+  add(/*moreJson*/) {  // each subclass does it's own thing
   }
 
   // marker function for saying "I am a proxy"
@@ -61,5 +72,4 @@ export default class {
     }
     return this.getObjectKeys(key);
   }
-
 }

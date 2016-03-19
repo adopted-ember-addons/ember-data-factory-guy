@@ -38,7 +38,7 @@ class RESTFixtureBuilder extends FixtureBuilder {
   convertForBuild(modelName, fixture) {
     let converter = new RESTFixtureConverter(this.store);
     let json = converter.convert(modelName, fixture);
-    new RESTPayload(modelName, json, converter.listType);
+    new RESTPayload(modelName, json, converter);
     return json;
   }
 }

@@ -313,6 +313,59 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) json", fun
   deepEqual(buildJson, expectedJson);
 });
 
+test("sideloads unrelated record passed as prebuilt ( build ) json", function () {
+
+  let batMan = build('bat_man');
+  let buildJson = build('user').add(batMan);
+  buildJson.unwrap();
+
+  let expectedJson = {
+    user: {
+      id: 1,
+      name: 'User1',
+      style: "normal"
+    },
+    'super-heros': [
+      {
+        id: 1,
+        name: "BatMan",
+        type: "SuperHero"
+      }
+    ]
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+test("sideloads unrelated record passed as prebuilt ( buildList ) json", function () {
+
+  let batMen = buildList('bat_man', 2);
+  let buildJson = build('user').add(batMen);
+  buildJson.unwrap();
+
+  let expectedJson = {
+    user: {
+      id: 1,
+      name: 'User1',
+      style: "normal"
+    },
+    'super-heros': [
+      {
+        id: 1,
+        name: "BatMan",
+        type: "SuperHero"
+      },
+      {
+        id: 2,
+        name: "BatMan",
+        type: "SuperHero"
+      }
+    ]
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
 
 module(title(adapter, 'FactoryGuy#buildList custom'), inlineSetup(App, adapterType));
 

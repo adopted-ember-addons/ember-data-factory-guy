@@ -20,7 +20,7 @@ class JSONAPIJsonBuilder extends FixtureBuilder {
   convertForBuild(modelName, fixture) {
     let converter = new JSONAPIFixtureConverter(this.store);
     let json =  converter.convert(modelName, fixture);
-    new JSONAPIPayload(modelName, json, converter.listType);
+    new JSONAPIPayload(modelName, json, converter);
     return json;
   }
 }

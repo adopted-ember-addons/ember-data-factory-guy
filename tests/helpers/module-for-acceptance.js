@@ -10,7 +10,7 @@ export default function(name, options = {}) {
 
       // Adding FactoryGuy mockSetup call
       mockSetup();
-
+//      FactoryGuy.cacheOnlyMode();
       if (options.beforeEach) {
         options.beforeEach.apply(this, arguments);
       }
