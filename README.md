@@ -1170,7 +1170,7 @@ Usage:
   // Exactly matching attributes, and returning extra attributes
   mockCreate('project')
     .match({name: "Moo", user: user})
-    .andReturn({created_at: new Date()});
+    .returns({created_at: new Date()});
 
 ```
 
