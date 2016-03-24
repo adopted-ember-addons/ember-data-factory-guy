@@ -366,6 +366,76 @@ test("sideloads unrelated record passed as prebuilt ( buildList ) json", functio
   deepEqual(buildJson, expectedJson);
 });
 
+test("embeds belongsTo record when serializer attrs => embedded: always ", function () {
+
+  let buildJson = build('comic-book', 'marvel');
+  buildJson.unwrap();
+
+  let expectedJson = {
+    'comic-book': {
+      id: 1,
+      name: 'Comic Times #1',
+      company: {id: 1, type: 'Company', name: 'Marvel Comics'}
+    }
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+test("embeds belongsTo record passed as prebuilt ( build ) json when serializer attrs => embedded: always ", function () {
+  let marvel = build('marvel');
+  let buildJson = build('comic-book', {company: marvel});
+  buildJson.unwrap();
+
+  let expectedJson = {
+    'comic-book': {
+      id: 1,
+      name: 'Comic Times #1',
+      company: {id: 1, type: 'Company', name: 'Marvel Comics'}
+    }
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+test("embeds hasMany records when serializer attrs => embedded: always", function () {
+
+  let buildJson = build('comic-book', 'with_bad_guys');
+  buildJson.unwrap();
+
+  let expectedJson = {
+    'comic-book': {
+      id: 1,
+      name: 'Comic Times #1',
+      characters: [
+        {id: 1, type: 'Villain', name: 'BadGuy#1'},
+        {id: 2, type: 'Villain', name: 'BadGuy#2'}
+      ]
+    }
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+test("embeds hasMany records passed as prebuilt ( buildList ) json when serializer attrs => embedded: always", function () {
+  let badGuys = buildList('villain', 2);
+  let buildJson = build('comic-book', {characters: badGuys});
+  buildJson.unwrap();
+
+  let expectedJson = {
+    'comic-book': {
+      id: 1,
+      name: 'Comic Times #1',
+      characters: [
+        {id: 1, type: 'Villain', name: 'BadGuy#1'},
+        {id: 2, type: 'Villain', name: 'BadGuy#2'}
+      ]
+    }
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
 
 module(title(adapter, 'FactoryGuy#buildList custom'), inlineSetup(App, adapterType));
 

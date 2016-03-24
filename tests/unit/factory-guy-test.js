@@ -174,24 +174,15 @@ test("without a number but with options returns array of models", function () {
 });
 
 
-//test("when composing associations enforces has many model type", function () {
-//  let profile = build('profile');
-//  let user = build('user', {company: profile});
-//  console.log(user.get());
-//});
-
-
 module('FactoryGuy#define extending another definition', inlineSetup(App,'-json-api'));
 
 test("default values and sequences are inherited", function () {
   FactoryGuy.define('person', {
     sequences: {
-      personName: function (num) {
-        return 'person #' + num;
-      },
+      personName: (i)=> `person #${i}`
     },
     default: {
-      type: 'normal',
+      style: 'normal',
       name: FactoryGuy.generate('personName')
     }
   });
@@ -199,16 +190,14 @@ test("default values and sequences are inherited", function () {
   FactoryGuy.define('philosopher', {
     extends: 'person',
     default: {
-      type: 'Super Thinker'
+      style: 'thinker'
     }
   });
 
-  FactoryGuy.define('villain', {
+  FactoryGuy.define('stoner', {
     extends: 'person',
     sequences: {
-      personName: function (num) {
-        return 'joker#' + num;
-      }
+      personName: (i)=> `stoner #${i}`
     }
   });
 
@@ -218,13 +207,13 @@ test("default values and sequences are inherited", function () {
   equal(json.attributes.name, 'person #1');
 
   json = FactoryGuy.build('philosopher').data;
-  // since the sequence ( personName ) that was inherited from person is owned by super hero,
-  // the person# starts at 1 again, and is not person#2
+  // since the sequence ( personName ) that was inherited from person is owned by stoner,
+  // the person # starts at 1 again, and is not person #2
   equal(json.attributes.name, 'person #1', 'inherits parent default attribute functions and sequences');
-  equal(json.attributes.type, 'Super Thinker', 'local attributes override parent attributes');
+  equal(json.attributes.style, 'thinker', 'local attributes override parent attributes');
 
-  json = FactoryGuy.build('villain').data;
-  equal(json.attributes.name, 'joker#1', 'uses local sequence with inherited parent default attribute function');
+  json = FactoryGuy.build('stoner').data;
+  equal(json.attributes.name, 'stoner #1', 'uses local sequence with inherited parent default attribute function');
 
 });
 
@@ -232,25 +221,22 @@ test("default values and sequences are inherited", function () {
 test("traits are inherited", function () {
   FactoryGuy.define('person', {
     traits: {
-      lazy_type: {type: 'Super Lazy'}
+      lazy_style: { style: 'Super Lazy' }
     }
   });
 
-  FactoryGuy.define('villain', {
+  FactoryGuy.define('stoner', {
     extends: 'person',
     traits: {
-      super_name: {name: 'Joker'}
-    },
-    default: {
-      type: 'Super Interesting'
+      real_name: { name: 'Stoned Guy'}
     }
   });
 
   let json;
 
-  json = FactoryGuy.build('villain', 'super_name', 'lazy_type').data;
-  equal(json.attributes.type, 'Super Lazy', 'inherits parent traits');
-  equal(json.attributes.name, 'Joker', 'local traits are available');
+  json = FactoryGuy.build('stoner', 'real_name', 'lazy_style').data;
+  equal(json.attributes.style, 'Super Lazy', 'inherits parent traits');
+  equal(json.attributes.name, 'Stoned Guy', 'local traits are available');
 });
 
 
@@ -261,30 +247,24 @@ test("named types are not inherited", function () {
         return 'person type #' + num;
       }
     },
-    default: {
-      type: 'normal',
-    },
     dude: {
       type: FactoryGuy.generate('personType')
     }
   });
 
-  FactoryGuy.define('villain', {
+  FactoryGuy.define('stoner', {
     extends: 'person',
-    default: {
-      type: 'Super Evil'
-    },
-    joker: {
-      name: 'Joker'
+    bif: {
+      name: 'Bif'
     },
   });
 
   let json;
 
-  json = FactoryGuy.build('joker').data;
-  equal(json.attributes.name, 'Joker');
+  json = FactoryGuy.build('bif').data;
+  equal(json.attributes.name, 'Bif');
 
-  let definition = FactoryGuy.findModelDefinition('villain');
+  let definition = FactoryGuy.findModelDefinition('stoner');
   equal(definition.matchesName('dude'), undefined);
 });
 

@@ -5,6 +5,11 @@ FactoryGuy.define("company", {
     type: 'Company',
     name: 'Silly corp'
   },
+
+  marvel: {
+    name: 'Marvel Comics'
+  },
+
   traits: {
     with_profile: {
       profile: {}

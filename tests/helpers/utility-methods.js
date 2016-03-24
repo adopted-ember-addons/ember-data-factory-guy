@@ -12,23 +12,21 @@ let theUsualSetup = function (adapterType) {
     let adapter = App.__container__.lookup('adapter:'+adapterType);
     let serializer = App.__container__.lookup('serializer:'+adapterType);
 
-    if (adapterType === "-json-api") {
-      // the json api serializer dasherizes keys, and I don't want to
-      //serializer.keyForAttribute = function (key, method) {
-      //  return key;
-      //};
-    }
-
     store.adapterFor = function() { return adapter; };
-    store.serializerFor = function() { return serializer; };
+
+    // comic book will always be REST style serializer
+    let comicBookSerializer = store.serializerFor('comic-book');
+    store.serializerFor = function(modelName) {
+      if (modelName==="comic-book") {
+        return comicBookSerializer;
+      }
+      return serializer;
+    };
+
     // this is cheesy .. but it works
     serializer.store = store;
     adapter.store = store;
 
-    adapter.shouldBackgroundReloadAll = function() { return false; };
-    adapter.shouldBackgroundReloadRecord = function() { return false; };
-    adapter.shouldReloadRecord = function() { return false; };
-    adapter.shouldReloadAll = function() { return true; };
     FactoryGuy.setStore(store);
   }
 

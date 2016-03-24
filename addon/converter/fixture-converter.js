@@ -21,14 +21,20 @@ export default class {
   }
 
   getTransformKeyFunction(modelName, type) {
-    if (!this.transformKeys) { return this.noTransformFn; }
+    if (!this.transformKeys) {
+      return this.noTransformFn;
+    }
     let serializer = this.store.serializerFor(modelName);
     return serializer['keyFor' + type] || this.defaultKeyTransformFn;
   }
 
   getTransformValueFunction(type) {
-    if (!this.transformKeys) { return this.noTransformFn; }
-    if (!type) { return this.defaultValueTransformFn; }
+    if (!this.transformKeys) {
+      return this.noTransformFn;
+    }
+    if (!type) {
+      return this.defaultValueTransformFn;
+    }
     let container = Ember.getOwner ? Ember.getOwner(this.store) : this.store.container;
     return container.lookup('transform:' + type).serialize;
   }
@@ -63,9 +69,9 @@ export default class {
     this.store.modelFor(modelName).eachRelationship((key, relationship)=> {
       if (fixture.hasOwnProperty(key)) {
         if (relationship.kind === 'belongsTo') {
-          this.extractBelongsTo(fixture, relationship, relationships);
+          this.extractBelongsTo(fixture, relationship, modelName, relationships);
         } else if (relationship.kind === 'hasMany') {
-          this.extractHasMany(fixture, relationship, relationships);
+          this.extractHasMany(fixture, relationship, modelName, relationships);
         }
       }
     });
@@ -80,44 +86,60 @@ export default class {
    @param relationship
    @param relationships
    */
-  extractBelongsTo(fixture, relationship, relationships) {
+  extractBelongsTo(fixture, relationship, parentModelName, relationships) {
     let belongsToRecord = fixture[relationship.key];
-    let relationshipKey = this.transformRelationshipKey(relationship);
 
-    let data = this.extractSingleRecord(belongsToRecord, relationship);
+    let relationshipKey = this.transformRelationshipKey(relationship);
+    let isEmbedded = this.isEmbeddedRelationship(parentModelName, relationshipKey);
+
+    let data = this.extractSingleRecord(belongsToRecord, relationship, isEmbedded);
 
     relationships[relationshipKey] = this.assignRelationship(data);
   }
 
-  extractHasMany(fixture, relationship, relationships) {
+  // Borrowed from ember data
+  // checks config for attrs option to embedded (always)
+  isEmbeddedRelationship(modelName, attr) {
+    let serializer = this.store.serializerFor(modelName);
+    var option = this.attrsOption(serializer, attr);
+    return option && option.embedded === 'always';
+  }
+
+  attrsOption(serializer, attr) {
+    var attrs = serializer.get('attrs');
+    return attrs && (attrs[Ember.String.camelize(attr)] || attrs[attr]);
+  }
+
+  extractHasMany(fixture, relationship, parentModelName, relationships) {
     let hasManyRecords = fixture[relationship.key];
 
+    let relationshipKey = this.transformRelationshipKey(relationship);
+    let isEmbedded = this.isEmbeddedRelationship(parentModelName, relationshipKey);
+
     if (hasManyRecords.isProxy) {
-      return this.addListProxyData(hasManyRecords, relationship, relationships);
+      return this.addListProxyData(hasManyRecords, relationship, relationships, isEmbedded);
     }
 
     if (Ember.typeOf(hasManyRecords) !== 'array') {
       return;
     }
 
-    let relationshipKey = this.transformRelationshipKey(relationship);
-
     let records = hasManyRecords.map((hasManyRecord)=> {
-      return this.extractSingleRecord(hasManyRecord, relationship);
+      return this.extractSingleRecord(hasManyRecord, relationship, isEmbedded);
     });
 
     relationships[relationshipKey] = this.assignRelationship(records);
   }
 
-  extractSingleRecord(record, relationship) {
+  extractSingleRecord(record, relationship, isEmbedded) {
     let data;
     switch (Ember.typeOf(record)) {
 
       case 'object':
         if (record.isProxy) {
-          data = this.addProxyData(record, relationship);
+          data = this.addProxyData(record, relationship, isEmbedded);
         } else {
-          data = this.addData(record, relationship);
+          data = this.addData(record, relationship, isEmbedded);
         }
         break;
 
@@ -142,32 +164,43 @@ export default class {
     return object;
   }
 
-  addData(embeddedFixture, relationship) {
+  addData(embeddedFixture, relationship, isEmbedded) {
     let relationshipType = this.getRelationshipType(relationship, embeddedFixture);
     // find possibly more embedded fixtures
     let data = this.convertSingle(relationshipType, embeddedFixture);
+    if (isEmbedded) {
+      return data;
+    }
     this.addToIncluded(data, relationshipType);
     return this.normalizeAssociation(data, relationship);
   }
 
   // proxy data is data that was build with FactoryGuy.build method
-  addProxyData(jsonProxy, relationship) {
+  addProxyData(jsonProxy, relationship, isEmbedded) {
     let data = jsonProxy.getModelPayload();
     let relationshipType = this.getRelationshipType(relationship, data);
+    if (isEmbedded) {
+      this.addToIncludedFromProxy(jsonProxy);
+      return data;
+    }
     this.addToIncluded(data, relationshipType);
     this.addToIncludedFromProxy(jsonProxy);
     return this.normalizeAssociation(data, relationship);
   }
 
   // listProxy data is data that was build with FactoryGuy.buildList method
-  addListProxyData(jsonProxy, relationship, relationships) {
+  addListProxyData(jsonProxy, relationship, relationships, isEmbedded) {
     let relationshipKey = this.transformRelationshipKey(relationship);
 
     let records = jsonProxy.getModelPayload().map((data)=> {
+      if (isEmbedded) {
+        return data;
+      }
       let relationshipType = this.getRelationshipType(relationship, data);
       this.addToIncluded(data, relationshipType);
       return this.normalizeAssociation(data, relationship);
     });
+
     this.addToIncludedFromProxy(jsonProxy);
 
     relationships[relationshipKey] = this.assignRelationship(records);
