@@ -24,3 +24,8 @@ test('using this.subject for profile and make for company associaion', function(
   let profile = this.subject({company: make('company')});
   ok(profile.get('company.profile') === profile);
 });
+
+test('uses customized transformFor', function () {
+  let profile = make('profile', {foo: 'bar'});
+  equal(profile.get('foo'), 'bar');
+});
