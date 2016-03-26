@@ -36,14 +36,13 @@ export default class {
       return this.defaultValueTransformFn;
     }
     let serializer = this.store.serializerFor(modelName);
-    if ('function' == typeof serializer.transformFor) {
+    if ('function' === typeof serializer.transformFor) {
       // Use serializer.transformFor for compatibility with ember-data-model-fragments,
       // for context see https://github.com/danielspaniel/ember-data-factory-guy/issues/182
       return serializer.transformFor(type).serialize;
-    } else {
-      let container = Ember.getOwner ? Ember.getOwner(this.store) : this.store.container;
-      return container.lookup('transform:' + type).serialize;
     }
+    let container = Ember.getOwner ? Ember.getOwner(this.store) : this.store.container;
+    return container.lookup('transform:' + type).serialize;
   }
 
   extractAttributes(modelName, fixture) {
