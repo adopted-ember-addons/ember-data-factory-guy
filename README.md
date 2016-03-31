@@ -820,11 +820,11 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - Use 'moduleForModel' ( ember-qunit ), or describeModel ( ember-mocha ) test helper
   - manually set up Factory guy 
 
-- [Sample component test #1 (dude-translator-manual-setup-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/dude-translator-manual-setup-test.js)
+- [Sample component test #1 (single-user-manual-setup-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/single-user-manual-setup-test.js)
   - Using 'moduleForComponent' ( ember-qunit ), or describeComponent ( ember-mocha ) helper
   - Manually sets up Factory guy ( so it's faster )
 
-- [Sample component test #2 (dude-translator-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/dude-translator-test.js)
+- [Sample component test #2 (single-user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/single-user-test.js)
   - Using 'moduleForComponent' ( ember-qunit ), or describeComponent ( ember-mocha ) helper
   - Starts a new application with startApp() before each test  ( slower )
 

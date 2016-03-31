@@ -16,7 +16,7 @@ import { test, moduleForModel } from 'ember-qunit';
  model test.
  */
 
-moduleForModel('user', {
+moduleForModel('user', 'Unit | Model | user', {
  // using integration: true to have all models registered in the container
  // but you could also use needs: [project, client, etc..] to list those you need as well
  integration:true,

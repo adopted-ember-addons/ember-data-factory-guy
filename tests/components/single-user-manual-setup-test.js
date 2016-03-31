@@ -3,7 +3,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 import { test, moduleForComponent } from 'ember-qunit';
 
-moduleForComponent('dude-translator', 'dude-translator manualSetup', {
+moduleForComponent('single-user', 'Integration | Component | single-user (manual setup)', {
   integration: true,
 
   beforeEach: function () {
@@ -15,8 +15,9 @@ moduleForComponent('dude-translator', 'dude-translator manualSetup', {
 test("can translate original word", function () {
   let user = make('user', {name: 'Rob'});
 
-  this.render(hbs`{{dude-translator original=name}}`);
-  this.set('name', user.get('name'));
+  this.render(hbs`{{single-user user=user}}`);
+  this.set('user', user);
 
-  ok(this.$('.translation').text() === 'Rob dude');
+  ok(this.$('.name').text().match(user.get('name')));
+  ok(this.$('.funny-name').text().match(user.get('funnyName')));
 });

@@ -7,7 +7,7 @@ import { test, moduleForComponent } from 'ember-qunit';
 
 let App = null;
 
-moduleForComponent('dude-translator', {
+moduleForComponent('single-user', 'Integration | Component | single-user', {
   integration: true,
 
   setup: function () {
@@ -25,7 +25,9 @@ moduleForComponent('dude-translator', {
 test("can translate original word", function () {
   let user = make('user', {name: 'Rob'});
 
-  this.render(hbs`{{dude-translator original=name}}`);
-  this.set('name', user.get('name'));
-  ok(this.$('.translation').text() === 'Rob dude');
+  this.render(hbs`{{single-user user=user}}`);
+  this.set('user', user);
+
+  ok(this.$('.name').text().match(user.get('name')));
+  ok(this.$('.funny-name').text().match(user.get('funnyName')));
 });

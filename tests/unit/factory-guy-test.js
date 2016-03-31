@@ -174,7 +174,7 @@ test("without a number but with options returns array of models", function () {
 });
 
 
-module('FactoryGuy#define extending another definition', inlineSetup(App,'-json-api'));
+module('FactoryGuy#define', inlineSetup(App,'-json-api'));
 
 test("default values and sequences are inherited", function () {
   FactoryGuy.define('person', {
@@ -266,6 +266,23 @@ test("named types are not inherited", function () {
 
   let definition = FactoryGuy.findModelDefinition('stoner');
   equal(definition.matchesName('dude'), undefined);
+});
+
+test("id can be a function", function () {
+  FactoryGuy.define('stoner', {
+
+    sequences: {
+      stonerId: (i)=>`stoner-${i}`,
+    },
+
+    bif: {
+      id: FactoryGuy.generate('stonerId'),
+      name: 'Bif'
+    }
+  });
+
+  let json = FactoryGuy.build('bif').data;
+  equal(json.id, 'stoner-1');
 });
 
 //module('FactoryGuy#define', inlineSetup(App));
