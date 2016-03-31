@@ -1313,7 +1313,7 @@ test("Creates new project", function () {
     fillIn('input.project-name', newProjectName);
 
     // Remember, this is for handling an exact match, if you did not care about
-    // matching attributes, you could just do: TestHelper.mockCreate('project')
+    // matching attributes, you could just do: mockCreate('project')
     mockCreate('project', {match: {name: newProjectName, user: user}});
 
     /**
