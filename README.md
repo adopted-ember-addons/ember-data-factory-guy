@@ -838,7 +838,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   });
   
   
-  test("can translate original word", function () {
+  test("shows user information", function () {
     let user = make('user', {name: 'Rob'});
   
     this.render(hbs`{{single-user user=user}}`);
