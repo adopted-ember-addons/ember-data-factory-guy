@@ -915,7 +915,7 @@ Usage:
    let mock = mockFind('user');
    let userId = mock.get('id');
 ```
-- To return custom factory built json object using `returns()` method
+- Using `returns({json})` to return json object  
 ```javascript
    let user = build('user', 'whacky', {isDude: true});
    let mock = mockFind('user').returns({ json: user });
@@ -930,7 +930,7 @@ Usage:
    // user.id => 1
    // user.style => 'whacky'
 ```
-- To return a custom factory made model/record using `returns()` method
+- Using `returns({model})` to return model instance
 ```javascript
    let user = make('user', 'whacky', {isDude: false});
    let mock = mockFind('user').returns({ model: user });
