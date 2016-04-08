@@ -771,7 +771,7 @@ This is helpful, when:
 
 Usage:
 
-```
+```javascript
 import FactoryGuy, { makeList } from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
