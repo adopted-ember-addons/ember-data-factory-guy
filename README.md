@@ -907,7 +907,6 @@ test('using this.subject for profile and make for company associaion', function(
 
 Usage:
 ```javascript
-   // Typically you will use like:
    import { build, make, mockFind } from 'ember-data-factory-guy';
 ```
 - To return default factory 'user'
@@ -916,17 +915,20 @@ Usage:
    let mock = mockFind('user');
    let userId = mock.get('id');
 ```
-- To return custom factory built json object using returns method
+- To return custom factory built json object using `returns()` method
 ```javascript
    let user = build('user', 'with_whacky_name', {isDude: true});
    let mock = mockFind('user').returns({ json: user });
    let userId = user.get('id');
+   // you can now also user.get('any-property')
 ```
-- To return a custom factory made model/record using returns method
+- To return a custom factory made model/record using `returns()` method
 ```javascript
-   let user = make('user', 'with_whacky_name', {isDude: true});
+   let user = make('user', 'with_whacky_name', {isDude: false});
    let mock = mockFind('user').returns({ model: user });
    let userId = user.get('id');
+   // you can now also user.get('any-computed-property') 
+   // since you have a real model instance
 ```
 - To reuse the mock
 ```javascript
@@ -949,28 +951,37 @@ Usage:
 Usage:
 
 ```javascript
-   // Typically you will use like:
-   import { buildList, mockFindAll } from 'ember-data-factory-guy';
-
-   // To mock store.findAll and return no users
+   import { buildList, makeList, mockFindAll } from 'ember-data-factory-guy';
+```
+- To mock store.findAll and return no users
+```javascript
    let mock = mockFindAll('user');
-
-   // To return custom factory built json object using returns method
+```
+- To return custom factory built json object using `returns()` method
+```javascript
    // that has 2 different users:
-   let users1 = buildList('user', 'with_whacky_name', {isDude: true});
+   let users1 = buildList('user', 'whacky', {isDude: true});
    let mock = mockFindAll('user').returns({ json: users1 });
-   // or  
+   // or to acccomplish the same thing with less code 
    let mock = mockFindAll('user', 'with_whacky_name', {isDude: true}) 
-   
-   // and to reuse the mock and return different payload
+```
+ - To return a custom factory made model/record using `returns()` method
+ ```javascript
+    let users = makeList('user', 'whacky', 'silly');
+    let mock = mockFind('user').returns({ models: user });
+    let userId = user.get('id');
+    // you can now also user.get('any-computed-property') 
+    // since you have a real model instance
+ ```
+- To reuse the mock and return different payload
+```javascript   
    let users2 = buildList('user', 3);
    mock.returns({ json: user2 });
-   
-   // To mock failure case use `fails()` method 
-   mockFindAll('user').fails();
-
 ```
-
+- To mock failure case use `fails()` method 
+```javascript   
+   mockFindAll('user').fails();
+```
 
 ##### mockReload
   - To handle reloading a model
