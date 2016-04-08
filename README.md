@@ -898,7 +898,7 @@ test('using this.subject for profile and make for company associaion', function(
   - Easiest is to set them up in [module-for-acceptance.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/helpers/module-for-acceptance.js)
 
 ##### mockFind
-  - For dealing with finding one record of a particular type
+  - For dealing with finding one record of a particular type => `store.find('modelType')`
   - Can pass in arguments just like you would for [make](https://github.com/danielspaniel/ember-data-factory-guy#make) or [build](https://github.com/danielspaniel/ember-data-factory-guy#build)
     - mockFind( fixture or model name, optional traits, optional attributes object)
   - Takes modifier method `returns()` for controlling the response payload
@@ -909,7 +909,7 @@ Usage:
 ```javascript
    import { build, make, mockFind } from 'ember-data-factory-guy';
 ```
-- To return default factory 'user'
+- To return default factory model type ( 'user' in this case )
 ```javascript
    // mockFind automatically returns json for the modelType ( in this case 'user' )  
    let mock = mockFind('user');
@@ -917,14 +917,23 @@ Usage:
 ```
 - To return custom factory built json object using `returns()` method
 ```javascript
-   let user = build('user', 'with_whacky_name', {isDude: true});
+   let user = build('user', 'whacky', {isDude: true});
    let mock = mockFind('user').returns({ json: user });
    let userId = user.get('id');
    // you can now also user.get('any-property')
+   // user.get('style') => 'whacky'
+   
+   // or to acccomplish the same thing with less code 
+   let mock = mockFindAll('user', 'whacky', {isDude: true});
+   // mock.get('id') => 1
+   // mock.get('style') => 'whacky'
+   let user = mock.get();
+   // user.id => 1
+   // user.style => 'whacky'
 ```
 - To return a custom factory made model/record using `returns()` method
 ```javascript
-   let user = make('user', 'with_whacky_name', {isDude: false});
+   let user = make('user', 'whacky', {isDude: false});
    let mock = mockFind('user').returns({ model: user });
    let userId = user.get('id');
    // you can now also user.get('any-computed-property') 
@@ -941,8 +950,8 @@ Usage:
 ```
 
 ##### mockFindAll
-  - For dealing with finding all records of a particular type
-  - takes same parameters as [makeList](https://github.com/danielspaniel/ember-data-factory-guy#makelist)
+  - For dealing with finding all records of a particular type => `store.findAll(modelType)`
+  - Takes same parameters as [makeList](https://github.com/danielspaniel/ember-data-factory-guy#makelist)
     - mockFindAll( fixture or model name, optional number, optional traits, optional attributes object)
   - Takes modifier method `returns()` for controlling the response payload
     - returns( models / json / ids )
@@ -953,11 +962,11 @@ Usage:
 ```javascript
    import { buildList, makeList, mockFindAll } from 'ember-data-factory-guy';
 ```
-- To mock store.findAll and return no users
+- To mock and return no results
 ```javascript
    let mock = mockFindAll('user');
 ```
-- To return custom factory built json object using `returns()` method
+- Using `returns({json})` to return json object  
 ```javascript
    // that has 2 different users:
    let users = buildList('user', 'whacky', 'silly');
@@ -973,7 +982,7 @@ Usage:
    // user1.style => 'whacky'
    // user2.style => 'silly'
 ```
- - Using `returns({models})` to model instances
+ - Using `returns({models})` to return model instances
 ```javascript
     let users = makeList('user', 'whacky', 'silly');
     let mock = mockFindAll('user').returns({ models: users });
