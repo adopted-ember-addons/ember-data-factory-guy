@@ -961,7 +961,7 @@ Usage:
 ```javascript
    // that has 2 different users:
    let users = buildList('user', 'whacky', 'silly');
-   let mock = mockFindAll('user').returns({ json: users1 });
+   let mock = mockFindAll('user').returns({ json: users });
    let user1 = users.get(0);
    let user2 = users.get(1);
    // user1.style => 'whacky'
@@ -976,7 +976,7 @@ Usage:
  - To return a custom factory made model/record using `returns()` method
 ```javascript
     let users = makeList('user', 'whacky', 'silly');
-    let mock = mockFindAll('user').returns({ models: user });
+    let mock = mockFindAll('user').returns({ models: users });
     let user1 = users[0];
     // you can now also user1.get('any-computed-property') 
     // since you have a real model instance
