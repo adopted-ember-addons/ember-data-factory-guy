@@ -967,7 +967,7 @@ Usage:
    // user1.style => 'whacky'
    // user2.style => 'silly'
    // or to acccomplish the same thing with less code 
-   let mock = mockFindAll('user', 'whacky', {isDude: true});
+   let mock = mockFindAll('user', 'whacky', 'silly');
    let user1 = mock.get(0);
    let user2 = mock.get(1);
    // user1.style => 'whacky'
