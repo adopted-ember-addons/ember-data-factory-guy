@@ -963,16 +963,16 @@ Usage:
    let users1 = buildList('user', 'whacky', {isDude: true});
    let mock = mockFindAll('user').returns({ json: users1 });
    // or to acccomplish the same thing with less code 
-   let mock = mockFindAll('user', 'with_whacky_name', {isDude: true}) 
+   let mock = mockFindAll('user', 'whacky', {isDude: true}) 
 ```
  - To return a custom factory made model/record using `returns()` method
- ```javascript
+```javascript
     let users = makeList('user', 'whacky', 'silly');
     let mock = mockFind('user').returns({ models: user });
     let userId = user.get('id');
     // you can now also user.get('any-computed-property') 
     // since you have a real model instance
- ```
+```
 - To reuse the mock and return different payload
 ```javascript   
    let users2 = buildList('user', 3);
