@@ -27,6 +27,9 @@ FactoryGuy.define('user', {
     silly: {
       style: 'silly'
     },
+    whacky: {
+      style: 'whacky'
+    },
     boblike: {
       name: 'Bob',
       style: 'boblike'
