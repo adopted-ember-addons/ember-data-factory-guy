@@ -973,7 +973,7 @@ Usage:
    // user1.style => 'whacky'
    // user2.style => 'silly'
 ```
- - To return a custom factory made model/record using `returns()` method
+ - Using `returns({models})` to model instances
 ```javascript
     let users = makeList('user', 'whacky', 'silly');
     let mock = mockFindAll('user').returns({ models: users });
