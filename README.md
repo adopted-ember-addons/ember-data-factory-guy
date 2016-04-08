@@ -960,17 +960,25 @@ Usage:
 - To return custom factory built json object using `returns()` method
 ```javascript
    // that has 2 different users:
-   let users1 = buildList('user', 'whacky', {isDude: true});
+   let users = buildList('user', 'whacky', 'silly');
    let mock = mockFindAll('user').returns({ json: users1 });
+   let user1 = users.get(0);
+   let user2 = users.get(1);
+   // user1.style => 'whacky'
+   // user2.style => 'silly'
    // or to acccomplish the same thing with less code 
-   let mock = mockFindAll('user', 'whacky', {isDude: true}) 
+   let mock = mockFindAll('user', 'whacky', {isDude: true});
+   let user1 = mock.get(0);
+   let user2 = mock.get(1);
+   // user1.style => 'whacky'
+   // user2.style => 'silly'
 ```
  - To return a custom factory made model/record using `returns()` method
 ```javascript
     let users = makeList('user', 'whacky', 'silly');
-    let mock = mockFind('user').returns({ models: user });
-    let userId = user.get('id');
-    // you can now also user.get('any-computed-property') 
+    let mock = mockFindAll('user').returns({ models: user });
+    let user1 = users[0];
+    // you can now also user1.get('any-computed-property') 
     // since you have a real model instance
 ```
 - To reuse the mock and return different payload
