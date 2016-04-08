@@ -836,8 +836,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
       manualSetup(this.container);
     }
   });
-  
-  
+          
   test("shows user information", function () {
     let user = make('user', {name: 'Rob'});
   

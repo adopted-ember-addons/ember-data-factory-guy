@@ -10,7 +10,6 @@ moduleForComponent('single-user', 'Integration | Component | single-user (manual
   }
 });
 
-
 test("shows user information", function () {
   let user = make('user', {name: 'Rob'});
 
