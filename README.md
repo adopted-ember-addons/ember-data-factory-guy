@@ -819,67 +819,40 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
 - [Sample model test (profile-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
   - Use 'moduleForModel' ( ember-qunit ), or describeModel ( ember-mocha ) test helper
   - manually set up Factory guy 
-
+  
 - [Sample component test #1 (single-user-manual-setup-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/single-user-manual-setup-test.js)
   - Using 'moduleForComponent' ( ember-qunit ), or describeComponent ( ember-mocha ) helper
   - Manually sets up Factory guy ( so it's faster )
+
+  ```javascript
+  import { make, manualSetup }  from 'ember-data-factory-guy';
+  import hbs from 'htmlbars-inline-precompile';
+  import { test, moduleForComponent } from 'ember-qunit';
+  
+  moduleForComponent('single-user', 'Integration | Component | single-user (manual setup)', {
+    integration: true,
+  
+    beforeEach: function () {
+      manualSetup(this.container);
+    }
+  });
+  
+  
+  test("can translate original word", function () {
+    let user = make('user', {name: 'Rob'});
+  
+    this.render(hbs`{{single-user user=user}}`);
+    this.set('user', user);
+  
+    ok(this.$('.name').text().match(user.get('name')));
+    ok(this.$('.funny-name').text().match(user.get('funnyName')));
+  });
+  ```
 
 - [Sample component test #2 (single-user-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/single-user-test.js)
   - Using 'moduleForComponent' ( ember-qunit ), or describeComponent ( ember-mocha ) helper
   - Starts a new application with startApp() before each test  ( slower )
 
-
-- Sample Unit Test for Profile Model => file: tests/unit/models/profile-test.js
-
-```javascript
-import { manualSetup, make } from 'ember-data-factory-guy';
-import { test, moduleForModel } from 'ember-qunit';
-
-moduleForModel('profile', 'Unit | Model | profile', {
-  needs: ['model:company', 'model:super-hero', 'model:group'],
-
-  beforeEach: function() {
-    manualSetup(this.container);
-  }
-});
-
-test('using only make for profile with company association', function() {
-  let profile = make('profile', 'with_company');
-  ok(profile.get('company.profile') === profile);
-});
-
-test('using this.subject for profile and make for company associaion', function() {
-  let profile = this.subject({company: make('company')});
-  ok(profile.get('company.profile') === profile);
-});
-
-```
-- Sample Component Integration Test => file: tests/integration/components/single-user-manual-setup-test.js
-
-```javascript
-import { make, manualSetup }  from 'ember-data-factory-guy';
-import hbs from 'htmlbars-inline-precompile';
-import { test, moduleForComponent } from 'ember-qunit';
-
-moduleForComponent('single-user', 'Integration | Component | single-user (manual setup)', {
-  integration: true,
-
-  beforeEach: function () {
-    manualSetup(this.container);
-  }
-});
-
-
-test("can translate original word", function () {
-  let user = make('user', {name: 'Rob'});
-
-  this.render(hbs`{{single-user user=user}}`);
-  this.set('user', user);
-
-  ok(this.$('.name').text().match(user.get('name')));
-  ok(this.$('.funny-name').text().match(user.get('funnyName')));
-});
-```
 
 ### Acceptance Tests
 
