@@ -906,27 +906,29 @@ test('using this.subject for profile and make for company associaion', function(
   - Sample acceptance tests using mockFind: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
 Usage:
-  
 ```javascript
    // Typically you will use like:
    import { build, mockFind } from 'ember-data-factory-guy';
-
-   // To return default factory 'user'
+```
+- To return default factory 'user'
+```javascript
    let mock = mockFind('user');
    let userId = mock.get('id');
-
-   // or to return custom factory built json object using returns method
+```
+- To return custom factory built json object using returns method
+```javascript
    let user1 = build('user', 'with_whacky_name', {isDude: true});
    let mock = mockFind('user').returns({ json: user1 });
    let userId = user1.get('id');
-
-   // and to reuse the mock
+```
+-To reuse the mock
+```javascript
    let user2 = build('user', {style: "boring"});
    mock.returns({ json: user2 });
-   
-   // To mock failure case use `fails` method
+``` 
+```javascript  
+   To mock failure case use `fails` method
    mockFind('user').fails();
-
 ```
 
 ##### mockFindAll
