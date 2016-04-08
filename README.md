@@ -919,8 +919,7 @@ Usage:
 ```javascript
    let user = build('user', 'whacky', {isDude: true});
    let mock = mockFind('user').returns({ json: user });
-   let userId = user.get('id');
-   // you can now also user.get('any-property')
+   // user.get('id') => 1
    // user.get('style') => 'whacky'
    
    // or to acccomplish the same thing with less code 
@@ -935,7 +934,7 @@ Usage:
 ```javascript
    let user = make('user', 'whacky', {isDude: false});
    let mock = mockFind('user').returns({ model: user });
-   let userId = user.get('id');
+   // user.get('id') => 1
    // you can now also user.get('any-computed-property') 
    // since you have a real model instance
 ```
@@ -943,6 +942,7 @@ Usage:
 ```javascript
    let user2 = build('user', {style: "boring"});
    mock.returns({ json: user2 });
+   // mock.get('id') => 2
 ```
 - To mock failure case use `fails` method
 ```javascript  
@@ -975,6 +975,7 @@ Usage:
    let user2 = users.get(1);
    // user1.style => 'whacky'
    // user2.style => 'silly'
+   
    // or to acccomplish the same thing with less code 
    let mock = mockFindAll('user', 'whacky', 'silly');
    let user1 = mock.get(0);
