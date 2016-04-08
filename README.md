@@ -912,22 +912,27 @@ Usage:
 ```
 - To return default factory 'user'
 ```javascript
+   
+   // mockFind automatically returns json for the modelType ( in this case 'user' )  
    let mock = mockFind('user');
    let userId = mock.get('id');
 ```
 - To return custom factory built json object using returns method
 ```javascript
+   
    let user1 = build('user', 'with_whacky_name', {isDude: true});
    let mock = mockFind('user').returns({ json: user1 });
    let userId = user1.get('id');
 ```
--To reuse the mock
+- To reuse the mock
 ```javascript
+   
    let user2 = build('user', {style: "boring"});
    mock.returns({ json: user2 });
-``` 
+```
+- To mock failure case use `fails` method
 ```javascript  
-   To mock failure case use `fails` method
+   
    mockFind('user').fails();
 ```
 
