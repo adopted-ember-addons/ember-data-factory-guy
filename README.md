@@ -5,7 +5,7 @@
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
-Questions: Slack => [factory-guy](https://embercommunity.slack.com/messages/factory-guy/)
+Questions: Slack => [factory-guy](https://embercommunity.slack.com/messages/e-factory-guy/)
 
 Contents:
   - [Installation](https://github.com/danielspaniel/ember-data-factory-guy#installation)
