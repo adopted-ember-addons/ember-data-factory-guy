@@ -1001,7 +1001,9 @@ Usage:
   - To handle reloading a model
     - Pass in a record ( or a typeName and id )
 
-*Passing in a record / model instance*
+Usage:
+
+- Passing in a record / model instance
 
 ```javascript
     let profile = make('profile');
@@ -1011,14 +1013,11 @@ Usage:
     profile.reload()
 ```
 
-*Mocking a failed reload*
+- Mocking a failed reload
 
 ```javascript
-
     mockReload('profile', 1).fails();
-
 ```
-
 
 ##### mockQuery
   - For dealing with finding all records for a type of model with query parameters.
