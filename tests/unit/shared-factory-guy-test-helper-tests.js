@@ -10,6 +10,7 @@ import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error'
 import $ from 'jquery';
 
 import Profile from 'dummy/models/profile';
+import SuperHero from 'dummy/models/super-hero';
 
 let SharedBehavior = {};
 
@@ -951,6 +952,25 @@ SharedBehavior.handleCreateTests = function() {
     });
   });
 
+  test("with dasherized model name", function(assert) {
+    Ember.run(function() {
+      let done = assert.async();
+      let customName = "special name";
+
+      mockCreate('super-hero', {
+        match: { name: customName }
+      });
+      ok(FactoryGuy.store.peekAll('super-hero').get('content.length') === 0);
+      FactoryGuy.store.createRecord('super-hero', {
+        name: customName
+      }).save().then(function(superHero) {
+        ok(FactoryGuy.store.peekAll('super-hero').get('content.length') === 1, 'No extra records created');
+        ok(superHero instanceof SuperHero, 'Creates the correct type of record');
+        ok(superHero.get('name') === customName, 'Passes along the match attributes');
+        done();
+      });
+    });
+  });
 
   /////// with hash of parameters ///////////////////
   test("with no specific match", function(assert) {
@@ -1187,6 +1207,24 @@ SharedBehavior.handleCreateTests = function() {
         ok(profile instanceof Profile);
         ok(profile.id === '1');
         ok(profile.get('description') === customDescription);
+        done();
+      });
+    });
+  });
+
+  test("with dasherized model name match some attributes with match method", function(assert) {
+    Ember.run(function() {
+      let done = assert.async();
+      let customName = "special name";
+
+      mockCreate('super-hero').match({ name: customName });
+
+      FactoryGuy.store.createRecord('super-hero', {
+        name: customName
+      }).save().then(function(superHero) {
+        ok(superHero instanceof SuperHero);
+        ok(superHero.id === '1');
+        ok(superHero.get('name') === customName);
         done();
       });
     });

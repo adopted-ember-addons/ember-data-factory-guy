@@ -103,8 +103,12 @@ let MockCreateRequest = function (url, modelName, options) {
     if (!expectedData.data) {
       expectedData = store.normalize(modelName, expectedData);
     }
-    if (!requestData.data && requestData[modelName]) {
-      requestData = store.normalize(modelName, requestData[modelName]);
+    if (!requestData.data) {
+      const serializer = store.serializerFor(modelName);
+      const transformedModelKey = serializer.payloadKeyFromModelName(modelName);
+      if (requestData[transformedModelKey]) {
+        requestData = store.normalize(modelName, requestData[transformedModelKey]);
+      }
     }
     let expectedAttributes = expectedData.data.attributes;
     let requestedAttributes = requestData.data.attributes;
