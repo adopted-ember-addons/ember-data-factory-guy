@@ -919,7 +919,7 @@ Usage:
    // user.get('style') => 'whacky'
    
    // or to acccomplish the same thing with less code 
-   let mock = mockFindAll('user', 'whacky', {isDude: true});
+   let mock = mockFind('user', 'whacky', {isDude: true});
    // mock.get('id') => 1
    // mock.get('style') => 'whacky'
    let user = mock.get();
