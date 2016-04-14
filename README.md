@@ -1014,8 +1014,8 @@ Usage:
 ```
 
 - Mocking a failed reload
-
-```javascript
+      
+```javascript 
     mockReload('profile', 1).fails();
 ```
 
