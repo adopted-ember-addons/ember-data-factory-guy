@@ -894,7 +894,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - Easiest is to set them up in [module-for-acceptance.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/helpers/module-for-acceptance.js)
 
 ##### mockFind
-  - For dealing with finding one record of a particular type => `store.find('modelType')`
+  - For dealing with finding one record of a model type => `store.find('modelType')`
   - Can pass in arguments just like you would for [make](https://github.com/danielspaniel/ember-data-factory-guy#make) or [build](https://github.com/danielspaniel/ember-data-factory-guy#build)
     - mockFind( fixture or model name, optional traits, optional attributes object)
   - Takes modifier method `returns()` for controlling the response payload
@@ -946,7 +946,7 @@ Usage:
 ```
 
 ##### mockFindAll
-  - For dealing with finding all records of a particular type => `store.findAll(modelType)`
+  - For dealing with finding all records for a model type => `store.findAll(modelType)`
   - Takes same parameters as [makeList](https://github.com/danielspaniel/ember-data-factory-guy#makelist)
     - mockFindAll( fixture or model name, optional number, optional traits, optional attributes object)
   - Takes modifier method `returns()` for controlling the response payload
@@ -1020,7 +1020,7 @@ Usage:
 ```
 
 ##### mockQuery
-  - For dealing with finding all records for a type of model with query parameters.
+  - For dealing with querying for all records for a model type => `store.query(modelType, params)`
     - Takes modifier method `returns()` for controlling the response payload
     - returns( models / json / ids )
    - Takes modifier methods for matching the query params
@@ -1081,7 +1081,7 @@ Usage:
 ```
 
 ##### mockQueryRecord
-  - For dealing with finding one record for a type of model with query parameters.
+  - For dealing with querying for one record for a model type => `store.queryRecord(modelType, params)`
     - Takes modifier method `returns()` for controlling the response payload
     - returns( model / json / id )
    - Takes modifier methods for matching the query params
