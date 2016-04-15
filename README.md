@@ -755,11 +755,10 @@ build up complex scenarios in a different way that has it's own benefits.*
 
 ####cacheOnlyMode
 - FactoryGuy.cacheOnlyMode
- - takes `except` parameter for models you don't want to label as 'cached'
- - Allows you to setup the adapters to prevent them from fetching data with ajax call 
-   - for single models ( find ) you have to put something in the store
-   - for collections ( findAll ) you don't have to put anything in the store.
- - Takes except parameter as a list of models you don't want to cache. 
+  - Allows you to setup the adapters to prevent them from fetching data with ajax call 
+    - for single models ( find ) you have to put something in the store
+    - for collections ( findAll ) you don't have to put anything in the store.
+  - Takes `except` parameter as a list of models you don't want to cache. 
     - These model requests will go to server with ajax call and need to be mocked.
    
 This is helpful, when: 
