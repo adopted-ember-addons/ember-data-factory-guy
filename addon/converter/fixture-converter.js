@@ -39,7 +39,8 @@ export default class {
     if ('function' === typeof serializer.transformFor) {
       // Use serializer.transformFor for compatibility with ember-data-model-fragments,
       // for context see https://github.com/danielspaniel/ember-data-factory-guy/issues/182
-      return serializer.transformFor(type).serialize;
+      let fragmentType = serializer.transformFor(type);
+      return fragmentType.deserialize.bind(fragmentType);
     }
     let container = Ember.getOwner ? Ember.getOwner(this.store) : this.store.container;
     return container.lookup('transform:' + type).serialize;
