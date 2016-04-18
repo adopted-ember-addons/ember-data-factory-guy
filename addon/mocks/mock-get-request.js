@@ -2,6 +2,7 @@ import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
 import DS from 'ember-data';
 import $ from 'jquery';
+const assign = Ember.assign || Ember.merge;
 
 class MockGetRequest {
 
@@ -85,7 +86,7 @@ class MockGetRequest {
 
       case 'attrs':
         let currentId = this.responseJson.get('id');
-        let modelParams = Ember.merge({id: currentId}, options.attrs);
+        let modelParams = assign({id: currentId}, options.attrs);
         json = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, modelParams);
         this.setResponseJson(json);
         break;
@@ -105,7 +106,7 @@ class MockGetRequest {
   }
 
   addResponseHeaders(headers) {
-    Ember.merge(this.responseHeaders, headers);
+    assign(this.responseHeaders, headers);
   }
 
   succeeds(options) {
