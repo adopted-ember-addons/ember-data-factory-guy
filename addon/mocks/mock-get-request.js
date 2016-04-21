@@ -28,7 +28,7 @@ class MockGetRequest {
     const [ responseKey ] = responseKeys;
     Ember.assert(`[ember-data-factory-guy] You passed an invalid key for 'returns' function.
       Valid keys are ${this.validReturnsKeys}. You used this key: ${responseKey}`,
-      this.validReturnsKeys.contains(responseKey));
+      Ember.A(this.validReturnsKeys).contains(responseKey));
 
     return responseKey;
   }
