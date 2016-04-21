@@ -517,7 +517,7 @@ class FactoryGuy {
       let adapter = findAdapter(name);
       let shouldCache = ()=> {
         if (Ember.isPresent(except)) {
-           return (except.contains(name));
+           return (Ember.A(except).contains(name));
         }
         return false;
       };
