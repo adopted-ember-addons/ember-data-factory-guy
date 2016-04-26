@@ -72,7 +72,7 @@ test('employee with department employments (fragment arrays)', function() {
     let department2 = employee.get('departmentEmployments').objectAt(1).get('department');
     ok(department1.get('name') === 'Acme Dept 1');
     ok(department2.get('name') === 'Acme Dept 2');
-    let addresses = department1.get('addresses')
+    let addresses = department1.get('addresses');
     ok(addresses.get('length') === 3);
     ok(addresses.get('firstObject.street') === '1 Sky Cell');
     ok(addresses.get('lastObject.street') === '3 Sky Cell');
