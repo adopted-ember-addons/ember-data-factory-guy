@@ -3,6 +3,7 @@ import DS from 'ember-data';
 import ModelDefinition from './model-definition';
 import FixtureBuilderFactory from './builder/fixture-builder-factory';
 
+const assign = Ember.assign || Ember.merge;
 let modelDefinitions = {};
 
 /**
@@ -57,7 +58,7 @@ let extractArguments = function (...args) {
   if (!name) {
     throw new Error('Build needs a factory name to build');
   }
-  return Ember.merge({name: name}, extractArgumentsShort.apply(this, args));
+  return assign({name: name}, extractArgumentsShort.apply(this, args));
 };
 
 class FactoryGuy {
@@ -516,7 +517,7 @@ class FactoryGuy {
       let adapter = findAdapter(name);
       let shouldCache = ()=> {
         if (Ember.isPresent(except)) {
-           return (except.contains(name));
+           return (Ember.A(except).contains(name));
         }
         return false;
       };

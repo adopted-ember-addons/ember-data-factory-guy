@@ -29,7 +29,7 @@ ChangeLog: ( Notes about what has changed in each version )
 
 ### Installation
 
- - ```ember install ember-data-factory-guy@2.4.2``` ( ember-data-1.13.5+ )
+ - ```ember install ember-data-factory-guy@2.4.5``` ( ember-data-1.13.5+ )
  - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + )
  - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 )
  - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )

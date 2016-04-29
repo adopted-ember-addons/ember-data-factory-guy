@@ -11,7 +11,7 @@ export default class extends JSONPayload {
   add(moreJson) {
     this.converter.included = this.json;
     Object.keys(moreJson)
-      .reject(key=> this.proxyMethods.contains(key))
+      .reject(key=> Ember.A(this.proxyMethods).contains(key))
       .forEach(key=> {
         if (Ember.typeOf(moreJson[key]) === "array") {
           moreJson[key].forEach(data=> this.converter.addToIncluded(data, key));
@@ -25,7 +25,7 @@ export default class extends JSONPayload {
   includeKeys() {
     return Object.keys(this.json)
         .reject(key => this.payloadKey === key)
-        .reject(key=> this.proxyMethods.contains(key)) ||
+        .reject(key=> Ember.A(this.proxyMethods).contains(key)) ||
       [];
   }
 
