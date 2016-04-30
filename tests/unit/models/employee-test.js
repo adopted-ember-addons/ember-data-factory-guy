@@ -1,4 +1,4 @@
-import { mockUpdate, manualSetup, make, makeList } from 'ember-data-factory-guy';
+import { manualSetup, make, makeList } from 'ember-data-factory-guy';
 import { test, moduleForModel } from 'ember-qunit';
 import Ember from 'ember';
 const { run } = Ember;
@@ -31,24 +31,8 @@ test('default employee', function() {
   });
 });
 
-//MOCK UPDATE TEST
-test('update the employee', function() {
-  let employee = make('employee');
-  mockUpdate(employee);
-  run(() => {
-    ok(!employee.get('hasDirtyAttributes'));
-    employee.set('name.firstName', 'Jamie');
-    ok(employee.get('name.firstName') === 'Jamie');
-    ok(employee.get('name.lastName') === 'Lannister');
-    ok(employee.get('hasDirtyAttributes'));
-    employee.save();
-    ok(!employee.get('hasDirtyAttributes'));
-  });
-});
-
 test('employee with default name trait', function() {
   let employee = make('employee', 'default_name_setup');
-  //Fails because name is defined with {}, should it not be the default name factory?
   run(() => {
     ok(employee.get('name.firstName') === 'Tyrion');
     ok(employee.get('name.lastName') === 'Lannister');
@@ -98,7 +82,7 @@ test('employee with department employments (fragment arrays)', function() {
     ok(department1.get('name') === 'Acme Dept 1');
     ok(department2.get('name') === 'Acme Dept 2');
 
-    let addresses = department1.get('addresses')
+    let addresses = department1.get('addresses');
     ok(addresses.get('length') === 3);
     ok(addresses.get('firstObject.street') === '1 Sky Cell');
     ok(addresses.get('lastObject.street') === '3 Sky Cell');

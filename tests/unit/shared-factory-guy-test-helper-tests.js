@@ -1447,8 +1447,31 @@ SharedBehavior.handleUpdateTests = function() {
     });
   });
 
+
+  test('with model that has model fragment as the updated field', function(assert) {
+    Ember.run(() => {
+      let done = assert.async();
+      let employee = make('employee');
+
+      mockUpdate(employee);
+
+      ok(!employee.get('hasDirtyAttributes'));
+      employee.set('name.firstName', 'Jamie');
+
+      ok(employee.get('name.firstName') === 'Jamie');
+      ok(employee.get('name.lastName') === 'Lannister');
+
+      ok(employee.get('hasDirtyAttributes'));
+
+      employee.save().then(()=> {
+        ok(!employee.get('hasDirtyAttributes'));
+        done();
+      });
+    });
+  });
+
   test("with modelType and id that fails", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let profile = make('profile');
 

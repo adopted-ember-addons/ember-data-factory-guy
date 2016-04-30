@@ -28,18 +28,12 @@ export default class {
     return serializer['keyFor' + type] || this.defaultKeyTransformFn;
   }
 
-  getTransformValueFunction(type, modelName) {
-    if (!this.transformKeys) {
+  getTransformValueFunction(type) {
+    if (!this.transformKeys || type.match('-mf')) {
       return this.noTransformFn;
     }
     if (!type) {
       return this.defaultValueTransformFn;
-    }
-    let serializer = this.store.serializerFor(modelName);
-    if ('function' === typeof serializer.transformFor) {
-      // Use serializer.transformFor for compatibility with ember-data-model-fragments,
-      // for context see https://github.com/danielspaniel/ember-data-factory-guy/issues/182
-      return serializer.transformFor(type).serialize;
     }
     let container = Ember.getOwner ? Ember.getOwner(this.store) : this.store.container;
     return container.lookup('transform:' + type).serialize;
@@ -51,7 +45,7 @@ export default class {
 
     this.store.modelFor(modelName).eachAttribute((attribute, meta)=> {
       let attributeKey = transformKeyFunction(attribute);
-      let transformValueFunction = this.getTransformValueFunction(meta.type, modelName);
+      let transformValueFunction = this.getTransformValueFunction(meta.type);
 
       if (fixture.hasOwnProperty(attribute)) {
         attributes[attributeKey] = transformValueFunction(fixture[attribute]);
