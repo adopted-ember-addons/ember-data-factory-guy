@@ -1,10 +1,20 @@
-import { manualSetup, make, makeList } from 'ember-data-factory-guy';
+import { mockUpdate, manualSetup, make, makeList } from 'ember-data-factory-guy';
 import { test, moduleForModel } from 'ember-qunit';
 import Ember from 'ember';
 const { run } = Ember;
 
 moduleForModel('employee', 'Unit | Model | employee', {
-  needs: ['model:name', 'model:department-employment', 'model:department', 'model:nested-fragment/address', 'model:mailing-address', 'model:billing-address'],
+  needs: [
+    'model:name',
+    'model:department-employment',
+    'model:department',
+    'model:nested-fragment/address',
+    'model:mailing-address',
+    'model:billing-address',
+    'transform:fragment',
+    'transform:fragment-array',
+    'transform:array'
+  ],
 
   beforeEach: function() {
     manualSetup(this.container);
@@ -18,6 +28,21 @@ test('default employee', function() {
   run(() => {
     ok(employee.get('name.firstName') === 'Tyrion');
     ok(employee.get('name.lastName') === 'Lannister');
+  });
+});
+
+//MOCK UPDATE TEST
+test('update the employee', function() {
+  let employee = make('employee');
+  mockUpdate(employee);
+  run(() => {
+    ok(!employee.get('hasDirtyAttributes'));
+    employee.set('name.firstName', 'Jamie');
+    ok(employee.get('name.firstName') === 'Jamie');
+    ok(employee.get('name.lastName') === 'Lannister');
+    ok(employee.get('hasDirtyAttributes'));
+    employee.save();
+    ok(!employee.get('hasDirtyAttributes'));
   });
 });
 
