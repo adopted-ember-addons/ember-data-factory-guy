@@ -6,6 +6,8 @@ let MockUpdateRequest = function(url, model, options) {
   let status = options.status || 200;
   let succeed = true;
   let response = null;
+  this.timesCalled = 0;
+  let self = this;
 
   if ('succeed' in options) {
     Ember.deprecate(
@@ -49,6 +51,7 @@ let MockUpdateRequest = function(url, model, options) {
   };
 
   this.handler = function() {
+    self.timesCalled++;
     if (!succeed) {
       this.status = status;
       if (response !== null) {

@@ -1,8 +1,8 @@
 import Ember from 'ember';
-import FactoryGuy, { build, mockFindAll, mockQueryRecord } from 'ember-data-factory-guy';
+import FactoryGuy, { make, build, mockFindAll, mockQueryRecord, mockUpdate } from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
-moduleForAcceptance('MockGetRequest#timeCalled');
+moduleForAcceptance('MockRequest#timeCalled');
 
 test("can verify how many times a queryRecord call was mocked", function(assert) {
   Ember.run(()=> {
@@ -25,6 +25,23 @@ test("can verify how many times a findAll call was mocked", function(assert) {
 
     FactoryGuy.store.findAll('company').then(()=> {
       FactoryGuy.store.findAll('company').then(()=> {
+        equal(mock.timesCalled, 2);
+        done();
+      });
+    });
+  });
+});
+
+test("can verify how many times an update call was mocked", function(assert) {
+  Ember.run(()=> {
+    var done = assert.async();
+    let company = make('company');
+    const mock = mockUpdate(company);
+
+    company.set('name', 'ONE');
+    company.save().then(()=> {
+      company.set('name', 'TWO');
+      company.save().then(()=> {
         equal(mock.timesCalled, 2);
         done();
       });

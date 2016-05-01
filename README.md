@@ -31,7 +31,7 @@ ChangeLog: ( Notes about what has changed in each version )
 
 ### Installation
 
- - ```ember install ember-data-factory-guy@2.5.0``` ( ember-data-1.13.5+ )
+ - ```ember install ember-data-factory-guy@2.5.2``` ( ember-data-1.13.5+ )
  - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + )
  - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 )
  - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )
@@ -877,9 +877,6 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
       ```
   - these mocks are are reusable
     - so you can simulate making the same ajax call ( url ) and return a different payload
-  - [mock#timesCalled](https://github.com/danielspaniel/ember-data-factory-guy#verify-how-many-times-the-ajax-call-was-mocked) 
-    - verify how many times the ajax call was mocked
-  
 - http POST/PUT/DELETE
   - [mockCreate](https://github.com/danielspaniel/ember-data-factory-guy#mockcreate)
   - [mockUpdate](https://github.com/danielspaniel/ember-data-factory-guy#mockupdate)
@@ -890,7 +887,22 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   ```javascript
     let mock = mockFindAll('user').fails({status: 401, errors: {description: "Unauthorized"}}); 
   ```
+- mock#timesCalled 
+  - verify how many times the ajax call was mocked
+  - use `timesCalled` property on the mock
+  - works when you are using mockQuery, mockQueryRecord, mockFindAll, or mockUpdate
+  - mockFind will always be at most 1 since it will only make ajax call
+    the first time, and then the store will use cache the second time
+  - Example:
+  ```javascript
+    const mock = mockQueryRecord('company', {}).returns({ json: build('company') });
   
+    FactoryGuy.store.queryRecord('company', {}).then(()=> {
+      FactoryGuy.store.queryRecord('company', {}).then(()=> {
+        mock.timesCalled //=> 2
+      });
+    });
+  ```
 
 ##### setup and teardown
   - Use ```mockSetup()``` in test setup/beforeEach 
@@ -1142,23 +1154,6 @@ Usage:
     // model will be one model and it will be user1
   });
 
-```
-
-##### verify how many times the ajax call was mocked
-  - use `timesCalled` property on the mock
-  - works best when you are using mockQuery, mockQueryRecord, mockFindAll
-  - mockFind will always be at most 1 since it will only make ajax call
-    the first time, and then the store will use cache the second time
-    
-
-```js
-  const mock = mockQueryRecord('company', {}).returns({ json: build('company') });
-
-  FactoryGuy.store.queryRecord('company', {}).then(()=> {
-    FactoryGuy.store.queryRecord('company', {}).then(()=> {
-      mock.timesCalled //=> 2
-    });
-  });
 ```
 
 ##### mockCreate
