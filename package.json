@@ -25,7 +25,7 @@
   "devDependencies": {
     "active-model-adapter": "2.0.3",
     "broccoli-asset-rev": "^2.1.2",
-    "ember-cli": "^2.3.0-beta.2",
+    "ember-cli": "^2.5.0",
     "ember-load-initializers": "^0.5.0",
     "ember-cli-app-version": "0.5.0",
     "ember-cli-babel": "latest",
@@ -37,7 +37,7 @@
     "ember-cli-qunit": "1.2.4",
     "ember-cli-sri": "^1.2.0",
     "ember-cli-uglify": "1.2.0",
-    "ember-data": "2.3.3",
+    "ember-data": "2.5.2",
     "ember-export-application-global": "latest",
     "ember-resolver": "2.0.3",
     "ember-sinon": "0.0.3",
