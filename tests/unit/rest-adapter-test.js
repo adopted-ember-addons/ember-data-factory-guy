@@ -46,6 +46,24 @@ test("returns an attribute with a key", function () {
   equal(users.get(1).name, 'User2');
 });
 
+module(title(adapter, 'mock#timeCalled'), inlineSetup(App, adapterType));
+
+test("can verify how many times the queryRecord call was mocked", function(assert) {
+  Ember.run(()=> {
+    var done = assert.async();
+    const mock = mockQueryRecord('company', {}).returns({ json: build('company') });
+
+    FactoryGuy.store.queryRecord('company', {}).then(()=> {
+      FactoryGuy.store.queryRecord('company', {}).then(()=> {
+        equal(mock.timesCalled, 2);
+        done();
+      });
+    });
+  });
+});
+
+
+
 module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, adapterType));
 
 test("sideloads belongsTo records which are built from fixture definition that just has empty object {}", function () {

@@ -194,6 +194,7 @@ SharedBehavior.handleFindTests = function() {
       });
     });
   });
+
 };
 
 //////// mockReload /////////
@@ -823,6 +824,7 @@ SharedBehavior.handleQueryRecordTests = function() {
 
     FactoryGuy.store.query('company', queryParams);
   });
+
 
   test("with no parameters matches queryRequest with any parameters", function(assert) {
     var done = assert.async();

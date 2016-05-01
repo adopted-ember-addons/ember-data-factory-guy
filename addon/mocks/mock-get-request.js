@@ -14,6 +14,7 @@ class MockGetRequest {
     this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(modelName, {});
     this.validReturnsKeys = [];
     this.handler = this.setupHandler();
+    this.timesCalled = 0;
   }
 
   setValidReturnsKeys(validKeys) {
@@ -154,6 +155,7 @@ class MockGetRequest {
       if (this.getSucceed() && !this.paramsMatch(settings)) {
         return false;
       }
+      this.timesCalled++;
       return this.getResponse();
     }.bind(this);
 

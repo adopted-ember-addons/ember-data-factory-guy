@@ -877,6 +877,8 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
       ```
   - these mocks are are reusable
     - so you can simulate making the same ajax call ( url ) and return a different payload
+  - can verify how many times the ajax call was mocked
+  
 - http POST/PUT/DELETE
   - [mockCreate](https://github.com/danielspaniel/ember-data-factory-guy#mockcreate)
   - [mockUpdate](https://github.com/danielspaniel/ember-data-factory-guy#mockupdate)
@@ -1139,6 +1141,23 @@ Usage:
     // model will be one model and it will be user1
   });
 
+```
+
+##### verify how many times the ajax call was mocked
+  - use `timesCalled` property on the mock
+  - works best when you are using mockQuery, mockQueryRecord, mockFindAll
+  - mockFind will always be at most 1 since it will only make ajax call
+    the first time, and then the store will use cache the second time
+    
+
+```js
+  const mock = mockQueryRecord('company', {}).returns({ json: build('company') });
+
+  FactoryGuy.store.queryRecord('company', {}).then(()=> {
+    FactoryGuy.store.queryRecord('company', {}).then(()=> {
+      mock.timesCalled //=> 2
+    });
+  });
 ```
 
 ##### mockCreate
