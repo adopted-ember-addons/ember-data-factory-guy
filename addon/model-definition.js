@@ -33,6 +33,18 @@ class ModelDefinition {
   }
 
   /**
+   Is this attribute a model fragment type
+
+   @param {String} field  field you want to check
+   @returns {Boolean} true if it's a model fragment
+   */
+  isModelFragmentAttribute(field) {
+    let modelClass = FactoryGuy.store.modelFor(this.modelName);
+    let attributeInfo = Ember.get(modelClass, 'attributes').get(field);
+    return (attributeInfo && attributeInfo.type.match('mf-fragment'));
+  }
+
+  /**
    @param {String} name model name like 'user' or named type like 'admin'
    @returns {Boolean} true if name is this definitions model or this definition
    contains a named model with that name
@@ -131,6 +143,11 @@ class ModelDefinition {
     // If it's an object and it's a model association attribute, build the json
     // for the association and replace the attribute with that json
     let relationship = this.getRelationship(attribute);
+    if (this.isModelFragmentAttribute(attribute)) {
+      let payload = fixture[attribute];
+      fixture[attribute] = FactoryGuy.buildRaw(attribute, payload);
+      return;
+    } 
     if (relationship) {
       let payload = fixture[attribute];
       if (!payload.isProxy) {

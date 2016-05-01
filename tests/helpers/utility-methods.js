@@ -13,12 +13,14 @@ let theUsualSetup = function (adapterType) {
     let serializer = App.__container__.lookup('serializer:'+adapterType);
 
     store.adapterFor = function() { return adapter; };
+    
+    let findSerializer = store.serializerFor.bind(store);
 
     // comic book will always be REST style serializer
-    let comicBookSerializer = store.serializerFor('comic-book');
     store.serializerFor = function(modelName) {
-      if (modelName==="comic-book") {
-        return comicBookSerializer;
+      let originalSerializer = findSerializer(modelName);
+      if (modelName.match(/(comic-book|name|department|address|department-employment)/)) {
+        return originalSerializer;
       }
       return serializer;
     };

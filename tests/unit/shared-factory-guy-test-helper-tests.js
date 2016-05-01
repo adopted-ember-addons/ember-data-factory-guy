@@ -5,9 +5,11 @@ import {
   mockSetup, mockTeardown,
   mockFind, mockFindAll, mockReload, mockQuery,
   mockQueryRecord, mockCreate, mockUpdate, mockDelete
- } from 'ember-data-factory-guy';
+} from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import $ from 'jquery';
+
+import JSONSerializer from 'ember-data/serializers/json';
 
 import Profile from 'dummy/models/profile';
 import SuperHero from 'dummy/models/super-hero';
@@ -42,7 +44,7 @@ SharedBehavior.handleFindTests = function() {
   });
 
   test("the basic returns id", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let profile = mockFind('profile');
       let profileId = profile.get('id');
@@ -56,7 +58,7 @@ SharedBehavior.handleFindTests = function() {
   });
 
   test("with fixture options", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let profile = mockFind('profile', { description: 'dude' });
       let profileId = profile.get('id');
@@ -69,7 +71,7 @@ SharedBehavior.handleFindTests = function() {
   });
 
   test("handles differently cased attributes", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let profile = mockFind('profile');
@@ -84,7 +86,7 @@ SharedBehavior.handleFindTests = function() {
   });
 
   test("with traits", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let profile = mockFind('profile', 'goofy_description');
@@ -98,7 +100,7 @@ SharedBehavior.handleFindTests = function() {
   });
 
   test("with traits and extra options", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let profile = mockFind('profile', 'goofy_description', { description: 'dude' });
@@ -113,7 +115,7 @@ SharedBehavior.handleFindTests = function() {
 
 
   test("with belongsTo association", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let profile = mockFind('profile', 'with_company', 'with_bat_man');
       let profileId = profile.get('id');
@@ -128,7 +130,7 @@ SharedBehavior.handleFindTests = function() {
 
 
   test("with hasMany association", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let user = mockFind('user', 'with_hats');
       let userId = user.get('id');
@@ -142,12 +144,12 @@ SharedBehavior.handleFindTests = function() {
   });
 
   test("using returns with json", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let json = build('profile', 'with_company', 'with_bat_man');
 
-      mockFind('profile').returns({json});
+      mockFind('profile').returns({ json });
       let profileId = json.get('id');
 
       FactoryGuy.store.find('profile', profileId).then(function(profile) {
@@ -159,29 +161,29 @@ SharedBehavior.handleFindTests = function() {
   });
 
   test("using returns with json with composed hasMany association", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let hat1 = build('big-hat');
       let hat2 = build('big-hat');
-      let json = build('user', {hats: [hat1, hat2]});
+      let json = build('user', { hats: [hat1, hat2] });
 
-      mockFind('user').returns({json});
+      mockFind('user').returns({ json });
 
       FactoryGuy.store.find('user', json.get('id')).then(function(user) {
-        ok(user.get('hats.firstObject.id') === hat1.get('id') +'');
-        ok(user.get('hats.lastObject.id')  === hat2.get('id') +'');
+        ok(user.get('hats.firstObject.id') === hat1.get('id') + '');
+        ok(user.get('hats.lastObject.id') === hat2.get('id') + '');
         done();
       });
     });
   });
 
   test("using returns with model", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let model = make('profile', 'with_company', 'with_bat_man');
-      let profile = mockFind('profile').returns({model});
+      let profile = mockFind('profile').returns({ model });
       let profileId = profile.get('id');
 
       FactoryGuy.store.find('profile', profileId).then(function(profile) {
@@ -200,7 +202,7 @@ SharedBehavior.handleReloadTests = function() {
 
   test("with a record handles reload, and does not change attributes", function(assert) {
     let done = assert.async();
-    Ember.run(function() {
+    Ember.run(()=> {
       let profile = make('profile', { description: "whatever" });
       mockReload(profile);
 
@@ -214,10 +216,10 @@ SharedBehavior.handleReloadTests = function() {
 
   test("can change the attributes returned using returns method", function(assert) {
     let done = assert.async();
-    Ember.run(function() {
+    Ember.run(()=> {
       let profile = make('profile', { description: "whatever", camelCaseDescription: "noodles" });
 
-      mockReload(profile).returns({attrs: {description: "moo"}});
+      mockReload(profile).returns({ attrs: { description: "moo" } });
 
       profile.reload().then(function(reloaded) {
         ok(reloaded.id === profile.id);
@@ -229,7 +231,7 @@ SharedBehavior.handleReloadTests = function() {
   });
 
   test("failure with fails method", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       mockReload('profile', 1).fails();
 
@@ -256,7 +258,7 @@ SharedBehavior.handleFindAllTests = function() {
   });
 
   test("the basic", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       mockFindAll('user', 2);
 
@@ -268,7 +270,7 @@ SharedBehavior.handleFindAllTests = function() {
   });
 
   test("handles differently cased attributes", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       mockFindAll('profile', 1);
@@ -282,7 +284,7 @@ SharedBehavior.handleFindAllTests = function() {
   });
 
   test("asking for no return records", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       mockFindAll('user', 0);
 
@@ -294,7 +296,7 @@ SharedBehavior.handleFindAllTests = function() {
   });
 
   test("with fixture options", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       mockFindAll('profile', 2, { description: 'dude' });
 
@@ -330,7 +332,7 @@ SharedBehavior.handleFindAllTests = function() {
 
 
   test("with belongsTo association", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       mockFindAll('profile', 2, 'with_company', 'with_bat_man');
 
@@ -345,7 +347,7 @@ SharedBehavior.handleFindAllTests = function() {
 
 
   test("with hasMany association", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       mockFindAll('user', 2, 'with_hats');
@@ -360,7 +362,7 @@ SharedBehavior.handleFindAllTests = function() {
   });
 
   test("with diverse models", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       mockFindAll('profile', 'goofy_description', { description: 'foo' }, ['goofy_description', { aBooleanField: true }]);
 
@@ -378,11 +380,11 @@ SharedBehavior.handleFindAllTests = function() {
   });
 
   test("using returns with json", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let json = buildList('profile', 'with_company', 'with_bat_man');
-      mockFindAll('profile').returns({json});
+      mockFindAll('profile').returns({ json });
 
       FactoryGuy.store.findAll('profile').then(function(profiles) {
         ok(profiles.get('firstObject.company.name') === 'Silly corp');
@@ -393,11 +395,11 @@ SharedBehavior.handleFindAllTests = function() {
   });
 
   test("using returns with model", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let models = makeList('profile', 'with_company', 'with_bat_man');
-      mockFindAll('profile').returns({models});
+      mockFindAll('profile').returns({ models });
 
       FactoryGuy.store.findAll('profile').then(function(profiles) {
         ok(profiles.get('firstObject.company.name') === 'Silly corp');
@@ -471,7 +473,7 @@ SharedBehavior.handleQueryTests = function() {
   });
 
   test("not using returns", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       mockQuery('user', { name: 'Bob' });
       FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
@@ -492,13 +494,13 @@ SharedBehavior.handleQueryTests = function() {
   });
 
   test("using fails makes the request fail", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let errors = { errors: { name: ['wrong'] } };
 
       mockQuery('user').fails({ status: 422, response: errors });
-      FactoryGuy.store.query('user',{}).catch(
+      FactoryGuy.store.query('user', {}).catch(
         ()=> {
           ok(true);
           done();
@@ -522,7 +524,7 @@ SharedBehavior.handleQueryTests = function() {
   });
 
   test("using nested search params", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let models = makeList('company', 2);
@@ -536,7 +538,7 @@ SharedBehavior.handleQueryTests = function() {
   });
 
   test("using returns with empty array", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       mockQuery('user', { name: 'Bob' }).returns({ models: [] });
       FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
@@ -547,7 +549,7 @@ SharedBehavior.handleQueryTests = function() {
   });
 
   test("using returns with model instances returns your models, and does not create new ones", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let bob = make('user');
 
@@ -563,7 +565,7 @@ SharedBehavior.handleQueryTests = function() {
   });
 
   test("using returns with model instances having hasMany models", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let models = makeList('user', 2, 'with_hats');
@@ -583,7 +585,7 @@ SharedBehavior.handleQueryTests = function() {
   });
 
   test("using returns with model instances with hasMany and belongsTo relationships", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let models = makeList('company', 2, 'with_projects', 'with_profile');
@@ -604,7 +606,7 @@ SharedBehavior.handleQueryTests = function() {
   });
 
   test("using returns with json returns and creates models", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let json = buildList('user', 1);
@@ -619,7 +621,7 @@ SharedBehavior.handleQueryTests = function() {
   });
 
   test("using returns with model ids returns those models and does not create new ones", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let bob = make('user');
@@ -638,7 +640,7 @@ SharedBehavior.handleQueryTests = function() {
 
   // test created for issue #143
   test("reuse mock query to first return nothing then use returns to return something", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let store = FactoryGuy.store;
 
@@ -662,7 +664,7 @@ SharedBehavior.handleQueryTests = function() {
   });
 
   test("reusing mock query using returns with differnet models and different params returns different results", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let companies1 = makeList('company', 2);
@@ -684,7 +686,7 @@ SharedBehavior.handleQueryTests = function() {
 
 
   test("using returns with same json and different query params returns same results", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let expectedAssertions = 2;
 
@@ -716,7 +718,7 @@ SharedBehavior.handleQueryTests = function() {
   });
 
   test("reusing mock query using returns with differnt models and withParams with different params returns different results", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let companies1 = makeList('company', 2);
@@ -793,7 +795,7 @@ SharedBehavior.handleQueryRecordTests = function() {
   });
 
   test("using fails makes the request fail", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       mockQueryRecord('user').fails();
@@ -840,7 +842,7 @@ SharedBehavior.handleQueryRecordTests = function() {
   });
 
   test("using returns with json returns and creates model", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let bob = build('user', { name: 'Bob' });
@@ -856,7 +858,7 @@ SharedBehavior.handleQueryRecordTests = function() {
   });
 
   test("using returns with model instance returns that model, and does not create new one", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let bob = make('user');
@@ -871,7 +873,7 @@ SharedBehavior.handleQueryRecordTests = function() {
   });
 
   test("using returns with model id returns that model, and does not create new one", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let bob = make('user');
@@ -886,7 +888,7 @@ SharedBehavior.handleQueryRecordTests = function() {
   });
 
   test("twice using returns with differnet json and different params returns different results", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let company1 = build('company');
@@ -907,7 +909,7 @@ SharedBehavior.handleQueryRecordTests = function() {
   });
 
   test("reusing mock using returns with differnt json and withParams with different params returns different results", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let company1 = build('company');
@@ -933,7 +935,7 @@ SharedBehavior.handleQueryRecordTests = function() {
 SharedBehavior.handleCreateTests = function() {
 
   test("the basic", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let customDescription = "special description";
 
@@ -953,7 +955,7 @@ SharedBehavior.handleCreateTests = function() {
   });
 
   test("with dasherized model name", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let customName = "special name";
 
@@ -974,7 +976,7 @@ SharedBehavior.handleCreateTests = function() {
 
   /////// with hash of parameters ///////////////////
   test("with no specific match", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       mockCreate('profile');
 
@@ -988,7 +990,7 @@ SharedBehavior.handleCreateTests = function() {
   });
 
   test("with no specific match creates many in a loop", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       mockCreate('profile');
@@ -1012,7 +1014,7 @@ SharedBehavior.handleCreateTests = function() {
   });
 
   test("match some attributes", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let customDescription = "special description";
       let date = new Date();
@@ -1031,7 +1033,7 @@ SharedBehavior.handleCreateTests = function() {
   });
 
   test("match all attributes", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let customDescription = "special description";
       let date = new Date();
@@ -1054,7 +1056,7 @@ SharedBehavior.handleCreateTests = function() {
 
 
   test("returns attributes", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let date = new Date();
 
@@ -1070,7 +1072,7 @@ SharedBehavior.handleCreateTests = function() {
   });
 
   test("match belongsTo association", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let company = make('company');
       mockCreate('profile', { match: { company: company } });
@@ -1083,7 +1085,7 @@ SharedBehavior.handleCreateTests = function() {
   });
 
   test("match belongsTo polymorphic association", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let group = make('group');
       mockCreate('profile', { match: { group: group } });
@@ -1097,7 +1099,7 @@ SharedBehavior.handleCreateTests = function() {
 
 
   test("match attributes and return attributes", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let date = new Date();
       let customDescription = "special description";
@@ -1123,7 +1125,7 @@ SharedBehavior.handleCreateTests = function() {
 
 
   test("failure", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       mockCreate('profile').fails();
 
@@ -1136,7 +1138,7 @@ SharedBehavior.handleCreateTests = function() {
   });
 
   test("failure with status code 422 and errors in response", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let errors = { errors: { description: ['bad'] } };
@@ -1159,7 +1161,7 @@ SharedBehavior.handleCreateTests = function() {
 
 
   test("match but still fail", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let description = "special description";
 
@@ -1176,7 +1178,7 @@ SharedBehavior.handleCreateTests = function() {
   });
 
   test("fails when match args not present in createRecord attributes", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       mockCreate('profile', { match: { description: 'correct description' } });
@@ -1194,7 +1196,7 @@ SharedBehavior.handleCreateTests = function() {
   /////// with chaining methods ///////////////////
 
   test("match some attributes with match method", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let customDescription = "special description";
       let date = new Date();
@@ -1213,7 +1215,7 @@ SharedBehavior.handleCreateTests = function() {
   });
 
   test("with dasherized model name match some attributes with match method", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let customName = "special name";
 
@@ -1231,7 +1233,7 @@ SharedBehavior.handleCreateTests = function() {
   });
 
   test("match all attributes with match method", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let customDescription = "special description";
       let date = new Date();
@@ -1251,7 +1253,7 @@ SharedBehavior.handleCreateTests = function() {
   });
 
   test("match belongsTo association with match method", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let company = make('company');
 
@@ -1265,7 +1267,7 @@ SharedBehavior.handleCreateTests = function() {
   });
 
   test("match belongsTo polymorphic association  with match method", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let group = make('group');
       mockCreate('profile').match({ group: group });
@@ -1279,7 +1281,7 @@ SharedBehavior.handleCreateTests = function() {
 
 
   test("using returns method with attributes", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let date = new Date();
 
@@ -1294,7 +1296,7 @@ SharedBehavior.handleCreateTests = function() {
 
 
   test("using returns method with user-supplied model id", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let id = 42;
 
@@ -1309,7 +1311,7 @@ SharedBehavior.handleCreateTests = function() {
 
 
   test("match attributes and return attributes using match and returns methods", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let date = new Date(2015, 1, 2, 3, 4, 5);
       let customDescription = "special description";
@@ -1334,7 +1336,7 @@ SharedBehavior.handleCreateTests = function() {
 
 
   test("failure with fails method", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       mockCreate('profile').fails();
 
@@ -1348,7 +1350,7 @@ SharedBehavior.handleCreateTests = function() {
 
 
   test("match but still fail with fails method", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let description = "special description";
 
@@ -1363,7 +1365,7 @@ SharedBehavior.handleCreateTests = function() {
   });
 
   test("failure with status code 422 and errors in response with fails method", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let errors = { errors: { description: ['bad'] } };
@@ -1403,7 +1405,7 @@ SharedBehavior.handleUpdateTests = function() {
   });
 
   test("with modelType and id", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let profile = make('profile');
       mockUpdate('profile', profile.id);
@@ -1418,7 +1420,7 @@ SharedBehavior.handleUpdateTests = function() {
 
 
   test("with model", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let profile = make('profile');
       mockUpdate(profile);
@@ -1432,7 +1434,7 @@ SharedBehavior.handleUpdateTests = function() {
   });
 
   test("with model that has polymorphic belongsTo", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
 
       let group = make('group');
@@ -1447,8 +1449,37 @@ SharedBehavior.handleUpdateTests = function() {
     });
   });
 
+
+  test('with model that has model fragment as the updated field', function(assert) {
+    Ember.run(() => {
+      var Serializer = DS.JSONSerializer.extend();
+      let container = Ember.getOwner(FactoryGuy.store).__container__;
+
+      container.registry.register('serializer:application', Serializer);
+//      container.registry.register('serializer:-fragment', Serializer);
+      console.log(FactoryGuy.store.serializerFor('name')+'');
+      let done = assert.async();
+      let employee = make('employee');
+
+      mockUpdate(employee);
+
+      ok(!employee.get('hasDirtyAttributes'));
+      employee.set('name.firstName', 'Jamie');
+
+      ok(employee.get('name.firstName') === 'Jamie');
+      ok(employee.get('name.lastName') === 'Lannister');
+
+      ok(employee.get('hasDirtyAttributes'));
+
+      employee.save().then(()=> {
+        ok(!employee.get('hasDirtyAttributes'));
+        done();
+      });
+    });
+  });
+
   test("with modelType and id that fails", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let profile = make('profile');
 
@@ -1468,7 +1499,7 @@ SharedBehavior.handleUpdateTests = function() {
   });
 
   test("with model that fails with custom response", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let profile = make('profile');
 
@@ -1490,7 +1521,7 @@ SharedBehavior.handleUpdateTests = function() {
 
   test("with model that fails with custom status", function(assert) {
     let done = assert.async();
-    Ember.run(function() {
+    Ember.run(()=> {
       let profile = make('profile');
 
       mockUpdate(profile).fails({ status: 500 });
@@ -1508,7 +1539,7 @@ SharedBehavior.handleUpdateTests = function() {
 
 
   test("with model that fails and then succeeds", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let profile = make('profile');
 
@@ -1544,7 +1575,7 @@ SharedBehavior.handleUpdateTests = function() {
 
 SharedBehavior.handleDeleteTests = function() {
   test("the basic", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let profile = make('profile');
       mockDelete('profile', profile.id);
@@ -1557,7 +1588,7 @@ SharedBehavior.handleDeleteTests = function() {
   });
 
   test("failure case", function(assert) {
-    Ember.run(function() {
+    Ember.run(()=> {
       let done = assert.async();
       let profile = make('profile');
       mockDelete('profile', profile.id, false);
