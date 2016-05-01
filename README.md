@@ -4,7 +4,8 @@
 
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.  
 Factories simplify the process of testing, making you more efficient and your tests more readable.  
-*Support for ember-data-model-fragment usage is baked in since v2.5.0* 
+
+**Support for ember-data-model-fragment usage is baked in since v2.5.0** 
 
 Questions: Slack => [factory-guy](https://embercommunity.slack.com/messages/e-factory-guy/)
 
