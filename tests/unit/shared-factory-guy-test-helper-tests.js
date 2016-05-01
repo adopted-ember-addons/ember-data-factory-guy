@@ -1452,12 +1452,6 @@ SharedBehavior.handleUpdateTests = function() {
 
   test('with model that has model fragment as the updated field', function(assert) {
     Ember.run(() => {
-      var Serializer = DS.JSONSerializer.extend();
-      let container = Ember.getOwner(FactoryGuy.store).__container__;
-
-      container.registry.register('serializer:application', Serializer);
-//      container.registry.register('serializer:-fragment', Serializer);
-      console.log(FactoryGuy.store.serializerFor('name')+'');
       let done = assert.async();
       let employee = make('employee');
 
