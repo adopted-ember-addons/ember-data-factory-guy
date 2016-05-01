@@ -878,7 +878,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - these mocks are are reusable
     - so you can simulate making the same ajax call ( url ) and return a different payload
   - [mock#timesCalled](https://github.com/danielspaniel/ember-data-factory-guy#verify-how-many-times-the-ajax-call-was-mocked) 
-   - verify how many times the ajax call was mocked
+    - verify how many times the ajax call was mocked
   
 - http POST/PUT/DELETE
   - [mockCreate](https://github.com/danielspaniel/ember-data-factory-guy#mockcreate)
