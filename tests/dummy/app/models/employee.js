@@ -11,5 +11,6 @@ export default Model.extend({
   titles    : array('string'),
   gender    : attr('string'),
   birthDate: attr('date'),
+  position: attr(),
   departmentEmployments : fragmentArray('department-employment')
 });
