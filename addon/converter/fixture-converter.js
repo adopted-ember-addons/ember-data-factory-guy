@@ -29,7 +29,7 @@ export default class {
   }
 
   getTransformValueFunction(type) {
-    if (!this.transformKeys || type.match('-mf')) {
+    if (!this.transformKeys || (type && type.match('-mf'))) {
       return this.noTransformFn;
     }
     if (!type) {
