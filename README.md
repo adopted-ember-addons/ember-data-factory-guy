@@ -21,6 +21,7 @@ Contents:
   - [Traits](https://github.com/danielspaniel/ember-data-factory-guy#traits)
   - [Associations](https://github.com/danielspaniel/ember-data-factory-guy#associations)
   - [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
+  - [Ember Data Model Fragments](https://github.com/danielspaniel/ember-data-factory-guy#ember-data-model-fragments)
   - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
   - [Testing - creating scenarios](https://github.com/danielspaniel/ember-data-factory-guy#testing---creating-scenarios)
   - [Testing models, controllers, components](https://github.com/danielspaniel/ember-data-factory-guy#testing-models-controllers-components)
@@ -696,6 +697,69 @@ the reverse 'user' belongsTo association is being setup for you on the project
     attributes in the default section ( for example ), and inherit the rest
 
   - [Sample Factory using inheritance (big-group.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/big-group.js)
+
+### Ember Data Model Fragments
+As of 2.5.2 you can create factories which contain [ember-data-model-fragments](https://github.com/lytics/ember-data-model-fragments). Setting up your fragments is easy and follows the same process as setting up regular factories. The mapping between fragment types and their associations are like so:
+
+Fragment Type | Association
+--- | ---
+`fragment` | `FactoryGuy.belongsTo`
+`fragmentArray` | `FactoryGuy.hasMany`
+`array` | `[]`
+
+For example, say we have the following `Employee` model which makes use of the `fragment`, `fragmentArray` and `array` fragment types.
+
+```javascript
+//Employee model
+export default Model.extend({
+  name      : fragment('name'),
+  phoneNumbers: fragmentArray('phone-number')
+})
+
+//Name fragment
+export default Fragment.extend({
+  titles: array('string'),
+  firstName : attr('string'),
+  lastName  : attr('string')
+});
+
+//Phone Number fragment
+export default Fragment.extend({
+  number: attr('string')
+  type: attr('string')
+});
+```
+
+A factory for this model and its fragments would look like so:
+
+```javascript
+// Employee factory
+FactoryGuy.define('employee', {
+  default: {
+    name: FactoryGuy.belongsTo('name'), //fragment
+    phoneNumbers: FactoryGuy.hasMany('phone-number') //fragmentArray
+  }
+});
+
+// Name fragment factory
+FactoryGuy.define('employee', {
+  default: {
+    titles: ['Mr.', 'Dr.'], //array
+    firstName: 'Jon',
+    lastName: 'Snow'
+  }
+});
+
+// Phone number fragment factory
+FactoryGuy.define('phone-number', {
+  default: {
+    number: '123-456-789',
+    type: 'home'
+  }
+});
+```
+
+For a more detailed example of setting up fragments have a look at the [employee test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/employee-test.js).
 
 ### Callbacks
  - afterMake
