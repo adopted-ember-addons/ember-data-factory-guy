@@ -64,16 +64,11 @@ let extractArguments = function (...args) {
 class FactoryGuy {
 
   setStore(aStore) {
-    Ember.assert("FactoryGuy#set('store') needs a valid store instance.You passed in [" + aStore + "]", aStore instanceof DS.Store);
+    Ember.assert("FactoryGuy#setStore needs a valid store instance.You passed in [" + aStore + "]", aStore instanceof DS.Store);
     this.store = aStore;
     const fixtureBuilderFactory = new FixtureBuilderFactory(this.store);
     this.fixtureBuilder = fixtureBuilderFactory.fixtureBuilder();
   }
-
-  //fixtureBuilder() {
-  //  const factory = this.get('fixtureBuilderFactory');
-  //  return factory.fixtureBuilder();
-  //}),
 
   updateHTTPMethod() {
     return this.fixtureBuilder.updateHTTPMethod || 'PUT';
@@ -128,14 +123,6 @@ class FactoryGuy {
   findModelDefinition(model) {
     return modelDefinitions[model];
   }
-
-  ///**
-  // The method has been kept for backward compatibility
-  // Use `instance.get('fixtureBuilder')` instead.
-  // */
-  //  fixtureBuilder {
-  //  return this.get('fixtureBuilder');
-  //}
 
   /**
    Used in model definitions to declare use of a sequence. For example:
