@@ -5,7 +5,7 @@ export default class MockFindRequest extends MockGetRequest {
 
   constructor(modelName) {
     super(modelName);
-    this.setValidReturnsKeys('model json id headers'.w());
+    this.setValidReturnsKeys(['model','json','id','headers']);
   }
 
   get(args) {
