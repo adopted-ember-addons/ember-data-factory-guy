@@ -6,6 +6,7 @@ import { inlineSetup, theUsualSetup, theUsualTeardown } from '../helpers/utility
 import User from 'dummy/models/user';
 
 let App = null;
+const A = Ember.A;
 
 import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 
@@ -166,10 +167,10 @@ test("without a number returns an array of 0 model instances", function () {
 test("without a number but with options returns array of models", function () {
   let profiles = makeList('profile', 'goofy_description', ['with_company', {description: 'Noodles'}], 'with_bat_man');
   equal(profiles.length, 3);
-  ok(profiles.objectAt(0).get('description') === 'goofy');
-  ok(profiles.objectAt(1).get('company.name') === 'Silly corp');
-  ok(profiles.objectAt(1).get('description') === 'Noodles');
-  ok(profiles.objectAt(2).get('superHero.name') === 'BatMan');
+  ok(A(profiles).objectAt(0).get('description') === 'goofy');
+  ok(A(profiles).objectAt(1).get('company.name') === 'Silly corp');
+  ok(A(profiles).objectAt(1).get('description') === 'Noodles');
+  ok(A(profiles).objectAt(2).get('superHero.name') === 'BatMan');
   equal(FactoryGuy.store.peekAll('profile').get('content').length, 3);
 });
 

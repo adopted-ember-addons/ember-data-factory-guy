@@ -14,6 +14,7 @@ import JSONSerializer from 'ember-data/serializers/json';
 import Profile from 'dummy/models/profile';
 import SuperHero from 'dummy/models/super-hero';
 
+const A = Ember.A;
 let SharedBehavior = {};
 
 //////// buildUrl /////////
@@ -355,8 +356,8 @@ SharedBehavior.handleFindAllTests = function() {
 
       FactoryGuy.store.findAll('user').then(function(users) {
         ok(users.get('length') === 2);
-        ok(users.get('lastObject.hats').mapBy('type') + '' === ['BigHat', 'BigHat'] + '');
-        ok(users.get('lastObject.hats').mapBy('id') + '' === [3, 4] + '');
+        ok(A(users.get('lastObject.hats')).mapBy('type') + '' === ['BigHat', 'BigHat'] + '');
+        ok(A(users.get('lastObject.hats')).mapBy('id') + '' === [3, 4] + '');
         done();
       });
     });
@@ -369,12 +370,12 @@ SharedBehavior.handleFindAllTests = function() {
 
       FactoryGuy.store.findAll('profile').then(function(profiles) {
         ok(profiles.get('length') === 3);
-        ok(profiles.objectAt(0).get('description') === 'goofy');
-        ok(profiles.objectAt(0).get('aBooleanField') === false);
-        ok(profiles.objectAt(1).get('description') === 'foo');
-        ok(profiles.objectAt(1).get('aBooleanField') === false);
-        ok(profiles.objectAt(2).get('description') === 'goofy');
-        ok(profiles.objectAt(2).get('aBooleanField') === true);
+        ok(A(profiles).objectAt(0).get('description') === 'goofy');
+        ok(A(profiles).objectAt(0).get('aBooleanField') === false);
+        ok(A(profiles).objectAt(1).get('description') === 'foo');
+        ok(A(profiles).objectAt(1).get('aBooleanField') === false);
+        ok(A(profiles).objectAt(2).get('description') === 'goofy');
+        ok(A(profiles).objectAt(2).get('aBooleanField') === true);
         done();
       });
     });
@@ -532,7 +533,7 @@ SharedBehavior.handleQueryTests = function() {
 
       mockQuery('company', { name: { like: 'Dude*' } }).returns({ models });
       FactoryGuy.store.query('company', { name: { like: 'Dude*' } }).then(function(companies) {
-        equal(companies.mapBy('id') + '', models.mapBy('id') + '');
+        equal(A(companies).mapBy('id') + '', A(models).mapBy('id') + '');
         done();
       });
     });
@@ -675,10 +676,10 @@ SharedBehavior.handleQueryTests = function() {
       mockQuery('company', { type: 'Small' }).returns({ models: companies2 });
 
       FactoryGuy.store.query('company', { name: 'Dude' }).then(function(companies) {
-        equal(companies.mapBy('id') + '', companies1.mapBy('id') + '');
+        equal(A(companies).mapBy('id') + '', A(companies1).mapBy('id') + '');
 
         FactoryGuy.store.query('company', { type: 'Small' }).then(function(companies) {
-          equal(companies.mapBy('id') + '', companies2.mapBy('id') + '');
+          equal(A(companies).mapBy('id') + '', A(companies2).mapBy('id') + '');
           done();
         });
       });
@@ -707,12 +708,12 @@ SharedBehavior.handleQueryTests = function() {
       let request2 = FactoryGuy.store.query('company', { type: 'Small', name: 'Dude' });
 
       request1.then(function(returnedCompanies) {
-        equal(companies.mapBy('id') + '', returnedCompanies.mapBy('id') + '');
+        equal(A(companies).mapBy('id') + '', A(returnedCompanies).mapBy('id') + '');
         finalizeTest();
       });
 
       request2.then(function(returnedCompanies) {
-        equal(companies.mapBy('id') + '', returnedCompanies.mapBy('id') + '');
+        equal(A(companies).mapBy('id') + '', A(returnedCompanies).mapBy('id') + '');
         finalizeTest();
       });
     });
@@ -727,11 +728,11 @@ SharedBehavior.handleQueryTests = function() {
 
       let queryHandler = mockQuery('company', { name: 'Dude' }).returns({ models: companies1 });
       FactoryGuy.store.query('company', { name: 'Dude' }).then(function(companies) {
-        equal(companies.mapBy('id') + '', companies1.mapBy('id') + '');
+        equal(A(companies).mapBy('id') + '', A(companies1).mapBy('id') + '');
 
         queryHandler.withParams({ type: 'Small' }).returns({ models: companies2 });
         FactoryGuy.store.query('company', { type: 'Small' }).then(function(companies) {
-          equal(companies.mapBy('id') + '', companies2.mapBy('id') + '');
+          equal(A(companies).mapBy('id') + '', A(companies2).mapBy('id') + '');
           done();
         });
       });

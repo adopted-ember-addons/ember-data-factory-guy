@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { pluralize } = Ember.String;
+const { pluralize, w } = Ember.String;
 
 export default class {
 
@@ -17,7 +17,7 @@ export default class {
     this.converter = converter;
     this.listType = converter.listType || false;
     this.payloadKey = this.listType ? pluralize(modelName) : modelName;
-    this.proxyMethods = "getModelPayload isProxy get add unwrap".w();
+    this.proxyMethods = w("getModelPayload isProxy get add unwrap");
     this.wrap(this.proxyMethods);
   }
 

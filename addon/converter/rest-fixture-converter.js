@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import Converter from './fixture-converter';
-const { underscore, pluralize } = Ember.String;
+const { underscore, pluralize, dasherize } = Ember.String;
 
 /**
  Convert base fixture to a REST format fixture, and while it's converting
@@ -107,7 +107,7 @@ class RestFixtureConverter extends Converter {
    @param {Object} includeObject
    */
   addToIncluded(data, modelKey) {
-    let relationshipKey = pluralize(modelKey.dasherize());
+    let relationshipKey = pluralize(dasherize(modelKey));
 
     if (!this.included[relationshipKey]) {
       this.included[relationshipKey] = [];

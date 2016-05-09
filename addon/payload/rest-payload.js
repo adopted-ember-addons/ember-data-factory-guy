@@ -5,12 +5,12 @@ export default class extends JSONPayload {
 
   constructor(modelName, json, converter) {
     super(modelName, json, converter);
-    this.addProxyMethods("includeKeys getInclude".w());
+    this.addProxyMethods(['includeKeys','getInclude']);
   }
 
   add(moreJson) {
     this.converter.included = this.json;
-    Object.keys(moreJson)
+    Ember.A(Object.keys(moreJson))
       .reject(key=> Ember.A(this.proxyMethods).contains(key))
       .forEach(key=> {
         if (Ember.typeOf(moreJson[key]) === "array") {
@@ -23,10 +23,8 @@ export default class extends JSONPayload {
   }
 
   includeKeys() {
-    return Object.keys(this.json)
-        .reject(key => this.payloadKey === key)
-        .reject(key=> Ember.A(this.proxyMethods).contains(key)) ||
-      [];
+    let keys = Ember.A(Object.keys(this.json)).reject(key => this.payloadKey === key);
+    return Ember.A(keys).reject(key=> Ember.A(this.proxyMethods).contains(key)) || [];
   }
 
   getInclude(modelType) {
