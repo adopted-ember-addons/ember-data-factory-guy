@@ -19,7 +19,7 @@ let theUsualSetup = function (adapterType) {
     // comic book will always be REST style serializer
     store.serializerFor = function(modelName) {
       let originalSerializer = findSerializer(modelName);
-      if (modelName.match(/(comic-book|name|department|address|department-employment)/)) {
+      if (modelName.match(/(comic-book|name|department|address|department-employment|manager)/)) {
         return originalSerializer;
       }
       return serializer;

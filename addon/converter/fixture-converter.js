@@ -102,7 +102,7 @@ export default class {
   isEmbeddedRelationship(modelName, attr) {
     let serializer = this.store.serializerFor(modelName);
     var option = this.attrsOption(serializer, attr);
-    return option && option.embedded === 'always';
+    return option && (option.embedded === 'always' || option.deserialize === 'records');
   }
 
   attrsOption(serializer, attr) {
