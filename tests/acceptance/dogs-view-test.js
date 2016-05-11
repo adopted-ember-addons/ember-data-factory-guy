@@ -9,7 +9,6 @@ test("Handles primaryKey other than id", function() {
   let name = 'Bandit';
 
   mockFindAll('dog', 2, {name: name});
-
   visit('/dogs');
 
   andThen(()=> {

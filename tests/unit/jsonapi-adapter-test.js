@@ -728,3 +728,10 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
   deepEqual(projectJson.included, expectedData.included);
 
 });
+
+// the override for primaryKey is in the helpers/utilityMethods.js
+test("serializer primaryKey override", function () {
+  let cat = build('cat');
+  equal(cat.data.catId, 1);
+  equal(cat.data.id, 1);
+});

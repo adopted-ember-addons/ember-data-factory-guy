@@ -50,42 +50,8 @@ SharedBehavior.makeTests = function () {
 
 
   test("when hasMany associations assigned, belongTo parent is assigned", function () {
-    //let profile = build('profile');
     let project = make('project');
     let user = make('user', {projects: [project]});
-    //let user = build('user', 'with_projects');
-    //console.log(user)
-    //let profile = build('profile', 'with_company');
-    //console.log(profile);
-    //let data = {
-    //  "data": {
-    //    "type": "profile",
-    //    "id": 1,
-    //    "attributes": {
-    //      "description": "textGoesHere",
-    //      "camel-case-description": "textGoesHere",
-    //      "snake-case-description": "text_goes_here"
-    //    },
-    //    "relationships": {
-    //      "company": {
-    //        "data": {"id": 1, "type": "company"},
-    //      }
-    //    }
-    //  },
-    //  "included": [
-    //    {
-    //      "type": "company",
-    //      "id": 1,
-    //      "attributes": {
-    //        "name": "Company B"
-    //      }
-    //    }
-    //  ]
-    //}
-    //Ember.run(function () {
-    //  let profile = FactoryGuy.store.push(data);
-    //  console.log(profile.get('camelCaseDescription'))
-    //})
     ok(project.get('user') === user);
   });
 

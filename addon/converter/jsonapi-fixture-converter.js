@@ -72,16 +72,12 @@ class JSONAPIFixtureConverter extends Converter {
    @returns {{type: *, id: *, attributes}}
    */
   convertSingle(modelName, fixture) {
-    let primaryKey = this.store.serializerFor(modelName).get('primaryKey');
     let data = {
       type: modelName,
-      id: fixture.id,
       attributes: this.extractAttributes(modelName, fixture),
     };
 
-    if(primaryKey !== 'id') {
-      data[primaryKey] = fixture.id;
-    }
+    this.addPrimaryKey(modelName, data, fixture);
 
     let relationships = this.extractRelationships(modelName, fixture);
     if (Object.getOwnPropertyNames(relationships).length > 0) {
