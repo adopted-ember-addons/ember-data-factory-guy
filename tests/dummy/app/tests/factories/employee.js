@@ -1,12 +1,11 @@
 import FactoryGuy from 'ember-data-factory-guy';
-import { make } from 'ember-data-factory-guy';
 
 FactoryGuy.define('employee', {
   default: {
     name: FactoryGuy.belongsTo('name'),
     titles: ['Mr.', 'Dr.'],
     gender: 'Male',
-    birthDate: new Date()
+    birthDate: new Date('2016-05-01')
   },
   traits: {
     default_name_setup: {

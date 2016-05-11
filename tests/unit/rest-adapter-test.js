@@ -436,6 +436,115 @@ test("embeds hasMany records passed as prebuilt ( buildList ) json when serializ
   deepEqual(buildJson, expectedJson);
 });
 
+test("embeds belongsTo record when serializer attrs => deserialize: 'records' ", function () {
+
+  let buildJson = build('manager', 'with_salary');
+  buildJson.unwrap();
+
+  let expectedJson = {
+    manager: {
+      id: 1,
+      name: {
+        firstName: "Tyrion",
+        id: 1,
+        lastName: "Lannister"
+      },
+      salary: {
+        id: 1,
+        income: 90000,
+        benefits: ['health', 'company car', 'dental']
+      }
+    }
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+test("embeds belongsTo record passed as prebuilt ( build ) json when serializer attrs => deserialize: 'records' ", function () {
+  let salary = build('salary');
+  let buildJson = build('manager', {salary: salary});
+  buildJson.unwrap();
+
+  let expectedJson = {
+    manager: {
+      id: 1,
+      name: {
+        firstName: "Tyrion",
+        id: 1,
+        lastName: "Lannister"
+      },
+      salary: {
+        id: 1,
+        income: 90000,
+        benefits: ['health', 'company car', 'dental']
+      }
+    }
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+test("embeds hasMany records when serializer attrs => deserialize: 'records'", function () {
+
+  let buildJson = build('manager', 'with_reviews');
+  buildJson.unwrap();
+
+  let expectedJson = {
+    manager: {
+      id: 1,
+      name: {
+        firstName: "Tyrion",
+        id: 1,
+        lastName: "Lannister"
+      },
+      reviews: [
+        {
+          id: 1,
+          rating: 1,
+          date: "2015-05-01T00:00:00.000Z"
+        },
+        {
+          id: 2,
+          rating: 2,
+          date: "2015-05-01T00:00:00.000Z"
+        }
+      ]
+    }
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+test("embeds hasMany records passed as prebuilt ( buildList ) json when serializer attrs => deserialize: 'records'", function () {
+  let reviews = buildList('review', 2);
+  let buildJson = build('manager', {reviews: reviews});
+  buildJson.unwrap();
+
+  let expectedJson = {
+    manager: {
+      id: 1,
+      name: {
+        firstName: "Tyrion",
+        id: 1,
+        lastName: "Lannister"
+      },
+      reviews: [
+        {
+          id: 1,
+          rating: 1,
+          date: "2015-05-01T00:00:00.000Z"
+        },
+        {
+          id: 2,
+          rating: 2,
+          date: "2015-05-01T00:00:00.000Z"
+        }
+      ]
+    }
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
 
 module(title(adapter, 'FactoryGuy#buildList custom'), inlineSetup(App, adapterType));
 
