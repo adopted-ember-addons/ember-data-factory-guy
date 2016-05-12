@@ -65,13 +65,16 @@ class RestFixtureConverter extends Converter {
     let data = {};
     let attributes = this.extractAttributes(modelName, fixture);
     let relationships = this.extractRelationships(modelName, fixture);
+
     Object.keys(attributes).forEach((key)=> {
       data[key] = attributes[key];
     });
     Object.keys(relationships).forEach((key)=> {
       data[key] = relationships[key];
     });
-    data.id = fixture.id;
+
+    this.addPrimaryKey(modelName, data, fixture);
+
     return data;
   }
 

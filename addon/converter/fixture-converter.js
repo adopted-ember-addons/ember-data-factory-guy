@@ -10,6 +10,14 @@ export default class {
     this.defaultValueTransformFn = this.noTransformFn;
   }
 
+  addPrimaryKey(modelName, data, fixture) {
+    let primaryKey = this.store.serializerFor(modelName).get('primaryKey');
+    data.id = fixture.id;
+    if(primaryKey !== 'id') {
+      data[primaryKey] = fixture.id;
+    }
+  }
+
   transformRelationshipKey(relationship) {
     let transformFn = this.getTransformKeyFunction(relationship.type, 'Relationship');
     return transformFn(relationship.key, relationship.kind);

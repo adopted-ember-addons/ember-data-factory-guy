@@ -16,10 +16,16 @@ let theUsualSetup = function (adapterType) {
     
     let findSerializer = store.serializerFor.bind(store);
 
-    // comic book will always be REST style serializer
     store.serializerFor = function(modelName) {
+      // comic book will always be REST style serializer
+      // all the modelFragment types will use their own default serializer
       let originalSerializer = findSerializer(modelName);
       if (modelName.match(/(comic-book|name|department|address|department-employment)/)) {
+        return originalSerializer;
+      }
+      // cat serialzer will always declare special primaryKey
+      if (modelName === 'cat') {
+        originalSerializer.set('primaryKey', 'catId');
         return originalSerializer;
       }
       return serializer;

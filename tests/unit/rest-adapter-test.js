@@ -436,6 +436,12 @@ test("embeds hasMany records passed as prebuilt ( buildList ) json when serializ
   deepEqual(buildJson, expectedJson);
 });
 
+// the override for primaryKey is in the helpers/utilityMethods.js
+test("serializer primaryKey override", function () {
+  let json = build('cat');
+  equal(json.get('catId'), 1);
+  equal(json.get('id'), 1);
+});
 
 module(title(adapter, 'FactoryGuy#buildList custom'), inlineSetup(App, adapterType));
 

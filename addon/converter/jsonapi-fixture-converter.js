@@ -74,9 +74,11 @@ class JSONAPIFixtureConverter extends Converter {
   convertSingle(modelName, fixture) {
     let data = {
       type: modelName,
-      id: fixture.id,
       attributes: this.extractAttributes(modelName, fixture),
     };
+
+    this.addPrimaryKey(modelName, data, fixture);
+
     let relationships = this.extractRelationships(modelName, fixture);
     if (Object.getOwnPropertyNames(relationships).length > 0) {
       data.relationships = relationships;
