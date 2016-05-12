@@ -233,7 +233,7 @@ Usage:
 
   import { make, makeList } from 'ember-data-factory-guy';
   
-  // Let's say bob is a named type in the 
+  // Let's say bob is a named type in the user factory
   makeList('bob') // makes 0 bob's
 
   makeList('bob', 2) // makes 2 bob's
@@ -249,11 +249,11 @@ Usage:
 
 ```
 ##### build
-  - for building json that you can pass json payload in [acceptance tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
-  - build takes same arguments as make 
+  - for building json that you can pass as json payload in [acceptance tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
+  - takes same arguments as make 
   - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
-  - use `.add()` method to add extra sideloaded data
+  - use `.add()` method to include extra sideloaded data to the payload
   
 Usage: 
 
@@ -300,7 +300,7 @@ Usage:
   let buildJson = build('property', { owners });
 
 ```
-- Example: what json payload from build looks like
+- Example of what json payload from build looks like
  - Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters
 
 ```javascript
@@ -329,11 +329,12 @@ Usage:
 ```
 
 ##### buildList
-  - for building json that you can pass json payload in [acceptance tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
-  - buildList takes the same arguments as makeList
+  - for building json that you can pass as json payload in [acceptance tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
+  - takes the same arguments as makeList
   - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
     - can use get(index) to get to items in the list
+  - use `.add()` method to include extra sideloaded data to the payload
            
 Usage: 
 
