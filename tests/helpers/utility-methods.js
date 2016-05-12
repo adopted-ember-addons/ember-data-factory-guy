@@ -20,7 +20,7 @@ let theUsualSetup = function (adapterType) {
       // comic book will always be REST style serializer
       // all the modelFragment types will use their own default serializer
       let originalSerializer = findSerializer(modelName);
-      if (modelName.match(/(comic-book|name|department|address|department-employment)/)) {
+      if (modelName.match(/(comic-book|name|department|address|department-employment|manager)/)) {
         return originalSerializer;
       }
       // cat serialzer will always declare special primaryKey for test purposes
