@@ -23,7 +23,9 @@ let theUsualSetup = function (adapterType) {
       if (modelName.match(/(comic-book|name|department|address|department-employment)/)) {
         return originalSerializer;
       }
-      // cat serialzer will always declare special primaryKey
+      // cat serialzer will always declare special primaryKey for test purposes
+      // but don't want to create serializer for cat, because this way allows the
+      // serializer to change from JSONAPI, to REST style at will ( of the test )
       if (modelName === 'cat') {
         originalSerializer.set('primaryKey', 'catId');
         return originalSerializer;
