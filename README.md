@@ -1419,7 +1419,7 @@ moduleForAcceptance('Acceptance | User View', {
 });
 
 test("Creates new project", function () {
-  let user = build('user', 'with_projects'); // build user payload
+  let user = make('user', 'with_projects'); // build user payload
   visit('/user/'+ user.get('id'));
 
   andThen(function () {
