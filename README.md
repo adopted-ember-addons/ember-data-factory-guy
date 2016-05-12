@@ -253,6 +253,7 @@ Usage:
   - build takes same arguments as make 
   - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
+  - use `.add()` method to add extra sideloaded data
   
 Usage: 
 
@@ -333,7 +334,7 @@ Usage:
   - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
     - can use get(index) to get to items in the list
-
+           
 Usage: 
 
 ```js
