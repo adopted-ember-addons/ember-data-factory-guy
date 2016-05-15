@@ -16,15 +16,6 @@ export default class {
     return payload;
   }
   /**
-   Returns the ID for the model payload
-
-   @param modelName
-   @param payload
-   */
-  extractId(modelName, payload) {
-    return payload.id;
-  }
-  /**
    Convert fixture for FactoryGuy.build
 
    @param modelName

@@ -1,5 +1,24 @@
 import Ember from 'ember';
+/**
+ Base class for converting the base fixture that factory guy creates to
+ the payload expected by ember data adapter.
 
+ While it's converting the format, it transforms the attribute and relationship keys.
+ Don't want to transform keys when building payload for a FactoryGuy#make/makeList operation,
+ but only for build/buildList.
+
+ If there are associations in the base fixture, they will be added to the
+ new fixture as 'side loaded' elements, even if they are another json payload
+ built whith the build/buildList methods.
+
+ TODO: The weakness here is in polymorphic types, since I am using that type
+ attribute to determine the correct model name. There is a work around,
+ but waiting to see if anyone complains.
+
+ @param {DS.Store} store
+ @param {Boolean} transformKeys tranform keys and values in fixture
+ @constructor
+ */
 export default class {
 
   constructor(store, transformKeys = true) {
@@ -10,11 +29,48 @@ export default class {
     this.defaultValueTransformFn = this.noTransformFn;
   }
 
+  /**
+   Convert an initial fixture into a final payload.
+   This raw fixture can contain other json in relationships that were
+   built by FacoryGuy ( build, buildList ) methods
+
+   @param modelName
+   @param fixture
+   @returns {*} converted fixture
+   */
+  convert(modelName, fixture) {
+    let data;
+
+    if (Ember.typeOf(fixture) === 'array') {
+      this.listType = true;
+      data = fixture.map((single)=> {
+        return this.convertSingle(modelName, single);
+      });
+    } else {
+      data = this.convertSingle(modelName, fixture);
+    }
+
+    let payload = this.createPayload(modelName, data);
+
+    this.addIncludedArray(payload);
+
+    return payload;
+  }
+
+  /**
+   * User the primaryKey from the serializer if it is declared
+   *
+   * @param modelName
+   * @param data
+   * @param fixture
+   */
   addPrimaryKey(modelName, data, fixture) {
     let primaryKey = this.store.serializerFor(modelName).get('primaryKey');
-    data.id = fixture.id;
-    if(primaryKey !== 'id') {
-      data[primaryKey] = fixture.id;
+    if (fixture.id) {
+      data.id = fixture.id;
+      if (primaryKey !== 'id') {
+        data[primaryKey] = fixture.id;
+      }
     }
   }
 

@@ -1,32 +1,33 @@
 import DS from 'ember-data';
 import JSONAPIFixtureBuilder from './jsonapi-fixture-builder';
 import RESTFixtureBuilder from './rest-fixture-builder';
+import JSONFixtureBuilder from './json-fixture-builder';
 
 export default class {
 
   constructor(store) {
     this.store = store;
-    this.adapter = store.adapterFor('application');
+    this.serializer = store.serializerFor('application');
   }
 
   /**
-   Return appropriate FixtureBuilder for the adapter type
+   Return appropriate FixtureBuilder for the serializer type
    */
   fixtureBuilder() {
-    if (this.usingJSONAPIAdapter()) {
+    if (this.usingJSONAPISerializer()) {
       return new JSONAPIFixtureBuilder(this.store);
     }
-    if (this.usingRESTAdapter()) {
+    if (this.usingRESTSerializer()) {
       return new RESTFixtureBuilder(this.store);
     }
-    return new JSONAPIFixtureBuilder(this.store);
+    return new JSONFixtureBuilder(this.store);
   }
 
-  usingJSONAPIAdapter() {
-    return this.adapter && this.adapter instanceof DS.JSONAPIAdapter;
+  usingJSONAPISerializer() {
+    return this.serializer && this.serializer instanceof DS.JSONAPISerializer;
   }
 
-  usingRESTAdapter() {
-    return this.adapter && this.adapter instanceof DS.RESTAdapter;
+  usingRESTSerializer() {
+    return this.serializer && this.serializer instanceof DS.RESTSerializer;
   }
 }

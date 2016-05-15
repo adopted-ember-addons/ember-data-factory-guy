@@ -93,7 +93,8 @@ let MockServer = Ember.Object.extend({
      name as first parameter`, args.length > 0);
 
     let json = FactoryGuy.build.apply(FactoryGuy, arguments);
-    return new MockFindRequest(modelName).returns({json});
+
+    return new MockFindRequest(modelName).returns({ json });
   },
   handleFind: function() {
     Ember.deprecate("`handleFind` - has been deprecated. Use `mockFind` method instead`",
@@ -177,6 +178,7 @@ let MockServer = Ember.Object.extend({
       let json = FactoryGuy.buildList.apply(FactoryGuy, args);
       mockFindAll.returns({json});
     }
+
     return mockFindAll;
   },
   handleFindAll: function () {

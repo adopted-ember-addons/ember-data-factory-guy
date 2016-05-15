@@ -634,7 +634,7 @@ test("using custom serialize keys function for transforming attributes and relat
 
 });
 
-test("serializes attributes with custom type", function () {
+test("serializes custom attributes types", function () {
   let info = {first: 1};
   let json = build('user', {info: info});
   json.unwrap();

@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import FixtureBuilder from './fixture-builder';
 import JSONAPIFixtureConverter from '../converter/jsonapi-fixture-converter';
 import JSONAPIPayload from '../payload/json-api-payload';
@@ -12,11 +11,13 @@ class JSONAPIJsonBuilder extends FixtureBuilder {
     super(store);
     this.updateHTTPMethod = 'PATCH';
   }
+  /**
+   Convert to the ember-data JSONAPI Serializer specification
 
-  extractId(modelName, payload) {
-    return Ember.get(payload, 'data.id');
-  }
-
+   @param {String} modelName
+   @param {String} fixture
+   @returns {*} new converted fixture
+   */
   convertForBuild(modelName, fixture) {
     let converter = new JSONAPIFixtureConverter(this.store);
     let json =  converter.convert(modelName, fixture);

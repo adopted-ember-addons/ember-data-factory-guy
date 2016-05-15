@@ -1,31 +1,39 @@
 import Ember from 'ember';
 import FactoryGuy from 'ember-data-factory-guy';
 import startApp from '../helpers/start-app';
+import DS from 'ember-data';
 
-// adapterType like -rest or -active-model, -json-api
-let theUsualSetup = function (adapterType) {
+// serializerType like -rest or -active-model, -json-api, -json
+let theUsualSetup = function (serializerType) {
   let App = startApp();
 
   // brute force setting the adapter/serializer on the store.
-  if (adapterType) {
-    let store = FactoryGuy.store;
-    let adapter = App.__container__.lookup('adapter:'+adapterType);
-    let serializer = App.__container__.lookup('serializer:'+adapterType);
+  if (serializerType) {
+    let store = App.__container__.lookup('service:store');
+
+    let adapterType = serializerType === '-json' ? '-rest' : serializerType;
+    let adapter = App.__container__.lookup('adapter:' + adapterType);
+
+    serializerType = serializerType === '-json' ? '-default' : serializerType;
+    let serializer = App.__container__.lookup('serializer:' + serializerType);
 
     store.adapterFor = function() { return adapter; };
-    
+
     let findSerializer = store.serializerFor.bind(store);
 
     store.serializerFor = function(modelName) {
-      // comic book will always be REST style serializer
+      // comic book will always be REST style serializer,
+      // train will always be JSON style serializer
+      // till I can figure out how to set those up dynamically with embedded mixing and attrs
+      // on only those serializers
       // all the modelFragment types will use their own default serializer
       let originalSerializer = findSerializer(modelName);
-      if (modelName.match(/(comic-book|name|department|address|department-employment|manager)/)) {
+      if (modelName.match(/(comic-book|train|name|department|address|department-employment|manager)/)) {
         return originalSerializer;
       }
       // cat serialzer will always declare special primaryKey for test purposes
-      // but don't want to create serializer for cat, because this way allows the
-      // serializer to change from JSONAPI, to REST style at will ( of the test )
+      // but don't want to create serializer for cat, because doing it this way
+      // allows the serializer to change from JSONAPI, REST, JSON style at will ( of the test )
       if (modelName === 'cat') {
         originalSerializer.set('primaryKey', 'catId');
         return originalSerializer;

@@ -1,25 +1,12 @@
 import Ember from 'ember';
-import JSONPayload from './json-payload';
+import BasePayload from './base-payload';
 
-export default class extends JSONPayload {
+export default class extends BasePayload {
 
   constructor(modelName, json, converter) {
     super(modelName, json, converter);
+    this.payloadKey = converter.getPayloadKey(modelName);
     this.addProxyMethods(['includeKeys','getInclude']);
-  }
-
-  add(moreJson) {
-    this.converter.included = this.json;
-    Ember.A(Object.keys(moreJson))
-      .reject(key=> Ember.A(this.proxyMethods).contains(key))
-      .forEach(key=> {
-        if (Ember.typeOf(moreJson[key]) === "array") {
-          moreJson[key].forEach(data=> this.converter.addToIncluded(data, key));
-        } else {
-          this.converter.addToIncluded(moreJson[key], key);
-        }
-      });
-    return this.json;
   }
 
   includeKeys() {

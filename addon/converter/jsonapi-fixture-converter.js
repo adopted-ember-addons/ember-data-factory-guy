@@ -10,37 +10,27 @@ class JSONAPIFixtureConverter extends Converter {
     this.polymorphicTypeTransformFn = dasherize;
     this.included = [];
   }
-
   /**
-   Convert an initial fixture into JSONAPI document
-   This raw fixture can contain other json in relationships that were
-   built by FacoryGuy ( build, buildList ) methods
-
-   @param {String} modelName
-   @param {Object} fixture initial raw fixture
-   @returns {{data: {type: *, id: *, attributes}: Array}}
+   * JSONAPIerializer does not use modelName for payload key,
+   * and just has 'data' as the top level key.
+   *
+   * @param modelName
+   * @param fixture
+   * @returns {*}
    */
-  convert(modelName, fixture) {
-    let data;
-
-    if (Ember.typeOf(fixture) === 'array') {
-      this.listType = true;
-      data = fixture.map((single)=> {
-        return this.convertSingle(modelName, single);
-      });
-    } else {
-      data = this.convertSingle(modelName, fixture);
-    }
-
-    let jsonApiData = { data: data };
-
-    if (!Ember.isEmpty(this.included)) {
-      jsonApiData.included = this.included;
-    }
-
-    return jsonApiData;
+  createPayload(modelName, fixture) {
+    return { data: fixture };
   }
-
+  /**
+   * Add the included data
+   *
+   * @param payload
+   */
+  addIncludedArray(payload) {
+    if (!Ember.isEmpty(this.included)) {
+      payload.included = this.included;
+    }
+  }
   /**
    In order to conform to the way ember data expects to handle relationships
    in a json payload ( during deserialization ), convert a record ( model instance )

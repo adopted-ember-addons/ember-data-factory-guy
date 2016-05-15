@@ -3,16 +3,19 @@ import FactoryGuy, { build, buildList, make, makeList } from 'ember-data-factory
 import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
+import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
 import { title, inlineSetup } from '../helpers/utility-methods';
 
 let App = null;
 let adapter = 'DS.ActiveModelAdapter';
-let adapterType = '-active-model';
+let serializerType = '-active-model';
 
+SharedAdapterBehavior.all(adapter, serializerType);
 
-SharedAdapterBehavior.all(adapter, adapterType);
+SharedFactoryGuyTestHelperBehavior.mockFindSideloadingTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(App, adapter, serializerType);
 
-module(title(adapter, 'FactoryGuyTestHelper#mockCreate custom'), inlineSetup(App, adapterType));
+module(title(adapter, 'FactoryGuyTestHelper#mockCreate custom'), inlineSetup(App, serializerType));
 
 test("returns camelCase attributes", function (assert) {
   Ember.run(function () {
@@ -32,7 +35,7 @@ test("returns camelCase attributes", function (assert) {
   });
 });
 
-module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, adapterType));
+module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, serializerType));
 
 test("sideloads belongsTo records which are built from fixture definition", function () {
 

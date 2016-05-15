@@ -1,54 +1,114 @@
 import Ember from 'ember';
-import FactoryGuy, { build, buildList, make, makeList } from 'ember-data-factory-guy';
+import FactoryGuy, { build, buildList, make, makeList, mockFind, mockFindAll } from 'ember-data-factory-guy';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
+import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
 import { title, inlineSetup } from '../helpers/utility-methods';
 
 let App = null;
 let adapter = 'DS.RESTAdapter';
-let adapterType = '-rest';
+let serializerType = '-rest';
 
-SharedAdapterBehavior.all(adapter, adapterType);
+SharedAdapterBehavior.all(adapter, serializerType);
 
-module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, adapterType));
+SharedFactoryGuyTestHelperBehavior.mockFindSideloadingTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(App, adapter, serializerType);
 
-test("returns all attributes with no key", function () {
+module(title(adapter, 'FactoryGuyTestHelper#mockFind | embedded'), inlineSetup(App, serializerType));
+
+test("belongsTo", function(assert) {
+  Ember.run(()=> {
+    let done = assert.async();
+    let mock = mockFind('comic-book', 'marvel');
+
+    FactoryGuy.store.find('comic-book', mock.get('id')).then(function(comic) {
+      ok(comic.get('name') === 'Comic Times #1');
+      ok(comic.get('company.name') === 'Marvel Comics');
+      done();
+    });
+  });
+});
+
+test("hasMany", function(assert) {
+  Ember.run(()=> {
+    let done = assert.async();
+    let mock = mockFind('comic-book', 'with_bad_guys');
+
+    FactoryGuy.store.find('comic-book', mock.get('id')).then(function(comic) {
+      ok(comic.get('name') === 'Comic Times #1');
+      ok(comic.get('characters').mapBy('name') + '' === ['BadGuy#1', 'BadGuy#2'] + '');
+      done();
+    });
+  });
+});
+
+
+module(title(adapter, 'FactoryGuyTestHelper#mockFindAll | embedded'), inlineSetup(App, serializerType));
+
+test("belongsTo", function(assert) {
+  Ember.run(()=> {
+    let done = assert.async();
+
+    mockFindAll('comic-book', 2, 'marvel');
+
+    FactoryGuy.store.findAll('comic-book').then(function(comics) {
+      ok(comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + '');
+      ok(comics.mapBy('company.name') + '' === ['Marvel Comics', 'Marvel Comics'] + '');
+      done();
+    });
+  });
+});
+
+test("hasMany", function(assert) {
+  Ember.run(()=> {
+    let done = assert.async();
+
+    mockFindAll('comic-book', 2, 'with_bad_guys');
+
+    FactoryGuy.store.findAll('comic-book').then(function(comics) {
+      ok(comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + '');
+      ok(comics.get('firstObject.characters').mapBy('name') + '' === ['BadGuy#1', 'BadGuy#2'] + '');
+      ok(comics.get('lastObject.characters').mapBy('name') + '' === ['BadGuy#3', 'BadGuy#4'] + '');
+      done();
+    });
+  });
+});
+
+
+module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, serializerType));
+
+test("returns all attributes with no key", function() {
   let user = build('user');
-  deepEqual(user.get(), {id: 1, name: 'User1', style: "normal"});
+  deepEqual(user.get(), { id: 1, name: 'User1', style: "normal" });
   equal(user.get().id, 1);
   equal(user.get().name, 'User1');
 });
 
-test("returns an attribute with a key", function () {
+test("returns an attribute for a key", function() {
   let user = build('user');
   equal(user.get('id'), 1);
   equal(user.get('name'), 'User1');
 });
 
-//test("returns an attribute with a key", function () {
-//  let user = build('user');
-//  equal(user.get('id'), 1);
-//  equal(user.get('name'), 'User1');
-//});
 
-module(title(adapter, 'FactoryGuy#buildList get'), inlineSetup(App, adapterType));
+module(title(adapter, 'FactoryGuy#buildList get'), inlineSetup(App, serializerType));
 
-test("returns array of all attributes with no key", function () {
+test("returns array of all attributes with no key", function() {
   let users = buildList('user', 2);
-  deepEqual(users.get(), [{id: 1, name: 'User1', style: "normal"}, {id: 2, name: 'User2', style: "normal"}]);
+  deepEqual(users.get(), [{ id: 1, name: 'User1', style: "normal" }, { id: 2, name: 'User2', style: "normal" }]);
 });
 
-test("returns an attribute with a key", function () {
+test("returns an attribute with a key", function() {
   let users = buildList('user', 2);
-  deepEqual(users.get(0), {id: 1, name: 'User1', style: "normal"});
+  deepEqual(users.get(0), { id: 1, name: 'User1', style: "normal" });
   equal(users.get(0).id, 1);
-  deepEqual(users.get(1), {id: 2, name: 'User2', style: "normal"});
+  deepEqual(users.get(1), { id: 2, name: 'User2', style: "normal" });
   equal(users.get(1).name, 'User2');
 });
 
-module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, adapterType));
+module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, serializerType));
 
-test("sideloads belongsTo records which are built from fixture definition that just has empty object {}", function () {
+test("sideloads belongsTo records which are built from fixture definition that just has empty object {}", function() {
   let buildJson = build('user', 'with_company');
   buildJson.unwrap();
 
@@ -57,17 +117,17 @@ test("sideloads belongsTo records which are built from fixture definition that j
       id: 1,
       name: 'User1',
       style: "normal",
-      company: {id: 1, type: 'company'}
+      company: { id: 1, type: 'company' }
     },
     companies: [
-      {id: 1, type: 'Company', name: "Silly corp" }
+      { id: 1, type: 'Company', name: "Silly corp" }
     ]
   };
 
   deepEqual(buildJson, expectedJson);
 });
 
-test("sideloads belongsTo records which are built from fixture definition with FactoryGuy.belongsTo", function () {
+test("sideloads belongsTo records which are built from fixture definition with FactoryGuy.belongsTo", function() {
 
   let buildJson = build('profile', 'with_bat_man');
   buildJson.unwrap();
@@ -93,10 +153,10 @@ test("sideloads belongsTo records which are built from fixture definition with F
   deepEqual(buildJson, expectedJson);
 });
 
-test("sideloads belongsTo record passed as ( prebuilt ) json", function () {
+test("sideloads belongsTo record passed as ( prebuilt ) json", function() {
 
   let batMan = build('bat_man');
-  let buildJson = build('profile', {superHero: batMan});
+  let buildJson = build('profile', { superHero: batMan });
   buildJson.unwrap();
 
   let expectedJson = {
@@ -120,7 +180,7 @@ test("sideloads belongsTo record passed as ( prebuilt ) json", function () {
   deepEqual(buildJson, expectedJson);
 });
 
-test("sideloads 2 levels of relationships ( build => belongsTo , build => belongsTo )", function () {
+test("sideloads 2 levels of relationships ( build => belongsTo , build => belongsTo )", function() {
 
   let company = build('company');
   let user = build('user', { company });
@@ -137,7 +197,7 @@ test("sideloads 2 levels of relationships ( build => belongsTo , build => belong
       {
         id: 1,
         name: "User1",
-        company: {id: 1, type: "company"},
+        company: { id: 1, type: "company" },
         style: "normal"
       }
     ],
@@ -154,7 +214,7 @@ test("sideloads 2 levels of relationships ( build => belongsTo , build => belong
 });
 
 
-test("sideloads 2 levels of records ( buildList => hasMany , build => belongsTo )", function () {
+test("sideloads 2 levels of records ( buildList => hasMany , build => belongsTo )", function() {
   let hats = buildList('big-hat', 2, 'square');
   let user = build('user', { hats });
   let buildJson = build('project', { user });
@@ -170,7 +230,7 @@ test("sideloads 2 levels of records ( buildList => hasMany , build => belongsTo 
       {
         id: 1,
         name: "User1",
-        hats: [{id: 1, type: "big_hat"},{id: 2, type: "big_hat"}],
+        hats: [{ id: 1, type: "big_hat" }, { id: 2, type: "big_hat" }],
         style: "normal"
       }
     ],
@@ -192,10 +252,10 @@ test("sideloads 2 levels of records ( buildList => hasMany , build => belongsTo 
 });
 
 
-test("sideloads 2 levels of records ( build => belongsTo,  buildList => hasMany )", function () {
-  let company1 = build('company', {name: 'A Corp'});
-  let company2 = build('company', {name: 'B Corp'});
-  let owners = buildList('user', { company:company1 }, { company:company2 });
+test("sideloads 2 levels of records ( build => belongsTo,  buildList => hasMany )", function() {
+  let company1 = build('company', { name: 'A Corp' });
+  let company2 = build('company', { name: 'B Corp' });
+  let owners = buildList('user', { company: company1 }, { company: company2 });
   let buildJson = build('property', { owners });
   buildJson.unwrap();
 
@@ -203,19 +263,19 @@ test("sideloads 2 levels of records ( build => belongsTo,  buildList => hasMany 
     property: {
       id: 1,
       name: 'Silly property',
-      owners: [1,2]
+      owners: [1, 2]
     },
     users: [
       {
         id: 1,
         name: "User1",
-        company: {id: 1, type: "company"},
+        company: { id: 1, type: "company" },
         style: "normal"
       },
       {
         id: 2,
         name: "User2",
-        company: {id: 2, type: "company"},
+        company: { id: 2, type: "company" },
         style: "normal"
       }
     ],
@@ -237,7 +297,7 @@ test("sideloads 2 levels of records ( build => belongsTo,  buildList => hasMany 
 });
 
 
-test("sideloads hasMany records which are built from fixture definition", function () {
+test("sideloads hasMany records which are built from fixture definition", function() {
 
   let buildJson = build('user', 'with_hats');
   buildJson.unwrap();
@@ -248,23 +308,23 @@ test("sideloads hasMany records which are built from fixture definition", functi
       name: 'User1',
       style: "normal",
       hats: [
-        {type: 'big_hat', id:1},
-        {type: 'big_hat', id:2}
+        { type: 'big_hat', id: 1 },
+        { type: 'big_hat', id: 2 }
       ],
     },
     'big-hats': [
-      {id: 1, type: "BigHat" },
-      {id: 2, type: "BigHat" }
+      { id: 1, type: "BigHat" },
+      { id: 2, type: "BigHat" }
     ]
   };
 
   deepEqual(buildJson, expectedJson);
 });
 
-test("sideloads hasMany records passed as prebuilt ( buildList ) json", function () {
+test("sideloads hasMany records passed as prebuilt ( buildList ) json", function() {
 
   let hats = buildList('big-hat', 2);
-  let buildJson = build('user', {hats: hats});
+  let buildJson = build('user', { hats: hats });
   buildJson.unwrap();
 
   let expectedJson = {
@@ -273,13 +333,13 @@ test("sideloads hasMany records passed as prebuilt ( buildList ) json", function
       name: 'User1',
       style: "normal",
       hats: [
-        {type: 'big_hat', id:1},
-        {type: 'big_hat', id:2}
+        { type: 'big_hat', id: 1 },
+        { type: 'big_hat', id: 2 }
       ],
     },
     'big-hats': [
-      {id: 1, type: "BigHat" },
-      {id: 2, type: "BigHat" }
+      { id: 1, type: "BigHat" },
+      { id: 2, type: "BigHat" }
     ]
   };
 
@@ -287,11 +347,11 @@ test("sideloads hasMany records passed as prebuilt ( buildList ) json", function
 });
 
 
-test("sideloads hasMany records passed as prebuilt ( array of build ) json", function () {
+test("sideloads hasMany records passed as prebuilt ( array of build ) json", function() {
 
   let hat1 = build('big-hat');
   let hat2 = build('big-hat');
-  let buildJson = build('user', {hats: [hat1, hat2]});
+  let buildJson = build('user', { hats: [hat1, hat2] });
   buildJson.unwrap();
 
   let expectedJson = {
@@ -300,20 +360,20 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) json", fun
       name: 'User1',
       style: "normal",
       hats: [
-        {type: 'big_hat', id:1},
-        {type: 'big_hat', id:2}
+        { type: 'big_hat', id: 1 },
+        { type: 'big_hat', id: 2 }
       ],
     },
     'big-hats': [
-      {id: 1, type: "BigHat" },
-      {id: 2, type: "BigHat" }
+      { id: 1, type: "BigHat" },
+      { id: 2, type: "BigHat" }
     ]
   };
 
   deepEqual(buildJson, expectedJson);
 });
 
-test("sideloads unrelated record passed as prebuilt ( build ) json", function () {
+test("sideloads unrelated record passed as prebuilt ( build ) json", function() {
 
   let batMan = build('bat_man');
   let buildJson = build('user').add(batMan);
@@ -337,7 +397,7 @@ test("sideloads unrelated record passed as prebuilt ( build ) json", function ()
   deepEqual(buildJson, expectedJson);
 });
 
-test("sideloads unrelated record passed as prebuilt ( buildList ) json", function () {
+test("sideloads unrelated record passed as prebuilt ( buildList ) json", function() {
 
   let batMen = buildList('bat_man', 2);
   let buildJson = build('user').add(batMen);
@@ -366,50 +426,50 @@ test("sideloads unrelated record passed as prebuilt ( buildList ) json", functio
   deepEqual(buildJson, expectedJson);
 });
 
-test("embeds belongsTo record when serializer attrs => embedded: always ", function () {
+test("embeds belongsTo record when serializer attrs => embedded: always ", function() {
 
   let buildJson = build('comic-book', 'marvel');
   buildJson.unwrap();
 
   let expectedJson = {
-    'comic-book': {
+    comicBook: {
       id: 1,
       name: 'Comic Times #1',
-      company: {id: 1, type: 'Company', name: 'Marvel Comics'}
+      company: { id: 1, type: 'Company', name: 'Marvel Comics' }
     }
   };
 
   deepEqual(buildJson, expectedJson);
 });
 
-test("embeds belongsTo record passed as prebuilt ( build ) json when serializer attrs => embedded: always ", function () {
+test("embeds belongsTo record passed as prebuilt ( build ) json when serializer attrs => embedded: always ", function() {
   let marvel = build('marvel');
-  let buildJson = build('comic-book', {company: marvel});
+  let buildJson = build('comic-book', { company: marvel });
   buildJson.unwrap();
 
   let expectedJson = {
-    'comic-book': {
+    comicBook: {
       id: 1,
       name: 'Comic Times #1',
-      company: {id: 1, type: 'Company', name: 'Marvel Comics'}
+      company: { id: 1, type: 'Company', name: 'Marvel Comics' }
     }
   };
 
   deepEqual(buildJson, expectedJson);
 });
 
-test("embeds hasMany records when serializer attrs => embedded: always", function () {
+test("embeds hasMany records when serializer attrs => embedded: always", function() {
 
   let buildJson = build('comic-book', 'with_bad_guys');
   buildJson.unwrap();
 
   let expectedJson = {
-    'comic-book': {
+    comicBook: {
       id: 1,
       name: 'Comic Times #1',
       characters: [
-        {id: 1, type: 'Villain', name: 'BadGuy#1'},
-        {id: 2, type: 'Villain', name: 'BadGuy#2'}
+        { id: 1, type: 'Villain', name: 'BadGuy#1' },
+        { id: 2, type: 'Villain', name: 'BadGuy#2' }
       ]
     }
   };
@@ -417,18 +477,18 @@ test("embeds hasMany records when serializer attrs => embedded: always", functio
   deepEqual(buildJson, expectedJson);
 });
 
-test("embeds hasMany records passed as prebuilt ( buildList ) json when serializer attrs => embedded: always", function () {
+test("embeds hasMany records passed as prebuilt ( buildList ) json when serializer attrs => embedded: always", function() {
   let badGuys = buildList('villain', 2);
-  let buildJson = build('comic-book', {characters: badGuys});
+  let buildJson = build('comic-book', { characters: badGuys });
   buildJson.unwrap();
 
   let expectedJson = {
-    'comic-book': {
+    comicBook: {
       id: 1,
       name: 'Comic Times #1',
       characters: [
-        {id: 1, type: 'Villain', name: 'BadGuy#1'},
-        {id: 2, type: 'Villain', name: 'BadGuy#2'}
+        { id: 1, type: 'Villain', name: 'BadGuy#1' },
+        { id: 2, type: 'Villain', name: 'BadGuy#2' }
       ]
     }
   };
@@ -436,7 +496,7 @@ test("embeds hasMany records passed as prebuilt ( buildList ) json when serializ
   deepEqual(buildJson, expectedJson);
 });
 
-test("embeds belongsTo record when serializer attrs => deserialize: 'records' ", function () {
+test("embeds belongsTo record when serializer attrs => deserialize: 'records' ", function() {
 
   let buildJson = build('manager', 'with_salary');
   buildJson.unwrap();
@@ -460,9 +520,9 @@ test("embeds belongsTo record when serializer attrs => deserialize: 'records' ",
   deepEqual(buildJson, expectedJson);
 });
 
-test("embeds belongsTo record passed as prebuilt ( build ) json when serializer attrs => deserialize: 'records' ", function () {
+test("embeds belongsTo record passed as prebuilt ( build ) json when serializer attrs => deserialize: 'records' ", function() {
   let salary = build('salary');
-  let buildJson = build('manager', {salary: salary});
+  let buildJson = build('manager', { salary: salary });
   buildJson.unwrap();
 
   let expectedJson = {
@@ -484,7 +544,7 @@ test("embeds belongsTo record passed as prebuilt ( build ) json when serializer 
   deepEqual(buildJson, expectedJson);
 });
 
-test("embeds hasMany records when serializer attrs => deserialize: 'records'", function () {
+test("embeds hasMany records when serializer attrs => deserialize: 'records'", function() {
 
   let buildJson = build('manager', 'with_reviews');
   buildJson.unwrap();
@@ -515,9 +575,9 @@ test("embeds hasMany records when serializer attrs => deserialize: 'records'", f
   deepEqual(buildJson, expectedJson);
 });
 
-test("embeds hasMany records passed as prebuilt ( buildList ) json when serializer attrs => deserialize: 'records'", function () {
+test("embeds hasMany records passed as prebuilt ( buildList ) json when serializer attrs => deserialize: 'records'", function() {
   let reviews = buildList('review', 2);
-  let buildJson = build('manager', {reviews: reviews});
+  let buildJson = build('manager', { reviews: reviews });
   buildJson.unwrap();
 
   let expectedJson = {
@@ -547,15 +607,15 @@ test("embeds hasMany records passed as prebuilt ( buildList ) json when serializ
 });
 
 // the override for primaryKey is in the helpers/utilityMethods.js
-test("serializer primaryKey override", function () {
+test("serializer primaryKey override", function() {
   let json = build('cat');
   equal(json.get('catId'), 1);
   equal(json.get('id'), 1);
 });
 
-module(title(adapter, 'FactoryGuy#buildList custom'), inlineSetup(App, adapterType));
+module(title(adapter, 'FactoryGuy#buildList custom'), inlineSetup(App, serializerType));
 
-test("sideloads belongsTo records", function () {
+test("sideloads belongsTo records", function() {
 
   let buildJson = buildList('profile', 2, 'with_bat_man');
   buildJson.unwrap();
@@ -597,7 +657,7 @@ test("sideloads belongsTo records", function () {
 });
 
 
-test("sideloads hasMany records", function () {
+test("sideloads hasMany records", function() {
 
   let buildJson = buildList('user', 2, 'with_hats');
   buildJson.unwrap();
@@ -609,8 +669,8 @@ test("sideloads hasMany records", function () {
         name: 'User1',
         style: "normal",
         hats: [
-          {type: 'big_hat', id:1},
-          {type: 'big_hat', id:2}
+          { type: 'big_hat', id: 1 },
+          { type: 'big_hat', id: 2 }
         ]
       },
       {
@@ -618,25 +678,25 @@ test("sideloads hasMany records", function () {
         name: 'User2',
         style: "normal",
         hats: [
-          {type: 'big_hat', id:3},
-          {type: 'big_hat', id:4}
+          { type: 'big_hat', id: 3 },
+          { type: 'big_hat', id: 4 }
         ]
       }
     ],
     'big-hats': [
-      {id: 1, type: "BigHat" },
-      {id: 2, type: "BigHat" },
-      {id: 3, type: "BigHat" },
-      {id: 4, type: "BigHat" }
+      { id: 1, type: "BigHat" },
+      { id: 2, type: "BigHat" },
+      { id: 3, type: "BigHat" },
+      { id: 4, type: "BigHat" }
     ]
   };
 
   deepEqual(buildJson, expectedJson);
 });
 
-test("serializes attributes with custom type", function () {
-  let info = {first: 1};
-  let buildJson = build('user', {info: info});
+test("serializes custom attributes types", function() {
+  let info = { first: 1 };
+  let buildJson = build('user', { info: info });
   buildJson.unwrap();
 
   let expectedJson = {
@@ -651,3 +711,25 @@ test("serializes attributes with custom type", function () {
   deepEqual(buildJson, expectedJson);
 });
 
+test("uses serializers payloadKeyFromModelName function", function() {
+  let serializer = FactoryGuy.store.serializerFor('application');
+  let savedPayloadKeyFromModelNameFn = serializer.payloadKeyFromModelName;
+  serializer.payloadKeyFromModelName = function() {
+    return "dude";
+  };
+
+  let buildJson = build('user');
+  buildJson.unwrap();
+
+  let expectedJson = {
+    dude: {
+      id: 1,
+      name: 'User1',
+      style: "normal"
+    }
+  };
+
+  deepEqual(buildJson, expectedJson);
+
+  serializer.payloadKeyFromModelName = savedPayloadKeyFromModelNameFn;
+});

@@ -8,8 +8,7 @@ import {
 } from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import $ from 'jquery';
-
-import JSONSerializer from 'ember-data/serializers/json';
+import { title, inlineSetup } from '../helpers/utility-methods';
 
 import Profile from 'dummy/models/profile';
 import SuperHero from 'dummy/models/super-hero';
@@ -36,13 +35,8 @@ SharedBehavior.buildUrl = function() {
 
 };
 
-//////// mockFind /////////
-SharedBehavior.handleFindTests = function() {
-
-  test("have access to handler being used by mockjax", function() {
-    let mock = mockFind('user');
-    ok(mock.handler);
-  });
+//////// mockFind common /////////
+SharedBehavior.mockFindCommonTests = function() {
 
   test("the basic returns id", function(assert) {
     Ember.run(()=> {
@@ -113,9 +107,13 @@ SharedBehavior.handleFindTests = function() {
       });
     });
   });
+};
 
+SharedBehavior.mockFindSideloadingTests = function(App, adapter, serializerType) {
 
-  test("with belongsTo association", function(assert) {
+  module(title(adapter, 'FactoryGuyTestHelper#mockFind | sideloading'), inlineSetup(App, serializerType));
+
+  test("belongsTo association", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
       let profile = mockFind('profile', 'with_company', 'with_bat_man');
@@ -130,7 +128,7 @@ SharedBehavior.handleFindTests = function() {
   });
 
 
-  test("with hasMany association", function(assert) {
+  test("hasMany association", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
       let user = mockFind('user', 'with_hats');
@@ -195,12 +193,11 @@ SharedBehavior.handleFindTests = function() {
       });
     });
   });
-
 };
 
 //////// mockReload /////////
 
-SharedBehavior.handleReloadTests = function() {
+SharedBehavior.mockReloadTests = function() {
 
   test("with a record handles reload, and does not change attributes", function(assert) {
     let done = assert.async();
@@ -250,14 +247,8 @@ SharedBehavior.handleReloadTests = function() {
 
 };
 
-/////// mockFindAll //////////
-
-SharedBehavior.handleFindAllTests = function() {
-
-  test("have access to handler being used by mockjax", function() {
-    let mock = mockFindAll('user');
-    ok(mock.handler);
-  });
+/////// mockFindAll common //////////
+SharedBehavior.mockFindAllCommonTests = function() {
 
   test("the basic", function(assert) {
     Ember.run(()=> {
@@ -331,7 +322,12 @@ SharedBehavior.handleFindAllTests = function() {
       done();
     });
   });
+};
 
+//////// mockFindAll with sideloading /////////
+SharedBehavior.mockFindAllSideloadingTests = function(App, adapter, serializerType) {
+
+  module(title(adapter, 'FactoryGuyTestHelper#mockFindAll | sideloading'), inlineSetup(App, serializerType));
 
   test("with belongsTo association", function(assert) {
     Ember.run(()=> {
@@ -411,68 +407,12 @@ SharedBehavior.handleFindAllTests = function() {
       });
     });
   });
-
 };
 
 
 /////// mockQuery //////////
 
-SharedBehavior.handleQueryTests = function() {
-
-  test("json payload argument should be an object", function(assert) {
-    assert.throws(function() {
-      mockQuery('user', 'name', {});
-    }, "query argument should not be a string");
-
-    assert.throws(function() {
-      mockQuery('user', ['name'], {});
-    }, "query argument should not be an array");
-  });
-
-  test("mock query returns() accepts only ids, or models or json keys", function(assert) {
-    const handler = mockQuery('user', { name: 'Bob' });
-    // In those tests, values don't matter
-    assert.throws(()=> {
-      handler.returns({
-        ids: undefined,
-        models: undefined
-      });
-    });
-
-    assert.throws(()=> {
-      handler.returns({
-        ids: undefined,
-        json: undefined
-      });
-    });
-
-    assert.throws(()=> {
-      handler.returns({
-        models: undefined,
-        json: undefined
-      });
-    });
-
-    assert.throws(()=> {
-      handler.returns({
-        ids: undefined,
-        models: undefined,
-        json: undefined
-      });
-    });
-  });
-
-  test("mock query using returns with an instance of DS.Model throws error", function(assert) {
-    assert.throws(function() {
-      let models = make('user', { name: 'Bob' });
-      mockQuery('user', { name: 'Bob' }).returns({ models });
-    }, "can't pass a DS.Model instance to mock query");
-  });
-
-  test("have access to handler being used by mockjax", function() {
-    let mock = mockQuery('user');
-    ok(mock.handler);
-  });
+SharedBehavior.mockQueryTests = function() {
 
   test("not using returns", function(assert) {
     Ember.run(()=> {
@@ -744,104 +684,16 @@ SharedBehavior.handleQueryTests = function() {
 
 /////// mockQueryRecord //////////
 
-SharedBehavior.handleQueryRecordTests = function() {
-
-  test("returns() method accepts only id, model, json or header as keys", function(assert) {
-    const handler = mockQueryRecord('user');
-
-    assert.throws(()=> {
-      handler.returns({
-        ids: undefined,
-      });
-    });
-
-    assert.throws(()=> {
-      handler.returns({
-        models: undefined,
-      });
-    });
-
-    assert.throws(()=> {
-      handler.returns({
-        id: undefined,
-        model: undefined
-      });
-    });
-
-    assert.throws(()=> {
-      handler.returns({
-        id: undefined,
-        json: undefined
-      });
-    });
-
-    assert.throws(()=> {
-      handler.returns({
-        model: undefined,
-        json: undefined
-      });
-    });
-
-    assert.throws(()=> {
-      handler.returns({
-        id: undefined,
-        model: undefined,
-        json: undefined
-      });
-    });
-  });
-
-  test("have access to handler being used by mockjax", function() {
-    let mock = mockQueryRecord('user');
-    ok(mock.handler);
-  });
-
-  test("using fails makes the request fail", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-
-      mockQueryRecord('user').fails();
-      FactoryGuy.store.queryRecord('user', {})
-        .catch(()=> {
-          ok(true);
-          done();
-        });
-
-    });
-  });
-
-  test("using returns with headers adds the headers to the response", function(assert) {
-    var done = assert.async();
-
-    const queryParams = { name: 'MyCompany' };
-    const handler = mockQueryRecord('company', queryParams);
-    handler.returns({ headers: { 'X-Testing': 'absolutely' } });
-
-    $(document).ajaxComplete(function(event, xhr) {
-      assert.equal(xhr.getResponseHeader('X-Testing'), 'absolutely');
-      $(document).off('ajaxComplete');
-      done();
-    });
-
-    FactoryGuy.store.query('company', queryParams);
-  });
-
+SharedBehavior.mockQueryRecordTests = function() {
 
   test("with no parameters matches queryRequest with any parameters", function(assert) {
     var done = assert.async();
-    mockQueryRecord('user');
+    mockQueryRecord('user').returns({ json: build('user') });
     FactoryGuy.store.queryRecord('user', { name: 'Bob' })
       .then(()=> {
         ok(true);
         done();
       });
-  });
-
-  test("using returns 'model' with array of DS.Models throws error", function(assert) {
-    assert.throws(function() {
-      let bobs = makeList('user', 2, { name: 'Bob' });
-      mockQueryRecord('user', { name: 'Bob' }).returns({ model: bobs });
-    }, "can't pass array of models to mock queryRecord");
   });
 
   test("using returns with json returns and creates model", function(assert) {
@@ -935,7 +787,7 @@ SharedBehavior.handleQueryRecordTests = function() {
 
 /////// mockCreate //////////
 
-SharedBehavior.handleCreateTests = function() {
+SharedBehavior.mockCreateTests = function() {
 
   test("the basic", function(assert) {
     Ember.run(()=> {
@@ -1393,7 +1245,7 @@ SharedBehavior.handleCreateTests = function() {
 
 /////// mockUpdate //////////
 
-SharedBehavior.handleUpdateTests = function() {
+SharedBehavior.mockUpdateTests = function() {
 
   test("with incorrect parameters", function(assert) {
     assert.throws(function() {
@@ -1570,7 +1422,7 @@ SharedBehavior.handleUpdateTests = function() {
 
 /////// mockDelete //////////
 
-SharedBehavior.handleDeleteTests = function() {
+SharedBehavior.mockDeleteTests = function() {
   test("the basic", function(assert) {
     Ember.run(()=> {
       let done = assert.async();

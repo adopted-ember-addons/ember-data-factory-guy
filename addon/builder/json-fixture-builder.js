@@ -1,12 +1,11 @@
 import FixtureBuilder from './fixture-builder';
-import RESTFixtureConverter from '../converter/rest-fixture-converter';
-import RESTPayload from '../payload/rest-payload';
+import JSONFixtureConverter from '../converter/json-fixture-converter';
+import JSONPayload from '../payload/json-payload';
 /**
- Fixture Builder for REST based Serializer, like ActiveModelSerializer or
- RESTSerializer
+ Fixture Builder for JSONSerializer
 
  */
-class RESTFixtureBuilder extends FixtureBuilder {
+class JSONFixtureBuilder extends FixtureBuilder {
   constructor(store) {
     super(store);
   }
@@ -19,22 +18,22 @@ class RESTFixtureBuilder extends FixtureBuilder {
    @param {Object} json Json object from record.toJSON
    @return {Object} responseJson
    */
-  normalize(modelName, payload) {
-    return { [modelName]: payload };
+  normalize(_, payload) {
+    return payload;
   }
   /**
-   Convert to the ember-data REST Serializer specification
+   Convert to the ember-data REST adapter specification
 
    @param {String} modelName
    @param {String} fixture
    @returns {*} new converted fixture
    */
   convertForBuild(modelName, fixture) {
-    let converter = new RESTFixtureConverter(this.store);
+    let converter = new JSONFixtureConverter(this.store);
     let json = converter.convert(modelName, fixture);
-    new RESTPayload(modelName, json, converter);
+    new JSONPayload(modelName, json, converter);
     return json;
   }
 }
 
-export default RESTFixtureBuilder;
+export default JSONFixtureBuilder;

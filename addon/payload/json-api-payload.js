@@ -1,7 +1,7 @@
 import Ember from 'ember';
-import JSONPayload from './json-payload';
+import BasePayload from './base-payload';
 
-export default class extends JSONPayload {
+export default class extends BasePayload {
 
   constructor(modelName, json, converter) {
     super(modelName, json, converter);

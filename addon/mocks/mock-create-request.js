@@ -105,9 +105,13 @@ let MockCreateRequest = function (url, modelName, options) {
     }
     if (!requestData.data) {
       const serializer = store.serializerFor(modelName);
-      const transformedModelKey = serializer.payloadKeyFromModelName(modelName);
-      if (requestData[transformedModelKey]) {
-        requestData = store.normalize(modelName, requestData[transformedModelKey]);
+      if (serializer.payloadKeyFromModelName) { // REST type
+        const transformedModelKey = serializer.payloadKeyFromModelName(modelName);
+        if (requestData[transformedModelKey]) {
+          requestData = store.normalize(modelName, requestData[transformedModelKey]);
+        }
+      } else {
+        requestData = store.normalize(modelName, requestData);
       }
     }
     let expectedAttributes = expectedData.data.attributes;
