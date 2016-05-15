@@ -50,7 +50,9 @@ class JSONAPIFixtureConverter extends Converter {
       return { type: record.constructor.modelName, id: record.id };
     }
   }
-
+  isEmbeddedRelationship(/*modelName, attr*/) {
+    return false;
+  }
   /**
    Recursively descend into the fixture json, looking for relationships that are
    either record instances or other fixture objects that need to be normalized
