@@ -22,10 +22,10 @@ Contents:
   - [Traits](https://github.com/danielspaniel/ember-data-factory-guy#traits)
   - [Associations](https://github.com/danielspaniel/ember-data-factory-guy#associations)
   - [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
+  - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
   - [Ember Data Model Fragments](https://github.com/danielspaniel/ember-data-factory-guy#ember-data-model-fragments)
   - [Ember Django Adapter](https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter)
   - [Custom API formats](https://github.com/danielspaniel/ember-data-factory-guy#custom-api-formats)
-  - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
   - [Testing - creating scenarios](https://github.com/danielspaniel/ember-data-factory-guy#testing---creating-scenarios)
   - [Testing models, controllers, components](https://github.com/danielspaniel/ember-data-factory-guy#testing-models-controllers-components)
   - [Acceptance Tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
@@ -674,6 +674,48 @@ the reverse 'user' belongsTo association is being setup for you on the project
 
   - [Sample Factory using inheritance (big-group.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/big-group.js)
 
+
+### Callbacks
+ - afterMake
+  - Uses transient attributes
+
+Assuming the factory-guy model definition defines afterMake function:
+
+```javascript
+  FactoryGuy.define('property', {
+    default: {
+      name: 'Silly property'
+    },
+
+    // optionally set transient attributes, that will be passed in to afterMake function
+    transient: {
+      for_sale: true
+    },
+
+    // The attributes passed to after make will include any optional attributes you
+    // passed in to make, and the transient attributes defined in this definition
+    afterMake: function(model, attributes) {
+      if (attributes.for_sale) {
+        model.set('name', model.get('name') + '(FOR SALE)');
+      }
+    }
+  }
+```
+
+You would use this to make models like:
+
+```javascript
+  Ember.run(function () {
+
+    let property = FactoryGuy.make('property');
+    property.get('name'); // => 'Silly property(FOR SALE)')
+
+    let property = FactoryGuy.make('property', {for_sale: false});
+    property.get('name'); // => 'Silly property')
+  });
+
+```
+
 ### Ember Data Model Fragments
 As of 2.5.2 you can create factories which contain [ember-data-model-fragments](https://github.com/lytics/ember-data-model-fragments). Setting up your fragments is easy and follows the same process as setting up regular factories. The mapping between fragment types and their associations are like so:
 
@@ -760,46 +802,6 @@ In case your API doesn't follow either of these conventions, you can still make 
  - For now, before I launch into the details, let me know if you need this hookup and I 
    can guide you to a solution, since the use cases will be rare and varied.
 
-### Callbacks
- - afterMake
-  - Uses transient attributes
-
-Assuming the factory-guy model definition defines afterMake function:
-
-```javascript
-  FactoryGuy.define('property', {
-    default: {
-      name: 'Silly property'
-    },
-
-    // optionally set transient attributes, that will be passed in to afterMake function
-    transient: {
-      for_sale: true
-    },
-
-    // The attributes passed to after make will include any optional attributes you
-    // passed in to make, and the transient attributes defined in this definition
-    afterMake: function(model, attributes) {
-      if (attributes.for_sale) {
-        model.set('name', model.get('name') + '(FOR SALE)');
-      }
-    }
-  }
-```
-
-You would use this to make models like:
-
-```javascript
-  Ember.run(function () {
-
-    let property = FactoryGuy.make('property');
-    property.get('name'); // => 'Silly property(FOR SALE)')
-
-    let property = FactoryGuy.make('property', {for_sale: false});
-    property.get('name'); // => 'Silly property')
-  });
-
-```
 
 ### Testing - Creating Scenarios
 - Easy to create complex scenarios involving multi layered relationships.
