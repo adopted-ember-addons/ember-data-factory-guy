@@ -6,6 +6,8 @@ Feel the thrill and enjoyment of testing when using Factories instead of Fixture
 Factories simplify the process of testing, making you more efficient and your tests more readable.  
 
 **Support for [ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments) usage is baked in since v2.5.0** 
+**Support for JSONSerializer usage is baked in since v2.6.0** 
+**Support for [ember-django-adapter](https://github.com/dustinfarris/ember-django-adapter) usage is almost baked in since v2.6.0** 
                                   
 Questions: Slack => [factory-guy](https://embercommunity.slack.com/messages/e-factory-guy/)
 
@@ -15,13 +17,14 @@ Contents:
   - [Setup](https://github.com/danielspaniel/ember-data-factory-guy#setup)
   - [Defining Factories](https://github.com/danielspaniel/ember-data-factory-guy#defining-factories)
   - [Using Factories](https://github.com/danielspaniel/ember-data-factory-guy#using-factories)
-  - [Custom API formats](https://github.com/danielspaniel/ember-data-factory-guy#custom-api-formats)
   - [Sequences](https://github.com/danielspaniel/ember-data-factory-guy#sequences)
   - [Inline Function](https://github.com/danielspaniel/ember-data-factory-guy#inline-functions)
   - [Traits](https://github.com/danielspaniel/ember-data-factory-guy#traits)
   - [Associations](https://github.com/danielspaniel/ember-data-factory-guy#associations)
   - [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
   - [Ember Data Model Fragments](https://github.com/danielspaniel/ember-data-factory-guy#ember-data-model-fragments)
+  - [Ember Django Adapter](https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter)
+  - [Custom API formats](https://github.com/danielspaniel/ember-data-factory-guy#custom-api-formats)
   - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
   - [Testing - creating scenarios](https://github.com/danielspaniel/ember-data-factory-guy#testing---creating-scenarios)
   - [Testing models, controllers, components](https://github.com/danielspaniel/ember-data-factory-guy#testing-models-controllers-components)
@@ -406,35 +409,6 @@ Usage:
 
 ```
 
-### Custom API formats
-
-FactoryGuy handles JSON-API and RESTSerializer out of the box.
-In case your API doesn't follow either of these conventions, you can
-still build a custom formatter.
-
-Currently, a custom formatter __must__ implement the following interface:
-
-* `extractId(modelName, payload)`: Tells FactoryGuy where to find the ID of your payload
-* `convertForBuild(modelName, payload)`: Transforms a fixture into a JSON payload compatible with your API
-
-```javascript
-// tests/acceptance/my_test.js
-
-import Ember from 'ember';
-import FactoryGuy from 'ember-data-factory-guy/factory-guy';
-
-const builderClass = Ember.Object.extend({
-  extractId(modelName, payload) {
-    return payload.id;
-  },
-  convertForBuild(/* type, payload */) {
-    return { convert: 'build' };
-  }
-});
-
-FactoryGuy.set('fixtureBuilder', builderClass.create());
-```
-
 ### Sequences
 
 - For generating unique attribute values.
@@ -762,6 +736,29 @@ FactoryGuy.define('phone-number', {
 ```
 
 For a more detailed example of setting up fragments have a look at the [employee test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/employee-test.js).
+
+### Ember Django Adapter 
+As of 2.6.0 you can create factories for [ember-django-adapter](https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter) by using the JSONFixtureBuilder 
+
+In your tests you have to manually tell FactoryGuy you are using JSONSerializer.
+
+```javascript 
+  // import the Builder
+  import FactoryGuy, { JSONFixtureBuilder } from 'ember-data-factory-guy';
+  // then somewhere before the test starts
+  beforeEach() {  
+    FactoryGuy.fixtureBuilder = new JSONFixtureBuilder(FactoryGuy.store);
+ },
+```
+
+### Custom API formats
+
+FactoryGuy handles JSON-API / RESTSerializer / JSONSerializer out of the box.
+
+In case your API doesn't follow either of these conventions, you can still make a custom fixture builder,
+ or modify the FixtureConverters and JSONPayload classes that exist.
+ - For now, before I launch into the details, let me know if you need this hookup and I 
+   can guide you to a solution, since the use cases will be rare and varied.
 
 ### Callbacks
  - afterMake
