@@ -740,7 +740,7 @@ For a more detailed example of setting up fragments have a look at the [employee
 ### Ember Django Adapter 
 As of 2.6.0 you can create factories for [ember-django-adapter](https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter) by using the JSONFixtureBuilder 
   - In your tests you have to manually tell FactoryGuy you are using JSONFixtureBuilder.
-    - Since the ember-django-serializer is actually a REST bases serializer 
+    - Since the ember-django-serializer is actually a REST based serializer 
   
 ```javascript 
   // import the Builder
