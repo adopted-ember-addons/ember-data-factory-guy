@@ -1,6 +1,4 @@
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
-var Funnel = require('broccoli-funnel');
-var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
 
@@ -10,16 +8,6 @@ module.exports = function(defaults) {
       includePolyfill: true
     }
   });
-  var env = EmberApp.env();
-  console.log('env', env );
-  var factoryDefinitions = new Funnel('tests/factories', {
-    srcDir: '/',
-    include: ['**/*.js'],
-    destDir: '/assets/vendor'
-  });
-  console.log('factoryDefinitions', factoryDefinitions);
-
-  return app.toTree(factoryDefinitions);
 
   app.import('bower_components/jquery-mockjax/dist/jquery.mockjax.js');
   app.import('bower_components/sinon/index.js');

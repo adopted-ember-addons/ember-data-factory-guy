@@ -12,7 +12,7 @@ module.exports = {
       app.import(app.bowerDirectory + '/jquery-mockjax/dist/jquery.mockjax.js');
     }
   },
-  isDevelopingAddon: function() { return true },
+
   treeFor: function(name) {
     if(this.app.tests) {
       return this._super.treeFor.apply(this, arguments);
