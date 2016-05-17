@@ -6,16 +6,16 @@ import DS from 'ember-data';
 // serializerType like -rest or -active-model, -json-api, -json
 let theUsualSetup = function (serializerType) {
   let App = startApp();
-
+  let container = App.__container__;
   // brute force setting the adapter/serializer on the store.
   if (serializerType) {
-    let store = App.__container__.lookup('service:store');
+    let store = container.lookup('service:store');
 
     let adapterType = serializerType === '-json' ? '-rest' : serializerType;
-    let adapter = App.__container__.lookup('adapter:' + adapterType);
+    let adapter = container.lookup('adapter:' + adapterType);
 
     serializerType = serializerType === '-json' ? '-default' : serializerType;
-    let serializer = App.__container__.lookup('serializer:' + serializerType);
+    let serializer = container.lookup('serializer:' + serializerType);
 
     store.adapterFor = function() { return adapter; };
 
@@ -30,7 +30,7 @@ let theUsualSetup = function (serializerType) {
       // comic-book is used in JSON, and REST serializer test and this allows it to be
       // dynamically both types in different tests
       if (modelName === 'comic-book') {
-        let comicSerializer = App.__container__.lookup('serializer:' + serializerType);
+        let comicSerializer = container.lookup('serializer:' + serializerType);
         comicSerializer.reopen(DS.EmbeddedRecordsMixin, {
           attrs: {
             company: {embedded: 'always'}, characters: {embedded: 'always'}
