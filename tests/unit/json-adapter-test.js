@@ -11,66 +11,8 @@ let serializerType = '-json';
 
 SharedAdapterBehavior.all(adapter, serializerType);
 
-module(title(adapter, 'FactoryGuyTestHelper#mockFind | embedded'), inlineSetup(App, serializerType));
-
-test("belongsTo", function(assert) {
-  Ember.run(()=> {
-    let done = assert.async();
-
-    let mock = mockFind('train', 'with_city');
-
-    FactoryGuy.store.find('train', mock.get('id')).then(function(train) {
-      ok(train.get('name') === 'Train-1');
-      ok(train.get('city.name') === 'City-1');
-      done();
-    });
-  });
-});
-
-test("hasMany", function(assert) {
-  Ember.run(()=> {
-    let done = assert.async();
-
-    let mock = mockFind('train', 'with_cars');
-
-    FactoryGuy.store.find('train', mock.get('id')).then(function(train) {
-      ok(train.get('name') === 'Train-1');
-      ok(train.get('cars').mapBy('name') + '' === ['Car-1', 'Car-2'] + '');
-      done();
-    });
-  });
-});
-
-module(title(adapter, 'FactoryGuyTestHelper#mockFindAll | embedded'), inlineSetup(App, serializerType));
-
-test("belongsTo", function(assert) {
-  Ember.run(()=> {
-    let done = assert.async();
-
-    mockFindAll('train', 2, 'with_city');
-
-    FactoryGuy.store.findAll('train').then(function(trains) {
-      ok(trains.mapBy('name') + '' === ['Train-1', 'Train-2'] + '');
-      ok(trains.mapBy('city.name')+'' === ['City-1', 'City-2']+'');
-      done();
-    });
-  });
-});
-
-test("hasMany", function(assert) {
-  Ember.run(()=> {
-    let done = assert.async();
-
-    mockFindAll('train', 2, 'with_cars');
-
-    FactoryGuy.store.findAll('train').then(function(trains) {
-      ok(trains.mapBy('name') + '' === ['Train-1', 'Train-2'] + '');
-      ok(trains.get('firstObject.cars').mapBy('name') + '' === ['Car-1', 'Car-2'] + '');
-      ok(trains.get('lastObject.cars').mapBy('name') + '' === ['Car-3', 'Car-4'] + '');
-      done();
-    });
-  });
-});
+SharedFactoryGuyTestHelperBehavior.mockFindEmbeddedTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(App, adapter, serializerType);
 
 
 module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, serializerType));

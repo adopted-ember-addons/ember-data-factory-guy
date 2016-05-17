@@ -22,14 +22,22 @@ let theUsualSetup = function (serializerType) {
     let findSerializer = store.serializerFor.bind(store);
 
     store.serializerFor = function(modelName) {
-      // comic book will always be REST style serializer,
-      // train will always be JSON style serializer
-      // till I can figure out how to set those up dynamically with embedded mixing and attrs
-      // on only those serializers
       // all the modelFragment types will use their own default serializer
       let originalSerializer = findSerializer(modelName);
-      if (modelName.match(/(comic-book|train|name|department|address|department-employment|manager)/)) {
+      if (modelName.match(/(name|department|address|department-employment|manager)/)) {
         return originalSerializer;
+      }
+      // comic-book is used in JSON, and REST serializer test and this allows it to be
+      // dynamically both types in different tests
+      if (modelName === 'comic-book') {
+        let comicSerializer = App.__container__.lookup('serializer:' + serializerType);
+        comicSerializer.reopen(DS.EmbeddedRecordsMixin, {
+          attrs: {
+            company: {embedded: 'always'}, characters: {embedded: 'always'}
+          }
+        });
+        comicSerializer.store = store;
+        return comicSerializer;
       }
       // cat serialzer will always declare special primaryKey for test purposes
       // but don't want to create serializer for cat, because doing it this way

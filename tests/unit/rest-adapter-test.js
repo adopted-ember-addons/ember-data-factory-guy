@@ -14,65 +14,8 @@ SharedAdapterBehavior.all(adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockFindSideloadingTests(App, adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(App, adapter, serializerType);
 
-module(title(adapter, 'FactoryGuyTestHelper#mockFind | embedded'), inlineSetup(App, serializerType));
-
-test("belongsTo", function(assert) {
-  Ember.run(()=> {
-    let done = assert.async();
-    let mock = mockFind('comic-book', 'marvel');
-
-    FactoryGuy.store.find('comic-book', mock.get('id')).then(function(comic) {
-      ok(comic.get('name') === 'Comic Times #1');
-      ok(comic.get('company.name') === 'Marvel Comics');
-      done();
-    });
-  });
-});
-
-test("hasMany", function(assert) {
-  Ember.run(()=> {
-    let done = assert.async();
-    let mock = mockFind('comic-book', 'with_bad_guys');
-
-    FactoryGuy.store.find('comic-book', mock.get('id')).then(function(comic) {
-      ok(comic.get('name') === 'Comic Times #1');
-      ok(comic.get('characters').mapBy('name') + '' === ['BadGuy#1', 'BadGuy#2'] + '');
-      done();
-    });
-  });
-});
-
-
-module(title(adapter, 'FactoryGuyTestHelper#mockFindAll | embedded'), inlineSetup(App, serializerType));
-
-test("belongsTo", function(assert) {
-  Ember.run(()=> {
-    let done = assert.async();
-
-    mockFindAll('comic-book', 2, 'marvel');
-
-    FactoryGuy.store.findAll('comic-book').then(function(comics) {
-      ok(comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + '');
-      ok(comics.mapBy('company.name') + '' === ['Marvel Comics', 'Marvel Comics'] + '');
-      done();
-    });
-  });
-});
-
-test("hasMany", function(assert) {
-  Ember.run(()=> {
-    let done = assert.async();
-
-    mockFindAll('comic-book', 2, 'with_bad_guys');
-
-    FactoryGuy.store.findAll('comic-book').then(function(comics) {
-      ok(comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + '');
-      ok(comics.get('firstObject.characters').mapBy('name') + '' === ['BadGuy#1', 'BadGuy#2'] + '');
-      ok(comics.get('lastObject.characters').mapBy('name') + '' === ['BadGuy#3', 'BadGuy#4'] + '');
-      done();
-    });
-  });
-});
+SharedFactoryGuyTestHelperBehavior.mockFindEmbeddedTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(App, adapter, serializerType);
 
 
 module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, serializerType));

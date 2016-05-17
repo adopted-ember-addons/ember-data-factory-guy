@@ -195,6 +195,37 @@ SharedBehavior.mockFindSideloadingTests = function(App, adapter, serializerType)
   });
 };
 
+SharedBehavior.mockFindEmbeddedTests = function(App, adapter, serializerType) {
+
+  module(title(adapter, 'FactoryGuyTestHelper#mockFind | embedded'), inlineSetup(App, serializerType));
+
+  test("belongsTo", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let mock = mockFind('comic-book', 'marvel');
+      console.log(mock.get(), mock.get('id'));
+      FactoryGuy.store.find('comic-book', mock.get('id')).then(function(comic) {
+        ok(comic.get('name') === 'Comic Times #1');
+        ok(comic.get('company.name') === 'Marvel Comics');
+        done();
+      });
+    });
+  });
+
+  test("hasMany", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let mock = mockFind('comic-book', 'with_bad_guys');
+
+      FactoryGuy.store.find('comic-book', mock.get('id')).then(function(comic) {
+        ok(comic.get('name') === 'Comic Times #1');
+        ok(comic.get('characters').mapBy('name') + '' === ['BadGuy#1', 'BadGuy#2'] + '');
+        done();
+      });
+    });
+  });
+};
+
 //////// mockReload /////////
 
 SharedBehavior.mockReloadTests = function() {
@@ -409,6 +440,39 @@ SharedBehavior.mockFindAllSideloadingTests = function(App, adapter, serializerTy
   });
 };
 
+SharedBehavior.mockFindAllEmbeddedTests = function(App, adapter, serializerType) {
+
+  module(title(adapter, 'FactoryGuyTestHelper#mockFindAll | embedded'), inlineSetup(App, serializerType));
+
+  test("belongsTo", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+
+      mockFindAll('comic-book', 2, 'marvel');
+
+      FactoryGuy.store.findAll('comic-book').then(function(comics) {
+        ok(comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + '');
+        ok(comics.mapBy('company.name') + '' === ['Marvel Comics', 'Marvel Comics'] + '');
+        done();
+      });
+    });
+  });
+
+  test("hasMany", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+
+      mockFindAll('comic-book', 2, 'with_bad_guys');
+
+      FactoryGuy.store.findAll('comic-book').then(function(comics) {
+        ok(comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + '');
+        ok(comics.get('firstObject.characters').mapBy('name') + '' === ['BadGuy#1', 'BadGuy#2'] + '');
+        ok(comics.get('lastObject.characters').mapBy('name') + '' === ['BadGuy#3', 'BadGuy#4'] + '');
+        done();
+      });
+    });
+  });
+};
 
 /////// mockQuery //////////
 
