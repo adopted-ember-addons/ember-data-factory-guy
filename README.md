@@ -256,7 +256,7 @@ Usage:
   - takes same arguments as make 
   - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
-  - use [.add()](https://github.com/danielspaniel/ember-data-factory-guy#using-add-method) method 
+  - use [add](https://github.com/danielspaniel/ember-data-factory-guy#using-add-method) method 
     - to include extra sideloaded data to the payload
     - to include meta data
   
@@ -339,7 +339,7 @@ Usage:
   - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
     - can use get(index) to get to items in the list
-  - use [.add()](https://github.com/danielspaniel/ember-data-factory-guy#using-add-method) method 
+  - use [add](https://github.com/danielspaniel/ember-data-factory-guy#using-add-method) method 
     - to add extra sideloaded data to the payload => `.add({json})`
     - to add meta data => `.add({meta})`
 
