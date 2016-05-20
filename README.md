@@ -24,6 +24,7 @@ Contents:
   - [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
   - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
   - [Ember Data Model Fragments](https://github.com/danielspaniel/ember-data-factory-guy#ember-data-model-fragments)
+  - [Creating Factories in Addons](https://github.com/danielspaniel/ember-data-factory-guy#creating-factories-in-addons)
   - [Ember Django Adapter](https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter)
   - [Custom API formats](https://github.com/danielspaniel/ember-data-factory-guy#custom-api-formats)
   - [Testing - creating scenarios](https://github.com/danielspaniel/ember-data-factory-guy#testing---creating-scenarios)
@@ -828,6 +829,9 @@ FactoryGuy.define('phone-number', {
 ```
 
 For a more detailed example of setting up fragments have a look at the [employee test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/employee-test.js).
+
+### Creating Factories in Addons
+If you are making an addon with factories and you want the factories available to Ember apps using your addon, place the factories in `test-support/factories` instead of `tests/factories`. They should be available both within your addon and in Ember apps using your addon.
 
 ### Ember Django Adapter 
   - As of 2.6.1 you can use [ember-django-adapter](https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter)  
