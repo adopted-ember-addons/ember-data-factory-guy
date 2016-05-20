@@ -256,7 +256,9 @@ Usage:
   - takes same arguments as make 
   - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
-  - use `.add()` method to include extra sideloaded data to the payload
+  - use `.add()` method 
+    - to include extra sideloaded data to the payload
+    - to include meta data
   
 Usage: 
 
@@ -337,7 +339,10 @@ Usage:
   - can compose relationships with other build/buildList payloads
   - to inspect the json use the get() method
     - can use get(index) to get to items in the list
-  - use `.add()` method to include extra sideloaded data to the payload
+  - use `.add()` method 
+    - to add extra sideloaded data to the payload => `.add({json})`
+    - to add meta data => `.add({meta})`
+
            
 Usage: 
 
@@ -352,9 +357,9 @@ Usage:
   let owners = buildList('user', { name:'Bob' }, { name:'Rob' });
 ```
 
-##### Using add() method
- - can add more json to payload 
-  - which will be sideloaded 
+##### Using `add()` method
+ - when you need to add more json to payload 
+  - will be sideloaded 
     - only JSONAPI, and REST based serializers can do sideloading
     - so DRFSerializer and JSONSerializer users can not user this feature
 
@@ -362,7 +367,7 @@ Usage:
 
 ```js
   let batMan = build('bat_man');
-  let userPayload = build('user').add(batMan);
+  let userPayload = build('user').add({json:batMan});
  
   userPayload = {
     user: {
@@ -379,7 +384,7 @@ Usage:
     ]
   };
 ```
-- can add meta data to payload 
+- when you want to add meta data to payload 
   - only JSONAPI, and REST based and serializers and DRFSerializer can handle meta data
   - so JSONSerializer users can not user this feature ( though this might be a bug on my part )
 
