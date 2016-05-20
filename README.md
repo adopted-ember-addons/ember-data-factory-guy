@@ -790,7 +790,8 @@ For a more detailed example of setting up fragments have a look at the [employee
       let user = make('user', { projects });  // attatch them to user
       mockFind('user').returns({model: user}); // now the mock will return a user that have projects
     ```
-  
+  - using `fails()` with errors hash is not working reliably 
+    - so you can always just `mockWhatever(args).fails()`  
 
 ### Custom API formats
 
