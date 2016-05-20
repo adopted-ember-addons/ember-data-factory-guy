@@ -352,6 +352,51 @@ Usage:
   let owners = buildList('user', { name:'Bob' }, { name:'Rob' });
 ```
 
+##### Using add() method
+ - can add more json to payload 
+  - which will be sideloaded 
+    - only JSONAPI, and REST based serializers can do sideloading
+    - so DRFSerializer and JSONSerializer users can not user this feature
+
+Usage:
+
+```js
+  let batMan = build('bat_man');
+  let userPayload = build('user').add(batMan);
+ 
+  userPayload = {
+    user: {
+      id: 1,
+      name: 'User1',
+      style: "normal"
+    },
+    'super-heros': [
+      {
+        id: 1,
+        name: "BatMan",
+        type: "SuperHero"
+      }
+    ]
+  };
+```
+- can add meta data to payload 
+  - only JSONAPI, and REST based and serializers and DRFSerializer can handle meta data
+  - so JSONSerializer users can not user this feature ( though this might be a bug on my part )
+
+Usage:
+
+```js
+  let json1 = buildList('profile', 2).add({ meta: { previous: '/profiles?page=1', next: '/profiles?page=3' } });
+  let json2 = buildList('profile', 2).add({ meta: { previous: '/profiles?page=2', next: '/profiles?page=4' } });
+
+  mockQuery('profile', {page: 2}).returns({ json: json1 });
+  mockQuery('profile', {page: 3}).returns({ json: json2 });
+
+ store.query('profile', {page: 2}).then((records)=> // first 2 from json1
+ store.query('profile', {page: 3}).then((records)=> // second 2 from json2
+
+```
+
 ##### Using get() method 
   - for inspecting contents of json payload
     - get() returns all attributes of top level model 
