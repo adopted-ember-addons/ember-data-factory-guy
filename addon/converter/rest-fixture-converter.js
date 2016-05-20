@@ -3,7 +3,7 @@ import JSONFixtureConverter from './json-fixture-converter';
 const { pluralize, dasherize } = Ember.String;
 
 /**
- Convert base fixture to a REST format fixture.
+ Convert base fixture to a REST Serializer formatted payload.
 
  @param store
  @constructor
@@ -36,7 +36,7 @@ export default class extends JSONFixtureConverter {
     return (this.listType) ? pluralize(payloadKey) : payloadKey;
   }
   /**
-   * Add the included data
+   * Add the included data to the final payload
    *
    * @param payload
    */

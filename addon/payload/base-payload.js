@@ -21,24 +21,51 @@ export default class {
   }
 
   /**
-    Add another json payload to this one.
-    Adds the main model payload and all it's includes to this json
+   Add another json payload or meta data to this payload
 
-    @param {Object} json built from FactoryGuy buildList build
-    @returns {Object} the current json payload
+   Typically you would build a payload and add that to another one
+
+   Usage:
+   ```
+   let batMen = buildList('bat_man', 2);
+   let user = build('user').add({json: batMen});
+   ```
+
+   but you can also add meta data:
+   ```
+   let user = buildList('user', 2).add({meta: { next: '/url?page=3', previous: '/url?page=1'}});
+   ```
+
+   @param {Object} json built from FactoryGuy build or buildList
+   @returns {Object} the current json payload
    */
-  add(moreJson) {
+  add(more) {
     this.converter.included = this.json;
-    Ember.A(Object.keys(moreJson))
+    Ember.A(Object.getOwnPropertyNames(more))
       .reject(key=> Ember.A(this.proxyMethods).contains(key))
       .forEach(key=> {
-        if (Ember.typeOf(moreJson[key]) === "array") {
-          moreJson[key].forEach(data=> this.converter.addToIncluded(data, key));
+        if (Ember.typeOf(more[key]) === "array") {
+          more[key].forEach(data=> this.converter.addToIncluded(data, key));
         } else {
-          this.converter.addToIncluded(moreJson[key], key);
+          if (key === "meta") {
+            this.addMeta(more[key]);
+          } else {
+            this.converter.addToIncluded(more[key], key);
+          }
         }
       });
     return this.json;
+  }
+
+  /**
+   * Add new meta data to the json payload, which will
+   * overwrite any existing meta data with same keys
+   *
+   * @param data
+   */
+  addMeta(data) {
+    this.json.meta = this.json.meta || {};
+    Object.assign(this.json.meta, data);
   }
 
   // marker function for saying "I am a proxy"

@@ -3,7 +3,7 @@ import Converter from './fixture-converter';
 const { underscore } = Ember.String;
 
 /**
- Convert base fixture to a JSON format fixture.
+ Convert base fixture to a JSON format payload.
 
  @param store
  @constructor
@@ -30,6 +30,9 @@ export default class extends Converter {
    * @returns {*}
    */
   createPayload(_, fixture) {
+//    if (this.listType) {
+//      return { results: fixture, next: 2, previous: 1, total_pages: 2 };
+//    }
     return fixture;
   }
   /**

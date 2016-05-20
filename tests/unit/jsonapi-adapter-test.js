@@ -2,15 +2,23 @@ import Ember from 'ember';
 import FactoryGuy, { build, buildList } from 'ember-data-factory-guy';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
+import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
 import { title, inlineSetup } from '../helpers/utility-methods';
 
 let App = null;
 let adapter = 'DS.JSONAPIAdapter';
-let adapterType = '-json-api';
+let serializerType = '-json-api';
 
-SharedAdapterBehavior.all(adapter, adapterType);
+SharedAdapterBehavior.all(adapter, serializerType);
 
-module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, adapterType));
+SharedFactoryGuyTestHelperBehavior.mockFindSideloadingTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(App, adapter, serializerType);
+
+SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(App, adapter, serializerType);
+
+SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
+
+module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, serializerType));
 
 test("returns all attributes with no key", function () {
   let user = build('user');
@@ -25,7 +33,7 @@ test("returns an attribute with a key", function () {
   equal(user.get('name'), 'User1');
 });
 
-module(title(adapter, 'FactoryGuy#buildList get'), inlineSetup(App, adapterType));
+module(title(adapter, 'FactoryGuy#buildList get'), inlineSetup(App, serializerType));
 
 test("returns array of all attributes with no key", function () {
   let users = buildList('user', 2);
@@ -40,7 +48,7 @@ test("returns an attribute with a key", function () {
   equal(users.get(1).name, 'User2');
 });
 
-module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, adapterType));
+module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, serializerType));
 
 test("with traits defining model attributes", function () {
   let json = build('project', 'big').data;
@@ -384,73 +392,6 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) attribute"
     });
 });
 
-test("sideloads unrelated record passed as prebuilt ( build ) json", function () {
-
-  let batMan = build('bat_man');
-  let buildJson = build('user').add(batMan);
-  buildJson.unwrap();
-
-  let expectedJson = {
-    data: {
-      id: 1,
-      type: 'user',
-      attributes: {
-        name: 'User1',
-        style: "normal"
-      }
-    },
-    included: [
-      {
-        id: 1,
-        type: "super-hero",
-        attributes: {
-          name: "BatMan",
-          type: "SuperHero"
-        }
-      }
-    ]
-  };
-
-  deepEqual(buildJson, expectedJson);
-});
-
-test("sideloads unrelated record passed as prebuilt ( buildList ) json", function () {
-
-  let batMen = buildList('bat_man', 2);
-  let buildJson = build('user').add(batMen);
-  buildJson.unwrap();
-
-  let expectedJson = {
-    data: {
-      id: 1,
-      type: 'user',
-      attributes: {
-        name: 'User1',
-        style: "normal"
-      }
-    },
-    included: [
-      {
-        id: 1,
-        type: "super-hero",
-        attributes: {
-          name: "BatMan",
-          type: "SuperHero"
-        }
-      },
-      {
-        id: 2,
-        type: "super-hero",
-        attributes: {
-          name: "BatMan",
-          type: "SuperHero"
-        }
-      }
-    ]
-  };
-
-  deepEqual(buildJson, expectedJson);
-});
 
 test("creates default json for model", function () {
   let json = build('user');
@@ -727,6 +668,74 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
   deepEqual(projectJson.data, expectedData.data);
   deepEqual(projectJson.included, expectedData.included);
 
+});
+
+test("#add method sideloads unrelated record passed as prebuilt ( build ) json", function () {
+
+  let batMan = build('bat_man');
+  let buildJson = build('user').add(batMan);
+  buildJson.unwrap();
+
+  let expectedJson = {
+    data: {
+      id: 1,
+      type: 'user',
+      attributes: {
+        name: 'User1',
+        style: "normal"
+      }
+    },
+    included: [
+      {
+        id: 1,
+        type: "super-hero",
+        attributes: {
+          name: "BatMan",
+          type: "SuperHero"
+        }
+      }
+    ]
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+test("#add method sideloads unrelated record passed as prebuilt ( buildList ) json", function () {
+
+  let batMen = buildList('bat_man', 2);
+  let buildJson = build('user').add(batMen);
+  buildJson.unwrap();
+
+  let expectedJson = {
+    data: {
+      id: 1,
+      type: 'user',
+      attributes: {
+        name: 'User1',
+        style: "normal"
+      }
+    },
+    included: [
+      {
+        id: 1,
+        type: "super-hero",
+        attributes: {
+          name: "BatMan",
+          type: "SuperHero"
+        }
+      },
+      {
+        id: 2,
+        type: "super-hero",
+        attributes: {
+          name: "BatMan",
+          type: "SuperHero"
+        }
+      }
+    ]
+  };
+
+  deepEqual(buildJson, expectedJson);
 });
 
 // the override for primaryKey is in the helpers/utilityMethods.js

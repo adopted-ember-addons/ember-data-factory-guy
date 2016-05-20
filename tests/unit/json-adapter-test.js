@@ -14,6 +14,7 @@ SharedAdapterBehavior.all(adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockFindEmbeddedTests(App, adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(App, adapter, serializerType);
 
+SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
 
 module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, serializerType));
 
@@ -46,6 +47,34 @@ test("returns an attribute with a key", function() {
 });
 
 module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, serializerType));
+
+test("belongsTo ( not polymorphic ) record as id", function() {
+  let company = build('company');
+  let buildJson = build('property', { company });
+  buildJson.unwrap();
+
+  let expectedJson = {
+    id: 1,
+    name: 'Silly property',
+    company: 1
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+test("hasMany ( not polymorphic ) records as ids", function() {
+  let owners = buildList('user', 2);
+  let buildJson = build('property', { owners });
+  buildJson.unwrap();
+
+  let expectedJson = {
+    id: 1,
+    name: 'Silly property',
+    owners: [1, 2]
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
 
 test("embeds belongsTo record when serializer attrs => embedded: always ", function() {
 

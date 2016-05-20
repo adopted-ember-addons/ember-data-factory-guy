@@ -5,7 +5,7 @@ import FactoryGuy from '../factory-guy';
 let MockUpdateRequest = function(url, model, options) {
   let status = options.status || 200;
   let succeed = true;
-  let response = null;
+  let response = {};
   this.timesCalled = 0;
   let self = this;
 

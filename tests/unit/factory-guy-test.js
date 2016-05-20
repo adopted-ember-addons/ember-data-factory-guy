@@ -98,6 +98,23 @@ test("#clearStore clears the store of models, and resets the model definition", 
   });
 });
 
+module('FactoryGuy#buildURL', inlineSetup(App,'-rest'));
+
+test("without namespace", function() {
+  equal(FactoryGuy.buildURL('project'), '/projects', 'has no namespace by default');
+});
+
+test("with namespace and host", function() {
+  let adapter = FactoryGuy.store.adapterFor('application');
+  adapter.setProperties({
+    host: 'https://dude.com',
+    namespace: 'api/v1'
+  });
+
+  equal(FactoryGuy.buildURL('project'), 'https://dude.com/api/v1/projects');
+});
+
+
 module('FactoryGuy#build', inlineSetup(App,'-rest'));
 
 test("with one level of hasMany relationship", function () {

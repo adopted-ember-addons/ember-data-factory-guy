@@ -1,6 +1,8 @@
 import Ember from 'ember';
 import FactoryGuy, { make, makeList, build, buildList } from 'ember-data-factory-guy';
 import TestHelper from 'ember-data-factory-guy';
+import { isEquivalent } from 'ember-data-factory-guy/utils/helper-functions';
+
 import {
   mockSetup, mockTeardown,
   mockFind, mockFindAll, mockReload, mockQuery,
@@ -16,24 +18,6 @@ import SuperHero from 'dummy/models/super-hero';
 const A = Ember.A;
 let SharedBehavior = {};
 
-//////// buildUrl /////////
-SharedBehavior.buildUrl = function() {
-
-  test("#buildURL without namespace", function() {
-    equal(FactoryGuy.buildURL('project'), '/projects', 'has no namespace by default');
-  });
-
-  test("#buildURL with namespace and host", function() {
-    let adapter = FactoryGuy.store.adapterFor('application');
-    adapter.setProperties({
-      host: 'https://dude.com',
-      namespace: 'api/v1'
-    });
-
-    equal(FactoryGuy.buildURL('project'), 'https://dude.com/api/v1/projects');
-  });
-
-};
 
 //////// mockFind common /////////
 SharedBehavior.mockFindCommonTests = function() {
@@ -107,11 +91,12 @@ SharedBehavior.mockFindCommonTests = function() {
       });
     });
   });
+
 };
 
 SharedBehavior.mockFindSideloadingTests = function(App, adapter, serializerType) {
 
-  module(title(adapter, 'FactoryGuyTestHelper#mockFind | sideloading'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockFind | sideloading'), inlineSetup(App, serializerType));
 
   test("belongsTo association", function(assert) {
     Ember.run(()=> {
@@ -197,13 +182,13 @@ SharedBehavior.mockFindSideloadingTests = function(App, adapter, serializerType)
 
 SharedBehavior.mockFindEmbeddedTests = function(App, adapter, serializerType) {
 
-  module(title(adapter, 'FactoryGuyTestHelper#mockFind | embedded'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockFind | embedded'), inlineSetup(App, serializerType));
 
   test("belongsTo", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
       let mock = mockFind('comic-book', 'marvel');
-      console.log(mock.get(), mock.get('id'));
+
       FactoryGuy.store.find('comic-book', mock.get('id')).then(function(comic) {
         ok(comic.get('name') === 'Comic Times #1');
         ok(comic.get('company.name') === 'Marvel Comics');
@@ -358,7 +343,7 @@ SharedBehavior.mockFindAllCommonTests = function() {
 //////// mockFindAll with sideloading /////////
 SharedBehavior.mockFindAllSideloadingTests = function(App, adapter, serializerType) {
 
-  module(title(adapter, 'FactoryGuyTestHelper#mockFindAll | sideloading'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockFindAll | sideloading'), inlineSetup(App, serializerType));
 
   test("with belongsTo association", function(assert) {
     Ember.run(()=> {
@@ -442,7 +427,7 @@ SharedBehavior.mockFindAllSideloadingTests = function(App, adapter, serializerTy
 
 SharedBehavior.mockFindAllEmbeddedTests = function(App, adapter, serializerType) {
 
-  module(title(adapter, 'FactoryGuyTestHelper#mockFindAll | embedded'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockFindAll | embedded'), inlineSetup(App, serializerType));
 
   test("belongsTo", function(assert) {
     Ember.run(()=> {
@@ -743,6 +728,34 @@ SharedBehavior.mockQueryTests = function() {
     });
   });
 
+};
+
+SharedBehavior.mockQueryMetaTests = function(App, adapter, serializerType) {
+
+  module(title(adapter, '#mockQuery | meta'), inlineSetup(App, serializerType));
+
+  test("with proxy payload", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+
+      let json1 = buildList('profile', 2).add({ meta: { previous: '/profiles?page=1', next: '/profiles?page=3' } });
+      let json2 = buildList('profile', 2).add({ meta: { previous: '/profiles?page=2', next: '/profiles?page=4' } });
+
+      mockQuery('profile', {page: 2}).returns({ json: json1 });
+      mockQuery('profile', {page: 3}).returns({ json: json2 });
+
+      FactoryGuy.store.query('profile', {page: 2}).then(function(profiles) {
+        deepEqual(profiles.mapBy('id'), ["1", "2"]);
+        ok(isEquivalent(profiles.get('meta'), { previous: '/profiles?page=1', next: '/profiles?page=3' }));
+
+        FactoryGuy.store.query('profile', {page: 3}).then(function(profiles2) {
+          deepEqual(profiles2.mapBy('id'), ["3", "4"]);
+          ok(isEquivalent(profiles2.get('meta'), { previous: '/profiles?page=2', next: '/profiles?page=4' }));
+          done();
+        });
+      });
+    });
+  });
 
 };
 
@@ -1311,18 +1324,6 @@ SharedBehavior.mockCreateTests = function() {
 
 SharedBehavior.mockUpdateTests = function() {
 
-  test("with incorrect parameters", function(assert) {
-    assert.throws(function() {
-      mockUpdate();
-    }, "missing everything");
-    assert.throws(function() {
-      mockUpdate('profile');
-    }, "missing id");
-    assert.throws(function() {
-      mockUpdate('profile', {});
-    }, "missing id");
-  });
-
   test("with modelType and id", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
@@ -1411,26 +1412,6 @@ SharedBehavior.mockUpdateTests = function() {
     });
   });
 
-  test("with model that fails with custom response", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-      let profile = make('profile');
-
-      mockUpdate(profile).fails({
-        status: 400,
-        response: { errors: { description: 'invalid data' } }
-      });
-
-      profile.set('description', 'new desc');
-      profile.save().catch(
-        function(reason) {
-          let errors = reason.errors;
-          equal(errors.description, "invalid data", "custom description shows up in errors");
-          done();
-        }
-      );
-    });
-  });
 
   test("with model that fails with custom status", function(assert) {
     let done = assert.async();
@@ -1456,7 +1437,36 @@ SharedBehavior.mockUpdateTests = function() {
       let done = assert.async();
       let profile = make('profile');
 
-      let updateMock = mockUpdate(profile).fails({
+      let updateMock = mockUpdate(profile).fails({ status: 400 });
+
+      profile.set('description', 'new desc');
+      profile.save()
+        .catch(()=> ok(true, 'update failed the first time'))
+        .then(()=> {
+          updateMock.succeeds();
+          ok(!profile.get('valid'), "Profile is invalid.");
+
+          profile.save().then(() => {
+              ok(!profile.get('saving'), "Saved model");
+              ok(profile.get('description') === 'new desc', "Description was updated.");
+              done();
+            }
+          );
+        });
+    });
+  });
+};
+
+SharedBehavior.mockUpdateWithErrorMessages = function(App, adapter, serializerType) {
+
+  module(title(adapter, '#mockUpdate | error messages'), inlineSetup(App, serializerType));
+
+  test("with model returns custom response", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let profile = make('profile');
+
+      mockUpdate(profile).fails({
         status: 400,
         response: { errors: { description: 'invalid data' } }
       });
@@ -1465,21 +1475,10 @@ SharedBehavior.mockUpdateTests = function() {
       profile.save().catch(
         function(reason) {
           let errors = reason.errors;
-          equal(errors.description, "invalid data", "Could not save model.");
+          equal(errors.description, "invalid data", "custom description shows up in errors");
+          done();
         }
-      ).then(function() {
-          updateMock.succeeds();
-
-          ok(!profile.get('valid'), "Profile is invalid.");
-
-          profile.save().then(
-            function() {
-              ok(!profile.get('saving'), "Saved model");
-              ok(profile.get('description') === 'new desc', "Description was updated.");
-              done();
-            }
-          );
-        });
+      );
     });
   });
 };

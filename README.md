@@ -7,7 +7,7 @@ Factories simplify the process of testing, making you more efficient and your te
 
 - **Support for [ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments) usage is baked in since v2.5.0** 
 - **Support for JSONSerializer usage is baked in since v2.6.0** 
-- **Support for [ember-django-adapter](https://github.com/dustinfarris/ember-django-adapter) usage is almost baked in since v2.6.0** 
+- **Support for [ember-django-adapter](https://github.com/dustinfarris/ember-django-adapter) usage is baked in since v2.6.1** 
                                   
 Questions: Slack => [factory-guy](https://embercommunity.slack.com/messages/e-factory-guy/)
 
@@ -780,18 +780,17 @@ FactoryGuy.define('phone-number', {
 For a more detailed example of setting up fragments have a look at the [employee test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/employee-test.js).
 
 ### Ember Django Adapter 
-As of 2.6.0 you can create factories for [ember-django-adapter](https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter) by using the JSONFixtureBuilder 
-  - In your tests you have to manually tell FactoryGuy you are using JSONFixtureBuilder.
-    - Since the ember-django-serializer is actually a REST based serializer 
+  - As of 2.6.1 you can use [ember-django-adapter](https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter)  
+  - Everything is setup automatically
+  - Remember that sideloading is not supported in DRFSerializer so all relationships should either
+    be set as embedded with DS.EmbeddedRecordsMixin if you want to use build/buildList 
+    OR user make/makeList and in you mocks, return models instead of json:
+    ```javascript
+      let projects = makeList('projects', 2); // put projects in the store
+      let user = make('user', { projects });  // attatch them to user
+      mockFind('user').returns({model: user}); // now the mock will return a user that have projects
+    ```
   
-```javascript 
-  // import the Builder
-  import FactoryGuy, { JSONFixtureBuilder } from 'ember-data-factory-guy';
-  // then somewhere before the test starts
-  beforeEach() {  
-    FactoryGuy.fixtureBuilder = new JSONFixtureBuilder(FactoryGuy.store);
- },
-```
 
 ### Custom API formats
 

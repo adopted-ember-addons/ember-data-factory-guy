@@ -6,10 +6,7 @@ import RESTPayload from '../payload/rest-payload';
  RESTSerializer
 
  */
-class RESTFixtureBuilder extends FixtureBuilder {
-  constructor(store) {
-    super(store);
-  }
+export default class extends FixtureBuilder {
   /**
    Map single object to response json.
 
@@ -36,5 +33,3 @@ class RESTFixtureBuilder extends FixtureBuilder {
     return json;
   }
 }
-
-export default RESTFixtureBuilder;

@@ -15,7 +15,11 @@ SharedAdapterBehavior.all(adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockFindSideloadingTests(App, adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(App, adapter, serializerType);
 
-module(title(adapter, 'FactoryGuyTestHelper#mockCreate custom'), inlineSetup(App, serializerType));
+SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(App, adapter, serializerType);
+
+SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
+
+module(title(adapter, '#mockCreate custom'), inlineSetup(App, serializerType));
 
 test("returns camelCase attributes", function (assert) {
   Ember.run(function () {

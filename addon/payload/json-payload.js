@@ -3,8 +3,14 @@ import BasePayload from './base-payload';
 
 export default class extends BasePayload {
 
-  constructor(modelName, json, converter) {
-    super(modelName, json, converter);
+  // Can't add to included array for JSON payloads since they have
+  // no includes or sideloaded relationships
+  // Meta not working at the moment for this serializer
+  add(more) {
+    if (more.meta) {
+      this.addMeta(more.meta);
+    }
+    return this.json;
   }
 
   getObjectKeys(key) {

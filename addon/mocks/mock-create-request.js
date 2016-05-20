@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
+import FixtureBuilderFactory from '../builder/fixture-builder-factory';
 import $ from 'jquery';
 
 let MockCreateRequest = function (url, modelName, options) {
@@ -10,6 +11,7 @@ let MockCreateRequest = function (url, modelName, options) {
   let responseJson = {};
   let expectedRequest = {};
   let store = FactoryGuy.store;
+  let builder = new FixtureBuilderFactory(store);
 
   this.calculate = function () {
     if (matchArgs) {
@@ -104,8 +106,8 @@ let MockCreateRequest = function (url, modelName, options) {
       expectedData = store.normalize(modelName, expectedData);
     }
     if (!requestData.data) {
-      const serializer = store.serializerFor(modelName);
-      if (serializer.payloadKeyFromModelName) { // REST type
+      if (builder.usingRESTSerializer() && !builder.usingDRFSerializer()) {
+        const serializer = store.serializerFor(modelName);
         const transformedModelKey = serializer.payloadKeyFromModelName(modelName);
         if (requestData[transformedModelKey]) {
           requestData = store.normalize(modelName, requestData[transformedModelKey]);

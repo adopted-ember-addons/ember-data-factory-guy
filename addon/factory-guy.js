@@ -290,6 +290,7 @@ class FactoryGuy {
 
     let name = args.shift();
     let modelName = lookupModelForFixtureName(name);
+
     return this.fixtureBuilder.convertForBuild(modelName, list);
   }
 

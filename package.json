@@ -39,6 +39,7 @@
     "ember-data": "2.6.0-beta.4",
     "ember-data-model-fragments": "2.3.0",
     "ember-disable-prototype-extensions": "1.1.0",
+    "ember-django-adapter": "1.1.2",
     "ember-export-application-global": "latest",
     "ember-load-initializers": "^0.5.0",
     "ember-resolver": "2.0.3",

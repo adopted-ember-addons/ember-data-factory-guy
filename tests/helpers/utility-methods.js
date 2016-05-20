@@ -2,13 +2,19 @@ import Ember from 'ember';
 import FactoryGuy from 'ember-data-factory-guy';
 import startApp from '../helpers/start-app';
 import DS from 'ember-data';
+import DRFAdapter from 'ember-django-adapter/adapters/drf';
+import DRFSerializer from 'ember-django-adapter/serializers/drf';
 
 // serializerType like -rest or -active-model, -json-api, -json
 let theUsualSetup = function (serializerType) {
   let App = startApp();
-  let container = App.__container__;
+
   // brute force setting the adapter/serializer on the store.
   if (serializerType) {
+    let container = App.__container__;
+    container.registry.register('adapter:-drf', DRFAdapter, {singleton: false});
+    container.registry.register('serializer:-drf', DRFSerializer, {singleton: false});
+
     let store = container.lookup('service:store');
 
     let adapterType = serializerType === '-json' ? '-rest' : serializerType;
@@ -80,7 +86,7 @@ let inlineSetup = function (App,adapterType) {
 };
 
 let title = function (adapter, testName) {
-  return [adapter, testName].join(' ');
+  return [adapter, testName].join(' | ');
 };
 
 export { title, inlineSetup, theUsualSetup, theUsualTeardown };

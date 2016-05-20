@@ -5,7 +5,7 @@ import JSONAPIPayload from '../payload/json-api-payload';
 /**
  Fixture Builder for JSONAPISerializer
  */
-class JSONAPIJsonBuilder extends FixtureBuilder {
+export default class extends FixtureBuilder {
 
   constructor(store) {
     super(store);
@@ -25,5 +25,3 @@ class JSONAPIJsonBuilder extends FixtureBuilder {
     return json;
   }
 }
-
-export default JSONAPIJsonBuilder;

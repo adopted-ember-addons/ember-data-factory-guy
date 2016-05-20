@@ -13,20 +13,24 @@ export default class extends BasePayload {
     return this.data;
   }
 
-  add(moreJson) {
-    if (!this.json.included) {
-      this.json.included = [];
-    }
-    this.converter.included = this.json.included;
-    // add the main moreJson model payload
-    let data = moreJson.getModelPayload();
-    if (Ember.typeOf(data) === "array") {
-      data.forEach(dati=> this.converter.addToIncluded(dati));
+  add(more) {
+    if (more.meta) {
+      this.addMeta(more.meta);
     } else {
-      this.converter.addToIncluded(data);
+      if (!this.json.included) {
+        this.json.included = [];
+      }
+      this.converter.included = this.json.included;
+      // add the main moreJson model payload
+      let data = more.getModelPayload();
+      if (Ember.typeOf(data) === "array") {
+        data.forEach(dati=> this.converter.addToIncluded(dati));
+      } else {
+        this.converter.addToIncluded(data);
+      }
+      // add all of the moreJson's includes
+      this.converter.addToIncludedFromProxy(more);
     }
-    // add all of the moreJson's includes
-    this.converter.addToIncludedFromProxy(moreJson);
     return this.json;
   }
 

@@ -5,10 +5,7 @@ import JSONPayload from '../payload/json-payload';
  Fixture Builder for JSONSerializer
 
  */
-class JSONFixtureBuilder extends FixtureBuilder {
-  constructor(store) {
-    super(store);
-  }
+export default class extends FixtureBuilder {
   /**
    Map single object to response json.
 
@@ -35,5 +32,3 @@ class JSONFixtureBuilder extends FixtureBuilder {
     return json;
   }
 }
-
-export default JSONFixtureBuilder;

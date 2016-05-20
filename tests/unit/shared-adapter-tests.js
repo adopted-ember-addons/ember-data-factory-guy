@@ -15,39 +15,35 @@ SharedAdapterBehavior.all = function (adapter, serializerType) {
   SharedFactoryGuyBehavior.makeListTests();
 
 
-  module(title(adapter, 'FactoryGuy#buildUrl'), inlineSetup(App, serializerType));
-  SharedFactoryGuyTestHelperBehavior.buildUrl();
-
-
-  module(title(adapter, 'FactoryGuyTestHelper#mockFind'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockFind'), inlineSetup(App, serializerType));
   SharedFactoryGuyTestHelperBehavior.mockFindCommonTests();
 
 
-  module(title(adapter, 'FactoryGuyTestHelper#mockReload'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockReload'), inlineSetup(App, serializerType));
   SharedFactoryGuyTestHelperBehavior.mockReloadTests();
 
 
-  module(title(adapter, 'FactoryGuyTestHelper#mockFindAll'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockFindAll'), inlineSetup(App, serializerType));
   SharedFactoryGuyTestHelperBehavior.mockFindAllCommonTests();
 
 
-  module(title(adapter, 'FactoryGuyTestHelper#mockQuery'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockQuery'), inlineSetup(App, serializerType));
   SharedFactoryGuyTestHelperBehavior.mockQueryTests();
 
 
-  module(title(adapter, 'FactoryGuyTestHelper#mockQueryRecord'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockQueryRecord'), inlineSetup(App, serializerType));
   SharedFactoryGuyTestHelperBehavior.mockQueryRecordTests();
 
 
-  module(title(adapter, 'FactoryGuyTestHelper#mockCreate'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockCreate'), inlineSetup(App, serializerType));
   SharedFactoryGuyTestHelperBehavior.mockCreateTests();
 
 
-  module(title(adapter, 'FactoryGuyTestHelper#mockUpdate'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockUpdate'), inlineSetup(App, serializerType));
   SharedFactoryGuyTestHelperBehavior.mockUpdateTests();
 
 
-  module(title(adapter, 'FactoryGuyTestHelper#mockDelete'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockDelete'), inlineSetup(App, serializerType));
   SharedFactoryGuyTestHelperBehavior.mockDeleteTests();
 
 };

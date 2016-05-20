@@ -17,6 +17,10 @@ SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(App, adapter, ser
 SharedFactoryGuyTestHelperBehavior.mockFindEmbeddedTests(App, adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(App, adapter, serializerType);
 
+SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(App, adapter, serializerType);
+
+SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
+
 
 module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, serializerType));
 
@@ -316,58 +320,6 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) json", fun
   deepEqual(buildJson, expectedJson);
 });
 
-test("sideloads unrelated record passed as prebuilt ( build ) json", function() {
-
-  let batMan = build('bat_man');
-  let buildJson = build('user').add(batMan);
-  buildJson.unwrap();
-
-  let expectedJson = {
-    user: {
-      id: 1,
-      name: 'User1',
-      style: "normal"
-    },
-    'super-heros': [
-      {
-        id: 1,
-        name: "BatMan",
-        type: "SuperHero"
-      }
-    ]
-  };
-
-  deepEqual(buildJson, expectedJson);
-});
-
-test("sideloads unrelated record passed as prebuilt ( buildList ) json", function() {
-
-  let batMen = buildList('bat_man', 2);
-  let buildJson = build('user').add(batMen);
-  buildJson.unwrap();
-
-  let expectedJson = {
-    user: {
-      id: 1,
-      name: 'User1',
-      style: "normal"
-    },
-    'super-heros': [
-      {
-        id: 1,
-        name: "BatMan",
-        type: "SuperHero"
-      },
-      {
-        id: 2,
-        name: "BatMan",
-        type: "SuperHero"
-      }
-    ]
-  };
-
-  deepEqual(buildJson, expectedJson);
-});
 
 test("embeds belongsTo record when serializer attrs => embedded: always ", function() {
 
@@ -544,6 +496,59 @@ test("embeds hasMany records passed as prebuilt ( buildList ) json when serializ
         }
       ]
     }
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+test("#add method sideloads unrelated record passed as prebuilt ( build ) json", function() {
+
+  let batMan = build('bat_man');
+  let buildJson = build('user').add(batMan);
+  buildJson.unwrap();
+
+  let expectedJson = {
+    user: {
+      id: 1,
+      name: 'User1',
+      style: "normal"
+    },
+    'super-heros': [
+      {
+        id: 1,
+        name: "BatMan",
+        type: "SuperHero"
+      }
+    ]
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
+test("#add method sideloads unrelated record passed as prebuilt ( buildList ) json", function() {
+
+  let batMen = buildList('bat_man', 2);
+  let buildJson = build('user').add(batMen);
+  buildJson.unwrap();
+
+  let expectedJson = {
+    user: {
+      id: 1,
+      name: 'User1',
+      style: "normal"
+    },
+    'super-heros': [
+      {
+        id: 1,
+        name: "BatMan",
+        type: "SuperHero"
+      },
+      {
+        id: 2,
+        name: "BatMan",
+        type: "SuperHero"
+      }
+    ]
   };
 
   deepEqual(buildJson, expectedJson);

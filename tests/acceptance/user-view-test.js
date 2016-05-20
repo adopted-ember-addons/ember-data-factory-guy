@@ -25,7 +25,8 @@ test("Show user by make(ing) a model and using returns with that model", functio
 });
 
 test("Show user with projects by build(ing) json and using returns with json", function () {
-  // build a user with projects ( which will be in the store )
+  // build a user with projects ( which will be sideloaded into the payload, and
+  // therefore be put in the store when user is loaded )
   let projects = buildList('project', {title: 'Moo'}, {title: 'Zoo'});
   let user = build('user', {projects: projects});
   mockFind('user').returns({json: user});
