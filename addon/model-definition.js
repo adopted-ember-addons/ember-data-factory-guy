@@ -41,7 +41,7 @@ class ModelDefinition {
   isModelFragmentAttribute(field) {
     let modelClass = FactoryGuy.store.modelFor(this.modelName);
     let attributeInfo = Ember.get(modelClass, 'attributes').get(field);
-    return (attributeInfo && attributeInfo.type.match('mf-fragment'));
+    return (attributeInfo && attributeInfo.type && attributeInfo.type.match('mf-fragment'));
   }
 
   /**
@@ -147,7 +147,7 @@ class ModelDefinition {
       let payload = fixture[attribute];
       fixture[attribute] = FactoryGuy.buildRaw(attribute, payload);
       return;
-    } 
+    }
     if (relationship) {
       let payload = fixture[attribute];
       if (!payload.isProxy) {
