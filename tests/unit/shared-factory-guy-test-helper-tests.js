@@ -1,7 +1,6 @@
 import Ember from 'ember';
-import FactoryGuy, { make, makeList, build, buildList } from 'ember-data-factory-guy';
-import TestHelper from 'ember-data-factory-guy';
-import { isEquivalent } from 'ember-data-factory-guy/utils/helper-functions';
+import FactoryGuy, {make, makeList, build, buildList} from 'ember-data-factory-guy';
+import {isEquivalent} from 'ember-data-factory-guy/utils/helper-functions';
 
 import {
   mockSetup, mockTeardown,
@@ -10,7 +9,7 @@ import {
 } from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import $ from 'jquery';
-import { title, inlineSetup } from '../helpers/utility-methods';
+import {title, inlineSetup} from '../helpers/utility-methods';
 
 import Profile from 'dummy/models/profile';
 import SuperHero from 'dummy/models/super-hero';
@@ -741,14 +740,14 @@ SharedBehavior.mockQueryMetaTests = function(App, adapter, serializerType) {
       let json1 = buildList('profile', 2).add({ meta: { previous: '/profiles?page=1', next: '/profiles?page=3' } });
       let json2 = buildList('profile', 2).add({ meta: { previous: '/profiles?page=2', next: '/profiles?page=4' } });
 
-      mockQuery('profile', {page: 2}).returns({ json: json1 });
-      mockQuery('profile', {page: 3}).returns({ json: json2 });
+      mockQuery('profile', { page: 2 }).returns({ json: json1 });
+      mockQuery('profile', { page: 3 }).returns({ json: json2 });
 
-      FactoryGuy.store.query('profile', {page: 2}).then(function(profiles) {
+      FactoryGuy.store.query('profile', { page: 2 }).then(function(profiles) {
         deepEqual(profiles.mapBy('id'), ["1", "2"]);
         ok(isEquivalent(profiles.get('meta'), { previous: '/profiles?page=1', next: '/profiles?page=3' }));
 
-        FactoryGuy.store.query('profile', {page: 3}).then(function(profiles2) {
+        FactoryGuy.store.query('profile', { page: 3 }).then(function(profiles2) {
           deepEqual(profiles2.mapBy('id'), ["3", "4"]);
           ok(isEquivalent(profiles2.get('meta'), { previous: '/profiles?page=2', next: '/profiles?page=4' }));
           done();
@@ -907,17 +906,234 @@ SharedBehavior.mockCreateTests = function() {
   });
 
   /////// with hash of parameters ///////////////////
+  //  test("with no specific match", function(assert) {
+  //    Ember.run(()=> {
+  //      let done = assert.async();
+  //      mockCreate('profile');
+  //
+  //      FactoryGuy.store.createRecord('profile', { description: 'whatever' }).save().then(function(profile) {
+  //        ok(profile.id === "1");
+  //        ok(profile.get('description') === 'whatever');
+  //        done();
+  //      });
+  //
+  //    });
+  //  });
+  //
+  //  test("with no specific match creates many in a loop", function(assert) {
+  //    Ember.run(()=> {
+  //      let done = assert.async();
+  //
+  //      mockCreate('profile');
+  //
+  //      let promises = [1, 2, 3].map(function() {
+  //        return FactoryGuy.store.createRecord('profile', { description: 'whatever' }).save();
+  //      });
+  //
+  //      Ember.RSVP.all(promises).then(function(profiles) {
+  //        let ids = profiles.map(function(profile) {
+  //          return profile.get('id');
+  //        });
+  //        let descriptions = profiles.map(function(profile) {
+  //          return profile.get('description');
+  //        });
+  //        ok(ids + '' === [1, 2, 3] + '');
+  //        ok(descriptions + '' === ['whatever', 'whatever', 'whatever'] + '');
+  //        done();
+  //      });
+  //    });
+  //  });
+  //
+  //  test("match some attributes", function(assert) {
+  //    Ember.run(()=> {
+  //      let done = assert.async();
+  //      let customDescription = "special description";
+  //      let date = new Date();
+  //
+  //      mockCreate('profile', { match: { description: customDescription } });
+  //
+  //      FactoryGuy.store.createRecord('profile', {
+  //        description: customDescription, created_at: date
+  //      }).save().then(function(profile) {
+  //        ok(profile instanceof Profile);
+  //        ok(profile.id === '1');
+  //        ok(profile.get('description') === customDescription);
+  //        done();
+  //      });
+  //    });
+  //  });
+  //
+  //  test("match all attributes", function(assert) {
+  //    Ember.run(()=> {
+  //      let done = assert.async();
+  //      let customDescription = "special description";
+  //      let date = new Date();
+  //
+  //      mockCreate('profile', {
+  //        match: { description: customDescription, created_at: date }
+  //      });
+  //
+  //      FactoryGuy.store.createRecord('profile', {
+  //        description: customDescription, created_at: date
+  //      }).save().then(function(profile) {
+  //        ok(profile instanceof Profile);
+  //        ok(profile.id === '1');
+  //        ok(profile.get('description') === customDescription);
+  //        ok(profile.get('created_at').toString() === date.toString());
+  //        done();
+  //      });
+  //    });
+  //  });
+  //
+  //
+  //  test("returns attributes", function(assert) {
+  //    Ember.run(()=> {
+  //      let done = assert.async();
+  //      let date = new Date();
+  //
+  //      mockCreate('profile', {
+  //        returns: { created_at: date, description: 'mano' }
+  //      });
+  //
+  //      FactoryGuy.store.createRecord('profile').save().then(function(profile) {
+  //        ok(profile.get("created_at") + '' === date + '');
+  //        done();
+  //      });
+  //    });
+  //  });
+  //
+  //  test("match belongsTo association", function(assert) {
+  //    Ember.run(()=> {
+  //      let done = assert.async();
+  //      let company = make('company');
+  //      mockCreate('profile', { match: { company: company } });
+  //
+  //      FactoryGuy.store.createRecord('profile', { company: company }).save().then(function(profile) {
+  //        ok(profile.get('company') === company);
+  //        done();
+  //      });
+  //    });
+  //  });
+  //
+  //  test("match belongsTo polymorphic association", function(assert) {
+  //    Ember.run(()=> {
+  //      let done = assert.async();
+  //      let group = make('group');
+  //      mockCreate('profile', { match: { group: group } });
+  //
+  //      FactoryGuy.store.createRecord('profile', { group: group }).save().then(function(profile) {
+  //        ok(profile.get('group') === group);
+  //        done();
+  //      });
+  //    });
+  //  });
+  //
+  //
+  //  test("match attributes and return attributes", function(assert) {
+  //    Ember.run(()=> {
+  //      let done = assert.async();
+  //      let date = new Date();
+  //      let customDescription = "special description";
+  //      let company = make('company');
+  //      let group = make('big-group');
+  //
+  //      mockCreate('profile', {
+  //        match: { description: customDescription, company: company, group: group },
+  //        returns: { created_at: new Date() }
+  //      });
+  //
+  //      FactoryGuy.store.createRecord('profile', {
+  //        description: customDescription, company: company, group: group
+  //      }).save().then(function(profile) {
+  //        ok(profile.get('created_at').toString() === date.toString());
+  //        ok(profile.get('group') === group);
+  //        ok(profile.get('company') === company);
+  //        ok(profile.get('description') === customDescription);
+  //        done();
+  //      });
+  //    });
+  //  });
+  //
+  //
+  //  test("failure", function(assert) {
+  //    Ember.run(()=> {
+  //      let done = assert.async();
+  //      mockCreate('profile').fails();
+  //
+  //      FactoryGuy.store.createRecord('profile').save()
+  //        .catch(()=> {
+  //          ok(true);
+  //          done();
+  //        });
+  //    });
+  //  });
+  //
+  //  test("failure with status code 422 and errors in response", function(assert) {
+  //    Ember.run(()=> {
+  //      let done = assert.async();
+  //
+  //      let errors = { errors: { description: ['bad'] } };
+  //      mockCreate('profile').fails({ status: 422, response: errors });
+  //
+  //      let profile = FactoryGuy.store.createRecord('profile');
+  //      profile.save()
+  //        .catch(()=> {
+  //          //let errors = invalidError.errors[0];
+  //          //console.log('A',invalidError.errors);
+  //          //console.log('B',profile.get('errors.messages'));
+  //          //let errors = profile.get('errors.messages')[0];
+  //          //equal(errors.title, 'invalid description');
+  //          //equal(errors.detail, 'bad');
+  //          ok(true);
+  //          done();
+  //        });
+  //    });
+  //  });
+  //
+  //
+  //  test("match but still fail", function(assert) {
+  //    Ember.run(()=> {
+  //      let done = assert.async();
+  //      let description = "special description";
+  //
+  //      mockCreate('profile', {
+  //        match: { description: description }
+  //      }).fails();
+  //
+  //      FactoryGuy.store.createRecord('profile', { description: description }).save()
+  //        .catch(()=> {
+  //          ok(true);
+  //          done();
+  //        });
+  //    });
+  //  });
+  //
+  //  test("fails when match args not present in createRecord attributes", function(assert) {
+  //    Ember.run(()=> {
+  //      let done = assert.async();
+  //
+  //      mockCreate('profile', { match: { description: 'correct description' } });
+  //
+  //      FactoryGuy.store.createRecord('profile', { description: 'wrong description' }).save()
+  //        .catch(()=> {
+  //          ok(true);
+  //          done();
+  //        });
+  //    });
+  //  });
+  //
+
   test("with no specific match", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
       mockCreate('profile');
 
-      FactoryGuy.store.createRecord('profile', { description: 'whatever' }).save().then(function(profile) {
-        ok(profile.id === "1");
-        ok(profile.get('description') === 'whatever');
-        done();
-      });
-
+      FactoryGuy.store.createRecord('profile', { description: 'whatever' })
+        .save().then((profile)=> {
+          ok(profile.id === "1");
+          ok(profile.get('description') === 'whatever');
+          done();
+        });
     });
   });
 
@@ -938,196 +1154,14 @@ SharedBehavior.mockCreateTests = function() {
         let descriptions = profiles.map(function(profile) {
           return profile.get('description');
         });
-        ok(ids + '' === [1, 2, 3] + '');
-        ok(descriptions + '' === ['whatever', 'whatever', 'whatever'] + '');
+        deepEqual(ids , ['1', '2', '3'] );
+        deepEqual(descriptions , ['whatever', 'whatever', 'whatever']);
         done();
       });
     });
   });
 
   test("match some attributes", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-      let customDescription = "special description";
-      let date = new Date();
-
-      mockCreate('profile', { match: { description: customDescription } });
-
-      FactoryGuy.store.createRecord('profile', {
-        description: customDescription, created_at: date
-      }).save().then(function(profile) {
-        ok(profile instanceof Profile);
-        ok(profile.id === '1');
-        ok(profile.get('description') === customDescription);
-        done();
-      });
-    });
-  });
-
-  test("match all attributes", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-      let customDescription = "special description";
-      let date = new Date();
-
-      mockCreate('profile', {
-        match: { description: customDescription, created_at: date }
-      });
-
-      FactoryGuy.store.createRecord('profile', {
-        description: customDescription, created_at: date
-      }).save().then(function(profile) {
-        ok(profile instanceof Profile);
-        ok(profile.id === '1');
-        ok(profile.get('description') === customDescription);
-        ok(profile.get('created_at').toString() === date.toString());
-        done();
-      });
-    });
-  });
-
-
-  test("returns attributes", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-      let date = new Date();
-
-      mockCreate('profile', {
-        returns: { created_at: date, description: 'mano' }
-      });
-
-      FactoryGuy.store.createRecord('profile').save().then(function(profile) {
-        ok(profile.get("created_at") + '' === date + '');
-        done();
-      });
-    });
-  });
-
-  test("match belongsTo association", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-      let company = make('company');
-      mockCreate('profile', { match: { company: company } });
-
-      FactoryGuy.store.createRecord('profile', { company: company }).save().then(function(profile) {
-        ok(profile.get('company') === company);
-        done();
-      });
-    });
-  });
-
-  test("match belongsTo polymorphic association", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-      let group = make('group');
-      mockCreate('profile', { match: { group: group } });
-
-      FactoryGuy.store.createRecord('profile', { group: group }).save().then(function(profile) {
-        ok(profile.get('group') === group);
-        done();
-      });
-    });
-  });
-
-
-  test("match attributes and return attributes", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-      let date = new Date();
-      let customDescription = "special description";
-      let company = make('company');
-      let group = make('big-group');
-
-      mockCreate('profile', {
-        match: { description: customDescription, company: company, group: group },
-        returns: { created_at: new Date() }
-      });
-
-      FactoryGuy.store.createRecord('profile', {
-        description: customDescription, company: company, group: group
-      }).save().then(function(profile) {
-        ok(profile.get('created_at').toString() === date.toString());
-        ok(profile.get('group') === group);
-        ok(profile.get('company') === company);
-        ok(profile.get('description') === customDescription);
-        done();
-      });
-    });
-  });
-
-
-  test("failure", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-      mockCreate('profile').fails();
-
-      FactoryGuy.store.createRecord('profile').save()
-        .catch(()=> {
-          ok(true);
-          done();
-        });
-    });
-  });
-
-  test("failure with status code 422 and errors in response", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-
-      let errors = { errors: { description: ['bad'] } };
-      mockCreate('profile').fails({ status: 422, response: errors });
-
-      let profile = FactoryGuy.store.createRecord('profile');
-      profile.save()
-        .catch(()=> {
-          //let errors = invalidError.errors[0];
-          //console.log('A',invalidError.errors);
-          //console.log('B',profile.get('errors.messages'));
-          //let errors = profile.get('errors.messages')[0];
-          //equal(errors.title, 'invalid description');
-          //equal(errors.detail, 'bad');
-          ok(true);
-          done();
-        });
-    });
-  });
-
-
-  test("match but still fail", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-      let description = "special description";
-
-      mockCreate('profile', {
-        match: { description: description }
-      }).fails();
-
-      FactoryGuy.store.createRecord('profile', { description: description }).save()
-        .catch(()=> {
-          ok(true);
-          done();
-        });
-    });
-  });
-
-  test("fails when match args not present in createRecord attributes", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-
-      mockCreate('profile', { match: { description: 'correct description' } });
-
-      FactoryGuy.store.createRecord('profile', { description: 'wrong description' }).save()
-        .catch(()=> {
-          ok(true);
-          done();
-        });
-    });
-  });
-
-
-  /////// mockCreate //////////
-  /////// with chaining methods ///////////////////
-
-  test("match some attributes with match method", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
       let customDescription = "special description";
@@ -1146,7 +1180,7 @@ SharedBehavior.mockCreateTests = function() {
     });
   });
 
-  test("with dasherized model name match some attributes with match method", function(assert) {
+  test("with dasherized model name match some attributes", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
       let customName = "special name";
@@ -1164,7 +1198,7 @@ SharedBehavior.mockCreateTests = function() {
     });
   });
 
-  test("match all attributes with match method", function(assert) {
+  test("match all attributes", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
       let customDescription = "special description";
@@ -1184,7 +1218,7 @@ SharedBehavior.mockCreateTests = function() {
     });
   });
 
-  test("match belongsTo association with match method", function(assert) {
+  test("match belongsTo association", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
       let company = make('company');
@@ -1198,7 +1232,7 @@ SharedBehavior.mockCreateTests = function() {
     });
   });
 
-  test("match belongsTo polymorphic association  with match method", function(assert) {
+  test("match belongsTo polymorphic association", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
       let group = make('group');
@@ -1242,7 +1276,7 @@ SharedBehavior.mockCreateTests = function() {
   });
 
 
-  test("match attributes and return attributes using match and returns methods", function(assert) {
+  test("match attributes and also return attributes", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
       let date = new Date(2015, 1, 2, 3, 4, 5);
@@ -1252,7 +1286,7 @@ SharedBehavior.mockCreateTests = function() {
 
       mockCreate('profile')
         .match({ description: customDescription, company: company, group: group })
-        .andReturn({ created_at: date });
+        .returns({ created_at: date });
 
       FactoryGuy.store.createRecord('profile', {
         description: customDescription, company: company, group: group
@@ -1270,6 +1304,7 @@ SharedBehavior.mockCreateTests = function() {
   test("failure with fails method", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
+
       mockCreate('profile').fails();
 
       FactoryGuy.store.createRecord('profile').save()
@@ -1280,6 +1315,19 @@ SharedBehavior.mockCreateTests = function() {
     });
   });
 
+  test("fails when match args not present in createRecord attributes", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+
+      mockCreate('profile').match({ description: 'correct description' });
+
+      FactoryGuy.store.createRecord('profile', { description: 'wrong description' }).save()
+        .catch(()=> {
+          ok(true);
+          done();
+        });
+    });
+  });
 
   test("match but still fail with fails method", function(assert) {
     Ember.run(()=> {

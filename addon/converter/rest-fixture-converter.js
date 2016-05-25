@@ -10,8 +10,8 @@ const { pluralize, dasherize } = Ember.String;
  */
 export default class extends JSONFixtureConverter {
 
-  constructor(store) {
-    super(store);
+  constructor(store, options) {
+    super(store, options);
     this.included = {};
   }
   /**

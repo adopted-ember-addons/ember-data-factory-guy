@@ -35,7 +35,11 @@ export default class extends BasePayload {
   }
 
   createAttrs(data) {
-    let attrs = data.attributes;
+    let relationships = {};
+    Object.keys(data.relationships||[]).forEach((key)=> {
+      relationships[key] = data.relationships[key].data;
+    });
+    let attrs = Ember.$.extend({}, data.attributes, relationships);
     attrs.id = data.id;
     return attrs;
   }
@@ -49,7 +53,9 @@ export default class extends BasePayload {
     if (!key) {
       return attrs;
     }
-    return attrs[key];
+    if (attrs[key]) {
+      return attrs[key];
+    }
   }
 
   getListKeys(key) {

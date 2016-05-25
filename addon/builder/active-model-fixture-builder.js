@@ -1,15 +1,12 @@
-import FixtureBuilder from './fixture-builder';
-import RESTFixtureConverter from '../converter/rest-fixture-converter';
+import RESTFixtureBuilder from './fixture-builder';
+import ActiveModelFixtureConverter from '../converter/active-model-fixture-converter';
 import RESTPayload from '../payload/rest-payload';
 /**
- Fixture Builder for REST based Serializer, like ActiveModelSerializer or
- RESTSerializer
-
+ Fixture Builder for ActiveModelSerializer
  */
-export default class extends FixtureBuilder {
-
+export default class extends RESTFixtureBuilder {
   constructor(store) {
-    super(store, RESTFixtureConverter, RESTPayload);
+    super(store, ActiveModelFixtureConverter, RESTPayload);
   }
   /**
    Map single object to response json.
@@ -23,4 +20,6 @@ export default class extends FixtureBuilder {
   normalize(modelName, payload) {
     return { [modelName]: payload };
   }
+  
 }
+

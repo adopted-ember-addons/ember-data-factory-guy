@@ -4,6 +4,8 @@ import startApp from '../helpers/start-app';
 import DS from 'ember-data';
 import DRFAdapter from 'ember-django-adapter/adapters/drf';
 import DRFSerializer from 'ember-django-adapter/serializers/drf';
+import ActiveModelAdapter from 'active-model-adapter';
+import { ActiveModelSerializer } from 'active-model-adapter';
 
 // serializerType like -rest or -active-model, -json-api, -json
 let theUsualSetup = function (serializerType) {
@@ -14,6 +16,9 @@ let theUsualSetup = function (serializerType) {
     let container = App.__container__;
     container.registry.register('adapter:-drf', DRFAdapter, {singleton: false});
     container.registry.register('serializer:-drf', DRFSerializer, {singleton: false});
+
+    container.registry.register('adapter:-active-model', ActiveModelAdapter, {singleton: false});
+    container.registry.register('serializer:-active-model', ActiveModelSerializer, {singleton: false});
 
     let store = container.lookup('service:store');
 

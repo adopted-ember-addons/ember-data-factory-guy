@@ -1,10 +1,9 @@
 import Ember from 'ember';
-import FactoryGuy, { build, buildList, make, makeList } from 'ember-data-factory-guy';
-import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
+import FactoryGuy, {build, buildList, make, makeList, mockCreate} from 'ember-data-factory-guy';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
 import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
-import { title, inlineSetup } from '../helpers/utility-methods';
+import {title, inlineSetup} from '../helpers/utility-methods';
 
 let App = null;
 let adapter = 'DS.ActiveModelAdapter';
@@ -21,27 +20,24 @@ SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, ser
 
 module(title(adapter, '#mockCreate custom'), inlineSetup(App, serializerType));
 
-test("returns camelCase attributes", function (assert) {
-  Ember.run(function () {
+test("returns camelCase attributes", function(assert) {
+  Ember.run(()=> {
     let done = assert.async();
     let customDescription = "special description";
 
-    TestHelper.mockCreate('profile', {
-      returns: {camel_case_description: customDescription}
-    });
+    mockCreate('profile').returns({ camel_case_description: customDescription });
 
-    FactoryGuy.store.createRecord('profile', {
-      camel_case_description: 'description'
-    }).save().then(function (profile) {
-      ok(profile.get('camelCaseDescription') === customDescription);
-      done();
-    });
+    FactoryGuy.store.createRecord('profile', { camel_case_description: 'description' })
+      .save().then((profile)=> {
+        ok(profile.get('camelCaseDescription') === customDescription);
+        done();
+      });
   });
 });
 
 module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, serializerType));
 
-test("sideloads belongsTo records which are built from fixture definition", function () {
+test("sideloads belongsTo records which are built from fixture definition", function() {
 
   let buildJson = build('profile', 'with_bat_man');
   buildJson.unwrap();
@@ -67,10 +63,10 @@ test("sideloads belongsTo records which are built from fixture definition", func
   deepEqual(buildJson, expectedJson);
 });
 
-test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () {
+test("sideloads belongsTo record passed as ( prebuilt ) attribute", function() {
 
   let batMan = build('bat_man');
-  let buildJson = build('profile', {superHero: batMan});
+  let buildJson = build('profile', { superHero: batMan });
   buildJson.unwrap();
 
   let expectedJson = {
@@ -94,7 +90,7 @@ test("sideloads belongsTo record passed as ( prebuilt ) attribute", function () 
   deepEqual(buildJson, expectedJson);
 });
 
-test("sideloads hasMany records built from fixture definition", function () {
+test("sideloads hasMany records built from fixture definition", function() {
 
   let buildJson = build('user', 'with_hats');
   buildJson.unwrap();
@@ -105,13 +101,13 @@ test("sideloads hasMany records built from fixture definition", function () {
       name: 'User1',
       style: "normal",
       hats: [
-        {type: 'big_hat', id:1},
-        {type: 'big_hat', id:2}
+        { type: 'big_hat', id: 1 },
+        { type: 'big_hat', id: 2 }
       ],
     },
     'big-hats': [
-      {id: 1, type: "BigHat" },
-      {id: 2, type: "BigHat" }
+      { id: 1, type: "BigHat" },
+      { id: 2, type: "BigHat" }
     ]
   };
 
@@ -119,10 +115,10 @@ test("sideloads hasMany records built from fixture definition", function () {
 });
 
 
-test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", function () {
+test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", function() {
 
   let hats = buildList('big-hat', 2);
-  let buildJson = build('user', {hats: hats});
+  let buildJson = build('user', { hats: hats });
   buildJson.unwrap();
 
   let expectedJson = {
@@ -131,13 +127,13 @@ test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", fun
       name: 'User1',
       style: "normal",
       hats: [
-        {type: 'big_hat', id:1},
-        {type: 'big_hat', id:2}
+        { type: 'big_hat', id: 1 },
+        { type: 'big_hat', id: 2 }
       ],
     },
     'big-hats': [
-      {id: 1, type: "BigHat" },
-      {id: 2, type: "BigHat" }
+      { id: 1, type: "BigHat" },
+      { id: 2, type: "BigHat" }
     ]
   };
 
@@ -145,11 +141,11 @@ test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", fun
 });
 
 
-test("sideloads hasMany records passed as prebuilt ( array of build ) attribute", function () {
+test("sideloads hasMany records passed as prebuilt ( array of build ) attribute", function() {
 
   let hat1 = build('big-hat');
   let hat2 = build('big-hat');
-  let buildJson = build('user', {hats: [hat1, hat2]});
+  let buildJson = build('user', { hats: [hat1, hat2] });
   buildJson.unwrap();
 
   let expectedJson = {
@@ -158,13 +154,13 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) attribute"
       name: 'User1',
       style: "normal",
       hats: [
-        {type: 'big_hat', id:1},
-        {type: 'big_hat', id:2}
+        { type: 'big_hat', id: 1 },
+        { type: 'big_hat', id: 2 }
       ],
     },
     'big-hats': [
-      {id: 1, type: "BigHat" },
-      {id: 2, type: "BigHat" }
+      { id: 1, type: "BigHat" },
+      { id: 2, type: "BigHat" }
     ]
   };
 
@@ -172,7 +168,7 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) attribute"
 });
 
 
-test("using custom serialize keys function for transforming attributes and relationship keys", function () {
+test("using custom serialize keys function for transforming attributes and relationship keys", function() {
   let serializer = FactoryGuy.store.serializerFor('application');
 
   let savedKeyForAttributeFn = serializer.keyForAttribute;
@@ -207,9 +203,9 @@ test("using custom serialize keys function for transforming attributes and relat
   serializer.keyForRelationship = savedKeyForRelationshipFn;
 });
 
-test("serializes attributes with custom type", function () {
-  let info = {first: 1};
-  let buildJson = build('user', {info: info});
+test("serializes attributes with custom type", function() {
+  let info = { first: 1 };
+  let buildJson = build('user', { info: info });
   buildJson.unwrap();
 
   let expectedJson = {
