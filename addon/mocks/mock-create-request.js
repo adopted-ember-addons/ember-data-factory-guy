@@ -12,22 +12,12 @@ export default class {
     this.matchArgs = {};
     this.returnArgs = {};
     this.responseJson = {};
-    this.store = FactoryGuy.store;
-    this.fixtureBuilder = FactoryGuy.fixtureBuilder;
     this.handler = this.setupHandler();
   }
 
   calculate() {
     if (this.succeed) {
-      let modelClass = this.store.modelFor(this.modelName);
       this.responseJson = Ember.$.extend({}, this.matchArgs, this.returnArgs);
-      // Remove belongsTo associations since they will already be set when you called
-      // createRecord, so they don't need to be returned.
-      Ember.get(modelClass, 'relationshipsByName').forEach((relationship)=> {
-        if (relationship.kind === 'belongsTo') {
-          delete this.responseJson[relationship.key];
-        }
-      });
     }
   }
 
@@ -47,7 +37,7 @@ export default class {
     this.succeed = false;
     this.status = options.status || 500;
     if (options.response) {
-      let errors = this.fixtureBuilder.convertResponseErrors(options.response);
+      let errors = FactoryGuy.fixtureBuilder.convertResponseErrors(options.response);
       this.responseJson = errors;
     }
     return this;
@@ -75,14 +65,18 @@ export default class {
       return true;
     }
 
-    let builder = this.fixtureBuilder;
-    // transform they match keys
+    let builder = FactoryGuy.fixtureBuilder;
 
+    // transform they match keys
     let matchCheckKeys = Object.keys(this.matchArgs).map((key)=> {
       return builder.transformKey(this.modelName, key);
     });
+
+    // build the match args into a JSONPayload class
     let buildOpts = { serializeMode: true, transformKeys: true };
     let expectedData = builder.convertForBuild(this.modelName, this.matchArgs, buildOpts);
+
+    // wrap request data in a JSONPayload class
     builder.wrapPayload(this.modelName, requestData);
 
     let allMatch = matchCheckKeys.map((key)=> {
@@ -124,7 +118,7 @@ export default class {
         // Setting the id at the very last minute, so that calling calculate
         // again and again does not mess with id, and it's reset for each call
         finalResponseJson.id = this.modelId();
-        finalResponseJson = this.fixtureBuilder.convertForBuild(this.modelName, finalResponseJson);
+        finalResponseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, finalResponseJson);
       } else {
         this.status = status;
       }

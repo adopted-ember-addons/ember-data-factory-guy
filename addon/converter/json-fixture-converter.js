@@ -80,15 +80,21 @@ export default class extends Converter {
    @param {Object} relationship
    */
   normalizeAssociation(record, relationship) {
+    if (this.serializeMode) {
+      return record.id;
+    }
     if (Ember.typeOf(record) === 'object') {
       if (relationship.options.polymorphic) {
         return { type: underscore(record.type), id: record.id };
       } else {
         return record.id;
       }
-    } else {
-      return record.id;
     }
+    // it's a model instance
+    if (relationship.options.polymorphic) {
+      return { type: underscore(record.constructor.modelName), id: record.id };
+    }
+    return record.id;
   }
 
   /**
