@@ -156,10 +156,11 @@ export default class {
   extractBelongsTo(fixture, relationship, parentModelName, relationships) {
     let belongsToRecord = fixture[relationship.key];
 
-    let relationshipKey = this.transformRelationshipKey(relationship);
-    let isEmbedded = this.isEmbeddedRelationship(parentModelName, relationshipKey);
+    let isEmbedded = this.isEmbeddedRelationship(parentModelName, relationship.key);
 
     let data = this.extractSingleRecord(belongsToRecord, relationship, isEmbedded);
+
+    let relationshipKey = isEmbedded ? relationship.key : this.transformRelationshipKey(relationship);
 
     relationships[relationshipKey] = this.assignRelationship(data);
   }

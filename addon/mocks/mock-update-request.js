@@ -41,7 +41,7 @@ let MockUpdateRequest = function(url, model, options) {
     return this.fails(options);
   };
 
-  this.fails = function(options) {
+  this.fails = function(options={}) {
     succeed = false;
     status = options.status || 500;
     if ('response' in options) {

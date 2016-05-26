@@ -296,19 +296,19 @@ let MockServer = Ember.Object.extend({
    mockCreate('post')
    mockCreate('post').match({title: 'foo'});
    mockCreate('post').match({title: 'foo', user: user});
-   mockCreate('post').andReturn({createdAt: new Date()});
-   mockCreate('post').match({title: 'foo'}).andReturn({createdAt: new Date()});
+   mockCreate('post').returns({createdAt: new Date()});
+   mockCreate('post').match({title: 'foo'}).returns({createdAt: new Date()});
    mockCreate('post').match({title: 'foo'}.fails();
    ```
 
    match - attributes that must be in request json,
-   andReturn - attributes to include in response json,
+   returns - attributes to include in response json,
    fails - can include optional status and response attributes
 
    ```js
    TestHelper.mockCreate('project').fails({
-        status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}
-      });
+      status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}
+    });
    ```
 
    Note:
@@ -328,11 +328,9 @@ let MockServer = Ember.Object.extend({
    returns hash either.
 
    @param {String} modelName  name of model your creating like 'profile' for Profile
-   @param {Object} options  hash of options for handling request
    */
-  mockCreate: function (modelName, opts={}) {
-    let url = FactoryGuy.buildURL(modelName);
-    return new MockCreateRequest(url, modelName, opts);
+  mockCreate: function (modelName) {
+    return new MockCreateRequest(modelName);
   },
   handleCreate: function () {
     Ember.deprecate("`handleCreate` - has been deprecated. Use `mockCreate` method instead`",

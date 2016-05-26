@@ -1,20 +1,15 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
 import DS from 'ember-data';
-import $ from 'jquery';
+import MockRequest from './mock-request';
 const assign = Ember.assign || Ember.merge;
 
-class MockGetRequest {
+class MockGetRequest extends MockRequest {
 
   constructor(modelName) {
-    this.modelName = modelName;
-    this.status = 200;
-    this.succeed = true;
-    this.responseHeaders = {};
+    super(modelName);
     this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(modelName, {});
     this.validReturnsKeys = [];
-    this.handler = this.setupHandler();
-    this.timesCalled = 0;
   }
 
   setValidReturnsKeys(validKeys) {
@@ -98,70 +93,16 @@ class MockGetRequest {
     }
   }
 
-  getUrl() {
-    return FactoryGuy.buildURL(this.modelName);
-  }
-
   setResponseJson(json) {
     this.responseJson = json;
-  }
-
-  addResponseHeaders(headers) {
-    assign(this.responseHeaders, headers);
-  }
-
-  succeeds(options) {
-    this.succeed = true;
-    this.status = options && options.status || 200;
-    return this;
-  }
-
-  fails(options = {}) {
-    this.succeed = false;
-    this.status = options.status || 500;
-    if (options.response) {
-      let errors = FactoryGuy.fixtureBuilder.convertResponseErrors(options.response);
-      this.responseJson = errors;
-    }
-    return this;
-  }
-
-  getSucceed() {
-    return this.succeed;
-  }
-
-  getResponseJson() {
-    return this.responseJson;
-  }
-
-  getResponse() {
-    return {
-      responseText: this.responseJson,
-      headers: this.responseHeaders,
-      status: this.status
-    };
   }
 
   paramsMatch() {
     return true;
   }
 
-  //////////////  common handler for all get requests ////////////
-  setupHandler() {
-    let handler = function(settings) {
-      if (!(settings.url === this.getUrl() && settings.type === "GET")) {
-        return false;
-      }
-      if (this.getSucceed() && !this.paramsMatch(settings)) {
-        return false;
-      }
-      this.timesCalled++;
-      return this.getResponse();
-    }.bind(this);
-
-    $.mockjax(handler);
-
-    return handler;
+  extraRequestMatches(settings) {
+    return this.paramsMatch(settings);
   }
 
   //////////////////  deprecated /////////////////////

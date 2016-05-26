@@ -1,7 +1,7 @@
+import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
 import { isEquivalent } from '../utils/helper-functions';
 import MockGetRequest from './mock-get-request';
-import $ from 'jquery';
 
 export default class MockQueryRequest extends MockGetRequest {
 
@@ -18,7 +18,7 @@ export default class MockQueryRequest extends MockGetRequest {
   }
 
   paramsMatch(settings) {
-    if ($.isEmptyObject(this.currentQueryParams)) {
+    if (Ember.$.isEmptyObject(this.currentQueryParams)) {
       return true;
     }
     return isEquivalent(this.currentQueryParams, settings.data);

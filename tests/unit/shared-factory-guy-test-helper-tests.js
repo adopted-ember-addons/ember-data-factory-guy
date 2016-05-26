@@ -247,16 +247,15 @@ SharedBehavior.mockReloadTests = function() {
   test("failure with fails method", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
-      mockReload('profile', 1).fails();
+      let mock = mockReload('profile', 1).fails();
 
-      FactoryGuy.store.find('profile', 1).then(
-        function() {
-        },
-        function() {
-          ok(true);
-          done();
-        }
-      );
+      FactoryGuy.store.find('profile', 1)
+        .catch(()=> {
+            equal(mock.timesCalled, 1);
+            ok(true);
+            done();
+          }
+        );
     });
   });
 
@@ -489,9 +488,10 @@ SharedBehavior.mockQueryTests = function() {
 
       let errors = { errors: { name: ['wrong'] } };
 
-      mockQuery('user').fails({ status: 422, response: errors });
-      FactoryGuy.store.query('user', {}).catch(
-        ()=> {
+      let mock = mockQuery('user').fails({ status: 422, response: errors });
+      FactoryGuy.store.query('user', {})
+        .catch(()=> {
+          equal(mock.timesCalled, 1);
           ok(true);
           done();
         });
@@ -520,8 +520,9 @@ SharedBehavior.mockQueryTests = function() {
       let models = makeList('company', 2);
 
       mockQuery('company', { name: { like: 'Dude*' } }).returns({ models });
+
       FactoryGuy.store.query('company', { name: { like: 'Dude*' } }).then(function(companies) {
-        equal(A(companies).mapBy('id') + '', A(models).mapBy('id') + '');
+        deepEqual(A(companies).mapBy('id'), A(models).mapBy('id'));
         done();
       });
     });
@@ -1130,10 +1131,10 @@ SharedBehavior.mockCreateTests = function() {
 
       FactoryGuy.store.createRecord('profile', { description: 'whatever' })
         .save().then((profile)=> {
-          ok(profile.id === "1");
-          ok(profile.get('description') === 'whatever');
-          done();
-        });
+        ok(profile.id === "1");
+        ok(profile.get('description') === 'whatever');
+        done();
+      });
     });
   });
 
@@ -1154,8 +1155,8 @@ SharedBehavior.mockCreateTests = function() {
         let descriptions = profiles.map(function(profile) {
           return profile.get('description');
         });
-        deepEqual(ids , ['1', '2', '3'] );
-        deepEqual(descriptions , ['whatever', 'whatever', 'whatever']);
+        deepEqual(ids, ['1', '2', '3']);
+        deepEqual(descriptions, ['whatever', 'whatever', 'whatever']);
         done();
       });
     });
@@ -1305,11 +1306,12 @@ SharedBehavior.mockCreateTests = function() {
     Ember.run(()=> {
       let done = assert.async();
 
-      mockCreate('profile').fails();
+      let mock = mockCreate('profile').fails();
 
       FactoryGuy.store.createRecord('profile').save()
         .catch(()=> {
           ok(true);
+          equal(mock.timesCalled, 1);
           done();
         });
     });
@@ -1319,11 +1321,12 @@ SharedBehavior.mockCreateTests = function() {
     Ember.run(()=> {
       let done = assert.async();
 
-      mockCreate('profile').match({ description: 'correct description' });
+      let mock = mockCreate('profile').match({ description: 'correct description' });
 
       FactoryGuy.store.createRecord('profile', { description: 'wrong description' }).save()
         .catch(()=> {
           ok(true);
+          equal(mock.timesCalled, 0);
           done();
         });
     });
@@ -1334,11 +1337,12 @@ SharedBehavior.mockCreateTests = function() {
       let done = assert.async();
       let description = "special description";
 
-      mockCreate('profile').match({ description: description }).fails();
+      let mock = mockCreate('profile').match({ description: description }).fails();
 
       FactoryGuy.store.createRecord('profile', { description: description }).save()
         .catch(()=> {
           ok(true);
+          equal(mock.timesCalled, 1);
           done();
         });
     });
@@ -1349,7 +1353,7 @@ SharedBehavior.mockCreateTests = function() {
       let done = assert.async();
 
       let errors = { errors: { description: ['bad'] } };
-      mockCreate('profile').fails({ status: 422, response: errors });
+      let mock = mockCreate('profile').fails({ status: 422, response: errors });
 
       let profile = FactoryGuy.store.createRecord('profile');
       profile.save()
@@ -1360,9 +1364,51 @@ SharedBehavior.mockCreateTests = function() {
           //console.log(profile.get('errors'))
           //equal(errors.title, 'invalid description');
           //equal(errors.detail, 'bad');
+          equal(mock.timesCalled, 1);
           ok(true);
           done();
         });
+    });
+  });
+
+};
+
+
+SharedBehavior.mockCreateReturnsAssociations = function(App, adapter, serializerType) {
+
+  module(title(adapter, '#mockCreate | returns association'), inlineSetup(App, serializerType));
+
+  test("belongsTo", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let company = build('company');
+      mockCreate('profile').returns({ company });
+
+      FactoryGuy.store.createRecord('profile').save().then(function(profile) {
+        equal(profile.get('company.id'), company.get('id').toString());
+        equal(profile.get('company.name'), company.get('name').toString());
+        done();
+      });
+    });
+  });
+
+};
+
+SharedBehavior.mockCreateReturnsEmbeddedAssociations = function(App, adapter, serializerType) {
+
+  module(title(adapter, '#mockCreate | returns embedded association'), inlineSetup(App, serializerType));
+
+  test("belongsTo", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let company = build('company');
+      mockCreate('comic-book').returns({ company });
+
+      FactoryGuy.store.createRecord('comic-book').save().then(function(comic) {
+        equal(comic.get('company.id'), company.get('id').toString());
+        equal(comic.get('company.name'), company.get('name').toString());
+        done();
+      });
     });
   });
 
@@ -1445,9 +1491,7 @@ SharedBehavior.mockUpdateTests = function() {
       let done = assert.async();
       let profile = make('profile');
 
-      mockUpdate('profile', profile.id).fails({
-        status: 500
-      });
+      mockUpdate('profile', profile.id).fails({ status: 500 });
 
       profile.set('description', 'new desc');
       profile.save().catch(
@@ -1466,13 +1510,13 @@ SharedBehavior.mockUpdateTests = function() {
     Ember.run(()=> {
       let profile = make('profile');
 
-      mockUpdate(profile).fails({ status: 500 });
+      mockUpdate(profile).fails({ status: 401 });
 
       profile.set('description', 'new desc');
       profile.save().catch(
         function(reason) {
           let error = reason.errors[0];
-          equal(error.status, "500");
+          equal(error.status, "401");
           done();
         }
       );
@@ -1485,7 +1529,7 @@ SharedBehavior.mockUpdateTests = function() {
       let done = assert.async();
       let profile = make('profile');
 
-      let updateMock = mockUpdate(profile).fails({ status: 400 });
+      let updateMock = mockUpdate(profile).fails();
 
       profile.set('description', 'new desc');
       profile.save()

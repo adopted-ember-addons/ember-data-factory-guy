@@ -54,7 +54,6 @@ export default class {
    @param fixture
    */
   convertForBuild(modelName, fixture, converterOptions) {
-//    console.trace('convertForBuild', modelName, fixture, converterOptions);
     let converter = this.getConverter(converterOptions);
     let json = converter.convert(modelName, fixture);
     this.wrapPayload(modelName, json, converter);

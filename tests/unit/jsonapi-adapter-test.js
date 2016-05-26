@@ -18,6 +18,8 @@ SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(App, adapter, serializerTy
 
 SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
 
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(App, adapter, serializerType);
+
 module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, serializerType));
 
 test("returns all attributes with no key", function() {

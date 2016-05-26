@@ -16,6 +16,8 @@ SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(App, adapter, serial
 
 SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
 
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(App, adapter, serializerType);
+
 module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, serializerType));
 
 test("returns all attributes with no key", function() {

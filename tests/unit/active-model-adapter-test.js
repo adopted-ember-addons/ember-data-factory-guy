@@ -18,6 +18,9 @@ SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(App, adapter, serializerTy
 
 SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
 
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(App, adapter, serializerType);
+
 module(title(adapter, '#mockCreate custom'), inlineSetup(App, serializerType));
 
 test("returns camelCase attributes", function(assert) {
@@ -36,6 +39,23 @@ test("returns camelCase attributes", function(assert) {
 });
 
 module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, serializerType));
+
+test("embeds belongsTo record when serializer attrs => embedded: always ", function() {
+
+  let buildJson = build('comic-book', 'marvel');
+  buildJson.unwrap();
+
+  let expectedJson = {
+    comic_book: {
+      id: 1,
+      name: 'Comic Times #1',
+      company: { id: 1, type: 'Company', name: 'Marvel Comics' }
+    }
+  };
+
+  deepEqual(buildJson, expectedJson);
+});
+
 
 test("sideloads belongsTo records which are built from fixture definition", function() {
 

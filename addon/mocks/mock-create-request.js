@@ -1,24 +1,23 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
+import MockRequest from './mock-request';
 import {isEquivalent} from '../utils/helper-functions';
+const { isPresent, isEmpty } = Ember;
 
-export default class {
+export default class extends MockRequest {
 
-  constructor(url, modelName) {
-    this.url = url;
-    this.status = 200;
-    this.modelName = modelName;
-    this.succeed = true;
+  constructor(modelName) {
+    super(modelName);
     this.matchArgs = {};
     this.returnArgs = {};
-    this.responseJson = {};
-    this.handler = this.setupHandler();
+  }
+
+  getType() {
+    return "POST";
   }
 
   calculate() {
-    if (this.succeed) {
-      this.responseJson = Ember.$.extend({}, this.matchArgs, this.returnArgs);
-    }
+    this.responseJson = Ember.$.extend({}, this.matchArgs, this.returnArgs);
   }
 
   match(matches) {
@@ -30,16 +29,6 @@ export default class {
   returns(returns) {
     this.returnArgs = returns;
     this.calculate();
-    return this;
-  }
-
-  fails(options = {}) {
-    this.succeed = false;
-    this.status = options.status || 500;
-    if (options.response) {
-      let errors = FactoryGuy.fixtureBuilder.convertResponseErrors(options.response);
-      this.responseJson = errors;
-    }
     return this;
   }
 
@@ -61,7 +50,7 @@ export default class {
    * @returns {boolean} true is no attributes to match or they all match
    */
   attributesMatch(requestData) {
-    if (Ember.isEmpty(Object.keys(this.matchArgs))) {
+    if (isEmpty(Object.keys(this.matchArgs))) {
       return true;
     }
 
@@ -79,10 +68,10 @@ export default class {
     // wrap request data in a JSONPayload class
     builder.wrapPayload(this.modelName, requestData);
 
-    let allMatch = matchCheckKeys.map((key)=> {
+    // success if all values match
+    return matchCheckKeys.map((key)=> {
       return isEquivalent(expectedData.get(key), requestData.get(key));
     }).every((value)=> value);
-    return allMatch;
   }
 
   /*
@@ -90,7 +79,7 @@ export default class {
    again and again does not mess with id, and it's reset for each call.
    */
   modelId() {
-    if (Ember.isPresent(this.returnArgs) && Ember.isPresent(this.returnArgs['id'])) {
+    if (isPresent(this.returnArgs) && isPresent(this.returnArgs['id'])) {
       return this.returnArgs['id'];
     } else {
       let definition = FactoryGuy.findModelDefinition(this.modelName);
@@ -98,41 +87,24 @@ export default class {
     }
   }
 
-  setupHandler() {
-    let handler = function(settings) {
-      if (!(settings.url === this.url && settings.type === "POST")) {
+  extraRequestMatches(settings) {
+    if (this.matchArgs) {
+      let requestData = JSON.parse(settings.data);
+      if (!this.attributesMatch(requestData)) {
         return false;
       }
-      // need to clone the response since it could be used a few times in a row,
-      // in a loop where you're doing createRecord of same model type
-      let finalResponseJson = Ember.$.extend({}, true, this.responseJson);
+    }
+    return true;
+  }
 
-      if (this.succeed) {
-        if (this.matchArgs) {
-          let requestData = JSON.parse(settings.data);
-          if (!this.attributesMatch(requestData)) {
-            return false;
-          }
-        }
-        this.status = 200;
-        // Setting the id at the very last minute, so that calling calculate
-        // again and again does not mess with id, and it's reset for each call
-        finalResponseJson.id = this.modelId();
-        finalResponseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, finalResponseJson);
-      } else {
-        this.status = status;
-      }
-
-      return {
-        responseText: finalResponseJson,
-        status: this.status
-      };
-
-    }.bind(this);
-
-    Ember.$.mockjax(handler);
-
-    return handler;
+  /**
+   This mock might be callled a few times in a row so,
+   Need to clone the responseJson and add id at the very last minute
+   */
+  getResponse() {
+    let json = Ember.$.extend({}, true, this.responseJson, { id: this.modelId() });
+    this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
+    return super.getResponse();
   }
 
 }

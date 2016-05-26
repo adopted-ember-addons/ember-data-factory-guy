@@ -14,7 +14,7 @@ let serializerType = '-json-api';
  These tests are testing basic functionality of the mocks so the serializer type
  is not important
  */
-module('#mockFind', inlineSetup(App, serializerType));
+module('mockFind', inlineSetup(App, serializerType));
 
 test("have access to handler being used by mockjax", function() {
   let mock = mockFind('user');
@@ -22,14 +22,14 @@ test("have access to handler being used by mockjax", function() {
 });
 
 
-module('#mockFindAll', inlineSetup(App, serializerType));
+module('mockFindAll', inlineSetup(App, serializerType));
 
 test("have access to handler being used by mockjax", function() {
   let mock = mockFindAll('user');
   ok(mock.handler);
 });
 
-module('#mockQuery', inlineSetup(App, serializerType));
+module('mockQuery', inlineSetup(App, serializerType));
 
 test("json payload argument should be an object", function(assert) {
   assert.throws(function() {
@@ -87,7 +87,7 @@ test("have access to handler being used by mockjax", function() {
 });
 
 
-module('#mockQueryRecord', inlineSetup(App, serializerType));
+module('mockQueryRecord', inlineSetup(App, serializerType));
 
 test("returns() method accepts only id, model, json or header as keys", function(assert) {
   const handler = mockQueryRecord('user');

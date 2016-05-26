@@ -5,7 +5,7 @@ import { inlineSetup } from '../helpers/utility-methods';
 let App = null;
 let serializerType = '-json-api';
 
-module('mockFind#getUrl', inlineSetup(App));
+module('mockFind #getUrl', inlineSetup(App));
 
 test("with proxy", function() {
   let json = build('user');
@@ -17,6 +17,30 @@ test("with json", function() {
   let json = { id: 1, name: "Dan" };
   let mock = mockFind('user').returns({ json });
   equal(mock.getUrl(), '/users/1');
+});
+
+module('mockFind #fails', inlineSetup(App));
+
+test("with errors in response", function(assert) {
+  Ember.run(()=> {
+    let done = assert.async();
+
+    let response = { errors: { description: ['bad'] } };
+    let mock = mockFind('profile', 1).fails({ response });
+
+    FactoryGuy.store.findRecord('profile', 1)
+      .catch((res)=> {
+        //let errors = profile.get('errors.messages')[0];
+        //console.log('AA',invalidError.errors);
+        //console.log('BB',profile.get('errors.messages'));
+        //console.log(profile.get('errors'))
+        //equal(errors.title, 'invalid description');
+        //equal(errors.detail, 'bad');
+        equal(mock.timesCalled, 1);
+        ok(true);
+        done();
+      });
+  });
 });
 
 

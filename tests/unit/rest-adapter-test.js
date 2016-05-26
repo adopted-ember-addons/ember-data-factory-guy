@@ -21,6 +21,8 @@ SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(App, adapter, serializerTy
 
 SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
 
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(App, adapter, serializerType);
 
 module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, serializerType));
 

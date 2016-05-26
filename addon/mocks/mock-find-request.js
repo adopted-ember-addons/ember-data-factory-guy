@@ -8,18 +8,22 @@ export default class MockFindRequest extends MockGetRequest {
     this.setValidReturnsKeys(['model', 'json', 'id', 'headers']);
   }
 
+  getUrl() {
+    return FactoryGuy.buildURL(this.modelName, this.get('id'));
+  }
+
   /**
    Usually the args will be an attribute like 'id', but it might
-   also be a number like 0 or 1 for list types.
+   also be a number like 0 or 1 for and index to list types.
 
-   Ideally the responseJson is a JSONproxy class so the logic can be handed off there.
+   Ideally the responseJson is a JSONProxy class so the logic can be handed off there.
    Otherwise it's a plain object which is rare ( so the logic is not great )
 
    @param args
    @returns {*}
    */
   get(args) {
-    let json = this.getResponseJson();
+    let json = this.responseJson;
     if (json.get) {
       return json.get(args);
     }
@@ -27,7 +31,4 @@ export default class MockFindRequest extends MockGetRequest {
     return json[args];
   }
 
-  getUrl() {
-    return FactoryGuy.buildURL(this.modelName, this.get('id'));
-  }
 }
