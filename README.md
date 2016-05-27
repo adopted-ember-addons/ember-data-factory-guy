@@ -843,7 +843,7 @@ If you are making an addon with factories and you want the factories available t
 ```javascript
   let projects = makeList('projects', 2); // put projects in the store
   let user = make('user', { projects });  // attatch them to user
-  mockFind('user').returns({model: user}); // now the mock will return a user that have projects
+  mockFind('user').returns({model: user}); // now the mock will return a user that has projects
 ```
   - using `fails()` with errors hash is not working reliably 
     - so you can always just `mockWhatever(args).fails()`  
@@ -1281,8 +1281,13 @@ Usage:
   - Use chainable methods to build the response
     - match
       - Attributes that must be in request json
+        - These will be added to the response json automatically, so
+          you don't need to include them in the returns hash.
+        - If you match on a belongsTo association, you don't have to include that in 
+        the returns hash either ( same idea ).
+
     - returns
-      - Attributes to include in response json
+      - Attributes ( including relationships ) to include in response json
     - fails
       - Request will fail
       - Takes a hash of options:
@@ -1290,14 +1295,6 @@ Usage:
         - response - error response message, or an errors hash for 422 status
 
   - Need to wrap tests using mockCreate with: Ember.run.function() { 'your test' })
-
-**Note**
-
-  *Any attributes in match will be added to the response json automatically,
-  so you don't need to include them in the returns hash as well.*
-
-  *If you match on a belongsTo association, you don't have to include that in the
-  returns hash.*
 
 
 Realistically, you will have code in a view action or controller action that will
@@ -1340,6 +1337,14 @@ Usage:
   mockCreate('project')
     .match({name: "Moo", user: user})
     .returns({created_at: new Date()});
+
+  // Returning belongsTo relationship. Assume outfit belongsTo 'person'
+  let person = build('super-hero'); // it's polymorphic
+  mockCreate('outfit').returns({ person });
+
+  // Returning hasMany relationship. Assume super-hero hasMany 'outfits'
+  let outfits = buildList('outfit', 2);
+  mockCreate('super-hero').returns({ outfits });
 
 ```
 

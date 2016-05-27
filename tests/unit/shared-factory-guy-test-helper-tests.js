@@ -1386,7 +1386,21 @@ SharedBehavior.mockCreateReturnsAssociations = function(App, adapter, serializer
 
       FactoryGuy.store.createRecord('profile').save().then(function(profile) {
         equal(profile.get('company.id'), company.get('id').toString());
-        equal(profile.get('company.name'), company.get('name').toString());
+        equal(profile.get('company.name'), company.get('name'));
+        done();
+      });
+    });
+  });
+
+  test("belongsTo ( polymorphic )", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let person = build('super-hero');
+      mockCreate('outfit').returns({ person });
+
+      FactoryGuy.store.createRecord('outfit').save().then(function(outfit) {
+        equal(outfit.get('person.id'), person.get('id').toString());
+        equal(outfit.get('person.name'), person.get('name'));
         done();
       });
     });
