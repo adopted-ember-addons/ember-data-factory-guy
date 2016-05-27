@@ -9,6 +9,7 @@ import MockQueryRecordRequest from './mocks/mock-query-record-request';
 import MockFindRequest from './mocks/mock-find-request';
 import MockReloadRequest from './mocks/mock-reload-request';
 import MockFindAllRequest from './mocks/mock-find-all-request';
+import MockDeleteRequest from './mocks/mock-delete-request';
 
 let MockServer = Ember.Object.extend({
 
@@ -390,20 +391,26 @@ let MockServer = Ember.Object.extend({
   },
   /**
    Handling ajax DELETE ( delete record ) for a model type. You can mock
-   failed delete by passing in success argument as false.
+   failed delete by calling 'fails' method after setting up the mock
 
-   @param {String} type  model type like 'user' for User model
-   @param {String} id  id of record to update
-   @param {Boolean} succeed  optional flag to indicate if the request
-   should succeed ( default is true )
+   @param {String|DS.Model} type|model model type like 'user' for User model or DS.Model record
+   @param {String} id optional id of record to delete
    */
-  mockDelete: function (type, id, succeed=true) {
-    // TODO Turn this into a MockClass so it provides `andSuccess`, `fails`, `returns`...
-    //succeed = succeed === undefined ? true : succeed;
-    this.stubEndpointForHttpRequest(FactoryGuy.buildURL(type, id), null, {
-      type: 'DELETE',
-      status: succeed ? 200 : 500
-    });
+  mockDelete: function (...args) {
+    let modelName, id;
+
+    if (args[0] instanceof DS.Model) {
+      let record = args[0];
+      modelName = record.constructor.modelName;
+      id = record.id;
+    } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
+      modelName = args[0];
+      id = args[1];
+    }
+
+    Ember.assert(`[ember-data-factory-guy] mockDelete requires at least a model type name`, modelName);
+
+    return new MockDeleteRequest(modelName, id);
   },
   handleDelete: function () {
     Ember.deprecate("`handleDelete` - has been deprecated. Use `mockDelete` method instead`",

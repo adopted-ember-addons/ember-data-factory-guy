@@ -1616,7 +1616,23 @@ SharedBehavior.mockUpdateWithErrorMessages = function(App, adapter, serializerTy
 /////// mockDelete //////////
 
 SharedBehavior.mockDeleteTests = function() {
-  test("the basic", function(assert) {
+  test("with modelType", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let profiles = makeList('profile', 2);
+      let profile = profiles[0];
+      mockDelete('profile');
+
+      equal(FactoryGuy.store.peekAll('profile').get('content.length'), 2);
+
+      profile.destroyRecord().then(function() {
+        equal(FactoryGuy.store.peekAll('profile').get('content.length'), 1);
+        done();
+      });
+    });
+  });
+
+  test("with modelType and id", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
       let profile = make('profile');
@@ -1629,22 +1645,128 @@ SharedBehavior.mockDeleteTests = function() {
     });
   });
 
-  test("failure case", function(assert) {
+  test("with model", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
       let profile = make('profile');
-      mockDelete('profile', profile.id, false);
+      mockDelete(profile);
+
+      profile.destroyRecord().then(function() {
+        equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
+        done();
+      });
+    });
+  });
+
+  test("with modelType that fails", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let profiles = makeList('profile', 2);
+      let profile = profiles[0];
+      let mock = mockDelete('profile').fails({ status: 500 });
+
+      profile.destroyRecord().catch(function(reason) {
+        let error = reason.errors[0];
+        equal(error.status, "500");
+        equal(mock.timesCalled, 1);
+        ok(true);
+        done();
+      });
+    });
+  });
+
+  test("with modelType and id that fails", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let profile = make('profile');
+      let mock = mockDelete('profile', profile.id).fails({ status: 500 });
+
+      profile.destroyRecord().catch(function(reason) {
+        let error = reason.errors[0];
+        equal(error.status, "500");
+        equal(mock.timesCalled, 1);
+        ok(true);
+        done();
+      });
+    });
+  });
+
+  test("with model that fails with custom status", function(assert) {
+    let done = assert.async();
+    Ember.run(()=> {
+      let profile = make('profile');
+
+      mockDelete(profile).fails({ status: 401 });
 
       profile.destroyRecord().catch(
-        function() {
-          ok(true);
+        function(reason) {
+          let error = reason.errors[0];
+          equal(error.status, "401");
           done();
         }
       );
     });
   });
 
-};
+  test("with modelType that fails and then succeeds", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let profiles = makeList('profile', 2);
+      let profile = profiles[0];
+      let deleteMock = mockDelete('profile').fails();
 
+      profile.destroyRecord()
+        .catch(()=> ok(true, 'delete failed the first time'))
+        .then(()=> {
+          deleteMock.succeeds();
+
+          profile.destroyRecord().then(function() {
+            equal(FactoryGuy.store.peekAll('profile').get('content.length'), 1);
+            done();
+          });
+        });
+    });
+  });
+
+  test("with modelType and id that fails and then succeeds", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let profile = make('profile');
+
+      let deleteMock = mockDelete('profile', profile.id).fails();
+
+      profile.destroyRecord()
+        .catch(()=> ok(true, 'delete failed the first time'))
+        .then(()=> {
+          deleteMock.succeeds();
+
+          profile.destroyRecord().then(function() {
+            equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
+            done();
+          });
+        });
+    });
+  });
+
+  test("with model that fails and then succeeds", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let profile = make('profile');
+
+      let deleteMock = mockDelete(profile).fails();
+
+      profile.destroyRecord()
+        .catch(()=> ok(true, 'delete failed the first time'))
+        .then(()=> {
+          deleteMock.succeeds();
+
+          profile.destroyRecord().then(function() {
+            equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
+            done();
+          });
+        });
+    });
+  });
+};
 
 export default SharedBehavior;

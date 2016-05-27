@@ -1436,25 +1436,51 @@ Usage:
 
 ##### mockDelete
   - Need to wrap tests using mockDelete with: Ember.run.function() { 'your test' })
+  - To handle deleteing a model
+    - Pass in a record ( or a typeName and id )
 
-Usage: 
+Usage:
+
+- Passing in a record / model instance
 
 ```javascript
   import { make, mockDelete } from 'ember-data-factory-guy';
-  
+
+  let profile = make('profile');
+  mockDelete(profile);
+
+  profile.destroyRecord() // => will succeed
+```
+
+- Passing in a model typeName and id
+
+```javascript
+  import { make, mockDelete } from 'ember-data-factory-guy';
+
   let profile = make('profile');
   mockDelete('profile', profile.id);
 
   profile.destroyRecord() // => will succeed
-````
+```
 
-  - mocking a failed delete
+- Passing in a model typeName
 
 ```javascript
-  mockDelete('profile', profile.id, false);
+  import { make, mockDelete } from 'ember-data-factory-guy';
 
-  profile.destroyRecord() // => will fail
-````
+  let profile1 = make('profile');
+  let profile2 = make('profile');
+  mockDelete('profile');
+
+  profile1.destroyRecord() // => will succeed
+  profile2.destroyRecord() // => will succeed
+```
+
+- Mocking a failed delete
+
+```javascript
+    mockDelete(profile).fails();
+```
 
 
 ##### Sample Acceptance test [(user-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
