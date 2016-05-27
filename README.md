@@ -838,13 +838,13 @@ If you are making an addon with factories and you want the factories available t
   - As of 2.6.1 you can use [ember-django-adapter](https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter)  
   - Everything is setup automatically
   - Remember that sideloading is not supported in DRFSerializer so all relationships should either
-    be set as embedded with DS.EmbeddedRecordsMixin if you want to use build/buildList 
-    OR user make/makeList and in you mocks, return models instead of json:
-    ```javascript
-      let projects = makeList('projects', 2); // put projects in the store
-      let user = make('user', { projects });  // attatch them to user
-      mockFind('user').returns({model: user}); // now the mock will return a user that have projects
-    ```
+    - be set as embedded with DS.EmbeddedRecordsMixin if you want to use build/buildList 
+    - or user make/makeList and in you mocks, and return models instead of json:
+```javascript
+  let projects = makeList('projects', 2); // put projects in the store
+  let user = make('user', { projects });  // attatch them to user
+  mockFind('user').returns({model: user}); // now the mock will return a user that have projects
+```
   - using `fails()` with errors hash is not working reliably 
     - so you can always just `mockWhatever(args).fails()`  
 

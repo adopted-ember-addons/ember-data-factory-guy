@@ -627,7 +627,7 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
         type: "outfit",
         id: 1,
         attributes: {
-          name: "Outfit1"
+          name: "Outfit-1"
         },
       }, {
         type: "big-hat",
@@ -644,7 +644,7 @@ test("with (nested json fixture) belongsTo has a hasMany association which has a
         type: "outfit",
         id: 2,
         attributes: {
-          name: "Outfit2"
+          name: "Outfit-2"
         },
       }, {
         type: "big-hat",

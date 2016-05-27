@@ -31,6 +31,7 @@ export default class {
 
   succeeds(options) {
     this.status = options && options.status || 200;
+    this.errorResponse = null;
     return this;
   }
 

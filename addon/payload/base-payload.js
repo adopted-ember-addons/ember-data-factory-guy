@@ -61,7 +61,7 @@ export default class {
    * Add new meta data to the json payload, which will
    * overwrite any existing meta data with same keys
    *
-   * @param data
+   * @param {Object} data meta data to add
    */
   addMeta(data) {
     this.json.meta = this.json.meta || {};
@@ -72,7 +72,7 @@ export default class {
   isProxy() {
   }
 
-  // get the top level model from the json payload
+  // get the top level model's payload ( without the includes or meta data ) 
   getModelPayload() {
     return this.get();
   }
@@ -98,7 +98,7 @@ export default class {
    json payload
 
    Could be asking for attribute like 'id' or 'name',
-   or index into list for list type
+   or index into list for list type like 0 or 1 
 
    @param key
    @returns {*}

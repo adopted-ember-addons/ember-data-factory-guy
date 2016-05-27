@@ -1392,6 +1392,20 @@ SharedBehavior.mockCreateReturnsAssociations = function(App, adapter, serializer
     });
   });
 
+  test("hasMany", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let outfits = buildList('outfit', 2);
+      mockCreate('super-hero').returns({ outfits });
+
+      FactoryGuy.store.createRecord('super-hero').save().then(function(hero) {
+        deepEqual(hero.get('outfits').mapBy('id'), ['1', '2']);
+        deepEqual(hero.get('outfits').mapBy('name'), ['Outfit-1', 'Outfit-2']);
+        done();
+      });
+    });
+  });
+
 };
 
 SharedBehavior.mockCreateReturnsEmbeddedAssociations = function(App, adapter, serializerType) {

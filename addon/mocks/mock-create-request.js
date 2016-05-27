@@ -26,6 +26,14 @@ export default class extends MockRequest {
     return this;
   }
 
+  /**
+   * This returns is different than the one for GET requests, because 
+   * you don't prefix the returns with json or models etc...
+   * The returns arguments are those attributes or relationships that 
+   * you would like returned with the model when the create succeeds.
+   * 
+   * @param {Object} returns attributes and or relationships to return with payload
+   */
   returns(returns) {
     this.returnArgs = returns;
     this.calculate();
@@ -74,9 +82,8 @@ export default class extends MockRequest {
     }).every((value)=> value);
   }
 
-  /*
-   Setting the id at the very last minute, so that calling calculate
-   again and again does not mess with id, and it's reset for each call.
+  /**
+   Unless the id is setup already in the return args, then setup a new id. 
    */
   modelId() {
     if (isPresent(this.returnArgs) && isPresent(this.returnArgs['id'])) {
