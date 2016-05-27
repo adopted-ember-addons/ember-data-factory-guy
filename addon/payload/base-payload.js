@@ -36,7 +36,8 @@ export default class {
    let user = buildList('user', 2).add({meta: { next: '/url?page=3', previous: '/url?page=1'}});
    ```
 
-   @param {Object} json built from FactoryGuy build or buildList
+   @param {Object} optional json built from FactoryGuy build or buildList or
+   meta data to add to payload
    @returns {Object} the current json payload
    */
   add(more) {
@@ -98,7 +99,7 @@ export default class {
    json payload
 
    Could be asking for attribute like 'id' or 'name',
-   or index into list for list type like 0 or 1 
+   or index into list for list type like 0 or 1
 
    @param key
    @returns {*}

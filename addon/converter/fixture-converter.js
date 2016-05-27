@@ -61,6 +61,17 @@ export default class {
   }
 
   /**
+    Empty respose is a special case, so use this method for generating it.
+
+    @param _
+    @param {Object} options useValue to override the null value that is passed
+    @returns {Array|null}
+   */
+  emptyResponse(_, options={})  {
+    return options.useValue || null;
+  }
+  
+  /**
    * User the primaryKey from the serializer if it is declared
    *
    * @param modelName

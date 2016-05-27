@@ -4,7 +4,6 @@ import FactoryGuy, {
   mockFind, mockFindAll, mockReload, mockQuery, mockQueryRecord,
   mockCreate, mockUpdate, mockDelete
 } from 'ember-data-factory-guy';
-import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import { inlineSetup } from '../helpers/utility-methods';
 
 let App = null;
@@ -174,4 +173,19 @@ test("using returns 'model' with array of DS.Models throws error", function(asse
     let bobs = makeList('user', 2, { name: 'Bob' });
     mockQueryRecord('user', { name: 'Bob' }).returns({ model: bobs });
   }, "can't pass array of models to mock queryRecord");
+});
+
+
+module('mockUpdate', inlineSetup(App));
+
+test("with incorrect parameters", function(assert) {
+  assert.throws(function() {
+    mockUpdate();
+  }, "missing everything");
+  assert.throws(function() {
+    mockUpdate('profile');
+  }, "missing id");
+  assert.throws(function() {
+    mockUpdate('profile', {});
+  }, "missing id");
 });

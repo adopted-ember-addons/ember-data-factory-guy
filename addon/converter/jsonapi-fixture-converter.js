@@ -18,6 +18,10 @@ class JSONAPIFixtureConverter extends Converter {
     this.included = [];
   }
 
+  emptyResponse(_, options={}) {
+    return {data: options.useValue || null};
+  }
+
   /**
    * JSONAPIerializer does not use modelName for payload key,
    * and just has 'data' as the top level key.

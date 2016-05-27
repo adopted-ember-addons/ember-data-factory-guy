@@ -763,6 +763,16 @@ SharedBehavior.mockQueryMetaTests = function(App, adapter, serializerType) {
 
 SharedBehavior.mockQueryRecordTests = function() {
 
+  test("when returning no result", function(assert) {
+    var done = assert.async();
+    mockQueryRecord('user');
+    FactoryGuy.store.queryRecord('user', {})
+      .then(()=> {
+        ok(true);
+        done();
+      });
+  });
+
   test("with no parameters matches queryRequest with any parameters", function(assert) {
     var done = assert.async();
     mockQueryRecord('user').returns({ json: build('user') });

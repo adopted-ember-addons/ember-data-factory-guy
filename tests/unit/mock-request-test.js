@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import FactoryGuy, { make, build, mockFindAll, mockFind, mockQueryRecord, mockUpdate } from 'ember-data-factory-guy';
-import { inlineSetup } from '../helpers/utility-methods';
+import FactoryGuy, {make, build, mockFindAll, mockFind, mockQueryRecord, mockUpdate} from 'ember-data-factory-guy';
+import {inlineSetup} from '../helpers/utility-methods';
 
 let App = null;
 let serializerType = '-json-api';
@@ -89,19 +89,4 @@ test("can verify how many times an update call was mocked", function(assert) {
       });
     });
   });
-});
-
-
-module('mockUpdate', inlineSetup(App));
-
-test("with incorrect parameters", function(assert) {
-  assert.throws(function() {
-    mockUpdate();
-  }, "missing everything");
-  assert.throws(function() {
-    mockUpdate('profile');
-  }, "missing id");
-  assert.throws(function() {
-    mockUpdate('profile', {});
-  }, "missing id");
 });
