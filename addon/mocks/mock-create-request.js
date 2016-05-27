@@ -111,7 +111,6 @@ export default class extends MockRequest {
   getResponse() {
     let json = Ember.$.extend({}, true, this.responseJson, { id: this.modelId() });
     this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
-    console.log(this.responseJson, JSON.stringify(this.responseJson));
     return super.getResponse();
   }
 
