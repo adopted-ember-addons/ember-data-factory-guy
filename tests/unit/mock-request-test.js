@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import FactoryGuy, {make, build, mockFindAll, mockFind, mockQueryRecord, mockUpdate} from 'ember-data-factory-guy';
 import {inlineSetup} from '../helpers/utility-methods';
+import MockRequest from 'ember-data-factory-guy/mocks/mock-request';
 
 let App = null;
 let serializerType = '-json-api';
@@ -18,6 +19,7 @@ test("with json", function() {
   let mock = mockFind('user').returns({ json });
   equal(mock.getUrl(), '/users/1');
 });
+
 
 module('mockFind #fails', inlineSetup(App));
 
@@ -41,6 +43,25 @@ test("with errors in response", function(assert) {
         done();
       });
   });
+});
+
+module('MockRequest #fails', inlineSetup(App));
+
+test("status must be 4XX or 5XX", function(assert) {
+  let mock = new MockRequest('user');
+  
+  assert.throws(()=> {
+    mock.fails({ status: 323 });
+  });
+  assert.throws(()=> {
+    mock.fails({ status: 292 });
+  });
+  assert.throws(()=> {
+    mock.fails({ status: 104 });
+  });
+
+  ok(mock.fails({ status: 401 }) instanceof MockRequest);
+  ok(mock.fails({ status: 521 }) instanceof MockRequest);
 });
 
 
