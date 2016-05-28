@@ -11,23 +11,22 @@ export default class MockDeleteRequest extends MockRequest {
     return "DELETE";
   }
 
+  /**
+   If the id is null the url will not include the id, and
+   can be used to match any delete for this modelName
+   */
   getUrl() {
-    if(this.id) {
-      return FactoryGuy.buildURL(this.modelName, this.id);
-    } else {
-      return FactoryGuy.buildURL(this.modelName, null);
-    }
+    return FactoryGuy.buildURL(this.modelName, this.id);
   }
 
   basicRequestMatches(settings) {
-    let url = this.getUrl();
-
     /**
      If no id is specified, match any url with an id,
      with or without a trailing slash after the id.
      Ex: /profiles/:id and /profiles/:id/
      */
-    if(!this.id) {
+    let url = this.getUrl();
+    if (!this.id) {
       url = new RegExp(url + '\/*\\d+\/*');
     }
 
