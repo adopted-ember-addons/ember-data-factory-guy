@@ -37,8 +37,8 @@ export default class {
 
   fails(options = {}) {
     if (options.status) {
-      Ember.assert(`[ember-data-factory-guy] 'fails' method status code must be 4XX or 5XX,
-        you are using: ${options.status}`, options.status.toString().match(/^[45]\d{2}/) );
+      Ember.assert(`[ember-data-factory-guy] 'fails' method status code must be 3XX, 4XX or 5XX,
+        you are using: ${options.status}`, options.status.toString().match(/^([345]\d{2})/) );
     }
     this.status = options.status || 500;
     if (options.response) {

@@ -47,11 +47,11 @@ test("with errors in response", function(assert) {
 
 module('MockRequest #fails', inlineSetup(App));
 
-test("status must be 4XX or 5XX", function(assert) {
+test("status must be 3XX, 4XX or 5XX", function(assert) {
   let mock = new MockRequest('user');
   
   assert.throws(()=> {
-    mock.fails({ status: 323 });
+    mock.fails({ status: 201 });
   });
   assert.throws(()=> {
     mock.fails({ status: 292 });
@@ -60,6 +60,8 @@ test("status must be 4XX or 5XX", function(assert) {
     mock.fails({ status: 104 });
   });
 
+  ok(mock.fails({ status: 300 }) instanceof MockRequest);
+  ok(mock.fails({ status: 303 }) instanceof MockRequest);
   ok(mock.fails({ status: 401 }) instanceof MockRequest);
   ok(mock.fails({ status: 521 }) instanceof MockRequest);
 });
