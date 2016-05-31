@@ -8,6 +8,21 @@ export default class extends RESTFixtureBuilder {
   constructor(store) {
     super(store, ActiveModelFixtureConverter, RESTPayload);
   }
+
+  /**
+   ActiveModelAdapter converts them automatically for status 422
+
+   @param errors
+   @returns {*}
+   */
+  convertResponseErrors(errors, status) {
+    if (status === 422) {
+      return errors;
+    } else {
+      return super.convertResponseErrors(errors, status);
+    }
+  }
+
   /**
    Map single object to response json.
 
@@ -20,6 +35,6 @@ export default class extends RESTFixtureBuilder {
   normalize(modelName, payload) {
     return { [modelName]: payload };
   }
-  
+
 }
 

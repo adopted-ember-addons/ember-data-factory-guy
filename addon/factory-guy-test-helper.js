@@ -358,31 +358,30 @@ let MockServer = Ember.Object.extend({
    @param {String} id  id of record to update
    @param {Object} options options object
    */
-  mockUpdate: function () {
-    let args = Array.prototype.slice.call(arguments);
+  mockUpdate: function (...args) {
     Ember.assert("To mockUpdate pass in a model instance or a type and an id", args.length > 0);
 
-    let options = {};
     if (args.length > 1 && typeof args[args.length - 1] === 'object') {
-      options = args.pop();
+      Ember.assert("Passing in options to mockUpdate is no longer supported. To mockUpdate pass in a model instance or a modelName and an id", true);
     }
 
-    let model, type, id;
+    let model, modelName, id;
     let store = FactoryGuy.store;
 
     if (args[0] instanceof DS.Model) {
       model = args[0];
       id = model.id;
-      type = model.constructor.modelName;
+      modelName = model.constructor.modelName;
     } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
-      type = args[0];
+      modelName = args[0];
       id = args[1];
-      model = store.peekRecord(type, id);
+      model = store.peekRecord(modelName, id);
     }
-    Ember.assert("To mockUpdate pass in a model instance or a model type name and an id", type && id);
+    Ember.assert("To mockUpdate pass in a model instance or a modelName and an id", modelName && id);
 
-    let url = FactoryGuy.buildURL(type, id);
-    return new MockUpdateRequest(url, model, options);
+//    let url = FactoryGuy.buildURL(modelName, id);
+//    return new MockUpdateRequest(url, model, {});
+    return new MockUpdateRequest(modelName, id);
   },
   handleUpdate: function () {
     Ember.deprecate("`handleUpdate` - has been deprecated. Use `mockUpdate` method instead`",

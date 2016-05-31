@@ -15,6 +15,7 @@ SharedFactoryGuyTestHelperBehavior.mockFindEmbeddedTests(App, adapter, serialize
 SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(App, adapter, serializerType);
 
 SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(App, adapter, serializerType);
 
 SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(App, adapter, serializerType);
 

@@ -62,7 +62,7 @@ export default class {
     this.wrapPayload(modelName, json, converter);
     return json;
   }
-
+  
   /**
    Convert to the ember-data JSONAPI adapter specification, since FactoryGuy#make
    pushes jsonapi data into the store. For make builds, don't transform attr keys,

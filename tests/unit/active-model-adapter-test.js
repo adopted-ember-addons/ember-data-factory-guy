@@ -17,6 +17,8 @@ SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(App, adapter, ser
 SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(App, adapter, serializerType);
 
 SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsAssociations(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(App, adapter, serializerType);
 
 SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(App, adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(App, adapter, serializerType);

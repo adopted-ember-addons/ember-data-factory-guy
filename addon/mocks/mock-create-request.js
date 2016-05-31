@@ -16,13 +16,8 @@ export default class extends MockRequest {
     return "POST";
   }
 
-  calculate() {
-    this.responseJson = Ember.$.extend({}, this.matchArgs, this.returnArgs);
-  }
-
   match(matches) {
     this.matchArgs = matches;
-    this.calculate();
     return this;
   }
 
@@ -36,7 +31,6 @@ export default class extends MockRequest {
    */
   returns(returns) {
     this.returnArgs = returns;
-    this.calculate();
     return this;
   }
 
@@ -109,7 +103,8 @@ export default class extends MockRequest {
    Need to clone the responseJson and add id at the very last minute
    */
   getResponse() {
-    let json = Ember.$.extend({}, true, this.responseJson, { id: this.modelId() });
+    let args = Ember.$.extend({}, this.matchArgs, this.returnArgs);
+    let json = Ember.$.extend({}, args, { id: this.modelId() });
     this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
     return super.getResponse();
   }

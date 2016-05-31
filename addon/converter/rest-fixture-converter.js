@@ -38,7 +38,11 @@ export default class extends JSONFixtureConverter {
    */
   getPayloadKey(modelName) {
     let serializer = this.store.serializerFor(modelName);
-    let payloadKey = serializer.payloadKeyFromModelName(modelName);
+    let payloadKey = modelName;
+    // model fragment serializer does not have payloadKeyFromModelName method
+    if (serializer.payloadKeyFromModelName) {
+      payloadKey = serializer.payloadKeyFromModelName(modelName);
+    }
     return (this.listType) ? pluralize(payloadKey) : payloadKey;
   }
 

@@ -179,13 +179,13 @@ test("using returns 'model' with array of DS.Models throws error", function(asse
 module('mockUpdate', inlineSetup(App));
 
 test("with incorrect parameters", function(assert) {
+  
   assert.throws(function() {
     mockUpdate();
   }, "missing everything");
+  
   assert.throws(function() {
     mockUpdate('profile');
   }, "missing id");
-  assert.throws(function() {
-    mockUpdate('profile', {});
-  }, "missing id");
+  
 });

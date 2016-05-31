@@ -30,11 +30,11 @@ SharedFactoryGuyTestHelperBehavior.mockQueryRecordTests();
 
 module(title(adapter, '#mockCreate'), inlineSetup(App, serializerType));
 SharedFactoryGuyTestHelperBehavior.mockCreateTests();
-
 SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(App, adapter, serializerType);
 
 module(title(adapter, '#mockUpdate'), inlineSetup(App, serializerType));
 SharedFactoryGuyTestHelperBehavior.mockUpdateTests();
+SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(App, adapter, serializerType);
 
 module(title(adapter, '#mockDelete'), inlineSetup(App, serializerType));
 SharedFactoryGuyTestHelperBehavior.mockDeleteTests();

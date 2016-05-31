@@ -1367,13 +1367,15 @@ SharedBehavior.mockCreateTests = function() {
 
       let profile = FactoryGuy.store.createRecord('profile');
       profile.save()
-        .catch(()=> {
-          //let errors = profile.get('errors.messages')[0];
-          //console.log('AA',invalidError.errors);
-          //console.log('BB',profile.get('errors.messages'));
-          //console.log(profile.get('errors'))
-          //equal(errors.title, 'invalid description');
-          //equal(errors.detail, 'bad');
+        .catch((reason)=> {
+//          console.log('A reason', reason.errors);
+//          console.log('AA reason', reason.errors[0] && reason.errors[0].detail, reason.errors[0].title);
+//          let errors = reason.errors[0];
+//          equal(errors.detail,'bad');
+          // TODO .. almost have this one =>  profile.get('errors.messages');
+          // it should === 'bad' only DRFAdapter failing
+//          let descriptionError = profile.get('errors.messages');
+//          equal(descriptionError, 'bad');
           equal(mock.timesCalled, 1);
           ok(true);
           done();
@@ -1611,6 +1613,96 @@ SharedBehavior.mockUpdateWithErrorMessages = function(App, adapter, serializerTy
       );
     });
   });
+};
+
+
+SharedBehavior.mockUpdateReturnsAssociations = function(App, adapter, serializerType) {
+
+  module(title(adapter, '#mockUpdate | returns association'), inlineSetup(App, serializerType));
+
+  test("belongsTo", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      
+      let profile = make('profile');
+      profile.set('description', 'new desc');
+      
+      let company = build('company');
+      mockUpdate(profile).returns({ company });
+      
+      profile.save().then(function(profile) {
+        equal(profile.get('company.id'), company.get('id').toString());
+        equal(profile.get('company.name'), company.get('name'));
+        done();
+      });
+    });
+  });
+
+  test("belongsTo ( polymorphic )", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+
+      let newValue = 'new name';
+      let outfit = make('outfit');
+      outfit.set('name', newValue);
+      
+      let person = build('super-hero');
+      mockUpdate(outfit).returns({ person });
+
+      outfit.save().then(function(outfit) {
+        equal(outfit.get('name'), newValue);
+        equal(outfit.get('person.id'), person.get('id').toString());
+        equal(outfit.get('person.name'), person.get('name'));
+        done();
+      });
+    });
+  });
+
+  test("hasMany", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+
+      let newValue = 'BoringMan';
+      let superHero = make('bat_man');
+      superHero.set('name', newValue);
+      
+      let outfits = buildList('outfit', 2);
+      mockUpdate(superHero).returns({ outfits });
+
+      superHero.save().then(function(hero) {
+        equal(hero.get('name'), newValue);
+        deepEqual(hero.get('outfits').mapBy('id'), ['1', '2']);
+        deepEqual(hero.get('outfits').mapBy('name'), ['Outfit-1', 'Outfit-2']);
+        done();
+      });
+    });
+  });
+
+};
+
+SharedBehavior.mockUpdateReturnsEmbeddedAssociations = function(App, adapter, serializerType) {
+
+  module(title(adapter, '#mockUpdate | returns embedded association'), inlineSetup(App, serializerType));
+
+  test("belongsTo", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let newValue = 'new name';
+      let comicBook = make('comic-book', {characters: []});
+      comicBook.set('name', newValue);
+      
+      let company = build('company');
+      mockUpdate(comicBook).returns({ company });
+
+      comicBook.save().then(function(comic) {
+        equal(comic.get('name'), newValue);
+        equal(comic.get('company.id'), company.get('id').toString());
+        equal(comic.get('company.name'), company.get('name').toString());
+        done();
+      });
+    });
+  });
+
 };
 
 /////// mockDelete //////////

@@ -2,7 +2,7 @@ import Ember from 'ember';
 import FactoryGuy, { make, makeList, build, buildList, clearStore } from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 
-import { inlineSetup, theUsualSetup, theUsualTeardown } from '../helpers/utility-methods';
+import { inlineSetup } from '../helpers/utility-methods';
 import User from 'dummy/models/user';
 
 let App = null;

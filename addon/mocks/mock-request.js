@@ -42,7 +42,7 @@ export default class {
     }
     this.status = options.status || 500;
     if (options.response) {
-      let errors = FactoryGuy.fixtureBuilder.convertResponseErrors(options.response);
+      let errors = FactoryGuy.fixtureBuilder.convertResponseErrors(options.response, this.status);
       this.errorResponse = errors;
     }
     return this;
