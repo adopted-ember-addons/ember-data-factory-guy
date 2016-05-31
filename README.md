@@ -37,7 +37,7 @@ ChangeLog: ( Notes about what has changed in each version )
 
 ### Installation
 
- - ```ember install ember-data-factory-guy@2.6.4``` ( ember-data-1.13.5+ )
+ - ```ember install ember-data-factory-guy@2.6.5``` ( ember-data-1.13.5+ )
  - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + )
  - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 )
  - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )
@@ -1285,7 +1285,6 @@ Usage:
           you don't need to include them in the returns hash.
         - If you match on a belongsTo association, you don't have to include that in 
         the returns hash either ( same idea ).
-
     - returns
       - Attributes ( including relationships ) to include in response json
     - fails
@@ -1293,7 +1292,9 @@ Usage:
       - Takes a hash of options:
         - status - HTTP status code, defaults to 500.
         - response - error response message, or an errors hash for 422 status
-
+    - succeeds
+      - to retry a mock after a failed response
+      
   - Need to wrap tests using mockCreate with: Ember.run.function() { 'your test' })
 
 
@@ -1369,13 +1370,13 @@ Usage:
   - mockUpdate(modelType, id)
     - Two arguments: modelType ( like 'profile' ) , and the profile id that will updated
   - Use chainable methods to help build response:
+    - returns
+      - Attributes ( including relationships ) to include in response json
     - fails
       - Request will fail
       - Optional arguments ( status and response text )
     - succeeds
-      - Update should succeed, this is the default behavior
-      - Can even use this after an ```fails``` call to simulate failure with
-        invalid properties and then success after valid ones.
+      - use this after an ```fails``` call to have update succeed
   - Need to wrap tests using mockUpdate with: Ember.run.function() { 'your test' })
 
 Usage:
@@ -1394,6 +1395,21 @@ Usage:
 
   profile.set('description', 'good value');
   profile.save() //=> will succeed
+  
+  // Returning belongsTo relationship. Assume outfit belongsTo 'person'
+  let outfit = make('outfit');
+  let person = build('super-hero'); // it's polymorphic
+  outfit.set('name','outrageous');
+  mockUpdate(outfit).returns({ person });
+  outfit.save(); //=> saves and returns superhero 
+
+  // Returning hasMany relationship. Assume super-hero hasMany 'outfits'
+  let superHero = make('super-hero');
+  let outfits = buildList('outfit', 2, {name:'bell bottoms'});
+  superHero.set('style','laid back');
+  mockUpdate(superHero).returns({ outfits });
+  superHero.save(); // => saves and returns outfits
+  
 ````
 
  - mocking a failed update
