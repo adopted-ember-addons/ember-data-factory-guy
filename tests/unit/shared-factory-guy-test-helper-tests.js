@@ -1137,6 +1137,7 @@ SharedBehavior.mockCreateTests = function() {
   test("with no specific match", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
+
       mockCreate('profile');
 
       FactoryGuy.store.createRecord('profile', { description: 'whatever' })
@@ -1186,24 +1187,6 @@ SharedBehavior.mockCreateTests = function() {
         ok(profile instanceof Profile);
         ok(profile.id === '1');
         ok(profile.get('description') === customDescription);
-        done();
-      });
-    });
-  });
-
-  test("with dasherized model name match some attributes", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-      let customName = "special name";
-
-      mockCreate('super-hero').match({ name: customName });
-
-      FactoryGuy.store.createRecord('super-hero', {
-        name: customName
-      }).save().then(function(superHero) {
-        ok(superHero instanceof SuperHero);
-        ok(superHero.id === '1');
-        ok(superHero.get('name') === customName);
         done();
       });
     });
