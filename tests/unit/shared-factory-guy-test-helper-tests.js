@@ -421,6 +421,21 @@ SharedBehavior.mockFindAllSideloadingTests = function(App, adapter, serializerTy
       });
     });
   });
+
+//  test("handles include params", function(assert) {
+//    Ember.run(()=> {
+//      let done = assert.async();
+//
+//      let json = buildList('profile', 'with_company');
+//      mockFindAll('profile').withParams({include: 'company'}).returns({ json });
+//
+//      FactoryGuy.store.findAll('profile', {inlcude: 'company'}).then(function(profiles) {
+//        ok(profiles.get('firstObject.company.name') === 'Silly corp');
+//        done();
+//      });
+//    });
+//  });
+
 };
 
 SharedBehavior.mockFindAllEmbeddedTests = function(App, adapter, serializerType) {

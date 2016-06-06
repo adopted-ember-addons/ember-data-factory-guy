@@ -2,6 +2,7 @@ import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
 import DS from 'ember-data';
 import MockRequest from './mock-request';
+import { isEquivalent } from '../utils/helper-functions';
 const assign = Ember.assign || Ember.merge;
 
 class MockGetRequest extends MockRequest {
@@ -10,6 +11,7 @@ class MockGetRequest extends MockRequest {
     super(modelName);
     this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(modelName, {});
     this.validReturnsKeys = [];
+    this.queryParams = {};
   }
 
   setValidReturnsKeys(validKeys) {
@@ -97,8 +99,16 @@ class MockGetRequest extends MockRequest {
     this.responseJson = json;
   }
 
-  paramsMatch() {
-    return true;
+  withParams(queryParams) {
+    this.queryParams = queryParams;
+    return this;
+  }
+
+  paramsMatch(settings) {
+    if (Ember.$.isEmptyObject(this.queryParams)) {
+      return true;
+    }
+    return isEquivalent(this.queryParams, settings.data);
   }
 
   extraRequestMatches(settings) {
