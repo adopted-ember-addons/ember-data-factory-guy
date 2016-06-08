@@ -3,9 +3,13 @@ import BasePayload from './base-payload';
 
 export default class extends BasePayload {
 
-  // Can't add to included array for JSON payloads since they have
-  // no includes or sideloaded relationships
-  // Meta not working at the moment for this serializer
+  /** 
+   Can't add to included array for JSON payloads since they have
+   no includes or sideloaded relationships
+
+   Meta not working at the moment for this serializer even though
+   it is being included here in the payload
+   */
   add(more) {
     if (more.meta) {
       this.addMeta(more.meta);

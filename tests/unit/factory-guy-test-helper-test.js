@@ -4,7 +4,6 @@ import FactoryGuy, {
   mockFind, mockFindAll, mockReload, mockQuery, mockQueryRecord,
   mockCreate, mockUpdate, mockDelete
 } from 'ember-data-factory-guy';
-import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import { inlineSetup } from '../helpers/utility-methods';
 
 let App = null;
@@ -14,7 +13,7 @@ let serializerType = '-json-api';
  These tests are testing basic functionality of the mocks so the serializer type
  is not important
  */
-module('#mockFind', inlineSetup(App, serializerType));
+module('mockFind', inlineSetup(App, serializerType));
 
 test("have access to handler being used by mockjax", function() {
   let mock = mockFind('user');
@@ -22,14 +21,14 @@ test("have access to handler being used by mockjax", function() {
 });
 
 
-module('#mockFindAll', inlineSetup(App, serializerType));
+module('mockFindAll', inlineSetup(App, serializerType));
 
 test("have access to handler being used by mockjax", function() {
   let mock = mockFindAll('user');
   ok(mock.handler);
 });
 
-module('#mockQuery', inlineSetup(App, serializerType));
+module('mockQuery', inlineSetup(App, serializerType));
 
 test("json payload argument should be an object", function(assert) {
   assert.throws(function() {
@@ -87,7 +86,7 @@ test("have access to handler being used by mockjax", function() {
 });
 
 
-module('#mockQueryRecord', inlineSetup(App, serializerType));
+module('mockQueryRecord', inlineSetup(App, serializerType));
 
 test("returns() method accepts only id, model, json or header as keys", function(assert) {
   const handler = mockQueryRecord('user');
@@ -174,4 +173,19 @@ test("using returns 'model' with array of DS.Models throws error", function(asse
     let bobs = makeList('user', 2, { name: 'Bob' });
     mockQueryRecord('user', { name: 'Bob' }).returns({ model: bobs });
   }, "can't pass array of models to mock queryRecord");
+});
+
+
+module('mockUpdate', inlineSetup(App));
+
+test("with incorrect parameters", function(assert) {
+  
+  assert.throws(function() {
+    mockUpdate();
+  }, "missing everything");
+  
+  assert.throws(function() {
+    mockUpdate('profile');
+  }, "missing id");
+  
 });

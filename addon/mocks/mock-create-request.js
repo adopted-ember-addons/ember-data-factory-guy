@@ -1,181 +1,112 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
-import FixtureBuilderFactory from '../builder/fixture-builder-factory';
-import $ from 'jquery';
+import MockRequest from './mock-request';
+import {isEquivalent} from '../utils/helper-functions';
+const { isPresent, isEmpty } = Ember;
 
-let MockCreateRequest = function (url, modelName, options) {
-  let status = options.status;
-  let succeed = options.succeed === undefined ? true : options.succeed;
-  let matchArgs = options.match;
-  let returnArgs = options.returns;
-  let responseJson = {};
-  let expectedRequest = {};
-  let store = FactoryGuy.store;
-  let builder = new FixtureBuilderFactory(store);
+export default class extends MockRequest {
 
-  this.calculate = function () {
-    if (matchArgs) {
-      // Using this technique to get properly serialized payload.
-      // Although it's not ideal to have to create and delete a record,
-      // TODO: Figure out how to use serializer without a record instance
-      let tmpRecord = store.createRecord(modelName, matchArgs);
-      expectedRequest = tmpRecord.serialize();
-      tmpRecord.deleteRecord();
-    }
-
-    if (succeed) {
-      let modelClass = store.modelFor(modelName);
-      responseJson = $.extend({}, matchArgs, returnArgs);
-      // Remove belongsTo associations since they will already be set when you called
-      // createRecord, so they don't need to be returned.
-      Ember.get(modelClass, 'relationshipsByName').forEach(function (relationship) {
-        if (relationship.kind === 'belongsTo') {
-          delete responseJson[relationship.key];
-        }
-      });
-    }
-  };
-
-  this.match = function (matches) {
-    matchArgs = matches;
-    this.calculate();
-    return this;
-  };
-
-  this.returns = function (returns) {
-    returnArgs = returns;
-    this.calculate();
-    return this;
-  };
-
-  this.andReturn = function (returns) {
-    Ember.deprecate(
-      `[ember-data-factory-guy] mockCreate.andReturn method has been deprecated.
-        Use chainable method \`returns()\` instead`,
-      !options.hasOwnProperty('succeed'),
-      { id: 'ember-data-factory-guy.handle-create-and-return', until: '2.4.0' }
-    );
-    return this.returns(returns);
-  };
-
-  this.andFail = function(options = {}) {
-    Ember.deprecate("`andFail` - has been deprecated. Use `fails(options)` method instead`",
-      false, { id: 'ember-data-factory-guy.and-fail', until: '2.4.0' });
-    return this.fails(options);
-  };
-
-  this.fails = function (options = {}) {
-    succeed = false;
-    status = options.status || 500;
-    if (options.response) {
-      let errors = FactoryGuy.fixtureBuilder.convertResponseErrors(options.response);
-      responseJson = errors;
-    }
-    return this;
-  };
-
-  // for supporting older ( non chaining methods ) style of passing in options
-  Ember.deprecate(
-    `[ember-data-factory-guy] TestHelper.mockCreate - options.succeed has been deprecated.
-      Use chainable method \`andFail()\` instead`,
-    !options.hasOwnProperty('succeed'),
-    { id: 'ember-data-factory-guy.handle-create-succeed-options', until: '2.4.0' }
-  );
-  Ember.deprecate(
-    `[ember-data-factory-guy] TestHelper.mockCreate - options.match has been deprecated.
-      Use chainable method \`match()\` instead`,
-    !options.hasOwnProperty('match'),
-    { id: 'ember-data-factory-guy.handle-create-match-options', until: '2.4.0' }
-  );
-  Ember.deprecate(
-    `[ember-data-factory-guy] TestHelper.mockCreate - options.returns has been deprecated.
-      Use chainable method \`returns()\` instead`,
-    !options.hasOwnProperty('returns'),
-    { id: 'ember-data-factory-guy.handle-create-returns-options', until: '2.4.0' }
-  );
-  if (succeed) {
-    this.calculate();
-  } else {
-    this.fails(options);
+  constructor(modelName) {
+    super(modelName);
+    this.matchArgs = {};
+    this.returnArgs = {};
   }
 
-  let attributesMatch = function (requestData, expectedData) {
-    // convert to json-api style data for standardization purposes
-    let allMatch = true;
-    if (!expectedData.data) {
-      expectedData = store.normalize(modelName, expectedData);
-    }
-    if (!requestData.data) {
-      if (builder.usingRESTSerializer() && !builder.usingDRFSerializer()) {
-        const serializer = store.serializerFor(modelName);
-        const transformedModelKey = serializer.payloadKeyFromModelName(modelName);
-        if (requestData[transformedModelKey]) {
-          requestData = store.normalize(modelName, requestData[transformedModelKey]);
-        }
-      } else {
-        requestData = store.normalize(modelName, requestData);
-      }
-    }
-    let expectedAttributes = expectedData.data.attributes;
-    let requestedAttributes = requestData.data.attributes;
-    for (let attribute in expectedAttributes) {
-      if (expectedAttributes[attribute]) {
-        // compare as strings for date comparison
-        let requestAttribute = requestedAttributes[attribute].toString();
-        let expectedAttribute = expectedAttributes[attribute].toString();
-        if (requestAttribute !== expectedAttribute) {
-          allMatch = false;
-          break;
-        }
-      }
-    }
-    return allMatch;
-  };
+  getType() {
+    return "POST";
+  }
 
-  /*
-   Setting the id at the very last minute, so that calling calculate
-   again and again does not mess with id, and it's reset for each call.
+  match(matches) {
+    this.matchArgs = matches;
+    return this;
+  }
+
+  /**
+   * This returns is different than the one for GET requests, because 
+   * you don't prefix the returns with json or models etc...
+   * The returns arguments are those attributes or relationships that 
+   * you would like returned with the model when the create succeeds.
+   * 
+   * @param {Object} returns attributes and or relationships to return with payload
    */
-  function modelId() {
-    if (Ember.isPresent(returnArgs) && Ember.isPresent(returnArgs['id'])) {
-      return returnArgs['id'];
+  returns(returns) {
+    this.returnArgs = returns;
+    return this;
+  }
+
+  /**
+   * This is tricky, but the main idea here is:
+   *
+   * #1 Take the keys they want to match and transform them to what the serialized
+   *  version would be ie. company => company_id
+   *
+   * #2 Take the matchArgs and turn them into a FactoryGuy payload class by
+   *  FactoryGuy.build(ing) them into a payload
+   *
+   * #3 Wrap the request data into a FactoryGuy payload class
+   *
+   * #4 Go though the keys from #1 and check that both the payloads from #2/#3 have the
+   * same values
+   *
+   * @param requestData
+   * @returns {boolean} true is no attributes to match or they all match
+   */
+  attributesMatch(requestData) {
+    if (isEmpty(Object.keys(this.matchArgs))) {
+      return true;
+    }
+
+    let builder = FactoryGuy.fixtureBuilder;
+
+    // transform they match keys
+    let matchCheckKeys = Object.keys(this.matchArgs).map((key)=> {
+      return builder.transformKey(this.modelName, key);
+    });
+
+    // build the match args into a JSONPayload class
+    let buildOpts = { serializeMode: true, transformKeys: true };
+    let expectedData = builder.convertForBuild(this.modelName, this.matchArgs, buildOpts);
+
+    // wrap request data in a JSONPayload class
+    builder.wrapPayload(this.modelName, requestData);
+
+    // success if all values match
+    return matchCheckKeys.map((key)=> {
+      return isEquivalent(expectedData.get(key), requestData.get(key));
+    }).every((value)=> value);
+  }
+
+  /**
+   Unless the id is setup already in the return args, then setup a new id. 
+   */
+  modelId() {
+    if (isPresent(this.returnArgs) && isPresent(this.returnArgs['id'])) {
+      return this.returnArgs['id'];
     } else {
-      let definition = FactoryGuy.findModelDefinition(modelName);
+      let definition = FactoryGuy.findModelDefinition(this.modelName);
       return definition.nextId();
     }
   }
 
-  this.handler = function(settings) {
-    // need to clone the response since it could be used a few times in a row,
-    // in a loop where you're doing createRecord of same model type
-    let finalResponseJson = $.extend({}, true, responseJson);
-
-    if (succeed) {
-      if (matchArgs) {
-        let requestData = JSON.parse(settings.data);
-        if (!attributesMatch(requestData, expectedRequest)) {
-          return false;
-        }
+  extraRequestMatches(settings) {
+    if (this.matchArgs) {
+      let requestData = JSON.parse(settings.data);
+      if (!this.attributesMatch(requestData)) {
+        return false;
       }
-      this.status = 200;
-      // Setting the id at the very last minute, so that calling calculate
-      // again and again does not mess with id, and it's reset for each call
-      finalResponseJson.id = modelId();
-      finalResponseJson = FactoryGuy.fixtureBuilder.convertForBuild(modelName, finalResponseJson);
-    } else {
-      this.status = status;
     }
-    this.responseText = finalResponseJson;
-  };
+    return true;
+  }
 
-  let requestConfig = {
-    url: url,
-    dataType: 'json',
-    type: 'POST',
-    response: this.handler
-  };
+  /**
+   This mock might be callled a few times in a row so,
+   Need to clone the responseJson and add id at the very last minute
+   */
+  getResponse() {
+    let args = Ember.$.extend({}, this.matchArgs, this.returnArgs);
+    let json = Ember.$.extend({}, args, { id: this.modelId() });
+    this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
+    return super.getResponse();
+  }
 
-  $.mockjax(requestConfig);
-};
-
-export default MockCreateRequest;
+}

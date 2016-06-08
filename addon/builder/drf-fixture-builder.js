@@ -3,21 +3,26 @@ import DRFFixtureConverter from '../converter/drf-fixture-converter';
 import DRFPayload from '../payload/drf-payload';
 /**
  Fixture Builder for DjangoRESTSerializer
-
  */
 export default class extends JSONFixtureBuilder {
-  /**
-   Convert to the ember-data REST adapter specification
-
-   @param {String} modelName
-   @param {String} fixture
-   @returns {*} new converted fixture
-   */
-  convertForBuild(modelName, fixture) {
-    let converter = new DRFFixtureConverter(this.store);
-    let json = converter.convert(modelName, fixture);
-    new DRFPayload(modelName, json, converter);
-    return json;
+  constructor(store) {
+    super(store, DRFFixtureConverter, DRFPayload);
   }
+
+  /**
+   DRFAdapter converts the errors to a JSONAPI error format for you,
+   but the error HAS to have a status of 400 .. but WHY?
+
+   @param errors
+   @returns {*}
+   */
+  convertResponseErrors(errors, status) {
+    if (status === 400) {
+      return errors;
+    } else {
+      return super.convertResponseErrors(errors, status);
+    }
+  }
+
 }
 

@@ -7,6 +7,10 @@ import RESTPayload from '../payload/rest-payload';
 
  */
 export default class extends FixtureBuilder {
+
+  constructor(store) {
+    super(store, RESTFixtureConverter, RESTPayload);
+  }
   /**
    Map single object to response json.
 
@@ -18,18 +22,5 @@ export default class extends FixtureBuilder {
    */
   normalize(modelName, payload) {
     return { [modelName]: payload };
-  }
-  /**
-   Convert to the ember-data REST Serializer specification
-
-   @param {String} modelName
-   @param {String} fixture
-   @returns {*} new converted fixture
-   */
-  convertForBuild(modelName, fixture) {
-    let converter = new RESTFixtureConverter(this.store);
-    let json = converter.convert(modelName, fixture);
-    new RESTPayload(modelName, json, converter);
-    return json;
   }
 }

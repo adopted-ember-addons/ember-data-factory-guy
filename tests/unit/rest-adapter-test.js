@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy, { build, buildList, make, makeList, mockFind, mockFindAll } from 'ember-data-factory-guy';
+import FactoryGuy, { build, buildList, make, makeList, mockFind, mockFindAll, manualSetup } from 'ember-data-factory-guy';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
 import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
@@ -20,7 +20,11 @@ SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(App, adapter, serial
 SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(App, adapter, serializerType);
 
 SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsAssociations(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(App, adapter, serializerType);
 
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(App, adapter, serializerType);
 
 module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, serializerType));
 
@@ -37,6 +41,10 @@ test("returns an attribute for a key", function() {
   equal(user.get('name'), 'User1');
 });
 
+test("returns a relationship with a key", function () {
+  let user = build('user', 'with_company');
+  deepEqual(user.get('company'), {id: 1, type: 'company'});
+});
 
 module(title(adapter, 'FactoryGuy#buildList get'), inlineSetup(App, serializerType));
 
@@ -51,6 +59,29 @@ test("returns an attribute with a key", function() {
   equal(users.get(0).id, 1);
   deepEqual(users.get(1), { id: 2, name: 'User2', style: "normal" });
   equal(users.get(1).name, 'User2');
+});
+
+test("returns a relationship with an index and key", function () {
+  let user = buildList('user', 2, 'with_company');
+  deepEqual(user.get(1).company, {id: 2, type: 'company'});
+});
+
+// model fragments
+test("with model fragment returns array of all attributes with no key", function() {
+  let addresses = buildList('billing-address', 2);
+  deepEqual(addresses.get(), [
+    { id: 1, street: '1 Sky Cell', city: 'Eyre', region: 'Vale of Arryn', country: 'Westeros', billingAddressProperty: 1 },
+    { id: 2, street: '2 Sky Cell', city: 'Eyre', region: 'Vale of Arryn', country: 'Westeros', billingAddressProperty: 2 }
+  ]);
+});
+
+// model fragments
+test("with model fragment returns an attribute with a key", function() {
+  let addresses = buildList('billing-address', 2);
+  deepEqual(addresses.get(0), { id: 1, street: '1 Sky Cell', city: 'Eyre', region: 'Vale of Arryn', country: 'Westeros', billingAddressProperty: 1 });
+  equal(addresses.get(0).id, 1);
+  deepEqual(addresses.get(1), { id: 2, street: '2 Sky Cell', city: 'Eyre', region: 'Vale of Arryn', country: 'Westeros', billingAddressProperty: 2 });
+  equal(addresses.get(1).street, '2 Sky Cell');
 });
 
 module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, serializerType));

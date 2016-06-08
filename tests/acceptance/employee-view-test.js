@@ -15,6 +15,7 @@ test("Show employee by make(ing) a model and using returns with that model", fun
 
   andThen(()=>{
     ok(find('.name').text().match(`${employee.get('name.firstName')} ${employee.get('name.lastName')}`));
+    equal(find('.department-employment').length, 2, "fragment array works");
   });
 });
 
@@ -26,5 +27,6 @@ test("Show employee by building(ing) json and using returns with that json", fun
 
   andThen(()=>{
     ok(find('.name').text().match(`${employee.get('name').firstName} ${employee.get('name').lastName}`));
+    equal(find('.department-employment').length, 2, "fragment array works");
   });
 });

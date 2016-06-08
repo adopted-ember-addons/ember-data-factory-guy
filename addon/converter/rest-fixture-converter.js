@@ -10,10 +10,15 @@ const { pluralize, dasherize } = Ember.String;
  */
 export default class extends JSONFixtureConverter {
 
-  constructor(store) {
-    super(store);
+  constructor(store, options) {
+    super(store, options);
     this.included = {};
   }
+
+  emptyResponse(modelName, options = {}) {
+    return { [modelName]: options.useValue || null };
+  }
+
   /**
    * RESTSerializer has a paylaod key
    *
@@ -24,6 +29,7 @@ export default class extends JSONFixtureConverter {
   createPayload(modelName, fixture) {
     return { [this.getPayloadKey(modelName)]: fixture };
   }
+
   /**
    * Get the payload key for this model from the serializer
    *
@@ -32,9 +38,14 @@ export default class extends JSONFixtureConverter {
    */
   getPayloadKey(modelName) {
     let serializer = this.store.serializerFor(modelName);
-    let payloadKey = serializer.payloadKeyFromModelName(modelName);
+    let payloadKey = modelName;
+    // model fragment serializer does not have payloadKeyFromModelName method
+    if (serializer.payloadKeyFromModelName) {
+      payloadKey = serializer.payloadKeyFromModelName(modelName);
+    }
     return (this.listType) ? pluralize(payloadKey) : payloadKey;
   }
+
   /**
    * Add the included data to the final payload
    *
@@ -45,6 +56,7 @@ export default class extends JSONFixtureConverter {
       payload[key] = this.included[key];
     });
   }
+
   /**
    Add the model to included array unless it's already there.
 
@@ -69,11 +81,12 @@ export default class extends JSONFixtureConverter {
       modelRelationships.push(data);
     }
   }
-  /**
-    Add proxied json to this payload, by taking all included models and
-    adding them to this payloads includes
 
-    @param proxy json payload proxy
+  /**
+   Add proxied json to this payload, by taking all included models and
+   adding them to this payloads includes
+
+   @param proxy json payload proxy
    */
   addToIncludedFromProxy(proxy) {
     proxy.includeKeys().forEach((modelKey)=> {

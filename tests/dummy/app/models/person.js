@@ -5,6 +5,6 @@ export default DS.Model.extend({
   name: DS.attr('string'),
   style: DS.attr('string'),
   category: DS.attr('string'),
-  company: DS.belongsTo('company', {async: false, embedded: 'always'}),
-  outfits: DS.hasMany('outfit', {async: false, embedded: 'always'})
+  company: DS.belongsTo('company', {async: false}),
+  outfits: DS.hasMany('outfit', {async: false})
 });

@@ -9,6 +9,7 @@ import MockQueryRecordRequest from './mocks/mock-query-record-request';
 import MockFindRequest from './mocks/mock-find-request';
 import MockReloadRequest from './mocks/mock-reload-request';
 import MockFindAllRequest from './mocks/mock-find-all-request';
+import MockDeleteRequest from './mocks/mock-delete-request';
 
 let MockServer = Ember.Object.extend({
 
@@ -296,19 +297,19 @@ let MockServer = Ember.Object.extend({
    mockCreate('post')
    mockCreate('post').match({title: 'foo'});
    mockCreate('post').match({title: 'foo', user: user});
-   mockCreate('post').andReturn({createdAt: new Date()});
-   mockCreate('post').match({title: 'foo'}).andReturn({createdAt: new Date()});
+   mockCreate('post').returns({createdAt: new Date()});
+   mockCreate('post').match({title: 'foo'}).returns({createdAt: new Date()});
    mockCreate('post').match({title: 'foo'}.fails();
    ```
 
    match - attributes that must be in request json,
-   andReturn - attributes to include in response json,
+   returns - attributes to include in response json,
    fails - can include optional status and response attributes
 
    ```js
    TestHelper.mockCreate('project').fails({
-        status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}
-      });
+      status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}
+    });
    ```
 
    Note:
@@ -328,11 +329,9 @@ let MockServer = Ember.Object.extend({
    returns hash either.
 
    @param {String} modelName  name of model your creating like 'profile' for Profile
-   @param {Object} options  hash of options for handling request
    */
-  mockCreate: function (modelName, opts={}) {
-    let url = FactoryGuy.buildURL(modelName);
-    return new MockCreateRequest(url, modelName, opts);
+  mockCreate: function (modelName) {
+    return new MockCreateRequest(modelName);
   },
   handleCreate: function () {
     Ember.deprecate("`handleCreate` - has been deprecated. Use `mockCreate` method instead`",
@@ -359,31 +358,30 @@ let MockServer = Ember.Object.extend({
    @param {String} id  id of record to update
    @param {Object} options options object
    */
-  mockUpdate: function () {
-    let args = Array.prototype.slice.call(arguments);
+  mockUpdate: function (...args) {
     Ember.assert("To mockUpdate pass in a model instance or a type and an id", args.length > 0);
 
-    let options = {};
     if (args.length > 1 && typeof args[args.length - 1] === 'object') {
-      options = args.pop();
+      Ember.assert("Passing in options to mockUpdate is no longer supported. To mockUpdate pass in a model instance or a modelName and an id", true);
     }
 
-    let model, type, id;
+    let model, modelName, id;
     let store = FactoryGuy.store;
 
     if (args[0] instanceof DS.Model) {
       model = args[0];
       id = model.id;
-      type = model.constructor.modelName;
+      modelName = model.constructor.modelName;
     } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
-      type = args[0];
+      modelName = args[0];
       id = args[1];
-      model = store.peekRecord(type, id);
+      model = store.peekRecord(modelName, id);
     }
-    Ember.assert("To mockUpdate pass in a model instance or a model type name and an id", type && id);
+    Ember.assert("To mockUpdate pass in a model instance or a modelName and an id", modelName && id);
 
-    let url = FactoryGuy.buildURL(type, id);
-    return new MockUpdateRequest(url, model, options);
+//    let url = FactoryGuy.buildURL(modelName, id);
+//    return new MockUpdateRequest(url, model, {});
+    return new MockUpdateRequest(modelName, id);
   },
   handleUpdate: function () {
     Ember.deprecate("`handleUpdate` - has been deprecated. Use `mockUpdate` method instead`",
@@ -392,20 +390,26 @@ let MockServer = Ember.Object.extend({
   },
   /**
    Handling ajax DELETE ( delete record ) for a model type. You can mock
-   failed delete by passing in success argument as false.
+   failed delete by calling 'fails' method after setting up the mock
 
-   @param {String} type  model type like 'user' for User model
-   @param {String} id  id of record to update
-   @param {Boolean} succeed  optional flag to indicate if the request
-   should succeed ( default is true )
+   @param {String|DS.Model} type|model model type like 'user' for User model or DS.Model record
+   @param {String} id optional id of record to delete
    */
-  mockDelete: function (type, id, succeed=true) {
-    // TODO Turn this into a MockClass so it provides `andSuccess`, `fails`, `returns`...
-    //succeed = succeed === undefined ? true : succeed;
-    this.stubEndpointForHttpRequest(FactoryGuy.buildURL(type, id), null, {
-      type: 'DELETE',
-      status: succeed ? 200 : 500
-    });
+  mockDelete: function (...args) {
+    let modelName, id;
+
+    if (args[0] instanceof DS.Model) {
+      let record = args[0];
+      modelName = record.constructor.modelName;
+      id = record.id;
+    } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
+      modelName = args[0];
+      id = args[1];
+    }
+
+    Ember.assert(`[ember-data-factory-guy] mockDelete requires at least a model type name`, modelName);
+
+    return new MockDeleteRequest(modelName, id);
   },
   handleDelete: function () {
     Ember.deprecate("`handleDelete` - has been deprecated. Use `mockDelete` method instead`",

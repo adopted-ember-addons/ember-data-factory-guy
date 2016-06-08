@@ -16,13 +16,16 @@ import Ember from 'ember';
  but waiting to see if anyone complains.
 
  @param {DS.Store} store
- @param {Boolean} transformKeys tranform keys and values in fixture
+ @param {Object} options
+  transformKeys tranform keys and values in fixture if true
+  serializeMode act like serialization is for a return to server if true
  @constructor
  */
 export default class {
 
-  constructor(store, transformKeys = true) {
-    this.transformKeys = transformKeys;
+  constructor(store, options = { transformKeys: true, serializeMode: false }) {
+    this.transformKeys = options.transformKeys;
+    this.serializeMode = options.serializeMode;
     this.store = store;
     this.listType = false;
     this.noTransformFn = (x)=> x;
@@ -57,6 +60,17 @@ export default class {
     return payload;
   }
 
+  /**
+    Empty respose is a special case, so use this method for generating it.
+
+    @param _
+    @param {Object} options useValue to override the null value that is passed
+    @returns {Array|null}
+   */
+  emptyResponse(_, options={})  {
+    return options.useValue || null;
+  }
+  
   /**
    * User the primaryKey from the serializer if it is declared
    *
@@ -153,10 +167,11 @@ export default class {
   extractBelongsTo(fixture, relationship, parentModelName, relationships) {
     let belongsToRecord = fixture[relationship.key];
 
-    let relationshipKey = this.transformRelationshipKey(relationship);
-    let isEmbedded = this.isEmbeddedRelationship(parentModelName, relationshipKey);
+    let isEmbedded = this.isEmbeddedRelationship(parentModelName, relationship.key);
 
     let data = this.extractSingleRecord(belongsToRecord, relationship, isEmbedded);
+
+    let relationshipKey = isEmbedded ? relationship.key : this.transformRelationshipKey(relationship);
 
     relationships[relationshipKey] = this.assignRelationship(data);
   }

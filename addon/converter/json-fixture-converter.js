@@ -10,11 +10,12 @@ const { underscore } = Ember.String;
  */
 export default class extends Converter {
 
-  constructor(store) {
-    super(store);
+  constructor(store, options) {
+    super(store, options);
     this.defaultKeyTransformFn = underscore;
     this.polymorphicTypeTransformFn = underscore;
   }
+
   /**
    * Can't add to payload since sideloading not supported
    *
@@ -22,6 +23,7 @@ export default class extends Converter {
    */
   add(/*moreJson*/) {
   }
+
   /**
    * There is no payload key for JSON Serializer
    *
@@ -30,11 +32,9 @@ export default class extends Converter {
    * @returns {*}
    */
   createPayload(_, fixture) {
-//    if (this.listType) {
-//      return { results: fixture, next: 2, previous: 1, total_pages: 2 };
-//    }
     return fixture;
   }
+
   /**
    * There is no sideloading for JSON Serializer
    *
@@ -42,6 +42,7 @@ export default class extends Converter {
    */
   addIncludedArray(/*payload*/) {
   }
+
   /**
    Convert single record
 
@@ -79,16 +80,23 @@ export default class extends Converter {
    @param {Object} relationship
    */
   normalizeAssociation(record, relationship) {
+    if (this.serializeMode) {
+      return record.id;
+    }
     if (Ember.typeOf(record) === 'object') {
       if (relationship.options.polymorphic) {
         return { type: underscore(record.type), id: record.id };
       } else {
         return record.id;
       }
-    } else {
-      return record.id;
     }
+    // it's a model instance
+    if (relationship.options.polymorphic) {
+      return { type: underscore(record.constructor.modelName), id: record.id };
+    }
+    return record.id;
   }
+
   /**
    The JSONSerializer does not support sideloading records
 
@@ -100,9 +108,9 @@ export default class extends Converter {
   }
 
   /**
-    The JSONSerializer does not support sideloading records
+   The JSONSerializer does not support sideloading records
 
-    @param proxy json payload proxy
+   @param proxy json payload proxy
    */
   addToIncludedFromProxy(/*proxy*/) {
   }

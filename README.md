@@ -5,9 +5,10 @@
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.  
 Factories simplify the process of testing, making you more efficient and your tests more readable.  
 
-- **Support for [ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments) usage is baked in since v2.5.0** 
-- **Support for JSONSerializer usage is baked in since v2.6.0** 
-- **Support for [ember-django-adapter](https://github.com/dustinfarris/ember-django-adapter) usage is baked in since v2.6.1** 
+- Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
+- Support for **JSONSerializer** usage is toasted in since v2.6.0 
+- Support for **[ember-django-adapter](https://github.com/dustinfarris/ember-django-adapter)** usage is fried in since v2.6.1 
+- Support for **"testing with factories without extra work"** roasted in since forever!
                                   
 Questions: Slack => [factory-guy](https://embercommunity.slack.com/messages/e-factory-guy/)
 
@@ -36,7 +37,7 @@ ChangeLog: ( Notes about what has changed in each version )
 
 ### Installation
 
- - ```ember install ember-data-factory-guy@2.6.1``` ( ember-data-1.13.5+ )
+ - ```ember install ember-data-factory-guy@2.6.5``` ( ember-data-1.13.5+ )
  - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + )
  - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 )
  - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )
@@ -837,13 +838,13 @@ If you are making an addon with factories and you want the factories available t
   - As of 2.6.1 you can use [ember-django-adapter](https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter)  
   - Everything is setup automatically
   - Remember that sideloading is not supported in DRFSerializer so all relationships should either
-    be set as embedded with DS.EmbeddedRecordsMixin if you want to use build/buildList 
-    OR user make/makeList and in you mocks, return models instead of json:
-    ```javascript
-      let projects = makeList('projects', 2); // put projects in the store
-      let user = make('user', { projects });  // attatch them to user
-      mockFind('user').returns({model: user}); // now the mock will return a user that have projects
-    ```
+    - be set as embedded with DS.EmbeddedRecordsMixin if you want to use build/buildList 
+    - or user make/makeList and in you mocks, and return models instead of json:
+```javascript
+  let projects = makeList('projects', 2); // put projects in the store
+  let user = make('user', { projects });  // attatch them to user
+  mockFind('user').returns({model: user}); // now the mock will return a user that has projects
+```
   - using `fails()` with errors hash is not working reliably 
     - so you can always just `mockWhatever(args).fails()`  
 
@@ -1280,23 +1281,21 @@ Usage:
   - Use chainable methods to build the response
     - match
       - Attributes that must be in request json
+        - These will be added to the response json automatically, so
+          you don't need to include them in the returns hash.
+        - If you match on a belongsTo association, you don't have to include that in 
+        the returns hash either ( same idea ).
     - returns
-      - Attributes to include in response json
+      - Attributes ( including relationships ) to include in response json
     - fails
       - Request will fail
       - Takes a hash of options:
         - status - HTTP status code, defaults to 500.
         - response - error response message, or an errors hash for 422 status
-
+    - succeeds
+      - to retry a mock after a failed response
+      
   - Need to wrap tests using mockCreate with: Ember.run.function() { 'your test' })
-
-**Note**
-
-  *Any attributes in match will be added to the response json automatically,
-  so you don't need to include them in the returns hash as well.*
-
-  *If you match on a belongsTo association, you don't have to include that in the
-  returns hash.*
 
 
 Realistically, you will have code in a view action or controller action that will
@@ -1340,6 +1339,14 @@ Usage:
     .match({name: "Moo", user: user})
     .returns({created_at: new Date()});
 
+  // Returning belongsTo relationship. Assume outfit belongsTo 'person'
+  let person = build('super-hero'); // it's polymorphic
+  mockCreate('outfit').returns({ person });
+
+  // Returning hasMany relationship. Assume super-hero hasMany 'outfits'
+  let outfits = buildList('outfit', 2);
+  mockCreate('super-hero').returns({ outfits });
+
 ```
 
   - mocking a failed create
@@ -1363,13 +1370,13 @@ Usage:
   - mockUpdate(modelType, id)
     - Two arguments: modelType ( like 'profile' ) , and the profile id that will updated
   - Use chainable methods to help build response:
+    - returns
+      - Attributes ( including relationships ) to include in response json
     - fails
       - Request will fail
       - Optional arguments ( status and response text )
     - succeeds
-      - Update should succeed, this is the default behavior
-      - Can even use this after an ```fails``` call to simulate failure with
-        invalid properties and then success after valid ones.
+      - use this after an ```fails``` call to have update succeed
   - Need to wrap tests using mockUpdate with: Ember.run.function() { 'your test' })
 
 Usage:
@@ -1388,6 +1395,21 @@ Usage:
 
   profile.set('description', 'good value');
   profile.save() //=> will succeed
+  
+  // Returning belongsTo relationship. Assume outfit belongsTo 'person'
+  let outfit = make('outfit');
+  let person = build('super-hero'); // it's polymorphic
+  outfit.set('name','outrageous');
+  mockUpdate(outfit).returns({ person });
+  outfit.save(); //=> saves and returns superhero 
+
+  // Returning hasMany relationship. Assume super-hero hasMany 'outfits'
+  let superHero = make('super-hero');
+  let outfits = buildList('outfit', 2, {name:'bell bottoms'});
+  superHero.set('style','laid back');
+  mockUpdate(superHero).returns({ outfits });
+  superHero.save(); // => saves and returns outfits
+  
 ````
 
  - mocking a failed update
@@ -1430,25 +1452,51 @@ Usage:
 
 ##### mockDelete
   - Need to wrap tests using mockDelete with: Ember.run.function() { 'your test' })
+  - To handle deleteing a model
+    - Pass in a record ( or a typeName and id )
 
-Usage: 
+Usage:
+
+- Passing in a record / model instance
 
 ```javascript
   import { make, mockDelete } from 'ember-data-factory-guy';
-  
+
+  let profile = make('profile');
+  mockDelete(profile);
+
+  profile.destroyRecord() // => will succeed
+```
+
+- Passing in a model typeName and id
+
+```javascript
+  import { make, mockDelete } from 'ember-data-factory-guy';
+
   let profile = make('profile');
   mockDelete('profile', profile.id);
 
   profile.destroyRecord() // => will succeed
-````
+```
 
-  - mocking a failed delete
+- Passing in a model typeName
 
 ```javascript
-  mockDelete('profile', profile.id, false);
+  import { make, mockDelete } from 'ember-data-factory-guy';
 
-  profile.destroyRecord() // => will fail
-````
+  let profile1 = make('profile');
+  let profile2 = make('profile');
+  mockDelete('profile');
+
+  profile1.destroyRecord() // => will succeed
+  profile2.destroyRecord() // => will succeed
+```
+
+- Mocking a failed delete
+
+```javascript
+    mockDelete(profile).fails();
+```
 
 
 ##### Sample Acceptance test [(user-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
