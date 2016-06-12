@@ -11,6 +11,7 @@ module.exports = function(defaults) {
 
   app.import('bower_components/jquery-mockjax/dist/jquery.mockjax.js');
   app.import('bower_components/sinon/index.js');
+  app.import('bower_components/urijs/src/URI.js');
 
   return app.toTree();
 };
