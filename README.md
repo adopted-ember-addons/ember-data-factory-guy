@@ -827,6 +827,12 @@ FactoryGuy.define('phone-number', {
     type: 'home'
   }
 });
+
+// TIP: You can set up associations manually ( and not necessarily in factory ) 
+// You can set up an employee ( hasMany ) phone numbers manually this way:  
+let phoneNumbers = buildList('phone-numbers', 2).get();
+let employee = make('employee', { phoneNumbers });
+
 ```
 
 For a more detailed example of setting up fragments have a look at the [employee test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/employee-test.js).

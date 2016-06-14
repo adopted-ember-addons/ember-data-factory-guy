@@ -1,5 +1,5 @@
-import { manualSetup, make, makeList } from 'ember-data-factory-guy';
-import { test, moduleForModel } from 'ember-qunit';
+import {manualSetup, make, makeList, buildList} from 'ember-data-factory-guy';
+import {test, moduleForModel} from 'ember-qunit';
 import Ember from 'ember';
 const { run } = Ember;
 
@@ -73,10 +73,19 @@ test('default employee and titles', function() {
 });
 
 // DEPARTMENT EMPLOYMENT
-test('employee with department employments (fragment arrays)', function() {
+
+test('employee hasMany departmentEmployments setup manually', function() {
+  run(() => {
+    let departmentEmployments = buildList('department-employment', 2).get();
+    let employee = make('employee', { departmentEmployments });
+    equal(employee.get('departmentEmployments.length'), 2);
+  });
+});
+
+test('employee hasMany department employments (fragment arrays) setup in fixture', function() {
   let employee = make('employee', 'with_department_employments');
   run(() => {
-    ok(employee.get('departmentEmployments.length') === 2);
+    equal(employee.get('departmentEmployments.length'), 2);
     let department1 = employee.get('departmentEmployments.firstObject.department');
     let department2 = employee.get('departmentEmployments').objectAt(1).get('department');
     ok(department1.get('name') === 'Acme Dept 1');
