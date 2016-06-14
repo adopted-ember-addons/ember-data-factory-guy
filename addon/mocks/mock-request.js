@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
-import URI from 'uri';
 const assign = Ember.assign || Ember.merge;
+/* global URI */
 
 export default class {
 
