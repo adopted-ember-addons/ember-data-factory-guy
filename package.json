@@ -25,6 +25,8 @@
   "devDependencies": {
     "active-model-adapter": "2.1.1",
     "broccoli-asset-rev": "^2.1.2",
+    "broccoli-funnel": "latest",
+    "broccoli-merge-trees": "latest",
     "ember-cli": "^2.5.0",
     "ember-cli-app-version": "0.5.0",
     "ember-cli-babel": "latest",
