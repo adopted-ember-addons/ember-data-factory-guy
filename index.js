@@ -10,7 +10,6 @@ module.exports = {
     // can be run from browser in development mode
     if (app.tests) {
       app.import(app.bowerDirectory + '/jquery-mockjax/dist/jquery.mockjax.js');
-      app.import(app.bowerDirectory + '/urijs/src/URI.js');
     }
   },
 
