@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
 const assign = Ember.assign || Ember.merge;
+/* global URI */
 
 export default class {
 
@@ -61,7 +62,8 @@ export default class {
   }
 
   basicRequestMatches(settings) {
-    return settings.url === this.getUrl() && settings.type === this.getType();
+    const uri = new URI(settings.url);
+    return uri.path() === this.getUrl() && settings.type === this.getType();
   }
 
   extraRequestMatches(/*settings*/) {
