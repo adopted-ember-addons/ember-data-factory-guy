@@ -4,7 +4,7 @@ import FactoryGuy, {
   mockFind, mockFindAll, mockReload, mockQuery, mockQueryRecord,
   mockCreate, mockUpdate, mockDelete
 } from 'ember-data-factory-guy';
-import { inlineSetup } from '../helpers/utility-methods';
+import {inlineSetup} from '../helpers/utility-methods';
 
 let App = null;
 let serializerType = '-json-api';
@@ -15,9 +15,14 @@ let serializerType = '-json-api';
  */
 module('mockFind', inlineSetup(App, serializerType));
 
-test("have access to handler being used by mockjax", function() {
+test("has access to handler being used by mockjax", function() {
   let mock = mockFind('user');
   ok(mock.handler);
+});
+
+test("#get method to access payload", function() {
+  let mock = mockFind('user');
+  equal(mock.get('name'), 'User1');
 });
 
 
@@ -28,7 +33,19 @@ test("have access to handler being used by mockjax", function() {
   ok(mock.handler);
 });
 
+test("#get method to access payload", function() {
+  let mock = mockFindAll('user', 2);
+  deepEqual(mock.get(0), { id: 1, name: 'User1', style: 'normal' });
+});
+
+
 module('mockQuery', inlineSetup(App, serializerType));
+
+test("#get method to access payload", function() {
+  let json = buildList('user', 2)
+  let mock = mockQuery('user', {}).returns({ json });
+  deepEqual(mock.get(0), json.get(0));
+});
 
 test("json payload argument should be an object", function(assert) {
   assert.throws(function() {
@@ -87,6 +104,12 @@ test("have access to handler being used by mockjax", function() {
 
 
 module('mockQueryRecord', inlineSetup(App, serializerType));
+
+test("#get method to access payload", function() {
+  let json = build('user')
+  let mock = mockQueryRecord('user', {}).returns({ json });
+  deepEqual(mock.get(), json.get());
+});
 
 test("returns() method accepts only id, model, json or header as keys", function(assert) {
   const handler = mockQueryRecord('user');
@@ -165,7 +188,8 @@ test("using returns with headers adds the headers to the response", function(ass
     done();
   });
 
-  FactoryGuy.store.queryRecord('company', queryParams).catch(()=>{});
+  FactoryGuy.store.queryRecord('company', queryParams).catch(()=> {
+  });
 });
 
 test("using returns 'model' with array of DS.Models throws error", function(assert) {
@@ -179,13 +203,13 @@ test("using returns 'model' with array of DS.Models throws error", function(asse
 module('mockUpdate', inlineSetup(App));
 
 test("with incorrect parameters", function(assert) {
-  
+
   assert.throws(function() {
     mockUpdate();
   }, "missing everything");
-  
+
   assert.throws(function() {
     mockUpdate('profile');
   }, "missing id");
-  
+
 });
