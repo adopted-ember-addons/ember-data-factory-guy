@@ -14,5 +14,4 @@ export default class MockQueryRecordRequest extends MockQueryRequest {
     this.setResponseJson(FactoryGuy.fixtureBuilder.convertForBuild(modelName, null));
     this.setValidReturnsKeys(['model','json','id','headers']);
   }
-
 }

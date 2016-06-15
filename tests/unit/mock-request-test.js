@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy, {make, build, mockFindAll, mockFind, mockQueryRecord, mockUpdate} from 'ember-data-factory-guy';
+import FactoryGuy, {make, build, mockFindAll, mockFind, mockQuery, mockQueryRecord, mockUpdate} from 'ember-data-factory-guy';
 import {inlineSetup} from '../helpers/utility-methods';
 import MockRequest from 'ember-data-factory-guy/mocks/mock-request';
 
