@@ -49,7 +49,7 @@ module('MockRequest #fails', inlineSetup(App));
 
 test("status must be 3XX, 4XX or 5XX", function(assert) {
   let mock = new MockRequest('user');
-  
+
   assert.throws(()=> {
     mock.fails({ status: 201 });
   });
@@ -112,4 +112,58 @@ test("can verify how many times an update call was mocked", function(assert) {
       });
     });
   });
+});
+
+module('MockRequest#basicRequestMatches', inlineSetup(App, serializerType));
+
+test("fails if the types don't match", function(assert) {
+  const mock = new MockRequest('user');
+  const getType = sinon.stub(mock, 'getType').returns('POST');
+  const getUrl = sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
+
+  const settings = {
+    type: 'GET',
+    url: '/api/ember-data-factory-guy'
+  };
+
+  assert.ok(! mock.basicRequestMatches(settings));
+});
+
+test("fails if the URLs don't match", function(assert) {
+  const mock = new MockRequest('user');
+  const getType = sinon.stub(mock, 'getType').returns('GET');
+  const getUrl = sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
+
+  const settings = {
+    type: 'GET',
+    url: '/api/ember-data-factory-guy/123'
+  };
+
+  assert.ok(! mock.basicRequestMatches(settings));
+});
+
+test("succeeds if the URLs and the types match", function(assert) {
+  const mock = new MockRequest('user');
+  const getType = sinon.stub(mock, 'getType').returns('GET');
+  const getUrl = sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
+
+  const settings = {
+    type: 'GET',
+    url: '/api/ember-data-factory-guy'
+  };
+
+  assert.ok(mock.basicRequestMatches(settings));
+});
+
+test("succeeds even if the given URL has query parameters that don't match", function(assert) {
+  const mock = new MockRequest('user');
+  const getType = sinon.stub(mock, 'getType').returns('GET');
+  const getUrl = sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
+
+  const settings = {
+    type: 'GET',
+    url: '/api/ember-data-factory-guy?page=2'
+  };
+
+  assert.ok(mock.basicRequestMatches(settings));
 });
