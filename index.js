@@ -29,8 +29,8 @@ module.exports = {
     // need to load mockjax in development and test environment since ember tests
     // can be run from browser in development mode
     if (app.tests) {
-      app.import(app.bowerDirectory + '/jquery-mockjax/dist/jquery.mockjax.js');
-      app.import('vendor/urijs/URI.js');
+      app.import(path.join(app.bowerDirectory, 'jquery-mockjax', 'dist', 'jquery.mockjax.js'));
+      app.import(path.join('vendor', 'urijs', 'URI.js'));
     }
   },
 
