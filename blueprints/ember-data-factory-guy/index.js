@@ -3,7 +3,7 @@ module.exports = {
   normalizeEntityName: function() {},
 
   afterInstall: function() {
-    return this.addBowerPackageToProject('jquery-mockjax', '2.1.1');
+    return this.addBowerPackageToProject('jquery-mockjax', '2.2.0');
   }
 
 };
