@@ -38,5 +38,5 @@ module.exports = {
     if (this.app.tests) {
       return this._super.treeFor.apply(this, arguments);
     }
-  },
+  }
 };
