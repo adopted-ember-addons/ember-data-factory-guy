@@ -7,7 +7,7 @@ Factories simplify the process of testing, making you more efficient and your te
 
 - Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
 - Support for **[ember-django-adapter](https://github.com/dustinfarris/ember-django-adapter)** usage is fried in since v2.6.1 
-- Support for adding meta data to payloads for use with **ember-infinity** ie. => pagination  
+- Support for adding [meta data](https://github.com/danielspaniel/ember-data-factory-guy#using-add-method) to payloads for use with **ember-infinity** ie. => pagination  
 - Support for adding headers to payloads
 - Since you using ember data, you don't need to create any ORM like things. 
   - You don't need to add any files to re create all the relationships in your models and serializers
