@@ -181,7 +181,7 @@ In other words, don't do this:
    - Loads zero to many model instances into the store
  - FactoryGuy.build
    - Builds json in accordance with the adapters specifications
-     - [RESTAdapter](http://guides.emberjs.com/v2.0.0/models/the-rest-adapter/#toc_json-conventions)  (*assume this adapter being used in most of the following examples*)
+     - [RESTAdapter](http://emberjs.com/api/data/classes/DS.RESTAdapter.html)  (*assume this adapter being used in most of the following examples*)
      - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
      - [JSONAPIAdapter](http://jsonapi.org/format/)
  - FactoryGuy.buildList
