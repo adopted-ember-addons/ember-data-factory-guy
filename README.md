@@ -364,7 +364,7 @@ Usage:
   let owners = buildList('user', { name:'Bob' }, { name:'Rob' });
 ```
 
-##### Using `add()` method
+##### Using add() method
  - when you need to add more json to payload 
   - will be sideloaded 
     - only JSONAPI, and REST based serializers can do sideloading
