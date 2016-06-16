@@ -9,10 +9,8 @@ Factories simplify the process of testing, making you more efficient and your te
 - Support for **[ember-django-adapter](https://github.com/dustinfarris/ember-django-adapter)** usage is fried in since v2.6.1 
 - Support for adding meta data to payloads for use with **ember-infinity** ie. => pagination  
 - Support for adding headers to payloads
-- Support for creating any level of relationships in your payload with no hassle
-  - Your relationships will be sideload or embed depending on your serializers
 - Since you using ember data, you don't need to create any ORM like things. 
-  - You don't need to re create all the logic for in your serializers
+  - You don't need to add any files to re create all the relationships in your models and serializers
   - You don't have to setup anything.
   - Everything just works.
                                   
