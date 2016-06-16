@@ -1,4 +1,5 @@
 var path = require('path');
+var fs = require('fs');
 var Funnel = require('broccoli-funnel');
 var mergeTrees = require('broccoli-merge-trees');
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
@@ -29,18 +30,22 @@ module.exports = {
   },
 //  isDevelopingAddon: function() { return true; },
 
-  treeForVendor: function(tree) {
-//    console.log("path.dirname('/tests/factories')",path.dirname('./tests/factories'));
-    var factoryTree =  new Funnel(path.dirname('./tests/factories'), {
-      include: [
-        '**/*.js'
-      ],
-      getDestinationPath: function getFileName(relativePath) {
-        console.log(relativePath, path.basename(relativePath));
-        return path.basename(relativePath);
+  treeForApp(appTree) {
+    var trees = [ appTree ];
+
+    try {
+      if (fs.statSync('tests/factories').isDirectory()) {
+        var factoriesTree = new Funnel('tests/factories', {
+            destDir: 'factories'
+        });
+        trees.push(factoriesTree);
       }
-    });
-    return mergeTrees(tree ? [tree, factoryTree] : [factoryTree], { annotation: 'factories for vendor' });
+    } catch (err) {
+      // do nothing;
+    }
+
+    
+    return mergeTrees(trees);
   },
 
   treeFor: function(name) {
