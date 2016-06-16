@@ -184,7 +184,7 @@ In other words, don't do this:
      - [RESTAdapter](http://emberjs.com/api/data/classes/DS.RESTAdapter.html)  (*assume this adapter being used in most of the following examples*)
      - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
      - [JSONAPIAdapter](http://jsonapi.org/format/)
-     - [DrfAdapter](https://github.com/dustinfarris/ember-django-adapter)
+     - [DrfAdapter (Ember Django Adapter)](https://github.com/dustinfarris/ember-django-adapter)
  - FactoryGuy.buildList
    - Builds json with list of zero or more items in accordance with the adapters specifications
  - Can override default attributes by passing in an object of options
