@@ -6,7 +6,6 @@ Feel the thrill and enjoyment of testing when using Factories instead of Fixture
 Factories simplify the process of testing, making you more efficient and your tests more readable.  
 
 - Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
-- Support for **JSONSerializer** usage is toasted in since v2.6.0 
 - Support for **[ember-django-adapter](https://github.com/dustinfarris/ember-django-adapter)** usage is fried in since v2.6.1 
 - Support for adding meta data to payloads for use with **ember-infinity** ie. => pagination  
 - Support for adding headers to payloads
