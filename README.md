@@ -834,7 +834,7 @@ FactoryGuy.define('phone-number', {
 });
 
 // TIP: You can set up associations manually ( and not necessarily in factory ) 
-// You can set up an employee ( hasMany ) phone numbers manually this way:  
+// To set up an employee ( hasMany ) phone numbers manually, try this:  
 let phoneNumbers = buildList('phone-numbers', 2).get();
 let employee = make('employee', { phoneNumbers });
 
