@@ -1,4 +1,3 @@
-import DS from 'ember-data';
 import { module } from 'qunit';
 import startApp from './start-app';
 import destroyApp from './destroy-app';
@@ -9,10 +8,12 @@ export default function(name, options = {}) {
   module(name, {
     beforeEach() {
       this.application = startApp();
-      drfReset(this.application);
+      
+      drfReset(this.application); // custom hackery for testing with drf
+      
       // Adding FactoryGuy mockSetup call
       mockSetup();
-//      FactoryGuy.cacheOnlyMode();
+
       if (options.beforeEach) {
         options.beforeEach.apply(this, arguments);
       }
