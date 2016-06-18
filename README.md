@@ -5,6 +5,10 @@
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.  
 Factories simplify the process of testing, making you more efficient and your tests more readable.  
 
+**NEW and Improved** starting with v2.7.0.beta-2
+- Support for using your [factories](https://github.com/danielspaniel/ember-data-factory-guy#using-in-development) in development environment
+- Change your scenarios, hit refresh and the development data changes
+
 - Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
 - Support for **[ember-django-adapter](https://github.com/dustinfarris/ember-django-adapter)** usage is fried in since v2.6.1 
 - Support for adding [meta data](https://github.com/danielspaniel/ember-data-factory-guy#using-add-method) to payloads for use with **ember-infinity** ie. => pagination  
@@ -28,6 +32,7 @@ Contents:
   - [Associations](https://github.com/danielspaniel/ember-data-factory-guy#associations)
   - [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
   - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
+  - [Using in Development](https://github.com/danielspaniel/ember-data-factory-guy#using-in-development)
   - [Ember Data Model Fragments](https://github.com/danielspaniel/ember-data-factory-guy#ember-data-model-fragments)
   - [Creating Factories in Addons](https://github.com/danielspaniel/ember-data-factory-guy#creating-factories-in-addons)
   - [Ember Django Adapter](https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter)
@@ -772,6 +777,54 @@ You would use this to make models like:
   });
 
 ```
+
+### Using in Development
+
+- You can set up scenarios for you app that use all your factories from tests
+- In config/environment.js place a flag factoryGuy: true 
+  ```js
+        if (environment === 'development') {
+           ENV.factoryGuy = true;
+           ENV.locationType = 'auto';
+           ENV.baseURL = '/';
+        }
+  ```
+- Place your scenarios in app/scenarios directory  
+  - Start by creating at least a scenarios/main.js file since this is the starting point 
+  - Your scenario classes should inherit from Scenario class  
+  - A Scenario class should declare a run method where you do things like:
+     - include other scenarios
+     - make your data or mock your requests using the typical FactoryGuy methods
+        - these methods are all built into Scenario classes so you don't have to import them
+
+  ```js 
+    // file: app/scenarios/main.js
+    import {Scenario} from 'ember-data-factory-guy';
+    import Users from './users';
+    
+    export default class extends Scenario {
+      run() { 
+         this.include([Users]);   // include other scenarios
+         this.mockFindAll('products', 3);  // mock some finds
+      }
+    }
+  ```
+
+
+  ```js 
+    // file: app/scenarios/users.js
+    import {Scenario} from 'ember-data-factory-guy';
+   
+    export default class extends Scenario {
+      run() {
+        this.mockFindAll('user', 'boblike', 'normal');
+        this.mockDelete('user');
+      }
+    }  
+  ```
+
+- The power of this is that you can compose scenarios easily 
+
 
 ### Ember Data Model Fragments
 As of 2.5.2 you can create factories which contain [ember-data-model-fragments](https://github.com/lytics/ember-data-model-fragments). Setting up your fragments is easy and follows the same process as setting up regular factories. The mapping between fragment types and their associations are like so:
