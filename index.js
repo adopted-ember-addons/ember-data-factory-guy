@@ -22,7 +22,7 @@ module.exports = {
     return mergeTrees(files);
   },
 
-  treeForApp(appTree) {
+  treeForApp: function(appTree) {
     var trees = [ appTree ];
 
     try {
