@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import {requireFiles} from './helper-functions';
 
-const scenarioFileRegExp = new RegExp('/scenarios/main.js$');
+const scenarioFileRegExp = new RegExp('/scenarios/main$');
 /**
  * There is only one scenario file that is important here. 
  * And that is: scenarios/main.js file.
