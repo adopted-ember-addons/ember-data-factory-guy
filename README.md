@@ -784,13 +784,14 @@ You would use this to make models like:
 ### Using in Development
 
 - You can set up scenarios for you app that use all your factories from tests
-- In config/environment.js place a flag factoryGuy: true 
+- In config/environment.js place a flag => factoryGuy: true 
   ```js
-        if (environment === 'development') {
-           ENV.factoryGuy = true;
-           ENV.locationType = 'auto';
-           ENV.baseURL = '/';
-        }
+  // file: config/environment.js
+  if (environment === 'development') {
+    ENV.factoryGuy = true;
+    ENV.locationType = 'auto';
+    ENV.baseURL = '/';
+  }
   ```
 - Place your scenarios in app/scenarios directory  
   - Start by creating at least a scenarios/main.js file since this is the starting point 
