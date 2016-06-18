@@ -3,11 +3,14 @@
 import FactoryGuy from '../factory-guy';
 import FactoryGuyTestHelper from '../factory-guy-test-helper';
 import loadFactories from './load-factories';
+import loadScenarios from './load-scenarios';
+//import ENV from '../config/environment';
 
 export default function(container) {
   FactoryGuy.setStore(container.lookup('service:store'));
   FactoryGuyTestHelper.set('container', container);
   FactoryGuy.resetDefinitions();
   loadFactories();
+  loadScenarios(container);
 }
 

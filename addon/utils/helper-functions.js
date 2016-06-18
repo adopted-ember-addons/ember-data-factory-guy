@@ -1,6 +1,9 @@
+/* global requirejs, require */
+/*jslint node: true */
+
 import Ember from 'ember';
 
-function isEquivalent(a, b) {
+export function isEquivalent(a, b) {
   var type = Ember.typeOf(a);
   if (type !== Ember.typeOf(b)) {
     return false;
@@ -41,15 +44,20 @@ function objectIsEquivalent(objectA, objectB) {
   return true;
 }
 
-/**
- * Is an object empty? ( no key/values )
- *
- * @public
- * @param {Object} obj
- * @returns {boolean} if it's empty 
- */
-function isEmptyObject(obj) {
-  return Object.keys(obj).length === 0;
-}
+// always exclude jshint or jscs files
+export const excludeRegex = new RegExp('[^\s]+(\\.(jscs|jshint))$', 'i');
 
-export {isEmptyObject, isEquivalent};
+/**
+ * Find files that have been seen by some tree in the application
+ * and require them. Always exclude jshint and jscs files
+ *
+ * @param filePattern
+ * @returns {Array}
+ */
+export function requireFiles(filePattern) {
+  let filesSeen = Object.keys(requirejs._eak_seen);
+
+  return filesSeen.filter((moduleName)=> {
+    return !excludeRegex.test(moduleName) && filePattern.test(moduleName);
+  }).map((moduleName)=> require(moduleName, null, null, true));
+}

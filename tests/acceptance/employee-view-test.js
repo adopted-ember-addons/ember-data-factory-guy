@@ -1,5 +1,3 @@
-import Ember from 'ember';
-const { run } = Ember;
 import { make, build, buildList, mockFind, mockCreate } from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
@@ -33,6 +31,7 @@ test("Show employee by make(ing) a model and using returns with that model", fun
 });
 
 test("Show employee by building(ing) json and using returns with that json", function () {
+  // 'with_department_employments' is a trait that build the has many in the employee factory 
   let employee = build('employee', 'with_department_employments');
 
   mockFind('employee').returns({json: employee});

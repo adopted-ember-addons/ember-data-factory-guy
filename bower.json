@@ -36,7 +36,7 @@
     "ember": "2.5.1",
     "handlebars": "latest",
     "ember-cli-shims": "0.1.1",
-    "qunit": "latest",
+    "qunit": "~2.0.0",
     "ember-qunit": "latest",
     "ember-qunit-notifications": "latest",
     "sinon": "http://sinonjs.org/releases/sinon-1.12.2.js"

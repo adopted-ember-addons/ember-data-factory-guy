@@ -23,6 +23,7 @@ module.exports = function(environment) {
   };
 
   if (environment === 'development') {
+    ENV.factoryGuy = true;
     ENV.locationType = 'auto';
     ENV.baseURL = '/';
     //ENV.APP.LOG_RESOLVER = true;
@@ -36,7 +37,7 @@ module.exports = function(environment) {
     // Testem prefers this...
     ENV.baseURL = '/';
     ENV.locationType = 'none';
-    ENV.exportApplicationGlobal =  true,
+    ENV.exportApplicationGlobal =  true;
     //keep test console output quieter
     //ENV.APP.LOG_RESOLVER = true;
     //ENV.APP.LOG_ACTIVE_GENERATION = true;
