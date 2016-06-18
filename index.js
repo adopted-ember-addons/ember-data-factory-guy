@@ -1,5 +1,6 @@
 /*jshint node: true */
 'use strict';
+var fs = require('fs');
 var path = require('path');
 var mergeTrees = require('broccoli-merge-trees');
 var Funnel = require('broccoli-funnel');
@@ -19,6 +20,23 @@ module.exports = {
     }));
 
     return mergeTrees(files);
+  },
+
+  treeForApp(appTree) {
+    var trees = [ appTree ];
+
+    try {
+      if (fs.statSync('tests/factories').isDirectory()) {
+        var factoriesTree = new Funnel('tests/factories', {
+          destDir: 'tests/factories'
+        });
+        trees.push(factoriesTree);
+      }
+    } catch (err) {
+      // do nothing;
+    }
+
+    return mergeTrees(trees);
   },
 
   included: function(app) {
