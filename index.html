@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Ember-data-factory-guy by danielspaniel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Ember-data-factory-guy</h1>
+      <h2 class="project-tagline">Factories for testing with Ember Data</h2>
+      <a href="https://github.com/danielspaniel/ember-data-factory-guy" class="btn">View on GitHub</a>
+      <a href="https://github.com/danielspaniel/ember-data-factory-guy/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/danielspaniel/ember-data-factory-guy/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="ember-data-factory-guy" class="anchor" href="#ember-data-factory-guy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Ember Data Factory Guy</h1>
+
+<p><a href="http://travis-ci.org/danielspaniel/ember-data-factory-guy"><img src="https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master" alt="Build Status"></a> <a href="http://emberobserver.com/addons/ember-data-factory-guy"><img src="http://emberobserver.com/badges/ember-data-factory-guy.svg" alt="Ember Observer Score"></a> <a href="http://badge.fury.io/js/ember-data-factory-guy"><img src="https://badge.fury.io/js/ember-data-factory-guy.svg" alt="npm version"></a></p>
+
+<p>Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.<br>
+Factories simplify the process of testing, making you more efficient and your tests more readable.  </p>
+
+<ul>
+<li>Support for <strong><a href="https://github.com/lytics/ember-data-model-fragments">ember-data-model-fragment</a></strong> usage is baked in since v2.5.0</li>
+<li>Support for <strong><a href="https://github.com/dustinfarris/ember-django-adapter">ember-django-adapter</a></strong> usage is fried in since v2.6.1 </li>
+<li>Support for adding <a href="https://github.com/danielspaniel/ember-data-factory-guy#using-add-method">meta data</a> to payloads for use with <strong>ember-infinity</strong> ie. =&gt; pagination<br>
+</li>
+<li>Support for adding headers to payloads</li>
+<li>Since you using ember data, you don't need to create any ORM like things. 
+
+<ul>
+<li>You don't need to add any files to re create all the relationships in your models and serializers</li>
+<li>You don't have to setup anything.</li>
+<li>Everything just works.</li>
+</ul>
+</li>
+</ul>
+
+<p>Questions: Slack =&gt; <a href="https://embercommunity.slack.com/messages/e-factory-guy/">factory-guy</a></p>
+
+<p>Contents:</p>
+
+<ul>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#installation">Installation</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#how-this-works">How This Works</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#setup">Setup</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#defining-factories">Defining Factories</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#using-factories">Using Factories</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#sequences">Sequences</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#inline-functions">Inline Function</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#traits">Traits</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#associations">Associations</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions">Extending Other Definitions</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#callbacks">Callbacks</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#ember-data-model-fragments">Ember Data Model Fragments</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#creating-factories-in-addons">Creating Factories in Addons</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter">Ember Django Adapter</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#custom-api-formats">Custom API formats</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#testing---creating-scenarios">Testing - creating scenarios</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#testing-models-controllers-components">Testing models, controllers, components</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests">Acceptance Tests</a></li>
+</ul>
+
+<p>ChangeLog: ( Notes about what has changed in each version )</p>
+
+<ul>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy/releases">Release Notes</a></li>
+</ul>
+
+<h3>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h3>
+
+<ul>
+<li>
+<code>ember install ember-data-factory-guy@2.6.5</code> ( ember-data-1.13.5+ )</li>
+<li>
+<code>ember install ember-data-factory-guy@1.13.2</code> ( ember-data-1.13.0 + )</li>
+<li>
+<code>ember install ember-data-factory-guy@1.1.2</code> ( ember-data-1.0.0-beta.19.1 )</li>
+<li>
+<code>ember install ember-data-factory-guy@1.0.10</code> ( ember-data-1.0.0-beta.16.1 )</li>
+</ul>
+
+<h3>
+<a id="upgrade" class="anchor" href="#upgrade" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Upgrade</h3>
+
+<ul>
+<li> remove ember-data-factory-guy from package.json</li>
+<li><code>npm prune</code></li>
+<li>
+<code>ember install ember-data-factory-guy  ( for latest release )</code> </li>
+</ul>
+
+<h3>
+<a id="how-this-works" class="anchor" href="#how-this-works" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How this works</h3>
+
+<ul>
+<li>You create factories for you models.
+
+<ul>
+<li>put them in tests/factories directory</li>
+</ul>
+</li>
+<li>Then you use them to create models in your tests.
+
+<ul>
+<li>You can make records that persist in the store</li>
+<li>Or you can build a json payload used for mocking an ajax call's payload</li>
+</ul>
+</li>
+</ul>
+
+<p><a href="https://vimeo.com/album/3607049/video/146964694"><img src="https://i.vimeocdn.com/video/545504017.png?mw=1920&amp;mh=1080" alt="Thumbnail of Introduction to ember-data-factory-guy"></a></p>
+
+<h3>
+<a id="setup" class="anchor" href="#setup" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setup</h3>
+
+<p>In the following examples, assume the models look like this:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-c">// standard models</span>
+  User <span class="pl-k">=</span> <span class="pl-c1">DS</span>.<span class="pl-smi">Model</span>.<span class="pl-en">extend</span>({
+    name<span class="pl-k">:</span>     <span class="pl-c1">DS</span>.<span class="pl-en">attr</span>(<span class="pl-s"><span class="pl-pds">'</span>string<span class="pl-pds">'</span></span>),
+    style<span class="pl-k">:</span>    <span class="pl-c1">DS</span>.<span class="pl-en">attr</span>(<span class="pl-s"><span class="pl-pds">'</span>string<span class="pl-pds">'</span></span>),
+    projects<span class="pl-k">:</span> <span class="pl-c1">DS</span>.<span class="pl-en">hasMany</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>),
+    hats<span class="pl-k">:</span> <span class="pl-c1">DS</span>.<span class="pl-en">hasMany</span>(<span class="pl-s"><span class="pl-pds">'</span>hat<span class="pl-pds">'</span></span>, {polymorphic<span class="pl-k">:</span> <span class="pl-c1">true</span>})
+  });
+
+  Project <span class="pl-k">=</span> <span class="pl-c1">DS</span>.<span class="pl-smi">Model</span>.<span class="pl-en">extend</span>({
+    title<span class="pl-k">:</span>  <span class="pl-c1">DS</span>.<span class="pl-en">attr</span>(<span class="pl-s"><span class="pl-pds">'</span>string<span class="pl-pds">'</span></span>),
+    user<span class="pl-k">:</span>   <span class="pl-c1">DS</span>.<span class="pl-en">belongsTo</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>)
+  });
+
+  <span class="pl-c">// polymorphic models</span>
+  Hat <span class="pl-k">=</span> <span class="pl-c1">DS</span>.<span class="pl-smi">Model</span>.<span class="pl-en">extend</span>({
+    type<span class="pl-k">:</span> <span class="pl-c1">DS</span>.<span class="pl-en">attr</span>(<span class="pl-s"><span class="pl-pds">'</span>string<span class="pl-pds">'</span></span>),
+    user<span class="pl-k">:</span> <span class="pl-c1">DS</span>.<span class="pl-en">belongsTo</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>)
+  });
+
+  BigHat <span class="pl-k">=</span> <span class="pl-smi">Hat</span>.<span class="pl-en">extend</span>();
+  SmallHat <span class="pl-k">=</span> <span class="pl-smi">Hat</span>.<span class="pl-en">extend</span>();</pre></div>
+
+<h3>
+<a id="defining-factories" class="anchor" href="#defining-factories" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Defining Factories</h3>
+
+<ul>
+<li>A factory has a name and a set of attributes.</li>
+<li>The name should match the model type name. So, for 'User' model, the name would be 'user'</li>
+<li>Create factory files in the tests/factories directory.</li>
+<li>Can use generator to create the outline of a factory file:
+<code>ember g factory user</code> This will create a file named user.js in the tests/factories directory.</li>
+</ul>
+
+<h5>
+<a id="standard-models" class="anchor" href="#standard-models" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Standard models</h5>
+
+<ul>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js">Sample full blown factory: (user.js)</a></li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-c">// file tests/factories/user.js</span>
+  <span class="pl-k">import</span> <span class="pl-smi">FactoryGuy</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {
+    <span class="pl-c">// Put default 'user' attributes in the default section</span>
+    <span class="pl-k">default</span><span class="pl-k">:</span> {
+      style<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>normal<span class="pl-pds">'</span></span>,
+      name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Dude<span class="pl-pds">'</span></span>
+    },
+    <span class="pl-c">// Create a named 'user' with custom attributes</span>
+    admin<span class="pl-k">:</span> {
+      style<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>super<span class="pl-pds">'</span></span>,
+      name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Admin<span class="pl-pds">'</span></span>
+    }
+  });
+</pre></div>
+
+<h5>
+<a id="polymorphic-models" class="anchor" href="#polymorphic-models" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Polymorphic models</h5>
+
+<ul>
+<li>Define each polymorphic model in it's own typed definition</li>
+<li>May want to extend parent factory here
+
+<ul>
+<li>See <a href="https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions">Extending Other Definitions</a>
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-c">// file tests/factories/small-hat.js</span>
+  <span class="pl-k">import</span> <span class="pl-smi">FactoryGuy</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>small-hat<span class="pl-pds">'</span></span>, {
+    <span class="pl-k">default</span><span class="pl-k">:</span> {
+      type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>SmallHat<span class="pl-pds">'</span></span>
+    }
+  })
+
+  <span class="pl-c">// file tests/factories/big-hat.js</span>
+  <span class="pl-k">import</span> <span class="pl-smi">FactoryGuy</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>big-hat<span class="pl-pds">'</span></span>, {
+    <span class="pl-k">default</span><span class="pl-k">:</span> {
+      type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>BigHat<span class="pl-pds">'</span></span>
+    }
+  })
+</pre></div>
+
+<p>In other words, don't do this:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-c">// file tests/factories/hat.js</span>
+  <span class="pl-k">import</span> <span class="pl-smi">FactoryGuy</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>hat<span class="pl-pds">'</span></span>, {
+    <span class="pl-k">default</span><span class="pl-k">:</span> {},
+    small<span class="pl-k">-</span>hat<span class="pl-k">:</span> {
+      type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>SmallHat<span class="pl-pds">'</span></span>
+    },
+    big<span class="pl-k">-</span>hat<span class="pl-k">:</span> {
+      type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>BigHat<span class="pl-pds">'</span></span>
+    }
+  })
+</pre></div>
+
+<h3>
+<a id="using-factories" class="anchor" href="#using-factories" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using Factories</h3>
+
+<ul>
+<li>FactoryGuy.make
+
+<ul>
+<li>Loads model instance into the store</li>
+</ul>
+</li>
+<li>FactoryGuy.makeList
+
+<ul>
+<li>Loads zero to many model instances into the store</li>
+</ul>
+</li>
+<li>FactoryGuy.build
+
+<ul>
+<li>Builds json in accordance with the adapters specifications
+
+<ul>
+<li>
+<a href="http://emberjs.com/api/data/classes/DS.RESTAdapter.html">RESTAdapter</a>  (<em>assume this adapter being used in most of the following examples</em>)</li>
+<li><a href="https://github.com/ember-data/active-model-adapter#json-structure">ActiveModelAdapter</a></li>
+<li><a href="http://jsonapi.org/format/">JSONAPIAdapter</a></li>
+<li><a href="https://github.com/dustinfarris/ember-django-adapter">DrfAdapter (Ember Django Adapter)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>FactoryGuy.buildList
+
+<ul>
+<li>Builds json with list of zero or more items in accordance with the adapters specifications</li>
+</ul>
+</li>
+<li>Can override default attributes by passing in an object of options</li>
+<li>Can add attributes or relationships with <a href="https://github.com/danielspaniel/ember-data-factory-guy#traits">traits</a>
+</li>
+<li>Can compose relationships 
+
+<ul>
+<li>By passing in other objects you've made with build/buildList or make/makeList </li>
+</ul>
+</li>
+</ul>
+
+<h5>
+<a id="makemakelist" class="anchor" href="#makemakelist" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>make/makeList</h5>
+
+<ul>
+<li>all instances loaded into the ember data store</li>
+</ul>
+
+<p>Usage:</p>
+
+<h5>
+<a id="make" class="anchor" href="#make" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>make</h5>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-k">import</span> { <span class="pl-smi">make</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+
+  <span class="pl-c">// make basic user with the default attributes in user factory</span>
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">user</span>.<span class="pl-en">toJSON</span>({includeId<span class="pl-k">:</span> <span class="pl-c1">true</span>}) <span class="pl-c">// =&gt; {id: 1, name: 'User1', style: 'normal'}</span>
+
+  <span class="pl-c">// make user with default attributes plus those defined as 'admin' in user factory</span>
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>admin<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">user</span>.<span class="pl-en">toJSON</span>({includeId<span class="pl-k">:</span> <span class="pl-c1">true</span>}) <span class="pl-c">// =&gt; {id: 2, name: 'Admin', style: 'super'}</span>
+
+  <span class="pl-c">// make user with default attributes plus these extra attributes</span>
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Fred<span class="pl-pds">'</span></span>});
+  <span class="pl-smi">user</span>.<span class="pl-en">toJSON</span>({includeId<span class="pl-k">:</span> <span class="pl-c1">true</span>}) <span class="pl-c">// =&gt; {id: 3, name: 'Fred', style: 'normal'}</span>
+
+  <span class="pl-c">// make admin defined user with these extra attributes</span>
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>admin<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Fred<span class="pl-pds">'</span></span>});
+  <span class="pl-smi">user</span>.<span class="pl-en">toJSON</span>({includeId<span class="pl-k">:</span> <span class="pl-c1">true</span>}) <span class="pl-c">// =&gt; {id: 4, name: 'Fred', style: 'super'}</span>
+
+  <span class="pl-c">// make default user with traits and with extra attributes</span>
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>silly<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Fred<span class="pl-pds">'</span></span>});
+  <span class="pl-smi">user</span>.<span class="pl-en">toJSON</span>({includeId<span class="pl-k">:</span> <span class="pl-c1">true</span>}) <span class="pl-c">// =&gt; {id: 5, name: 'Fred', style: 'silly'}</span>
+
+  <span class="pl-c">// make user with hats relationship ( hasMany ) composed of a few pre 'made' hats</span>
+  <span class="pl-k">let</span> hat1 <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>big-hat<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> hat2 <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>big-hat<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {hats<span class="pl-k">:</span> [hat1, hat2]});
+  <span class="pl-smi">user</span>.<span class="pl-en">toJSON</span>({includeId<span class="pl-k">:</span> <span class="pl-c1">true</span>})  
+  <span class="pl-c">// =&gt; {id: 6, name: 'User2', style: 'normal', hats: [{id:1, type:"big_hat"},{id:1, type:"big_hat"}]}</span>
+  <span class="pl-c">// note that hats are polymorphic. if they weren't, the hats array would be a list of ids: [1,2]</span>
+
+  <span class="pl-c">// make user with company relationship ( belongsTo ) composed of a pre 'made' company</span>
+  <span class="pl-k">let</span> company <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>company<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {company<span class="pl-k">:</span> company});
+  <span class="pl-smi">user</span>.<span class="pl-en">toJSON</span>({includeId<span class="pl-k">:</span> <span class="pl-c1">true</span>})  <span class="pl-c">// =&gt; {id: 7, name: 'User3', style: 'normal', company: 1} </span>
+</pre></div>
+
+<h5>
+<a id="makelist" class="anchor" href="#makelist" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>makeList</h5>
+
+<ul>
+<li>check out <a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js">(user factory):</a> to see 'bob' user and 'with_car' trait<br>
+</li>
+</ul>
+
+<p>Usage:</p>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-k">import</span> { <span class="pl-smi">make</span>, <span class="pl-smi">makeList</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+
+  <span class="pl-c">// Let's say bob is a named type in the user factory</span>
+  <span class="pl-en">makeList</span>(<span class="pl-s"><span class="pl-pds">'</span>bob<span class="pl-pds">'</span></span>) <span class="pl-c">// makes 0 bob's</span>
+
+  <span class="pl-en">makeList</span>(<span class="pl-s"><span class="pl-pds">'</span>bob<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>) <span class="pl-c">// makes 2 bob's</span>
+
+  <span class="pl-en">makeList</span>(<span class="pl-s"><span class="pl-pds">'</span>bob<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>, <span class="pl-s"><span class="pl-pds">'</span>with_car<span class="pl-pds">'</span></span> , {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Dude<span class="pl-pds">"</span></span>})
+  <span class="pl-c">// makes 2 bob's that have 'with_car' trait and name of "Dude"</span>
+  <span class="pl-c">// In other words, applies the traits and options to every bob made  </span>
+
+  <span class="pl-en">makeList</span>(<span class="pl-s"><span class="pl-pds">'</span>bob<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>with_car<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>with_car<span class="pl-pds">'</span></span>,{name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Dude<span class="pl-pds">"</span></span>}])
+  <span class="pl-c">// 2 User models with bob attributes, where the first also has 'with_car' trait</span>
+  <span class="pl-c">// the last has 'with_car' trait and name of "Dude", so you get 2 different bob's</span>
+
+</pre></div>
+
+<h5>
+<a id="build" class="anchor" href="#build" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>build</h5>
+
+<ul>
+<li>for building json that you can pass as json payload in <a href="https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests">acceptance tests</a>
+</li>
+<li>takes same arguments as make </li>
+<li>can compose relationships with other build/buildList payloads</li>
+<li>to inspect the json use the get() method</li>
+<li>use <a href="https://github.com/danielspaniel/ember-data-factory-guy#using-add-method">add</a> method 
+
+<ul>
+<li>to include extra sideloaded data to the payload</li>
+<li>to include meta data</li>
+</ul>
+</li>
+</ul>
+
+<p>Usage: </p>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-k">import</span> { <span class="pl-smi">build</span>, <span class="pl-smi">buildList</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;  
+
+  <span class="pl-c">// build basic user with the default attributes in user factory</span>
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>() <span class="pl-c">// =&gt; {id: 1, name: 'User1', style: 'normal'}</span>
+
+  <span class="pl-c">// build user with default attributes plus those defined as 'admin' in user factory  </span>
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>admin<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>() <span class="pl-c">// =&gt; {id: 2, name: 'Admin', style: 'super'}</span>
+
+  <span class="pl-c">// build user with default attributes plus these extra attributes</span>
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Fred<span class="pl-pds">'</span></span>});
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>() <span class="pl-c">// =&gt; {id: 3, name: 'Fred', style: 'normal'}</span>
+
+  <span class="pl-c">// build admin defined user with extra attributes</span>
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>admin<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Fred<span class="pl-pds">'</span></span>});
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>() <span class="pl-c">// =&gt; {id: 4, name: 'Fred', style: 'super'}</span>
+
+  <span class="pl-c">// build default user with traits and with extra attributes</span>
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>silly<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Fred<span class="pl-pds">'</span></span>});
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>() <span class="pl-c">// =&gt; {id: 5, name: 'Fred', style: 'silly'}</span>
+
+  <span class="pl-c">// build user with hats relationship ( hasMany ) composed of a few pre 'built' hats </span>
+  <span class="pl-k">let</span> hat1 <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>big-hat<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> hat2 <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>big-hat<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {hats<span class="pl-k">:</span> [hat1, hat2]});
+  <span class="pl-c">// note that hats are polymorphic. if they weren't, the hats array would be a list of ids: [1,2]</span>
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>() <span class="pl-c">// =&gt; {id: 6, name: 'User2', style: 'normal', hats: [{id:1, type:"big_hat"},{id:1, type:"big_hat"}]}</span>
+
+  <span class="pl-c">// build user with company relationship ( belongsTo ) composed of a pre 'built' company</span>
+  <span class="pl-k">let</span> company <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>company<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {company<span class="pl-k">:</span> company});
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>() <span class="pl-c">// =&gt; {id: 7, name: 'User3', style: 'normal', company: 1} </span>
+
+  <span class="pl-c">// build and compose relationships to unlimited degree</span>
+  <span class="pl-k">let</span> company1 <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>company<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>A Corp<span class="pl-pds">'</span></span>});
+  <span class="pl-k">let</span> company2 <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>company<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>B Corp<span class="pl-pds">'</span></span>});
+  <span class="pl-k">let</span> owners <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, { company<span class="pl-k">:</span>company1 }, { company<span class="pl-k">:</span>company2 });
+  <span class="pl-k">let</span> buildJson <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>property<span class="pl-pds">'</span></span>, { owners });
+</pre></div>
+
+<ul>
+<li>Example of what json payload from build looks like
+
+<ul>
+<li>Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters</li>
+</ul>
+</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>with_company<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>with_hats<span class="pl-pds">'</span></span>);
+  json <span class="pl-c">// =&gt;</span>
+    {
+      user<span class="pl-k">:</span> {
+        id<span class="pl-k">:</span> <span class="pl-c1">1</span>,
+        name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>User1<span class="pl-pds">'</span></span>,
+        company<span class="pl-k">:</span> <span class="pl-c1">1</span>,
+        hats<span class="pl-k">:</span> [
+          {type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>big_hat<span class="pl-pds">'</span></span>, id<span class="pl-k">:</span><span class="pl-c1">1</span>},
+          {type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>big_hat<span class="pl-pds">'</span></span>, id<span class="pl-k">:</span><span class="pl-c1">2</span>}
+        ]
+      },
+      companies<span class="pl-k">:</span> [
+        {id<span class="pl-k">:</span> <span class="pl-c1">1</span>, name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Silly corp<span class="pl-pds">'</span></span>}
+      ],
+      <span class="pl-s"><span class="pl-pds">'</span>big-hats<span class="pl-pds">'</span></span><span class="pl-k">:</span> [
+        {id<span class="pl-k">:</span> <span class="pl-c1">1</span>, type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>BigHat<span class="pl-pds">"</span></span> },
+        {id<span class="pl-k">:</span> <span class="pl-c1">2</span>, type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>BigHat<span class="pl-pds">"</span></span> }
+      ]
+    }
+</pre></div>
+
+<h5>
+<a id="buildlist" class="anchor" href="#buildlist" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>buildList</h5>
+
+<ul>
+<li>for building json that you can pass as json payload in <a href="https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests">acceptance tests</a>
+</li>
+<li>takes the same arguments as makeList</li>
+<li>can compose relationships with other build/buildList payloads</li>
+<li>to inspect the json use the get() method
+
+<ul>
+<li>can use get(index) to get to items in the list</li>
+</ul>
+</li>
+<li>use <a href="https://github.com/danielspaniel/ember-data-factory-guy#using-add-method">add</a> method 
+
+<ul>
+<li>to add extra sideloaded data to the payload =&gt; <code>.add({json})</code>
+</li>
+<li>to add meta data =&gt; <code>.add({meta})</code>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>Usage: </p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> { <span class="pl-smi">build</span>, <span class="pl-smi">buildList</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+
+  <span class="pl-k">let</span> owners <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>bob<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>);  <span class="pl-c">// builds 2 Bob's</span>
+
+  <span class="pl-k">let</span> owners <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>bob<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Rob<span class="pl-pds">'</span></span>); <span class="pl-c">// builds 2 Bob's with name of 'Rob'</span>
+
+  <span class="pl-c">// builds 2 users, one with name 'Bob' , the next with name 'Rob'  </span>
+  <span class="pl-k">let</span> owners <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, { name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span> }, { name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Rob<span class="pl-pds">'</span></span> });</pre></div>
+
+<h5>
+<a id="using-add-method" class="anchor" href="#using-add-method" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using add() method</h5>
+
+<ul>
+<li>when you need to add more json to payload 
+
+<ul>
+<li>will be sideloaded 
+
+<ul>
+<li>only JSONAPI, and REST based serializers can do sideloading</li>
+<li>so DRFSerializer and JSONSerializer users can not user this feature</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>Usage:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">let</span> batMan <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>bat_man<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> userPayload <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>).<span class="pl-c1">add</span>({json<span class="pl-k">:</span>batMan});
+
+  userPayload <span class="pl-k">=</span> {
+    user<span class="pl-k">:</span> {
+      id<span class="pl-k">:</span> <span class="pl-c1">1</span>,
+      name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>User1<span class="pl-pds">'</span></span>,
+      style<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>normal<span class="pl-pds">"</span></span>
+    },
+    <span class="pl-s"><span class="pl-pds">'</span>super-heros<span class="pl-pds">'</span></span><span class="pl-k">:</span> [
+      {
+        id<span class="pl-k">:</span> <span class="pl-c1">1</span>,
+        name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>BatMan<span class="pl-pds">"</span></span>,
+        type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>SuperHero<span class="pl-pds">"</span></span>
+      }
+    ]
+  };</pre></div>
+
+<ul>
+<li>when you want to add meta data to payload 
+
+<ul>
+<li>only JSONAPI, and REST based and serializers and DRFSerializer can handle meta data</li>
+<li>so JSONSerializer users can not user this feature ( though this might be a bug on my part )</li>
+</ul>
+</li>
+</ul>
+
+<p>Usage:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">let</span> json1 <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>).<span class="pl-c1">add</span>({ meta<span class="pl-k">:</span> { previous<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/profiles?page=1<span class="pl-pds">'</span></span>, next<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/profiles?page=3<span class="pl-pds">'</span></span> } });
+  <span class="pl-k">let</span> json2 <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>).<span class="pl-c1">add</span>({ meta<span class="pl-k">:</span> { previous<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/profiles?page=2<span class="pl-pds">'</span></span>, next<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/profiles?page=4<span class="pl-pds">'</span></span> } });
+
+  <span class="pl-en">mockQuery</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>, {page<span class="pl-k">:</span> <span class="pl-c1">2</span>}).<span class="pl-en">returns</span>({ json<span class="pl-k">:</span> json1 });
+  <span class="pl-en">mockQuery</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>, {page<span class="pl-k">:</span> <span class="pl-c1">3</span>}).<span class="pl-en">returns</span>({ json<span class="pl-k">:</span> json2 });
+
+ <span class="pl-smi">store</span>.<span class="pl-en">query</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>, {page<span class="pl-k">:</span> <span class="pl-c1">2</span>}).<span class="pl-en">then</span>((<span class="pl-smi">records</span>)<span class="pl-k">=&gt;</span> <span class="pl-c">// first 2 from json1</span>
+ <span class="pl-smi">store</span>.<span class="pl-en">query</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>, {page<span class="pl-k">:</span> <span class="pl-c1">3</span>}).<span class="pl-en">then</span>((<span class="pl-smi">records</span>)<span class="pl-k">=&gt;</span> <span class="pl-c">// second 2 from json2</span>
+</pre></div>
+
+<h5>
+<a id="using-get-method" class="anchor" href="#using-get-method" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using get() method</h5>
+
+<ul>
+<li>for inspecting contents of json payload
+
+<ul>
+<li>get() returns all attributes of top level model </li>
+<li>get(attribute) gives you attribute in top level model</li>
+<li>get(index) gives you the info for hasMany relationship at that index</li>
+<li>get(relationships) gives you just id or type ( if polymorphic )
+
+<ul>
+<li>better to compose the build relationships by hand if you need more info</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>check out <a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js">user factory:</a> to see 'boblike' and 'adminlike' user traits</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>() <span class="pl-c">//=&gt; {id: 1, name: 'User1', style: 'normal'}</span>
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>id<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 1</span>
+
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>);
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>(<span class="pl-c1">0</span>) <span class="pl-c">//=&gt; {id: 1, name: 'User1', style: 'normal'}</span>
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>(<span class="pl-c1">1</span>) <span class="pl-c">//=&gt; {id: 2, name: 'User2', style: 'normal'}</span>
+
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>boblike<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>adminlike<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>(<span class="pl-c1">0</span>) <span class="pl-c">//=&gt; {id: 1, name: 'Bob', style: 'boblike'}</span>
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>(<span class="pl-c1">1</span>) <span class="pl-c">//=&gt; {id: 2, name: 'Admin', style: 'super'}</span></pre></div>
+
+<ul>
+<li>building relationships inline</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>with_company<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>with_hats<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>() <span class="pl-c">//=&gt; {id: 1, name: 'User1', style: 'normal'}</span>
+
+  <span class="pl-c">// to get hats (hasMany relationship) info</span>
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>hats<span class="pl-pds">'</span></span>) <span class="pl-c">//=&gt; [{id: 1, type: "big_hat"},{id: 1, type: "big_hat"}]</span>
+
+  <span class="pl-c">// to get company ( belongsTo relationship ) info</span>
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>company<span class="pl-pds">'</span></span>) <span class="pl-c">//=&gt; {id: 1, type: "company"}</span>
+</pre></div>
+
+<ul>
+<li>by composing the relationships you can get the full attributes of those associations</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-k">let</span> company <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>company<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> hats <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>big-hats<span class="pl-pds">'</span></span>);
+
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {company<span class="pl-k">:</span> company, hats<span class="pl-k">:</span> hats});
+  <span class="pl-smi">user</span>.<span class="pl-en">get</span>() <span class="pl-c">//=&gt; {id: 1, name: 'User1', style: 'normal'}</span>
+
+  <span class="pl-c">// to get hats info from hats json </span>
+  <span class="pl-smi">hats</span>.<span class="pl-en">get</span>(<span class="pl-c1">0</span>) <span class="pl-c">//=&gt; {id: 1, type: "BigHat", plus .. any other attributes}</span>
+  <span class="pl-smi">hats</span>.<span class="pl-en">get</span>(<span class="pl-c1">1</span>) <span class="pl-c">//=&gt; {id: 2, type: "BigHat", plus .. any other attributes}</span>
+
+  <span class="pl-c">// to get company info</span>
+  <span class="pl-smi">company</span>.<span class="pl-en">get</span>() <span class="pl-c">//=&gt; {id: 1, type: "Company", name: "Silly corp"}</span>
+</pre></div>
+
+<h3>
+<a id="sequences" class="anchor" href="#sequences" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sequences</h3>
+
+<ul>
+<li>For generating unique attribute values.</li>
+<li>Can be defined:
+
+<ul>
+<li>In the model definition's sequences hash</li>
+<li>Inline on the attribute</li>
+</ul>
+</li>
+<li>Values are generated by calling FactoryGuy.generate</li>
+</ul>
+
+<h5>
+<a id="declaring-sequences-in-sequences-hash" class="anchor" href="#declaring-sequences-in-sequences-hash" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Declaring sequences in sequences hash</h5>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {
+    sequences<span class="pl-k">:</span> {
+      <span class="pl-en">userName</span><span class="pl-k">:</span> (<span class="pl-smi">num</span>)<span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">`</span>User<span class="pl-s1"><span class="pl-pse">${</span>num<span class="pl-pse">}</span></span><span class="pl-pds">`</span></span>
+    },
+
+    <span class="pl-k">default</span><span class="pl-k">:</span> {
+      <span class="pl-c">// use the 'userName' sequence for this attribute</span>
+      name<span class="pl-k">:</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">generate</span>(<span class="pl-s"><span class="pl-pds">'</span>userName<span class="pl-pds">'</span></span>)
+    }
+  });
+
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'User1'</span>
+
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'User2'</span>
+</pre></div>
+
+<h5>
+<a id="declaring-an-inline-sequence-on-attribute" class="anchor" href="#declaring-an-inline-sequence-on-attribute" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Declaring an inline sequence on attribute</h5>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>, {
+    special_project<span class="pl-k">:</span> {
+      title<span class="pl-k">:</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">generate</span>((<span class="pl-smi">num</span>)<span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">`</span>Project #<span class="pl-s1"><span class="pl-pse">${</span>num<span class="pl-pse">}</span></span><span class="pl-pds">`</span></span>)
+    },
+  });
+
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>special_project<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>title<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'Project #1'</span>
+
+  <span class="pl-k">let</span> project <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>special_project<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">project</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>title<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'Project #2'</span>
+</pre></div>
+
+<h3>
+<a id="inline-functions" class="anchor" href="#inline-functions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Inline Functions</h3>
+
+<ul>
+<li>Declare a function for an attribute
+
+<ul>
+<li>Can reference all other attributes, even id</li>
+</ul>
+</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {
+    sequences<span class="pl-k">:</span> {
+      <span class="pl-en">userName</span><span class="pl-k">:</span> (<span class="pl-smi">num</span>)<span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">`</span>User<span class="pl-s1"><span class="pl-pse">${</span>num<span class="pl-pse">}</span></span><span class="pl-pds">`</span></span>
+    },
+    <span class="pl-k">default</span><span class="pl-k">:</span> { 
+      name<span class="pl-k">:</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">generate</span>(<span class="pl-s"><span class="pl-pds">'</span>userName<span class="pl-pds">'</span></span>) 
+    },
+    traits<span class="pl-k">:</span> {
+      boringStyle<span class="pl-k">:</span> {
+        <span class="pl-en">style</span><span class="pl-k">:</span> (<span class="pl-smi">f</span>)<span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">`</span><span class="pl-s1"><span class="pl-pse">${</span><span class="pl-smi">f</span>.<span class="pl-c1">id</span><span class="pl-pse">}</span></span> boring <span class="pl-pds">`</span></span>
+      }
+      funnyUser<span class="pl-k">:</span> {
+        <span class="pl-en">style</span><span class="pl-k">:</span> (<span class="pl-smi">f</span>)<span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">`</span>funny <span class="pl-s1"><span class="pl-pse">${</span><span class="pl-smi">f</span>.<span class="pl-c1">name</span><span class="pl-pse">}</span></span><span class="pl-pds">`</span></span>
+      }
+    }
+  });
+
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>funny<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'User1'</span>
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>style<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'funny User1'</span>
+
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>boring<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>id<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 2</span>
+  <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>style<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; '2 boring'</span>
+</pre></div>
+
+<p><em>Note the style attribute was built from a function which depends on the name
+ and the name is a generated attribute from a sequence function</em></p>
+
+<h3>
+<a id="traits" class="anchor" href="#traits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Traits</h3>
+
+<ul>
+<li>Used with build, buildList, make, or makeList</li>
+<li>For grouping attributes together</li>
+<li>Can use one or more traits in a row
+
+<ul>
+<li>The last trait included overrides any values in traits before it</li>
+</ul>
+</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {
+    traits<span class="pl-k">:</span> {
+      big<span class="pl-k">:</span> { name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Big Guy<span class="pl-pds">'</span></span> }
+      friendly<span class="pl-k">:</span> { style<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Friendly<span class="pl-pds">'</span></span> }
+    }
+  });
+
+  <span class="pl-k">let</span> json <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>big<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>friendly<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'Big Guy'</span>
+  <span class="pl-smi">json</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>style<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'Friendly'</span>
+
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>big<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>friendly<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'Big Guy'</span>
+  <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>style<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'Friendly'</span>
+</pre></div>
+
+<p>You can still pass in a hash of options when using traits. This hash of
+attributes will override any trait attributes or default attributes</p>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>big<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>friendly<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Dave<span class="pl-pds">'</span></span>});
+  <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'Dave'</span>
+  <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>style<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'Friendly'</span>
+</pre></div>
+
+<h3>
+<a id="associations" class="anchor" href="#associations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Associations</h3>
+
+<ul>
+<li>Can setup belongsTo or hasMany associations in factory definitions
+
+<ul>
+<li>As inline attribute definition</li>
+<li>With traits</li>
+</ul>
+</li>
+<li>Can setup belongsTo or hasMany associations manually 
+
+<ul>
+<li>With <a href="https://github.com/danielspaniel/ember-data-factory-guy#build">build</a> / <a href="https://github.com/danielspaniel/ember-data-factory-guy#buildlist">buildList</a> and <a href="https://github.com/danielspaniel/ember-data-factory-guy#make">make</a> / <a href="https://github.com/danielspaniel/ember-data-factory-guy#makelist">makeList</a> 
+
+<ul>
+<li>Can compose relationships to any level </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<h5>
+<a id="setup-belongsto-associations-in-factory-definition" class="anchor" href="#setup-belongsto-associations-in-factory-definition" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setup belongsTo associations in Factory Definition</h5>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-c">// Recall ( from above setup ) that there is a user belongsTo on the Project model</span>
+  <span class="pl-c">// Also, assume 'user' factory is same as from 'user' factory definition above in</span>
+  <span class="pl-c">// 'Defining Factories' section</span>
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>, {
+
+    project_with_user<span class="pl-k">:</span> {
+      <span class="pl-c">// create user model with default attributes</span>
+      user<span class="pl-k">:</span> {}
+    },
+    project_with_bob<span class="pl-k">:</span> {
+      <span class="pl-c">// create user model with custom attributes</span>
+      user<span class="pl-k">:</span> {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span>}
+    },
+    project_with_admin<span class="pl-k">:</span> {
+      <span class="pl-c">// create a named user model with the FactoryGuy.belongsTo helper method</span>
+      user<span class="pl-k">:</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">belongsTo</span>(<span class="pl-s"><span class="pl-pds">'</span>admin<span class="pl-pds">'</span></span>)
+    }
+  });
+
+  <span class="pl-k">let</span> project <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>project_with_admin<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">project</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>user.name<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'Admin'</span>
+  <span class="pl-smi">project</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>user.style<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 'super'</span>
+</pre></div>
+
+<p><em>You could also accomplish the above with traits:</em></p>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>, {
+    traits<span class="pl-k">:</span> {
+      with_user<span class="pl-k">:</span> { user<span class="pl-k">:</span> {} },
+      with_admin<span class="pl-k">:</span> { user<span class="pl-k">:</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">belongsTo</span>(<span class="pl-s"><span class="pl-pds">'</span>admin<span class="pl-pds">'</span></span>) }
+    }
+  });
+
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>with_user<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">project</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>).<span class="pl-en">toJSON</span>({includeId<span class="pl-k">:</span> <span class="pl-c1">true</span>}) <span class="pl-c">// =&gt; {id:1, name: 'Dude', style: 'normal'}</span>
+</pre></div>
+
+<h5>
+<a id="setup-belongsto-associations-manually" class="anchor" href="#setup-belongsto-associations-manually" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setup belongsTo associations manually</h5>
+
+<ul>
+<li>See <a href="https://github.com/danielspaniel/ember-data-factory-guy#build">build</a> / <a href="https://github.com/danielspaniel/ember-data-factory-guy#buildlist">buildList</a> and <a href="https://github.com/danielspaniel/ember-data-factory-guy#make">make</a> / <a href="https://github.com/danielspaniel/ember-data-factory-guy#makelist">makeList</a> for more ideas </li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> project <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>, {user<span class="pl-k">:</span> user});
+
+  <span class="pl-smi">project</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>).<span class="pl-en">toJSON</span>({includeId<span class="pl-k">:</span> <span class="pl-c1">true</span>}) <span class="pl-c">// =&gt; {id:1, name: 'Dude', style: 'normal'}</span></pre></div>
+
+<p><em>Note that though you are setting the 'user' belongsTo association on a project,
+the reverse user hasMany 'projects' association is being setup for you on the user
+( for both manual and factory defined belongsTo associations ) as well</em></p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>projects.length<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 1</span></pre></div>
+
+<h5>
+<a id="setup-hasmany-associations-in-factory-definition" class="anchor" href="#setup-hasmany-associations-in-factory-definition" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setup hasMany associations in Factory Definition</h5>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {
+    user_with_projects<span class="pl-k">:</span> { projects<span class="pl-k">:</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">hasMany</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>) }
+  });
+
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user_with_projects<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>projects.length<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 2</span>
+</pre></div>
+
+<p><em>You could also accomplish the above with traits:</em></p>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>, {
+    traits<span class="pl-k">:</span> {
+      with_projects<span class="pl-k">:</span> {
+        projects<span class="pl-k">:</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">hasMany</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>)
+      }
+    }
+  });
+
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>with_projects<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>projects.length<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 2</span>
+</pre></div>
+
+<h5>
+<a id="setup-hasmany-associations-manually" class="anchor" href="#setup-hasmany-associations-manually" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setup hasMany associations manually</h5>
+
+<ul>
+<li>See <a href="https://github.com/danielspaniel/ember-data-factory-guy#build">build</a> / <a href="https://github.com/danielspaniel/ember-data-factory-guy#buildlist">buildList</a> and <a href="https://github.com/danielspaniel/ember-data-factory-guy#make">make</a> / <a href="https://github.com/danielspaniel/ember-data-factory-guy#makelist">makeList</a> for more ideas</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">let</span> project1 <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> project2 <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {projects<span class="pl-k">:</span> [project1,project2]});
+  <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>projects.length<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 2</span>
+
+  <span class="pl-c">// or</span>
+  <span class="pl-k">let</span> projects <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">makeList</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>);
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {projects<span class="pl-k">:</span> projects});
+  <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>projects.length<span class="pl-pds">'</span></span>) <span class="pl-c">// =&gt; 2</span>
+</pre></div>
+
+<p><em>Note that though you are setting the 'projects' hasMany association on a user,
+the reverse 'user' belongsTo association is being setup for you on the project
+( for both manual and factory defined hasMany associations ) as well</em></p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-smi">projects</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>firstObject.user<span class="pl-pds">'</span></span>)  <span class="pl-c">// =&gt; user</span></pre></div>
+
+<h3>
+<a id="extending-other-definitions" class="anchor" href="#extending-other-definitions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Extending Other Definitions</h3>
+
+<ul>
+<li>Extending another definition will inherit these sections:
+
+<ul>
+<li>sequences</li>
+<li>traits</li>
+<li>default attributes</li>
+</ul>
+</li>
+<li><p>Inheritance is fine grained, so in each section, any attribute that is local
+will take precedence over an inherited one. So you can override some
+attributes in the default section ( for example ), and inherit the rest</p></li>
+<li><p><a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/big-group.js">Sample Factory using inheritance (big-group.js):</a></p></li>
+</ul>
+
+<h3>
+<a id="callbacks" class="anchor" href="#callbacks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Callbacks</h3>
+
+<ul>
+<li>afterMake
+
+<ul>
+<li>Uses transient attributes</li>
+</ul>
+</li>
+</ul>
+
+<p>Assuming the factory-guy model definition defines afterMake function:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>property<span class="pl-pds">'</span></span>, {
+    <span class="pl-k">default</span><span class="pl-k">:</span> {
+      name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Silly property<span class="pl-pds">'</span></span>
+    },
+
+    <span class="pl-c">// optionally set transient attributes, that will be passed in to afterMake function</span>
+    transient<span class="pl-k">:</span> {
+      for_sale<span class="pl-k">:</span> <span class="pl-c1">true</span>
+    },
+
+    <span class="pl-c">// The attributes passed to after make will include any optional attributes you</span>
+    <span class="pl-c">// passed in to make, and the transient attributes defined in this definition</span>
+    <span class="pl-en">afterMake</span><span class="pl-k">:</span> <span class="pl-k">function</span>(<span class="pl-smi">model</span>, <span class="pl-smi">attributes</span>) {
+      <span class="pl-k">if</span> (<span class="pl-smi">attributes</span>.<span class="pl-smi">for_sale</span>) {
+        <span class="pl-smi">model</span>.<span class="pl-en">set</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>, <span class="pl-smi">model</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>) <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>(FOR SALE)<span class="pl-pds">'</span></span>);
+      }
+    }
+  }</pre></div>
+
+<p>You would use this to make models like:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-smi">Ember</span>.<span class="pl-en">run</span>(<span class="pl-k">function</span> () {
+
+    <span class="pl-k">let</span> property <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>property<span class="pl-pds">'</span></span>);
+    <span class="pl-smi">property</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>); <span class="pl-c">// =&gt; 'Silly property(FOR SALE)')</span>
+
+    <span class="pl-k">let</span> property <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>property<span class="pl-pds">'</span></span>, {for_sale<span class="pl-k">:</span> <span class="pl-c1">false</span>});
+    <span class="pl-smi">property</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>); <span class="pl-c">// =&gt; 'Silly property')</span>
+  });
+</pre></div>
+
+<h3>
+<a id="ember-data-model-fragments" class="anchor" href="#ember-data-model-fragments" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Ember Data Model Fragments</h3>
+
+<p>As of 2.5.2 you can create factories which contain <a href="https://github.com/lytics/ember-data-model-fragments">ember-data-model-fragments</a>. Setting up your fragments is easy and follows the same process as setting up regular factories. The mapping between fragment types and their associations are like so:</p>
+
+<table>
+<thead>
+<tr>
+<th>Fragment Type</th>
+<th>Association</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fragment</code></td>
+<td><code>FactoryGuy.belongsTo</code></td>
+</tr>
+<tr>
+<td><code>fragmentArray</code></td>
+<td><code>FactoryGuy.hasMany</code></td>
+</tr>
+<tr>
+<td><code>array</code></td>
+<td><code>[]</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>For example, say we have the following <code>Employee</code> model which makes use of the <code>fragment</code>, <code>fragmentArray</code> and <code>array</code> fragment types.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">//Employee model</span>
+<span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-smi">Model</span>.<span class="pl-en">extend</span>({
+  name      <span class="pl-k">:</span> <span class="pl-en">fragment</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>),
+  phoneNumbers<span class="pl-k">:</span> <span class="pl-en">fragmentArray</span>(<span class="pl-s"><span class="pl-pds">'</span>phone-number<span class="pl-pds">'</span></span>)
+})
+
+<span class="pl-c">//Name fragment</span>
+<span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-smi">Fragment</span>.<span class="pl-en">extend</span>({
+  titles<span class="pl-k">:</span> <span class="pl-en">array</span>(<span class="pl-s"><span class="pl-pds">'</span>string<span class="pl-pds">'</span></span>),
+  firstName <span class="pl-k">:</span> <span class="pl-en">attr</span>(<span class="pl-s"><span class="pl-pds">'</span>string<span class="pl-pds">'</span></span>),
+  lastName  <span class="pl-k">:</span> <span class="pl-en">attr</span>(<span class="pl-s"><span class="pl-pds">'</span>string<span class="pl-pds">'</span></span>)
+});
+
+<span class="pl-c">//Phone Number fragment</span>
+<span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-smi">Fragment</span>.<span class="pl-en">extend</span>({
+  number<span class="pl-k">:</span> <span class="pl-en">attr</span>(<span class="pl-s"><span class="pl-pds">'</span>string<span class="pl-pds">'</span></span>)
+  type<span class="pl-k">:</span> <span class="pl-en">attr</span>(<span class="pl-s"><span class="pl-pds">'</span>string<span class="pl-pds">'</span></span>)
+});</pre></div>
+
+<p>A factory for this model and its fragments would look like so:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// Employee factory</span>
+<span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>employee<span class="pl-pds">'</span></span>, {
+  <span class="pl-k">default</span><span class="pl-k">:</span> {
+    name<span class="pl-k">:</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">belongsTo</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>), <span class="pl-c">//fragment</span>
+    phoneNumbers<span class="pl-k">:</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">hasMany</span>(<span class="pl-s"><span class="pl-pds">'</span>phone-number<span class="pl-pds">'</span></span>) <span class="pl-c">//fragmentArray</span>
+  }
+});
+
+<span class="pl-c">// Name fragment factory</span>
+<span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>employee<span class="pl-pds">'</span></span>, {
+  <span class="pl-k">default</span><span class="pl-k">:</span> {
+    titles<span class="pl-k">:</span> [<span class="pl-s"><span class="pl-pds">'</span>Mr.<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>Dr.<span class="pl-pds">'</span></span>], <span class="pl-c">//array</span>
+    firstName<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Jon<span class="pl-pds">'</span></span>,
+    lastName<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Snow<span class="pl-pds">'</span></span>
+  }
+});
+
+<span class="pl-c">// Phone number fragment factory</span>
+<span class="pl-smi">FactoryGuy</span>.<span class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>phone-number<span class="pl-pds">'</span></span>, {
+  <span class="pl-k">default</span><span class="pl-k">:</span> {
+    number<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>123-456-789<span class="pl-pds">'</span></span>,
+    type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>home<span class="pl-pds">'</span></span>
+  }
+});
+
+<span class="pl-c">// TIP: You can set up associations manually ( and not necessarily in factory ) </span>
+<span class="pl-c">// To set up an employee ( hasMany ) phone numbers manually, try this:  </span>
+<span class="pl-k">let</span> phoneNumbers <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>phone-numbers<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>).<span class="pl-en">get</span>();
+<span class="pl-k">let</span> employee <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>employee<span class="pl-pds">'</span></span>, { phoneNumbers });
+</pre></div>
+
+<p>For a more detailed example of setting up fragments have a look at:</p>
+
+<ul>
+<li>model test <a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/employee-test.js">employee test</a>.</li>
+<li>acceptance test <a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/employee-view-test.js">employee-view-test</a>.</li>
+</ul>
+
+<h3>
+<a id="creating-factories-in-addons" class="anchor" href="#creating-factories-in-addons" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating Factories in Addons</h3>
+
+<p>If you are making an addon with factories and you want the factories available to Ember apps using your addon, place the factories in <code>test-support/factories</code> instead of <code>tests/factories</code>. They should be available both within your addon and in Ember apps using your addon.</p>
+
+<h3>
+<a id="ember-django-adapter" class="anchor" href="#ember-django-adapter" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Ember Django Adapter</h3>
+
+<ul>
+<li>As of 2.6.1 you can use <a href="https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter">ember-django-adapter</a><br>
+</li>
+<li>Everything is setup automatically</li>
+<li>Remember that sideloading is not supported in DRFSerializer so all relationships should either
+
+<ul>
+<li>be set as embedded with DS.EmbeddedRecordsMixin if you want to use build/buildList </li>
+<li>or user make/makeList and in you mocks, and return models instead of json:</li>
+</ul>
+</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">let</span> projects <span class="pl-k">=</span> <span class="pl-en">makeList</span>(<span class="pl-s"><span class="pl-pds">'</span>projects<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>); <span class="pl-c">// put projects in the store</span>
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, { projects });  <span class="pl-c">// attatch them to user</span>
+  <span class="pl-en">mockFind</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>).<span class="pl-en">returns</span>({model<span class="pl-k">:</span> user}); <span class="pl-c">// now the mock will return a user that has projects</span></pre></div>
+
+<ul>
+<li>using <code>fails()</code> with errors hash is not working reliably 
+
+<ul>
+<li>so you can always just <code>mockWhatever(args).fails()</code><br>
+</li>
+</ul>
+</li>
+</ul>
+
+<h3>
+<a id="custom-api-formats" class="anchor" href="#custom-api-formats" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Custom API formats</h3>
+
+<p>FactoryGuy handles JSON-API / RESTSerializer / JSONSerializer out of the box.</p>
+
+<p>In case your API doesn't follow either of these conventions, you can still make a custom fixture builder,
+ or modify the FixtureConverters and JSONPayload classes that exist.</p>
+
+<ul>
+<li>For now, before I launch into the details, let me know if you need this hookup and I 
+can guide you to a solution, since the use cases will be rare and varied.</li>
+</ul>
+
+<h3>
+<a id="testing---creating-scenarios" class="anchor" href="#testing---creating-scenarios" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing - Creating Scenarios</h3>
+
+<ul>
+<li>Easy to create complex scenarios involving multi layered relationships.
+
+<ul>
+<li>Can use model instances to create relationships for making other models.</li>
+</ul>
+</li>
+</ul>
+
+<p>Example:</p>
+
+<ul>
+<li>Setup a scenario where a user has two projects and belongs to a company</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>   <span class="pl-k">let</span> company <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>company<span class="pl-pds">'</span></span>);
+   <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {company<span class="pl-k">:</span> company});
+   <span class="pl-k">let</span> projects <span class="pl-k">=</span> <span class="pl-en">makeList</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>, {user<span class="pl-k">:</span> user});</pre></div>
+
+<p><em>You can use traits to help create the relationships as well, but this strategy allows you to
+build up complex scenarios in a different way that has it's own benefits.</em></p>
+
+<h4>
+<a id="cacheonlymode" class="anchor" href="#cacheonlymode" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>cacheOnlyMode</h4>
+
+<ul>
+<li>FactoryGuy.cacheOnlyMode
+
+<ul>
+<li>Allows you to setup the adapters to prevent them from fetching data with ajax call 
+
+<ul>
+<li>for single models ( find ) you have to put something in the store</li>
+<li>for collections ( findAll ) you don't have to put anything in the store.</li>
+</ul>
+</li>
+<li>Takes <code>except</code> parameter as a list of models you don't want to cache. 
+
+<ul>
+<li>These model requests will go to server with ajax call and need to be mocked.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>This is helpful, when: </p>
+
+<ul>
+<li>you want to set up the test data with make/makeList, and then prevent
+calls like store.find or findAll from fetching more data, since you have 
+already setup the store with make/makeList data. </li>
+<li>you have an application that starts up and loads data that is not relevant
+to the test page you are working on. </li>
+</ul>
+
+<p>Usage:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">import</span> <span class="pl-smi">FactoryGuy</span>, { <span class="pl-smi">makeList</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">moduleForAcceptance</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>../helpers/module-for-acceptance<span class="pl-pds">'</span></span>;
+
+<span class="pl-en">moduleForAcceptance</span>(<span class="pl-s"><span class="pl-pds">'</span>Acceptance | Profiles View<span class="pl-pds">'</span></span>);
+
+<span class="pl-en">test</span>(<span class="pl-s"><span class="pl-pds">"</span>Using FactoryGuy.cacheOnlyMode<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>() {
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">cacheOnlyMode</span>();
+  <span class="pl-c">// the store.find call for the user will go out unless there is a user</span>
+  <span class="pl-c">// in the store</span>
+  <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>current<span class="pl-pds">'</span></span>});
+  <span class="pl-c">// the application starts up and makes calls to findAll a few things, but</span>
+  <span class="pl-c">// those can be ignored because of the cacheOnlyMode</span>
+
+  <span class="pl-c">// for this test I care about just testing profiles</span>
+  <span class="pl-en">makeList</span>(<span class="pl-s"><span class="pl-pds">"</span>profile<span class="pl-pds">"</span></span>, <span class="pl-c1">2</span>);
+
+  <span class="pl-en">visit</span>(<span class="pl-s"><span class="pl-pds">'</span>/profiles<span class="pl-pds">'</span></span>);
+
+  <span class="pl-en">andThen</span>(()<span class="pl-k">=&gt;</span> {
+    <span class="pl-c">// test stuff</span>
+  });
+});
+
+<span class="pl-en">test</span>(<span class="pl-s"><span class="pl-pds">"</span>Using FactoryGuy.cacheOnlyMode with except<span class="pl-pds">"</span></span>, <span class="pl-k">function</span>() {
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-en">cacheOnlyMode</span>({except<span class="pl-k">:</span> [<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>]});
+
+  <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>current<span class="pl-pds">'</span></span>});
+
+  <span class="pl-c">// this time I want to allow the ajax call so I can return built json payload</span>
+  <span class="pl-en">mockFindAll</span>(<span class="pl-s"><span class="pl-pds">"</span>profile<span class="pl-pds">"</span></span>, <span class="pl-c1">2</span>);
+
+  <span class="pl-en">visit</span>(<span class="pl-s"><span class="pl-pds">'</span>/profiles<span class="pl-pds">'</span></span>);
+
+  <span class="pl-en">andThen</span>(()<span class="pl-k">=&gt;</span> {
+    <span class="pl-c">// test stuff</span>
+  });
+});</pre></div>
+
+<h3>
+<a id="testing-models-controllers-components" class="anchor" href="#testing-models-controllers-components" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing models, controllers, components</h3>
+
+<ul>
+<li>
+<p>FactoryGuy needs to setup the factories before the test run.</p>
+
+<ul>
+<li>use manualSetup function to set up FactoryGuy in unit/component tests</li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js">Sample model test (profile-test.js):</a></p>
+
+<ul>
+<li>Use 'moduleForModel' ( ember-qunit ), or describeModel ( ember-mocha ) test helper</li>
+<li>manually set up Factory guy </li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/single-user-manual-setup-test.js">Sample component test #1 (single-user-manual-setup-test.js):</a></p>
+
+<ul>
+<li>Using 'moduleForComponent' ( ember-qunit ), or describeComponent ( ember-mocha ) helper</li>
+<li>Manually sets up Factory guy ( so it's faster )</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">import</span> { <span class="pl-smi">make</span>, <span class="pl-smi">manualSetup</span> }  <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">hbs</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>htmlbars-inline-precompile<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> { <span class="pl-smi">test</span>, <span class="pl-smi">moduleForComponent</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-qunit<span class="pl-pds">'</span></span>;
+
+<span class="pl-en">moduleForComponent</span>(<span class="pl-s"><span class="pl-pds">'</span>single-user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>Integration | Component | single-user (manual setup)<span class="pl-pds">'</span></span>, {
+  integration<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+
+  <span class="pl-en">beforeEach</span><span class="pl-k">:</span> <span class="pl-k">function</span> () {
+    <span class="pl-en">manualSetup</span>(<span class="pl-v">this</span>.<span class="pl-smi">container</span>);
+  }
+});
+
+<span class="pl-en">test</span>(<span class="pl-s"><span class="pl-pds">"</span>shows user information<span class="pl-pds">"</span></span>, <span class="pl-k">function</span> () {
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Rob<span class="pl-pds">'</span></span>});
+
+  <span class="pl-v">this</span>.<span class="pl-en">render</span>(hbs<span class="pl-s"><span class="pl-pds">`</span>{{single-user user=user}}<span class="pl-pds">`</span></span>);
+  <span class="pl-v">this</span>.<span class="pl-en">set</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, user);
+
+  <span class="pl-en">ok</span>(<span class="pl-v">this</span>.<span class="pl-en">$</span>(<span class="pl-s"><span class="pl-pds">'</span>.name<span class="pl-pds">'</span></span>).<span class="pl-c1">text</span>().<span class="pl-c1">match</span>(<span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>)));
+  <span class="pl-en">ok</span>(<span class="pl-v">this</span>.<span class="pl-en">$</span>(<span class="pl-s"><span class="pl-pds">'</span>.funny-name<span class="pl-pds">'</span></span>).<span class="pl-c1">text</span>().<span class="pl-c1">match</span>(<span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>funnyName<span class="pl-pds">'</span></span>)));
+});</pre></div>
+</li>
+<li>
+<p><a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/single-user-test.js">Sample component test #2 (single-user-test.js):</a></p>
+
+<ul>
+<li>Using 'moduleForComponent' ( ember-qunit ), or describeComponent ( ember-mocha ) helper</li>
+<li>Starts a new application with startApp() before each test  ( slower )</li>
+</ul>
+</li>
+</ul>
+
+<h3>
+<a id="acceptance-tests" class="anchor" href="#acceptance-tests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Acceptance Tests</h3>
+
+<h5>
+<a id="using-mock-methods" class="anchor" href="#using-mock-methods" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using mock methods</h5>
+
+<ul>
+<li>Uses mockjax
+
+<ul>
+<li>for mocking the ajax calls made by ember-data.</li>
+<li>this library is installed with ember-data-factory-guy.</li>
+</ul>
+</li>
+<li>http GET mocks
+
+<ul>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#mockfind">mockFind</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#mockfindall">mockFindAll</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#mockreload">mockReload</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#mockquery">mockQuery</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#mockqueryrecord">mockQueryRecord</a></li>
+<li>takes modifier method <code>returns()</code> for setting the payload response
+
+<ul>
+<li>
+<code>returns()</code> accepts parameters like: json, model, models, id, ids, headers
+
+<ul>
+<li>headers are cumulative so you can add as many as you like</li>
+<li>Example: </li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">let</span> mock <span class="pl-k">=</span> <span class="pl-en">mockFindAll</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>).<span class="pl-en">returns</span>({headers<span class="pl-k">:</span> {<span class="pl-s"><span class="pl-pds">'</span>X-Man<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Wolverine<span class="pl-pds">"</span></span>}); 
+  <span class="pl-smi">mock</span>.<span class="pl-en">returns</span>({headers<span class="pl-k">:</span> {<span class="pl-s"><span class="pl-pds">'</span>X-Weapon<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Claws<span class="pl-pds">"</span></span>}); </pre></div>
+</li>
+</ul>
+</li>
+<li>these mocks are are reusable
+
+<ul>
+<li>so you can simulate making the same ajax call ( url ) and return a different payload</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>http POST/PUT/DELETE
+
+<ul>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#mockcreate">mockCreate</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#mockupdate">mockUpdate</a></li>
+<li><a href="https://github.com/danielspaniel/ember-data-factory-guy#mockdelete">mockDelete</a></li>
+</ul>
+</li>
+<li>can use method <code>fails()</code> to simulate failure, and then <code>succeeds()</code> to simulate success
+
+<ul>
+<li>to customize failure, fails method takes optional object with status and errors.</li>
+<li>Example: </li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">let</span> mock <span class="pl-k">=</span> <span class="pl-en">mockFindAll</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>).<span class="pl-en">fails</span>({status<span class="pl-k">:</span> <span class="pl-c1">401</span>, errors<span class="pl-k">:</span> {description<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Unauthorized<span class="pl-pds">"</span></span>}}); </pre></div>
+</li>
+<li>
+<p>mock#timesCalled </p>
+
+<ul>
+<li>verify how many times the ajax call was mocked</li>
+<li>use <code>timesCalled</code> property on the mock</li>
+<li>works when you are using mockQuery, mockQueryRecord, mockFindAll, or mockUpdate</li>
+<li>mockFind will always be at most 1 since it will only make ajax call
+the first time, and then the store will use cache the second time</li>
+<li>Example:</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">const</span> <span class="pl-c1">mock</span> <span class="pl-k">=</span> <span class="pl-en">mockQueryRecord</span>(<span class="pl-s"><span class="pl-pds">'</span>company<span class="pl-pds">'</span></span>, {}).<span class="pl-en">returns</span>({ json<span class="pl-k">:</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>company<span class="pl-pds">'</span></span>) });
+
+  <span class="pl-smi">FactoryGuy</span>.<span class="pl-smi">store</span>.<span class="pl-en">queryRecord</span>(<span class="pl-s"><span class="pl-pds">'</span>company<span class="pl-pds">'</span></span>, {}).<span class="pl-en">then</span>(()<span class="pl-k">=&gt;</span> {
+    <span class="pl-smi">FactoryGuy</span>.<span class="pl-smi">store</span>.<span class="pl-en">queryRecord</span>(<span class="pl-s"><span class="pl-pds">'</span>company<span class="pl-pds">'</span></span>, {}).<span class="pl-en">then</span>(()<span class="pl-k">=&gt;</span> {
+      <span class="pl-smi">mock</span>.<span class="pl-smi">timesCalled</span> <span class="pl-c">//=&gt; 2</span>
+    });
+  });</pre></div>
+</li>
+</ul>
+
+<h5>
+<a id="setup-and-teardown" class="anchor" href="#setup-and-teardown" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>setup and teardown</h5>
+
+<ul>
+<li>Use <code>mockSetup()</code> in test setup/beforeEach </li>
+<li>Use <code>mockTeardown()</code> in test teardown/afterEach</li>
+<li>Easiest is to set them up in <a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/helpers/module-for-acceptance.js">module-for-acceptance.js:</a>
+</li>
+</ul>
+
+<h5>
+<a id="mockfind" class="anchor" href="#mockfind" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mockFind</h5>
+
+<ul>
+<li>For dealing with finding one record of a model type =&gt; <code>store.find('modelType')</code>
+</li>
+<li>Can pass in arguments just like you would for <a href="https://github.com/danielspaniel/ember-data-factory-guy#make">make</a> or <a href="https://github.com/danielspaniel/ember-data-factory-guy#build">build</a>
+
+<ul>
+<li>mockFind( fixture or model name, optional traits, optional attributes object)</li>
+</ul>
+</li>
+<li>Takes modifier method <code>returns()</code> for controlling the response payload
+
+<ul>
+<li>returns( model / json / id )</li>
+</ul>
+</li>
+<li>Sample acceptance tests using mockFind: <a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js">user-view-test.js:</a>
+</li>
+</ul>
+
+<p>Usage:</p>
+
+<div class="highlight highlight-source-js"><pre>   <span class="pl-k">import</span> { <span class="pl-smi">build</span>, <span class="pl-smi">make</span>, <span class="pl-smi">mockFind</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;</pre></div>
+
+<ul>
+<li>To return default factory model type ( 'user' in this case )</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>   <span class="pl-c">// mockFind automatically returns json for the modelType ( in this case 'user' )  </span>
+   <span class="pl-k">let</span> mock <span class="pl-k">=</span> <span class="pl-en">mockFind</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>);
+   <span class="pl-k">let</span> userId <span class="pl-k">=</span> <span class="pl-smi">mock</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>id<span class="pl-pds">'</span></span>);</pre></div>
+
+<ul>
+<li>Using <code>returns({json})</code> to return json object<br>
+</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>   <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>whacky<span class="pl-pds">'</span></span>, {isDude<span class="pl-k">:</span> <span class="pl-c1">true</span>});
+   <span class="pl-k">let</span> mock <span class="pl-k">=</span> <span class="pl-en">mockFind</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>).<span class="pl-en">returns</span>({ json<span class="pl-k">:</span> user });
+   <span class="pl-c">// user.get('id') =&gt; 1</span>
+   <span class="pl-c">// user.get('style') =&gt; 'whacky'</span>
+
+   <span class="pl-c">// or to acccomplish the same thing with less code </span>
+   <span class="pl-k">let</span> mock <span class="pl-k">=</span> <span class="pl-en">mockFind</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>whacky<span class="pl-pds">'</span></span>, {isDude<span class="pl-k">:</span> <span class="pl-c1">true</span>});
+   <span class="pl-c">// mock.get('id') =&gt; 1</span>
+   <span class="pl-c">// mock.get('style') =&gt; 'whacky'</span>
+   <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-smi">mock</span>.<span class="pl-en">get</span>();
+   <span class="pl-c">// user.id =&gt; 1</span>
+   <span class="pl-c">// user.style =&gt; 'whacky'</span></pre></div>
+
+<ul>
+<li>Using <code>returns({model})</code> to return model instance</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>   <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>whacky<span class="pl-pds">'</span></span>, {isDude<span class="pl-k">:</span> <span class="pl-c1">false</span>});
+   <span class="pl-k">let</span> mock <span class="pl-k">=</span> <span class="pl-en">mockFind</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>).<span class="pl-en">returns</span>({ model<span class="pl-k">:</span> user });
+   <span class="pl-c">// user.get('id') =&gt; 1</span>
+   <span class="pl-c">// you can now also user.get('any-computed-property') </span>
+   <span class="pl-c">// since you have a real model instance</span></pre></div>
+
+<ul>
+<li>To reuse the mock</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>   <span class="pl-k">let</span> user2 <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {style<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>boring<span class="pl-pds">"</span></span>});
+   <span class="pl-smi">mock</span>.<span class="pl-en">returns</span>({ json<span class="pl-k">:</span> user2 });
+   <span class="pl-c">// mock.get('id') =&gt; 2</span></pre></div>
+
+<ul>
+<li>To mock failure case use <code>fails</code> method</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>   <span class="pl-en">mockFind</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>).<span class="pl-en">fails</span>();</pre></div>
+
+<h5>
+<a id="mockfindall" class="anchor" href="#mockfindall" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mockFindAll</h5>
+
+<ul>
+<li>For dealing with finding all records for a model type =&gt; <code>store.findAll(modelType)</code>
+</li>
+<li>Takes same parameters as <a href="https://github.com/danielspaniel/ember-data-factory-guy#makelist">makeList</a>
+
+<ul>
+<li>mockFindAll( fixture or model name, optional number, optional traits, optional attributes object)</li>
+</ul>
+</li>
+<li>Takes modifier method <code>returns()</code> for controlling the response payload
+
+<ul>
+<li>returns( models / json / ids )</li>
+</ul>
+</li>
+<li>Sample acceptance tests using mockFindAll: <a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js">users-view-test.js</a> </li>
+</ul>
+
+<p>Usage:</p>
+
+<div class="highlight highlight-source-js"><pre>   <span class="pl-k">import</span> { <span class="pl-smi">buildList</span>, <span class="pl-smi">makeList</span>, <span class="pl-smi">mockFindAll</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;</pre></div>
+
+<ul>
+<li>To mock and return no results</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>   <span class="pl-k">let</span> mock <span class="pl-k">=</span> <span class="pl-en">mockFindAll</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>);</pre></div>
+
+<ul>
+<li>Using <code>returns({json})</code> to return json object<br>
+</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>   <span class="pl-c">// that has 2 different users:</span>
+   <span class="pl-k">let</span> users <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>whacky<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>silly<span class="pl-pds">'</span></span>);
+   <span class="pl-k">let</span> mock <span class="pl-k">=</span> <span class="pl-en">mockFindAll</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>).<span class="pl-en">returns</span>({ json<span class="pl-k">:</span> users });
+   <span class="pl-k">let</span> user1 <span class="pl-k">=</span> <span class="pl-smi">users</span>.<span class="pl-en">get</span>(<span class="pl-c1">0</span>);
+   <span class="pl-k">let</span> user2 <span class="pl-k">=</span> <span class="pl-smi">users</span>.<span class="pl-en">get</span>(<span class="pl-c1">1</span>);
+   <span class="pl-c">// user1.style =&gt; 'whacky'</span>
+   <span class="pl-c">// user2.style =&gt; 'silly'</span>
+
+   <span class="pl-c">// or to acccomplish the same thing with less code </span>
+   <span class="pl-k">let</span> mock <span class="pl-k">=</span> <span class="pl-en">mockFindAll</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>whacky<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>silly<span class="pl-pds">'</span></span>);
+   <span class="pl-k">let</span> user1 <span class="pl-k">=</span> <span class="pl-smi">mock</span>.<span class="pl-en">get</span>(<span class="pl-c1">0</span>);
+   <span class="pl-k">let</span> user2 <span class="pl-k">=</span> <span class="pl-smi">mock</span>.<span class="pl-en">get</span>(<span class="pl-c1">1</span>);
+   <span class="pl-c">// user1.style =&gt; 'whacky'</span>
+   <span class="pl-c">// user2.style =&gt; 'silly'</span></pre></div>
+
+<ul>
+<li>Using <code>returns({models})</code> to return model instances</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-k">let</span> users <span class="pl-k">=</span> <span class="pl-en">makeList</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>whacky<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>silly<span class="pl-pds">'</span></span>);
+    <span class="pl-k">let</span> mock <span class="pl-k">=</span> <span class="pl-en">mockFindAll</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>).<span class="pl-en">returns</span>({ models<span class="pl-k">:</span> users });
+    <span class="pl-k">let</span> user1 <span class="pl-k">=</span> users[<span class="pl-c1">0</span>];
+    <span class="pl-c">// you can now also user1.get('any-computed-property') </span>
+    <span class="pl-c">// since you have a real model instance</span></pre></div>
+
+<ul>
+<li>To reuse the mock and return different payload</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>   <span class="pl-k">let</span> users2 <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-c1">3</span>);
+   <span class="pl-smi">mock</span>.<span class="pl-en">returns</span>({ json<span class="pl-k">:</span> user2 });</pre></div>
+
+<ul>
+<li>To mock failure case use <code>fails()</code> method </li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>   <span class="pl-en">mockFindAll</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>).<span class="pl-en">fails</span>();</pre></div>
+
+<h5>
+<a id="mockreload" class="anchor" href="#mockreload" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mockReload</h5>
+
+<ul>
+<li>To handle reloading a model
+
+<ul>
+<li>Pass in a record ( or a typeName and id )</li>
+</ul>
+</li>
+</ul>
+
+<p>Usage:</p>
+
+<ul>
+<li>Passing in a record / model instance</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-k">let</span> profile <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>);
+    <span class="pl-en">mockReload</span>(profile);
+
+    <span class="pl-c">// will stub a call to reload that profile</span>
+    <span class="pl-smi">profile</span>.<span class="pl-c1">reload</span>()</pre></div>
+
+<ul>
+<li>Mocking a failed reload</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-en">mockReload</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>, <span class="pl-c1">1</span>).<span class="pl-en">fails</span>();</pre></div>
+
+<h5>
+<a id="mockquery" class="anchor" href="#mockquery" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mockQuery</h5>
+
+<ul>
+<li>For dealing with querying for all records for a model type =&gt; <code>store.query(modelType, params)</code>
+
+<ul>
+<li>Takes modifier method <code>returns()</code> for controlling the response payload</li>
+<li>returns( models / json / ids )</li>
+<li>Takes modifier methods for matching the query params</li>
+<li>withParams( object )</li>
+</ul>
+</li>
+<li>Sample acceptance tests using mockQuery: <a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-search-test.js">user-search-test.js</a>
+</li>
+</ul>
+
+<p>Usage: </p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> <span class="pl-smi">FactoryGuy</span>, { <span class="pl-smi">make</span>, <span class="pl-smi">build</span>, <span class="pl-smi">buildList</span>, <span class="pl-smi">mockQuery</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+  <span class="pl-k">let</span> store <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-smi">store</span>;
+
+  <span class="pl-c">// This simulates a query that returns no results</span>
+  <span class="pl-en">mockQuery</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {age<span class="pl-k">:</span> <span class="pl-c1">10</span>});
+
+  <span class="pl-smi">store</span>.<span class="pl-en">query</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {age<span class="pl-k">:</span> <span class="pl-c1">10</span>}}).<span class="pl-en">then</span>((<span class="pl-smi">userInstances</span>) <span class="pl-k">=&gt;</span> {
+    <span class="pl-c">/// userInstances will be empty</span>
+  })</pre></div>
+
+<ul>
+<li>with returns( models )</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-c">// Create model instances</span>
+  <span class="pl-k">let</span> users <span class="pl-k">=</span> <span class="pl-en">makeList</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>, <span class="pl-s"><span class="pl-pds">'</span>with_hats<span class="pl-pds">'</span></span>);
+
+  <span class="pl-en">mockQuery</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span>, age<span class="pl-k">:</span> <span class="pl-c1">10</span>}).<span class="pl-en">returns</span>({models<span class="pl-k">:</span> users});
+
+  <span class="pl-smi">store</span>.<span class="pl-en">query</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span>, age<span class="pl-k">:</span> <span class="pl-c1">10</span>}}).<span class="pl-en">then</span>((<span class="pl-smi">models</span>)<span class="pl-k">=&gt;</span> {
+    <span class="pl-c">// models are the same as the users array</span>
+  });</pre></div>
+
+<ul>
+<li>with returns ( json )</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-c">// Create json with buildList</span>
+  <span class="pl-k">let</span> users <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>, <span class="pl-s"><span class="pl-pds">'</span>with_hats<span class="pl-pds">'</span></span>);
+
+  <span class="pl-en">mockQuery</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span>, age<span class="pl-k">:</span> <span class="pl-c1">10</span>}).<span class="pl-en">returns</span>({json<span class="pl-k">:</span> users});
+
+  <span class="pl-smi">store</span>.<span class="pl-en">query</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span>, age<span class="pl-k">:</span> <span class="pl-c1">10</span>}}).<span class="pl-en">then</span>((<span class="pl-smi">models</span>)<span class="pl-k">=&gt;</span> {
+    <span class="pl-c">// these models were created from the users json</span>
+  });</pre></div>
+
+<ul>
+<li>with returns( ids )</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-c">// Create list of models</span>
+  <span class="pl-k">let</span> users <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>, <span class="pl-s"><span class="pl-pds">'</span>with_hats<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> user1 <span class="pl-k">=</span> <span class="pl-smi">users</span>.<span class="pl-en">get</span>(<span class="pl-c1">0</span>);
+
+  <span class="pl-en">mockQuery</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span>, age<span class="pl-k">:</span> <span class="pl-c1">10</span>}).<span class="pl-en">returns</span>({ids<span class="pl-k">:</span> [<span class="pl-smi">user1</span>.<span class="pl-c1">id</span>]});
+
+  <span class="pl-smi">store</span>.<span class="pl-en">query</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span>, age<span class="pl-k">:</span> <span class="pl-c1">10</span>}}).<span class="pl-en">then</span>(<span class="pl-k">function</span>(<span class="pl-smi">models</span>) {
+    <span class="pl-c">// models will be one model and it will be user1</span>
+  });
+</pre></div>
+
+<h5>
+<a id="mockqueryrecord" class="anchor" href="#mockqueryrecord" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mockQueryRecord</h5>
+
+<ul>
+<li>For dealing with querying for one record for a model type =&gt; <code>store.queryRecord(modelType, params)</code>
+
+<ul>
+<li>Takes modifier method <code>returns()</code> for controlling the response payload</li>
+<li>returns( model / json / id )</li>
+<li>Takes modifier methods for matching the query params</li>
+<li>withParams( object )</li>
+</ul>
+</li>
+</ul>
+
+<p>Usage: </p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> <span class="pl-smi">FactoryGuy</span>, { <span class="pl-smi">make</span>, <span class="pl-smi">build</span>, <span class="pl-smi">mockQueryRecord</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+  <span class="pl-k">let</span> store <span class="pl-k">=</span> <span class="pl-smi">FactoryGuy</span>.<span class="pl-smi">store</span>;
+
+  <span class="pl-c">// This simulates a query that returns no results</span>
+  <span class="pl-en">mockQueryRecord</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {age<span class="pl-k">:</span> <span class="pl-c1">10</span>});
+
+  <span class="pl-smi">store</span>.<span class="pl-en">queryRecord</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {age<span class="pl-k">:</span> <span class="pl-c1">10</span>}}).<span class="pl-en">then</span>((<span class="pl-smi">userInstance</span>) <span class="pl-k">=&gt;</span> {
+    <span class="pl-c">/// userInstance will be empty</span>
+  })</pre></div>
+
+<ul>
+<li>with returns( models )</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-c">// Create model instances</span>
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>);
+
+  <span class="pl-en">mockQueryRecord</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span>, age<span class="pl-k">:</span> <span class="pl-c1">10</span>}).<span class="pl-en">returns</span>({model<span class="pl-k">:</span> user});
+
+  <span class="pl-smi">store</span>.<span class="pl-en">queryRecord</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span>, age<span class="pl-k">:</span> <span class="pl-c1">10</span>}}).<span class="pl-en">then</span>((<span class="pl-smi">model</span>)<span class="pl-k">=&gt;</span> {
+    <span class="pl-c">// model is the same as the user you made</span>
+  });</pre></div>
+
+<ul>
+<li>with returns ( json )</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-c">// Create json with buildList</span>
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>);
+
+  <span class="pl-en">mockQueryRecord</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span>, age<span class="pl-k">:</span> <span class="pl-c1">10</span>}).<span class="pl-en">returns</span>({json<span class="pl-k">:</span> user});
+
+  <span class="pl-smi">store</span>.<span class="pl-en">queryRecord</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span>, age<span class="pl-k">:</span> <span class="pl-c1">10</span>}}).<span class="pl-en">then</span>((<span class="pl-smi">model</span>)<span class="pl-k">=&gt;</span> {
+    <span class="pl-c">// user model created from the user json</span>
+  });</pre></div>
+
+<ul>
+<li>with returns( ids )</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-c">// Create list of models</span>
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>with_hats<span class="pl-pds">'</span></span>);
+
+  <span class="pl-en">mockQueryRecord</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span>, age<span class="pl-k">:</span> <span class="pl-c1">10</span>}).<span class="pl-en">returns</span>({id<span class="pl-k">:</span> <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>id<span class="pl-pds">'</span></span>)});
+
+  <span class="pl-smi">store</span>.<span class="pl-en">queryRecord</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>Bob<span class="pl-pds">'</span></span>, age<span class="pl-k">:</span> <span class="pl-c1">10</span>}}).<span class="pl-en">then</span>(<span class="pl-k">function</span>(<span class="pl-smi">model</span>) {
+    <span class="pl-c">// model will be one model and it will be user1</span>
+  });
+</pre></div>
+
+<h5>
+<a id="mockcreate" class="anchor" href="#mockcreate" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mockCreate</h5>
+
+<ul>
+<li>
+<p>Use chainable methods to build the response</p>
+
+<ul>
+<li>match
+
+<ul>
+<li>Attributes that must be in request json
+
+<ul>
+<li>These will be added to the response json automatically, so
+you don't need to include them in the returns hash.</li>
+<li>If you match on a belongsTo association, you don't have to include that in 
+the returns hash either ( same idea ).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>returns
+
+<ul>
+<li>Attributes ( including relationships ) to include in response json</li>
+</ul>
+</li>
+<li>fails
+
+<ul>
+<li>Request will fail</li>
+<li>Takes a hash of options:
+
+<ul>
+<li>status - HTTP status code, defaults to 500.</li>
+<li>response - error response message, or an errors hash for 422 status</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>succeeds
+
+<ul>
+<li>to retry a mock after a failed response</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Need to wrap tests using mockCreate with: Ember.run.function() { 'your test' })</p></li>
+</ul>
+
+<p>Realistically, you will have code in a view action or controller action that will
+ create the record, and setup any associations.</p>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-c">// most actions that create a record look something like this:</span>
+  action<span class="pl-k">:</span> {
+    <span class="pl-en">addProject</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">user</span>) {
+      <span class="pl-k">let</span> name <span class="pl-k">=</span> <span class="pl-v">this</span>.<span class="pl-en">$</span>(<span class="pl-s"><span class="pl-pds">'</span>button.project-name<span class="pl-pds">'</span></span>).<span class="pl-en">val</span>();
+      <span class="pl-k">let</span> store <span class="pl-k">=</span> <span class="pl-v">this</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>controller.store<span class="pl-pds">'</span></span>);
+      <span class="pl-smi">store</span>.<span class="pl-en">createRecord</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> name, user<span class="pl-k">:</span> user}).<span class="pl-en">save</span>();
+    }
+  }
+</pre></div>
+
+<p>In this case, you are are creating a 'project' record with a specific name, and belonging
+to a particular user. To mock this createRecord call here are a few ways to do this using
+chainable methods.</p>
+
+<p>Usage:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> { <span class="pl-smi">mockCreate</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+
+  <span class="pl-c">// Simplest case</span>
+  <span class="pl-c">// Don't care about a match just handle createRecord for any project</span>
+  <span class="pl-en">mockCreate</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>);
+
+  <span class="pl-c">// Matching some attributes</span>
+  <span class="pl-en">mockCreate</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>).<span class="pl-c1">match</span>({name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Moo<span class="pl-pds">"</span></span>});
+
+  <span class="pl-c">// Match all attributes</span>
+  <span class="pl-en">mockCreate</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>).<span class="pl-c1">match</span>({name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Moo<span class="pl-pds">"</span></span>, user<span class="pl-k">:</span> user});
+
+  <span class="pl-c">// Exactly matching attributes, and returning extra attributes</span>
+  <span class="pl-en">mockCreate</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>)
+    .<span class="pl-c1">match</span>({name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Moo<span class="pl-pds">"</span></span>, user<span class="pl-k">:</span> user})
+    .<span class="pl-en">returns</span>({created_at<span class="pl-k">:</span> <span class="pl-k">new</span> <span class="pl-en">Date</span>()});
+
+  <span class="pl-c">// Returning belongsTo relationship. Assume outfit belongsTo 'person'</span>
+  <span class="pl-k">let</span> person <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>super-hero<span class="pl-pds">'</span></span>); <span class="pl-c">// it's polymorphic</span>
+  <span class="pl-en">mockCreate</span>(<span class="pl-s"><span class="pl-pds">'</span>outfit<span class="pl-pds">'</span></span>).<span class="pl-en">returns</span>({ person });
+
+  <span class="pl-c">// Returning hasMany relationship. Assume super-hero hasMany 'outfits'</span>
+  <span class="pl-k">let</span> outfits <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>outfit<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>);
+  <span class="pl-en">mockCreate</span>(<span class="pl-s"><span class="pl-pds">'</span>super-hero<span class="pl-pds">'</span></span>).<span class="pl-en">returns</span>({ outfits });
+</pre></div>
+
+<ul>
+<li>mocking a failed create</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-c">// Mocking failure case is easy with chainable methods, just use #fails</span>
+  <span class="pl-en">mockCreate</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>).<span class="pl-c1">match</span>({name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Moo<span class="pl-pds">"</span></span>}).<span class="pl-en">fails</span>();
+
+  <span class="pl-c">// Can optionally add a status code and/or errors to the response</span>
+  <span class="pl-en">mockCreate</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>).<span class="pl-en">fails</span>({status<span class="pl-k">:</span> <span class="pl-c1">422</span>, response<span class="pl-k">:</span> {errors<span class="pl-k">:</span> {name<span class="pl-k">:</span> [<span class="pl-s"><span class="pl-pds">'</span>Moo bad, Bahh better<span class="pl-pds">'</span></span>]}}});
+
+  <span class="pl-smi">store</span>.<span class="pl-en">createRecord</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>, {name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Moo<span class="pl-pds">"</span></span>}).<span class="pl-en">save</span>(); <span class="pl-c">//=&gt; fails</span></pre></div>
+
+<h5>
+<a id="mockupdate" class="anchor" href="#mockupdate" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mockUpdate</h5>
+
+<ul>
+<li>mockUpdate(model)
+
+<ul>
+<li>Single argument ( the model instance that will be updated )</li>
+</ul>
+</li>
+<li>mockUpdate(modelType, id)
+
+<ul>
+<li>Two arguments: modelType ( like 'profile' ) , and the profile id that will updated</li>
+</ul>
+</li>
+<li>Use chainable methods to help build response:
+
+<ul>
+<li>returns
+
+<ul>
+<li>Attributes ( including relationships ) to include in response json</li>
+</ul>
+</li>
+<li>fails
+
+<ul>
+<li>Request will fail</li>
+<li>Optional arguments ( status and response text )</li>
+</ul>
+</li>
+<li>succeeds
+
+<ul>
+<li>use this after an <code>fails</code> call to have update succeed</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Need to wrap tests using mockUpdate with: Ember.run.function() { 'your test' })</li>
+</ul>
+
+<p>Usage:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> { <span class="pl-smi">make</span>, <span class="pl-smi">mockUpdate</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+
+  <span class="pl-k">let</span> profile <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>);
+
+  <span class="pl-c">// Pass in the model that will be updated ( if you have it available )</span>
+  <span class="pl-en">mockUpdate</span>(profile);
+
+  <span class="pl-c">// If the model is not available, pass in the modelType and the id of</span>
+  <span class="pl-c">// the model that will be updated</span>
+  <span class="pl-en">mockUpdate</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>, <span class="pl-c1">1</span>);
+
+  <span class="pl-smi">profile</span>.<span class="pl-en">set</span>(<span class="pl-s"><span class="pl-pds">'</span>description<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>good value<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">profile</span>.<span class="pl-en">save</span>() <span class="pl-c">//=&gt; will succeed</span>
+
+  <span class="pl-c">// Returning belongsTo relationship. Assume outfit belongsTo 'person'</span>
+  <span class="pl-k">let</span> outfit <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>outfit<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> person <span class="pl-k">=</span> <span class="pl-en">build</span>(<span class="pl-s"><span class="pl-pds">'</span>super-hero<span class="pl-pds">'</span></span>); <span class="pl-c">// it's polymorphic</span>
+  <span class="pl-smi">outfit</span>.<span class="pl-en">set</span>(<span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>,<span class="pl-s"><span class="pl-pds">'</span>outrageous<span class="pl-pds">'</span></span>);
+  <span class="pl-en">mockUpdate</span>(outfit).<span class="pl-en">returns</span>({ person });
+  <span class="pl-smi">outfit</span>.<span class="pl-en">save</span>(); <span class="pl-c">//=&gt; saves and returns superhero </span>
+
+  <span class="pl-c">// Returning hasMany relationship. Assume super-hero hasMany 'outfits'</span>
+  <span class="pl-k">let</span> superHero <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>super-hero<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> outfits <span class="pl-k">=</span> <span class="pl-en">buildList</span>(<span class="pl-s"><span class="pl-pds">'</span>outfit<span class="pl-pds">'</span></span>, <span class="pl-c1">2</span>, {name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>bell bottoms<span class="pl-pds">'</span></span>});
+  <span class="pl-smi">superHero</span>.<span class="pl-en">set</span>(<span class="pl-s"><span class="pl-pds">'</span>style<span class="pl-pds">'</span></span>,<span class="pl-s"><span class="pl-pds">'</span>laid back<span class="pl-pds">'</span></span>);
+  <span class="pl-en">mockUpdate</span>(superHero).<span class="pl-en">returns</span>({ outfits });
+  <span class="pl-smi">superHero</span>.<span class="pl-en">save</span>(); <span class="pl-c">// =&gt; saves and returns outfits</span>
+</pre></div>
+
+<ul>
+<li>mocking a failed update</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">let</span> profile <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>);
+
+  <span class="pl-c">// set the succeed flag to 'false'</span>
+  <span class="pl-en">mockUpdate</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>, <span class="pl-smi">profile</span>.<span class="pl-c1">id</span>).<span class="pl-en">fails</span>({status<span class="pl-k">:</span> <span class="pl-c1">422</span>, response<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Invalid data<span class="pl-pds">'</span></span>});
+  <span class="pl-c">// or</span>
+  <span class="pl-en">mockUpdate</span>(profile).<span class="pl-en">fails</span>({status<span class="pl-k">:</span> <span class="pl-c1">422</span>, response<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Invalid data<span class="pl-pds">'</span></span>});
+
+  <span class="pl-smi">profile</span>.<span class="pl-en">set</span>(<span class="pl-s"><span class="pl-pds">'</span>description<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>bad value<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">profile</span>.<span class="pl-en">save</span>() <span class="pl-c">//=&gt; will fail</span></pre></div>
+
+<p><em>mocking a failed update and retry with succees</em></p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">let</span> profile <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>);
+
+  <span class="pl-k">let</span> mockUpdate <span class="pl-k">=</span> <span class="pl-en">mockUpdate</span>(profile);
+
+  <span class="pl-smi">mockUpdate</span>.<span class="pl-en">fails</span>({status<span class="pl-k">:</span> <span class="pl-c1">422</span>, response<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Invalid data<span class="pl-pds">'</span></span>});
+
+  <span class="pl-smi">profile</span>.<span class="pl-en">set</span>(<span class="pl-s"><span class="pl-pds">'</span>description<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>bad value<span class="pl-pds">'</span></span>);
+  <span class="pl-smi">profile</span>.<span class="pl-en">save</span>() <span class="pl-c">//=&gt; will fail</span>
+
+  <span class="pl-c">// After setting valid value</span>
+  <span class="pl-smi">profile</span>.<span class="pl-en">set</span>(<span class="pl-s"><span class="pl-pds">'</span>description<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>good value<span class="pl-pds">'</span></span>);
+
+  <span class="pl-c">// Now expecting success</span>
+  <span class="pl-smi">mockUpdate</span>.<span class="pl-en">succeeds</span>();
+
+  <span class="pl-c">// Try that update again</span>
+  <span class="pl-smi">profile</span>.<span class="pl-en">save</span>() <span class="pl-c">//=&gt; will succeed!</span></pre></div>
+
+<h5>
+<a id="mockdelete" class="anchor" href="#mockdelete" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mockDelete</h5>
+
+<ul>
+<li>Need to wrap tests using mockDelete with: Ember.run.function() { 'your test' })</li>
+<li>To handle deleteing a model
+
+<ul>
+<li>Pass in a record ( or a typeName and id )</li>
+</ul>
+</li>
+</ul>
+
+<p>Usage:</p>
+
+<ul>
+<li>Passing in a record / model instance</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> { <span class="pl-smi">make</span>, <span class="pl-smi">mockDelete</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+
+  <span class="pl-k">let</span> profile <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>);
+  <span class="pl-en">mockDelete</span>(profile);
+
+  <span class="pl-smi">profile</span>.<span class="pl-en">destroyRecord</span>() <span class="pl-c">// =&gt; will succeed</span></pre></div>
+
+<ul>
+<li>Passing in a model typeName and id</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> { <span class="pl-smi">make</span>, <span class="pl-smi">mockDelete</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+
+  <span class="pl-k">let</span> profile <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>);
+  <span class="pl-en">mockDelete</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>, <span class="pl-smi">profile</span>.<span class="pl-c1">id</span>);
+
+  <span class="pl-smi">profile</span>.<span class="pl-en">destroyRecord</span>() <span class="pl-c">// =&gt; will succeed</span></pre></div>
+
+<ul>
+<li>Passing in a model typeName</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> { <span class="pl-smi">make</span>, <span class="pl-smi">mockDelete</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+
+  <span class="pl-k">let</span> profile1 <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>);
+  <span class="pl-k">let</span> profile2 <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>);
+  <span class="pl-en">mockDelete</span>(<span class="pl-s"><span class="pl-pds">'</span>profile<span class="pl-pds">'</span></span>);
+
+  <span class="pl-smi">profile1</span>.<span class="pl-en">destroyRecord</span>() <span class="pl-c">// =&gt; will succeed</span>
+  <span class="pl-smi">profile2</span>.<span class="pl-en">destroyRecord</span>() <span class="pl-c">// =&gt; will succeed</span></pre></div>
+
+<ul>
+<li>Mocking a failed delete</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-en">mockDelete</span>(profile).<span class="pl-en">fails</span>();</pre></div>
+
+<h5>
+<a id="sample-acceptance-test-user-view-testjs" class="anchor" href="#sample-acceptance-test-user-view-testjs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sample Acceptance test <a href="https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js">(user-view-test.js):</a>
+</h5>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// file: tests/acceptance/user-view-test.js</span>
+
+<span class="pl-k">import</span> { <span class="pl-smi">make</span>, <span class="pl-smi">mockCreate</span>, <span class="pl-smi">mockSetup</span>, <span class="pl-smi">mockTeardown</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>ember-data-factory-guy<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">moduleForAcceptance</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>../helpers/module-for-acceptance<span class="pl-pds">'</span></span>;
+
+<span class="pl-en">moduleForAcceptance</span>(<span class="pl-s"><span class="pl-pds">'</span>Acceptance | User View<span class="pl-pds">'</span></span>, {
+  <span class="pl-en">beforeEach</span><span class="pl-k">:</span> <span class="pl-k">function</span> () {
+    <span class="pl-c">// mockSetup sets $.mockjaxSettings response time to zero ( speeds up tests )</span>
+    <span class="pl-en">mockSetup</span>();
+  },
+  <span class="pl-en">afterEach</span><span class="pl-k">:</span> <span class="pl-k">function</span> () {
+      <span class="pl-c">// mockTeardown calls $.mockjax.clear() which resets all the mockjax handlers</span>
+    <span class="pl-en">mockTeardown</span>();
+  }
+});
+
+<span class="pl-en">test</span>(<span class="pl-s"><span class="pl-pds">"</span>Creates new project<span class="pl-pds">"</span></span>, <span class="pl-k">function</span> () {
+  <span class="pl-k">let</span> user <span class="pl-k">=</span> <span class="pl-en">make</span>(<span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>with_projects<span class="pl-pds">'</span></span>); <span class="pl-c">// build user payload</span>
+  <span class="pl-en">visit</span>(<span class="pl-s"><span class="pl-pds">'</span>/user/<span class="pl-pds">'</span></span><span class="pl-k">+</span> <span class="pl-smi">user</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>id<span class="pl-pds">'</span></span>));
+
+  <span class="pl-en">andThen</span>(<span class="pl-k">function</span> () {
+    <span class="pl-k">let</span> newProjectName <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>Gonzo Project<span class="pl-pds">"</span></span>;
+
+    <span class="pl-en">fillIn</span>(<span class="pl-s"><span class="pl-pds">'</span>input.project-name<span class="pl-pds">'</span></span>, newProjectName);
+
+    <span class="pl-c">// Remember, this is for handling an exact match, if you did not care about</span>
+    <span class="pl-c">// matching attributes, you could just do: mockCreate('project')</span>
+    <span class="pl-en">mockCreate</span>(<span class="pl-s"><span class="pl-pds">'</span>project<span class="pl-pds">'</span></span>, {match<span class="pl-k">:</span> {name<span class="pl-k">:</span> newProjectName, user<span class="pl-k">:</span> user}});
+
+    <span class="pl-c">/**</span>
+<span class="pl-c">     Let's say that clicking this 'button.add-project', triggers action in the view to</span>
+<span class="pl-c">     create project record and looks something like this:</span>
+<span class="pl-c">     actions: {</span>
+<span class="pl-c">        addProject: function (user) {</span>
+<span class="pl-c">          let name = this.$('input.project-name').val();</span>
+<span class="pl-c">          let store = this.get('controller.store');</span>
+<span class="pl-c">          store.createRecord('project', {name: name, user: user}).save();</span>
+<span class="pl-c">        }</span>
+<span class="pl-c">    */</span>
+    <span class="pl-en">click</span>(<span class="pl-s"><span class="pl-pds">'</span>button:contains(Add New User)<span class="pl-pds">'</span></span>);
+
+    <span class="pl-en">andThen</span>(<span class="pl-k">function</span> () {
+      <span class="pl-k">let</span> newProjectDiv <span class="pl-k">=</span> <span class="pl-en">find</span>(<span class="pl-s"><span class="pl-pds">'</span>li.project:contains(<span class="pl-pds">'</span></span> <span class="pl-k">+</span> newProjectName <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>)<span class="pl-pds">'</span></span>);
+      <span class="pl-en">ok</span>(newProjectDiv[<span class="pl-c1">0</span>] <span class="pl-k">!==</span> <span class="pl-c1">undefined</span>);
+    });
+  });
+});
+</pre></div>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/danielspaniel/ember-data-factory-guy">Ember-data-factory-guy</a> is maintained by <a href="https://github.com/danielspaniel">danielspaniel</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
