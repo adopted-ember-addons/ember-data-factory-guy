@@ -792,7 +792,8 @@ You would use this to make models like:
       ENV.locationType = 'auto';
       ENV.baseURL = '/';
     }
-  ```
+    
+    ```
 - Place your scenarios in app/scenarios directory  
   - Start by creating at least a scenarios/main.js file since this is the starting point 
   - Your scenario classes should inherit from Scenario class  
