@@ -36,6 +36,7 @@ module.exports = {
       // do nothing;
     }
 
+
     return mergeTrees(trees);
   },
 
