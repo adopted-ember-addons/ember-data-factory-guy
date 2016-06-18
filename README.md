@@ -14,10 +14,12 @@ Factories simplify the process of testing, making you more efficient and your te
 - Support for **[ember-django-adapter](https://github.com/dustinfarris/ember-django-adapter)** usage is fried in since v2.6.1 
 - Support for adding [meta data](https://github.com/danielspaniel/ember-data-factory-guy#using-add-method) to payloads for use with **ember-infinity** ie. => pagination  
 - Support for adding headers to payloads
+
+**Why is FactoryGuy so awesome**
 - Since you using ember data, you don't need to create any ORM like things. 
-  - You don't need to add any files to re create all the relationships in your models and serializers
-  - You don't have to setup anything.
-  - Everything just works.
+- You don't need to add any files to re create all the relationships in your models and serializers
+- You don't have to setup anything.
+- Everything just works.
                                   
 Questions: Slack => [factory-guy](https://embercommunity.slack.com/messages/e-factory-guy/)
 
