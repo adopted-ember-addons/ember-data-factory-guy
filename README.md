@@ -6,9 +6,10 @@ Feel the thrill and enjoyment of testing when using Factories instead of Fixture
 Factories simplify the process of testing, making you more efficient and your tests more readable.  
 
 **NEW and Improved** starting with v2.7.0.beta-2
-- Support for using your [factories](https://github.com/danielspaniel/ember-data-factory-guy#using-in-development) in development environment
-- Change your scenarios, hit refresh and the development data changes
+  - Support for using your [factories](https://github.com/danielspaniel/ember-data-factory-guy#using-in-development) in development environment
+  - Change your scenarios, hit refresh and the development data changes
 
+**Older but still fun things**
 - Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
 - Support for **[ember-django-adapter](https://github.com/dustinfarris/ember-django-adapter)** usage is fried in since v2.6.1 
 - Support for adding [meta data](https://github.com/danielspaniel/ember-data-factory-guy#using-add-method) to payloads for use with **ember-infinity** ie. => pagination  
