@@ -1,27 +1,22 @@
 import Ember from 'ember';
-import FactoryGuy, {make, makeList, build, buildList, mockFind, mockFindAll,
-  mockQuery, mockQueryRecord, mockUpdate, mockDelete} from 'ember-data-factory-guy';
+import FactoryGuy, * as fgMethods from 'ember-data-factory-guy';
+
+let proxyFx = [
+  'make', 'makeList', 'build', 'buildList', 'mockFind', 'mockFindAll',
+  'mockQuery', 'mockQueryRecord', 'mockUpdate', 'mockDelete'
+];
 
 export default class {
 
-  constructor(opts) {
-    this.make = make;
-    this.makeList = makeList;
-    this.build = build;
-    this.buildList = buildList;
-    this.mockFind = mockFind;
-    this.mockFindAll = mockFindAll;
-    this.mockQuery = mockQuery;
-    this.mockQueryRecord = mockQueryRecord;
-    this.mockUpdate = mockUpdate;
-    this.mockDelete = mockDelete;
+  constructor() {
+    proxyFx.forEach(fx => this[fx] = fgMethods[fx]);
     this.store = FactoryGuy.store;
-    this.setupOptions(opts);
     this.run();
   }
 
-  setupOptions(opts={})  {
-    Ember.$.mockjaxSettings.logging = !!opts.debug;
+  static setupOptions(opts = {}) {
+    Ember.$.mockjaxSettings.logger = !!opts.logger;
+    Ember.$.mockjaxSettings.logging = opts.logLevel || 2;
     Ember.$.mockjaxSettings.responseTime = opts.responseTime || 0;
   }
 
@@ -29,6 +24,6 @@ export default class {
   }
 
   include(scenarios) {
-    (scenarios || []).forEach((Scenario)=> new Scenario());
+    (scenarios || []).forEach(Scenario => new Scenario());
   }
 }
