@@ -364,12 +364,22 @@ Usage:
 ```js
   import { build, buildList } from 'ember-data-factory-guy';
   
-  let owners = buildList('bob', 2);  // builds 2 Bob's
+  let bobs = buildList('bob', 2);  // builds 2 Bob's
   
-  let owners = buildList('bob', 2, {name: 'Rob'); // builds 2 Bob's with name of 'Rob'
+  let bobs = buildList('bob', 2, {name: 'Rob'); // builds 2 Bob's with name of 'Rob'
   
   // builds 2 users, one with name 'Bob' , the next with name 'Rob'  
-  let owners = buildList('user', { name:'Bob' }, { name:'Rob' });
+  let users = buildList('user', { name:'Bob' }, { name:'Rob' });
+  
+  // builds 2 users, one with 'boblike' and the next with name 'adminlike' features
+  // NOTE: you don't say how many to make, because each trait is making new user
+  let users = buildList('user', 'boblike', 'adminlike');
+
+  // builds 2 users:
+  // one 'boblike' with stoner style 
+  // and the next 'adminlike' with square style
+  // NOTE: how you are grouping traits and attributes for each one by wrapping them in array
+  let users = buildList('user', ['boblike',{ style: 'stoner' }], ['adminlike', {style: 'square'}]);
 ```
 
 ##### Using add() method
