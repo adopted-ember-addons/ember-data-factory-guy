@@ -536,7 +536,9 @@ Usage:
   FactoryGuy.define('user', {
     default: {
       // Don't need the userName sequence, since the id is almost 
-      // always a sequential number, and you can use that
+      // always a sequential number, and you can use that. 
+      // f is the fixture being built as the moment for this factory 
+      // definition, which has the id available
       name: (f)=> `User${f.id}` 
     },
     traits: {
