@@ -462,7 +462,7 @@ Usage:
   let company = build('company');
   let hats = buildList('big-hats');
 
-  let user = build('user', {company: company, hats: hats});
+  let user = build('user', {company , hats});
   user.get() //=> {id: 1, name: 'User1', style: 'normal'}
 
   // to get hats info from hats json 

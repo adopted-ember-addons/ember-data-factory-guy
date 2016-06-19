@@ -14,7 +14,7 @@ import MockDeleteRequest from './mocks/mock-delete-request';
 let MockServer = Ember.Object.extend({
 
   setup: function () {
-    $.mockjaxSettings.logging = 2;  // set to 4 for maximum logging action
+    $.mockjaxSettings.logging = 1;  // set to 4 for maximum logging action
     $.mockjaxSettings.responseTime = 0;
   },
 

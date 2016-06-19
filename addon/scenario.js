@@ -16,7 +16,7 @@ export default class {
 
   static setupOptions(opts = {}) {
     Ember.$.mockjaxSettings.logger = !!opts.logger;
-    Ember.$.mockjaxSettings.logging = opts.logLevel || 2;
+    Ember.$.mockjaxSettings.logging = opts.logLevel || 1;
     Ember.$.mockjaxSettings.responseTime = opts.responseTime || 0;
   }
 

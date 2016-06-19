@@ -23,19 +23,20 @@ module.exports = {
   },
 
   treeForApp: function(appTree) {
-    var trees = [ appTree ];
+    var trees = [appTree];
 
-    try {
-      if (fs.statSync('tests/factories').isDirectory()) {
-        var factoriesTree = new Funnel('tests/factories', {
-          destDir: 'tests/factories'
-        });
-        trees.push(factoriesTree);
+    if (this.app.env === 'development') {
+      try {
+        if (fs.statSync('tests/factories').isDirectory()) {
+          var factoriesTree = new Funnel('tests/factories', {
+            destDir: 'tests/factories'
+          });
+          trees.push(factoriesTree);
+        }
+      } catch (err) {
+        // do nothing;
       }
-    } catch (err) {
-      // do nothing;
     }
-
 
     return mergeTrees(trees);
   },
