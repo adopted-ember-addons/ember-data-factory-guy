@@ -527,13 +527,15 @@ Usage:
 ### Inline Functions
 
 - Declare a function for an attribute
-  - Can reference all other attributes, even id
+  - The fixture is passed as parameter so you can reference 
+  all other attributes, even id
+  
 
 ```javascript
 
   FactoryGuy.define('user', {
     default: {
-      // don't need the userName sequence, since the id is almost 
+      // Don't need the userName sequence, since the id is almost 
       // always a sequential number, and you can use that
       name: (f)=> `User${f.id}` 
     },
