@@ -532,11 +532,10 @@ Usage:
 ```javascript
 
   FactoryGuy.define('user', {
-    sequences: {
-      userName: (num)=> `User${num}`
-    },
-    default: { 
-      name: FactoryGuy.generate('userName') 
+    default: {
+      // don't need the userName sequence, since the id is almost 
+      // always a sequential number, and you can use that
+      name: (f)=> `User${f.id}` 
     },
     traits: {
       boringStyle: {
