@@ -84,10 +84,10 @@ export default class {
         return false;
       }
       this.timesCalled++;
-      this.responseJson.unwrap()
-      let name = this.constructor.name
+//      this.responseJson.unwrap()
+//      let name = this.constructor.name
 //      console.debug(`[factory-guy] :', JSON.stringify( this.getResponse().responseText ) );
-      console.log(`[factory-guy] ${name}:`, this.responseJson, this.responseHeaders);
+//      console.log(`[factory-guy] ${name}:`, this.responseJson, this.responseHeaders);
       return this.getResponse();
     }.bind(this);
 
