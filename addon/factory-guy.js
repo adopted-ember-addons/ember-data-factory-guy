@@ -62,7 +62,20 @@ let extractArguments = function (...args) {
 };
 
 class FactoryGuy {
-
+  /**
+   * Setting for FactoryGuy. For now, just logging settings
+   * 
+   * fgLogLevel or logLevel: 0 is off, 1 is on
+   * 
+   * @param opts
+   */
+  settings(opts={}) {
+    if (opts.fgLogLevel) {
+      opts.logLevel = opts.fgLogLevel;  
+    }
+    this.logLevel = opts.logLevel || 0;
+  }
+  
   setStore(aStore) {
     Ember.assert("FactoryGuy#setStore needs a valid store instance.You passed in [" + aStore + "]", aStore instanceof DS.Store);
     this.store = aStore;

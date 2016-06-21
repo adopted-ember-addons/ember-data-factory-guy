@@ -11,19 +11,18 @@ export default class {
   constructor() {
     proxyFx.forEach(fx => this[fx] = fgMethods[fx]);
     this.store = FactoryGuy.store;
-    this.run();
   }
 
-  static setupOptions(opts = {}) {
-    Ember.$.mockjaxSettings.logger = !!opts.logger;
-    Ember.$.mockjaxSettings.logging = opts.logLevel || 1;
+  static settings(opts = {}) {
+    Ember.$.mockjaxSettings.logging = opts.mockjaxLogLevel || 1;
     Ember.$.mockjaxSettings.responseTime = opts.responseTime || 0;
+    FactoryGuy.settings(opts);
   }
 
   run() {
   }
 
   include(scenarios) {
-    (scenarios || []).forEach(Scenario => new Scenario());
+    (scenarios || []).forEach(Scenario => (new Scenario()).run());
   }
 }

@@ -39,7 +39,7 @@ export default class {
   fails(options = {}) {
     if (options.status) {
       Ember.assert(`[ember-data-factory-guy] 'fails' method status code must be 3XX, 4XX or 5XX,
-        you are using: ${options.status}`, options.status.toString().match(/^([345]\d{2})/) );
+        you are using: ${options.status}`, options.status.toString().match(/^([345]\d{2})/));
     }
     this.status = options.status || 500;
     if (options.response) {
@@ -55,6 +55,18 @@ export default class {
       headers: this.responseHeaders,
       status: this.status
     };
+  }
+
+  logInfo() {
+    if (FactoryGuy.logLevel > 0) {
+      let json = JSON.parse(JSON.stringify(this.responseJson));
+      let name = this.constructor.name;
+      let info = ['[factory-guy]', name, json]
+      if (!Ember.$.isEmptyObject(this.queryParams)) {
+        info = info.concat(['queryParams:', this.queryParams]);
+      }
+      console.log(...info);
+    }
   }
 
   paramsMatch() {
@@ -84,10 +96,7 @@ export default class {
         return false;
       }
       this.timesCalled++;
-//      this.responseJson.unwrap()
-//      let name = this.constructor.name
-//      console.debug(`[factory-guy] :', JSON.stringify( this.getResponse().responseText ) );
-//      console.log(`[factory-guy] ${name}:`, this.responseJson, this.responseHeaders);
+      this.logInfo();
       return this.getResponse();
     }.bind(this);
 

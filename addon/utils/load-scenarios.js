@@ -23,6 +23,6 @@ export default function (container) {
       If you have factoryGuy set to true in config/environment.js file, 
       then you should setup a file app/scenarios/main.js to control what data will 
       be like in the development application.`, Scenario);
-    new Scenario['default']();
+    (new Scenario['default']()).run();
   }
 }
