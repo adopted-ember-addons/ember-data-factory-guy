@@ -2,7 +2,7 @@ import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
 import MockRequest from './mock-request';
 
-export default class extends MockRequest {
+export default class MockUpdateRequest extends MockRequest {
 
   constructor(modelName, id) {
     super(modelName);

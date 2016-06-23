@@ -4,7 +4,7 @@ import MockRequest from './mock-request';
 import {isEquivalent} from '../utils/helper-functions';
 const { isPresent, isEmpty } = Ember;
 
-export default class extends MockRequest {
+export default class MockCreateRequest extends MockRequest {
 
   constructor(modelName) {
     super(modelName);

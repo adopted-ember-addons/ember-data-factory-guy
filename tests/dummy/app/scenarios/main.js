@@ -3,10 +3,9 @@ import {Scenario} from 'ember-data-factory-guy';
 import Users from './users';
 import UsersB from './usersB';
 
-Scenario.setupOptions({
+Scenario.settings({
   logger: null,
   logLevel: 0,
-//  fgDebug: 4
 });
 
 export default class extends Scenario {

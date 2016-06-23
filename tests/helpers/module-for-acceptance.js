@@ -8,7 +8,7 @@ export default function(name, options = {}) {
   module(name, {
     beforeEach() {
       this.application = startApp();
-      
+      FactoryGuy.settings({logLevel:1});
       drfReset(this.application); // custom hackery for testing with drf
       
       // Adding FactoryGuy mockSetup call

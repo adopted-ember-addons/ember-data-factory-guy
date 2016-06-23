@@ -60,8 +60,8 @@ export default class {
   logInfo() {
     if (FactoryGuy.logLevel > 0) {
       let json = JSON.parse(JSON.stringify(this.responseJson));
-      let name = this.constructor.name;
-      let info = ['[factory-guy]', name, json]
+      let name = this.constructor.name.replace('Request', '');
+      let info = ['[factory-guy]', `${name}(${this.modelName})`, json]
       if (!Ember.$.isEmptyObject(this.queryParams)) {
         info = info.concat(['queryParams:', this.queryParams]);
       }
@@ -96,8 +96,9 @@ export default class {
         return false;
       }
       this.timesCalled++;
+      let response = this.getResponse();
       this.logInfo();
-      return this.getResponse();
+      return response;
     }.bind(this);
 
     Ember.$.mockjax(handler);
