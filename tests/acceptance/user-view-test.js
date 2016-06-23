@@ -1,4 +1,4 @@
-import { make, build, buildList, mockFind, mockCreate } from 'ember-data-factory-guy';
+import { make, build, buildList, mockFind, mockCreate, mockReload } from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
 moduleForAcceptance('Acceptance | User View');
@@ -58,7 +58,18 @@ test("Add a project to a user with mockCreate", function () {
 
     // Remember, this is for handling an exact match, if you did not care about
     // matching attributes, you could just do: TestHelper.mockCreate('project')
-    mockCreate('project').match({title: newProjectTitle});
+
+    // USING BUILD
+    // let project = build('project');
+    // mockCreate('project').match({title: newProjectTitle}).returns({project});
+    // mockCreate('project').match({title: newProjectTitle}).returns({project: project});
+
+    // USING MAKE
+    let project = make('project');
+    mockCreate('project').match({title: newProjectTitle}).returns({project: project.id});
+
+    mockReload('project', project.get('id'));
+    console.log('Project record ID returned in Test code:', project.get('id'));
 
     /**
      Let's say that clicking this 'button:contains(Add New User)', triggers action in the
