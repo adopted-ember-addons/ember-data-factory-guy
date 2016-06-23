@@ -58,10 +58,18 @@ test("Add a project to a user with mockCreate", function () {
 
     // Remember, this is for handling an exact match, if you did not care about
     // matching attributes, you could just do: TestHelper.mockCreate('project')
+
+    // USING BUILD
+    // let project = build('project');
+    // mockCreate('project').match({title: newProjectTitle}).returns({project});
+    // mockCreate('project').match({title: newProjectTitle}).returns({project: project});
+
+    // USING MAKE
     let project = make('project');
+    mockCreate('project').match({title: newProjectTitle}).returns({project: project.id});
+
     mockReload('project', project.get('id'));
     console.log('Project record ID returned in Test code:', project.get('id'));
-    mockCreate('project').match({title: newProjectTitle}).returns({model: project});
 
     /**
      Let's say that clicking this 'button:contains(Add New User)', triggers action in the
