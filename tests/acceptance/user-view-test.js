@@ -57,7 +57,7 @@ test("Add a project to a user with mockCreate", function () {
     fillIn('input.project-title', newProjectTitle);
 
     // Remember, this is for handling an exact match, if you did not care about
-    // matching attributes, you could just do: TestHelper.mockCreate('project')
+    // matching attributes, you could just do: mockCreate('project')
     mockCreate('project').match({title: newProjectTitle});
 
     /**
