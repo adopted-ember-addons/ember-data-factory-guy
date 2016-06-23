@@ -44,6 +44,9 @@ FactoryGuy.define('user', {
     with_projects: {
       projects: FactoryGuy.hasMany('project', 2)
     },
+    with_projects_splat: {
+      projects: FactoryGuy.hasMany('project', 'big', 'small', {title: "Cool Project"})
+    },
     with_hats: {
       hats: FactoryGuy.hasMany('big-hat', 2)
     },

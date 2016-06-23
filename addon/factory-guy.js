@@ -232,9 +232,9 @@ class FactoryGuy {
    @param   {Object} opts options
    @returns {Function} wrapper function that will build the association json
    */
-    hasMany(fixtureName, number, opts) {
+    hasMany(...args) {
     return ()=> {
-      return this.buildRawList(fixtureName, number, opts);
+      return this.buildRawList.apply(this, args);
     };
   }
 

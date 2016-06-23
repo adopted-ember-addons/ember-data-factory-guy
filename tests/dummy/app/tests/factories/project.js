@@ -6,6 +6,7 @@ FactoryGuy.define("project", {
   },
   traits: {
     big: { title: 'Big Project' },
+    small: { title: 'Small Project' },
     with_title_sequence: { title: FactoryGuy.generate('title') },
     with_user: { user: {} },
     with_parent: { project: {} },

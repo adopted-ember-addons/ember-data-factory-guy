@@ -727,7 +727,7 @@ test("with trait with custom belongsTo association object", function () {
   deepEqual(json, expected);
 });
 
-test("using trait with attribute using FactoryGuy.belongsTo method", function () {
+test("using trait with association using FactoryGuy.belongsTo method", function () {
   let json = FactoryGuy.buildRaw('project', 'with_admin');
   let expected = {
     id: 1,
@@ -743,13 +743,28 @@ test("with attribute using sequence", function () {
   deepEqual(json, expected);
 });
 
-test("with trait defining hasMany association", function () {
+test("with trait defining association using FactoryGuy.hasMany method", function () {
   let json = FactoryGuy.buildRaw('user', 'with_projects');
   let expected = {
     id: 1,
     name: 'User1',
     style: "normal",
     projects: [{id: 1, title: 'Project1'}, {id: 2, title: 'Project2'}]
+  };
+  deepEqual(json, expected);
+});
+
+test("with trait defining association using FactoryGuy.hasMany method that uses splat style attributes", function () {
+  let json = FactoryGuy.buildRaw('user', 'with_projects_splat');
+  let expected = {
+    id: 1,
+    name: 'User1',
+    style: "normal",
+    projects: [
+      {id: 1, title: 'Big Project'},
+      {id: 2, title: 'Small Project'},
+      {id: 3, title: 'Cool Project'}
+    ]
   };
   deepEqual(json, expected);
 });
