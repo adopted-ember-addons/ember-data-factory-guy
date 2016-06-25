@@ -1488,7 +1488,6 @@ SharedBehavior.mockUpdateTests = function() {
 
   test("with only modelType", function(assert) {
     Ember.run(()=> {
-      FactoryGuy.settings({logLevel:1})
       let done = assert.async();
       let profile = make('profile');
       mockUpdate('profile');
