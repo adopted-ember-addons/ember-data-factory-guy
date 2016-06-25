@@ -66,7 +66,7 @@ export default class {
 
   /**
    Adapters freak out if there is non empty response with no id.
-   So, if there there is no id in the return null
+   So, if there there is no id in fixture => return null
 
    @param modelName
    @param fixture
