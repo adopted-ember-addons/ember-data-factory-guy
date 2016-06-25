@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import DS from 'ember-data';
-import $ from 'jquery';
 import FactoryGuy from './factory-guy';
 import MockUpdateRequest from './mocks/mock-update-request';
 import MockCreateRequest from './mocks/mock-create-request';
@@ -13,13 +12,14 @@ import MockDeleteRequest from './mocks/mock-delete-request';
 
 let MockServer = Ember.Object.extend({
 
-  setup: function () {
-    $.mockjaxSettings.logging = 1;  // set to 4 for maximum logging action
-    $.mockjaxSettings.responseTime = 0;
+  setup: function (opts={}) {
+    Ember.$.mockjaxSettings.logging = opts.mockjaxLogLevel || 1;  // set to 4 for maximum logging output
+    Ember.$.mockjaxSettings.responseTime = opts.responseTime || 0;
+    FactoryGuy.settings(opts);
   },
 
   teardown: function () {
-    $.mockjax.clear();
+    Ember.$.mockjax.clear();
   },
 
   // Look up a controller from the current container
@@ -346,12 +346,15 @@ let MockServer = Ember.Object.extend({
    // Typically you will make a model
    let user = make('user');
    // and then to handle update, use the testHelper.mockUpdate call to mock a update
-   testHelper.mockUpdate(user);
+      mockUpdate(user);
    or
-   // testHelper.mockUpdate('user', user.id);
+   // mockUpdate('user', user.id);
+   or
+   // just the model type
+   // mockUpdate('user');
 
    // and to mock failure case use method fails
-   testHelper.mockUpdate(user).fails();
+    mockUpdate(user).fails();
    ```
 
    @param {String} type  model type like 'user' for User model, or a model instance
@@ -359,28 +362,20 @@ let MockServer = Ember.Object.extend({
    @param {Object} options options object
    */
   mockUpdate: function (...args) {
-    Ember.assert("To mockUpdate pass in a model instance or a type and an id", args.length > 0);
-
-    if (args.length > 1 && typeof args[args.length - 1] === 'object') {
-      Ember.assert("Passing in options to mockUpdate is no longer supported. To mockUpdate pass in a model instance or a modelName and an id", true);
-    }
-
     let model, modelName, id;
-    let store = FactoryGuy.store;
 
     if (args[0] instanceof DS.Model) {
       model = args[0];
       id = model.id;
       modelName = model.constructor.modelName;
-    } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
-      modelName = args[0];
-      id = args[1];
-      model = store.peekRecord(modelName, id);
+    } else {
+      if (typeof args[0] === "string") {
+        [modelName, id] = args;
+      }
     }
-    Ember.assert("To mockUpdate pass in a model instance or a modelName and an id", modelName && id);
 
-//    let url = FactoryGuy.buildURL(modelName, id);
-//    return new MockUpdateRequest(url, model, {});
+    Ember.assert("To mockUpdate pass in a model instance or a modelName and an id or just a modelName", modelName);
+
     return new MockUpdateRequest(modelName, id);
   },
   handleUpdate: function () {

@@ -8,11 +8,15 @@ export default function(name, options = {}) {
   module(name, {
     beforeEach() {
       this.application = startApp();
-      FactoryGuy.settings({logLevel:1});
+
       drfReset(this.application); // custom hackery for testing with drf
-      
+
       // Adding FactoryGuy mockSetup call
       mockSetup();
+
+      // If you want to check if your mocks are handling response
+      // and also see what the mocks are returning
+      // mockSetup({logLevel:1});
 
       if (options.beforeEach) {
         options.beforeEach.apply(this, arguments);

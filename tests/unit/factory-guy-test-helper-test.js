@@ -2,7 +2,7 @@ import Ember from 'ember';
 import FactoryGuy, {
   make, makeList, build, buildList, clearStore,
   mockFind, mockFindAll, mockReload, mockQuery, mockQueryRecord,
-  mockCreate, mockUpdate, mockDelete
+  mockCreate, mockUpdate, mockDelete, mockSetup
 } from 'ember-data-factory-guy';
 import {inlineSetup} from '../helpers/utility-methods';
 
@@ -208,8 +208,32 @@ test("with incorrect parameters", function(assert) {
     mockUpdate();
   }, "missing everything");
 
-  assert.throws(function() {
-    mockUpdate('profile');
-  }, "missing id");
+});
 
+test("using returns when only setting modelName", function(assert) {
+  assert.throws(function() {
+    mockUpdate('profile').returns({});
+  }, "can't user returns when only specifying modelName");
+
+});
+
+module('mockSetup', inlineSetup(App));
+
+test("accepts parameters", function() {
+  FactoryGuy.logLevel = 0;
+  Ember.$.mockjaxSettings.responseTime = 0;
+  Ember.$.mockjaxSettings.logging = 0;
+
+  mockSetup({logLevel: 1});
+  equal(FactoryGuy.logLevel, 1);
+
+  mockSetup({responseTime: 10});
+  equal(Ember.$.mockjaxSettings.responseTime, 10);
+
+  mockSetup({mockjaxLogLevel: 4});
+  equal(Ember.$.mockjaxSettings.logging, 4);
+
+  FactoryGuy.logLevel = 0;
+  Ember.$.mockjaxSettings.responseTime = 0;
+  Ember.$.mockjaxSettings.logging = 0;
 });

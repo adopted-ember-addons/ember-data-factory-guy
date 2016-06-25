@@ -1470,6 +1470,37 @@ SharedBehavior.mockUpdateTests = function() {
     });
   });
 
+  test("with modelType and id using returns to return an attribute", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let profile = make('profile');
+      let date = new Date(2016, 1, 4);
+      mockUpdate('profile', profile.id).returns({ created_at: date });
+
+      profile.set('description', 'new desc');
+      profile.save().then(function(profile) {
+        ok(profile.get('description') === 'new desc');
+        ok(profile.get('created_at').toString() === date.toString());
+        done();
+      });
+    });
+  });
+
+  test("with only modelType", function(assert) {
+    Ember.run(()=> {
+      FactoryGuy.settings({logLevel:1})
+      let done = assert.async();
+      let profile = make('profile');
+      mockUpdate('profile');
+
+      profile.set('description', 'new desc');
+      profile.save().then(function(profile) {
+        ok(profile.get('description') === 'new desc');
+        done();
+      });
+    });
+  });
+
 
   test("with model", function(assert) {
     Ember.run(()=> {
@@ -1480,6 +1511,22 @@ SharedBehavior.mockUpdateTests = function() {
       profile.set('description', 'new desc');
       profile.save().then(function(profile) {
         ok(profile.get('description') === 'new desc');
+        done();
+      });
+    });
+  });
+
+  test("with model using returns to return an attribute", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let profile = make('profile');
+      let date = new Date(2016, 1, 4);
+      mockUpdate(profile).returns({ created_at: date });
+
+      profile.set('description', 'new desc');
+      profile.save().then(function(profile) {
+        ok(profile.get('description') === 'new desc');
+        ok(profile.get('created_at').toString() === date.toString());
         done();
       });
     });

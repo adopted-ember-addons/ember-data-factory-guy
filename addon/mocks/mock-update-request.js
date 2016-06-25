@@ -18,6 +18,19 @@ export default class MockUpdateRequest extends MockRequest {
     return FactoryGuy.updateHTTPMethod();
   }
 
+  basicRequestMatches(settings) {
+    /**
+     If no id is specified, match any url with an id,
+     with or without a trailing slash after the id.
+     Ex: /profiles/:id and /profiles/:id/
+     */
+    let url = this.getUrl();
+    if (!this.id) {
+      url = new RegExp(url + '\/*\\d+\/*');
+    }
+
+    return settings.url.match(url) && settings.type === this.getType();
+  }
   /**
    * This returns is different than the one for GET requests, because
    * you don't prefix the returns with json or models etc...
@@ -27,6 +40,9 @@ export default class MockUpdateRequest extends MockRequest {
    * @param {Object} returns attributes and or relationships to send with payload
    */
   returns(returns) {
+    if (!this.id) {
+      Ember.assert(`[ember-data-factory-guy] Can't use returns in mockUpdate when update only has modelName and no id`, this.id);
+    }
     this.returnArgs = returns;
     return this;
   }
@@ -41,7 +57,7 @@ export default class MockUpdateRequest extends MockRequest {
 
   getResponse() {
     let json = Ember.$.extend({}, this.returnArgs, { id: this.id });
-    this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
+    this.responseJson = FactoryGuy.fixtureBuilder.createUpdateResponse(this.modelName, json);
     return super.getResponse();
   }
 

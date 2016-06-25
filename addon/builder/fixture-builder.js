@@ -52,6 +52,7 @@ export default class {
 
    @param modelName
    @param fixture
+   @param converterOptions
    */
   convertForBuild(modelName, fixture, converterOptions) {
     let converter = this.getConverter(converterOptions);
@@ -61,6 +62,22 @@ export default class {
     let json = converter.convert(modelName, fixture);
     this.wrapPayload(modelName, json, converter);
     return json;
+  }
+
+  /**
+   Adapters freak out if there is non empty response with no id.
+   So, if there there is no id in the return null
+
+   @param modelName
+   @param fixture
+   @param converterOptions
+   @returns {*}
+   */
+  createUpdateResponse(modelName, fixture, converterOptions) {
+    if (!fixture.id) {
+      return null;
+    }
+    return this.convertForBuild(modelName, fixture, converterOptions); 
   }
   
   /**
