@@ -63,22 +63,6 @@ export default class {
     this.wrapPayload(modelName, json, converter);
     return json;
   }
-
-  /**
-   Adapters freak out if there is non empty response with no id.
-   So, if there there is no id in fixture => return null
-
-   @param modelName
-   @param fixture
-   @param converterOptions
-   @returns {*}
-   */
-  createUpdateResponse(modelName, fixture, converterOptions) {
-    if (!fixture.id) {
-      return null;
-    }
-    return this.convertForBuild(modelName, fixture, converterOptions); 
-  }
   
   /**
    Convert to the ember-data JSONAPI adapter specification, since FactoryGuy#make

@@ -55,9 +55,18 @@ export default class MockUpdateRequest extends MockRequest {
     return this;
   }
 
+  /**
+   Adapters freak out if update payload is non empty response with no id.
+   So, if there there is no id in fixture => return null
+
+   @returns {*}
+   */
   getResponse() {
-    let json = Ember.$.extend({}, this.returnArgs, { id: this.id });
-    this.responseJson = FactoryGuy.fixtureBuilder.createUpdateResponse(this.modelName, json);
+    this.responseJson = null;
+    if (this.id) {
+      let json = Ember.$.extend({}, this.returnArgs, { id: this.id });
+      this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
+    }
     return super.getResponse();
   }
 
