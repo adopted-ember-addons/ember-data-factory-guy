@@ -137,38 +137,6 @@ class MockGetRequest extends MockRequest {
     return this.paramsMatch(settings);
   }
 
-  //////////////////  deprecated /////////////////////
-  returnsModels(models) {
-    Ember.deprecate("`returnsModel` has been deprecated. Use `returns({ model })` instead.",
-      false, { id: 'ember-data-factory-guy.returns-models', until: '2.4.0' });
-    return this.returns({ models });
-  }
-
-  returnsJSON(json) {
-    Ember.deprecate("`returnsJSON - has been deprecated. Use `returns({ json })` instead", false,
-      { id: 'ember-data-factory-guy.returns-json', until: '2.4.0' });
-    return this.returns({ json });
-  }
-
-  returnsExistingIds(ids) {
-    Ember.deprecate("`returnsExistingIds` - has been deprecated. Use `returns({ ids })` method instead`",
-      false, { id: 'ember-data-factory-guy.returns-json', until: '2.4.0' });
-
-    return this.returns({ ids });
-  }
-
-  andFail(options = {}) {
-    Ember.deprecate("`andFail` - has been deprecated. Use `fails(options)` method instead`",
-      false, { id: 'ember-data-factory-guy.and-fail', until: '2.4.0' });
-    return this.fails(options);
-  }
-
-  andSucceed(options) {
-    Ember.deprecate("`andSucceed` - has been deprecated. Use `succeeds(options)` method instead`",
-      false, { id: 'ember-data-factory-guy.and-succeed', until: '2.4.0' });
-    return this.succeeds(options);
-  }
-
 }
 
 export default MockGetRequest;

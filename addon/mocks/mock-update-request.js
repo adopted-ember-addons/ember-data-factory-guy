@@ -57,7 +57,7 @@ export default class MockUpdateRequest extends MockRequest {
 
   /**
    Adapters freak out if update payload is non empty response with no id.
-   So, if there there is no id in fixture => return null
+   So, if there is no id specified for this update => return null
 
    @returns {*}
    */
