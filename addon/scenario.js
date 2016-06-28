@@ -3,7 +3,7 @@ import FactoryGuy, * as fgMethods from 'ember-data-factory-guy';
 
 let proxyFx = [
   'make', 'makeList', 'build', 'buildList', 'mockFind', 'mockFindAll',
-  'mockQuery', 'mockQueryRecord', 'mockUpdate', 'mockDelete'
+  'mockQuery', 'mockQueryRecord', 'mockUpdate', 'mockCreate', 'mockDelete'
 ];
 
 export default class {

@@ -5,7 +5,9 @@ export default class {
 
   /**
    Proxy class for getting access to a json payload.
-   Adds methods to json built from build and buildList methods.
+   Allows you to: 
+     - inspect a payload with friendly .get(attr)  syntax 
+     - add to json payload with more json built from build and buildList methods.
 
    @param {String} modelName name of model for payload
    @param {Object} json json payload being proxied
@@ -59,10 +61,10 @@ export default class {
   }
 
   /**
-   * Add new meta data to the json payload, which will
-   * overwrite any existing meta data with same keys
-   *
-   * @param {Object} data meta data to add
+    Add new meta data to the json payload, which will
+    overwrite any existing meta data with same keys
+   
+    @param {Object} data meta data to add
    */
   addMeta(data) {
     this.json.meta = this.json.meta || {};
