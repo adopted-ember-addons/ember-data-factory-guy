@@ -1,0 +1,14 @@
+<h3>User</h3>
+
+<div class="name">Name: {{user.name}}</div>
+<div class="funny-name">Funny Name: {{user.funnyName}}</div>
+
+Projects:
+<ul>
+ {{#each user.projects as |project|}}
+   <li class="project">{{project.title}}</li>
+ {{/each}}
+</ul>
+
+<input class="project-title" type="textbox">
+<button {{action 'addProject' user}}>Add New User</button>

@@ -1,42 +1,34 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-    <meta charset='UTF-8' />
-    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Dummy Tests</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>jQuery.simpleFAQ QUnit Test Runner</title>
+    {{content-for 'head'}}
+    {{content-for 'test-head'}}
 
-    <link rel="stylesheet" type="text/css" href="../bower_components/qunit/qunit/qunit.css">
-    <!-- add any external libraries your code needs -->
-    <script src='../bower_components/jquery/jquery.js'></script>
-    <script src='../bower_components/handlebars/handlebars.js'></script>
-    <script src='../bower_components/ember/ember.js'></script>
-    <script src='../bower_components/ember-data/ember-data.js'></script>
-    <script src="../bower_components/qunit/qunit/qunit.js"></script>
-    <script src="../bower_components/sinon/index.js"></script>
-    <script src="../bower_components/sinon-qunit/lib/sinon-qunit.js"></script>
-    <script src="../bower_components/jquery-mockjax/jquery.mockjax.js"></script>
+    <link rel="stylesheet" href="assets/vendor.css">
+    <link rel="stylesheet" href="assets/dummy.css">
+    <link rel="stylesheet" href="assets/test-support.css">
 
-    <script src='../dist/ember-data-factory-guy.js'></script>
-    <!--<script src='../src/has_many.js'></script>-->
+    {{content-for 'head-footer'}}
+    {{content-for 'test-head-footer'}}
+  </head>
+  <body>
+    {{content-for 'body'}}
+    {{content-for 'test-body'}}
 
-    <!-- your tests, any and all to run with the given fixtures below -->
-    <script src='../tests/test_setup.js'></script>
-    <script src='../tests/support/test_helper.js'></script>
+    <script src="assets/vendor.js"></script>
+    <script src="assets/test-support.js"></script>
+    <script src="assets/dummy.js"></script>
+    <script src="testem.js" integrity=""></script>
+    <script src="assets/tests.js"></script>
+    <script src="assets/test-loader.js"></script>
 
-</head>
-<body>
-<div id="qunit"></div> <!-- QUnit fills this with results, etc -->
-<script src='active_model_adapter_factory_test.js'></script>
-<script src='rest_adapter_factory_test.js'></script>
-<!--<script src='fixture_adapter_factory_test.js'></script>-->
-<script src='store_test.js'></script>
-<script src='factory_guy_test.js'></script>
-<script src='factory_guy_test_mixin_test.js'></script>
-<div id='qunit-fixture'>
-
-<!-- any HTML you want to be present in each test (will be reset for each test) -->
-
-</div>
-</body>
+    {{content-for 'body-footer'}}
+    <!--{{content-for 'test-body-footer'}}-->
+  </body>
 </html>
