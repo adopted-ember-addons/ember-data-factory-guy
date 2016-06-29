@@ -12,10 +12,15 @@ class JSONAPIFixtureConverter extends Converter {
 
   constructor(store, options = { transformKeys: true, serializeMode: false }) {
     super(store, options);
-    this.typeTransformFn = this.serializeMode ? pluralize : this.noTransformFn;
+    this.typeTransformFn = this.serializeMode ? this.typeTransformViaSerializer : this.noTransformFn;
     this.defaultKeyTransformFn = dasherize;
     this.polymorphicTypeTransformFn = dasherize;
     this.included = [];
+  }
+
+  typeTransformViaSerializer(modelName) {
+      let serializer = this.store.serializerFor(modelName);
+      return serializer.payloadKeyFromModelName(modelName);
   }
 
   emptyResponse(_, options={}) {
