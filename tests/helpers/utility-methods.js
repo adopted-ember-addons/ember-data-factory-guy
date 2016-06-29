@@ -35,7 +35,7 @@ let theUsualSetup = function (serializerType) {
     store.serializerFor = function(modelName) {
       // all the modelFragment types will use their own default serializer
       let originalSerializer = findSerializer(modelName);
-      if (modelName.match(/(name|department|address|department-employment|manager)/)) {
+      if (modelName.match(/(name|department|address|department-employment|manager|entry|entry-type)/)) {
         return originalSerializer;
       }
       // comic-book is used in JSON, and REST serializer test and this allows it to be
