@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy, {build, buildList, mockCreate} from 'ember-data-factory-guy';
+import FactoryGuy, {make, build, buildList, mockCreate} from 'ember-data-factory-guy';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
 import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
@@ -26,16 +26,14 @@ module(title(adapter, '#mockCreate custom'), inlineSetup(App, serializerType));
 test("match belongsTo with custom payloadKeyFromModelName function", function(assert) {
   Ember.run(()=> {
     let done = assert.async();
-    let entryTypeObj = {id: '1', type: 'entry_type'}
-    mockCreate('entry-type').returns(entryTypeObj);
-    mockCreate('entry').match({entryType: entryTypeObj});
-    FactoryGuy.store.createRecord('entry-type', {id: '1'})
-      .save().then((entryType) => {
-        FactoryGuy.store.createRecord('entry', { entryType: entryType })
-          .save().then((entry)=> {
-            ok(entry.get('entryType.id') === '1');
-            done();
-          });
+
+    let entryType = make('entry-type');
+    mockCreate('entry').match({ entryType: entryType });
+
+    FactoryGuy.store.createRecord('entry', { entryType: entryType }).save()
+      .then((entry)=> {
+        equal(entry.get('entryType.id'), entryType.id);
+        done();
       });
   });
 });
@@ -43,17 +41,15 @@ test("match belongsTo with custom payloadKeyFromModelName function", function(as
 test("match hasMany with custom payloadKeyFromModelName function", function(assert) {
   Ember.run(()=> {
     let done = assert.async();
-    let entryObj = {id: '1', type: 'entry'};
-    mockCreate('entry').returns(entryObj);
-    mockCreate('entry-type').match({entries: [entryObj]});
-    FactoryGuy.store.createRecord('entry', {id: '1'})
-      .save().then((entry) => {
-        FactoryGuy.store.createRecord('entry-type', { entries: [entry] })
-          .save().then((entryType)=> {
-            let entries = entryType.get('entries');
-            ok(entries.objectAt(0).get('id'), '1');
-            done();
-          });
+
+    let entry = make('entry');
+    mockCreate('entry-type').match({ entries: [entry] });
+
+    FactoryGuy.store.createRecord('entry-type', { entries: [entry] }).save()
+      .then((entryType)=> {
+        let entries = entryType.get('entries');
+        deepEqual(entries.mapBy('id'), [entry.id]);
+        done();
       });
   });
 });
