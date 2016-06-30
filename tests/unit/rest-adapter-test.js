@@ -117,7 +117,7 @@ test("sideloads belongsTo records which are built from fixture definition with F
       camelCaseDescription: 'textGoesHere',
       snake_case_description: 'text_goes_here',
       aBooleanField: false,
-      superHero: 1,
+      superHero: 1
     },
     'super-heros': [
       {
