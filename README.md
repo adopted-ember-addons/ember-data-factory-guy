@@ -1090,12 +1090,9 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - [mockCreate](https://github.com/danielspaniel/ember-data-factory-guy#mockcreate)
   - [mockUpdate](https://github.com/danielspaniel/ember-data-factory-guy#mockupdate)
   - [mockDelete](https://github.com/danielspaniel/ember-data-factory-guy#mockdelete)
-- can use method `fails()` to simulate failure, and then `succeeds()` to simulate success
-  - to customize failure, fails method takes optional object with status and errors.
-  - Example: 
-  ```javascript
-    let mock = mockFindAll('user').fails({status: 401, errors: {description: "Unauthorized"}}); 
-  ```
+
+- All requests can use method `fails()` to simulate failure, and then `succeeds()` to simulate success
+
 - mock#timesCalled 
   - verify how many times the ajax call was mocked
   - use `timesCalled` property on the mock
@@ -1123,6 +1120,25 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
     ```
   - Use ```mockTeardown()``` in test teardown/afterEach
   - Easiest is to set them up in [module-for-acceptance.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/helpers/module-for-acceptance.js)
+
+##### Using fails method
+  - Use optional object arguments status and response and convertErrors to customize
+    - status : must be number in the range of 3XX, 4XX, or 5XX ( default is 500 )
+    - response : must be object with errors key 
+    - convertErrors : default is true, set to false will not convert errors for you
+     
+  - Examples: 
+  ```javascript
+    let errors401 = {errors: {description: "Unauthorized"}};
+    let mock = mockFindAll('user').fails({status: 401, response: errors401}); 
+
+    let errors422 = {errors: {name: "Name too short"}};
+    let mock = mockFind('profile').fails({status: 422, response: errors422}); 
+
+    let errorsMine = {errors: [{detail: "Name too short", title: "I am short"}]};
+    let mock = mockFind('profile').fails({status: 422, response: errorsMine, convertErrors: false}); 
+  ```
+  
 
 ##### mockFind
   - For dealing with finding one record of a model type => `store.find('modelType')`
