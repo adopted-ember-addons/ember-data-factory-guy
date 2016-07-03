@@ -1117,7 +1117,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - Use ```mockSetup()``` in test setup/beforeEach
    - set logging options here ( logLevel, responseTime, mockjaxLogLevel )
     - Example: 
-    ``javascript 
+    ```javascript 
       mockSetup({logLevel: 1, responseTime: 1000, mockjaxLogLevel: 4});
     ```
   - Use ```mockTeardown()``` in test teardown/afterEach
