@@ -1127,8 +1127,8 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
     - response : must be object with errors key ( default is null )  
     - convertErrors : set to false and object will be left untouched ( default is true )
       - errors must be in particular format for ember-data to accept them
-       - factory guy allows you to use a simple style: ```{errors: {name: "Name too short"}}``` 
-       - Behind the scenes converts to another format for ember-data to consume
+        - factory guy allows you to use a simple style: ```{errors: {name: "Name too short"}}``` 
+        - Behind the scenes converts to another format for ember-data to consume
      
   - Examples: 
   ```javascript
