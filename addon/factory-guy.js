@@ -14,7 +14,7 @@ let modelDefinitions = {};
  or a named person in model definition like 'dude'
  @returns {String} model  name associated with fixture name or undefined if not found
  */
-let lookupModelForFixtureName = function (name) {
+let lookupModelForFixtureName = function(name) {
   let definition = lookupDefinitionForFixtureName(name);
   if (definition) {
     return definition.modelName;
@@ -27,7 +27,7 @@ let lookupModelForFixtureName = function (name) {
  or a named person in model definition like 'dude'
  @returns {ModelDefinition} ModelDefinition associated with model or undefined if not found
  */
-let lookupDefinitionForFixtureName = function (name) {
+let lookupDefinitionForFixtureName = function(name) {
   for (let model in modelDefinitions) {
     let definition = modelDefinitions[model];
     if (definition.matchesName(name)) {
@@ -36,14 +36,14 @@ let lookupDefinitionForFixtureName = function (name) {
   }
 };
 
-let extractArgumentsShort = function (...args) {
+let extractArgumentsShort = function(...args) {
   let opts = {};
   if (Ember.typeOf(args[args.length - 1]) === 'object') {
     opts = args.pop();
   }
   // whatever is left are traits
   let traits = Ember.A(args).compact();
-  return {opts: opts, traits: traits};
+  return { opts: opts, traits: traits };
 };
 
 /**
@@ -53,29 +53,26 @@ let extractArgumentsShort = function (...args) {
  @param {Object} opts  optional fixture options that will override default fixture values
  @returns {Object} json fixture
  */
-let extractArguments = function (...args) {
+let extractArguments = function(...args) {
   let name = args.shift();
   if (!name) {
     throw new Error('Build needs a factory name to build');
   }
-  return assign({name: name}, extractArgumentsShort.apply(this, args));
+  return assign({ name: name }, extractArgumentsShort.apply(this, args));
 };
 
 class FactoryGuy {
   /**
    * Setting for FactoryGuy. For now, just logging settings
-   * 
-   * fgLogLevel or logLevel: 0 is off, 1 is on
-   * 
+   *
+   * logLevel: 0 is off, 1 is on
+   *
    * @param opts
    */
-  settings(opts={}) {
-    if (opts.fgLogLevel) {
-      opts.logLevel = opts.fgLogLevel;  
-    }
-    this.logLevel = opts.logLevel || 0;
+  settings({ logLevel = 0 } = {}) {
+    this.logLevel = logLevel;
   }
-  
+
   setStore(aStore) {
     Ember.assert("FactoryGuy#setStore needs a valid store instance.You passed in [" + aStore + "]", aStore instanceof DS.Store);
     this.store = aStore;
@@ -160,9 +157,9 @@ class FactoryGuy {
    @returns {Function} wrapper function that is called by the model
    definition containing the sequence
    */
-    generate(nameOrFunction) {
+  generate(nameOrFunction) {
     let sortaRandomName = Math.floor((1 + Math.random()) * 65536).toString(16) + Date.now();
-    return function () {
+    return function() {
       // this function will be called by ModelDefinition, which has it's own generate method
       if (Ember.typeOf(nameOrFunction) === 'function') {
         return this.generate(sortaRandomName, nameOrFunction);
@@ -171,6 +168,7 @@ class FactoryGuy {
       }
     };
   }
+
   /**
    Used in model definitions to define a belongsTo association attribute.
    For example:
@@ -199,11 +197,12 @@ class FactoryGuy {
    @param   {Object} opts options
    @returns {Function} wrapper function that will build the association json
    */
-    belongsTo(fixtureName, opts) {
+  belongsTo(fixtureName, opts) {
     return ()=> {
       return this.buildRaw(fixtureName, opts);
     };
   }
+
   /**
    Used in model definitions to define a hasMany association attribute.
    For example:
@@ -232,7 +231,7 @@ class FactoryGuy {
    @param   {Object} opts options
    @returns {Function} wrapper function that will build the association json
    */
-    hasMany(...args) {
+  hasMany(...args) {
     return ()=> {
       return this.buildRawList.apply(this, args);
     };
@@ -276,6 +275,7 @@ class FactoryGuy {
 
     return definition.build(args.name, args.opts, args.traits);
   }
+
   /**
    Build list of fixtures for model or specific fixture name. For example:
 
@@ -285,8 +285,8 @@ class FactoryGuy {
    FactoryGuy.buildList('user', 2) // for 2 User models
    FactoryGuy.build('bob', 2) // for 2 User model with bob attributes
    FactoryGuy.build('bob', 'with_car', ['with_car',{name: "Dude"}])
-    // 2 User model with bob attributes, where the first also has 'with_car' trait
-    // the last has 'with_car' trait and name of "Dude"
+   // 2 User model with bob attributes, where the first also has 'with_car' trait
+   // the last has 'with_car' trait and name of "Dude"
 
    ```
 
@@ -296,7 +296,7 @@ class FactoryGuy {
    @param {Object} opts  optional fixture options that will override default fixture values
    @returns {Array} list of fixtures
    */
-    buildList(...args) {
+  buildList(...args) {
     Ember.assert("buildList needs at least a name ( of model or named factory definition )", args.length > 0);
 
     let list = this.buildRawList.apply(this, arguments);
@@ -320,7 +320,7 @@ class FactoryGuy {
       return definition.buildList(name, number, parts.traits, parts.opts);
     }
     else {
-      return args.map(function (innerArgs) {
+      return args.map(function(innerArgs) {
         if (Ember.typeOf(innerArgs) !== 'array') {
           innerArgs = [innerArgs];
         }
@@ -329,6 +329,7 @@ class FactoryGuy {
       });
     }
   }
+
   /**
    Make new fixture and save to store.
 
@@ -336,7 +337,7 @@ class FactoryGuy {
    @param {String} trait  optional trait names ( one or more )
    @param {Object} options  optional fixture options that will override default fixture values
    @returns {DS.Model} record
-  */
+   */
   make() {
     let args = extractArguments.apply(this, arguments);
 
@@ -363,16 +364,16 @@ class FactoryGuy {
    Make a list of model instances
 
    ```
-    FactoryGuy.makeList('bob') // makes 0 bob's
+   FactoryGuy.makeList('bob') // makes 0 bob's
 
-    FactoryGuy.makeList('bob', 2) // makes 2 bob's
+   FactoryGuy.makeList('bob', 2) // makes 2 bob's
 
-    FactoryGuy.makeList('bob', 2, 'with_car' , {name: "Dude"})
-    // makes 2 bob's that have 'with_car' trait and name of "Dude"
+   FactoryGuy.makeList('bob', 2, 'with_car' , {name: "Dude"})
+   // makes 2 bob's that have 'with_car' trait and name of "Dude"
 
-    FactoryGuy.makeList('bob', 'with_car', ['with_car',{name: "Dude"}])
-    // 2 User model with bob attributes, where the first also has 'with_car' trait
-    // the last has 'with_car' trait and name of "Dude"
+   FactoryGuy.makeList('bob', 'with_car', ['with_car',{name: "Dude"}])
+   // 2 User model with bob attributes, where the first also has 'with_car' trait
+   // the last has 'with_car' trait and name of "Dude"
    ```
 
    @param {String} name name of fixture
@@ -392,7 +393,7 @@ class FactoryGuy {
 
     let name = args.shift();
     let definition = lookupDefinitionForFixtureName(name);
-    Ember.assert("Can't find that factory named [" + name + "]" , !!definition);
+    Ember.assert("Can't find that factory named [" + name + "]", !!definition);
 
     let number = args[0] || 0;
     if (typeof number === 'number') {
@@ -411,6 +412,7 @@ class FactoryGuy {
       return this.make(...[name, ...innerArgs]);
     });
   }
+
   /**
    Clear model instances from store cache.
    Reset the id sequence for the models back to zero.
@@ -473,8 +475,8 @@ class FactoryGuy {
    */
   indexOfFixture(fixtures, fixture) {
     let index = -1,
-      id = fixture.id + '';
-    Ember.A(fixtures).find(function (r, i) {
+        id    = fixture.id + '';
+    Ember.A(fixtures).find(function(r, i) {
       if ('' + Ember.get(r, 'id') === id) {
         index = i;
         return true;
@@ -488,11 +490,12 @@ class FactoryGuy {
   /**
    Clears all model definitions
    */
-    clearDefinitions(opts) {
+  clearDefinitions(opts) {
     if (!opts) {
       this.modelDefinitions = {};
     }
   }
+
   /**
    Build url's for the mockjax calls. Proxy to the adapters buildURL method.
 
@@ -504,21 +507,22 @@ class FactoryGuy {
     const adapter = this.store.adapterFor(modelName);
     return adapter.buildURL(modelName, id);
   }
+
   /**
    Change reload behavior to only used cached models for find/findAll.
    You still have to handle query calls, since they always ajax for data.
 
    @params {Array} except list of models you don't want to mark as cached
    */
-  cacheOnlyMode({except=[]}={}) {
+  cacheOnlyMode({ except=[] }={}) {
     let store = this.store;
     let findAdapter = store.adapterFor.bind(store);
 
-    store.adapterFor = function (name) {
+    store.adapterFor = function(name) {
       let adapter = findAdapter(name);
       let shouldCache = ()=> {
         if (Ember.isPresent(except)) {
-           return (Ember.A(except).contains(name));
+          return (Ember.A(except).contains(name));
         }
         return false;
       };
@@ -539,5 +543,5 @@ let build = factoryGuy.build.bind(factoryGuy);
 let buildList = factoryGuy.buildList.bind(factoryGuy);
 let clearStore = factoryGuy.clearStore.bind(factoryGuy);
 
-export { make, makeList, build, buildList, clearStore };
+export {make, makeList, build, buildList, clearStore};
 export default factoryGuy;

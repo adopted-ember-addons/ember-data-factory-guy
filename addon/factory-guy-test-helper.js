@@ -12,10 +12,10 @@ import MockDeleteRequest from './mocks/mock-delete-request';
 
 let MockServer = Ember.Object.extend({
 
-  setup: function (opts={}) {
-    Ember.$.mockjaxSettings.logging = opts.mockjaxLogLevel || 1;  // set to 4 for maximum logging output
-    Ember.$.mockjaxSettings.responseTime = opts.responseTime || 0;
-    FactoryGuy.settings(opts);
+  setup: function({mockjaxLogLevel = 1, responseTime = 0, logLevel = 0 }={}) {
+    Ember.$.mockjaxSettings.logging = mockjaxLogLevel; // set to 4 for maximum logging output
+    Ember.$.mockjaxSettings.responseTime = responseTime;
+    FactoryGuy.settings({logLevel});
   },
 
   teardown: function () {

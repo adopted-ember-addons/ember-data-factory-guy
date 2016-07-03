@@ -15,8 +15,8 @@ export default function(name, options = {}) {
       mockSetup();
 
       // If you want to check if your mocks are handling response
-      // and also see what the mocks are returning
-      // mockSetup({logLevel:1});
+      // and also see what the mocks are returning, or slow the responses down
+      // mockSetup({logLevel:1, responseTime: 1000});
 
       if (options.beforeEach) {
         options.beforeEach.apply(this, arguments);

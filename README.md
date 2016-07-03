@@ -1114,7 +1114,12 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   ```
 
 ##### setup and teardown
-  - Use ```mockSetup()``` in test setup/beforeEach 
+  - Use ```mockSetup()``` in test setup/beforeEach
+   - set logging options here ( logLevel, responseTime, mockjaxLogLevel )
+    - Example: 
+    ``javascript 
+      mockSetup({logLevel: 1, responseTime: 1000, mockjaxLogLevel: 4});
+    ```
   - Use ```mockTeardown()``` in test teardown/afterEach
   - Easiest is to set them up in [module-for-acceptance.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/helpers/module-for-acceptance.js)
 
@@ -1600,6 +1605,8 @@ import moduleForAcceptance from '../helpers/module-for-acceptance';
 moduleForAcceptance('Acceptance | User View', {
   beforeEach: function () {
     // mockSetup sets $.mockjaxSettings response time to zero ( speeds up tests )
+    // But you can change the default options , example:
+    // mockSetup({logLevel: 1, responseTime: 1000, mockjaxLogLevel: 4});
     mockSetup();
   },
   afterEach: function () {
