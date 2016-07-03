@@ -1091,7 +1091,10 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - [mockUpdate](https://github.com/danielspaniel/ember-data-factory-guy#mockupdate)
   - [mockDelete](https://github.com/danielspaniel/ember-data-factory-guy#mockdelete)
 
-- All requests can use method `fails()` to simulate failure, and then `succeeds()` to simulate success
+- Use method `fails()` to simulate failure
+- Use method `succeeds()` to simulate success
+ - Only used if the mock was set to fail with ```fails()```  and you want to set the 
+   mock to succeed to simulate a successful retry
 
 - mock#timesCalled 
   - verify how many times the ajax call was mocked
@@ -1124,6 +1127,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - Easiest is to set them up in [module-for-acceptance.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/helpers/module-for-acceptance.js)
 
 ##### Using fails method
+  - Usable on all mocks
   - Use optional object arguments status and response and convertErrors to customize
     - status : must be number in the range of 3XX, 4XX, or 5XX ( default is 500 )
     - response : must be object with errors key ( default is null )  
@@ -1400,19 +1404,10 @@ Usage:
         - These will be added to the response json automatically, so
           you don't need to include them in the returns hash.
         - If you match on a belongsTo association, you don't have to include that in 
-        the returns hash either ( same idea ).
+          the returns hash either ( same idea ).
     - returns
       - Attributes ( including relationships ) to include in response json
-    - fails
-      - Request will fail
-      - Takes a hash of options:
-        - status - HTTP status code, defaults to 500.
-        - response - error response message, or an errors hash for 422 status
-    - succeeds
-      - to retry a mock after a failed response
-      
   - Need to wrap tests using mockCreate with: Ember.run.function() { 'your test' })
-
 
 Realistically, you will have code in a view action or controller action that will
  create the record, and setup any associations.
@@ -1488,11 +1483,6 @@ Usage:
   - Use chainable methods to help build response:
     - returns
       - Attributes ( including relationships ) to include in response json
-    - fails
-      - Request will fail
-      - Optional arguments ( status and response text )
-    - succeeds
-      - use this after an ```fails``` call to have update succeed
   - Need to wrap tests using mockUpdate with: Ember.run.function() { 'your test' })
 
 Usage:
