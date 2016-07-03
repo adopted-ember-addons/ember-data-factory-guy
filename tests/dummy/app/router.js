@@ -10,7 +10,6 @@ Router.map(function() {
   this.route('profiles');
   this.route('employees');
   this.route('cats');
-  this.route('dogs');
   this.route('employee', {path: '/employee/:employee_id'});
   this.route('user', {path: '/user/:user_id'});
   this.route('search', {path: '/search'}, function() {

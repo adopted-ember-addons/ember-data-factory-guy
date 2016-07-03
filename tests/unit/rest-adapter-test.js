@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy, { build, buildList, make, makeList, mockFind, mockFindAll, manualSetup } from 'ember-data-factory-guy';
+import FactoryGuy, { build, buildList, make, makeList, mockCreate, mockFind, mockFindAll, manualSetup } from 'ember-data-factory-guy';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
 import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
@@ -26,6 +26,39 @@ SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(App, ad
 SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(App, adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(App, adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(App, adapter, serializerType);
+
+module(title(adapter, '#mockCreate custom'), inlineSetup(App, serializerType));
+
+test("match belongsTo with custom payloadKeyFromModelName function", function(assert) {
+  Ember.run(()=> {
+    let done = assert.async();
+
+    let entryType = make('entry-type');
+    mockCreate('entry').match({ entryType: entryType });
+
+    FactoryGuy.store.createRecord('entry', { entryType: entryType }).save()
+      .then((entry)=> {
+        equal(entry.get('entryType.id'), entryType.id);
+        done();
+      });
+  });
+});
+
+test("match hasMany with custom payloadKeyFromModelName function", function(assert) {
+  Ember.run(()=> {
+    let done = assert.async();
+
+    let entry = make('entry');
+    mockCreate('entry-type').match({ entries: [entry] });
+
+    FactoryGuy.store.createRecord('entry-type', { entries: [entry] }).save()
+      .then((entryType)=> {
+        let entries = entryType.get('entries');
+        deepEqual(entries.mapBy('id'), [entry.id]);
+        done();
+      });
+  });
+});
 
 module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, serializerType));
 
