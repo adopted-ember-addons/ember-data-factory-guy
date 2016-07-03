@@ -93,11 +93,11 @@ export default class {
    */
   convertResponseErrors(object) {
     let jsonAPIErrrors = [];
-    Ember.assert('Your error REST Adapter style response must have an errors key. The errors hash format is: {errors: {description: ["bad"]}}', object.errors);
+    Ember.assert('[ember-data-factory-guy] Your error response must have an errors key. The errors hash format is: {errors: {name: ["name too short"]}}', object.errors);
     let errors = object.errors;
     for (let key in errors) {
       let description = Ember.typeOf(errors[key]) === "array" ? errors[key][0] : errors[key];
-      let source = { pointer: "data/attributes/key" + key };
+      let source = { pointer: "data/attributes/" + key };
       let newError = { detail: description, title: "invalid " + key, source: source };
       jsonAPIErrrors.push(newError);
     }

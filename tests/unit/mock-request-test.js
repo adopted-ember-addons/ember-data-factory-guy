@@ -60,6 +60,35 @@ test("status must be 3XX, 4XX or 5XX", function(assert) {
   ok(mock.fails({ status: 521 }) instanceof MockRequest);
 });
 
+test("with convertErrors not set, the errors are converted to JSONAPI formatted errors", function() {
+  const mock = new MockRequest('user');
+  let errors = { errors: { phrase: 'poorly worded' } };
+  mock.fails({ response: errors });
+  deepEqual(mock.errorResponse, {
+    errors: [
+      {
+        detail: 'poorly worded',
+        source: { pointer: "data/attributes/phrase" },
+        title: 'invalid phrase'
+      }
+    ]
+  });
+});
+
+test("with convertErrors set to false, does not convert errors", function() {
+  const mock = new MockRequest('user');
+  let errors = { errors: { phrase: 'poorly worded' } };
+  mock.fails({ response: errors, convertErrors: false });
+  deepEqual(mock.errorResponse, errors);
+});
+
+test("with errors response that will be converted but does not have errors as object key", function(assert) {
+  const mock = new MockRequest('user');
+  let errors = { phrase: 'poorly worded' };
+  assert.throws(()=> {
+    mock.fails({ response: errors, convertErrors: true });
+  });
+});
 
 module('MockRequest#timeCalled', inlineSetup(App, serializerType));
 
@@ -120,7 +149,7 @@ test("fails if the types don't match", function(assert) {
     url: '/api/ember-data-factory-guy'
   };
 
-  assert.ok(! mock.basicRequestMatches(settings));
+  assert.ok(!mock.basicRequestMatches(settings));
 });
 
 test("fails if the URLs don't match", function(assert) {
@@ -133,7 +162,7 @@ test("fails if the URLs don't match", function(assert) {
     url: '/api/ember-data-factory-guy/123'
   };
 
-  assert.ok(! mock.basicRequestMatches(settings));
+  assert.ok(!mock.basicRequestMatches(settings));
 });
 
 test("succeeds if the URLs and the types match", function(assert) {
@@ -161,3 +190,4 @@ test("succeeds even if the given URL has query parameters that don't match", fun
 
   assert.ok(mock.basicRequestMatches(settings));
 });
+

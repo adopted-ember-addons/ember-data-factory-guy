@@ -20,6 +20,7 @@ SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, ser
 SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsAssociations(App, adapter, serializerType);
 
 SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(App, adapter, serializerType);
 
 module(title(adapter, '#mockCreate custom'), inlineSetup(App, serializerType));
 

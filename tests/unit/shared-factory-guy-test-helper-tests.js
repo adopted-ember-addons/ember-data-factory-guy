@@ -1140,31 +1140,32 @@ SharedBehavior.mockCreateTests = function() {
     });
   });
 
+};
+
+
+SharedBehavior.mockCreateFailsWithErrorResponse = function(App, adapter, serializerType) {
+  
+  module(title(adapter, '#mockCreate | fails with error response'), inlineSetup(App, serializerType));
+  
   test("failure with status code 422 and errors in response with fails method", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
 
-      let errors = { errors: { description: ['bad'] } };
+      let errors = { errors: { dog: ['bad dog'], dude: ['bad dude'] } };
       let mock = mockCreate('profile').fails({ status: 422, response: errors });
 
       let profile = FactoryGuy.store.createRecord('profile');
       profile.save()
-        .catch((reason)=> {
-//          console.log('A reason', reason.errors);
-//          console.log('AA reason', reason.errors[0] && reason.errors[0].detail, reason.errors[0].title);
-//          let errors = reason.errors[0];
-//          equal(errors.detail,'bad');
-          // TODO .. almost have this one =>  profile.get('errors.messages');
-          // it should === 'bad' only DRFAdapter failing
-//          let descriptionError = profile.get('errors.messages');
-//          equal(descriptionError, 'bad');
+        .catch(()=> {
+          let errorMessages = profile.get('errors.messages');
+          deepEqual(errorMessages, ['bad dog', 'bad dude']);
           equal(mock.timesCalled, 1);
           ok(true);
           done();
         });
     });
   });
-
+  
 };
 
 

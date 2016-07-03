@@ -30,21 +30,25 @@ export default class {
     assign(this.responseHeaders, headers);
   }
 
-  succeeds(options) {
-    this.status = options && options.status || 200;
+  succeeds({ status= 200 }={}) {
+    this.status = status;
     this.errorResponse = null;
     return this;
   }
 
-  fails(options = {}) {
-    if (options.status) {
-      Ember.assert(`[ember-data-factory-guy] 'fails' method status code must be 3XX, 4XX or 5XX,
-        you are using: ${options.status}`, options.status.toString().match(/^([345]\d{2})/));
-    }
-    this.status = options.status || 500;
-    if (options.response) {
-      let errors = FactoryGuy.fixtureBuilder.convertResponseErrors(options.response, this.status);
-      this.errorResponse = errors;
+  fails({ status= 500, response= null, convertErrors= true }={}) {
+    Ember.assert(`[ember-data-factory-guy] 'fails' method status code must be 3XX, 4XX or 5XX,
+        you are using: ${status}`, status.toString().match(/^([345]\d{2})/));
+
+    this.status = status;
+
+    if (response) {
+      if (convertErrors) {
+        let errors = FactoryGuy.fixtureBuilder.convertResponseErrors(response, this.status);
+        this.errorResponse = errors;
+      } else {
+        this.errorResponse = response;
+      }
     }
     return this;
   }
