@@ -1096,9 +1096,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
  - Only used if the mock was set to fail with ```fails()```  and you want to set the 
    mock to succeed to simulate a successful retry
 
-- mock#timesCalled 
-  - verify how many times the ajax call was mocked
-  - use `timesCalled` property on the mock
+- User property timesCalled to verify how many times the ajax call was mocked
   - works when you are using mockQuery, mockQueryRecord, mockFindAll, or mockUpdate
   - mockFind will always be at most 1 since it will only make ajax call
     the first time, and then the store will use cache the second time
