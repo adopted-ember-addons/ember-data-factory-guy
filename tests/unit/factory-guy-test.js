@@ -8,9 +8,6 @@ import User from 'dummy/models/user';
 let App = null;
 const A = Ember.A;
 
-import TestHelper from 'ember-data-factory-guy/factory-guy-test-helper';
-
-//module('FactoryGuy', inlineSetup(App, '-active-model'));
 module('FactoryGuy', inlineSetup(App, '-json-api'));
 
 test("has store set in initializer", function () {
@@ -123,6 +120,13 @@ test("with one level of hasMany relationship", function () {
 
   ok(user['user']);
   equal(user['big-hats'].length, 2);
+});
+
+test("emits warning when trait is not found", function() {
+  sinon.spy(Ember, 'warn');
+  build('user', "non_existent_trait");
+  ok(Ember.warn.calledOnce);
+  Ember.warn.restore();
 });
 
 //test("with two level of relationship", function () {
