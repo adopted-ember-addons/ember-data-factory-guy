@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
-import MockRequest from './mock-request';
+import MockRequest from './mock-request-match';
 
 export default class MockUpdateRequest extends MockRequest {
 
@@ -64,7 +64,8 @@ export default class MockUpdateRequest extends MockRequest {
   getResponse() {
     this.responseJson = null;
     if (this.id) {
-      let json = Ember.$.extend({}, this.returnArgs, { id: this.id });
+      let args = Ember.$.extend({}, this.matchArgs, this.returnArgs);
+      let json = Ember.$.extend({}, args, { id: this.id });
       this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
     }
     return super.getResponse();
