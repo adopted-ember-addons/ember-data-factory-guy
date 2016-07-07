@@ -1416,6 +1416,183 @@ SharedBehavior.mockUpdateTests = function() {
         });
     });
   });
+
+  test("match some attributes", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let customDescription = "special description";
+      let profile = make('profile');
+
+      mockUpdate('profile', profile.id).match({ description: customDescription });
+
+      profile.set('description', customDescription);
+      profile.save().then(function(profile) {
+        ok(profile instanceof Profile);
+        ok(profile.id === '1');
+        ok(profile.get('description') === customDescription);
+        done();
+      });
+    });
+  });
+
+  test("match some attributes with only modelType", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let customDescription = "special description";
+      let profile = make('profile', {description: customDescription});
+      let profile2 = make('profile', {description: customDescription});
+
+      mockUpdate('profile').match({ description: customDescription });
+
+      profile.save().then(function(profile) {
+        ok(profile instanceof Profile);
+        ok(profile.id === '1');
+        ok(profile.get('description') === customDescription);
+
+        profile2.save().then(function(profile) {
+          ok(profile2 instanceof Profile);
+          ok(profile2.id === '2');
+          ok(profile2.get('description') === customDescription);
+          done();
+        });
+      });
+    });
+  });
+
+  test("match all attributes", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let date = new Date();
+      let profile = make('profile', {created_at: date, aBooleanField: false});
+      let customDescription = "special description";
+
+      mockUpdate('profile', profile.id).match({ description: customDescription, created_at: date, aBooleanField: true });
+
+      profile.set('description', customDescription);
+      profile.set('aBooleanField', true);
+      profile.save().then(function(profile) {
+        ok(profile instanceof Profile);
+        ok(profile.id === '1');
+        ok(profile.get('description') === customDescription);
+        ok(profile.get('created_at').toString() === date.toString());
+        ok(profile.get('aBooleanField') === true);
+        done();
+      });
+    });
+  });
+
+  test("match belongsTo association", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let company = make('company');
+      let profile = make('profile', {company: company});
+
+      mockUpdate('profile', profile.id).match({ company: company });
+
+      profile.save()
+        .then(function(profile) {
+          ok(profile.get('company') === company);
+          done();
+        });
+    });
+  });
+
+  test("match belongsTo polymorphic association", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let group = make('group');
+      let profile = make('profile', {group: group});
+      mockUpdate('profile', profile.id).match({ group: group });
+
+      profile.save()
+        .then(function(profile) {
+          ok(profile.get('group') === group);
+          done();
+        });
+    });
+  });
+
+  test("match attributes and also return attributes", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let date = new Date(2015, 1, 2, 3, 4, 5);
+      let customDescription = "special description";
+      let company = make('company');
+      let group = make('big-group');
+
+      let profile = make('profile', {description: customDescription, company: company, group: group});
+
+      mockUpdate('profile', profile.id)
+        .match({ description: customDescription, company: company, group: group })
+        .returns({ created_at: date });
+
+      profile.save().then(function(profile) {
+        ok(profile.get('created_at').toString() === date.toString());
+        ok(profile.get('group') === group);
+        ok(profile.get('company') === company);
+        ok(profile.get('description') === customDescription);
+        done();
+      });
+    });
+  });
+
+  test("fails when match args not present", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let profile = make('profile');
+
+      let mock = mockUpdate('profile', profile.id).match({ description: 'correct description' });
+
+      profile.set('description', 'wrong description');
+      profile.save()
+        .catch(()=> {
+          ok(true);
+          equal(mock.timesCalled, 0);
+          done();
+        });
+    });
+  });
+
+  test("succeeds then fails when match args not present with only modelType", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let customDescription = "special description";
+      let profile = make('profile', {description: customDescription});
+      let profile2 = make('profile');
+
+      let mock = mockUpdate('profile').match({ description: customDescription });
+
+      profile.save()
+        .then(()=> {
+          ok(true);
+          equal(mock.timesCalled, 1);
+
+          profile2.save()
+            .catch(()=> {
+              ok(true);
+              equal(mock.timesCalled, 1);
+              done();
+            });
+        });
+    });
+  });
+
+  test("match but still fail with fails method", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let description = "special description";
+      let profile = make('profile', {description: description});
+
+      let mock = mockUpdate('profile', profile.id).match({ description: description }).fails();
+
+      profile.save()
+        .catch(()=> {
+          ok(true);
+          equal(mock.timesCalled, 1);
+          done();
+        });
+    });
+  });
 };
 
 SharedBehavior.mockUpdateWithErrorMessages = function(App, adapter, serializerType) {
