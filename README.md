@@ -1515,7 +1515,7 @@ Usage:
   mockUpdate(superHero).returns({ outfits });
   superHero.save(); // => saves and returns outfits
   
-  // using matches to only update model with certain attribute values
+  // using match() method to specify attribute values
   let profile = make('profile');
   profile.set('name', "woo");
   let mock = mockUpdate(profile).match({name: "moo"}); 
