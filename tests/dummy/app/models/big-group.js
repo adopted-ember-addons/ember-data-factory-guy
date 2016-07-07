@@ -1,5 +1,6 @@
 import Group from './group';
+import attr from 'ember-data/attr';
 
 export default Group.extend({
-  type:    DS.attr('string', {defaultValue: 'BigGroup'})
+  type: attr('string', { defaultValue: 'BigGroup' })
 });

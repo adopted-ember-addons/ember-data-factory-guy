@@ -1,9 +1,11 @@
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+import {hasMany, belongsTo} from 'ember-data/relationships';
 
-export default DS.Model.extend({
-  type:    DS.attr('string', {defaultValue: 'Company'}),
-  name:    DS.attr('string'),
-  profile: DS.belongsTo('profile', {async: false}),
-  users:   DS.hasMany('user', {async: true, inverse: 'company'}),
-  projects: DS.hasMany('project', {async: true})
+export default Model.extend({
+  type: attr('string', { defaultValue: 'Company' }),
+  name: attr('string'),
+  profile: belongsTo('profile', { async: false }),
+  users: hasMany('user', { async: true, inverse: 'company' }),
+  projects: hasMany('project', { async: true })
 });

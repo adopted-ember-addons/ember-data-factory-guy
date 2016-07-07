@@ -1,6 +1,7 @@
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
 
-export default DS.Model.extend({
-  rating: DS.attr('number'),
-  date: DS.attr('date')
+export default Model.extend({
+  rating: attr('number'),
+  date: attr('date')
 });
