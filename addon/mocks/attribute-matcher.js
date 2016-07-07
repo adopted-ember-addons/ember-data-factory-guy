@@ -4,7 +4,7 @@ import {isEquivalent} from '../utils/helper-functions';
 const { isEmpty } = Ember;
 
 /**
- This is a mixin used by MockUpdate and MockRequest
+ This is a mixin used by MockUpdate and MockCreateRequest
 
  Make sure you setup the constructor in the class that uses this mixin
  to set the matchArgs variable
