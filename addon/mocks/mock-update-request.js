@@ -1,13 +1,15 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
-import MockRequest from './mock-request-match';
+import MockRequest from './mock-request';
+import AttributeMatcher from './attribute-matcher';
 
-export default class MockUpdateRequest extends MockRequest {
+export default class MockUpdateRequest extends AttributeMatcher(MockRequest) {
 
   constructor(modelName, id) {
     super(modelName);
     this.id = id;
     this.returnArgs = {};
+    this.matchArgs = {};
   }
 
   getUrl() {
@@ -31,13 +33,14 @@ export default class MockUpdateRequest extends MockRequest {
 
     return settings.url.match(url) && settings.type === this.getType();
   }
+
   /**
-   * This returns is different than the one for GET requests, because
-   * you don't prefix the returns with json or models etc...
-   * The returns arguments are those attributes or relationships that
-   * you would like returned with the model when the update succeeds.
-   *
-   * @param {Object} returns attributes and or relationships to send with payload
+   This returns is different than the one for GET requests, because
+   you don't prefix the returns with json or models etc...
+   The returns arguments are those attributes or relationships that
+   you would like returned with the model when the update succeeds.
+
+   @param {Object} returns attributes and or relationships to send with payload
    */
   returns(returns) {
     if (!this.id) {
@@ -47,12 +50,16 @@ export default class MockUpdateRequest extends MockRequest {
     return this;
   }
 
-  fails(options = {}) {
-    super.fails(options);
-    if (options.response) {
-      this.errorResponse = options.response;
-    }
-    return this;
+  /**
+   Not sure why the update errors don't need conversion ?? puzzled
+  
+   @param status
+   @param response
+   @param convertErrors
+   @returns {*}
+   */
+  fails({ status= 500, response= null, convertErrors= false }={}) {
+    return super.fails({ status, response, convertErrors });
   }
 
   /**

@@ -1,13 +1,15 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
-import MockRequest from './mock-request-match';
+import MockRequest from './mock-request';
+import AttributeMatcher from './attribute-matcher';
 const { isPresent } = Ember;
 
-export default class MockCreateRequest extends MockRequest {
+export default class MockCreateRequest extends AttributeMatcher(MockRequest) {
 
   constructor(modelName) {
     super(modelName);
     this.returnArgs = {};
+    this.matchArgs = {};
   }
 
   getType() {
@@ -15,12 +17,12 @@ export default class MockCreateRequest extends MockRequest {
   }
 
   /**
-   * This returns is different than the one for GET requests, because 
-   * you don't prefix the returns with json or models etc...
-   * The returns arguments are those attributes or relationships that 
-   * you would like returned with the model when the create succeeds.
-   * 
-   * @param {Object} returns attributes and or relationships to return with payload
+   This returns is different than the one for GET requests, because
+   you don't prefix the returns with json or models etc...
+   The returns arguments are those attributes or relationships that
+   you would like returned with the model when the create succeeds.
+
+   @param {Object} returns attributes and or relationships to return with payload
    */
   returns(returns) {
     this.returnArgs = returns;
@@ -28,7 +30,7 @@ export default class MockCreateRequest extends MockRequest {
   }
 
   /**
-   Unless the id is setup already in the return args, then setup a new id. 
+   Unless the id is setup already in the return args, then setup a new id.
    */
   modelId() {
     if (isPresent(this.returnArgs) && isPresent(this.returnArgs['id'])) {
