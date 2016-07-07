@@ -1416,8 +1416,7 @@ Realistically, you will have code in a view action or controller action that wil
   action: {
     addProject: function (user) {
       let name = this.$('button.project-name').val();
-      let store = this.get('controller.store');
-      store.createRecord('project', {name: name, user: user}).save();
+      this.store.createRecord('project', {name: name, user: user}).save();
     }
   }
 
@@ -1479,6 +1478,8 @@ Usage:
   - mockUpdate(modelType, id)
     - Two arguments: modelType ( like 'profile' ) , and the profile id that will updated
   - Use chainable methods to help build response:
+    - match
+      - Attributes with values that must be present on the model you are updating
     - returns
       - Attributes ( including relationships ) to include in response json
   - Need to wrap tests using mockUpdate with: Ember.run.function() { 'your test' })
@@ -1514,6 +1515,22 @@ Usage:
   mockUpdate(superHero).returns({ outfits });
   superHero.save(); // => saves and returns outfits
   
+  // using matches to only update model with certain attribute values
+  let profile = make('profile');
+  profile.set('name', "woo");
+  let mock = mockUpdate(profile).match({name: "moo"}); 
+  profile.save();  // will not be mocked since the mock you set says the name must be "woo"
+  
+  // either set the name to "moo" which will now be mocked correctly
+  profile.set('name', "moo");
+  profile.save(); // succeeds
+  
+  // or 
+  
+  // keep the profile name as "woo"
+  // but change the mock to match the name "woo"
+  mock.match({name: "woo"});
+  profile.save();  // succeeds
 ````
 
  - mocking a failed update
