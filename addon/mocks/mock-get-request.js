@@ -35,7 +35,6 @@ class MockGetRequest extends MockRequest {
     return json[args];
   }
 
-
   setValidReturnsKeys(validKeys) {
     this.validReturnsKeys = validKeys;
   }
