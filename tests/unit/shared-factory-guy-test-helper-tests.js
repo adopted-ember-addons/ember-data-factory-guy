@@ -1027,7 +1027,7 @@ SharedBehavior.mockCreateTests = function() {
   test("match belongsTo polymorphic association", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
-      let group = make('group');
+      let group = make('big-group');
       mockCreate('profile').match({ group: group });
 
       FactoryGuy.store.createRecord('profile', { group: group }).save()
@@ -1500,7 +1500,7 @@ SharedBehavior.mockUpdateTests = function() {
   test("match belongsTo polymorphic association", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
-      let group = make('group');
+      let group = make('big-group');
       let profile = make('profile', {group: group});
       mockUpdate('profile', profile.id).match({ group: group });
 
