@@ -65,16 +65,16 @@ let MockServer = Ember.Object.extend({
    // Typically you will use like:
 
    // To return default factory 'user'
-   let mockFind = TestHelper.mockFind('user');
-   let userId = mockFind.get('id');
+   let mock = mockFind('user');
+   let userId = mock.get('id');
 
    // or to return custom factory built json object
-   let json = FactoryGuy.build('user', 'with_whacky_name', {isDude: true});
-   let mockFind = TestHelper.mockFind('user').returns({json});
+   let json = build('user', 'with_whacky_name', {isDude: true});
+   let mock = mockFind('user').returns({json});
    let userId = json.get('id');
 
    // To mock failure case use method fails
-   TestHelper.mockFind('user').fails();
+   mockFind('user').fails();
 
    // Then to 'find' the user
    store.find('user', userId);
