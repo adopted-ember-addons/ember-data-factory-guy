@@ -1406,7 +1406,7 @@ Usage:
           the returns hash either ( same idea ).
     - returns
       - Attributes ( including relationships ) to include in response json
-  - Need to wrap tests using mockCreate with: Ember.run.function() { 'your test' })
+  - Need to wrap tests using mockCreate with: Ember.run(function() { 'your test' })
 
 Realistically, you will have code in a view action or controller action that will
  create the record, and setup any associations.
@@ -1426,7 +1426,6 @@ Realistically, you will have code in a view action or controller action that wil
 In this case, you are are creating a 'project' record with a specific name, and belonging
 to a particular user. To mock this createRecord call here are a few ways to do this using
 chainable methods.
-
 
 Usage:
 
@@ -1483,7 +1482,7 @@ Usage:
       - Attributes with values that must be present on the model you are updating
     - returns
       - Attributes ( including relationships ) to include in response json
-  - Need to wrap tests using mockUpdate with: Ember.run.function() { 'your test' })
+  - Need to wrap tests using mockUpdate with: Ember.run(function() { 'your test' })
 
 Usage:
 
