@@ -1627,26 +1627,27 @@ Usage:
   that you can actually test you serializer code if you are doing anything special
   in the serializer method ( when you are sending a payload to the server )
   
-```javascipt
-  // app/serializers/person.js
-  export default DS.RESTSerializer.extend({
-  
-    serialize: function(snapshot, options) {
-      var json = this._super(snapshot, options);
-      
-      // do something to the name attribute  
-      let nameToSend = [snapshot.record.get('name'), 'san'].join();
-      json.name = nameToSend;
-      
-      return json;
-    }
-  
-  });
-  
-  // somewhere in your tests
-  let person = make('person', {name: "Daniel"});
-  mockUpdate(person).match({name: "Danielsan"});
-  person.save(); // will succeed
-   
+```javascript
+
+// app/serializers/person.js
+export default DS.RESTSerializer.extend({
+
+  serialize: function(snapshot, options) {
+    var json = this._super(snapshot, options);
+    
+    // do something to the name attribute  
+    let nameToSend = [snapshot.record.get('name'), 'san'].join();
+    json.name = nameToSend;
+    
+    return json;
+  }
+
+});
+
+// somewhere in your tests
+let person = make('person', {name: "Daniel"});
+mockUpdate(person).match({name: "Danielsan"});
+person.save(); // will succeed
+ 
 // and voila, you have just tested the serializer is converting the name properly 
 ```
