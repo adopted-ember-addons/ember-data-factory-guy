@@ -5,7 +5,7 @@
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.  
 Factories simplify the process of testing, making you more efficient and your tests more readable.  
 
-**NEW and Improved** starting with v2.7.0.beta ( latest is v2.7.0.beta.9 ) 
+**NEW and Improved** starting with v2.7.0.beta ( latest is v2.7.0.beta.11 ) 
   - Support for using your factories in development environment
   - Change your [scenarios](https://github.com/danielspaniel/ember-data-factory-guy#using-in-development), hit refresh and the development data changes
 
@@ -50,7 +50,7 @@ ChangeLog: ( Notes about what has changed in each version )
 
 ### Installation
 
- - ```ember install ember-data-factory-guy@2.7.0-beta.10``` ( ember-data-1.13.5+ )
+ - ```ember install ember-data-factory-guy@2.7.0-beta.11``` ( ember-data-1.13.5+ )
  - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + )
  - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 )
  - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )

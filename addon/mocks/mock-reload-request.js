@@ -6,4 +6,5 @@ export default class MockReloadRequest extends MockFindRequest {
     super(modelName);
     this.setValidReturnsKeys(['attrs','json','headers']);
   }
+  
 }
