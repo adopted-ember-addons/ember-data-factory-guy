@@ -1624,20 +1624,19 @@ Usage:
 ##### Tips and Tricks 
   
 - The fact that you can match on attributes in mockUpdate and mockCreate means 
-  that you can actually test you serializer code if you are doing anything special
-  in the serializer method ( when you are sending a payload to the server )
+  that you can test a custom serializer method in a model serializer 
   
 ```javascript
 
 // app/serializers/person.js
 export default DS.RESTSerializer.extend({
-
+  
+  // let's say your modifying all names to be Japanese honorific style
   serialize: function(snapshot, options) {
     var json = this._super(snapshot, options);
     
-    // do something to the name attribute  
-    let nameToSend = [snapshot.record.get('name'), 'san'].join();
-    json.name = nameToSend;
+    let honorificName = [snapshot.record.get('name'), 'san'].join(' ');
+    json.name = honorificName;
     
     return json;
   }
@@ -1646,12 +1645,9 @@ export default DS.RESTSerializer.extend({
 
 // somewhere in your tests
 let person = make('person', {name: "Daniel"});
-mockUpdate(person).match({name: "Danielsan"});
+mockUpdate(person).match({name: "Daniel san"});
 person.save(); // will succeed
  
 // and voila, you have just tested the serializer is converting the name properly 
 ```
 
-- The fact that you can match on attributes in mockUpdate and mockCreate means 
-  that you can actually test you serializer code if you are doing anything special
-  in the serializer method ( when you are sending a payload to the server )
