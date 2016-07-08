@@ -1635,7 +1635,7 @@ export default DS.RESTSerializer.extend({
   serialize: function(snapshot, options) {
     var json = this._super(snapshot, options);
     
-    let honorificName = [snapshot.record.get('name'), 'san'].join(' ');
+    let honorificName = [snapshot.record.get('name'), 'san'].join('-');
     json.name = honorificName;
     
     return json;
@@ -1645,7 +1645,7 @@ export default DS.RESTSerializer.extend({
 
 // somewhere in your tests
 let person = make('person', {name: "Daniel"});
-mockUpdate(person).match({name: "Daniel san"});
+mockUpdate(person).match({name: "Daniel-san"});
 person.save(); // will succeed
  
 // and voila, you have just tested the serializer is converting the name properly 
