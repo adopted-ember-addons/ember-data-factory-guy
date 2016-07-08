@@ -151,7 +151,6 @@ test("embeds belongsTo record when serializer attrs => deserialize: 'records' ",
     id: 1,
     name: {
       firstName: "Tyrion",
-      id: 1,
       lastName: "Lannister"
     },
     salary: {
@@ -173,7 +172,6 @@ test("embeds belongsTo record passed as prebuilt ( build ) json when serializer 
     id: 1,
     name: {
       firstName: "Tyrion",
-      id: 1,
       lastName: "Lannister"
     },
     salary: {
@@ -195,7 +193,6 @@ test("embeds hasMany records when serializer attrs => deserialize: 'records'", f
     id: 1,
     name: {
       firstName: "Tyrion",
-      id: 1,
       lastName: "Lannister"
     },
     reviews: [
@@ -224,7 +221,6 @@ test("embeds hasMany records passed as prebuilt ( buildList ) json when serializ
     id: 1,
     name: {
       firstName: "Tyrion",
-      id: 1,
       lastName: "Lannister"
     },
     reviews: [

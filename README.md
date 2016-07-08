@@ -43,6 +43,7 @@ Contents:
   - [Testing - creating scenarios](https://github.com/danielspaniel/ember-data-factory-guy#testing---creating-scenarios)
   - [Testing models, controllers, components](https://github.com/danielspaniel/ember-data-factory-guy#testing-models-controllers-components)
   - [Acceptance Tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
+  - [Tips and Tricks](https://github.com/danielspaniel/ember-data-factory-guy#tips-and-tricks)
                             
 ChangeLog: ( Notes about what has changed in each version )
   - [Release Notes](https://github.com/danielspaniel/ember-data-factory-guy/releases)
@@ -1620,58 +1621,30 @@ Usage:
 ```
 
 
-##### Sample Acceptance test [(user-view-test.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
-
-
-```javascript
-// file: tests/acceptance/user-view-test.js
-
-import { make, mockCreate, mockSetup, mockTeardown } from 'ember-data-factory-guy';
-import moduleForAcceptance from '../helpers/module-for-acceptance';
-
-moduleForAcceptance('Acceptance | User View', {
-  beforeEach: function () {
-    // mockSetup sets $.mockjaxSettings response time to zero ( speeds up tests )
-    // But you can change the default options , example:
-    // mockSetup({logLevel: 1, responseTime: 1000, mockjaxLogLevel: 4});
-    mockSetup();
-  },
-  afterEach: function () {
-      // mockTeardown calls $.mockjax.clear() which resets all the mockjax handlers
-    mockTeardown();
-  }
-});
-
-test("Creates new project", function () {
-  let user = make('user', 'with_projects'); // build user payload
-  visit('/user/'+ user.get('id'));
-
-  andThen(function () {
-    let newProjectName = "Gonzo Project";
-
-    fillIn('input.project-name', newProjectName);
-
-    // Remember, this is for handling an exact match, if you did not care about
-    // matching attributes, you could just do: mockCreate('project')
-    mockCreate('project', {match: {name: newProjectName, user: user}});
-
-    /**
-     Let's say that clicking this 'button.add-project', triggers action in the view to
-     create project record and looks something like this:
-     actions: {
-        addProject: function (user) {
-          let name = this.$('input.project-name').val();
-          let store = this.get('controller.store');
-          store.createRecord('project', {name: name, user: user}).save();
-        }
-    */
-    click('button:contains(Add New User)');
-
-    andThen(function () {
-      let newProjectDiv = find('li.project:contains(' + newProjectName + ')');
-      ok(newProjectDiv[0] !== undefined);
-    });
+##### Tips and Tricks 
+  
+  - The fact that you can match on attributes in mockUpdate and mockCreate means 
+    that you can actually test you serializer code if you are doing anything special
+    in the serializer method ( when you are sending a payload to the server )
+    
+```javascipt
+  // app/serializers/person.js
+  export default DS.RESTSerializer.extend({
+  
+    serialize: function(snapshot, options) {
+      var json = this._super(snapshot, options);
+      // do something to the name attribute  
+      let nameToSend = [snapshot.record.get('name'), 'san'].join();
+      json.name = nameToSend;
+      
+      return json;
+    }
+  
   });
-});
 
+  // somewhere in your tests
+  let person = make('person', {name: "Daniel"});
+  mockUpdate(person).match({name: "Danielsan"});
+  person.save(); // will succeed 
+  
 ```

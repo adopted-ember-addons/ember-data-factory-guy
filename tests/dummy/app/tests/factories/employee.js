@@ -21,7 +21,7 @@ FactoryGuy.define('employee', {
       name: FactoryGuy.belongsTo('employee_geoffrey')
     },
     with_department_employments: {
-      departmentEmployments: FactoryGuy.hasMany('department-employment', 2),
+      departmentEmployments: FactoryGuy.hasMany('department-employment', 2)
     }
   }
 });

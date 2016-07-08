@@ -104,17 +104,16 @@ test("returns a relationship with an index and key", function () {
 test("with model fragment returns array of all attributes with no key", function() {
   let addresses = buildList('billing-address', 2);
   deepEqual(addresses.get(), [
-    { id: 1, street: '1 Sky Cell', city: 'Eyre', region: 'Vale of Arryn', country: 'Westeros', billingAddressProperty: 1 },
-    { id: 2, street: '2 Sky Cell', city: 'Eyre', region: 'Vale of Arryn', country: 'Westeros', billingAddressProperty: 2 }
+    { street: '1 Sky Cell', city: 'Eyre', region: 'Vale of Arryn', country: 'Westeros', billingAddressProperty: 1 },
+    { street: '2 Sky Cell', city: 'Eyre', region: 'Vale of Arryn', country: 'Westeros', billingAddressProperty: 2 }
   ]);
 });
 
 // model fragments
 test("with model fragment returns an attribute with a key", function() {
   let addresses = buildList('billing-address', 2);
-  deepEqual(addresses.get(0), { id: 1, street: '1 Sky Cell', city: 'Eyre', region: 'Vale of Arryn', country: 'Westeros', billingAddressProperty: 1 });
-  equal(addresses.get(0).id, 1);
-  deepEqual(addresses.get(1), { id: 2, street: '2 Sky Cell', city: 'Eyre', region: 'Vale of Arryn', country: 'Westeros', billingAddressProperty: 2 });
+  deepEqual(addresses.get(0), { street: '1 Sky Cell', city: 'Eyre', region: 'Vale of Arryn', country: 'Westeros', billingAddressProperty: 1 });
+  deepEqual(addresses.get(1), { street: '2 Sky Cell', city: 'Eyre', region: 'Vale of Arryn', country: 'Westeros', billingAddressProperty: 2 });
   equal(addresses.get(1).street, '2 Sky Cell');
 });
 
@@ -466,7 +465,6 @@ test("embeds belongsTo record when serializer attrs => deserialize: 'records' ",
       id: 1,
       name: {
         firstName: "Tyrion",
-        id: 1,
         lastName: "Lannister"
       },
       salary: {
@@ -490,7 +488,6 @@ test("embeds belongsTo record passed as prebuilt ( build ) json when serializer 
       id: 1,
       name: {
         firstName: "Tyrion",
-        id: 1,
         lastName: "Lannister"
       },
       salary: {
@@ -514,7 +511,6 @@ test("embeds hasMany records when serializer attrs => deserialize: 'records'", f
       id: 1,
       name: {
         firstName: "Tyrion",
-        id: 1,
         lastName: "Lannister"
       },
       reviews: [
@@ -545,7 +541,6 @@ test("embeds hasMany records passed as prebuilt ( buildList ) json when serializ
       id: 1,
       name: {
         firstName: "Tyrion",
-        id: 1,
         lastName: "Lannister"
       },
       reviews: [

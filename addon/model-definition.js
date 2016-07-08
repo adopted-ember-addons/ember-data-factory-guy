@@ -15,6 +15,7 @@ class ModelDefinition {
 
   constructor(model, config) {
     this.modelName = model;
+    this.isFragment = this.isModelAFragment();
     this.modelId = 1;
     this.originalConfig = $.extend(true, {}, config);
     this.parseConfig(config);
@@ -33,6 +34,22 @@ class ModelDefinition {
   }
 
   /**
+   Is this model a fragment type
+
+   @returns {Boolean} true if it's a model fragment
+   */
+  isModelAFragment() {
+    try {
+      if (FactoryGuy.store.createFragment) {
+        return !!FactoryGuy.store.createFragment(this.modelName);
+      }
+    } catch (e) {
+      // do nothing
+    }
+    return false;
+  }
+
+  /**
    Is this attribute a model fragment type
 
    @param {String} field  field you want to check
@@ -41,7 +58,7 @@ class ModelDefinition {
   isModelFragmentAttribute(field) {
     let modelClass = FactoryGuy.store.modelFor(this.modelName);
     let attributeInfo = Ember.get(modelClass, 'attributes').get(field);
-    return (attributeInfo && attributeInfo.type.match('mf-fragment'));
+    return !!(attributeInfo && attributeInfo.type.match('mf-fragment'));
   }
 
   /**
@@ -100,7 +117,7 @@ class ModelDefinition {
     let traitsObj = {};
     traitArgs.forEach((trait)=> {
       if (!this.traits[trait]) {
-        Ember.warn(`[ember-data-factory-guy] Your trying to use a trait [${trait}] for model ${this.modelName} but that trait can not be found.`, null, {id: 'ember-data-factory-guy-trait-does-not-exist'});
+        Ember.warn(`[ember-data-factory-guy] Your trying to use a trait [${trait}] for model ${this.modelName} but that trait can not be found.`, null, { id: 'ember-data-factory-guy-trait-does-not-exist' });
       }
       $.extend(traitsObj, this.traits[trait]);
     });
@@ -133,6 +150,9 @@ class ModelDefinition {
       throw e;
     }
 
+    if (this.isFragment) {
+      delete fixture.id;
+    }
     delete fixture._generatedId;
     return fixture;
   }
@@ -149,8 +169,7 @@ class ModelDefinition {
     if (this.isModelFragmentAttribute(attribute)) {
       let payload = fixture[attribute];
       fixture[attribute] = FactoryGuy.buildRaw(attribute, payload);
-      return;
-    } 
+    }
     if (relationship) {
       let payload = fixture[attribute];
       if (!payload.isProxy) {
