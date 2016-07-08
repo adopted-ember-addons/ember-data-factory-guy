@@ -1572,7 +1572,7 @@ Usage:
 
 
 ##### mockDelete
-  - Need to wrap tests using mockDelete with: Ember.run.function() { 'your test' })
+  - Need to wrap tests using mockDelete with: Ember.run(function() { 'your test' })
   - To handle deleteing a model
     - Pass in a record ( or a typeName and id )
 
