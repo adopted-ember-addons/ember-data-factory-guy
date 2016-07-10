@@ -1259,19 +1259,30 @@ Usage:
 Usage:
 
 - Passing in a record / model instance
-
 ```javascript
-    let profile = make('profile');
-    mockReload(profile);
+  let profile = make('profile');
+  mockReload(profile);
 
-    // will stub a call to reload that profile
-    profile.reload()
+  // will stub a call to reload that profile
+  profile.reload()
 ```
-
+- Using `returns({attrs})` to return new attributes
+```javascript
+  let profile = make('profile', { description: "whatever" });
+  mockReload(profile).returns({ attrs: { description: "moo" } });
+  profile.reload(); // description is now "moo"
+```
+- Using `returns({json})` to return new all new attributes
+```javascript
+  let profile = make('profile', { description: "tomatoes" });
+  // all new values EXCEPT the profile id ( you should keep that id the same ) 
+  let profileAllNew = build('profile', { id: profile.get('id'), description: "potatoes" }
+  mockReload(profile).returns({ json: profileAllNew });
+  profile.reload(); // description = "potatoes"
+```
 - Mocking a failed reload
-      
 ```javascript 
-    mockReload('profile', 1).fails();
+  mockReload('profile', 1).fails();
 ```
 
 ##### mockQuery

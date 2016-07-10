@@ -100,7 +100,7 @@ class MockGetRequest extends MockRequest {
         break;
 
       case 'json':
-        this.responseJson = options.json;
+        this.setResponseJson(options.json);
         break;
 
       case 'attrs':

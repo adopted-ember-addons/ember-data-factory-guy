@@ -228,7 +228,7 @@ SharedBehavior.mockReloadTests = function() {
     });
   });
 
-  test("can change the attributes returned using returns method", function(assert) {
+  test("can change the attributes using returns method with attrs", function(assert) {
     let done = assert.async();
     Ember.run(()=> {
       let profile = make('profile', { description: "whatever", camelCaseDescription: "noodles" });
@@ -236,9 +236,26 @@ SharedBehavior.mockReloadTests = function() {
       mockReload(profile).returns({ attrs: { description: "moo" } });
 
       profile.reload().then(function(reloaded) {
-        ok(reloaded.id === profile.id);
+        ok(reloaded.id === profile.id, 'does not change id');
         ok(reloaded.get('description') === "moo", "attribute changed");
         ok(reloaded.get('camelCaseDescription') === "noodles", "other attributes are same");
+        done();
+      });
+    });
+  });
+
+  test("using returns method with json", function(assert) {
+    let done = assert.async();
+    Ember.run(()=> {
+      let profile = make('profile', { description: "tomatoes", camelCaseDescription: "noodles" });
+
+      let newProfile = build('profile', { id: profile.get('id'), description: "potatoes", camelCaseDescription: "poodles" });
+      mockReload(profile).returns({ json:  newProfile});
+
+      profile.reload().then(function(reloaded) {
+        ok(reloaded.id === profile.id, 'does not change id');
+        ok(reloaded.get('description') === "potatoes", "description changed");
+        ok(reloaded.get('camelCaseDescription') === "poodles", "camelCaseDescription changes");
         done();
       });
     });
