@@ -35,6 +35,21 @@ SharedBehavior.mockFindCommonTests = function() {
     });
   });
 
+  // test for issue # 219
+  test("with model that has attribute key defined in serializer attrs", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let mock = mockFind('cat');
+
+      equal(mock.get('catName'), 'Cat 1');
+
+      FactoryGuy.store.find('cat', mock.get('id')).then(function(cat) {
+        equal(cat.get('name'), 'Cat 1');
+        done();
+      });
+    });
+  });
+
   test("with fixture options", function(assert) {
     Ember.run(()=> {
       let done = assert.async();

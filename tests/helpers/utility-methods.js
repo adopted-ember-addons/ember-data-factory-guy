@@ -27,7 +27,10 @@ const serializerOptions = {
     }
   },
   cat: {
-    primaryKey: 'catId'
+    primaryKey: 'catId',
+    attrs: {
+      name: 'catName'
+    }
   },
   'comic-book': [
     DS.EmbeddedRecordsMixin, {

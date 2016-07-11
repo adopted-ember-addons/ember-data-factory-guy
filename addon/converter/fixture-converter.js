@@ -17,8 +17,8 @@ import Ember from 'ember';
 
  @param {DS.Store} store
  @param {Object} options
-  transformKeys tranform keys and values in fixture if true
-  serializeMode act like serialization is for a return to server if true
+ transformKeys tranform keys and values in fixture if true
+ serializeMode act like serialization is for a return to server if true
  @constructor
  */
 export default class {
@@ -61,16 +61,16 @@ export default class {
   }
 
   /**
-    Empty respose is a special case, so use this method for generating it.
+   Empty respose is a special case, so use this method for generating it.
 
-    @param _
-    @param {Object} options useValue to override the null value that is passed
-    @returns {Array|null}
+   @param _
+   @param {Object} options useValue to override the null value that is passed
+   @returns {Array|null}
    */
-  emptyResponse(_, options={})  {
+  emptyResponse(_, options = {}) {
     return options.useValue || null;
   }
-  
+
   /**
    * User the primaryKey from the serializer if it is declared
    *
@@ -102,8 +102,14 @@ export default class {
     if (!this.transformKeys) {
       return this.noTransformFn;
     }
+
     let serializer = this.store.serializerFor(modelName);
-    return serializer['keyFor' + type] || this.defaultKeyTransformFn;
+    let keyFn = serializer['keyFor' + type] || this.defaultKeyTransformFn;
+
+    return ((attribute, kind)=> {
+      // if there is an attrs override in serializer, return that first
+      return this.attrsOption(serializer, attribute) || keyFn(attribute, kind);
+    });
   }
 
   getTransformValueFunction(type) {
