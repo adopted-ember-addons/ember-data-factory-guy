@@ -1644,7 +1644,8 @@ syntax yet, your truely missing out.
     - first will have square trait
     - second will have round trait
     - third will have round and broken trait
-- Check out [makeList](https://github.com/danielspaniel/ember-data-factory-guy#makelist) and [buildList](https://github.com/danielspaniel/ember-data-factory-guy#buildlist) for more ideas    
+  
+  - Check out [makeList](https://github.com/danielspaniel/ember-data-factory-guy#makelist) and [buildList](https://github.com/danielspaniel/ember-data-factory-guy#buildlist) for more ideas    
     
 - The fact that you can match on attributes in mockUpdate and mockCreate means 
   that you can test a custom `serialize` method in a model serializer 
