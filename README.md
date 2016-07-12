@@ -812,16 +812,17 @@ You would use this to make models like:
   - Start by creating at least a scenarios/main.js file since this is the starting point 
   - Your scenario classes should inherit from Scenario class  
   - A Scenario class should declare a run method where you do things like:
-     - include other scenarios
-     - make your data or mock your requests using the typical FactoryGuy methods
-        - these methods are all built into Scenario classes so you don't have to import them
-
+    - include other scenarios
+      - Meaning you can compose scenarios like a symphony of notes    
+    - make your data or mock your requests using the typical FactoryGuy methods
+      - these methods are all built into Scenario classes so you don't have to import them
+    
   ```js 
     // file: app/scenarios/main.js
     import {Scenario} from 'ember-data-factory-guy';
     import Users from './users';
     
-    // Just for fun, set the log level ( to 1 ) and see all the request info in console
+    // Just for fun, set the log level ( to 1 ) and see all FactoryGuy response info in console
     Scenario.settings({
       logLevel: 1, // 1 is the max for now, default is 0
     });
@@ -846,8 +847,6 @@ You would use this to make models like:
       }
     }  
   ```
-
-- The power of this is that you can compose scenarios easily 
 
 
 ### Ember Data Model Fragments
