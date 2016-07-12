@@ -40,7 +40,7 @@ const serializerOptions = {
       }
     }
   ]
-}
+};
 
 function setupCustomSerializer(container, serializerType, options) {
   let store = container.lookup('service:store');

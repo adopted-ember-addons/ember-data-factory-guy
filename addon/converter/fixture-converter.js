@@ -72,7 +72,7 @@ export default class {
   }
 
   /**
-   * User the primaryKey from the serializer if it is declared
+   * Use the primaryKey from the serializer if it is declared
    *
    * @param modelName
    * @param data
@@ -80,11 +80,14 @@ export default class {
    */
   addPrimaryKey(modelName, data, fixture) {
     let primaryKey = this.store.serializerFor(modelName).get('primaryKey');
-    if (fixture.id) {
-      data.id = fixture.id;
-      if (primaryKey !== 'id') {
-        data[primaryKey] = fixture.id;
-      }
+    let primaryKeyValue = fixture[primaryKey] || fixture.id;
+    // model fragments will have no primaryKey and don't want them to have id
+    if (primaryKeyValue) {
+      // need to set the id for all as a baseline
+      data.id = primaryKeyValue;
+      // if the id is NOT the primary key, need to make sure that the primaryKey
+      // has the primaryKey value
+      data[primaryKey] = primaryKeyValue;
     }
   }
 

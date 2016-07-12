@@ -43,7 +43,7 @@ SharedBehavior.mockFindCommonTests = function() {
 
       equal(mock.get('catName'), 'Cat 1');
       equal(mock.get('catFriend'), 'Friend 1');
-
+      
       FactoryGuy.store.find('cat', mock.get('id')).then(function(cat) {
         equal(cat.get('name'), 'Cat 1');
         equal(cat.get('friend'), 'Friend 1');

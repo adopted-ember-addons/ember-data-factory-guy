@@ -103,7 +103,7 @@ test("with traits defining model attributes", function() {
     id: 1,
     type: 'project',
     attributes: {
-      title: 'Big Project',
+      title: 'Big Project'
     }
   });
 });
@@ -786,8 +786,14 @@ test("#add method sideloads unrelated record passed as prebuilt ( buildList ) js
 });
 
 // the override for primaryKey is in the helpers/utilityMethods.js
-test("serializer primaryKey override", function() {
+test("with model that has primaryKey defined in serializer ( FactoryGuy sets primaryKey value )", function() {
   let cat = build('cat');
-  equal(cat.data.catId, 1);
+
   equal(cat.data.id, 1);
+});
+
+test("with model that has primaryKey defined in serializer ( user sets primaryKey value )", function() {
+  let cat = build('cat', {catId: 'meow1'});
+
+  equal(cat.data.id, 'meow1');
 });

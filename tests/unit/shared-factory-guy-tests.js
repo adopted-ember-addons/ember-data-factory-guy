@@ -18,7 +18,6 @@ SharedBehavior.makeTests = function () {
     ok(storeUser === user);
   });
 
-
   test("handles custom attribute type attributes", function () {
     let info = {first: 1};
     let user = make('user', {info: info});
@@ -31,10 +30,22 @@ SharedBehavior.makeTests = function () {
   });
 
   test("with model that has attribute keys defined in serializer attrs", function() {
-    let mock = make('cat');
+    let cat = make('cat');
 
-    equal(mock.get('name'), 'Cat 1');
-    equal(mock.get('friend'), 'Friend 1');
+    equal(cat.get('name'), 'Cat 1');
+    equal(cat.get('friend'), 'Friend 1');
+  });
+
+  test("with model that has primaryKey defined in serializer ( FactoryGuy sets id value )", function() {
+    let cat = make('cat');
+
+    equal(cat.get('id'), 1);
+  });
+
+  test("with model that has primaryKey defined in serializer ( user sets id value )", function() {
+    let cat = make('cat', {catId: 'meow1'});
+
+    equal(cat.get('id'), 'meow1');
   });
 
   test("with fixture options", function () {

@@ -615,11 +615,18 @@ test("#add method sideloads unrelated record passed as prebuilt ( buildList ) js
 });
 
 // the override for primaryKey is in the helpers/utilityMethods.js
-test("serializer primaryKey override", function() {
-  let json = build('cat');
-  equal(json.get('catId'), 1);
-  equal(json.get('id'), 1);
+test("with model that has primaryKey defined in serializer ( FactoryGuy sets primaryKey value )", function() {
+  let cat = build('cat');
+
+  equal(cat.get('id'), 1);
 });
+
+test("with model that has primaryKey defined in serializer ( user sets primaryKey value )", function() {
+  let cat = build('cat', {catId: 'meow1'});
+
+  equal(cat.get('id'), 'meow1');
+});
+
 
 module(title(adapter, 'FactoryGuy#buildList custom'), inlineSetup(App, serializerType));
 

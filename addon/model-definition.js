@@ -32,7 +32,7 @@ class ModelDefinition {
     let relationship = Ember.get(modelClass, 'relationshipsByName').get(field);
     return relationship || null;
   }
-
+  
   /**
    Is this model a fragment type
 
