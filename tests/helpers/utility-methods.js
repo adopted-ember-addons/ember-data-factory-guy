@@ -29,7 +29,8 @@ const serializerOptions = {
   cat: {
     primaryKey: 'catId',
     attrs: {
-      name: 'catName'
+      name: {key: 'catName'},
+      friend: 'catFriend'
     }
   },
   'comic-book': [

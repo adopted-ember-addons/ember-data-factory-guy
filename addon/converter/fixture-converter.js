@@ -192,7 +192,8 @@ export default class {
 
   attrsOption(serializer, attr) {
     var attrs = serializer.get('attrs');
-    return attrs && (attrs[Ember.String.camelize(attr)] || attrs[attr]);
+    let attrName = attrs && (attrs[Ember.String.camelize(attr)] || attrs[attr]);
+    return (attrName && attrName.key) ? attrName.key : attrName;
   }
 
   extractHasMany(fixture, relationship, parentModelName, relationships) {
