@@ -1632,9 +1632,21 @@ Usage:
 
 
 ##### Tips and Tricks 
-  
+
+- This is probably the funnest thing in FactoryGuy, if your not using this 
+syntax yet, your truely missing out.
+
+  ```javascript
+   let json    = buildList('widget', 'square', 'round', ['round','broken']);
+   let widgets = makeList('widget', 'square', 'round', ['round','broken']);
+  ```
+    - you just built/made 3 different widgets from traits ('square','round','broken')   
+    - first will has square trait
+    - second will have round trait
+    - third will have round and broken trait
+    
 - The fact that you can match on attributes in mockUpdate and mockCreate means 
-  that you can test a custom serializer method in a model serializer 
+  that you can test a custom `serialize` method in a model serializer 
   
 ```javascript
 
