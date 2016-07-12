@@ -30,6 +30,13 @@ SharedBehavior.makeTests = function () {
     ok(profile.get('camelCaseDescription') === 'description');
   });
 
+  test("with model that has attribute keys defined in serializer attrs", function() {
+    let mock = make('cat');
+
+    equal(mock.get('name'), 'Cat 1');
+    equal(mock.get('friend'), 'Friend 1');
+  });
+
   test("with fixture options", function () {
     let profile = make('profile', {description: 'dude'});
     ok(profile.get('description') === 'dude');
@@ -44,7 +51,6 @@ SharedBehavior.makeTests = function () {
     let profile = make('profile', 'goofy_description', {description: 'dude'});
     ok(profile.get('description') === 'dude');
   });
-
 
   test("when hasMany associations assigned, belongTo parent is assigned", function () {
     let project = make('project');
