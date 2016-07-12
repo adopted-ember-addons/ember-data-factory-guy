@@ -1633,7 +1633,7 @@ Usage:
 
 ##### Tips and Tricks 
 
-- This is probably the funnest thing in FactoryGuy, if your not using this 
+1. This is probably the funnest thing in FactoryGuy, if your not using this 
 syntax yet, your truely missing out.
 
   ```javascript
@@ -1647,7 +1647,7 @@ syntax yet, your truely missing out.
   
   - Check out [makeList](https://github.com/danielspaniel/ember-data-factory-guy#makelist) and [buildList](https://github.com/danielspaniel/ember-data-factory-guy#buildlist) for more ideas    
     
-- The fact that you can match on attributes in mockUpdate and mockCreate means 
+2. The fact that you can match on attributes in mockUpdate and mockCreate means 
   that you can test a custom `serialize` method in a model serializer 
   
 ```javascript
