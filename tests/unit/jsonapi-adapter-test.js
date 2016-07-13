@@ -789,11 +789,18 @@ test("#add method sideloads unrelated record passed as prebuilt ( buildList ) js
 test("with model that has primaryKey defined in serializer ( FactoryGuy sets primaryKey value )", function() {
   let cat = build('cat');
 
-  equal(cat.data.id, 1);
+  equal(cat.get('id'), 1);
 });
 
 test("with model that has primaryKey defined in serializer ( user sets primaryKey value )", function() {
   let cat = build('cat', {catId: 'meow1'});
 
-  equal(cat.data.id, 'meow1');
+  equal(cat.get('id'), 'meow1');
+});
+
+test("with model that has primaryKey defined in serializer and is attribute ( value set in fixture )", function() {
+  let dog = build('dog');
+
+  equal(dog.get('id'), 'Dog1', 'primary key comes from dogNumber');
+  equal(dog.get('dog-number'), 'Dog1', 'attribute has the primary key value as well');
 });

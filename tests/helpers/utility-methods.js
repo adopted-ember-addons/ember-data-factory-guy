@@ -26,6 +26,9 @@ const serializerOptions = {
       return modelName;
     }
   },
+  dog: {
+    primaryKey: 'dogNumber'
+  },
   cat: {
     primaryKey: 'catId',
     attrs: {
@@ -88,7 +91,7 @@ function theUsualSetup(serializerType) {
       if (modelName.match(/(name|department|address|department-employment|manager)/)) {
         return originalSerializer;
       }
-      if (modelName.match(/(entry|entry-type|comic-book|^cat$)/)) {
+      if (modelName.match(/(entry|entry-type|comic-book|^cat$|^dog$)/)) {
         let options = serializerOptions[modelName];
         return setupCustomSerializer(container, serializerType, options);
       }

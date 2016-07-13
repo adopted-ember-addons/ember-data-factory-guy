@@ -48,6 +48,13 @@ SharedBehavior.makeTests = function () {
     equal(cat.get('id'), 'meow1');
   });
 
+  test("with model that has primaryKey defined in serializer and is attribute ( value set in fixture )", function() {
+    let dog = make('dog');
+
+    equal(dog.get('id'), 'Dog1', 'primary key comes from dogNumber');
+    equal(dog.get('dogNumber'), 'Dog1', 'attribute has the primary key value as well');
+  });
+
   test("with fixture options", function () {
     let profile = make('profile', {description: 'dude'});
     ok(profile.get('description') === 'dude');

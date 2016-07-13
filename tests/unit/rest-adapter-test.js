@@ -627,6 +627,13 @@ test("with model that has primaryKey defined in serializer ( user sets primaryKe
   equal(cat.get('id'), 'meow1');
 });
 
+test("with model that has primaryKey defined in serializer and is attribute ( value set in fixture )", function() {
+  let dog = build('dog');
+
+  equal(dog.get('id'), 'Dog1', 'primary key comes from dogNumber');
+  equal(dog.get('dogNumber'), 'Dog1', 'attribute has the primary key value as well');
+});
+
 
 module(title(adapter, 'FactoryGuy#buildList custom'), inlineSetup(App, serializerType));
 
