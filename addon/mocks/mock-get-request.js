@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
-import DS from 'ember-data';
+import Model from 'ember-data/model';
 import MockRequest from './mock-request';
 import { isEquivalent } from '../utils/helper-functions';
 const assign = Ember.assign || Ember.merge;
@@ -67,15 +67,15 @@ class MockGetRequest extends MockRequest {
 
         Ember.assert(`argument ( id ) should refer to a model of type ${this.modelName} that is in
          the store. But no ${this.modelName} with id ${options.id} was found in the store`,
-          (model instanceof DS.Model && model.constructor.modelName === this.modelName));
+          (model instanceof Model && model.constructor.modelName === this.modelName));
 
         return this.returns({ model });
 
       case 'model':
         model = options.model;
 
-        Ember.assert(`argument ( model ) must be a DS.Model instance - found type:'
-          ${Ember.typeOf(model)}`, (model instanceof DS.Model));
+        Ember.assert(`argument ( model ) must be a Model instance - found type:'
+          ${Ember.typeOf(model)}`, (model instanceof Model));
 
         json = { id: model.id, type: model.constructor.modelName };
         this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);

@@ -2,7 +2,7 @@ import Ember from 'ember';
 import FactoryGuy, * as fgMethods from 'ember-data-factory-guy';
 
 let proxyFx = [
-  'make', 'makeList', 'build', 'buildList', 'mockFind', 'mockFindAll',
+  'make', 'makeList', 'build', 'buildList', 'mockFind', 'mockFindAll', 'modkReload',
   'mockQuery', 'mockQueryRecord', 'mockUpdate', 'mockCreate', 'mockDelete'
 ];
 

@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import Converter from './fixture-converter';
-const { pluralize, dasherize } = Ember.String;
+const { dasherize } = Ember.String;
 
 /**
  * Using `serializeMode` to create a payload the way ember-data would serialize types
