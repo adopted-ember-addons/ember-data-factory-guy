@@ -1188,6 +1188,15 @@ Usage:
    // you can now also user.get('any-computed-property') 
    // since you have a real model instance
 ```
+- Simper way to return a model instance
+```javascript
+   let user = make('user', 'whacky', {isDude: false});
+   let mock = mockFind(user);
+   // user.get('id') === mock.get('id')
+   // basically a shortcut to the above .returns({ model: user })
+   // as this sets up the returns for you
+```  
+
 - To reuse the mock
 ```javascript
    let user2 = build('user', {style: "boring"});
@@ -1202,7 +1211,7 @@ Usage:
 ```javascript
   let profile = make('profile');
   mockFind(profile).fails();
-  // mock.get('id') => profile.id
+  // mock.get('id') === profile.id
 ```
 
 ##### mockFindAll
