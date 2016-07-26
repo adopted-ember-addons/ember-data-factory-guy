@@ -33,7 +33,8 @@ test('makeList throws excpetion if there is NO store setup', function(assert) {
     },
     function(err) {
       return !!err.toString().match(/Use manualSetup\(this.container\) in model\/component test/);
-    });
+    }
+  );
 });
 
 test("#make returns a model instance", function(assert) {

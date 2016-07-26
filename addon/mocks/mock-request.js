@@ -30,32 +30,34 @@ export default class {
     assign(this.responseHeaders, headers);
   }
 
-  succeeds({ status= 200 }={}) {
+  succeeds({ status = 200 }={}) {
     this.status = status;
     this.errorResponse = null;
     return this;
   }
 
-  fails({ status= 500, response= null, convertErrors= true }={}) {
+  isErrorStatus(status) {
+    return !!status.toString().match(/^([345]\d{2})/);
+  }
+
+  fails({ status = 500, response = null, convertErrors = true }={}) {
     Ember.assert(`[ember-data-factory-guy] 'fails' method status code must be 3XX, 4XX or 5XX,
-        you are using: ${status}`, status.toString().match(/^([345]\d{2})/));
+        you are using: ${status}`, this.isErrorStatus(status));
 
     this.status = status;
+    this.errorResponse = response;
 
-    if (response) {
-      if (convertErrors) {
-        let errors = FactoryGuy.fixtureBuilder.convertResponseErrors(response, this.status);
-        this.errorResponse = errors;
-      } else {
-        this.errorResponse = response;
-      }
+    if (response && convertErrors) {
+      let errors = FactoryGuy.fixtureBuilder.convertResponseErrors(response, this.status);
+      this.errorResponse = errors;
     }
+
     return this;
   }
 
   getResponse() {
     return {
-      responseText: this.errorResponse || this.responseJson,
+      responseText: this.isErrorStatus(this.status) ? this.errorResponse : this.responseJson,
       headers: this.responseHeaders,
       status: this.status
     };
@@ -83,6 +85,7 @@ export default class {
   basicRequestMatches(settings) {
     const uri = new URI(settings.url);
     const mockUri = new URI(this.getUrl());
+//    console.log(settings.url, this.getUrl());
     return uri.path() === mockUri.path() && settings.type === this.getType();
   }
 
@@ -99,9 +102,11 @@ export default class {
       if (!this.extraRequestMatches(settings)) {
         return false;
       }
+
       this.timesCalled++;
       let response = this.getResponse();
       this.logInfo();
+//      console.log('HERE SS', this.timesCalled, response);
       return response;
     }.bind(this);
 

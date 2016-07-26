@@ -36,6 +36,11 @@ export function mockTeardown() {
  let mock = mockFind('user').returns({json});
  let userId = json.get('id');
 
+ // you could also make the model first and mock that find fails
+ let user = make('user')
+ let mock = mockFind(user);
+ let userId = user.id // or mock.get('id')
+
  // To mock failure case use method fails
  mockFind('user').fails();
 
@@ -51,20 +56,26 @@ export function mockTeardown() {
  @param {Object} opts  optional fixture options
  */
 export function mockFind(...args) {
-  let modelName = args[0];
+  let modelName;
 
   Ember.assert(`[ember-data-factory-guy] mockFind requires at least a model
      name as first parameter`, args.length > 0);
 
-  let json = FactoryGuy.build.apply(FactoryGuy, arguments);
+  if (args[0] instanceof Model) {
+    let model = args[0];
+    modelName = model.constructor.modelName;
+    return new MockFindRequest(modelName).returns({ model });
+  }
 
+  modelName = args[0];
+  let json = FactoryGuy.build.apply(FactoryGuy, arguments);
   return new MockFindRequest(modelName).returns({ json });
 }
 
 // eventually deprecate mockFind
-//export function mockFindRecord() {
-//  return mockFind.apply(this, arguments);
-//}
+export function mockFindRecord() {
+  return mockFind.apply(this, arguments);
+}
 
 /**
  Handling ajax GET for reloading a record

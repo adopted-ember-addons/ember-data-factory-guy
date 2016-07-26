@@ -121,22 +121,37 @@ SharedBehavior.mockFindCommonTests = function() {
     });
   });
 
-  test("failure with fails method", function(assert) {
+  test("failure with fails method when passing modelName as parameter", function(assert) {
+    let done = assert.async();
     Ember.run(()=> {
-      let done = assert.async();
-
-      let profile = make('profile');
-      let profileId = profile.get('id');
       let mock = mockFind('profile').fails();
-
-      FactoryGuy.store.findRecord('profile', profileId)
-        .catch(()=> {
-            equal(mock.timesCalled, 1);
-            ok(true);
-            done();
-          }
-        );
+      FactoryGuy.store.findRecord('profile', mock.get('id')).catch(()=> {
+        equal(mock.timesCalled, 1);
+        done();
+      });
     });
+  });
+
+  test("failure with fails method when passing mode instance as parameter and returning instance", function() {
+    let mock;
+    Ember.run(()=> {
+      let model = make('profile');
+      mock = mockFind('profile').returns({ model }).fails();
+      FactoryGuy.store.findRecord('profile', model.id);
+    });
+    equal(mock.timesCalled, 1);
+    equal(mock.status, 500);
+  });
+
+  test("failure with fails method when passing mode instance as parameter and no returns is used", function() {
+    let mock;
+    Ember.run(()=> {
+      let profile = make('profile');
+      mock = mockFind(profile).fails();
+      FactoryGuy.store.findRecord('profile', profile.id);
+    });
+    equal(mock.timesCalled, 1);
+    equal(mock.status, 500);
   });
 
 };
@@ -298,7 +313,7 @@ SharedBehavior.mockReloadTests = function() {
       let profile = make('profile', { description: "tomatoes", camelCaseDescription: "noodles" });
 
       let newProfile = build('profile', { id: profile.get('id'), description: "potatoes", camelCaseDescription: "poodles" });
-      mockReload(profile).returns({ json:  newProfile});
+      mockReload(profile).returns({ json: newProfile });
 
       profile.reload().then(function(reloaded) {
         ok(reloaded.id === profile.id, 'does not change id');
@@ -487,19 +502,19 @@ SharedBehavior.mockFindAllSideloadingTests = function(App, adapter, serializerTy
     });
   });
 
-//  test("handles include params", function(assert) {
-//    Ember.run(()=> {
-//      let done = assert.async();
-//
-//      let json = buildList('profile', 'with_company');
-//      mockFindAll('profile').withParams({include: 'company'}).returns({ json });
-//
-//      FactoryGuy.store.findAll('profile', {inlcude: 'company'}).then(function(profiles) {
-//        ok(profiles.get('firstObject.company.name') === 'Silly corp');
-//        done();
-//      });
-//    });
-//  });
+  //  test("handles include params", function(assert) {
+  //    Ember.run(()=> {
+  //      let done = assert.async();
+  //
+  //      let json = buildList('profile', 'with_company');
+  //      mockFindAll('profile').withParams({include: 'company'}).returns({ json });
+  //
+  //      FactoryGuy.store.findAll('profile', {inlcude: 'company'}).then(function(profiles) {
+  //        ok(profiles.get('firstObject.company.name') === 'Silly corp');
+  //        done();
+  //      });
+  //    });
+  //  });
 
 };
 
@@ -1209,9 +1224,9 @@ SharedBehavior.mockCreateTests = function() {
 
 
 SharedBehavior.mockCreateFailsWithErrorResponse = function(App, adapter, serializerType) {
-  
+
   module(title(adapter, '#mockCreate | fails with error response'), inlineSetup(App, serializerType));
-  
+
   test("failure with status code 422 and errors in response with fails method", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
@@ -1230,7 +1245,7 @@ SharedBehavior.mockCreateFailsWithErrorResponse = function(App, adapter, seriali
         });
     });
   });
-  
+
 };
 
 
@@ -1504,8 +1519,8 @@ SharedBehavior.mockUpdateTests = function() {
     Ember.run(()=> {
       let done = assert.async();
       let customDescription = "special description";
-      let profile = make('profile', {description: customDescription});
-      let profile2 = make('profile', {description: customDescription});
+      let profile = make('profile', { description: customDescription });
+      let profile2 = make('profile', { description: customDescription });
 
       mockUpdate('profile').match({ description: customDescription });
 
@@ -1528,7 +1543,7 @@ SharedBehavior.mockUpdateTests = function() {
     Ember.run(()=> {
       let done = assert.async();
       let date = new Date();
-      let profile = make('profile', {created_at: date, aBooleanField: false});
+      let profile = make('profile', { created_at: date, aBooleanField: false });
       let customDescription = "special description";
 
       mockUpdate('profile', profile.id).match({ description: customDescription, created_at: date, aBooleanField: true });
@@ -1550,7 +1565,7 @@ SharedBehavior.mockUpdateTests = function() {
     Ember.run(()=> {
       let done = assert.async();
       let company = make('company');
-      let profile = make('profile', {company: company});
+      let profile = make('profile', { company: company });
 
       mockUpdate('profile', profile.id).match({ company: company });
 
@@ -1566,7 +1581,7 @@ SharedBehavior.mockUpdateTests = function() {
     Ember.run(()=> {
       let done = assert.async();
       let group = make('big-group');
-      let profile = make('profile', {group: group});
+      let profile = make('profile', { group: group });
       mockUpdate('profile', profile.id).match({ group: group });
 
       profile.save()
@@ -1585,7 +1600,7 @@ SharedBehavior.mockUpdateTests = function() {
       let company = make('company');
       let group = make('big-group');
 
-      let profile = make('profile', {description: customDescription, company: company, group: group});
+      let profile = make('profile', { description: customDescription, company: company, group: group });
 
       mockUpdate('profile', profile.id)
         .match({ description: customDescription, company: company, group: group })
@@ -1622,7 +1637,7 @@ SharedBehavior.mockUpdateTests = function() {
     Ember.run(()=> {
       let done = assert.async();
       let customDescription = "special description";
-      let profile = make('profile', {description: customDescription});
+      let profile = make('profile', { description: customDescription });
       let profile2 = make('profile');
 
       let mock = mockUpdate('profile').match({ description: customDescription });
@@ -1646,7 +1661,7 @@ SharedBehavior.mockUpdateTests = function() {
     Ember.run(()=> {
       let done = assert.async();
       let description = "special description";
-      let profile = make('profile', {description: description});
+      let profile = make('profile', { description: description });
 
       let mock = mockUpdate('profile', profile.id).match({ description: description }).fails();
 
@@ -1694,13 +1709,13 @@ SharedBehavior.mockUpdateReturnsAssociations = function(App, adapter, serializer
   test("belongsTo", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
-      
+
       let profile = make('profile');
       profile.set('description', 'new desc');
-      
+
       let company = build('company');
       mockUpdate(profile).returns({ company });
-      
+
       profile.save().then(function(profile) {
         equal(profile.get('company.id'), company.get('id').toString());
         equal(profile.get('company.name'), company.get('name'));
@@ -1716,7 +1731,7 @@ SharedBehavior.mockUpdateReturnsAssociations = function(App, adapter, serializer
       let newValue = 'new name';
       let outfit = make('outfit');
       outfit.set('name', newValue);
-      
+
       let person = build('super-hero');
       mockUpdate(outfit).returns({ person });
 
@@ -1736,7 +1751,7 @@ SharedBehavior.mockUpdateReturnsAssociations = function(App, adapter, serializer
       let newValue = 'BoringMan';
       let superHero = make('bat_man');
       superHero.set('name', newValue);
-      
+
       let outfits = buildList('outfit', 2);
       mockUpdate(superHero).returns({ outfits });
 
@@ -1759,9 +1774,9 @@ SharedBehavior.mockUpdateReturnsEmbeddedAssociations = function(App, adapter, se
     Ember.run(()=> {
       let done = assert.async();
       let newValue = 'new name';
-      let comicBook = make('comic-book', {characters: []});
+      let comicBook = make('comic-book', { characters: [] });
       comicBook.set('name', newValue);
-      
+
       let company = build('company');
       mockUpdate(comicBook).returns({ company });
 
