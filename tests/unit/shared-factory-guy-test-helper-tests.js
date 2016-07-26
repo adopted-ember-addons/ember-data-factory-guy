@@ -132,7 +132,7 @@ SharedBehavior.mockFindCommonTests = function() {
     });
   });
 
-  test("failure with fails method when passing mode instance as parameter and returning instance", function() {
+  test("failure with fails method when passing modeName as parameter and returning instance", function() {
     let mock;
     Ember.run(()=> {
       let model = make('profile');
@@ -143,7 +143,7 @@ SharedBehavior.mockFindCommonTests = function() {
     equal(mock.status, 500);
   });
 
-  test("failure with fails method when passing mode instance as parameter and no returns is used", function() {
+  test("failure with fails method when passing model instance as parameter and no returns is used", function() {
     let mock;
     Ember.run(()=> {
       let profile = make('profile');

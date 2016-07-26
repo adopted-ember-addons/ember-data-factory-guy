@@ -1198,6 +1198,12 @@ Usage:
 ```javascript  
    mockFind('user').fails();
 ```
+- To mock failure when you have a model already
+```javascript
+  let profile = make('profile');
+  mockFind(profile).fails();
+  // mock.get('id') => profile.id
+```
 
 ##### mockFindAll
   - For dealing with finding all records for a model type => `store.findAll(modelType)`
