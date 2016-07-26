@@ -43,7 +43,7 @@ SharedBehavior.mockFindCommonTests = function() {
 
       equal(mock.get('catName'), 'Cat 1');
       equal(mock.get('catFriend'), 'Friend 1');
-      
+
       FactoryGuy.store.find('cat', mock.get('id')).then(function(cat) {
         equal(cat.get('name'), 'Cat 1');
         equal(cat.get('friend'), 'Friend 1');
@@ -118,6 +118,24 @@ SharedBehavior.mockFindCommonTests = function() {
         ok(profile.get('description') === 'dude');
         done();
       });
+    });
+  });
+
+  test("failure with fails method", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+
+      let profile = make('profile');
+      let profileId = profile.get('id');
+      let mock = mockFind('profile').fails();
+
+      FactoryGuy.store.findRecord('profile', profileId)
+        .catch(()=> {
+            equal(mock.timesCalled, 1);
+            ok(true);
+            done();
+          }
+        );
     });
   });
 
