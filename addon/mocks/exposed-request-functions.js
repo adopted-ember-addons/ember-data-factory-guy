@@ -83,9 +83,7 @@ export function mockFind(...args) {
  @param {String} type  model type like 'user' for User model, or a model instance
  @param {String} id  id of record to find
  */
-export function mockReload() {
-  let args = Array.prototype.slice.call(arguments);
-
+export function mockReload(...args) {
   let modelName, id;
   if (args[0] instanceof Model) {
     let record = args[0];
@@ -176,10 +174,8 @@ export function mockFindAll(...args) {
  @param {String} queryParams  the parameters that will be queried
  @param {Array}  array of Model records to be 'returned' by query
  */
-export function mockQuery(modelName, queryParams) {
-  if (queryParams) {
-    Ember.assert('The second argument ( queryParams ) must be an object', Ember.typeOf(queryParams) === 'object');
-  }
+export function mockQuery(modelName, queryParams={}) {
+  Ember.assert('The second argument ( queryParams ) must be an object', Ember.typeOf(queryParams) === 'object');
 
   return new MockQueryRequest(modelName, queryParams);
 }
