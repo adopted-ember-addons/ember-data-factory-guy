@@ -13,7 +13,6 @@ import RESTFixtureBuilder from './builder/rest-fixture-builder';
 import JSONFixtureBuilder from './builder/json-fixture-builder';
 
 import Scenario from './scenario';
-console.log('HERE');
 
 export default FactoryGuy;
 
