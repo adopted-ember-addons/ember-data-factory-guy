@@ -142,14 +142,14 @@ export function mockFindAll(...args) {
   Ember.assert(`[ember-data-factory-guy] mockFindAll requires at least a model
      name as first parameter`, args.length > 0);
 
-  let mockFindAll = new MockFindAllRequest(modelName);
+  let mock = new MockFindAllRequest(modelName);
 
   if (args.length > 1) {
     let json = FactoryGuy.buildList.apply(FactoryGuy, args);
-    mockFindAll.returns({ json });
+    mock.returns({ json });
   }
 
-  return mockFindAll;
+  return mock;
 }
 
 /**
