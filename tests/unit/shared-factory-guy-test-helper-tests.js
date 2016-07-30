@@ -1673,6 +1673,33 @@ SharedBehavior.mockUpdateTests = function() {
         });
     });
   });
+
+  test("removes attributes based serializer attrs settings", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+
+      let serializer = FactoryGuy.store.serializerFor('profile');
+      serializer.attrs = {
+        created_at: {
+          serialize: false
+        }
+      };
+
+      let date = new Date();
+      let profile = make('profile');
+      profile.set('created_at', date);
+
+      mockUpdate(profile)
+        .match({created_at: null}) // serializer removes date
+        .returns({ created_at: date });
+
+      profile.save().then(function(profile) {
+        ok(profile.get('created_at').toString() === date.toString());
+        done();
+      });
+    });
+  });
+
 };
 
 SharedBehavior.mockUpdateWithErrorMessages = function(App, adapter, serializerType) {

@@ -577,12 +577,12 @@ test("when no custom serialize keys functions exist, dasherizes attributes and r
     });
 });
 
+// Don't have to duplicate this test on all adapters since it's the same basic idea and not
+// adapter dependent
 test("using custom serialize keys function for transforming attributes and relationship keys", function() {
-  let serializer = FactoryGuy.store.serializerFor('application');
+  let serializer = FactoryGuy.store.serializerFor('profile');
 
-  let savedKeyForAttributeFn = serializer.keyForAttribute;
   serializer.keyForAttribute = Ember.String.underscore;
-  let savedKeyForRelationshipFn = serializer.keyForRelationship;
   serializer.keyForRelationship = Ember.String.underscore;
 
   let json = build('profile', 'with_bat_man');
@@ -616,10 +616,18 @@ test("using custom serialize keys function for transforming attributes and relat
         }
       ]
     });
+});
 
-  serializer.keyForAttribute = savedKeyForAttributeFn;
-  serializer.keyForRelationship = savedKeyForRelationshipFn;
-
+test("using custom serializer with property forbidden for serialization", function() {
+  let date = new Date();
+  let serializer = FactoryGuy.store.serializerFor('profile');
+  serializer.attrs = {
+    created_at: {
+      serialize: false
+    }
+  };
+  let profile = build('profile', 'with_created_at', {created_at: date});
+  equal(profile.get("created-at"), date.toJSON());
 });
 
 test("serializes custom attributes types", function() {

@@ -7,6 +7,11 @@ import Ember from 'ember';
  Don't want to transform keys when building payload for a FactoryGuy#make/makeList operation,
  but only for build/buildList.
 
+ serializerMode (true) means => produce json as if ember data was serializing the payload
+ to go back to the server.
+ So, what does serializerMode ( false ) mean? produce json that can immediately be consumed
+ by ember data .. but it is such a long story .. that I will have to explain another time
+
  If there are associations in the base fixture, they will be added to the
  new fixture as 'side loaded' elements, even if they are another json payload
  built whith the build/buildList methods.
@@ -101,6 +106,18 @@ export default class {
     return isPolymorphic ? this.polymorphicTypeTransformFn(fixture.type) : relationship.type;
   }
 
+  attributeIncluded(attribute, modelName) {
+    if (!this.serializeMode) {
+      return true;
+    }
+    let serializer = this.store.serializerFor(modelName);
+    let attrOptions = this.attrsOption(serializer, attribute);
+    if (attrOptions && attrOptions.serialize === false) {
+      return false;
+    }
+    return true;
+  }
+
   getTransformKeyFunction(modelName, type) {
     if (!this.transformKeys) {
       return this.noTransformFn;
@@ -111,7 +128,17 @@ export default class {
 
     return ((attribute, kind)=> {
       // if there is an attrs override in serializer, return that first
-      return this.attrsOption(serializer, attribute) || keyFn(attribute, kind);
+      let attrOptions = this.attrsOption(serializer, attribute);
+      let attrName;
+      if (attrOptions) {
+        if (attrOptions.key) {
+          attrName = attrOptions.key;
+        }
+        if (Ember.typeOf(attrOptions) === "string") {
+          attrName = attrOptions;
+        }
+      }
+      return attrName || keyFn(attribute, kind);
     });
   }
 
@@ -131,13 +158,15 @@ export default class {
     let transformKeyFunction = this.getTransformKeyFunction(modelName, 'Attribute');
 
     this.store.modelFor(modelName).eachAttribute((attribute, meta)=> {
-      let attributeKey = transformKeyFunction(attribute);
-      let transformValueFunction = this.getTransformValueFunction(meta.type);
+      if (this.attributeIncluded(attribute, modelName)) {
+        let attributeKey = transformKeyFunction(attribute);
+        let transformValueFunction = this.getTransformValueFunction(meta.type);
 
-      if (fixture.hasOwnProperty(attribute)) {
-        attributes[attributeKey] = transformValueFunction(fixture[attribute]);
-      } else if (fixture.hasOwnProperty(attributeKey)) {
-        attributes[attributeKey] = transformValueFunction(fixture[attributeKey]);
+        if (fixture.hasOwnProperty(attribute)) {
+          attributes[attributeKey] = transformValueFunction(fixture[attribute]);
+        } else if (fixture.hasOwnProperty(attributeKey)) {
+          attributes[attributeKey] = transformValueFunction(fixture[attributeKey]);
+        }
       }
     });
     return attributes;
@@ -195,8 +224,9 @@ export default class {
 
   attrsOption(serializer, attr) {
     var attrs = serializer.get('attrs');
-    let attrName = attrs && (attrs[Ember.String.camelize(attr)] || attrs[attr]);
-    return (attrName && attrName.key) ? attrName.key : attrName;
+    let option = attrs && (attrs[Ember.String.camelize(attr)] || attrs[attr]);
+    return option;
+    //    return (option && option.key) ? option.key : option;
   }
 
   extractHasMany(fixture, relationship, parentModelName, relationships) {

@@ -16,6 +16,9 @@ FactoryGuy.define('profile', {
     },
     with_bat_man: {
       superHero: FactoryGuy.belongsTo('bat_man')
+    },
+    with_created_at: {
+      created_at: new Date()
     }
   }
 });

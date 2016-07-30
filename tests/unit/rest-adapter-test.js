@@ -614,6 +614,19 @@ test("#add method sideloads unrelated record passed as prebuilt ( buildList ) js
   deepEqual(buildJson, expectedJson);
 });
 
+// duplicate of test in json-api => doing this just for fun ( make extra sure .. though not 100% necessary )
+test("using custom serializer with property forbidden for serialization", function() {
+  let date = new Date();
+  let serializer = FactoryGuy.store.serializerFor('profile');
+  serializer.attrs = {
+    created_at: {
+      serialize: false
+    }
+  };
+  let profile = build('profile', 'with_created_at', {created_at: date});
+  equal(profile.get("created_at"), date.toJSON());
+});
+
 // the override for primaryKey is in the helpers/utilityMethods.js
 test("with model that has primaryKey defined in serializer ( FactoryGuy sets primaryKey value )", function() {
   let cat = build('cat');
