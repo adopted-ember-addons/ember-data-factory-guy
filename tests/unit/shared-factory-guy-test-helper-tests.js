@@ -559,7 +559,9 @@ SharedBehavior.mockQueryTests = function() {
   test("not using returns", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
+
       mockQuery('user', { name: 'Bob' });
+
       FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
         equal(users.get('length'), 0, "nothing returned");
         done();
