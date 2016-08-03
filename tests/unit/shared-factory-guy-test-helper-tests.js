@@ -825,6 +825,27 @@ SharedBehavior.mockQueryTests = function() {
     });
   });
 
+  test("mock query with withSomeParams captures the query even if it contains additional params", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+
+      let companies1 = makeList('company', 2);
+      let companies2 = makeList('company', 2);
+
+      let matchQueryHandler = mockQuery('company').withSomeParams({ name: 'Dude' }).returns({ models: companies1 });
+      let allQueryHandler = mockQuery('company').returns({ models: companies2 });
+ 
+      FactoryGuy.store.query('company', { name: 'Dude', page: 1 }).then(function(companies) {
+        equal(A(companies).mapBy('id') + '', A(companies1).mapBy('id') + '');
+
+        FactoryGuy.store.query('company', { name: 'Other', page: 1 }).then(function(companies) {
+          equal(A(companies).mapBy('id') + '', A(companies2).mapBy('id') + '');
+          done();
+        });
+      });
+    });
+  });
+
 };
 
 SharedBehavior.mockQueryMetaTests = function(App, adapter, serializerType) {

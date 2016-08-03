@@ -18,6 +18,12 @@ export function isEquivalent(a, b) {
   }
 }
 
+export function isPartOf(object, part) {
+  return Object.keys(part).every(function(key) {
+    return isEquivalent(object[key], part[key]);
+  });
+}
+
 function arrayIsEquivalent(arrayA, arrayB) {
   if (arrayA.length !== arrayB.length) {
     return false;

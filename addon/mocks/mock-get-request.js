@@ -2,7 +2,7 @@ import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
 import Model from 'ember-data/model';
 import MockRequest from './mock-request';
-import { isEquivalent } from '../utils/helper-functions';
+import { isEquivalent, isPartOf } from '../utils/helper-functions';
 const assign = Ember.assign || Ember.merge;
 
 class MockGetRequest extends MockRequest {
@@ -125,12 +125,21 @@ class MockGetRequest extends MockRequest {
     return this;
   }
 
-  paramsMatch(settings) {
-    if (Ember.$.isEmptyObject(this.queryParams)) {
-      return true;
-    }
-    return isEquivalent(this.queryParams, settings.data);
+  withSomeParams(someQueryParams) {
+    this.someQueryParams = someQueryParams;
+    return this;
   }
+
+  paramsMatch(settings) {
+    if (!Ember.$.isEmptyObject(this.someQueryParams)) {
+      return isPartOf(settings.data, this.someQueryParams);
+    }
+    if (!Ember.$.isEmptyObject(this.queryParams)) {
+      return isEquivalent(this.queryParams, settings.data);
+    }
+    return true;
+  }
+
 
   extraRequestMatches(settings) {
     return this.paramsMatch(settings);

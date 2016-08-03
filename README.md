@@ -1305,6 +1305,7 @@ Usage:
     - returns( models / json / ids )
    - Takes modifier methods for matching the query params
     - withParams( object )
+    - withSomeParams( object )
   - Sample acceptance tests using mockQuery: [user-search-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-search-test.js)
 
 Usage: 
@@ -1346,7 +1347,6 @@ Usage:
 ```
 
   - with returns( ids )
-
 ```js
   // Create list of models
   let users = buildList('user', 2, 'with_hats');
@@ -1358,6 +1358,33 @@ Usage:
     // models will be one model and it will be user1
   });
 
+```
+
+  - withParams() / withSomeParams()
+```js
+  // Create list of models
+  let users = buildList('user', 2, 'with_hats');
+  let user1 = users.get(0);
+  
+  mock = mockQuery('user').returns({ids: [user1.id]});
+  
+  mock.withParams({name:'Bob', age: 10})
+  
+  // When using 'withParams' modifier, params hash must match exactly
+  store.query('user', {name:'Bob', age: 10}}).then(function(models) {
+    // models will be one model and it will be user1
+  });
+
+  // The following call will not be caught by the mock
+  store.query('user', {name:'Bob', age: 10, hair: 'brown'}})
+
+  // 'withSomeParams' is designed to catch requests by partial match
+  // It has precedence over strict params matching once applied
+  mock.withSomeParams({name:'Bob'})
+  
+  // Now both requests will be intercepted
+  store.query('user', {name:'Bob', age: 10}})
+  store.query('user', {name:'Bob', age: 10, hair: 'brown'}})
 ```
 
 ##### mockQueryRecord

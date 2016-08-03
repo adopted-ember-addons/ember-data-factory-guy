@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { isEquivalent } from 'ember-data-factory-guy/utils/helper-functions';
+import { isEquivalent, isPartOf } from 'ember-data-factory-guy/utils/helper-functions';
 
 module('isEquivalent | Helper Function');
 
@@ -100,4 +100,18 @@ test('#isEquivalent with deeply nested objects', function(assert) {
   }), 'returns true if object key-value pairs are equivalent' );
 
   assert.ok( !isEquivalent(nestedZoey, nestedTomster), 'returns false if object key-value pairs are not equivalent' );
+});
+
+test('#isPartOf', function(assert) {
+  assert.ok( isPartOf(tomster, { name: 'Tomster' } ), 
+    'returns true if the first object contains all key-value pairs from the second object' );
+
+  assert.ok( isPartOf(tomster, tomster), 
+    'returns true if the first object is the same as the second object' );
+
+  assert.ok( isPartOf(tomster, {}), 
+    'returns true if the second object is empty' );
+
+  assert.notOk( isPartOf(tomster, { name: 'Tomster', number: 1 } ), 
+    'returns false if the first object does not contains key-value pairs from the second object' );
 });
