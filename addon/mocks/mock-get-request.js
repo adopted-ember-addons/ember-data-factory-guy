@@ -130,19 +130,12 @@ class MockGetRequest extends MockRequest {
     return this;
   }
 
-  // paramsMatch(settings) {
-  //   if (Ember.$.isEmptyObject(this.queryParams)) {
-  //     return true;
-  //   }
-  //   return isEquivalent(this.queryParams, settings.data);
-  // }
-
   paramsMatch(settings) {
-    if (!Ember.$.isEmptyObject(this.queryParams)) {
-      return isEquivalent(this.queryParams, settings.data);
-    }
     if (!Ember.$.isEmptyObject(this.someQueryParams)) {
       return isPartOf(settings.data, this.someQueryParams);
+    }
+    if (!Ember.$.isEmptyObject(this.queryParams)) {
+      return isEquivalent(this.queryParams, settings.data);
     }
     return true;
   }
