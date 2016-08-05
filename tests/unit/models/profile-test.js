@@ -1,4 +1,6 @@
-import { manualSetup, make, makeList } from 'ember-data-factory-guy';
+import {
+  manualSetup, mockTeardown, make, makeList
+} from 'ember-data-factory-guy';
 import { test, moduleForModel } from 'ember-qunit';
 
 moduleForModel('profile', 'Unit | Model | profile', {
@@ -6,6 +8,9 @@ moduleForModel('profile', 'Unit | Model | profile', {
 
   beforeEach: function() {
     manualSetup(this.container);
+  },
+  afterEach: function () {
+    mockTeardown();
   }
 });
 
