@@ -1111,6 +1111,13 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
     });
   ```
 
+- Use method `disable()` to temporarily disable the mock. You can re-enable
+the disabled mock using `enable()`.
+
+- Use method `destroy()` to completely remove the mockjax handler for the mock.
+The `isDestroyed` property is set to `true` when the mock is destroyed.
+
+
 ##### setup and teardown
   - Use ```mockSetup()``` in test setup/beforeEach
    - set logging options here:

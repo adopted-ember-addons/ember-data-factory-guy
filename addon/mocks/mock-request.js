@@ -11,6 +11,8 @@ export default class {
     this.responseHeaders = {};
     this.responseJson = null;
     this.errorResponse = null;
+    this.isDisabled = false;
+    this.isDestroyed = false;
     this.handler = this.setupHandler();
     this.timesCalled = 0;
   }
@@ -96,6 +98,9 @@ export default class {
   //////////////  common handler for all requests ////////////
   setupHandler() {
     let handler = function(settings) {
+      if (this.isDisabled) {
+        return false;
+      }
       if (!this.basicRequestMatches(settings)) {
         return false;
       }
@@ -110,8 +115,21 @@ export default class {
       return response;
     }.bind(this);
 
-    Ember.$.mockjax(handler);
+    this.mockId = Ember.$.mockjax(handler);
 
     return handler;
+  }
+
+  disable() {
+    this.isDisabled = true;
+  }
+
+  enable() {
+    this.isDisabled = false;
+  }
+
+  destroy() {
+    Ember.$.mockjax.clear(this.mockId);
+    this.isDestroyed = true;
   }
 }
