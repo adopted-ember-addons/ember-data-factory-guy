@@ -185,6 +185,40 @@ test("succeeds even if the given URL has query parameters that don't match", fun
 });
 
 
+module('mockRequest #disable, #enable, and #destroy', inlineSetup(App, serializerType));
+
+test("can enable, disable, and destroy mock", function(assert) {
+  Ember.run(()=> {
+    const done = assert.async();
+    let json1 = build('user');
+    let json2 = build('user');
+    let mock1 = mockQueryRecord('user', { id: 1 }).returns({ json: json1 });
+    let mock2 = mockQueryRecord('user', {}).returns({ json: json2 });
+
+    notOk(mock1.isDestroyed, "isDestroyed is false initially")
+
+    FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
+      equal(data.get('id'), json1.get('id'), "the first mock works initially");
+      mock1.disable();
+      FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
+        equal(data.get('id'), json2.get('id'), "the first mock doesn't work once it's disabled");
+        mock1.enable();
+        FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
+          equal(data.get('id'), json1.get('id'), "the first mock works again after enabling");
+          mock1.destroy();
+          ok(mock1.isDestroyed, "isDestroyed is set to true once the mock is destroyed")
+          FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
+            equal(data.get('id'), json2.get('id'), "the destroyed first mock doesn't work");
+            done();
+          });
+        });
+      });
+    });
+  });
+});
+
+
+
 module('mockFind', inlineSetup(App, serializerType));
 
 test("has access to handler being used by mockjax", function() {
