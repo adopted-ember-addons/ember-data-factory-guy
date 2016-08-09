@@ -85,7 +85,6 @@ export default class {
   basicRequestMatches(settings) {
     const uri = new URI(settings.url);
     const mockUri = new URI(this.getUrl());
-//    console.log(settings.url, this.getUrl());
     return uri.path() === mockUri.path() && settings.type === this.getType();
   }
 
@@ -106,7 +105,6 @@ export default class {
       this.timesCalled++;
       let response = this.getResponse();
       this.logInfo();
-//      console.log('HERE SS', this.timesCalled, response);
       return response;
     }.bind(this);
 
