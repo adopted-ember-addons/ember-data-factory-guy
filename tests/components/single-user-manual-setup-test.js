@@ -1,4 +1,4 @@
-import { make, manualSetup, mockTeardown }  from 'ember-data-factory-guy';
+import { make, manualSetup }  from 'ember-data-factory-guy';
 import hbs from 'htmlbars-inline-precompile';
 import { test, moduleForComponent } from 'ember-qunit';
 
@@ -7,9 +7,6 @@ moduleForComponent('single-user', 'Integration | Component | single-user (manual
 
   beforeEach: function () {
     manualSetup(this.container);
-  },
-  afterEach: function () {
-    mockTeardown();
   }
 });
 
