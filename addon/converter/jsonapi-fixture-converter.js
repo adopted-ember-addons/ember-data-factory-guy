@@ -12,7 +12,7 @@ class JSONAPIFixtureConverter extends Converter {
 
   constructor(store, options = { transformKeys: true, serializeMode: false }) {
     super(store, options);
-    this.typeTransformFn = this.serializeMode ? this.typeTransformViaSerializer : this.noTransformFn;
+    this.typeTransformFn = this.serializeMode ? this.typeTransformViaSerializer : dasherize;
     this.defaultKeyTransformFn = dasherize;
     this.polymorphicTypeTransformFn = dasherize;
     this.included = [];
@@ -58,13 +58,9 @@ class JSONAPIFixtureConverter extends Converter {
    @param {Object or DS.Model instance} record
    @param {Object} relationship
    */
-  normalizeAssociation(record, relationship) {
+  normalizeAssociation(record) {
     if (Ember.typeOf(record) === 'object') {
-      if (relationship.options.polymorphic) {
-        return { type: this.typeTransformFn(dasherize(record.type)), id: record.id };
-      } else {
-        return { type: this.typeTransformFn(record.type), id: record.id };
-      }
+      return { type: this.typeTransformFn(record.type), id: record.id };
     } else {
       return { type: this.typeTransformFn(record.constructor.modelName), id: record.id };
     }
@@ -86,7 +82,7 @@ class JSONAPIFixtureConverter extends Converter {
    */
   convertSingle(modelName, fixture) {
     let data = {
-      type: this.typeTransformFn(modelName),
+      type: this.typeTransformFn(fixture.type || modelName),
       attributes: this.extractAttributes(modelName, fixture),
     };
 

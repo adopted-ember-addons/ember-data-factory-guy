@@ -95,6 +95,15 @@ test("returns a relationship with an index and key", function() {
   deepEqual(user.get(1).company, { id: 2, type: 'company' });
 });
 
+module(title(adapter, 'FactoryGuy#buildList custom'), inlineSetup(App, serializerType));
+
+test("mock returns inherited models with proper types", function(assert) {
+  let list = buildList('hat', 'big', 'small');
+  let data = list.data;
+  equal(data[0].type, 'small-hat');
+  equal(data[1].type, 'big-hat');
+});
+
 module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, serializerType));
 
 test("with traits defining model attributes", function() {
