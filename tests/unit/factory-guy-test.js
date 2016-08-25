@@ -240,6 +240,16 @@ test("default values and sequences are inherited", function() {
 
 });
 
+test("config is not destroyed", function() {
+  var config = {
+    default: {
+      color: 'yellow'
+    }
+  };
+
+  FactoryGuy.define('apple', config);
+  deepEqual(config, { default: { color: 'yellow' } });
+});
 
 test("traits are inherited", function() {
   FactoryGuy.define('person', {

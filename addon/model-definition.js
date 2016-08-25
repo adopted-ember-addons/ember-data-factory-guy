@@ -18,7 +18,7 @@ class ModelDefinition {
     this.isFragment = this.isModelAFragment();
     this.modelId = 1;
     this.originalConfig = $.extend(true, {}, config);
-    this.parseConfig(config);
+    this.parseConfig(Ember.copy(config));
   }
 
   /**
