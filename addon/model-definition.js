@@ -125,6 +125,10 @@ class ModelDefinition {
     // merge default, modelAttributes, traits and opts to get the rough fixture
     let fixture = $.extend({}, this.defaultAttributes, modelAttributes, traitsObj, opts);
 
+    if (this.notPolymorphic !== undefined) {
+      fixture._notPolymorphic = true;
+    }
+
     // set the id, unless it was already set in opts
     if (!fixture.id) {
       // Setting a flag to indicate that this is a generated an id,
@@ -283,6 +287,13 @@ class ModelDefinition {
     delete config.afterMake;
   }
 
+  parsePolymorphicSetting(config) {
+    if (config.polymorphic !== undefined && config.polymorphic === false) {
+      this.notPolymorphic = true;
+      delete config.polymorphic;
+    }
+  }
+
   parseSequences(config) {
     this.sequences = config.sequences || {};
     delete config.sequences;
@@ -301,6 +312,7 @@ class ModelDefinition {
     if (config.extends) {
       this.mergeConfig(config);
     }
+    this.parsePolymorphicSetting(config);
     this.parseSequences(config);
     this.parseTraits(config);
     this.parseDefault(config);

@@ -251,6 +251,13 @@ test("config is not destroyed", function() {
   deepEqual(config, { default: { color: 'yellow' } });
 });
 
+test("using polymorphic:false to use a type attribute name on non polymorphic model", function() {
+  let cat = build('cat', {type: 'fluffy'});
+
+  equal(cat.data.type, 'cat');
+  equal(cat.get('type'), 'fluffy');
+});
+
 test("traits are inherited", function() {
   FactoryGuy.define('person', {
     traits: {

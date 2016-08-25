@@ -81,8 +81,13 @@ class JSONAPIFixtureConverter extends Converter {
    @returns {{type: *, id: *, attributes}}
    */
   convertSingle(modelName, fixture) {
+    let polymorphicType = fixture.type;
+    if (polymorphicType && fixture._notPolymorphic) {
+      polymorphicType = modelName;
+      delete fixture._notPolymorphic;
+    }
     let data = {
-      type: this.typeTransformFn(fixture.type || modelName),
+      type: this.typeTransformFn(polymorphicType || modelName),
       attributes: this.extractAttributes(modelName, fixture),
     };
 
