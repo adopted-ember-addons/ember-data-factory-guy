@@ -51,18 +51,6 @@ export default class MockUpdateRequest extends AttributeMatcher(MockRequest) {
   }
 
   /**
-   Not sure why the update errors don't need conversion ?? puzzled
-  
-   @param status
-   @param response
-   @param convertErrors
-   @returns {*}
-   */
-  fails({ status= 500, response= null, convertErrors= false }={}) {
-    return super.fails({ status, response, convertErrors });
-  }
-
-  /**
    Adapters freak out if update payload is non empty response with no id.
    So, if there is no id specified for this update => return null
 
