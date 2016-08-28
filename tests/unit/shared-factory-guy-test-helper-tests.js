@@ -1736,7 +1736,8 @@ SharedBehavior.mockUpdateWithErrorMessages = function(App, adapter, serializerTy
 
       mockUpdate(profile).fails({
         status: 400,
-        response: { errors: { description: 'invalid data' } }
+        response: { errors: { description: ['invalid data'] } },
+        convertErrors: false
       });
 
       profile.set('description', 'new desc');

@@ -32,8 +32,8 @@ export default class {
     assign(this.responseHeaders, headers);
   }
 
-  succeeds({ status = 200 }={}) {
-    this.status = status;
+  succeeds(opts = {}) {
+    this.status = opts.status || 200;
     this.errorResponse = null;
     return this;
   }
@@ -42,7 +42,10 @@ export default class {
     return !!status.toString().match(/^([345]\d{2})/);
   }
 
-  fails({ status = 500, response = null, convertErrors = true }={}) {
+  fails(opts = {}) {
+    var convertErrors = opts.hasOwnProperty('convertErrors') ? opts.convertErrors : true;
+    var status = opts.status || 500;
+    var response = opts.response || null;
     Ember.assert(`[ember-data-factory-guy] 'fails' method status code must be 3XX, 4XX or 5XX,
         you are using: ${status}`, this.isErrorStatus(status));
 
