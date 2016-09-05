@@ -34,7 +34,7 @@ Contents:
   - [Traits](https://github.com/danielspaniel/ember-data-factory-guy#traits)
   - [Associations](https://github.com/danielspaniel/ember-data-factory-guy#associations)
   - [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
-  - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
+  - [Callbacks / Transient Attributes](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
   - [Using in Development](https://github.com/danielspaniel/ember-data-factory-guy#using-in-development)
   - [Ember Data Model Fragments](https://github.com/danielspaniel/ember-data-factory-guy#ember-data-model-fragments)
   - [Creating Factories in Addons](https://github.com/danielspaniel/ember-data-factory-guy#creating-factories-in-addons)
@@ -105,12 +105,14 @@ In the following examples, assume the models look like this:
  - Create factory files in the tests/factories directory.
  - Can use generator to create the outline of a factory file:
   ```ember g factory user``` This will create a file named user.js in the tests/factories directory.
-
+ 
 
 ##### Standard models
 
 - [Sample full blown factory: (user.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js)
-
+- If you are using an attribute named 'type' and this is not a polymorphic model, use the option 
+  ```polymorphic: false``` in your definition
+  
 ```javascript
 
   // file tests/factories/user.js
@@ -135,6 +137,7 @@ In the following examples, assume the models look like this:
 ##### Polymorphic models
 
  - Define each polymorphic model in it's own typed definition
+ - The attribute named 'type' is used to hold the model name 
  - May want to extend parent factory here
    - See [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
 
