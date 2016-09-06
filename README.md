@@ -115,24 +115,37 @@ In the following examples, assume the models look like this:
   
 ```javascript
 
-  // file tests/factories/user.js
-  import FactoryGuy from 'ember-data-factory-guy';
+// file tests/factories/user.js
+import FactoryGuy from 'ember-data-factory-guy';
 
-  FactoryGuy.define('user', {
-    // Put default 'user' attributes in the default section
-    default: {
-      style: 'normal',
-      name: 'Dude'
-    },
-    // Create a named 'user' with custom attributes
-    admin: {
-      style: 'super',
-      name: 'Admin'
-    }
-  });
+FactoryGuy.define('user', {
+  // Put default 'user' attributes in the default section
+  default: {
+    style: 'normal',
+    name: 'Dude'
+  },
+  // Create a named 'user' with custom attributes
+  admin: {
+    style: 'super',
+    name: 'Admin'
+  }
+});
 
 ```
 
+- when using attribute named "type" on non polymorphic model
+```js
+// file: tests/factories/cat.js
+FactoryGuy.define('cat', {
+  polymorphic: false, // manually flag this model as NOT polymorphic
+  default: {
+    // usually, an attribute named 'type' is for polymorphic models, but the defenition
+    // is set as NOT polymorphic, which allows this type to work as attibute
+    type: 'Cute',
+    name: (f)=> `Cat ${f.id}`
+  }
+});
+```
 
 ##### Polymorphic models
 
