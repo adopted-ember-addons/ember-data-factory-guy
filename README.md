@@ -112,7 +112,6 @@ In the following examples, assume the models look like this:
 - [Sample full blown factory: (user.js)](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js)
 
 - Brief sample of a factory definition
-
 ```javascript
 
 // file tests/factories/user.js
@@ -135,7 +134,6 @@ FactoryGuy.define('user', {
 
 - If you are using an attribute named 'type' and this is not a polymorphic model, use the option 
   ```polymorphic: false``` in your definition
-
 ```js
 // file: tests/factories/cat.js
 FactoryGuy.define('cat', {
