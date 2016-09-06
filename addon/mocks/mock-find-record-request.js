@@ -9,6 +9,6 @@ export default class MockFindRecordRequest extends MockGetRequest {
   }
 
   getUrl() {
-    return FactoryGuy.buildURL(this.modelName, this.get('id'));
+    return FactoryGuy.buildURL(this.modelName, this.get('id'), 'findRecord');
   }
 }

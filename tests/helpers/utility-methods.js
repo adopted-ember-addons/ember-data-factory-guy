@@ -15,6 +15,13 @@ const adapterOptions = {
       const url = this._super(modelName, id, snapshot, requestType, query);
       const delimiter = (url.indexOf('?') !== -1) ? '&' : '?';
       return `${url}${delimiter}company_id=12345`;
+    },
+    urlForFindRecord(id, modelName, snapshot) {
+      if (id === 'self') {
+        return '/user';
+      } else {
+        return this._super(id, modelName, snapshot);
+      }
     }
   }
 };
