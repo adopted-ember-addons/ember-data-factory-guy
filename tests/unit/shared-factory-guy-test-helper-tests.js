@@ -1887,6 +1887,19 @@ SharedBehavior.mockDeleteTests = function() {
     });
   });
 
+  test("with model and query param", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let employee = make('employee');
+      mockDelete(employee);
+
+      employee.destroyRecord().then(function() {
+        equal(FactoryGuy.store.peekAll('employee').get('content.length'), 0);
+        done();
+      });
+    });
+  });
+
   test("with modelType that fails", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
