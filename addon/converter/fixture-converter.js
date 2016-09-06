@@ -15,11 +15,7 @@ import Ember from 'ember';
  If there are associations in the base fixture, they will be added to the
  new fixture as 'side loaded' elements, even if they are another json payload
  built whith the build/buildList methods.
-
- TODO: The weakness here is in polymorphic types, since I am using that type
- attribute to determine the correct model name. There is a work around,
- but waiting to see if anyone complains.
-
+ 
  @param {DS.Store} store
  @param {Object} options
  transformKeys tranform keys and values in fixture if true

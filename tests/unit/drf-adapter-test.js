@@ -10,11 +10,11 @@ let App = null;
 let adapter = 'DRFAdapeter';
 let serializerType = '-drf';
 
-SharedFactoryGuyTestHelperBehavior.mockFindEmbeddedTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindRecordEmbeddedTests(App, adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(App, adapter, serializerType);
 
 module(title(adapter, '#mockFind'), inlineSetup(App, serializerType));
-SharedFactoryGuyTestHelperBehavior.mockFindCommonTests();
+SharedFactoryGuyTestHelperBehavior.mockFindRecordCommonTests();
 
 module(title(adapter, '#mockReload'), inlineSetup(App, serializerType));
 SharedFactoryGuyTestHelperBehavior.mockReloadTests();

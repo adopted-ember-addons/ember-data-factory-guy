@@ -5,7 +5,7 @@ import MockUpdateRequest from './mock-update-request';
 import MockCreateRequest from './mock-create-request';
 import MockQueryRequest from './mock-query-request';
 import MockQueryRecordRequest from './mock-query-record-request';
-import MockFindRequest from './mock-find-request';
+import MockFindRecordRequest from './mock-find-record-request';
 import MockReloadRequest from './mock-reload-request';
 import MockFindAllRequest from './mock-find-all-request';
 import MockDeleteRequest from './mock-delete-request';
@@ -55,7 +55,7 @@ export function mockTeardown() {
  @param {String} trait  optional traits (one or more)
  @param {Object} opts  optional fixture options
  */
-export function mockFind(...args) {
+export function mockFindRecord(...args) {
   let modelName;
 
   Ember.assert(`[ember-data-factory-guy] mockFind requires at least a model
@@ -64,17 +64,18 @@ export function mockFind(...args) {
   if (args[0] instanceof Model) {
     let model = args[0];
     modelName = model.constructor.modelName;
-    return new MockFindRequest(modelName).returns({ model });
+    return new MockFindRecordRequest(modelName).returns({ model });
   }
 
   modelName = args[0];
   let json = FactoryGuy.build.apply(FactoryGuy, arguments);
-  return new MockFindRequest(modelName).returns({ json });
+  return new MockFindRecordRequest(modelName).returns({ json });
 }
 
-// eventually deprecate mockFind
-export function mockFindRecord() {
-  return mockFind.apply(this, arguments);
+export function mockFind() {
+  Ember.deprecate("`mockFind` - has been deprecated. Use `mockFindRecord` method instead`",
+    false, { id: 'ember-data-factory-guy.mock-find', until: '2.8.0' });
+  return mockFindRecord.apply(this, arguments);
 }
 
 /**

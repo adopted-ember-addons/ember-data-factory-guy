@@ -11,7 +11,7 @@ let serializerType = '-active-model';
 
 SharedAdapterBehavior.all(adapter, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockFindSideloadingTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindRecordSideloadingTests(App, adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(App, adapter, serializerType);
 
 SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(App, adapter, serializerType);

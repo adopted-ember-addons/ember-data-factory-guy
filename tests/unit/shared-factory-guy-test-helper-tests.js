@@ -4,7 +4,7 @@ import {isEquivalent} from 'ember-data-factory-guy/utils/helper-functions';
 
 import {
   mockSetup, mockTeardown,
-  mockFind, mockFindAll, mockReload, mockQuery,
+  mockFindRecord, mockFindAll, mockReload, mockQuery,
   mockQueryRecord, mockCreate, mockUpdate, mockDelete
 } from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
@@ -18,13 +18,13 @@ const A = Ember.A;
 let SharedBehavior = {};
 
 
-//////// mockFind common /////////
-SharedBehavior.mockFindCommonTests = function() {
+//////// mockFindRecord common /////////
+SharedBehavior.mockFindRecordCommonTests = function() {
 
   test("the basic returns id", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
-      let profile = mockFind('profile');
+      let profile = mockFindRecord('profile');
       let profileId = profile.get('id');
 
       FactoryGuy.store.find('profile', profileId).then(function(profile) {
@@ -39,7 +39,7 @@ SharedBehavior.mockFindCommonTests = function() {
   test("with model that has attribute key defined in serializer attrs", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
-      let mock = mockFind('cat');
+      let mock = mockFindRecord('cat');
 
       equal(mock.get('catName'), 'Cat 1');
       equal(mock.get('catFriend'), 'Friend 1');
@@ -55,7 +55,7 @@ SharedBehavior.mockFindCommonTests = function() {
   test("with model that has primaryKey defined in serializer attrs and is attribute of model", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
-      let mock = mockFind('dog');
+      let mock = mockFindRecord('dog');
 
       FactoryGuy.store.find('dog', mock.get('id')).then(function(dog) {
         equal(dog.get('id'), 'Dog1');
@@ -68,7 +68,7 @@ SharedBehavior.mockFindCommonTests = function() {
   test("with fixture options", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
-      let profile = mockFind('profile', { description: 'dude' });
+      let profile = mockFindRecord('profile', { description: 'dude' });
       let profileId = profile.get('id');
 
       FactoryGuy.store.find('profile', profileId).then(function(profile) {
@@ -82,7 +82,7 @@ SharedBehavior.mockFindCommonTests = function() {
     Ember.run(()=> {
       let done = assert.async();
 
-      let profile = mockFind('profile');
+      let profile = mockFindRecord('profile');
       let profileId = profile.get('id');
 
       FactoryGuy.store.find('profile', profileId).then(function(profile) {
@@ -97,7 +97,7 @@ SharedBehavior.mockFindCommonTests = function() {
     Ember.run(()=> {
       let done = assert.async();
 
-      let profile = mockFind('profile', 'goofy_description');
+      let profile = mockFindRecord('profile', 'goofy_description');
       let profileId = profile.get('id');
 
       FactoryGuy.store.find('profile', profileId).then(function(profile) {
@@ -111,7 +111,7 @@ SharedBehavior.mockFindCommonTests = function() {
     Ember.run(()=> {
       let done = assert.async();
 
-      let profile = mockFind('profile', 'goofy_description', { description: 'dude' });
+      let profile = mockFindRecord('profile', 'goofy_description', { description: 'dude' });
       let profileId = profile.get('id');
 
       FactoryGuy.store.find('profile', profileId).then(function(profile) {
@@ -124,7 +124,7 @@ SharedBehavior.mockFindCommonTests = function() {
   test("failure with fails method when passing modelName as parameter", function(assert) {
     let done = assert.async();
     Ember.run(()=> {
-      let mock = mockFind('profile').fails();
+      let mock = mockFindRecord('profile').fails();
       FactoryGuy.store.findRecord('profile', mock.get('id')).catch(()=> {
         equal(mock.timesCalled, 1);
         done();
@@ -136,7 +136,7 @@ SharedBehavior.mockFindCommonTests = function() {
     let mock;
     Ember.run(()=> {
       let model = make('profile');
-      mock = mockFind('profile').returns({ model }).fails();
+      mock = mockFindRecord('profile').returns({ model }).fails();
       FactoryGuy.store.findRecord('profile', model.id);
     });
     equal(mock.timesCalled, 1);
@@ -147,7 +147,7 @@ SharedBehavior.mockFindCommonTests = function() {
     let mock;
     Ember.run(()=> {
       let profile = make('profile');
-      mock = mockFind(profile).fails();
+      mock = mockFindRecord(profile).fails();
       FactoryGuy.store.findRecord('profile', profile.id);
     });
     equal(mock.timesCalled, 1);
@@ -156,14 +156,14 @@ SharedBehavior.mockFindCommonTests = function() {
 
 };
 
-SharedBehavior.mockFindSideloadingTests = function(App, adapter, serializerType) {
+SharedBehavior.mockFindRecordSideloadingTests = function(App, adapter, serializerType) {
 
-  module(title(adapter, '#mockFind | sideloading'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockFindRecord | sideloading'), inlineSetup(App, serializerType));
 
   test("belongsTo association", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
-      let profile = mockFind('profile', 'with_company', 'with_bat_man');
+      let profile = mockFindRecord('profile', 'with_company', 'with_bat_man');
       let profileId = profile.get('id');
 
       FactoryGuy.store.find('profile', profileId).then(function(profile) {
@@ -178,7 +178,7 @@ SharedBehavior.mockFindSideloadingTests = function(App, adapter, serializerType)
   test("hasMany association", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
-      let user = mockFind('user', 'with_hats');
+      let user = mockFindRecord('user', 'with_hats');
       let userId = user.get('id');
 
       FactoryGuy.store.find('user', userId).then(function(user) {
@@ -195,7 +195,7 @@ SharedBehavior.mockFindSideloadingTests = function(App, adapter, serializerType)
 
       let json = build('profile', 'with_company', 'with_bat_man');
 
-      mockFind('profile').returns({ json });
+      mockFindRecord('profile').returns({ json });
       let profileId = json.get('id');
 
       FactoryGuy.store.find('profile', profileId).then(function(profile) {
@@ -214,7 +214,7 @@ SharedBehavior.mockFindSideloadingTests = function(App, adapter, serializerType)
       let hat2 = build('big-hat');
       let json = build('user', { hats: [hat1, hat2] });
 
-      mockFind('user').returns({ json });
+      mockFindRecord('user').returns({ json });
 
       FactoryGuy.store.find('user', json.get('id')).then(function(user) {
         ok(user.get('hats.firstObject.id') === hat1.get('id') + '');
@@ -229,7 +229,7 @@ SharedBehavior.mockFindSideloadingTests = function(App, adapter, serializerType)
       let done = assert.async();
 
       let model = make('profile', 'with_company', 'with_bat_man');
-      let profile = mockFind('profile').returns({ model });
+      let profile = mockFindRecord('profile').returns({ model });
       let profileId = profile.get('id');
 
       FactoryGuy.store.find('profile', profileId).then(function(profile) {
@@ -242,14 +242,14 @@ SharedBehavior.mockFindSideloadingTests = function(App, adapter, serializerType)
   });
 };
 
-SharedBehavior.mockFindEmbeddedTests = function(App, adapter, serializerType) {
+SharedBehavior.mockFindRecordEmbeddedTests = function(App, adapter, serializerType) {
 
-  module(title(adapter, '#mockFind | embedded'), inlineSetup(App, serializerType));
+  module(title(adapter, '#mockFindRecord | embedded'), inlineSetup(App, serializerType));
 
   test("belongsTo", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
-      let mock = mockFind('comic-book', 'marvel');
+      let mock = mockFindRecord('comic-book', 'marvel');
 
       FactoryGuy.store.find('comic-book', mock.get('id')).then(function(comic) {
         ok(comic.get('name') === 'Comic Times #1');
@@ -262,7 +262,7 @@ SharedBehavior.mockFindEmbeddedTests = function(App, adapter, serializerType) {
   test("hasMany", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
-      let mock = mockFind('comic-book', 'with_bad_guys');
+      let mock = mockFindRecord('comic-book', 'with_bad_guys');
 
       FactoryGuy.store.find('comic-book', mock.get('id')).then(function(comic) {
         ok(comic.get('name') === 'Comic Times #1');
@@ -1382,7 +1382,7 @@ SharedBehavior.mockUpdateTests = function() {
 
       profile.set('description', 'new desc');
       profile.save().then(function(profile) {
-        ok(profile.get('description') === 'new desc');
+        equal(profile.get('description'), 'new desc');
         done();
       });
     });

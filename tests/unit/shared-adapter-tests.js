@@ -16,7 +16,7 @@ SharedAdapterBehavior.all = function (adapter, serializerType) {
 
 
   module(title(adapter, '#mockFind'), inlineSetup(App, serializerType));
-  SharedFactoryGuyTestHelperBehavior.mockFindCommonTests();
+  SharedFactoryGuyTestHelperBehavior.mockFindRecordCommonTests();
 
 
   module(title(adapter, '#mockReload'), inlineSetup(App, serializerType));

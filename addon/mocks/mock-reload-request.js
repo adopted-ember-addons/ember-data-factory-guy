@@ -1,6 +1,6 @@
-import MockFindRequest from './mock-find-request';
+import MockFindRecordRequest from './mock-find-record-request';
 
-export default class MockReloadRequest extends MockFindRequest {
+export default class MockReloadRequest extends MockFindRecordRequest {
 
   constructor(modelName) {
     super(modelName);

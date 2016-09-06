@@ -1,7 +1,7 @@
 import FactoryGuy from '../factory-guy';
-import MockFindRequest from './mock-find-request';
+import MockFindRecordRequest from './mock-find-record-request';
 
-export default class MockFindAllRequest extends MockFindRequest {
+export default class MockFindAllRequest extends MockFindRecordRequest {
 
   constructor(modelName) {
     super(modelName);

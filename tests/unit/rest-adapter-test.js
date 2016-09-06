@@ -11,10 +11,10 @@ let serializerType = '-rest';
 
 SharedAdapterBehavior.all(adapter, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockFindSideloadingTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindRecordSideloadingTests(App, adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(App, adapter, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockFindEmbeddedTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindRecordEmbeddedTests(App, adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(App, adapter, serializerType);
 
 SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(App, adapter, serializerType);
