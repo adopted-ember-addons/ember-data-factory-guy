@@ -2,6 +2,7 @@ import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
 import MockRequest from './mock-request';
 import AttributeMatcher from './attribute-matcher';
+import {escapeRegExp} from '../utils/helper-functions';
 
 export default class MockUpdateRequest extends AttributeMatcher(MockRequest) {
 
@@ -20,18 +21,18 @@ export default class MockUpdateRequest extends AttributeMatcher(MockRequest) {
     return FactoryGuy.updateHTTPMethod();
   }
 
-  basicRequestMatches(settings) {
+  urlMatch(settings) {
     /**
      If no id is specified, match any url with an id,
      with or without a trailing slash after the id.
      Ex: /profiles/:id and /profiles/:id/
      */
-    let url = this.getUrl();
+    let url = escapeRegExp(this.getUrl());
     if (!this.id) {
       url = new RegExp(url + '\/*\\d+\/*');
     }
 
-    return settings.url.match(url) && settings.type === this.getType();
+    return settings.url.match(url);
   }
 
   /**

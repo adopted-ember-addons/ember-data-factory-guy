@@ -84,13 +84,21 @@ export default class {
     return true;
   }
 
+  typeMatch(settings) {
+    return settings.type === this.getType();
+  }
+  
+  urlMatch(settings) {
+    const uri = new URI(settings.url);
+    const mockUri = new URI(this.getUrl());
+    return uri.path() === mockUri.path();
+  }
+  
   // Only check the uri path, not the host name and or query params.
   // The query params will be checked for mockQuery, mockQueryRecord,
   // but for the other mocks ignore them
   basicRequestMatches(settings) {
-    const uri = new URI(settings.url);
-    const mockUri = new URI(this.getUrl());
-    return uri.path() === mockUri.path() && settings.type === this.getType();
+    return this.typeMatch(settings) && this.urlMatch(settings);
   }
 
   extraRequestMatches(/*settings*/) {

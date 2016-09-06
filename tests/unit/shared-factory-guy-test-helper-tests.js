@@ -1397,7 +1397,21 @@ SharedBehavior.mockUpdateTests = function() {
 
       profile.set('description', 'new desc');
       profile.save().then(function(profile) {
-        ok(profile.get('description') === 'new desc');
+        equal(profile.get('description'), 'new desc');
+        done();
+      });
+    });
+  });
+
+  test("with model and query param", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let employee = make('employee');
+      mockUpdate(employee);
+
+      employee.set('gender', 'new gender');
+      employee.save().then(function(model) {
+        equal(model.get('gender'), 'new gender');
         done();
       });
     });

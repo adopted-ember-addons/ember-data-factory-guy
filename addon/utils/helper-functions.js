@@ -67,3 +67,7 @@ export function requireFiles(filePattern) {
     return !excludeRegex.test(moduleName) && filePattern.test(moduleName);
   }).map((moduleName)=> require(moduleName, null, null, true));
 }
+
+export function escapeRegExp(str) {
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}

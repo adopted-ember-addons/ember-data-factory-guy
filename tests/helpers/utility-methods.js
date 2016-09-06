@@ -7,9 +7,20 @@ import DRFSerializer from 'ember-django-adapter/serializers/drf';
 import ActiveModelAdapter from 'active-model-adapter';
 import {ActiveModelSerializer} from 'active-model-adapter';
 
+// custom adapter options for the various models 
+// which are applied to the currently testing model's adapter ( JSONAPI, REST, ActiveModel, etc ) 
+const adapterOptions = {
+  employee: {
+    buildURL(modelName, id, snapshot, requestType, query)  {
+      const url = this._super(modelName, id, snapshot, requestType, query);
+      const delimiter = (url.indexOf('?') !== -1) ? '&' : '?';
+      return `${url}${delimiter}company_id=12345`;
+    }
+  }
+};
 
 // custom serializer options for the various models 
-// which are applied to any serialier ( JSONAPI, REST, ActiveModel, etc ) 
+// which are applied to the currently testing  model's serialier ( JSONAPI, REST, ActiveModel, etc ) 
 const serializerOptions = {
   'entry-type': {
     attrs: {
@@ -32,7 +43,7 @@ const serializerOptions = {
   cat: {
     primaryKey: 'catId',
     attrs: {
-      name: {key: 'catName'},
+      name: { key: 'catName' },
       friend: 'catFriend'
     }
   },
@@ -44,6 +55,18 @@ const serializerOptions = {
     }
   ]
 };
+
+function setupCustomAdapter(container, adapterType, options) {
+  let store = container.lookup('service:store');
+  let modelAdapter = container.lookup('adapter:' + adapterType);
+  if (Ember.typeOf(options) === 'array') {
+    modelAdapter.reopen.apply(modelAdapter, options);
+  } else {
+    modelAdapter.reopen(options);
+  }
+  modelAdapter.store = store;
+  return modelAdapter;
+}
 
 function setupCustomSerializer(container, serializerType, options) {
   let store = container.lookup('service:store');
@@ -79,7 +102,11 @@ function theUsualSetup(serializerType) {
     serializerType = serializerType === '-json' ? '-default' : serializerType;
     let serializer = container.lookup('serializer:' + serializerType);
 
-    store.adapterFor = function() {
+    store.adapterFor = function(modelName) {
+      if (modelName.match(/(employee)/)) {
+        let options = adapterOptions[modelName];
+        return setupCustomAdapter(container, adapterType, options);
+      }
       return adapter;
     };
 
