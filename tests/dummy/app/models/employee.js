@@ -4,10 +4,10 @@ import {hasMany, belongsTo} from 'ember-data/relationships';
 import {array, fragment, fragmentArray} from 'model-fragments/attributes';
 
 export default Model.extend({
-  name: fragment('name'),
+  designation: fragment('name'),
   titles: array('string'),
   gender: attr('string'),
   birthDate: attr('date'),
   position: attr(),
-  departmentEmployments: fragmentArray('department-employment')
+  employments: fragmentArray('department-employment')
 });

@@ -13,7 +13,7 @@ test("Show employee by make(ing) a model ( with hasMany fragment added manually 
   visit('/employee/' + employee.get('id'));
 
   andThen(()=>{
-    ok(find('.name').text().match(`${employee.get('name.firstName')} ${employee.get('name.lastName')}`));
+    ok(find('.name').text().match(`${employee.get('designation.firstName')} ${employee.get('designation.lastName')}`));
     equal(find('.department-employment').length, 2, "fragment array works");
   });
 });
@@ -25,7 +25,7 @@ test("Show employee by make(ing) a model and using returns with that model", fun
   visit('/employee/' + employee.get('id'));
 
   andThen(()=>{
-    ok(find('.name').text().match(`${employee.get('name.firstName')} ${employee.get('name.lastName')}`));
+    ok(find('.name').text().match(`${employee.get('designation.firstName')} ${employee.get('designation.lastName')}`));
     equal(find('.department-employment').length, 2, "fragment array works");
   });
 });
@@ -38,7 +38,7 @@ test("Show employee by building(ing) json and using returns with that json", fun
   visit('/employee/' + employee.get('id'));
 
   andThen(()=>{
-    ok(find('.name').text().match(`${employee.get('name').firstName} ${employee.get('name').lastName}`));
+    ok(find('.name').text().match(`${employee.get('designation').firstName} ${employee.get('designation').lastName}`));
     equal(find('.department-employment').length, 2, "fragment array works");
   });
 });
@@ -51,7 +51,7 @@ test("Show employee by building(ing) json ( with hasMany fragment added manually
   visit('/employee/' + employee.get('id'));
 
   andThen(()=>{
-    ok(find('.name').text().match(`${employee.get('name').firstName} ${employee.get('name').lastName}`));
+    ok(find('.name').text().match(`${employee.get('designation').firstName} ${employee.get('designation').lastName}`));
     equal(find('.department-employment').length, 2, "fragment array works");
   });
 });

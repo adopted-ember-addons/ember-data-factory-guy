@@ -1,4 +1,4 @@
-import {manualSetup, make, makeList, buildList} from 'ember-data-factory-guy';
+import {manualSetup, make, makeList, build, buildList} from 'ember-data-factory-guy';
 import {test, moduleForModel} from 'ember-qunit';
 import Ember from 'ember';
 const { run } = Ember;
@@ -26,40 +26,50 @@ test('default employee', function() {
   let employee = make('employee');
   //Should I need a run loop?
   run(() => {
-    ok(employee.get('name.firstName') === 'Tyrion');
-    ok(employee.get('name.lastName') === 'Lannister');
+    ok(employee.get('designation.firstName') === 'Tyrion');
+    ok(employee.get('designation.lastName') === 'Lannister');
   });
 });
 
 test('employee with default name trait', function() {
   let employee = make('employee', 'default_name_setup');
   run(() => {
-    ok(employee.get('name.firstName') === 'Tyrion');
-    ok(employee.get('name.lastName') === 'Lannister');
+    ok(employee.get('designation.firstName') === 'Tyrion');
+    ok(employee.get('designation.lastName') === 'Lannister');
   });
 });
 
 test('default employee with trait with custom name fragment', function() {
   let employee = make('employee', 'jon');
   run(() => {
-    ok(employee.get('name.firstName') === 'Jon');
-    ok(employee.get('name.lastName') === 'Snow');
+    ok(employee.get('designation.firstName') === 'Jon');
+    ok(employee.get('designation.lastName') === 'Snow');
   });
 });
 
 test('default employee with trait with custom name belongsTo', function() {
   let employee = make('employee', 'geoffrey');
   run(() => {
-    ok(employee.get('name.firstName') === 'Geoffrey');
-    ok(employee.get('name.lastName') === 'Lannister');
+    ok(employee.get('designation.firstName') === 'Geoffrey');
+    ok(employee.get('designation.lastName') === 'Lannister');
   });
 });
 
 test('manual setting up employee name', function() {
   let employee = make('employee', 'geoffrey');
   run(() => {
-    ok(employee.get('name.firstName') === 'Geoffrey');
-    ok(employee.get('name.lastName') === 'Lannister');
+    ok(employee.get('designation.firstName') === 'Geoffrey');
+    ok(employee.get('designation.lastName') === 'Lannister');
+  });
+});
+
+test('employee belongsTo designation (fragments) setup manually', function() {
+  run(() => {
+    let employee = make('employee', {
+      designation: build('name').get()
+    });
+
+    equal(employee.get('designation.firstName'), 'Tyrion');
   });
 });
 
