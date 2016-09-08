@@ -32,7 +32,7 @@ class ModelDefinition {
     let relationship = Ember.get(modelClass, 'relationshipsByName').get(field);
     return relationship || null;
   }
-  
+
   /**
    Is this model a fragment type
 
@@ -50,15 +50,38 @@ class ModelDefinition {
   }
 
   /**
+   Get model fragment info ( if it exists )
+
+   @param attribute
+   @returns {Object} or null if no fragment info
+   */
+  modelFragmentInfo(attribute) {
+    let modelClass = FactoryGuy.store.modelFor(this.modelName);
+    return Ember.get(modelClass, 'attributes').get(attribute);
+  }
+
+  /**
    Is this attribute a model fragment type
 
-   @param {String} field  field you want to check
+   @param {String} attribute  attribute you want to check
    @returns {Boolean} true if it's a model fragment
    */
-  isModelFragmentAttribute(field) {
-    let modelClass = FactoryGuy.store.modelFor(this.modelName);
-    let attributeInfo = Ember.get(modelClass, 'attributes').get(field);
-    return !!(attributeInfo && attributeInfo.type.match('mf-fragment'));
+  isModelFragmentAttribute(attribute) {
+    let info = this.modelFragmentInfo(attribute);
+    return !!(info && info.type.match('mf-fragment'));
+  }
+
+  /**
+   Get actual model fragment type, in case the attribute name is different
+   than the fragment type
+
+   @param {String} attribute attribute name for which you want fragment type
+   @returns {String} fragment type
+   */
+  fragmentType(attribute) {
+    let info = this.modelFragmentInfo(attribute);
+    let match = info.type.match('mf-fragment\\$(.*)');
+    return match[1];
   }
 
   /**
@@ -170,9 +193,16 @@ class ModelDefinition {
     // If it's an object and it's a model association attribute, build the json
     // for the association and replace the attribute with that json
     let relationship = this.getRelationship(attribute);
+
     if (this.isModelFragmentAttribute(attribute)) {
       let payload = fixture[attribute];
-      fixture[attribute] = FactoryGuy.buildRaw(attribute, payload);
+      if ($.isEmptyObject(payload)) {
+        // make a payload, but make sure it's the correct fragment type
+        let actualType = this.fragmentType(attribute);
+        payload = FactoryGuy.buildRaw(actualType, {});
+      }
+      // use the payload you have been given
+      fixture[attribute] = payload;
     }
     if (relationship) {
       let payload = fixture[attribute];

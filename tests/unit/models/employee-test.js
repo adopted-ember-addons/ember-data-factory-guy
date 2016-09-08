@@ -1,4 +1,4 @@
-import {manualSetup, make, makeList, buildList} from 'ember-data-factory-guy';
+import {manualSetup, build, make, makeList, buildList} from 'ember-data-factory-guy';
 import {test, moduleForModel} from 'ember-qunit';
 import Ember from 'ember';
 const { run } = Ember;
@@ -28,6 +28,34 @@ test('default employee', function() {
   run(() => {
     ok(employee.get('name.firstName') === 'Tyrion');
     ok(employee.get('name.lastName') === 'Lannister');
+  });
+});
+
+// FRAGMENT attribute this differently named than fragment type
+// passing in a value you built manually
+test('making employee with attribute this differently named than fragment type', function() {
+  let employee = make('employee', {designation: build('name').get()});
+  //Should I need a run loop?
+  run(() => {
+    ok(employee.get('designation.firstName') === 'Tyrion');
+    ok(employee.get('designation.lastName') === 'Lannister');
+  });
+});
+
+/** FRAGMENT attribute this differently named than fragment type
+ letting factory guy make the type for you from definition like:
+ traits: {
+   with_designation:{
+    designation: {}
+   },
+ }
+*/
+test('making employee with attribute this differently named than fragment type with empty declaration in definition', function() {
+  let employee = make('employee', 'with_designation');
+  //Should I need a run loop?
+  run(() => {
+    ok(employee.get('designation.firstName') === 'Tyrion');
+    ok(employee.get('designation.lastName') === 'Lannister');
   });
 });
 
