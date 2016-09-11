@@ -14,7 +14,7 @@ module.exports = {
     var urijsPath = path.dirname(require.resolve('urijs'));
     files.push(new Funnel(urijsPath, {
       files: [
-        'URI.js',
+        'URI.js'
       ],
       destDir: 'urijs'
     }));
@@ -22,10 +22,20 @@ module.exports = {
     return mergeTrees(files);
   },
 
+  config: function (env, config) {
+    this.parentConfig = config;
+    return config;
+  },
+  
+  includeFactoryGuyFactories() {
+    let config = this.parentConfig;
+    return config.environment === 'development' && config.factoryGuy;
+  },
+
   treeForApp: function(appTree) {
     var trees = [appTree];
 
-    if (this.app.env === 'development') {
+    if (this.includeFactoryGuyFactories()) {
       try {
         if (fs.statSync('tests/factories').isDirectory()) {
           var factoriesTree = new Funnel('tests/factories', {
