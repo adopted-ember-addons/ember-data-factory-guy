@@ -350,6 +350,7 @@ class FactoryGuy {
     let modelName = lookupModelForFixtureName(args.name);
     let fixture = this.buildRaw.apply(this, arguments);
     let data = this.fixtureBuilder.convertForMake(modelName, fixture);
+
     const model = Ember.run(()=> this.store.push(data));
 
     let definition = lookupDefinitionForFixtureName(args.name);
