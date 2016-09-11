@@ -13,7 +13,7 @@ let serializerType = '-drf';
 SharedFactoryGuyTestHelperBehavior.mockFindRecordEmbeddedTests(App, adapter, serializerType);
 SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(App, adapter, serializerType);
 
-module(title(adapter, '#mockFind'), inlineSetup(App, serializerType));
+module(title(adapter, '#mockFindRecord'), inlineSetup(App, serializerType));
 SharedFactoryGuyTestHelperBehavior.mockFindRecordCommonTests();
 
 module(title(adapter, '#mockReload'), inlineSetup(App, serializerType));
