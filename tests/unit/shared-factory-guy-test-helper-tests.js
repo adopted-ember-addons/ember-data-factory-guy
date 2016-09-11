@@ -78,15 +78,16 @@ SharedBehavior.mockFindRecordCommonTests = function() {
     });
   });
 
-  test("with model that has attribute named type, is not polymorphic, and passing model", function(assert) {
+  test("with model that has attribute named type, is not polymorphic, and returns model", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
-      let cat = make('cat');
-      let mock = mockFindRecord(cat).returns({model:cat});
+      let cat = make('cat', { type: 'Cutest' });
+      let mock = mockFindRecord('cat').returns({ model: cat });
+      FactoryGuy.settings({logLevel:1})
 
-      FactoryGuy.store.find('cat', cat.get('id')).then(function(catA) {
-        console.log(cat+'', catA+'', catA.get('type'));
-        equal(cat.get('type'), catA.get('type'));
+      FactoryGuy.store.findRecord('cat', mock.get('id')).then(function(catA) {
+        console.log(cat.get('type'), catA.get('type'));
+        equal(catA.get('type'), 'Cutest');
         done();
       });
     });
