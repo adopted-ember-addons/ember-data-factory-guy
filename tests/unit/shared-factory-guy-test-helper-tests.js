@@ -83,10 +83,8 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       let done = assert.async();
       let cat = make('cat', { type: 'Cutest' });
       let mock = mockFindRecord('cat').returns({ model: cat });
-      FactoryGuy.settings({logLevel:1})
 
-      FactoryGuy.store.findRecord('cat', mock.get('id')).then(function(catA) {
-        console.log(cat.get('type'), catA.get('type'));
+      FactoryGuy.store.findRecord('cat', mock.get('id'), {reload: true}).then(function(catA) {
         equal(catA.get('type'), 'Cutest');
         done();
       });

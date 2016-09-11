@@ -77,7 +77,7 @@ class MockGetRequest extends MockRequest {
         Ember.assert(`argument ( model ) must be a Model instance - found type:'
           ${Ember.typeOf(model)}`, (model instanceof Model));
 
-        json = { id: model.id, type: model.constructor.modelName };
+        json = { id: model.id };
         this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
         break;
 
