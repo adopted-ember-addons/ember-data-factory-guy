@@ -27,7 +27,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       let profile = mockFindRecord('profile');
       let profileId = profile.get('id');
 
-      FactoryGuy.store.find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
         equal(profile.get('id'), profileId);
         equal(profile.get('description'), 'Text goes here');
         done();
@@ -44,7 +44,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       equal(mock.get('catName'), 'Cat 1');
       equal(mock.get('catFriend'), 'Friend 1');
 
-      FactoryGuy.store.find('cat', mock.get('id')).then(function(cat) {
+      FactoryGuy.store.findRecord('cat', mock.get('id')).then(function(cat) {
         equal(cat.get('name'), 'Cat 1');
         equal(cat.get('friend'), 'Friend 1');
         done();
@@ -57,7 +57,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       let done = assert.async();
       let mock = mockFindRecord('dog');
 
-      FactoryGuy.store.find('dog', mock.get('id')).then(function(dog) {
+      FactoryGuy.store.findRecord('dog', mock.get('id')).then(function(dog) {
         equal(dog.get('id'), 'Dog1');
         equal(dog.get('dogNumber'), 'Dog1');
         done();
@@ -71,7 +71,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       let employeeA = build('employee');
       let mock = mockFindRecord('employee', {id: 'self'}).returns({json:employeeA});
 
-      FactoryGuy.store.find('employee', mock.get('id')).then(function(employee) {
+      FactoryGuy.store.findRecord('employee', mock.get('id')).then(function(employee) {
         equal(employee.get('id'), employeeA.get('id'));
         done();
       });
@@ -97,7 +97,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       let profile = mockFindRecord('profile', { description: 'dude' });
       let profileId = profile.get('id');
 
-      FactoryGuy.store.find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
         ok(profile.get('description') === 'dude');
         done();
       });
@@ -111,7 +111,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       let profile = mockFindRecord('profile');
       let profileId = profile.get('id');
 
-      FactoryGuy.store.find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
         ok(profile.get('camelCaseDescription') === 'textGoesHere');
         ok(profile.get('snake_case_description') === 'text_goes_here');
         done();
@@ -126,7 +126,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       let profile = mockFindRecord('profile', 'goofy_description');
       let profileId = profile.get('id');
 
-      FactoryGuy.store.find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
         ok(profile.get('description') === 'goofy');
         done();
       });
@@ -140,7 +140,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       let profile = mockFindRecord('profile', 'goofy_description', { description: 'dude' });
       let profileId = profile.get('id');
 
-      FactoryGuy.store.find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
         ok(profile.get('description') === 'dude');
         done();
       });
@@ -192,7 +192,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function(App, adapter, serialize
       let profile = mockFindRecord('profile', 'with_company', 'with_bat_man');
       let profileId = profile.get('id');
 
-      FactoryGuy.store.find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
         ok(profile.get('company.name') === 'Silly corp');
         ok(profile.get('superHero.name') === 'BatMan');
         done();
@@ -207,7 +207,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function(App, adapter, serialize
       let user = mockFindRecord('user', 'with_hats');
       let userId = user.get('id');
 
-      FactoryGuy.store.find('user', userId).then(function(user) {
+      FactoryGuy.store.findRecord('user', userId).then(function(user) {
         ok(user.get('hats.length') === 2);
         ok(user.get('hats.firstObject.type') === 'BigHat');
         done();
@@ -224,7 +224,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function(App, adapter, serialize
       mockFindRecord('profile').returns({ json });
       let profileId = json.get('id');
 
-      FactoryGuy.store.find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
         ok(profile.get('company.name') === 'Silly corp');
         ok(profile.get('superHero.name') === 'BatMan');
         done();
@@ -242,7 +242,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function(App, adapter, serialize
 
       mockFindRecord('user').returns({ json });
 
-      FactoryGuy.store.find('user', json.get('id')).then(function(user) {
+      FactoryGuy.store.findRecord('user', json.get('id')).then(function(user) {
         ok(user.get('hats.firstObject.id') === hat1.get('id') + '');
         ok(user.get('hats.lastObject.id') === hat2.get('id') + '');
         done();
@@ -258,7 +258,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function(App, adapter, serialize
       let profile = mockFindRecord('profile').returns({ model });
       let profileId = profile.get('id');
 
-      FactoryGuy.store.find('profile', profileId).then(function(profile) {
+      FactoryGuy.store.findRecord('profile', profileId, {reload: true}).then(function(profile) {
         ok(profile.get('company.name') === 'Silly corp');
         ok(profile.get('superHero.name') === 'BatMan');
         equal(FactoryGuy.store.peekAll('profile').get('content').length, 1, "does not make another profile");
@@ -277,7 +277,7 @@ SharedBehavior.mockFindRecordEmbeddedTests = function(App, adapter, serializerTy
       let done = assert.async();
       let mock = mockFindRecord('comic-book', 'marvel');
 
-      FactoryGuy.store.find('comic-book', mock.get('id')).then(function(comic) {
+      FactoryGuy.store.findRecord('comic-book', mock.get('id')).then(function(comic) {
         ok(comic.get('name') === 'Comic Times #1');
         ok(comic.get('company.name') === 'Marvel Comics');
         done();
@@ -290,7 +290,7 @@ SharedBehavior.mockFindRecordEmbeddedTests = function(App, adapter, serializerTy
       let done = assert.async();
       let mock = mockFindRecord('comic-book', 'with_bad_guys');
 
-      FactoryGuy.store.find('comic-book', mock.get('id')).then(function(comic) {
+      FactoryGuy.store.findRecord('comic-book', mock.get('id')).then(function(comic) {
         ok(comic.get('name') === 'Comic Times #1');
         ok(comic.get('characters').mapBy('name') + '' === ['BadGuy#1', 'BadGuy#2'] + '');
         done();
@@ -355,7 +355,7 @@ SharedBehavior.mockReloadTests = function() {
       let done = assert.async();
       let mock = mockReload('profile', 1).fails();
 
-      FactoryGuy.store.find('profile', 1)
+      FactoryGuy.store.findRecord('profile', 1)
         .catch(()=> {
             equal(mock.timesCalled, 1);
             ok(true);
