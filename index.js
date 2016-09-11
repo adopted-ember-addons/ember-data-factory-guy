@@ -28,7 +28,7 @@ module.exports = {
   },
   
   includeFactoryGuyFactories: function() {
-    let config = this.parentConfig;
+    var config = this.parentConfig;
     return config.environment === 'development' && config.factoryGuy;
   },
 
