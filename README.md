@@ -68,8 +68,6 @@ ChangeLog: ( Notes about what has changed in each version )
     - You can make records that persist in the store
     - Or you can build a json payload used for mocking an ajax call's payload
 
-[![Thumbnail of Introduction to ember-data-factory-guy](https://i.vimeocdn.com/video/545504017.png?mw=1920&mh=1080)](https://vimeo.com/album/3607049/video/146964694)
-
 ### Setup
 
 In the following examples, assume the models look like this:
