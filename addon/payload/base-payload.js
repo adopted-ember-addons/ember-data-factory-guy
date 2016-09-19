@@ -45,7 +45,10 @@ export default class {
   add(more) {
     this.converter.included = this.json;
     Ember.A(Object.getOwnPropertyNames(more))
-      .reject(key=> Ember.A(this.proxyMethods).contains(key))
+      .reject(key=> {
+        const array = Ember.A(this.proxyMethods)
+        return array.includes ? array.includes(key) : array.contains(key);
+      })
       .forEach(key=> {
         if (Ember.typeOf(more[key]) === "array") {
           more[key].forEach(data=> this.converter.addToIncluded(data, key));
