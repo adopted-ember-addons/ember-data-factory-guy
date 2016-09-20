@@ -11,10 +11,7 @@ export default class extends BasePayload {
 
   includeKeys() {
     let keys = Ember.A(Object.keys(this.json)).reject(key => this.payloadKey === key);
-    return Ember.A(keys).reject(key=> {
-      const array = Ember.A(this.proxyMethods);
-      return array.includes ? array.includes(key) : array.contains(key);
-    }) || [];
+    return Ember.A(keys).reject(key=> Ember.A(this.proxyMethods).includes(key)) || [];
   }
 
   getInclude(modelType) {

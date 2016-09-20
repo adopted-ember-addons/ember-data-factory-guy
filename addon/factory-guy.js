@@ -522,8 +522,7 @@ class FactoryGuy {
       let adapter = findAdapter(name);
       let shouldCache = ()=> {
         if (Ember.isPresent(except)) {
-          const array = Ember.A(except);
-          return array.includes ? array.includes(name) : array.contains(name);
+          return (Ember.A(except).includes(name));
         }
         return false;
       };

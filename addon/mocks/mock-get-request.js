@@ -46,12 +46,9 @@ class MockGetRequest extends MockRequest {
 
     const [ responseKey ] = responseKeys;
 
-    const array = Ember.A(this.validReturnsKeys);
-
     Ember.assert(`[ember-data-factory-guy] You passed an invalid key for 'returns' function.
       Valid keys are ${this.validReturnsKeys}. You used this key: ${responseKey}`,
-      array.includes ? array.includes(responseKey) : array.contains(responseKey));
-
+      Ember.A(this.validReturnsKeys).includes(responseKey));
     return responseKey;
   }
 
