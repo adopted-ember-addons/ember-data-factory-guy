@@ -1,13 +1,13 @@
 import Ember from 'ember';
-import FactoryGuy, {make, makeList, build, buildList} from 'ember-data-factory-guy';
 import {isEquivalent} from 'ember-data-factory-guy/utils/helper-functions';
 
-import {
+import FactoryGuy, {
+  make, makeList, build, buildList,
   mockSetup, mockTeardown,
   mockFindRecord, mockFindAll, mockReload, mockQuery,
   mockQueryRecord, mockCreate, mockUpdate, mockDelete
 } from 'ember-data-factory-guy';
-import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
+
 import $ from 'jquery';
 import {title, inlineSetup} from '../helpers/utility-methods';
 

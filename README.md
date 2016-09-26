@@ -818,7 +818,7 @@ You would use this to make models like:
     if (environment === 'development') {
       ENV.factoryGuy = true;
       ENV.locationType = 'auto';
-      ENV.baseURL = '/';
+      ENV.rootURL = '/';
     }
 
     ```
@@ -946,7 +946,7 @@ If you are making an addon with factories and you want the factories available t
 ```javascript
   let projects = makeList('projects', 2); // put projects in the store
   let user = make('user', { projects });  // attatch them to user
-  mockFind('user').returns({model: user}); // now the mock will return a user that has projects
+  mockFindRecord('user').returns({model: user}); // now the mock will return a user that has projects
 ```
   - using `fails()` with errors hash is not working reliably
     - so you can always just `mockWhatever(args).fails()`
@@ -1086,7 +1086,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - for mocking the ajax calls made by ember-data.
   - this library is installed with ember-data-factory-guy.
 - http GET mocks
-  - [mockFind](https://github.com/danielspaniel/ember-data-factory-guy#mockfind)
+  - [mockFindRecord](https://github.com/danielspaniel/ember-data-factory-guy#mockfindRecord)
   - [mockFindAll](https://github.com/danielspaniel/ember-data-factory-guy#mockfindall)
   - [mockReload](https://github.com/danielspaniel/ember-data-factory-guy#mockreload)
   - [mockQuery](https://github.com/danielspaniel/ember-data-factory-guy#mockquery)
@@ -1113,7 +1113,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
 
 - Use property ```timesCalled``` to verify how many times the ajax call was mocked
   - works when you are using mockQuery, mockQueryRecord, mockFindAll, or mockUpdate
-  - mockFind will always be at most 1 since it will only make ajax call
+  - mockFindRecord will always be at most 1 since it will only make ajax call
     the first time, and then the store will use cache the second time
   - Example:
   ```javascript
@@ -1162,40 +1162,40 @@ The `isDestroyed` property is set to `true` when the mock is destroyed.
     let mock = mockFindAll('user').fails({status: 401, response: errors401});
 
     let errors422 = {errors: {name: "Name too short"}};
-    let mock = mockFind('profile').fails({status: 422, response: errors422});
+    let mock = mockFindRecord('profile').fails({status: 422, response: errors422});
 
     let errorsMine = {errors: [{detail: "Name too short", title: "I am short"}]};
-    let mock = mockFind('profile').fails({status: 422, response: errorsMine, convertErrors: false});
+    let mock = mockFindRecord('profile').fails({status: 422, response: errorsMine, convertErrors: false});
   ```
 
 
-##### mockFind
+##### mockFindRecord
   - For dealing with finding one record of a model type => `store.find('modelType')`
   - Can pass in arguments just like you would for [make](https://github.com/danielspaniel/ember-data-factory-guy#make) or [build](https://github.com/danielspaniel/ember-data-factory-guy#build)
-    - mockFind( fixture or model name, optional traits, optional attributes object)
+    - mockFindRecord( fixture or model name, optional traits, optional attributes object)
   - Takes modifier method `returns()` for controlling the response payload
     - returns( model / json / id )
-  - Sample acceptance tests using mockFind: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
+  - Sample acceptance tests using mockFindRecord: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
 Usage:
 ```javascript
-   import { build, make, mockFind } from 'ember-data-factory-guy';
+   import { build, make, mockFindRecord } from 'ember-data-factory-guy';
 ```
 - To return default factory model type ( 'user' in this case )
 ```javascript
-   // mockFind automatically returns json for the modelType ( in this case 'user' )
-   let mock = mockFind('user');
+   // mockFindRecord automatically returns json for the modelType ( in this case 'user' )
+   let mock = mockFindRecord('user');
    let userId = mock.get('id');
 ```
 - Using `returns({json})` to return json object
 ```javascript
    let user = build('user', 'whacky', {isDude: true});
-   let mock = mockFind('user').returns({ json: user });
+   let mock = mockFindRecord('user').returns({ json: user });
    // user.get('id') => 1
    // user.get('style') => 'whacky'
 
    // or to acccomplish the same thing with less code
-   let mock = mockFind('user', 'whacky', {isDude: true});
+   let mock = mockFindRecord('user', 'whacky', {isDude: true});
    // mock.get('id') => 1
    // mock.get('style') => 'whacky'
    let user = mock.get();
@@ -1205,7 +1205,7 @@ Usage:
 - Using `returns({model})` to return model instance
 ```javascript
    let user = make('user', 'whacky', {isDude: false});
-   let mock = mockFind('user').returns({ model: user });
+   let mock = mockFindRecord('user').returns({ model: user });
    // user.get('id') => 1
    // you can now also user.get('any-computed-property')
    // since you have a real model instance
@@ -1213,7 +1213,7 @@ Usage:
 - Simper way to return a model instance
 ```javascript
    let user = make('user', 'whacky', {isDude: false});
-   let mock = mockFind(user);
+   let mock = mockFindRecord(user);
    // user.get('id') === mock.get('id')
    // basically a shortcut to the above .returns({ model: user })
    // as this sets up the returns for you
@@ -1227,12 +1227,12 @@ Usage:
 ```
 - To mock failure case use `fails` method
 ```javascript
-   mockFind('user').fails();
+   mockFindRecord('user').fails();
 ```
 - To mock failure when you have a model already
 ```javascript
   let profile = make('profile');
-  mockFind(profile).fails();
+  mockFindRecord(profile).fails();
   // mock.get('id') === profile.id
 ```
 

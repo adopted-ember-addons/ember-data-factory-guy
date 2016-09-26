@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import FactoryGuy, {
   make, makeList, build, buildList, clearStore,
-  mockFind, mockFindAll, mockReload, mockQuery, mockQueryRecord,
+  mockFindRecord, mockFindAll, mockReload, mockQuery, mockQueryRecord,
   mockCreate, mockUpdate, mockDelete, mockSetup
 } from 'ember-data-factory-guy';
 import {inlineSetup} from '../helpers/utility-methods';
@@ -217,44 +217,42 @@ test("can enable, disable, and destroy mock", function(assert) {
   });
 });
 
-
-
-module('mockFind', inlineSetup(App, serializerType));
+module('mockFindRecord', inlineSetup(App, serializerType));
 
 test("has access to handler being used by mockjax", function() {
-  let mock = mockFind('user');
+  let mock = mockFindRecord('user');
   ok(mock.handler);
 });
 
 test("#get method to access payload", function() {
-  let mock = mockFind('user');
+  let mock = mockFindRecord('user');
   equal(mock.get('name'), 'User1');
 });
 
 
-module('mockFind #getUrl', inlineSetup(App));
+module('mockFindRecord #getUrl', inlineSetup(App));
 
 test("with proxy", function() {
   const json = build('user');
-  const mock = mockFind('user').returns({ json });
+  const mock = mockFindRecord('user').returns({ json });
   equal(mock.getUrl(), '/users/1');
 });
 
 test("with json", function() {
   const json = { id: 1, name: "Dan" };
-  const mock = mockFind('user').returns({ json });
+  const mock = mockFindRecord('user').returns({ json });
   equal(mock.getUrl(), '/users/1');
 });
 
 
-module('mockFind #fails', inlineSetup(App));
+module('mockFindRecord #fails', inlineSetup(App));
 
 test("with errors in response", function(assert) {
   Ember.run(()=> {
     const done = assert.async();
 
     const response = { errors: { description: ['bad'] } };
-    const mock = mockFind('profile', 1).fails({ response });
+    const mock = mockFindRecord('profile', 1).fails({ response });
 
     FactoryGuy.store.findRecord('profile', 1)
       .catch((res)=> {

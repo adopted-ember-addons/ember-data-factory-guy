@@ -1,5 +1,4 @@
-import Ember from 'ember';
-import FactoryGuy, { build, buildList, make, makeList, mockFind, mockFindAll } from 'ember-data-factory-guy';
+import { build, buildList, make, makeList, mockFindRecord, mockFindAll } from 'ember-data-factory-guy';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
 import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
@@ -269,7 +268,7 @@ test("serializes attributes with custom type", function() {
 //test("the basic returns id", function(assert) {
 //    Ember.run(()=> {
 //      let done = assert.async();
-//      let profile = mockFind('profile');
+//      let profile = mockFindRecord('profile');
 //      console.log('test profile',profile.get());
 //      let profileId = profile.get('id');
 //

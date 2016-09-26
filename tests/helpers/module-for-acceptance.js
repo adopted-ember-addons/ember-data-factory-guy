@@ -1,8 +1,11 @@
 import { module } from 'qunit';
-import startApp from './start-app';
-import destroyApp from './destroy-app';
+import Ember from 'ember';
+import startApp from '../helpers/start-app';
+import destroyApp from '../helpers/destroy-app';
 import FactoryGuy, {mockSetup, mockTeardown} from 'ember-data-factory-guy';
 import JSONAPIFixtureBuilder from 'ember-data-factory-guy/builder/jsonapi-fixture-builder';
+
+const { RSVP: { Promise } } = Ember;
 
 export default function(name, options = {}) {
   module(name, {
@@ -19,19 +22,15 @@ export default function(name, options = {}) {
       // mockSetup({logLevel:1, responseTime: 1000});
 
       if (options.beforeEach) {
-        options.beforeEach.apply(this, arguments);
+        return options.beforeEach.apply(this, arguments);
       }
     },
 
     afterEach() {
-      destroyApp(this.application);
-
-      // Adding FactoryGuy mockTeardown call
       mockTeardown();
-
-      if (options.afterEach) {
-        options.afterEach.apply(this, arguments);
-      }
+      
+      let afterEach = options.afterEach && options.afterEach.apply(this, arguments);
+      return Promise.resolve(afterEach).then(() => destroyApp(this.application));
     }
   });
 }

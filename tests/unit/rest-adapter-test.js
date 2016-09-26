@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy, { build, buildList, make, makeList, mockCreate, mockFind, mockFindAll, manualSetup } from 'ember-data-factory-guy';
+import FactoryGuy, { build, buildList, make, makeList, mockCreate, mockFindRecord, mockFindAll, manualSetup } from 'ember-data-factory-guy';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
 import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';

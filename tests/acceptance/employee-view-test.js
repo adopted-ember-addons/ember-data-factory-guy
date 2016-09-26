@@ -1,4 +1,4 @@
-import { make, build, buildList, mockFind, mockCreate } from 'ember-data-factory-guy';
+import { make, build, buildList, mockFindRecord, mockCreate } from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
 moduleForAcceptance('Acceptance | Employee View ( model-fragments )');
@@ -9,7 +9,7 @@ test("Show employee by make(ing) a model ( with hasMany fragment added manually 
   let departmentEmployments = buildList('department-employment', 2).get();
   let employee = make('employee', { departmentEmployments });
 
-  mockFind('employee').returns({model: employee});
+  mockFindRecord('employee').returns({model: employee});
   visit('/employee/' + employee.get('id'));
 
   andThen(()=>{
@@ -21,7 +21,7 @@ test("Show employee by make(ing) a model ( with hasMany fragment added manually 
 test("Show employee by make(ing) a model and using returns with that model", function () {
   let employee = make('employee', 'with_department_employments');
 
-  mockFind('employee').returns({model: employee});
+  mockFindRecord('employee').returns({model: employee});
   visit('/employee/' + employee.get('id'));
 
   andThen(()=>{
@@ -34,7 +34,7 @@ test("Show employee by building(ing) json and using returns with that json", fun
   // 'with_department_employments' is a trait that build the has many in the employee factory 
   let employee = build('employee', 'with_department_employments');
 
-  mockFind('employee').returns({json: employee});
+  mockFindRecord('employee').returns({json: employee});
   visit('/employee/' + employee.get('id'));
 
   andThen(()=>{
@@ -47,7 +47,7 @@ test("Show employee by building(ing) json ( with hasMany fragment added manually
   let departmentEmployments = buildList('department-employment', 2).get();
   let employee = build('employee', { departmentEmployments });
 
-  mockFind('employee').returns({json: employee});
+  mockFindRecord('employee').returns({json: employee});
   visit('/employee/' + employee.get('id'));
 
   andThen(()=>{

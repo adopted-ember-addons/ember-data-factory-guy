@@ -28,21 +28,21 @@ export function mockTeardown() {
  // Typically you will use like:
 
  // To return default factory 'user'
- let mock = mockFind('user');
+ let mock = mockFindRecord('user');
  let userId = mock.get('id');
 
  // or to return custom factory built json object
  let json = build('user', 'with_whacky_name', {isDude: true});
- let mock = mockFind('user').returns({json});
+ let mock = mockFindRecord('user').returns({json});
  let userId = json.get('id');
 
  // you could also make the model first and mock that find fails
  let user = make('user')
- let mock = mockFind(user);
+ let mock = mockFindRecord(user);
  let userId = user.id // or mock.get('id')
 
  // To mock failure case use method fails
- mockFind('user').fails();
+ mockFindRecord('user').fails();
 
  // Then to 'find' the user
  store.find('user', userId);

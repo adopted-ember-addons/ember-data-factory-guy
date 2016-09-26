@@ -10,11 +10,12 @@
 /vendor
 .bowerrc
 .editorconfig
+.watchmanconfig
 .ember-cli
 .idea/*
 .travis.yml
-testem.json
-Brocfile.js
+ember-cli-build.js
+testem.js
 bower.json
 
 

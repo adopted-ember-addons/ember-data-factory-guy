@@ -1,4 +1,4 @@
-import { make, build, buildList, mockFind, mockCreate } from 'ember-data-factory-guy';
+import { make, build, buildList, mockFindRecord, mockCreate } from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
 moduleForAcceptance('Acceptance | User View');
@@ -10,7 +10,7 @@ test("Show user by make(ing) a model and using returns with that model", functio
   // if you need the computed properties on the model this is best bet
   let user = make('user', 'with_projects');
   let projects = user.get('projects');
-  mockFind('user').returns({model: user});
+  mockFindRecord('user').returns({model: user});
 
   visit('/user/' + user.get('id'));
 
@@ -29,7 +29,7 @@ test("Show user with projects by build(ing) json and using returns with json", f
   // therefore be put in the store when user is loaded )
   let projects = buildList('project', {title: 'Moo'}, {title: 'Zoo'});
   let user = build('user', {projects: projects});
-  mockFind('user').returns({json: user});
+  mockFindRecord('user').returns({json: user});
 
   visit('/user/' + user.get('id'));
 
@@ -44,7 +44,7 @@ test("Show user with projects by build(ing) json and using returns with json", f
 
 test("Add a project to a user with mockCreate", function () {
   // mockFind will build a default user for the json payload
-  let mock = mockFind('user');
+  let mock = mockFindRecord('user');
 
   visit('/user/' + mock.get('id'));
 
