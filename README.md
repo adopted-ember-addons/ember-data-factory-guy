@@ -49,7 +49,7 @@ ChangeLog: ( Notes about what has changed in each version )
   - [Release Notes](https://github.com/danielspaniel/ember-data-factory-guy/releases)
 
 ### Installation
-
+   
  - ```ember install ember-data-factory-guy``` ( ember-data-1.13.5+ )
  - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + )
  - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 )
@@ -95,7 +95,6 @@ In the following examples, assume the models look like this:
   BigHat = Hat.extend();
   SmallHat = Hat.extend();
 ```
-
 
 ### Defining Factories
  - A factory has a name and a set of attributes.
