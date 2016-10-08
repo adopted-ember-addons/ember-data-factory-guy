@@ -1736,3 +1736,41 @@ person.save(); // will succeed
 
 // and voila, you have just tested the serializer is converting the name properly
 ```
+
+3. Can pass in random attributes to help build the fixture
+
+Let's say you have a model and a factory like this:
+
+```javascript
+
+  // app/models/dog.js
+  import Model from 'ember-data/model';
+  import attr from 'ember-data/attr';
+
+  export default Model.extend({
+    dogNumber: attr('string'),
+    sound: attr('string')
+  });
+
+ // tests/factories/dog.js
+ import FactoryGuy from 'ember-data-factory-guy';
+ 
+ const defaultVolume = "Normal";
+ 
+ FactoryGuy.define('dog', {
+   default: {
+     dogNumber: (f)=> `Dog${f.id}`,
+     sound: (f) => `${f.volume||defaultVolume} Woof`
+   }
+ });
+```
+ 
+Then to build the fixture:
+
+```javascript
+  let volume = 'Soft';
+  let dog2 = build('dog', { volume });
+  
+  dog2.get('sound'); //=> `Soft Woof` 
+```  
+  
