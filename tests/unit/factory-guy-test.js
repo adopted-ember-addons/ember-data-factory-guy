@@ -123,26 +123,22 @@ test("with one level of hasMany relationship", function() {
   equal(user['big-hats'].length, 2);
 });
 
+test("can use non model attributes to help setup attributes", function() {
+  let dog1 = build('dog');
+  equal(dog1.get('sound'), 'Normal Woof', 'no extra attribute');
+
+  let volume = 'Soft';
+  let dog2 = build('dog', { volume });
+
+  equal(dog2.get('sound'), `${volume} Woof`, 'uses your extra attribute');
+});
+
 test("emits warning when trait is not found", function() {
   sinon.spy(Ember, 'warn');
   build('user', "non_existent_trait");
   ok(Ember.warn.calledOnce);
   Ember.warn.restore();
 });
-
-//test("with two level of relationship", function () {
-//let outfit = build('outfit');
-//let hats = buildList('big-hat', {outfit: outfit});
-//let user = build('user', {hats: hats});
-
-//console.log(make('small-company')+'')
-//console.log(user);
-//console.log(hats);
-//ok(user['user']);
-//equal(user['big-hats'].length, 1);
-//equal(user['outfit'].length, 1);
-//});
-
 
 module('FactoryGuy#buildList', inlineSetup(App, '-rest'));
 
