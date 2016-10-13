@@ -1085,7 +1085,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - for mocking the ajax calls made by ember-data.
   - this library is installed with ember-data-factory-guy.
 - http GET mocks
-  - [mockFindRecord](https://github.com/danielspaniel/ember-data-factory-guy#mockfindRecord)
+  - [mockFindRecord](https://github.com/danielspaniel/ember-data-factory-guy#mockfindrecord)
   - [mockFindAll](https://github.com/danielspaniel/ember-data-factory-guy#mockfindall)
   - [mockReload](https://github.com/danielspaniel/ember-data-factory-guy#mockreload)
   - [mockQuery](https://github.com/danielspaniel/ember-data-factory-guy#mockquery)
