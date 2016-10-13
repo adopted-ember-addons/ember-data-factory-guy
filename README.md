@@ -1738,7 +1738,9 @@ person.save(); // will succeed
 ```
 
 3. Can pass in random attributes to help build the fixture
-
+  - sorta like transient attributes but these don't get passed to afterMake
+  - hence can be used in build/buildList as well
+  
 Let's say you have a model and a factory like this:
 
 ```javascript
