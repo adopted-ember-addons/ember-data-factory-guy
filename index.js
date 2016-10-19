@@ -26,10 +26,10 @@ module.exports = {
     this.parentConfig = config;
     return config;
   },
-  
+
   includeFactoryGuyFactories: function() {
     var config = this.parentConfig;
-    return config.environment === 'development' && config.factoryGuy;
+    return config.factoryGuy;
   },
 
   treeForApp: function(appTree) {
