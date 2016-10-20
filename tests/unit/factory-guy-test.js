@@ -140,6 +140,16 @@ test("emits warning when trait is not found", function() {
   Ember.warn.restore();
 });
 
+test("handles hash attribute with hash value as default value", function() {
+  let dog = build('dog');
+  deepEqual(dog.get('tag'), { num: 1 });
+});
+
+test("handles hash attribute with hash value in options", function() {
+  let dog = build('dog', {tag: {num: 10}});
+  deepEqual(dog.get('tag'), { num: 10 });
+});
+
 module('FactoryGuy#buildList', inlineSetup(App, '-rest'));
 
 test("without a number returns a empty json payload", function() {

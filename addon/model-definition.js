@@ -68,7 +68,7 @@ class ModelDefinition {
    */
   isModelFragmentAttribute(attribute) {
     let info = this.modelFragmentInfo(attribute);
-    return !!(info && info.type.match('mf-fragment'));
+    return !!(info && info.type && info.type.match('mf-fragment'));
   }
 
   /**
