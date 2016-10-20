@@ -1,3 +1,4 @@
+import {module, test} from 'qunit';
 import { make, makeList, build, buildList, mockQuery } from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
@@ -18,7 +19,7 @@ var visitAndSearch = function(name) {
   search(name);
 };
 
-test("mockQuery without params matches store.query with any parameters", function () {
+test("mockQuery without params matches store.query with any parameters", function(assert) {
   let dude = buildList('user', {name: 'Dude'});
 
   // no query parameters set in the mock so it will match
@@ -28,14 +29,14 @@ test("mockQuery without params matches store.query with any parameters", functio
   visitAndSearch("Bif"); // still returns dude
 
   andThen(()=> {
-    ok(find('.user .name').length === 1);
-    ok(find('.user .name').text().match("Dude"));
+    assert.ok(find('.user .name').length === 1);
+    assert.ok(find('.user .name').text().match("Dude"));
   });
 
 });
 
 
-test("mockQuery with params matches store.query with those parameters", function () {
+test("mockQuery with params matches store.query with those parameters", function(assert) {
   let dude = buildList('user', {name: 'Dude'});
 
   // asking to mock only exact match of 'user'
@@ -45,13 +46,13 @@ test("mockQuery with params matches store.query with those parameters", function
   visitAndSearch("Dude");
 
   andThen(()=> {
-    ok(find('.user .name').length === 1);
-    ok(find('.user .name').text().match("Dude"));
+    assert.ok(find('.user .name').length === 1);
+    assert.ok(find('.user .name').text().match("Dude"));
   });
 
 });
 
-test("reusing mockQuery to return different results with different parameters", function () {
+test("reusing mockQuery to return different results with different parameters", function(assert) {
   let sillyPeople = buildList('user', {name: 'Bo'}, {name: "Bif"});
 
   // nothing is returned with these parameters: {name: "Dude"}
@@ -60,7 +61,7 @@ test("reusing mockQuery to return different results with different parameters", 
   visitAndSearch("Dude");
 
   andThen(()=> {
-    ok(find('.user .name').length === 0);
+    assert.ok(find('.user .name').length === 0);
   });
 
   andThen(()=>{
@@ -69,15 +70,15 @@ test("reusing mockQuery to return different results with different parameters", 
   });
 
   andThen(()=>{
-    ok(find('.user .name').length === 2);
-    ok(find('.user .name:first').text().match("Bo"));
-    ok(find('.user .name:last').text().match("Bif"));
+    assert.ok(find('.user .name').length === 2);
+    assert.ok(find('.user .name:first').text().match("Bo"));
+    assert.ok(find('.user .name:last').text().match("Bif"));
   });
 
 });
 
 
-test("using returns( models )", function () {
+test("using returns( models )", function(assert) {
   let bobs = makeList("bob", 2);
 
   mockQuery('user', {name: "bob"}).returns({models: bobs});
@@ -85,12 +86,12 @@ test("using returns( models )", function () {
   visitAndSearch("bob");
 
   andThen(()=> {
-    ok(find('.user').length === 2);
+    assert.ok(find('.user').length === 2);
   });
 
 });
 
-test("using returns( ids )", function () {
+test("using returns( ids )", function(assert) {
   let bob = make("bob");
   let user = make("user");
 
@@ -99,20 +100,20 @@ test("using returns( ids )", function () {
   visitAndSearch("user2");
 
   andThen(()=> {
-    ok(find('.user').length === 1);
-    ok(find('.user .name').text().match("Bob"));
+    assert.ok(find('.user').length === 1);
+    assert.ok(find('.user .name').text().match("Bob"));
   });
 
 });
 
 
-test("using fails to mock a failed query", function () {
+test("using fails to mock a failed query", function(assert) {
   let errors = {errors: {description: ['invalid']}};
   mockQuery('user').fails({status: 422, response: errors});
 
   visitAndSearch("Allen");
 
   andThen(()=> {
-    ok(find('.results').text().match('Errors'));
+    assert.ok(find('.results').text().match('Errors'));
   });
 });

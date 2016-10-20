@@ -1,3 +1,4 @@
+import {module, test} from 'qunit';
 import Ember from 'ember';
 import FactoryGuy, { buildList, mockQuery } from 'ember-data-factory-guy';
 
@@ -48,7 +49,7 @@ test("with proxy payload", function(assert) {
     mockQuery('profile', {}).returns({ json });
 
     FactoryGuy.store.query('profile', {}).then(function(profiles) {
-      ok(isEquivalent(profiles.get('meta'), { previous: 1, next: 3, count: 2 }));
+      assert.ok(isEquivalent(profiles.get('meta'), { previous: 1, next: 3, count: 2 }));
       done();
     });
   });

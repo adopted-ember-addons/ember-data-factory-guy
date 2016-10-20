@@ -3,9 +3,9 @@ import { isEquivalent, isPartOf } from 'ember-data-factory-guy/utils/helper-func
 
 module('isEquivalent | Helper Function');
 
-var tomster = { name: 'Tomster', friends: ['Zoey',    'Yahuda', 'Tom'] };
-var zoey    = { name: 'Zoey',    friends: ['Tomster', 'Yahuda', 'Tom'] };
-var daniel  = { name: 'Daniel',  friends: ['Zoey',    'Yahuda', 'Tom'] };
+let tomster = { name: 'Tomster', friends: ['Zoey',    'Yahuda', 'Tom'] };
+let zoey    = { name: 'Zoey',    friends: ['Tomster', 'Yahuda', 'Tom'] };
+let daniel  = { name: 'Daniel',  friends: ['Zoey',    'Yahuda', 'Tom'] };
 
 test('#isEquivalent with numbers', function(assert) {
   assert.ok(  isEquivalent(1, 1),   'Equivalent numbers should return true'      );
@@ -84,12 +84,12 @@ test('#isEquivalent with deeply nested objects', function(assert) {
   // we don't use nestedTomster or nestedZoey in the friends array to avoid
   // infinite recurrsion
 
-  var nestedTomster = {
+  let nestedTomster = {
     name:    tomster.name,
     friends: [ zoey, daniel ]
   };
 
-  var nestedZoey = {
+  let nestedZoey = {
     name:    zoey.name,
     friends: [ tomster, daniel ]
   };
@@ -103,15 +103,15 @@ test('#isEquivalent with deeply nested objects', function(assert) {
 });
 
 test('#isPartOf', function(assert) {
-  assert.ok( isPartOf(tomster, { name: 'Tomster' } ), 
+  assert.ok( isPartOf(tomster, { name: 'Tomster' } ),
     'returns true if the first object contains all key-value pairs from the second object' );
 
-  assert.ok( isPartOf(tomster, tomster), 
+  assert.ok( isPartOf(tomster, tomster),
     'returns true if the first object is the same as the second object' );
 
-  assert.ok( isPartOf(tomster, {}), 
+  assert.ok( isPartOf(tomster, {}),
     'returns true if the second object is empty' );
 
-  assert.notOk( isPartOf(tomster, { name: 'Tomster', number: 1 } ), 
+  assert.notOk( isPartOf(tomster, { name: 'Tomster', number: 1 } ),
     'returns false if the first object does not contains key-value pairs from the second object' );
 });

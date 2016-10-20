@@ -30,12 +30,12 @@ moduleForModel('user', 'Unit | Model | user', {
   }
 });
 
-test('has funny name', function () {
+test('has funny name', function(assert) {
   let user = make('user', {name: 'Dude'});
-  equal(user.get('funnyName'), 'funny Dude');
+  assert.equal(user.get('funnyName'), 'funny Dude');
 });
 
-test('has projects', function () {
+test('has projects', function(assert) {
   let user = make('user', 'with_projects');
-  equal(user.get('projects.length'), 2);
+  assert.equal(user.get('projects.length'), 2);
 });

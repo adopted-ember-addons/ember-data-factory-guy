@@ -1,3 +1,4 @@
+import {module, test} from 'qunit';
 import Ember from 'ember';
 import FactoryGuy, {
   make, makeList, build, buildList, clearStore,
@@ -12,19 +13,19 @@ const serializerType = '-json-api';
 
 module('mockSetup', inlineSetup(App));
 
-test("accepts parameters", function() {
+test("accepts parameters", function(assert) {
   FactoryGuy.logLevel = 0;
   Ember.$.mockjaxSettings.responseTime = 0;
   Ember.$.mockjaxSettings.logging = 0;
 
   mockSetup({logLevel: 1});
-  equal(FactoryGuy.logLevel, 1);
+  assert.equal(FactoryGuy.logLevel, 1);
 
   mockSetup({responseTime: 10});
-  equal(Ember.$.mockjaxSettings.responseTime, 10);
+  assert.equal(Ember.$.mockjaxSettings.responseTime, 10);
 
   mockSetup({mockjaxLogLevel: 4});
-  equal(Ember.$.mockjaxSettings.logging, 4);
+  assert.equal(Ember.$.mockjaxSettings.logging, 4);
 
   FactoryGuy.logLevel = 0;
   Ember.$.mockjaxSettings.responseTime = 0;
@@ -47,17 +48,17 @@ test("status must be 3XX, 4XX or 5XX", function(assert) {
     mock.fails({ status: 104 });
   });
 
-  ok(mock.fails({ status: 300 }) instanceof MockRequest);
-  ok(mock.fails({ status: 303 }) instanceof MockRequest);
-  ok(mock.fails({ status: 401 }) instanceof MockRequest);
-  ok(mock.fails({ status: 521 }) instanceof MockRequest);
+  assert.ok(mock.fails({ status: 300 }) instanceof MockRequest);
+  assert.ok(mock.fails({ status: 303 }) instanceof MockRequest);
+  assert.ok(mock.fails({ status: 401 }) instanceof MockRequest);
+  assert.ok(mock.fails({ status: 521 }) instanceof MockRequest);
 });
 
-test("with convertErrors not set, the errors are converted to JSONAPI formatted errors", function() {
+test("with convertErrors not set, the errors are converted to JSONAPI formatted errors", function(assert) {
   const mock = new MockRequest('user');
   let errors = { errors: { phrase: 'poorly worded' } };
   mock.fails({ response: errors });
-  deepEqual(mock.errorResponse, {
+  assert.deepEqual(mock.errorResponse, {
     errors: [
       {
         detail: 'poorly worded',
@@ -68,11 +69,11 @@ test("with convertErrors not set, the errors are converted to JSONAPI formatted 
   });
 });
 
-test("with convertErrors set to false, does not convert errors", function() {
+test("with convertErrors set to false, does not convert errors", function(assert) {
   const mock = new MockRequest('user');
   let errors = { errors: { phrase: 'poorly worded' } };
   mock.fails({ response: errors, convertErrors: false });
-  deepEqual(mock.errorResponse, errors);
+  assert.deepEqual(mock.errorResponse, errors);
 });
 
 test("with errors response that will be converted but does not have errors as object key", function(assert) {
@@ -92,7 +93,7 @@ test("can verify how many times a queryRecord call was mocked", function(assert)
 
     FactoryGuy.store.queryRecord('company', {}).then(()=> {
       FactoryGuy.store.queryRecord('company', {}).then(()=> {
-        equal(mock.timesCalled, 2);
+        assert.equal(mock.timesCalled, 2);
         done();
       });
     });
@@ -106,7 +107,7 @@ test("can verify how many times a findAll call was mocked", function(assert) {
 
     FactoryGuy.store.findAll('company').then(()=> {
       FactoryGuy.store.findAll('company').then(()=> {
-        equal(mock.timesCalled, 2);
+        assert.equal(mock.timesCalled, 2);
         done();
       });
     });
@@ -123,7 +124,7 @@ test("can verify how many times an update call was mocked", function(assert) {
     company.save().then(()=> {
       company.set('name', 'TWO');
       company.save().then(()=> {
-        equal(mock.timesCalled, 2);
+        assert.equal(mock.timesCalled, 2);
         done();
       });
     });
@@ -198,17 +199,17 @@ test("can enable, disable, and destroy mock", function(assert) {
     notOk(mock1.isDestroyed, "isDestroyed is false initially")
 
     FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
-      equal(data.get('id'), json1.get('id'), "the first mock works initially");
+      assert.equal(data.get('id'), json1.get('id'), "the first mock works initially");
       mock1.disable();
       FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
-        equal(data.get('id'), json2.get('id'), "the first mock doesn't work once it's disabled");
+        assert.equal(data.get('id'), json2.get('id'), "the first mock doesn't work once it's disabled");
         mock1.enable();
         FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
-          equal(data.get('id'), json1.get('id'), "the first mock works again after enabling");
+          assert.equal(data.get('id'), json1.get('id'), "the first mock works again after enabling");
           mock1.destroy();
-          ok(mock1.isDestroyed, "isDestroyed is set to true once the mock is destroyed")
+          assert.ok(mock1.isDestroyed, "isDestroyed is set to true once the mock is destroyed")
           FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
-            equal(data.get('id'), json2.get('id'), "the destroyed first mock doesn't work");
+            assert.equal(data.get('id'), json2.get('id'), "the destroyed first mock doesn't work");
             done();
           });
         });
@@ -219,29 +220,29 @@ test("can enable, disable, and destroy mock", function(assert) {
 
 module('mockFindRecord', inlineSetup(App, serializerType));
 
-test("has access to handler being used by mockjax", function() {
+test("has access to handler being used by mockjax", function(assert) {
   let mock = mockFindRecord('user');
-  ok(mock.handler);
+  assert.ok(mock.handler);
 });
 
-test("#get method to access payload", function() {
+test("#get method to access payload", function(assert) {
   let mock = mockFindRecord('user');
-  equal(mock.get('name'), 'User1');
+  assert.equal(mock.get('name'), 'User1');
 });
 
 
 module('mockFindRecord #getUrl', inlineSetup(App));
 
-test("with proxy", function() {
+test("with proxy", function(assert) {
   const json = build('user');
   const mock = mockFindRecord('user').returns({ json });
-  equal(mock.getUrl(), '/users/1');
+  assert.equal(mock.getUrl(), '/users/1');
 });
 
-test("with json", function() {
+test("with json", function(assert) {
   const json = { id: 1, name: "Dan" };
   const mock = mockFindRecord('user').returns({ json });
-  equal(mock.getUrl(), '/users/1');
+  assert.equal(mock.getUrl(), '/users/1');
 });
 
 
@@ -256,8 +257,8 @@ test("with errors in response", function(assert) {
 
     FactoryGuy.store.findRecord('profile', 1)
       .catch((res)=> {
-        equal(mock.timesCalled, 1);
-        ok(true);
+        assert.equal(mock.timesCalled, 1);
+        assert.ok(true);
         done();
       });
   });
@@ -266,23 +267,23 @@ test("with errors in response", function(assert) {
 
 module('mockFindAll', inlineSetup(App, serializerType));
 
-test("have access to handler being used by mockjax", function() {
+test("have access to handler being used by mockjax", function(assert) {
   let mock = mockFindAll('user');
-  ok(mock.handler);
+  assert.ok(mock.handler);
 });
 
-test("#get method to access payload", function() {
+test("#get method to access payload", function(assert) {
   let mock = mockFindAll('user', 2);
-  deepEqual(mock.get(0), { id: 1, name: 'User1', style: 'normal' });
+  assert.deepEqual(mock.get(0), { id: 1, name: 'User1', style: 'normal' });
 });
 
 
 module('mockQuery', inlineSetup(App, serializerType));
 
-test("#get method to access payload", function() {
+test("#get method to access payload", function(assert) {
   let json = buildList('user', 2)
   let mock = mockQuery('user', {}).returns({ json });
-  deepEqual(mock.get(0), json.get(0));
+  assert.deepEqual(mock.get(0), json.get(0));
 });
 
 test("json payload argument should be an object", function(assert) {
@@ -335,18 +336,18 @@ test("mock query using returns with an instance of DS.Model throws error", funct
   }, "can't pass a DS.Model instance to mock query");
 });
 
-test("have access to handler being used by mockjax", function() {
+test("have access to handler being used by mockjax", function(assert) {
   let mock = mockQuery('user');
-  ok(mock.handler);
+  assert.ok(mock.handler);
 });
 
 
 module('mockQueryRecord', inlineSetup(App, serializerType));
 
-test("#get method to access payload", function() {
+test("#get method to access payload", function(assert) {
   let json = build('user')
   let mock = mockQueryRecord('user', {}).returns({ json });
-  deepEqual(mock.get(), json.get());
+  assert.deepEqual(mock.get(), json.get());
 });
 
 test("returns() method accepts only id, model, json or header as keys", function(assert) {
@@ -394,9 +395,9 @@ test("returns() method accepts only id, model, json or header as keys", function
   });
 });
 
-test("have access to handler being used by mockjax", function() {
+test("have access to handler being used by mockjax", function(assert) {
   let mock = mockQueryRecord('user');
-  ok(mock.handler);
+  assert.ok(mock.handler);
 });
 
 test("using fails makes the request fail", function(assert) {
@@ -406,7 +407,7 @@ test("using fails makes the request fail", function(assert) {
     mockQueryRecord('user').fails();
     FactoryGuy.store.queryRecord('user', {})
       .catch(()=> {
-        ok(true);
+        assert.ok(true);
         done();
       });
 
