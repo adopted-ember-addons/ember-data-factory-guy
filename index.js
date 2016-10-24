@@ -22,20 +22,10 @@ module.exports = {
     return mergeTrees(files);
   },
 
-  config: function (env, config) {
-    this.parentConfig = config;
-    return config;
-  },
-
-  includeFactoryGuyFactories: function() {
-    var config = this.parentConfig;
-    return config.factoryGuy;
-  },
-
   treeForApp: function(appTree) {
     var trees = [appTree];
 
-    if (this.includeFactoryGuyFactories()) {
+    if (this.includeFactoryGuyFiles()) {
       try {
         if (fs.statSync('tests/factories').isDirectory()) {
           var factoriesTree = new Funnel('tests/factories', {
@@ -54,18 +44,35 @@ module.exports = {
   included: function(app) {
     this._super.included(app);
     this.app = app;
+    this.factoryGuyEnabled = Boolean(this.app.project.config(app.env).factoryGuy);
 
-    // need to load mockjax in development and test environment since ember tests
-    // can be run from browser in development mode
-    if (app.tests) {
+    if (this.includeFactoryGuyFiles()) {
       app.import(path.join(app.bowerDirectory, 'jquery-mockjax', 'dist', 'jquery.mockjax.js'));
       app.import(path.join('vendor', 'urijs', 'URI.js'));
     }
   },
 
-  treeFor: function(name) {
-    if (this.app.tests) {
-      return this._super.treeFor.apply(this, arguments);
+  includeFactoryGuyFiles: function() {
+    var includeFiles = false;
+
+    if (this.app.env === 'test') {
+      includeFiles = true;
+
+      if (this.factoryGuyEnabled) {
+        includeFiles = this.factoryGuyEnabled;
+      }
+    } else {
+      includeFiles = this.factoryGuyEnabled;
     }
+
+    return includeFiles;
+  },
+
+  treeFor: function(name) {
+    if (!this.includeFactoryGuyFiles()) {
+      return;
+    }
+
+    return this._super.treeFor.apply(this, arguments);
   }
 };
