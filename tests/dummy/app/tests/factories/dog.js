@@ -5,6 +5,9 @@ const defaultVolume = "Normal";
 FactoryGuy.define('dog', {
   default: {
     dogNumber: (f)=> `Dog${f.id}`,
-    sound: (f) => `${f.volume||defaultVolume} Woof`
+    sound: (f) => `${f.volume || defaultVolume} Woof`,
+    tag: (f) => {
+      return { num: f.id };
+    }
   }
 });

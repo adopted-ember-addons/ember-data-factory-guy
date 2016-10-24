@@ -9,23 +9,23 @@ moduleForModel('profile', 'Unit | Model | profile', {
   }
 });
 
-test('using only make for profile with company association', function() {
+test('using only make for profile with company association', function(assert) {
   let profile = make('profile', 'with_company');
-  ok(profile.get('company.profile') === profile);
+  assert.ok(profile.get('company.profile') === profile);
 });
 
-test('composing a profile with a company association by making both', function() {
+test('composing a profile with a company association by making both', function(assert) {
   let company = make('company');
   let profile = make('profile', {company: company});
-  ok(profile.get('company.profile') === profile);
+  assert.ok(profile.get('company.profile') === profile);
 });
 
-test('using this.subject for profile and make for company associaion', function() {
+test('using this.subject for profile and make for company associaion', function(assert) {
   let profile = this.subject({company: make('company')});
-  ok(profile.get('company.profile') === profile);
+  assert.ok(profile.get('company.profile') === profile);
 });
 
-test('uses customized transformFor', function () {
+test('uses customized transformFor', function(assert) {
   let profile = make('profile', {foo: 'bar'});
-  equal(profile.get('foo'), 'bar');
+  assert.equal(profile.get('foo'), 'bar');
 });

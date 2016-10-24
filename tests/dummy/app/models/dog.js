@@ -3,5 +3,6 @@ import attr from 'ember-data/attr';
 
 export default Model.extend({
   dogNumber: attr('string'),
-  sound: attr('string')
+  sound: attr('string'),
+  tag: attr() // hash
 });

@@ -10,12 +10,12 @@ moduleForComponent('single-user', 'Integration | Component | single-user (manual
   }
 });
 
-test("shows user information", function () {
+test("shows user information", function(assert) {
   let user = make('user', {name: 'Rob'});
 
   this.render(hbs`{{single-user user=user}}`);
   this.set('user', user);
 
-  ok(this.$('.name').text().match(user.get('name')));
-  ok(this.$('.funny-name').text().match(user.get('funnyName')));
+  assert.ok(this.$('.name').text().match(user.get('name')));
+  assert.ok(this.$('.funny-name').text().match(user.get('funnyName')));
 });
