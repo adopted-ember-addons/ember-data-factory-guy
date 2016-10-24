@@ -35,7 +35,7 @@ Contents:
   - [Associations](https://github.com/danielspaniel/ember-data-factory-guy#associations)
   - [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
   - [Callbacks / Transient Attributes](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
-  - [Using in Development](https://github.com/danielspaniel/ember-data-factory-guy#using-in-development)
+  - [Using in Development, Production or other environments](https://github.com/danielspaniel/ember-data-factory-guy#using-in-other-environments)
   - [Ember Data Model Fragments](https://github.com/danielspaniel/ember-data-factory-guy#ember-data-model-fragments)
   - [Creating Factories in Addons](https://github.com/danielspaniel/ember-data-factory-guy#creating-factories-in-addons)
   - [Ember Django Adapter](https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter)
@@ -49,7 +49,7 @@ ChangeLog: ( Notes about what has changed in each version )
   - [Release Notes](https://github.com/danielspaniel/ember-data-factory-guy/releases)
 
 ### Installation
-   
+
  - ```ember install ember-data-factory-guy``` ( ember-data-1.13.5+ )
  - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + )
  - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 )
@@ -102,7 +102,7 @@ In the following examples, assume the models look like this:
  - Create factory files in the tests/factories directory.
  - Can use generator to create the outline of a factory file:
   ```ember g factory user``` This will create a file named user.js in the tests/factories directory.
- 
+
 
 ##### Standard models
 
@@ -129,7 +129,7 @@ FactoryGuy.define('user', {
 
 ```
 
-- If you are using an attribute named 'type' and this is not a polymorphic model, use the option 
+- If you are using an attribute named 'type' and this is not a polymorphic model, use the option
   ```polymorphic: false``` in your definition
 ```js
 // file: tests/factories/cat.js
@@ -147,7 +147,7 @@ FactoryGuy.define('cat', {
 ##### Polymorphic models
 
  - Define each polymorphic model in it's own typed definition
- - The attribute named 'type' is used to hold the model name 
+ - The attribute named 'type' is used to hold the model name
  - May want to extend parent factory here
    - See [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
 
@@ -808,13 +808,21 @@ You would use this to make models like:
 
 ```
 
-### Using in Development
+### Using in Other Environments
 
 - You can set up scenarios for you app that use all your factories from tests
 - In config/environment.js place a flag => factoryGuy: true
   ```js
     // file: config/environment.js
     if (environment === 'development') {
+      ENV.factoryGuy = true;
+      ENV.locationType = 'auto';
+      ENV.rootURL = '/';
+    }
+
+    or
+
+    if (environment === 'production') {
       ENV.factoryGuy = true;
       ENV.locationType = 'auto';
       ENV.rootURL = '/';
@@ -1740,7 +1748,7 @@ person.save(); // will succeed
 3. Can pass in random attributes to help build the fixture
   - sorta like transient attributes but these don't get passed to afterMake
   - hence can be used in build/buildList as well
-  
+
 Let's say you have a model and a factory like this:
 
 ```javascript
@@ -1756,9 +1764,9 @@ Let's say you have a model and a factory like this:
 
  // tests/factories/dog.js
  import FactoryGuy from 'ember-data-factory-guy';
- 
+
  const defaultVolume = "Normal";
- 
+
  FactoryGuy.define('dog', {
    default: {
      dogNumber: (f)=> `Dog${f.id}`,
@@ -1766,13 +1774,13 @@ Let's say you have a model and a factory like this:
    }
  });
 ```
- 
+
 Then to build the fixture:
 
 ```javascript
   let volume = 'Soft';
   let dog2 = build('dog', { volume });
-  
-  dog2.get('sound'); //=> `Soft Woof` 
-```  
-  
+
+  dog2.get('sound'); //=> `Soft Woof`
+```
+
