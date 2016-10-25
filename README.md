@@ -812,6 +812,10 @@ You would use this to make models like:
 
 - You can set up scenarios for you app that use all your factories from tests
 - In config/environment.js place a flag => factoryGuy: true
+- NOTE: Do not set the flag => factoryGuy: true in the `test` environment. Factories are enabled
+  by default for the `test` environment and setting the flag tells factory-guy to load the app/scenarios
+  files which are not needed for using factory-guy in testing. This will result in errors being generated if
+  the app/scenarios files do not exist.
   ```js
     // file: config/environment.js
     if (environment === 'development') {
