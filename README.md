@@ -861,7 +861,6 @@ You would use this to make models like:
     }
   ```
 
-
   ```js
     // file: app/scenarios/users.js
     import {Scenario} from 'ember-data-factory-guy';
