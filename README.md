@@ -1711,8 +1711,11 @@ Usage:
 syntax yet, you are truely missing out.
 
   ```javascript
+   
    let json    = buildList('widget', 'square', 'round', ['round','broken']);
    let widgets = makeList('widget', 'square', 'round', ['round','broken']);
+   let [roundWidget, squareWidget, roundBrokenWidget] = widgets; 
+   
   ```
     - you just built/made 3 different widgets from traits ('square','round','broken')
     - first will have square trait
@@ -1795,3 +1798,43 @@ Then to build the fixture:
   dog2.get('sound'); //=> `Soft Woof`
 ```
 
+4. You can build up static / fixture like data into the factories.
+
+ - States are the classic case. There is a state model, and there are 50 US states. 
+  
+ - You could use a strategy to get them with traits like this
+```javascript
+  import FactoryGuy from 'ember-data-factory-guy';
+  
+  FactoryGuy.define('state', {
+  
+    traits: {
+      NY: { name: "New York", id: "NY" },
+      NJ: { name: "New Jersey", id: "NJ" },
+      CT: { name: "Connecticut", id: "CT" }
+    }
+  });
+  
+  // then in your tests you would do 
+  let [ny, nj, ct] = makeList('state', 'ny', 'nj', 'ct'); 
+```
+ - Or you could use a strategy to get them like this:
+```javascript
+  import FactoryGuy from 'ember-data-factory-guy';
+  let states = [
+    { name: "New York", id: "NY" },
+    { name: "New Jersey", id: "NJ" },
+    { name: "Connecticut", id: "CT" }
+    ... blah .. blah .. blah
+  ];
+
+  FactoryGuy.define('state', {
+  
+    default: {
+      id: FactoryGuy.generate((i)=> states[i-1].id)
+      name: FactoryGuy.generate((i)=> states[i-1].name)
+  });
+  
+  // then in your tests you would do 
+  let states = makeList('state', 3); 
+```
