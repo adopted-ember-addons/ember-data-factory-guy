@@ -1708,7 +1708,7 @@ Usage:
 ##### Tips and Tricks
 
 1. This is probably the funnest thing in FactoryGuy, if your not using this
-syntax yet, your truely missing out.
+syntax yet, you are truely missing out.
 
   ```javascript
    let json    = buildList('widget', 'square', 'round', ['round','broken']);
@@ -1747,6 +1747,13 @@ mockUpdate(person).match({name: "Daniel-san"});
 person.save(); // will succeed
 
 // and voila, you have just tested the serializer is converting the name properly
+
+- You could also test ```serialize()``` method in a simpler way by doing this:
+
+```javascript  
+ let person = make('person', {name: "Daniel"});
+ let json = person.serialize();
+ assert.equal(json.name, 'Daniel-san');
 ```
 
 3. Can pass in random attributes to help build the fixture
