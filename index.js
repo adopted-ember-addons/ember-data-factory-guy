@@ -57,10 +57,6 @@ module.exports = {
 
     if (this.app.env === 'test') {
       includeFiles = true;
-
-      if (this.factoryGuyEnabled) {
-        includeFiles = this.factoryGuyEnabled;
-      }
     } else {
       includeFiles = this.factoryGuyEnabled;
     }
