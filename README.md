@@ -1753,16 +1753,16 @@ syntax yet, you are truely missing out.
 - You could also test ```serialize()``` method in a simpler way by doing this:
 
 ```javascript  
- let person = make('person', {name: "Daniel"});
- let json = person.serialize();
- assert.equal(json.name, 'Daniel-san');
+  let person = make('person', {name: "Daniel"});
+  let json = person.serialize();
+  assert.equal(json.name, 'Daniel-san');
 ```
 
-3. Can pass in random attributes to help build the fixture
+3. You can pass in random attributes to help build a fixture
   - sorta like transient attributes but these don't get passed to afterMake
   - hence can be used in build/buildList as well
 
-Let's say you have a model and a factory like this:
+  Let's say you have a model and a factory like this:
 
 ```javascript
 
@@ -1800,8 +1800,8 @@ Then to build the fixture:
 4. You can build up static / fixture like data into the factories.
 
  - States are the classic case. There is a state model, and there are 50 US states. 
-  
- - You could use a strategy to get them with traits like this
+ - You could use a strategy to get them with traits like this:
+ 
 ```javascript
   import FactoryGuy from 'ember-data-factory-guy';
   
@@ -1817,7 +1817,8 @@ Then to build the fixture:
   // then in your tests you would do 
   let [ny, nj, ct] = makeList('state', 'ny', 'nj', 'ct'); 
 ```
- - Or you could use a strategy to get them like this:
+- Or you could use a strategy to get them like this:
+
 ```javascript
   import FactoryGuy from 'ember-data-factory-guy';
   let states = [
