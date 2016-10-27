@@ -1824,7 +1824,8 @@ Then to build the fixture:
 
 ```javascript
   import FactoryGuy from 'ember-data-factory-guy';
-  let states = [
+  
+  const states = [
     { name: "New York", id: "NY" },
     { name: "New Jersey", id: "NJ" },
     { name: "Connecticut", id: "CT" }
