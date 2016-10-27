@@ -1729,27 +1729,26 @@ syntax yet, you are truely missing out.
 
 ```javascript
 
-// app/serializers/person.js
-export default DS.RESTSerializer.extend({
+  // app/serializers/person.js
+  export default DS.RESTSerializer.extend({
 
-  // let's say your modifying all names to be Japanese honorific style
-  serialize: function(snapshot, options) {
-    var json = this._super(snapshot, options);
+    // let's say your modifying all names to be Japanese honorific style
+    serialize: function(snapshot, options) {
+      var json = this._super(snapshot, options);
+  
+      let honorificName = [snapshot.record.get('name'), 'san'].join('-');
+      json.name = honorificName;
+  
+      return json;
+    }
+  });
 
-    let honorificName = [snapshot.record.get('name'), 'san'].join('-');
-    json.name = honorificName;
-
-    return json;
-  }
-
-});
-
-// somewhere in your tests
-let person = make('person', {name: "Daniel"});
-mockUpdate(person).match({name: "Daniel-san"});
-person.save(); // will succeed
-
-// and voila, you have just tested the serializer is converting the name properly
+  // somewhere in your tests
+  let person = make('person', {name: "Daniel"});
+  mockUpdate(person).match({name: "Daniel-san"});
+  person.save(); // will succeed
+  // and voila, you have just tested the serializer is converting the name properly
+```
 
 - You could also test ```serialize()``` method in a simpler way by doing this:
 
