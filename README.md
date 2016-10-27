@@ -1707,9 +1707,10 @@ Usage:
 
 ##### Tips and Tricks
 
-###### Tip 1: This is probably the funnest thing in FactoryGuy, if your not using this
-syntax yet, you are truely missing out.
-
+###### Tip 1: Fun with makeList/buildList and traits
+  - This is probably the funnest thing in FactoryGuy, if your not using this
+  syntax yet, you are truely missing out.
+  
   ```javascript
    
    let json    = buildList('widget', 'square', 'round', ['round','broken']);
@@ -1724,8 +1725,9 @@ syntax yet, you are truely missing out.
 
   - Check out [makeList](https://github.com/danielspaniel/ember-data-factory-guy#makelist) and [buildList](https://github.com/danielspaniel/ember-data-factory-guy#buildlist) for more ideas
 
-###### Tip 2: The fact that you can match on attributes in mockUpdate and mockCreate means
-  that you can test a custom `serialize` method in a model serializer
+###### Tip 2: Testing model's custom ```serialize()``` method 
+  - The fact that you can match on attributes in mockUpdate and mockCreate means
+   that you can test a custom ```serialize()``` method in a model serializer
 
 ```javascript
 
@@ -1758,9 +1760,10 @@ syntax yet, you are truely missing out.
   assert.equal(json.name, 'Daniel-san');
 ```
 
-###### Tip 3: You can pass in random attributes to help build a fixture
+###### Tip 3: Using random attributes to build fixture.
+  - Believe it or not, you can pass in random attributes to help build a fixture
   - sorta like transient attributes but these don't get passed to afterMake
-  - hence can be used in build/buildList as well
+  - This can be done in build/buildList as well
 
   Let's say you have a model and a factory like this:
 
@@ -1797,7 +1800,7 @@ Then to build the fixture:
   dog2.get('sound'); //=> `Soft Woof`
 ```
 
-###### Tip 4: You can build up static / fixture like data into the factories.
+###### Tip 4: Building static / fixture like data into the factories.
 
  - States are the classic case. There is a state model, and there are 50 US states. 
  - You could use a strategy to get them with traits like this:
@@ -1836,5 +1839,5 @@ Then to build the fixture:
   });
   
   // then in your tests you would do 
-  let states = makeList('state', 3); 
+  let states = makeList('state', 3); // or however many states you have 
 ```
