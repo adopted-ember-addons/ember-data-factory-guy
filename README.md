@@ -7,7 +7,7 @@ Factories simplify the process of testing, making you more efficient and your te
 
 **NEW and Improved** starting with v2.7.0
   - Support for using your factories in development environment
-  - Change your [scenarios](https://github.com/danielspaniel/ember-data-factory-guy#using-in-development), hit refresh and the development data changes
+  - Change your [scenarios](https://github.com/danielspaniel/ember-data-factory-guy#using-in-other-environments), hit refresh and the development data changes
 
 **Older but still fun things**
 - Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
