@@ -1,9 +1,17 @@
+/* global require */
 import DS from 'ember-data';
 import JSONAPIFixtureBuilder from './jsonapi-fixture-builder';
 import RESTFixtureBuilder from './rest-fixture-builder';
 import JSONFixtureBuilder from './json-fixture-builder';
 import DRFFixtureBuilder from './drf-fixture-builder';
 import ActiveModelFixtureBuilder from './active-model-fixture-builder';
+
+let ActiveModelSerializer, DjangoSerializer;
+try {
+  ActiveModelSerializer = require('active-model-adapter').ActiveModelSerializer;
+  DjangoSerializer = require('ember-django-adapter/serializers/drf').default;
+} catch (e) {
+}
 
 export default class {
 
@@ -37,11 +45,11 @@ export default class {
   }
 
   usingDRFSerializer() {
-    return this.serializer && this.adapter.defaultSerializer === 'DS/djangoREST';
+    return this.serializer && DjangoSerializer && this.serializer instanceof DjangoSerializer;
   }
 
   usingActiveModelSerializer() {
-    return this.serializer && this.adapter.defaultSerializer === '-active-model';
+    return this.serializer && ActiveModelSerializer && this.serializer instanceof ActiveModelSerializer;
   }
 
   usingRESTSerializer() {
