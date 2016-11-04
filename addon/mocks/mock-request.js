@@ -7,6 +7,7 @@ export default class {
 
   constructor(modelName) {
     this.modelName = modelName;
+    this.fixtureBuilder = FactoryGuy.fixtureBuilder(this.modelName)
     this.status = 200;
     this.responseHeaders = {};
     this.responseJson = null;
@@ -53,7 +54,7 @@ export default class {
     this.errorResponse = response;
 
     if (response && convertErrors) {
-      let errors = FactoryGuy.fixtureBuilder.convertResponseErrors(response, this.status);
+      let errors = this.fixtureBuilder.convertResponseErrors(response, this.status);
       this.errorResponse = errors;
     }
 
@@ -87,13 +88,13 @@ export default class {
   typeMatch(settings) {
     return settings.type === this.getType();
   }
-  
+
   urlMatch(settings) {
     const uri = new URI(settings.url);
     const mockUri = new URI(this.getUrl());
     return uri.path() === mockUri.path();
   }
-  
+
   // Only check the uri path, not the host name and or query params.
   // The query params will be checked for mockQuery, mockQueryRecord,
   // but for the other mocks ignore them

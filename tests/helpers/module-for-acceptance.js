@@ -12,14 +12,11 @@ export default function(name, options = {}) {
     beforeEach() {
       this.application = startApp();
 
-      drfReset(this.application); // custom hackery for testing with drf
-
       // Adding FactoryGuy mockSetup call
-      mockSetup();
-
       // If you want to check if your mocks are handling response
       // and also see what the mocks are returning, or slow the responses down
       // mockSetup({logLevel:1, responseTime: 1000});
+      mockSetup();
 
       if (options.beforeEach) {
         return options.beforeEach.apply(this, arguments);
@@ -43,24 +40,25 @@ export default function(name, options = {}) {
  * DRF adapter / serializer does not handle sideloading and many of these tests use that to load
  * their relationships, otherwise I would not care.
  *
+ * Seems like this is no longer needed? Nov 4 2016
  * @param application
  */
-let drfReset = function(application) {
-  let container = application.__container__;
-  let store = FactoryGuy.store;
-  FactoryGuy.fixtureBuilder = new JSONAPIFixtureBuilder(store);
-  let findSerializer = store.serializerFor.bind(store);
-  let adapter = container.lookup('adapter:-json-api');
-  store.adapterFor = function() { return adapter; };
-  let serializer = container.lookup('serializer:-json-api');
-  store.serializerFor = function(modelName) {
-    let originalSerializer = findSerializer(modelName);
-    // these models are ember-model-fragments so they do their own thing
-    if (modelName.match(/(name|department|address|department-employment|manager)/)) {
-      return originalSerializer;
-    }
-    return serializer;
-  };
-  adapter.store = store;
-  serializer.store = store;
-};
+//let drfReset = function(application) {
+//  let container = application.__container__;
+//  let store = FactoryGuy.store;
+//  FactoryGuy.fixtureBuilder = ()=> new JSONAPIFixtureBuilder(store);
+//  let findSerializer = store.serializerFor.bind(store);
+//  let adapter = container.lookup('adapter:-json-api');
+//  store.adapterFor = function() { return adapter; };
+//  let serializer = container.lookup('serializer:-json-api');
+//  store.serializerFor = function(modelName) {
+//    let originalSerializer = findSerializer(modelName);
+//    // these models are ember-model-fragments so they do their own thing
+//    if (modelName.match(/(name|department|address|department-employment|manager)/)) {
+//      return originalSerializer;
+//    }
+//    return serializer;
+//  };
+//  adapter.store = store;
+//  serializer.store = store;
+//};

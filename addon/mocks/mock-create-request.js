@@ -33,8 +33,9 @@ export default class MockCreateRequest extends AttributeMatcher(MockRequest) {
    Unless the id is setup already in the return args, then setup a new id.
    */
   modelId() {
-    if (isPresent(this.returnArgs) && isPresent(this.returnArgs['id'])) {
-      return this.returnArgs['id'];
+    let returnArgs = this.returnArgs;
+    if (isPresent(returnArgs) && isPresent(returnArgs['id'])) {
+      return returnArgs['id'];
     } else {
       let definition = FactoryGuy.findModelDefinition(this.modelName);
       return definition.nextId();
@@ -48,7 +49,7 @@ export default class MockCreateRequest extends AttributeMatcher(MockRequest) {
   getResponse() {
     let args = Ember.$.extend({}, this.matchArgs, this.returnArgs);
     let json = Ember.$.extend({}, args, { id: this.modelId() });
-    this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
+    this.responseJson = this.fixtureBuilder.convertForBuild(this.modelName, json);
     return super.getResponse();
   }
 

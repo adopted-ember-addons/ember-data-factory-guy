@@ -1,31 +1,31 @@
-import {module, test} from 'qunit';
+import {moduleFor, test} from 'ember-qunit';
+import {module} from 'qunit';
 import Ember from 'ember';
-import FactoryGuy, {build, buildList, make, makeList, mockCreate} from 'ember-data-factory-guy';
+import FactoryGuy, {build, buildList, make, makeList, mockCreate, manualSetup} from 'ember-data-factory-guy';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
 import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
-import {title, inlineSetup} from '../helpers/utility-methods';
+import {inlineSetup} from '../helpers/utility-methods';
 
-let App = null;
-let adapter = 'DS.ActiveModelAdapter';
+let serializer = 'DS.ActiveModelSerializer';
 let serializerType = '-active-model';
 
-SharedAdapterBehavior.all(adapter, serializerType);
+SharedAdapterBehavior.all(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockFindRecordSideloadingTests(App, adapter, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindRecordSideloadingTests(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsAssociations(App, adapter, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsAssociations(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(App, adapter, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(App, adapter, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(serializer, serializerType);
 
-module(title(adapter, '#mockCreate custom'), inlineSetup(App, serializerType));
+moduleFor('serializer:application', `${serializer} #mockCreate custom`, inlineSetup(serializerType));
 
 test("returns camelCase attributes", function(assert) {
   Ember.run(()=> {
@@ -42,7 +42,7 @@ test("returns camelCase attributes", function(assert) {
   });
 });
 
-module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, serializerType));
+moduleFor('serializer:application', `${serializer} FactoryGuy#build custom`, inlineSetup(serializerType));
 
 test("embeds belongsTo record when serializer attrs => embedded: always ", function(assert) {
 

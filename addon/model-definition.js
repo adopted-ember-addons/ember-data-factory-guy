@@ -353,4 +353,3 @@ class ModelDefinition {
 }
 
 export default ModelDefinition;
-

@@ -17,42 +17,51 @@ export default class {
 
   constructor(store) {
     this.store = store;
-    this.adapter = store.adapterFor('application');
-    this.serializer = store.serializerFor('application');
   }
 
   /**
-   Return appropriate FixtureBuilder for the serializer type
+   Return appropriate FixtureBuilder for the model's serializer type
    */
-  fixtureBuilder() {
-    if (this.usingJSONAPISerializer()) {
+  fixtureBuilder(modelName) {
+    let serializer = this.store.serializerFor(modelName);
+    if (!serializer) {
       return new JSONAPIFixtureBuilder(this.store);
     }
-    if (this.usingDRFSerializer()) {
+    if (this.usingJSONAPISerializer(serializer)) {
+      return new JSONAPIFixtureBuilder(this.store);
+    }
+    if (this.usingDRFSerializer(serializer)) {
       return new DRFFixtureBuilder(this.store);
     }
-    if (this.usingActiveModelSerializer()) {
+    if (this.usingActiveModelSerializer(serializer)) {
       return new ActiveModelFixtureBuilder(this.store);
     }
-    if (this.usingRESTSerializer()) {
+    if (this.usingRESTSerializer(serializer)) {
       return new RESTFixtureBuilder(this.store);
     }
-    return new JSONFixtureBuilder(this.store);
+    if (this.usingJSONSerializer(serializer)) {
+      return new JSONFixtureBuilder(this.store);
+    }
+    return new JSONAPIFixtureBuilder(this.store);
   }
 
-  usingJSONAPISerializer() {
-    return this.serializer && this.serializer instanceof DS.JSONAPISerializer;
+  usingJSONAPISerializer(serializer) {
+    return serializer instanceof DS.JSONAPISerializer;
   }
 
-  usingDRFSerializer() {
-    return this.serializer && DjangoSerializer && this.serializer instanceof DjangoSerializer;
+  usingDRFSerializer(serializer) {
+    return DjangoSerializer && serializer instanceof DjangoSerializer;
   }
 
-  usingActiveModelSerializer() {
-    return this.serializer && ActiveModelSerializer && this.serializer instanceof ActiveModelSerializer;
+  usingActiveModelSerializer(serializer) {
+    return ActiveModelSerializer && serializer instanceof ActiveModelSerializer;
   }
 
-  usingRESTSerializer() {
-    return this.serializer && this.serializer instanceof DS.RESTSerializer;
+  usingRESTSerializer(serializer) {
+    return serializer instanceof DS.RESTSerializer;
+  }
+
+  usingJSONSerializer(serializer) {
+    return serializer instanceof DS.JSONSerializer;
   }
 }

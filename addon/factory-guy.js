@@ -76,12 +76,15 @@ class FactoryGuy {
   setStore(aStore) {
     Ember.assert("FactoryGuy#setStore needs a valid store instance.You passed in [" + aStore + "]", aStore instanceof DS.Store);
     this.store = aStore;
-    const fixtureBuilderFactory = new FixtureBuilderFactory(this.store);
-    this.fixtureBuilder = fixtureBuilderFactory.fixtureBuilder();
+    this.fixtureBuilderFactory = new FixtureBuilderFactory(this.store);
   }
 
-  updateHTTPMethod() {
-    return this.fixtureBuilder.updateHTTPMethod || 'PUT';
+  fixtureBuilder(modelName) {
+    return this.fixtureBuilderFactory.fixtureBuilder(modelName);
+  }
+
+  updateHTTPMethod(modelName) {
+    return this.fixtureBuilder(modelName).updateHTTPMethod || 'PUT';
   }
 
   /**
@@ -262,7 +265,7 @@ class FactoryGuy {
     let fixture = this.buildRaw.apply(this, arguments);
     let modelName = lookupModelForFixtureName(args.name);
 
-    return this.fixtureBuilder.convertForBuild(modelName, fixture);
+    return this.fixtureBuilder(modelName).convertForBuild(modelName, fixture);
   }
 
   buildRaw() {
@@ -304,7 +307,7 @@ class FactoryGuy {
     let name = args.shift();
     let modelName = lookupModelForFixtureName(name);
 
-    return this.fixtureBuilder.convertForBuild(modelName, list);
+    return this.fixtureBuilder(modelName).convertForBuild(modelName, list);
   }
 
   buildRawList(...args) {
@@ -349,7 +352,7 @@ class FactoryGuy {
 
     let modelName = lookupModelForFixtureName(args.name);
     let fixture = this.buildRaw.apply(this, arguments);
-    let data = this.fixtureBuilder.convertForMake(modelName, fixture);
+    let data = this.fixtureBuilder(modelName).convertForMake(modelName, fixture);
 
     const model = Ember.run(()=> this.store.push(data));
 

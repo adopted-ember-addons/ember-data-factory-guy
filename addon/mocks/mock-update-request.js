@@ -18,7 +18,7 @@ export default class MockUpdateRequest extends AttributeMatcher(MockRequest) {
   }
 
   getType() {
-    return FactoryGuy.updateHTTPMethod();
+    return FactoryGuy.updateHTTPMethod(this.modelName);
   }
 
   urlMatch(settings) {
@@ -62,7 +62,7 @@ export default class MockUpdateRequest extends AttributeMatcher(MockRequest) {
     if (this.id) {
       let args = Ember.$.extend({}, this.matchArgs, this.returnArgs);
       let json = Ember.$.extend({}, args, { id: this.id });
-      this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
+      this.responseJson = this.fixtureBuilder.convertForBuild(this.modelName, json);
     }
     return super.getResponse();
   }

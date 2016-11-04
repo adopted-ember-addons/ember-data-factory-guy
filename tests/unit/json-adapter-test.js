@@ -1,26 +1,25 @@
-import {module, test} from 'qunit';
+import {moduleFor, test} from 'ember-qunit';
 import { build, buildList, make, makeList, mockFindRecord, mockFindAll } from 'ember-data-factory-guy';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
 import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
-import { title, inlineSetup } from '../helpers/utility-methods';
+import { inlineSetup } from '../helpers/utility-methods';
 
-let App = null;
-let adapter = 'DS.RESTAdapter/JSONSerializer';
+let serializer = 'DS.RESTAdapter/JSONSerializer';
 let serializerType = '-json';
 
-SharedAdapterBehavior.all(adapter, serializerType);
+SharedAdapterBehavior.all(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockFindRecordEmbeddedTests(App, adapter, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindRecordEmbeddedTests(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(App, adapter, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(serializer, serializerType);
 
-module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, serializerType));
+moduleFor('serializer:application', `${serializer} FactoryGuy#build get`, inlineSetup(serializerType));
 
 test("returns all attributes with no key", function(assert) {
   let user = build('user');
@@ -35,7 +34,7 @@ test("returns an attribute with a key", function(assert) {
   assert.equal(user.get('name'), 'User1');
 });
 
-module(title(adapter, 'FactoryGuy#buildList get'), inlineSetup(App, serializerType));
+moduleFor('serializer:application', `${serializer} FactoryGuy#buildList get`, inlineSetup(serializerType));
 
 test("returns array of all attributes with no key", function(assert) {
   let users = buildList('user', 2);
@@ -50,7 +49,7 @@ test("returns an attribute with a key", function(assert) {
   assert.equal(users.get(1).name, 'User2');
 });
 
-module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, serializerType));
+moduleFor('serializer:application', `${serializer} FactoryGuy#build custom`, inlineSetup(serializerType));
 
 test("belongsTo ( not polymorphic ) record as id", function(assert) {
   let company = build('company');
@@ -142,103 +141,107 @@ test("embeds hasMany records passed as prebuilt ( buildList ) json when serializ
   assert.deepEqual(buildJson, expectedJson);
 });
 
-test("embeds belongsTo record when serializer attrs => deserialize: 'records' ", function(assert) {
+// Nov 4 2016 => not sure why these tests for manager model are here because this
+// model is  REST model using EmbeddedRecordsMixin which is not compatible with JSONSerializer
+// so what did I put tests for that here ?? can't remember
 
-  let buildJson = build('manager', 'with_salary');
-  buildJson.unwrap();
-
-  let expectedJson = {
-    id: 1,
-    name: {
-      firstName: "Tyrion",
-      lastName: "Lannister"
-    },
-    salary: {
-      id: 1,
-      income: 90000,
-      benefits: ['health', 'company car', 'dental']
-    }
-  };
-
-  assert.deepEqual(buildJson, expectedJson);
-});
-
-test("embeds belongsTo record passed as prebuilt ( build ) json when serializer attrs => deserialize: 'records' ", function(assert) {
-  let salary = build('salary');
-  let buildJson = build('manager', { salary: salary });
-  buildJson.unwrap();
-
-  let expectedJson = {
-    id: 1,
-    name: {
-      firstName: "Tyrion",
-      lastName: "Lannister"
-    },
-    salary: {
-      id: 1,
-      income: 90000,
-      benefits: ['health', 'company car', 'dental']
-    }
-  };
-
-  assert.deepEqual(buildJson, expectedJson);
-});
-
-test("embeds hasMany records when serializer attrs => deserialize: 'records'", function(assert) {
-
-  let buildJson = build('manager', 'with_reviews');
-  buildJson.unwrap();
-
-  let expectedJson = {
-    id: 1,
-    name: {
-      firstName: "Tyrion",
-      lastName: "Lannister"
-    },
-    reviews: [
-      {
-        id: 1,
-        rating: 1,
-        date: "2015-05-01T00:00:00.000Z"
-      },
-      {
-        id: 2,
-        rating: 2,
-        date: "2015-05-01T00:00:00.000Z"
-      }
-    ]
-  };
-
-  assert.deepEqual(buildJson, expectedJson);
-});
-
-test("embeds hasMany records passed as prebuilt ( buildList ) json when serializer attrs => deserialize: 'records'", function(assert) {
-  let reviews = buildList('review', 2);
-  let buildJson = build('manager', { reviews: reviews });
-  buildJson.unwrap();
-
-  let expectedJson = {
-    id: 1,
-    name: {
-      firstName: "Tyrion",
-      lastName: "Lannister"
-    },
-    reviews: [
-      {
-        id: 1,
-        rating: 1,
-        date: "2015-05-01T00:00:00.000Z"
-      },
-      {
-        id: 2,
-        rating: 2,
-        date: "2015-05-01T00:00:00.000Z"
-      }
-    ]
-  };
-
-  assert.deepEqual(buildJson, expectedJson);
-});
+//test("embeds belongsTo record when serializer attrs => deserialize: 'records' ", function(assert) {
+//
+//  let buildJson = build('manager', 'with_salary');
+//  buildJson.unwrap();
+//
+//  let expectedJson = {
+//    id: 1,
+//    name: {
+//      firstName: "Tyrion",
+//      lastName: "Lannister"
+//    },
+//    salary: {
+//      id: 1,
+//      income: 90000,
+//      benefits: ['health', 'company car', 'dental']
+//    }
+//  };
+//
+//  assert.deepEqual(buildJson, expectedJson);
+//});
+//
+//test("embeds belongsTo record passed as prebuilt ( build ) json when serializer attrs => deserialize: 'records' ", function(assert) {
+//  let salary = build('salary');
+//  let buildJson = build('manager', { salary: salary });
+//  buildJson.unwrap();
+//
+//  let expectedJson = {
+//    id: 1,
+//    name: {
+//      firstName: "Tyrion",
+//      lastName: "Lannister"
+//    },
+//    salary: {
+//      id: 1,
+//      income: 90000,
+//      benefits: ['health', 'company car', 'dental']
+//    }
+//  };
+//
+//  assert.deepEqual(buildJson, expectedJson);
+//});
+//
+//test("embeds hasMany records when serializer attrs => deserialize: 'records'", function(assert) {
+//
+//  let buildJson = build('manager', 'with_reviews');
+//  buildJson.unwrap();
+//
+//  let expectedJson = {
+//    id: 1,
+//    name: {
+//      firstName: "Tyrion",
+//      lastName: "Lannister"
+//    },
+//    reviews: [
+//      {
+//        id: 1,
+//        rating: 1,
+//        date: "2015-05-01T00:00:00.000Z"
+//      },
+//      {
+//        id: 2,
+//        rating: 2,
+//        date: "2015-05-01T00:00:00.000Z"
+//      }
+//    ]
+//  };
+//
+//  assert.deepEqual(buildJson, expectedJson);
+//});
+//
+//test("embeds hasMany records passed as prebuilt ( buildList ) json when serializer attrs => deserialize: 'records'", function(assert) {
+//  let reviews = buildList('review', 2);
+//  let buildJson = build('manager', { reviews: reviews });
+//  buildJson.unwrap();
+//
+//  let expectedJson = {
+//    id: 1,
+//    name: {
+//      firstName: "Tyrion",
+//      lastName: "Lannister"
+//    },
+//    reviews: [
+//      {
+//        id: 1,
+//        rating: 1,
+//        date: "2015-05-01T00:00:00.000Z"
+//      },
+//      {
+//        id: 2,
+//        rating: 2,
+//        date: "2015-05-01T00:00:00.000Z"
+//      }
+//    ]
+//  };
+//
+//  assert.deepEqual(buildJson, expectedJson);
+//});
 
 // the override for primaryKey is in the helpers/utilityMethods.js
 test("serializer primaryKey override", function(assert) {
@@ -247,23 +250,6 @@ test("serializer primaryKey override", function(assert) {
   assert.equal(json.get('id'), 1);
 });
 
-
-//module(title(adapter, 'mockFind'), inlineSetup(App, serializerType));
-//
-//test("the basic returns id", function(assert) {
-//    Ember.run(()=> {
-//      let done = assert.async();
-//      let profile = mockFindRecord('profile');
-//      console.log('test profile',profile.get());
-//      let profileId = profile.get('id');
-//
-//      FactoryGuy.store.find('profile', profileId).then(function(profile) {
-//        equal(profile.get('id'), profileId);
-//        equal(profile.get('description'), 'Text goes here');
-//        done();
-//      });
-//    });
-//  });
 test("serializes attributes with custom type", function(assert) {
   let info = { first: 1 };
   let buildJson = build('user', { info: info });

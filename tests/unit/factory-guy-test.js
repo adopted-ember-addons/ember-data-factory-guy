@@ -1,4 +1,5 @@
-import {module, test} from 'qunit';
+import {moduleFor, test} from 'ember-qunit';
+import DS from 'ember-data';
 import Ember from 'ember';
 import FactoryGuy, {make, makeList, build, buildList, clearStore} from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
@@ -6,10 +7,9 @@ import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error'
 import {inlineSetup} from '../helpers/utility-methods';
 import User from 'dummy/models/user';
 
-let App = null;
 const A = Ember.A;
 
-module('FactoryGuy', inlineSetup(App, '-json-api'));
+moduleFor('serializer:application', 'FactoryGuy', inlineSetup('-json-api'));
 
 test("has store set in initializer", function(assert) {
   assert.ok(FactoryGuy.store instanceof DS.Store);
@@ -97,7 +97,7 @@ test("#clearStore clears the store of models, and resets the model definition", 
   });
 });
 
-module('FactoryGuy#buildURL', inlineSetup(App, '-rest'));
+moduleFor('serializer:application', 'FactoryGuy#buildURL', inlineSetup('-rest'));
 
 test("without namespace", function(assert) {
   assert.equal(FactoryGuy.buildURL('project'), '/projects', 'has no namespace by default');
@@ -114,7 +114,7 @@ test("with namespace and host", function(assert) {
 });
 
 
-module('FactoryGuy#build', inlineSetup(App, '-rest'));
+moduleFor('serializer:application', 'FactoryGuy#build', inlineSetup('-rest'));
 
 test("with one level of hasMany relationship", function(assert) {
   let hats = buildList('big-hat', 2);
@@ -136,8 +136,9 @@ test("can use non model attributes to help setup attributes", function(assert) {
 
 test("emits warning when trait is not found", function(assert) {
   sinon.spy(Ember, 'warn');
+//  Ember.warn = (args)=> console.log('do doo', args);
   build('user', "non_existent_trait");
-  assert.ok(Ember.warn.calledOnce);
+  assert.ok(Ember.warn.getCall(0).args[0].match('non_existent_trait'));
   Ember.warn.restore();
 });
 
@@ -151,7 +152,7 @@ test("handles hash attribute with hash value in options", function(assert) {
   assert.deepEqual(dog.get('tag'), { num: 10 });
 });
 
-module('FactoryGuy#buildList', inlineSetup(App, '-rest'));
+moduleFor('serializer:application', 'FactoryGuy#buildList', inlineSetup('-rest'));
 
 test("without a number returns a empty json payload", function(assert) {
   let users = buildList('user');
@@ -175,7 +176,7 @@ test("with a number and extra options", function(assert) {
 });
 
 
-module('FactoryGuy#makeList', inlineSetup(App, '-json-api'));
+moduleFor('serializer:application', 'FactoryGuy#makeList', inlineSetup('-json-api'));
 
 test("with number as 0 returns an empty array of model instances", function(assert) {
   let users = makeList('user', 0);
@@ -204,7 +205,7 @@ test("without a number but with options returns array of models", function(asser
 });
 
 
-module('FactoryGuy#define', inlineSetup(App, '-json-api'));
+moduleFor('serializer:application', 'FactoryGuy#define', inlineSetup('-json-api'));
 
 test("default values and sequences are inherited", function(assert) {
   FactoryGuy.define('person', {
@@ -332,7 +333,7 @@ test("id can be a function", function(assert) {
   assert.equal(json.id, 'stoner-1');
 });
 
-//module('FactoryGuy#define', inlineSetup(App));
+//moduleFor('serializer:application', 'FactoryGuy#define', inlineSetup(App));
 
 //test("Using sequences", function () {
 //
@@ -577,7 +578,7 @@ test("id can be a function", function(assert) {
 //});
 
 
-module('FactoryGuy#buildRaw', inlineSetup(App, '-json-api'));
+moduleFor('serializer:application', 'FactoryGuy#buildRaw', inlineSetup('-json-api'));
 
 test("Using sequences", function(assert) {
 
@@ -843,7 +844,7 @@ test("removes id for model fragmentArray attribute", function(assert) {
 });
 
 
-module('FactoryGuy#buildRawList', inlineSetup(App, '-json-api'));
+moduleFor('serializer:application', 'FactoryGuy#buildRawList', inlineSetup('-json-api'));
 
 test("basic", function(assert) {
   let userList = FactoryGuy.buildRawList('user', 2);
@@ -878,14 +879,14 @@ test("using diverse attributes", function(assert) {
   assert.deepEqual(projectList, expected);
 });
 
-module('FactoryGuy and JSONAPI', inlineSetup(App, '-json-api'));
+moduleFor('serializer:application', 'FactoryGuy and JSONAPI', inlineSetup('-json-api'));
 test('it knows how to update with JSON-API', function(assert) {
-  const method = FactoryGuy.updateHTTPMethod();
+  const method = FactoryGuy.updateHTTPMethod('application');
   assert.equal(method, 'PATCH');
 });
 
-module('FactoryGuy and REST', inlineSetup(App, '-rest'));
+moduleFor('serializer:application', 'FactoryGuy and REST', inlineSetup('-rest'));
 test('it knows how to update with RESTSerializer', function(assert) {
-  const method = FactoryGuy.updateHTTPMethod();
+  const method = FactoryGuy.updateHTTPMethod('application');
   assert.equal(method, 'PUT');
 });

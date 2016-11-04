@@ -6,7 +6,7 @@ import RESTPayload from '../payload/rest-payload';
  RESTSerializer
 
  */
-export default class extends FixtureBuilder {
+export default class RESTFixtureBuilder extends FixtureBuilder {
 
   constructor(store) {
     super(store, RESTFixtureConverter, RESTPayload);

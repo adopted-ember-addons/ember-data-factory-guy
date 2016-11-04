@@ -1,4 +1,4 @@
-import {module, test} from 'qunit';
+import {moduleFor, test} from 'ember-qunit';
 import Ember from 'ember';
 import FactoryGuy, {
   make, makeList, build, buildList, clearStore,
@@ -8,10 +8,9 @@ import FactoryGuy, {
 import {inlineSetup} from '../helpers/utility-methods';
 import MockRequest from 'ember-data-factory-guy/mocks/mock-request';
 
-let App = null;
 const serializerType = '-json-api';
 
-module('mockSetup', inlineSetup(App));
+moduleFor('serializer:application', 'mockSetup', inlineSetup(serializerType));
 
 test("accepts parameters", function(assert) {
   FactoryGuy.logLevel = 0;
@@ -33,7 +32,7 @@ test("accepts parameters", function(assert) {
 });
 
 
-module('MockRequest #fails', inlineSetup(App));
+moduleFor('serializer:application', 'MockRequest #fails', inlineSetup(serializerType));
 
 test("status must be 3XX, 4XX or 5XX", function(assert) {
   const mock = new MockRequest('user');
@@ -84,7 +83,7 @@ test("with errors response that will be converted but does not have errors as ob
   });
 });
 
-module('MockRequest#timeCalled', inlineSetup(App, serializerType));
+moduleFor('serializer:application', 'MockRequest#timeCalled', inlineSetup(serializerType));
 
 test("can verify how many times a queryRecord call was mocked", function(assert) {
   Ember.run(()=> {
@@ -131,7 +130,7 @@ test("can verify how many times an update call was mocked", function(assert) {
   });
 });
 
-module('MockRequest#basicRequestMatches', inlineSetup(App, serializerType));
+moduleFor('serializer:application', 'MockRequest#basicRequestMatches', inlineSetup(serializerType));
 
 test("fails if the types don't match", function(assert) {
   const mock = new MockRequest('user');
@@ -186,7 +185,7 @@ test("succeeds even if the given URL has query parameters that don't match", fun
 });
 
 
-module('mockRequest #disable, #enable, and #destroy', inlineSetup(App, serializerType));
+moduleFor('serializer:application', 'mockRequest #disable, #enable, and #destroy', inlineSetup(serializerType));
 
 test("can enable, disable, and destroy mock", function(assert) {
   Ember.run(()=> {
@@ -218,7 +217,7 @@ test("can enable, disable, and destroy mock", function(assert) {
   });
 });
 
-module('mockFindRecord', inlineSetup(App, serializerType));
+moduleFor('serializer:application', 'mockFindRecord', inlineSetup(serializerType));
 
 test("has access to handler being used by mockjax", function(assert) {
   let mock = mockFindRecord('user');
@@ -231,7 +230,7 @@ test("#get method to access payload", function(assert) {
 });
 
 
-module('mockFindRecord #getUrl', inlineSetup(App));
+moduleFor('serializer:application', 'mockFindRecord #getUrl', inlineSetup(serializerType));
 
 test("with proxy", function(assert) {
   const json = build('user');
@@ -246,7 +245,7 @@ test("with json", function(assert) {
 });
 
 
-module('mockFindRecord #fails', inlineSetup(App));
+moduleFor('serializer:application', 'mockFindRecord #fails', inlineSetup(serializerType));
 
 test("with errors in response", function(assert) {
   Ember.run(()=> {
@@ -265,7 +264,7 @@ test("with errors in response", function(assert) {
 });
 
 
-module('mockFindAll', inlineSetup(App, serializerType));
+moduleFor('serializer:application', 'mockFindAll', inlineSetup(serializerType));
 
 test("have access to handler being used by mockjax", function(assert) {
   let mock = mockFindAll('user');
@@ -278,7 +277,7 @@ test("#get method to access payload", function(assert) {
 });
 
 
-module('mockQuery', inlineSetup(App, serializerType));
+moduleFor('serializer:application', 'mockQuery', inlineSetup(serializerType));
 
 test("#get method to access payload", function(assert) {
   let json = buildList('user', 2)
@@ -342,7 +341,7 @@ test("have access to handler being used by mockjax", function(assert) {
 });
 
 
-module('mockQueryRecord', inlineSetup(App, serializerType));
+moduleFor('serializer:application', 'mockQueryRecord', inlineSetup(serializerType));
 
 test("#get method to access payload", function(assert) {
   let json = build('user')
@@ -439,7 +438,7 @@ test("using returns 'model' with array of DS.Models throws error", function(asse
 });
 
 
-module('mockUpdate', inlineSetup(App));
+moduleFor('serializer:application', 'mockUpdate', inlineSetup(serializerType));
 
 test("with incorrect parameters", function(assert) {
 

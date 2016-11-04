@@ -109,7 +109,7 @@ export function mockReload(...args) {
   Ember.assert("To handleFind pass in a model instance or a model type name and an id",
     modelName && id);
 
-  let json = FactoryGuy.fixtureBuilder.convertForBuild(modelName, { id: id });
+  let json = FactoryGuy.fixtureBuilder(modelName).convertForBuild(modelName, { id: id });
   return new MockReloadRequest(modelName).returns({ json });
 }
 

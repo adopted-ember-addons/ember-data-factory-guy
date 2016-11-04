@@ -1,29 +1,28 @@
-import {module, test} from 'qunit';
+import {moduleFor, test} from 'ember-qunit';
 import Ember from 'ember';
 import FactoryGuy, {make, build, buildList, mockCreate} from 'ember-data-factory-guy';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
 import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
-import {title, inlineSetup} from '../helpers/utility-methods';
+import {inlineSetup} from '../helpers/utility-methods';
 
-let App = null;
-let adapter = 'DS.JSONAPIAdapter';
+let serializer = 'DS.JSONAPISerializer';
 let serializerType = '-json-api';
 
-SharedAdapterBehavior.all(adapter, serializerType);
+SharedAdapterBehavior.all(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockFindRecordSideloadingTests(App, adapter, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindRecordSideloadingTests(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(App, adapter, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsAssociations(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsAssociations(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(App, adapter, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(App, adapter, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(serializer, serializerType);
 
-module(title(adapter, '#mockCreate custom'), inlineSetup(App, serializerType));
+moduleFor('serializer:application', `${serializer} #mockCreate custom`, inlineSetup(serializerType));
 
 test("match belongsTo with custom payloadKeyFromModelName function", function(assert) {
   Ember.run(()=> {
@@ -56,7 +55,7 @@ test("match hasMany with custom payloadKeyFromModelName function", function(asse
   });
 });
 
-module(title(adapter, 'FactoryGuy#build get'), inlineSetup(App, serializerType));
+moduleFor('serializer:application', `${serializer} FactoryGuy#build get`, inlineSetup(serializerType));
 
 test("returns all attributes with no key", function(assert) {
   let user = build('user');
@@ -76,7 +75,7 @@ test("returns a relationship with a key", function(assert) {
   assert.deepEqual(user.get('company'), { id: 1, type: 'company' });
 });
 
-module(title(adapter, 'FactoryGuy#buildList get'), inlineSetup(App, serializerType));
+moduleFor('serializer:application', `${serializer} FactoryGuy#buildList get`, inlineSetup(serializerType));
 
 test("returns array of all attributes with no key", function(assert) {
   let users = buildList('user', 2);
@@ -96,7 +95,7 @@ test("returns a relationship with an index and key", function(assert) {
   assert.deepEqual(user.get(1).company, { id: 2, type: 'company' });
 });
 
-module(title(adapter, 'FactoryGuy#buildList custom'), inlineSetup(App, serializerType));
+moduleFor('serializer:application', `${serializer} FactoryGuy#buildList custom`, inlineSetup(serializerType));
 
 test("mock returns inherited models with proper types", function(assert) {
   let list = buildList('hat', 'big', 'small');
@@ -105,7 +104,7 @@ test("mock returns inherited models with proper types", function(assert) {
   assert.equal(data[1].type, 'big-hat');
 });
 
-module(title(adapter, 'FactoryGuy#build custom'), inlineSetup(App, serializerType));
+moduleFor('serializer:application', `${serializer} FactoryGuy#build custom`, inlineSetup(serializerType));
 
 test("with traits defining model attributes", function(assert) {
   let json = build('project', 'big').data;

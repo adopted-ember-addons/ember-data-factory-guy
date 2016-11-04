@@ -5,7 +5,7 @@ import JSONPayload from '../payload/json-payload';
  Fixture Builder for JSONSerializer
 
  */
-export default class extends FixtureBuilder {
+export default class JSONFixtureBuilder extends FixtureBuilder {
   constructor(store) {
     super(store, JSONFixtureConverter, JSONPayload);
   }

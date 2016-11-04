@@ -4,7 +4,7 @@ import DRFPayload from '../payload/drf-payload';
 /**
  Fixture Builder for DjangoRESTSerializer
  */
-export default class extends JSONFixtureBuilder {
+export default class DRFFixtureBuilder extends JSONFixtureBuilder {
   constructor(store) {
     super(store, DRFFixtureConverter, DRFPayload);
   }

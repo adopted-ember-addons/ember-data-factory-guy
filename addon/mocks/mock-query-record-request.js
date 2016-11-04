@@ -1,5 +1,4 @@
 import MockQueryRequest from './mock-query-request';
-import FactoryGuy from '../factory-guy';
 
 export default class MockQueryRecordRequest extends MockQueryRequest {
 
@@ -11,7 +10,7 @@ export default class MockQueryRecordRequest extends MockQueryRequest {
    */
   constructor(modelName, queryParams={}) {
     super(modelName, queryParams);
-    this.setResponseJson(FactoryGuy.fixtureBuilder.convertForBuild(modelName, null));
+    this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, null));
     this.setValidReturnsKeys(['model','json','id','headers']);
   }
 }

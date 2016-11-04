@@ -4,7 +4,7 @@ import RESTPayload from '../payload/rest-payload';
 /**
  Fixture Builder for ActiveModelSerializer
  */
-export default class extends RESTFixtureBuilder {
+export default class ActiveModelFixtureBuilder extends RESTFixtureBuilder {
   constructor(store) {
     super(store, ActiveModelFixtureConverter, RESTPayload);
   }

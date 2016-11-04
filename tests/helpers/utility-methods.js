@@ -1,6 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy from 'ember-data-factory-guy';
-import startApp from '../helpers/start-app';
+import FactoryGuy, {makeList, manualSetup} from 'ember-data-factory-guy';
 import DS from 'ember-data';
 import DRFAdapter from 'ember-django-adapter/adapters/drf';
 import DRFSerializer from 'ember-django-adapter/serializers/drf';
@@ -89,12 +88,11 @@ function setupCustomSerializer(container, serializerType, options) {
 
 
 // serializerType like -rest or -active-model, -json-api, -json
-function theUsualSetup(serializerType) {
-  let App = startApp();
-
+function containerSetup(container, serializerType) {
+  manualSetup(container);
+  
   // brute force setting the adapter/serializer on the store.
   if (serializerType) {
-    let container = App.__container__;
     container.registry.register('adapter:-drf', DRFAdapter, { singleton: false });
     container.registry.register('serializer:-drf', DRFSerializer, { singleton: false });
 
@@ -121,6 +119,7 @@ function theUsualSetup(serializerType) {
 
     store.serializerFor = function(modelName) {
       // all the modelFragment types will use their own default serializer
+      // and manager is always REST serialiezr ( used in rest tests ) 
       let originalSerializer = findSerializer(modelName);
       if (modelName.match(/(name|department|address|department-employment|manager)/)) {
         return originalSerializer;
@@ -138,26 +137,27 @@ function theUsualSetup(serializerType) {
 
     FactoryGuy.setStore(store);
   }
-
-  $.mockjaxSettings.logging = false;
-  $.mockjaxSettings.responseTime = 0;
-  return App;
-};
+}
 
 function theUsualTeardown(App) {
   Ember.run(function() {
-    App.destroy();
     $.mockjax.clear();
   });
 }
 
-function inlineSetup(App, adapterType) {
+function inlineSetup(serializerType) {
   return {
+    integration: true,
     beforeEach: function() {
-      App = theUsualSetup(adapterType);
-    },
+      Ember.$.mockjaxSettings.responseTime = 0;
+      Ember.$.mockjaxSettings.logging = 1;
+      FactoryGuy.settings({logLevel: 0});
+      containerSetup(this.container, serializerType);
+    }, 
     afterEach: function() {
-      theUsualTeardown(App);
+      Ember.run(function() {
+        $.mockjax.clear();
+      });
     }
   };
 }
@@ -166,4 +166,4 @@ function title(adapter, testName) {
   return [adapter, testName].join(' | ');
 }
 
-export {title, inlineSetup, theUsualSetup, theUsualTeardown};
+export {title, inlineSetup, containerSetup, theUsualTeardown};

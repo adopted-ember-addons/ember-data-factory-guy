@@ -56,20 +56,21 @@ const AttributeMatcher = (superclass) => class extends superclass {
    @returns {boolean} true is no attributes to match or they all match
    */
   attributesMatch(requestData) {
-    if (isEmpty(Object.keys(this.matchArgs))) {
+    let matchArgs = this.matchArgs;
+    if (isEmpty(Object.keys(matchArgs))) {
       return true;
     }
 
-    let builder = FactoryGuy.fixtureBuilder;
+    let builder = FactoryGuy.fixtureBuilder(this.modelName);
 
     // transform they match keys
-    let matchCheckKeys = Object.keys(this.matchArgs).map((key)=> {
+    let matchCheckKeys = Object.keys(matchArgs).map((key)=> {
       return builder.transformKey(this.modelName, key);
     });
 
     // build the match args into a JSONPayload class
     let buildOpts = { serializeMode: true, transformKeys: true };
-    let expectedData = builder.convertForBuild(this.modelName, this.matchArgs, buildOpts);
+    let expectedData = builder.convertForBuild(this.modelName, matchArgs, buildOpts);
 
     // wrap request data in a JSONPayload class
     builder.wrapPayload(this.modelName, requestData);

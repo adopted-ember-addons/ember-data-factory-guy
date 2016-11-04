@@ -9,7 +9,7 @@ class MockGetRequest extends MockRequest {
 
   constructor(modelName) {
     super(modelName);
-    this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(modelName, {});
+    this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, {}));
     this.validReturnsKeys = [];
     this.queryParams = {};
   }
@@ -59,15 +59,15 @@ class MockGetRequest extends MockRequest {
   }
 
   _setReturns(responseKey, options) {
-    let json, model, models;
+    let json, model, models, modelName = this.modelName;
     switch (responseKey) {
 
       case 'id':
-         model = FactoryGuy.store.peekRecord(this.modelName, options.id);
+         model = FactoryGuy.store.peekRecord(modelName, options.id);
 
-        Ember.assert(`argument ( id ) should refer to a model of type ${this.modelName} that is in
-         the store. But no ${this.modelName} with id ${options.id} was found in the store`,
-          (model instanceof Model && model.constructor.modelName === this.modelName));
+        Ember.assert(`argument ( id ) should refer to a model of type ${modelName} that is in
+         the store. But no ${modelName} with id ${options.id} was found in the store`,
+          (model instanceof Model && model.constructor.modelName === modelName));
 
         return this.returns({ model });
 
@@ -78,12 +78,12 @@ class MockGetRequest extends MockRequest {
           ${Ember.typeOf(model)}`, (model instanceof Model));
 
         json = { id: model.id };
-        this.responseJson = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
+        this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, json));
         break;
 
       case 'ids':
         const store = FactoryGuy.store;
-        models = options.ids.map((id)=> store.peekRecord(this.modelName, id));
+        models = options.ids.map((id)=> store.peekRecord(modelName, id));
         return this.returns({ models });
 
       case 'models':
@@ -95,7 +95,7 @@ class MockGetRequest extends MockRequest {
           return { id: model.id, type: model.constructor.modelName };
         });
 
-        json = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, json);
+        json = this.fixtureBuilder.convertForBuild(modelName, json);
         this.setResponseJson(json);
         break;
 
@@ -106,7 +106,7 @@ class MockGetRequest extends MockRequest {
       case 'attrs':
         let currentId = this.responseJson.get('id');
         let modelParams = assign({id: currentId}, options.attrs);
-        json = FactoryGuy.fixtureBuilder.convertForBuild(this.modelName, modelParams);
+        json = this.fixtureBuilder.convertForBuild(modelName, modelParams);
         this.setResponseJson(json);
         break;
 
