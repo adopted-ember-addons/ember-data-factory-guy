@@ -909,7 +909,7 @@ SharedBehavior.mockQueryRecordTests = function() {
 
   test("when returning no result", function(assert) {
     var done = assert.async();
-    mockQueryRecord('user');
+    mockQueryRecord('user', {});
     FactoryGuy.store.queryRecord('user', {})
       .then(()=> {
         ok(true);
@@ -919,7 +919,7 @@ SharedBehavior.mockQueryRecordTests = function() {
 
   test("with no parameters matches queryRequest with any parameters", function(assert) {
     var done = assert.async();
-    mockQueryRecord('user').returns({ json: build('user') });
+    mockQueryRecord('user', { name: 'Bob' }).returns({ json: build('user') });
     FactoryGuy.store.queryRecord('user', { name: 'Bob' })
       .then(()=> {
         ok(true);
