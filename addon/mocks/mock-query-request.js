@@ -9,4 +9,7 @@ export default class MockQueryRequest extends MockGetRequest {
     this.queryParams = queryParams;
   }
 
+  getUrl() {
+    return FactoryGuy.buildURL(this.modelName, null, 'query', this.queryParams);
+  }
 }
