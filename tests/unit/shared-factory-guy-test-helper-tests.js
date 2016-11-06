@@ -65,19 +65,6 @@ SharedBehavior.mockFindRecordCommonTests = function() {
     });
   });
 
-  test("with model that has urlForFindRecord defined in adapter", function(assert) {
-    Ember.run(()=> {
-      let done = assert.async();
-      let employeeA = build('employee');
-      let mock = mockFindRecord('employee', { id: 'self' }).returns({ json: employeeA });
-
-      FactoryGuy.store.findRecord('employee', mock.get('id')).then(function(employee) {
-        equal(employee.get('id'), employeeA.get('id'));
-        done();
-      });
-    });
-  });
-
   test("with model that has attribute named type, is not polymorphic, and returns model", function(assert) {
     Ember.run(()=> {
       let done = assert.async();

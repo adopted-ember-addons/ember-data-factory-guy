@@ -6,24 +6,24 @@ import DRFSerializer from 'ember-django-adapter/serializers/drf';
 import ActiveModelAdapter from 'active-model-adapter';
 import {ActiveModelSerializer} from 'active-model-adapter';
 
-// custom adapter options for the various models 
-// which are applied to the currently testing model's adapter ( JSONAPI, REST, ActiveModel, etc ) 
-const adapterOptions = {
-  employee: {
-    buildURL(modelName, id, snapshot, requestType, query)  {
-      const url = this._super(modelName, id, snapshot, requestType, query);
-      const delimiter = (url.indexOf('?') !== -1) ? '&' : '?';
-      return `${url}${delimiter}company_id=12345`;
-    },
-    urlForFindRecord(id, modelName, snapshot) {
-      if (id === 'self') {
-        return '/user';
-      } else {
-        return this._super(id, modelName, snapshot);
-      }
-    }
-  }
-};
+//// custom adapter options for the various models
+//// which are applied to the currently testing model's adapter ( JSONAPI, REST, ActiveModel, etc )
+//const adapterOptions = {
+//  employee: {
+//    buildURL(modelName, id, snapshot, requestType, query)  {
+//      const url = this._super(modelName, id, snapshot, requestType, query);
+//      const delimiter = (url.indexOf('?') !== -1) ? '&' : '?';
+//      return `${url}${delimiter}company_id=12345`;
+//    },
+//    urlForFindRecord(id, modelName, snapshot) {
+//      if (id === 'self') {
+//        return '/user';
+//      } else {
+//        return this._super(id, modelName, snapshot);
+//      }
+//    }
+//  }
+//};
 
 // custom serializer options for the various models 
 // which are applied to the currently testing  model's serialier ( JSONAPI, REST, ActiveModel, etc ) 
@@ -108,10 +108,10 @@ function containerSetup(container, serializerType) {
     let serializer = container.lookup('serializer:' + serializerType);
 
     store.adapterFor = function(modelName) {
-      if (modelName.match(/(employee)/)) {
-        let options = adapterOptions[modelName];
-        return setupCustomAdapter(container, adapterType, options);
-      }
+//      if (modelName.match(/(employee)/)) {
+//        let options = adapterOptions[modelName];
+//        return setupCustomAdapter(container, adapterType, options);
+//      }
       return adapter;
     };
 

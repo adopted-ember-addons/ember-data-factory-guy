@@ -217,7 +217,7 @@ test("can enable, disable, and destroy mock", function(assert) {
   });
 });
 
-moduleFor('serializer:application', 'mockFindRecord', inlineSetup(serializerType));
+moduleFor('serializer:application', 'MockFindRecord', inlineSetup(serializerType));
 
 test("has access to handler being used by mockjax", function(assert) {
   let mock = mockFindRecord('user');
@@ -229,8 +229,19 @@ test("#get method to access payload", function(assert) {
   assert.equal(mock.get('name'), 'User1');
 });
 
+test("#getUrl uses urlForFindRecord if it is set on the adapter", function(assert) {
+  let mock1 = mockFindRecord('user');
+  assert.equal(mock1.getUrl(), '/users/1');
 
-moduleFor('serializer:application', 'mockFindRecord #getUrl', inlineSetup(serializerType));
+  let adapter = FactoryGuy.store.adapterFor('user');
+  sinon.stub(adapter, 'urlForFindRecord').returns('/dude/1');
+
+  assert.equal(mock1.getUrl(), '/dude/1');
+  adapter.urlForFindRecord.restore();
+});
+
+
+moduleFor('serializer:application', 'MockFindRecord #getUrl', inlineSetup(serializerType));
 
 test("with proxy", function(assert) {
   const json = build('user');
@@ -245,7 +256,7 @@ test("with json", function(assert) {
 });
 
 
-moduleFor('serializer:application', 'mockFindRecord #fails', inlineSetup(serializerType));
+moduleFor('serializer:application', 'MockFindRecord #fails', inlineSetup(serializerType));
 
 test("with errors in response", function(assert) {
   Ember.run(()=> {
@@ -264,7 +275,7 @@ test("with errors in response", function(assert) {
 });
 
 
-moduleFor('serializer:application', 'mockFindAll', inlineSetup(serializerType));
+moduleFor('serializer:application', 'MockFindAll', inlineSetup(serializerType));
 
 test("have access to handler being used by mockjax", function(assert) {
   let mock = mockFindAll('user');
@@ -277,7 +288,7 @@ test("#get method to access payload", function(assert) {
 });
 
 
-moduleFor('serializer:application', 'mockQuery', inlineSetup(serializerType));
+moduleFor('serializer:application', 'MockQuery', inlineSetup(serializerType));
 
 test("#get method to access payload", function(assert) {
   let json = buildList('user', 2)
@@ -340,6 +351,16 @@ test("have access to handler being used by mockjax", function(assert) {
   assert.ok(mock.handler);
 });
 
+test("#getUrl uses urlForQuery if it is set on the adapter", function(assert) {
+  let mock1 = mockQuery('user');
+  assert.equal(mock1.getUrl(), '/users');
+
+  let adapter = FactoryGuy.store.adapterFor('user');
+  sinon.stub(adapter, 'urlForQuery').returns('/dudes');
+
+  assert.equal(mock1.getUrl(), '/dudes');
+  adapter.urlForQuery.restore();
+});
 
 moduleFor('serializer:application', 'mockQueryRecord', inlineSetup(serializerType));
 
@@ -437,6 +458,16 @@ test("using returns 'model' with array of DS.Models throws error", function(asse
   }, "can't pass array of models to mock queryRecord");
 });
 
+test("#getUrl uses urlForQueryRecord if it is set on the adapter", function(assert) {
+  let mock1 = mockQueryRecord('user', {zip: 'it'});
+  assert.equal(mock1.getUrl(), '/users');
+
+  let adapter = FactoryGuy.store.adapterFor('user');
+  sinon.stub(adapter, 'urlForQueryRecord').returns('/dudes');
+
+  assert.equal(mock1.getUrl(), '/dudes');
+  adapter.urlForQueryRecord.restore();
+});
 
 moduleFor('serializer:application', 'mockUpdate', inlineSetup(serializerType));
 
