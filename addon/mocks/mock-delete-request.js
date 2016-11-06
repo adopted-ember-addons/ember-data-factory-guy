@@ -4,20 +4,12 @@ import {escapeRegExp} from '../utils/helper-functions';
 
 export default class MockDeleteRequest extends MockRequest {
   constructor(modelName, id) {
-    super(modelName);
+    super(modelName, 'deleteRecord');
     this.id = id;
   }
 
   getType() {
     return "DELETE";
-  }
-
-  /**
-   If the id is null the url will not include the id, and
-   can be used to match any delete for this modelName
-   */
-  getUrl() {
-    return FactoryGuy.buildURL(this.modelName, this.id);
   }
 
   urlMatch(settings) {
@@ -33,5 +25,5 @@ export default class MockDeleteRequest extends MockRequest {
 
     return settings.url.match(url);
   }
-  
+
 }

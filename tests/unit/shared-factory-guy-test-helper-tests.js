@@ -150,7 +150,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       let model = make('profile');
       let mock = mockFindRecord('profile').returns({ model }).fails();
 
-      return FactoryGuy.store.findRecord('profile', model.id, {reload: true})
+      return FactoryGuy.store.findRecord('profile', model.id, { reload: true })
         .catch((error)=> {
           assert.equal(mock.timesCalled, 1);
           assert.equal(mock.status, 500);
@@ -1255,8 +1255,8 @@ SharedBehavior.mockCreateTests = function() {
       FactoryGuy.store.createRecord('profile', { description: 'wrong description' }).save()
         .catch(()=> {
           ok(true);
+          // our mock was NOT called
           equal(mock.timesCalled, 0);
-
           done();
         });
     });

@@ -287,6 +287,8 @@ export function mockQueryRecord(modelName, queryParams) {
  @param {String} modelName  name of model your creating like 'profile' for Profile
  */
 export function mockCreate(modelName) {
+  Ember.assert(`[ember-data-factory-guy] mockCreate requires at least a model type name`, modelName);
+  
   return new MockCreateRequest(modelName);
 }
 

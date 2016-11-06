@@ -5,9 +5,10 @@ const assign = Ember.assign || Ember.merge;
 
 export default class {
 
-  constructor(modelName) {
+  constructor(modelName, requestType) {
     this.modelName = modelName;
-    this.fixtureBuilder = FactoryGuy.fixtureBuilder(this.modelName)
+    this.requestType = requestType;
+    this.fixtureBuilder = FactoryGuy.fixtureBuilder(this.modelName);
     this.status = 200;
     this.responseHeaders = {};
     this.responseJson = null;
@@ -18,8 +19,22 @@ export default class {
     this.timesCalled = 0;
   }
 
+  /**
+   Used by getUrl to => this.get('id')
+
+   MockGetRequest overrides this since those mocks have a payload with the id
+
+   For mockDelete: If the id is null the url will not include the id, and
+   can therefore be used to match any delete for this modelName
+   */
+  get(...args) {
+    if (args[0] === 'id') {
+      return this.id;
+    }
+  }
+
   getUrl() {
-    return FactoryGuy.buildURL(this.modelName);
+    return FactoryGuy.buildURL(this.modelName, this.get('id'), this.requestType);
   }
 
   getType() {

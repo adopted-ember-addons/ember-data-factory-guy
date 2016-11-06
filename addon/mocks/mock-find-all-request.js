@@ -1,9 +1,9 @@
-import MockFindRecordRequest from './mock-find-record-request';
+import MockGetRequest from './mock-get-request';
 
-export default class MockFindAllRequest extends MockFindRecordRequest {
+export default class MockFindAllRequest extends MockGetRequest {
 
   constructor(modelName) {
-    super(modelName);
+    super(modelName, 'findAll');
     this.setValidReturnsKeys(['models', 'json', 'ids','headers']);
     this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, []));
   }

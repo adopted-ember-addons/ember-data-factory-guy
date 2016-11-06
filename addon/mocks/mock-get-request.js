@@ -2,13 +2,13 @@ import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
 import Model from 'ember-data/model';
 import MockRequest from './mock-request';
-import { isEquivalent, isPartOf } from '../utils/helper-functions';
+import {isEquivalent, isPartOf} from '../utils/helper-functions';
 const assign = Ember.assign || Ember.merge;
 
 class MockGetRequest extends MockRequest {
 
-  constructor(modelName) {
-    super(modelName);
+  constructor(modelName, requestType) {
+    super(modelName, requestType);
     this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, {}));
     this.validReturnsKeys = [];
     this.queryParams = {};
@@ -28,11 +28,13 @@ class MockGetRequest extends MockRequest {
    */
   get(args) {
     let json = this.responseJson;
-    if (json.get) {
-      return json.get(args);
+    if (json) {
+      if (json.get) {
+        return json.get(args);
+      }
+      // if this becomes issue, make this search more robust
+      return json[args];
     }
-    // if this becomes issue, make this search more robust
-    return json[args];
   }
 
   setValidReturnsKeys(validKeys) {
@@ -63,7 +65,7 @@ class MockGetRequest extends MockRequest {
     switch (responseKey) {
 
       case 'id':
-         model = FactoryGuy.store.peekRecord(modelName, options.id);
+        model = FactoryGuy.store.peekRecord(modelName, options.id);
 
         Ember.assert(`argument ( id ) should refer to a model of type ${modelName} that is in
          the store. But no ${modelName} with id ${options.id} was found in the store`,
@@ -105,7 +107,7 @@ class MockGetRequest extends MockRequest {
 
       case 'attrs':
         let currentId = this.responseJson.get('id');
-        let modelParams = assign({id: currentId}, options.attrs);
+        let modelParams = assign({ id: currentId }, options.attrs);
         json = this.fixtureBuilder.convertForBuild(modelName, modelParams);
         this.setResponseJson(json);
         break;

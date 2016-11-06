@@ -185,7 +185,7 @@ test("succeeds even if the given URL has query parameters that don't match", fun
 });
 
 
-moduleFor('serializer:application', 'mockRequest #disable, #enable, and #destroy', inlineSetup(serializerType));
+moduleFor('serializer:application', 'MockRequest #disable, #enable, and #destroy', inlineSetup(serializerType));
 
 test("can enable, disable, and destroy mock", function(assert) {
   Ember.run(()=> {
@@ -285,6 +285,17 @@ test("have access to handler being used by mockjax", function(assert) {
 test("#get method to access payload", function(assert) {
   let mock = mockFindAll('user', 2);
   assert.deepEqual(mock.get(0), { id: 1, name: 'User1', style: 'normal' });
+});
+
+test("#getUrl uses urlForFindAll if it is set on the adapter", function(assert) {
+  let mock1 = mockFindAll('user');
+  assert.equal(mock1.getUrl(), '/users');
+
+  let adapter = FactoryGuy.store.adapterFor('user');
+  sinon.stub(adapter, 'urlForFindAll').returns('/zombies');
+
+  assert.equal(mock1.getUrl(), '/zombies');
+  adapter.urlForFindAll.restore();
 });
 
 
@@ -469,7 +480,7 @@ test("#getUrl uses urlForQueryRecord if it is set on the adapter", function(asse
   adapter.urlForQueryRecord.restore();
 });
 
-moduleFor('serializer:application', 'mockUpdate', inlineSetup(serializerType));
+moduleFor('serializer:application', 'MockUpdate', inlineSetup(serializerType));
 
 test("with incorrect parameters", function(assert) {
 
@@ -486,4 +497,55 @@ test("using returns when only setting modelName", function(assert) {
 
 });
 
+test("#getUrl uses urlForUpdateRecord if it is set on the adapter", function(assert) {
+  let mock1 = mockUpdate('user', '1');
+  assert.equal(mock1.getUrl(), '/users/1');
 
+  let adapter = FactoryGuy.store.adapterFor('user');
+  sinon.stub(adapter, 'urlForUpdateRecord').returns('/dudes/1');
+
+  assert.equal(mock1.getUrl(), '/dudes/1');
+  adapter.urlForUpdateRecord.restore();
+});
+
+moduleFor('serializer:application', 'MockCreate', inlineSetup(serializerType));
+
+test("with incorrect parameters", function(assert) {
+
+  assert.throws(function() {
+    mockCreate();
+  }, "missing modelName");
+
+});
+
+test("#getUrl uses urlForCreateRecord if it is set on the adapter", function(assert) {
+  let mock1 = mockCreate('user');
+  assert.equal(mock1.getUrl(), '/users');
+
+  let adapter = FactoryGuy.store.adapterFor('user');
+  sinon.stub(adapter, 'urlForCreateRecord').returns('/makeMeAZombie');
+
+  assert.equal(mock1.getUrl(), '/makeMeAZombie');
+  adapter.urlForCreateRecord.restore();
+});
+
+moduleFor('serializer:application', 'MockDelete', inlineSetup(serializerType));
+
+test("with incorrect parameters", function(assert) {
+
+  assert.throws(function() {
+    mockDelete();
+  }, "missing modelName");
+
+});
+
+test("#getUrl uses urlForDeleteRecord if it is set on the adapter", function(assert) {
+  let mock1 = mockDelete('user', '2');
+  assert.equal(mock1.getUrl(), '/users/2');
+
+  let adapter = FactoryGuy.store.adapterFor('user');
+  sinon.stub(adapter, 'urlForDeleteRecord').returns('/deleteMyZombie/2');
+
+  assert.equal(mock1.getUrl(), '/deleteMyZombie/2');
+  adapter.urlForDeleteRecord.restore();
+});

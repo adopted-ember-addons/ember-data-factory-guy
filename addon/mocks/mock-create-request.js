@@ -7,7 +7,7 @@ const { isPresent } = Ember;
 export default class MockCreateRequest extends AttributeMatcher(MockRequest) {
 
   constructor(modelName) {
-    super(modelName);
+    super(modelName, 'createRecord');
     this.returnArgs = {};
     this.matchArgs = {};
   }

@@ -7,14 +7,10 @@ import {escapeRegExp} from '../utils/helper-functions';
 export default class MockUpdateRequest extends AttributeMatcher(MockRequest) {
 
   constructor(modelName, id) {
-    super(modelName);
+    super(modelName, 'updateRecord');
     this.id = id;
     this.returnArgs = {};
     this.matchArgs = {};
-  }
-
-  getUrl() {
-    return FactoryGuy.buildURL(this.modelName, this.id);
   }
 
   getType() {
