@@ -918,7 +918,7 @@ FactoryGuy.define('employee', {
 });
 
 // Name fragment factory
-FactoryGuy.define('employee', {
+FactoryGuy.define('name', {
   default: {
     titles: ['Mr.', 'Dr.'], //array
     firstName: 'Jon',
