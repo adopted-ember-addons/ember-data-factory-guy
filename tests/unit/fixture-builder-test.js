@@ -19,7 +19,6 @@ moduleFor('serializer:application', 'FixtureBuilderFactory', {
 });
 
 test("returns the correct fixtureBuilder for serializer type of modelName", function() {
-  let store = this.container.lookup('service:store');
   let tests = [
     // serializer type   expected FixtureBuilder
     [DS.RESTSerializer, RESTFixtureBuilder],
