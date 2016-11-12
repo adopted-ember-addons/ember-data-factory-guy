@@ -45,7 +45,7 @@ export function mockTeardown() {
  mockFindRecord('user').fails();
 
  // Then to 'find' the user
- store.find('user', userId);
+ store.findRecord('user', userId);
 
  // or in acceptance test
  visit('/user'+userId);
