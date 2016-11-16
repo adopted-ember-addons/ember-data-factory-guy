@@ -53,7 +53,11 @@ export default class extends JSONFixtureConverter {
    */
   addIncludedArray(payload) {
     Object.keys(this.included).forEach((key)=> {
-      payload[key] = this.included[key];
+      if (!payload[key]) {
+        payload[key] = this.included[key];
+      } else {
+      	Array.prototype.push.apply(payload[key], this.included[key]);
+      }
     });
   }
 
