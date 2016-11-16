@@ -1,31 +1,31 @@
 import Ember from 'ember';
 import {moduleFor, test} from 'ember-qunit';
-import FactoryGuy, { build, buildList, make, makeList, mockCreate, mockFindRecord, mockFindAll, manualSetup } from 'ember-data-factory-guy';
+import FactoryGuy, {build, buildList, make, makeList, mockCreate, mockFindRecord, mockFindAll, manualSetup} from 'ember-data-factory-guy';
 
 import SharedAdapterBehavior from './shared-adapter-tests';
 import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
-import { inlineSetup } from '../helpers/utility-methods';
+import {inlineSetup} from '../helpers/utility-methods';
 
 let serializer = 'DS.RESTSerializer';
 let serializerType = '-rest';
 
 SharedAdapterBehavior.all(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockFindRecordSideloadingTests(serializer,serializerType);
-SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(serializer,serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindRecordSideloadingTests(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockFindRecordEmbeddedTests(serializer,serializerType);
-SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(serializer,serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindRecordEmbeddedTests(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(serializer,serializerType);
+SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(serializer,serializerType);
-SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsAssociations(serializer,serializerType);
-SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(serializer,serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsAssociations(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(serializer,serializerType);
-SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(serializer,serializerType);
-SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(serializer,serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(serializer, serializerType);
+SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(serializer, serializerType);
 
 moduleFor('serializer:application', `${serializer} #mockCreate custom`, inlineSetup(serializerType));
 
@@ -77,7 +77,7 @@ test("returns an attribute for a key", function(assert) {
 
 test("returns a relationship with a key", function(assert) {
   let user = build('user', 'with_company');
-  assert.deepEqual(user.get('company'), {id: 1, type: 'company'});
+  assert.deepEqual(user.get('company'), { id: 1, type: 'company' });
 });
 
 moduleFor('serializer:application', `${serializer} FactoryGuy#buildList get`, inlineSetup(serializerType));
@@ -97,7 +97,7 @@ test("returns an attribute with a key", function(assert) {
 
 test("returns a relationship with an index and key", function(assert) {
   let user = buildList('user', 2, 'with_company');
-  assert.deepEqual(user.get(1).company, {id: 2, type: 'company'});
+  assert.deepEqual(user.get(1).company, { id: 2, type: 'company' });
 });
 
 // model fragments
@@ -118,6 +118,46 @@ test("with model fragment returns an attribute with a key", function(assert) {
 });
 
 moduleFor('serializer:application', `${serializer} FactoryGuy#build custom`, inlineSetup(serializerType));
+
+test("serializes custom attributes types", function(assert) {
+  let info = { first: 1 };
+  let buildJson = build('user', { info: info });
+  buildJson.unwrap();
+
+  let expectedJson = {
+    user: {
+      id: 1,
+      name: 'User1',
+      style: "normal",
+      info: '{"first":1}'
+    }
+  };
+
+  assert.deepEqual(buildJson, expectedJson);
+});
+
+test("uses serializers payloadKeyFromModelName function", function(assert) {
+  let serializer = FactoryGuy.store.serializerFor('application');
+  let savedPayloadKeyFromModelNameFn = serializer.payloadKeyFromModelName;
+  serializer.payloadKeyFromModelName = function() {
+    return "dude";
+  };
+
+  let buildJson = build('user');
+  buildJson.unwrap();
+
+  let expectedJson = {
+    dude: {
+      id: 1,
+      name: 'User1',
+      style: "normal"
+    }
+  };
+
+  assert.deepEqual(buildJson, expectedJson);
+
+  serializer.payloadKeyFromModelName = savedPayloadKeyFromModelNameFn;
+});
 
 test("sideloads belongsTo records which are built from fixture definition that just has empty object {}", function(assert) {
   let buildJson = build('user', 'with_company');
@@ -623,7 +663,7 @@ test("using custom serializer with property forbidden for serialization", functi
       serialize: false
     }
   };
-  let profile = build('profile', 'with_created_at', {created_at: date});
+  let profile = build('profile', 'with_created_at', { created_at: date });
   assert.equal(profile.get("created_at"), date.toJSON());
 });
 
@@ -635,7 +675,7 @@ test("with model that has primaryKey defined in serializer ( FactoryGuy sets pri
 });
 
 test("with model that has primaryKey defined in serializer ( user sets primaryKey value )", function(assert) {
-  let cat = build('cat', {catId: 'meow1'});
+  let cat = build('cat', { catId: 'meow1' });
 
   assert.equal(cat.get('id'), 'meow1');
 });
@@ -729,42 +769,28 @@ test("sideloads hasMany records", function(assert) {
   assert.deepEqual(buildJson, expectedJson);
 });
 
-test("serializes custom attributes types", function(assert) {
-  let info = { first: 1 };
-  let buildJson = build('user', { info: info });
+
+test("handles self referential parent child relationship", function(assert) {
+  let buildJson = buildList('group', 'primary');
   buildJson.unwrap();
 
   let expectedJson = {
-    user: {
-      id: 1,
-      name: 'User1',
-      style: "normal",
-      info: '{"first":1}'
-    }
+    groups: [
+      {
+        group: 2,
+        id: 1,
+        name: 'Primary Group',
+        type: "Group"
+      },
+      {
+        group: undefined,
+        id: 2,
+        name: 'Parent Group',
+        type: "Group"
+      }
+    ]
   };
 
   assert.deepEqual(buildJson, expectedJson);
 });
 
-test("uses serializers payloadKeyFromModelName function", function(assert) {
-  let serializer = FactoryGuy.store.serializerFor('application');
-  let savedPayloadKeyFromModelNameFn = serializer.payloadKeyFromModelName;
-  serializer.payloadKeyFromModelName = function() {
-    return "dude";
-  };
-
-  let buildJson = build('user');
-  buildJson.unwrap();
-
-  let expectedJson = {
-    dude: {
-      id: 1,
-      name: 'User1',
-      style: "normal"
-    }
-  };
-
-  assert.deepEqual(buildJson, expectedJson);
-
-  serializer.payloadKeyFromModelName = savedPayloadKeyFromModelNameFn;
-});
