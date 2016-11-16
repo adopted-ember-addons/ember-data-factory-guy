@@ -305,6 +305,15 @@ SharedBehavior.makeTests = function () {
     });
   });
 
+  test("afterMake is called before the model's onLoad hook", function(assert) {
+    assert.expect(2);
+    Ember.run(function() {
+      let property = FactoryGuy.make('model-with-onload', {name: 'name'});
+      equal(property.get('name'), 'name -set in afterMake-', `afterMake is called and sets name`);
+      equal(property.get('derivedName'), 'name -set in afterMake- -set in model#didLoad-', `afterMake should be called before the model's didLoad hook`);
+    });
+  });
+
   test("hasMany associations assigned with ids", function () {
     let project1 = make('project', {id: 1, title: 'Project One'});
     let project2 = make('project', {id: 2, title: 'Project Two'});
