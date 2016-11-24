@@ -40,7 +40,6 @@ Contents:
   - [Creating Factories in Addons](https://github.com/danielspaniel/ember-data-factory-guy#creating-factories-in-addons)
   - [Ember Django Adapter](https://github.com/danielspaniel/ember-data-factory-guy#ember-django-adapter)
   - [Custom API formats](https://github.com/danielspaniel/ember-data-factory-guy#custom-api-formats)
-  - [Testing - creating scenarios](https://github.com/danielspaniel/ember-data-factory-guy#testing---creating-scenarios)
   - [Testing models, controllers, components](https://github.com/danielspaniel/ember-data-factory-guy#testing-models-controllers-components)
   - [Acceptance Tests](https://github.com/danielspaniel/ember-data-factory-guy#acceptance-tests)
   - [Tips and Tricks](https://github.com/danielspaniel/ember-data-factory-guy#tips-and-tricks)
@@ -972,23 +971,6 @@ In case your API doesn't follow either of these conventions, you can still make 
    can guide you to a solution, since the use cases will be rare and varied.
 
 
-### Testing - Creating Scenarios
-- Easy to create complex scenarios involving multi layered relationships.
-  - Can use model instances to create relationships for making other models.
-
-Example:
-
-  - Setup a scenario where a user has two projects and belongs to a company
-
-```javascript
-   let company = make('company');
-   let user = make('user', {company: company});
-   let projects = makeList('project', 2, {user: user});
-```
-
-*You can use traits to help create the relationships as well, but this strategy allows you to
-build up complex scenarios in a different way that has it's own benefits.*
-
 ####cacheOnlyMode
 - FactoryGuy.cacheOnlyMode
   - Allows you to setup the adapters to prevent them from fetching data with ajax call
@@ -1842,3 +1824,60 @@ Then to build the fixture:
   // then in your tests you would do 
   let states = makeList('state', 3); // or however many states you have 
 ```
+
+###### Tip 5: Using Scenario class in tests
+  - encapsulate data interaction in a scenario class
+    - sets up data 
+    - has helper methods to retrieve data 
+  - similar to how page objects abstract away the interaction with a page/component
+
+Example:
+
+```javascript
+// file: tests/scenarios/admin.js
+import Ember from 'ember';
+import {Scenario}  from 'ember-data-factory-guy';
+
+export default class extends Scenario {
+
+  run(opts={}) {
+    this.permissionGroups = this.makeList('permission-group',
+      ['default', { company }],
+      ['basic', { company }],
+      ['empty', { company }]);
+  }
+
+  groupNames() {
+    return this.permissionGroups.mapBy('name').sort();
+  }
+}
+
+// file: tests/acceptance/admin-view-test.js
+
+import page from '../pages/admin';
+import Scenario from '../scenarios/admin';
+
+describe('Admin View', function() {
+  let scenario;
+
+  beforeEach(function() {
+    scenario = new Scenario();
+    scenario.run();
+  });
+
+  afterEach(()=> {
+    mocaAfter(application);
+  });
+
+  describe('group', function() {
+    beforeEach(function() {
+      page.visitGroups();
+    });
+
+    it('shows all groups', function() {
+      expect(page.groups.names).to.arrayEqual(scenario.groupNames());
+    });
+  });
+});
+```
+
