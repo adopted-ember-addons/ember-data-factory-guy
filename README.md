@@ -766,10 +766,58 @@ the reverse 'user' belongsTo association is being setup for you on the project
   - [Sample Factory using inheritance (big-group.js):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/big-group.js)
 
 
-### Callbacks
- - afterMake
-  - Uses transient attributes
+### Transient Attributes
+  - Use transient attributes to build fixture
+    - Pass in any attribute you like to build a fixture
+    - Usually helps you to build some other attribute
+    - These attributes will be removed when fixture is done building
+  - Can be used in make/makeList/build/buildList 
 
+  Let's say you have a model and a factory like this:
+
+```javascript
+
+  // app/models/dog.js
+  import Model from 'ember-data/model';
+  import attr from 'ember-data/attr';
+
+  export default Model.extend({
+    dogNumber: attr('string'),
+    sound: attr('string')
+  });
+
+ // tests/factories/dog.js
+ import FactoryGuy from 'ember-data-factory-guy';
+
+ const defaultVolume = "Normal";
+
+ FactoryGuy.define('dog', {
+   default: {
+     dogNumber: (f)=> `Dog${f.id}`,
+     sound: (f) => `${f.volume||defaultVolume} Woof`
+   }
+ });
+```
+
+Then to build the fixture:
+
+```javascript
+  let volume = 'Soft';
+  let dog2 = build('dog', { volume });
+
+  dog2.get('sound'); //=> `Soft Woof`
+```
+
+
+### Callbacks 
+ - afterMake ( Going to be deprecated soon ) 
+  - Uses transient attributes
+  - Unfortuneately the model will fire 'onload' event before this afterMake is called.
+    - So all data will not be setup by then if you rely on afterMake to finish by the
+     time 'onload' is called. 
+    - In this case, just use transient attributes without the afterMake
+    - Probably will remove afterMake soon due to this issue
+      
 Assuming the factory-guy model definition defines afterMake function:
 
 ```javascript
@@ -1742,47 +1790,7 @@ Usage:
   assert.equal(json.name, 'Daniel-san');
 ```
 
-###### Tip 3: Using random attributes to build fixture.
-  - Believe it or not, you can pass in random attributes to help build a fixture
-  - sorta like transient attributes but these don't get passed to afterMake
-  - This can be done in build/buildList as well
-
-  Let's say you have a model and a factory like this:
-
-```javascript
-
-  // app/models/dog.js
-  import Model from 'ember-data/model';
-  import attr from 'ember-data/attr';
-
-  export default Model.extend({
-    dogNumber: attr('string'),
-    sound: attr('string')
-  });
-
- // tests/factories/dog.js
- import FactoryGuy from 'ember-data-factory-guy';
-
- const defaultVolume = "Normal";
-
- FactoryGuy.define('dog', {
-   default: {
-     dogNumber: (f)=> `Dog${f.id}`,
-     sound: (f) => `${f.volume||defaultVolume} Woof`
-   }
- });
-```
-
-Then to build the fixture:
-
-```javascript
-  let volume = 'Soft';
-  let dog2 = build('dog', { volume });
-
-  dog2.get('sound'); //=> `Soft Woof`
-```
-
-###### Tip 4: Building static / fixture like data into the factories.
+###### Tip 3: Building static / fixture like data into the factories.
 
  - States are the classic case. There is a state model, and there are 50 US states. 
  - You could use a strategy to get them with traits like this:
@@ -1825,7 +1833,7 @@ Then to build the fixture:
   let states = makeList('state', 3); // or however many states you have 
 ```
 
-###### Tip 5: Using Scenario class in tests
+###### Tip 4: Using Scenario class in tests
   - encapsulate data interaction in a scenario class
     - sets up data 
     - has helper methods to retrieve data 
