@@ -1853,7 +1853,6 @@ export default class extends Scenario {
 }
 
 // file: tests/acceptance/admin-view-test.js
-
 import page from '../pages/admin';
 import Scenario from '../scenarios/admin';
 
