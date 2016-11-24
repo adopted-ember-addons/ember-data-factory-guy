@@ -34,7 +34,8 @@ Contents:
   - [Traits](https://github.com/danielspaniel/ember-data-factory-guy#traits)
   - [Associations](https://github.com/danielspaniel/ember-data-factory-guy#associations)
   - [Extending Other Definitions](https://github.com/danielspaniel/ember-data-factory-guy#extending-other-definitions)
-  - [Callbacks / Transient Attributes](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
+  - [Transient Attributes](https://github.com/danielspaniel/ember-data-factory-guy#transient-attributes)
+  - [Callbacks](https://github.com/danielspaniel/ember-data-factory-guy#callbacks)
   - [Using in Development, Production or other environments](https://github.com/danielspaniel/ember-data-factory-guy#using-in-other-environments)
   - [Ember Data Model Fragments](https://github.com/danielspaniel/ember-data-factory-guy#ember-data-model-fragments)
   - [Creating Factories in Addons](https://github.com/danielspaniel/ember-data-factory-guy#creating-factories-in-addons)
@@ -810,7 +811,7 @@ Then to build the fixture:
 
 
 ### Callbacks 
- - afterMake ( Going to be deprecated soon ) 
+  - afterMake ( Going to be deprecated soon ) 
   - Uses transient attributes
   - Unfortuneately the model will fire 'onload' event before this afterMake is called.
     - So all data will not be setup by then if you rely on afterMake to finish by the
