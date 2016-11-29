@@ -93,9 +93,7 @@ export default class {
   }
 
   transformRelationshipKey(relationship) {
-    console.log('HERE,relationshipz',relationship);
     let transformFn = this.getTransformKeyFunction(relationship.type, 'Relationship');
-    console.log(relationship);
     return transformFn(relationship.key, relationship.kind);
   }
 
