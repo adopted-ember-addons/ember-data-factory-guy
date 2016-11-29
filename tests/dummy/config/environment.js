@@ -11,9 +11,10 @@ module.exports = function(environment) {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
       },
-      isNewSerializerAPI: true
-      // http://emberjs.com/guides/configuring-ember/disabling-prototype-extensions/
-      //EXTEND_PROTOTYPES: false
+      EXTEND_PROTOTYPES: {
+        // Prevent Ember Data from overriding Date.parse.
+        Date: false
+      }
     },
 
     APP: {
@@ -24,27 +25,20 @@ module.exports = function(environment) {
 
   if (environment === 'development') {
     ENV.factoryGuy = true;
-    ENV.locationType = 'auto';
-    ENV.rootURL = '/';
-    //ENV.APP.LOG_RESOLVER = true;
+    // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
-    //ENV.APP.LOG_TRANSITIONS = true;
-    //ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
+    // ENV.APP.LOG_TRANSITIONS = true;
+    // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
   }
 
   if (environment === 'test') {
     // Testem prefers this...
-    ENV.rootURL = '/';
     ENV.locationType = 'none';
-    ENV.exportApplicationGlobal =  true;
-    //keep test console output quieter
-    //ENV.APP.LOG_RESOLVER = true;
-    //ENV.APP.LOG_ACTIVE_GENERATION = true;
-    //ENV.APP.LOG_VIEW_LOOKUPS = true;
-    //ENV.APP.LOG_TRANSITIONS = true;
-    //ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
 
+    // keep test console output quieter
+    ENV.APP.LOG_ACTIVE_GENERATION = false;
+    ENV.APP.LOG_VIEW_LOOKUPS = false;
 
     ENV.APP.rootElement = '#ember-testing';
   }
@@ -53,8 +47,5 @@ module.exports = function(environment) {
 
   }
 
-  ENV.contentSecurityPolicy = {
-    'style-src': "'self' 'unsafe-inline'"
-  }
   return ENV;
 };

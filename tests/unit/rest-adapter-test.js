@@ -497,7 +497,7 @@ test("embeds hasMany records passed as prebuilt ( buildList ) json when serializ
 
 test("embeds belongsTo record when serializer attrs => deserialize: 'records' ", function(assert) {
 
-  let buildJson = build('manager', 'with_salary');
+  let buildJson = build('manager', 'withSalary');
   buildJson.unwrap();
 
   let expectedJson = {
@@ -543,7 +543,7 @@ test("embeds belongsTo record passed as prebuilt ( build ) json when serializer 
 
 test("embeds hasMany records when serializer attrs => deserialize: 'records'", function(assert) {
 
-  let buildJson = build('manager', 'with_reviews');
+  let buildJson = build('manager', 'withReviews');
   buildJson.unwrap();
 
   let expectedJson = {

@@ -93,7 +93,9 @@ export default class {
   }
 
   transformRelationshipKey(relationship) {
+    console.log('HERE,relationshipz',relationship);
     let transformFn = this.getTransformKeyFunction(relationship.type, 'Relationship');
+    console.log(relationship);
     return transformFn(relationship.key, relationship.kind);
   }
 
@@ -122,7 +124,7 @@ export default class {
     let serializer = this.store.serializerFor(modelName);
     let keyFn = serializer['keyFor' + type] || this.defaultKeyTransformFn;
 
-    return ((attribute, kind)=> {
+    return ((attribute, method)=> {
       // if there is an attrs override in serializer, return that first
       let attrOptions = this.attrsOption(serializer, attribute);
       let attrName;
@@ -134,7 +136,7 @@ export default class {
           attrName = attrOptions;
         }
       }
-      return attrName || keyFn(attribute, kind);
+      return attrName || keyFn.apply(this, [attribute, method]);
     });
   }
 

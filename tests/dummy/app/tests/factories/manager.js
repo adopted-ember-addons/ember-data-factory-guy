@@ -8,10 +8,10 @@ FactoryGuy.define('manager', {
     default_name_setup: {
       name: {}
     },
-    with_salary: {
+    withSalary: {
       salary: FactoryGuy.belongsTo('salary')
     },
-    with_reviews: {
+    withReviews: {
       reviews: FactoryGuy.hasMany('review', 2)
     }
   }
