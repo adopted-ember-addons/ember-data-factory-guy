@@ -15,7 +15,7 @@ import Ember from 'ember';
  If there are associations in the base fixture, they will be added to the
  new fixture as 'side loaded' elements, even if they are another json payload
  built whith the build/buildList methods.
- 
+
  @param {DS.Store} store
  @param {Object} options
  transformKeys tranform keys and values in fixture if true
@@ -134,7 +134,7 @@ export default class {
           attrName = attrOptions;
         }
       }
-      return attrName || keyFn(attribute, kind);
+      return attrName || keyFn.call(this, attribute, kind);
     });
   }
 
