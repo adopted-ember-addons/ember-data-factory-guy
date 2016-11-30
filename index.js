@@ -55,9 +55,7 @@ module.exports = {
   includeFactoryGuyFiles: function() {
     var includeFiles = false;
 
-    // development always needs the files, since the test runner can be
-    // run in development with /tests url
-    if (this.app.env.match(/test|development/)) {
+    if (this.app.env.match(/test/)) {
       includeFiles = true;
     } else {
       includeFiles = this.factoryGuyEnabled;
@@ -67,10 +65,12 @@ module.exports = {
   },
 
   treeFor: function(name) {
-    if (!this.includeFactoryGuyFiles()) {
+    // Not sure why this is necessary, but this stops the factory guy files
+    // from being added to app tree. Would have thought that this would have
+    // happened in treeForApp above, but not the case
+    if (!this.includeFactoryGuyFiles() && name === 'app') {
       return;
     }
-
     return this._super.treeFor.apply(this, arguments);
   }
 };

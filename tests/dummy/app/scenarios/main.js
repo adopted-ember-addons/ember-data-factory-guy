@@ -4,8 +4,8 @@ import Users from './users';
 import UsersB from './usersB';
 
 Scenario.settings({
-  logger: null,
-  logLevel: 0,
+  mockjaxLogLevel: 1,
+  logLevel: 1,
 });
 
 export default class extends Scenario {
