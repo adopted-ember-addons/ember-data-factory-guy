@@ -140,7 +140,7 @@ class ModelDefinition {
     let traitsObj = {};
     traitArgs.forEach((trait)=> {
       if (!this.traits[trait]) {
-        Ember.warn(`[ember-data-factory-guy] Your trying to use a trait [${trait}] for model ${this.modelName} but that trait can not be found.`, null, { id: 'ember-data-factory-guy-trait-does-not-exist' });
+        Ember.warn(`[ember-data-factory-guy] You're trying to use a trait [${trait}] for model ${this.modelName} but that trait can not be found.`, null, { id: 'ember-data-factory-guy-trait-does-not-exist' });
       }
       $.extend(traitsObj, this.traits[trait]);
     });
@@ -167,7 +167,7 @@ class ModelDefinition {
         if (attributeType === 'function') {
           this.addFunctionAttribute(fixture, attribute);
         } else if (attributeType === 'object') {
-          this.addObjectAtribute(fixture, attribute);
+          this.addObjectAttribute(fixture, attribute);
         }
       }
     } catch (e) {
@@ -189,7 +189,7 @@ class ModelDefinition {
     fixture[attribute] = fixture[attribute].call(this, fixture);
   }
 
-  addObjectAtribute(fixture, attribute) {
+  addObjectAttribute(fixture, attribute) {
     // If it's an object and it's a model association attribute, build the json
     // for the association and replace the attribute with that json
     let relationship = this.getRelationship(attribute);

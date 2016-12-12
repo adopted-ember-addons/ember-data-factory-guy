@@ -20,7 +20,7 @@ export default class extends JSONFixtureConverter {
   }
 
   /**
-   * RESTSerializer has a paylaod key
+   * RESTSerializer has a payload key
    *
    * @param modelName
    * @param fixture

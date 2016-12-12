@@ -38,7 +38,7 @@ SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(seriali
 moduleFor('serializer:application', `${serializer} #mockDelete`, inlineSetup(serializerType));
 SharedFactoryGuyTestHelperBehavior.mockDeleteTests();
 
-moduleFor('serializer:application', `${serializer} DRFAdapeter | #mockQuery | meta`, inlineSetup(serializerType));
+moduleFor('serializer:application', `${serializer} DRFAdapter | #mockQuery | meta`, inlineSetup(serializerType));
 // drf serializer takes the previous and next and extracts the page number
 // so this needed it's own test
 test("with proxy payload", function(assert) {

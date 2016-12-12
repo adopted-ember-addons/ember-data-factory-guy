@@ -28,7 +28,7 @@ class JSONAPIFixtureConverter extends Converter {
   }
 
   /**
-   * JSONAPIerializer does not use modelName for payload key,
+   * JSONAPISerializer does not use modelName for payload key,
    * and just has 'data' as the top level key.
    *
    * @param modelName

@@ -14,11 +14,11 @@ import Ember from 'ember';
 
  If there are associations in the base fixture, they will be added to the
  new fixture as 'side loaded' elements, even if they are another json payload
- built whith the build/buildList methods.
+ built with the build/buildList methods.
  
  @param {DS.Store} store
  @param {Object} options
- transformKeys tranform keys and values in fixture if true
+ transformKeys transform keys and values in fixture if true
  serializeMode act like serialization is for a return to server if true
  @constructor
  */
@@ -36,7 +36,7 @@ export default class {
   /**
    Convert an initial fixture into a final payload.
    This raw fixture can contain other json in relationships that were
-   built by FacoryGuy ( build, buildList ) methods
+   built by FactoryGuy ( build, buildList ) methods
 
    @param modelName
    @param fixture
@@ -62,7 +62,7 @@ export default class {
   }
 
   /**
-   Empty respose is a special case, so use this method for generating it.
+   Empty response is a special case, so use this method for generating it.
 
    @param _
    @param {Object} options useValue to override the null value that is passed
