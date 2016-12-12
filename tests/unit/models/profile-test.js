@@ -20,7 +20,7 @@ test('composing a profile with a company association by making both', function(a
   assert.ok(profile.get('company.profile') === profile);
 });
 
-test('using this.subject for profile and make for company associaion', function(assert) {
+test('using this.subject for profile and make for company association', function(assert) {
   let profile = this.subject({company: make('company')});
   assert.ok(profile.get('company.profile') === profile);
 });

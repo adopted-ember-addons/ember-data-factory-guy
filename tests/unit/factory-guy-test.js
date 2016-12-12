@@ -15,7 +15,7 @@ test("has store set in initializer", function(assert) {
   assert.ok(FactoryGuy.store instanceof DS.Store);
 });
 
-test('make throws excpetion if there is NO store setup', function(assert) {
+test('make throws exception if there is NO store setup', function(assert) {
   FactoryGuy.store = null;
   assert.throws(
     function() {
@@ -26,7 +26,7 @@ test('make throws excpetion if there is NO store setup', function(assert) {
     });
 });
 
-test('makeList throws excpetion if there is NO store setup', function(assert) {
+test('makeList throws exception if there is NO store setup', function(assert) {
   FactoryGuy.store = null;
   assert.throws(
     function() {

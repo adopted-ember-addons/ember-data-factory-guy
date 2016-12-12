@@ -528,7 +528,7 @@ SharedBehavior.mockFindAllSideloadingTests = function(serializer, serializerType
   //      let json = buildList('profile', 'with_company');
   //      mockFindAll('profile').withParams({include: 'company'}).returns({ json });
   //
-  //      FactoryGuy.store.findAll('profile', {inlcude: 'company'}).then(function(profiles) {
+  //      FactoryGuy.store.findAll('profile', {include: 'company'}).then(function(profiles) {
   //        ok(profiles.get('firstObject.company.name') === 'Silly corp');
   //        done();
   //      });
@@ -770,7 +770,7 @@ SharedBehavior.mockQueryTests = function() {
     });
   });
 
-  test("reusing mock query using returns with differnet models and different params returns different results", function(assert) {
+  test("reusing mock query using returns with different models and different params returns different results", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
 
@@ -824,7 +824,7 @@ SharedBehavior.mockQueryTests = function() {
     });
   });
 
-  test("reusing mock query using returns with differnt models and withParams with different params returns different results", function(assert) {
+  test("reusing mock query using returns with different models and withParams with different params returns different results", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
 
@@ -966,7 +966,7 @@ SharedBehavior.mockQueryRecordTests = function() {
     });
   });
 
-  test("twice using returns with differnet json and different params returns different results", function(assert) {
+  test("twice using returns with different json and different params returns different results", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
 
@@ -987,7 +987,7 @@ SharedBehavior.mockQueryRecordTests = function() {
     });
   });
 
-  test("reusing mock using returns with differnt json and withParams with different params returns different results", function(assert) {
+  test("reusing mock using returns with different json and withParams with different params returns different results", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
 

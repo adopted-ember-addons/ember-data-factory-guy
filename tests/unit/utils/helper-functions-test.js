@@ -82,7 +82,7 @@ test('#isEquivalent with objects', function(assert) {
 
 test('#isEquivalent with deeply nested objects', function(assert) {
   // we don't use nestedTomster or nestedZoey in the friends array to avoid
-  // infinite recurrsion
+  // infinite recursion
 
   let nestedTomster = {
     name: tomster.name,

@@ -15,7 +15,7 @@ class MockGetRequest extends MockRequest {
   }
 
   /**
-   Used for inspecting the repsonse that this mock will generate
+   Used for inspecting the response that this mock will generate
 
    Usually the args will be an attribute like 'id', but it might
    also be a number like 0 or 1 for and index to list types.

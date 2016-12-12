@@ -119,7 +119,7 @@ function containerSetup(container, serializerType) {
 
     store.serializerFor = function(modelName) {
       // all the modelFragment types will use their own default serializer
-      // and manager is always REST serialiezr ( used in rest tests ) 
+      // and manager is always REST serializer ( used in rest tests )
       let originalSerializer = findSerializer(modelName);
       if (modelName.match(/(name|department|address|department-employment|manager)/)) {
         return originalSerializer;

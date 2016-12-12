@@ -128,7 +128,7 @@ export function mockReload(...args) {
  let mockFindAll = mockFindAll('user').returns({json});
 
  store.findAll('user').then(function(users){
-      // 2 users, fisrt with whacky name, second isDude
+      // 2 users, first with whacky name, second isDude
    });
  ```
 
@@ -284,7 +284,7 @@ export function mockQueryRecord(modelName, queryParams) {
  2) If you match on a belongsTo association, you don't have to include that in the
  returns hash either.
 
- @param {String} modelName  name of model your creating like 'profile' for Profile
+ @param {String} modelName  name of model you're creating like 'profile' for Profile
  */
 export function mockCreate(modelName) {
   Ember.assert(`[ember-data-factory-guy] mockCreate requires at least a model type name`, modelName);

@@ -8,7 +8,7 @@ import { test, moduleForModel } from 'ember-qunit';
 
  But you do need to user moduleForModel instead of just module
 
- As long as your using ember 2.3 of have ember-getowner-pollyfill addon installed
+ As long as you're using ember 2.3 of have ember-getowner-pollyfill addon installed
  this style should work for you, and be speedier than calling startApp()
 
  If this does not work for you ( for whatever reason ) take a look at

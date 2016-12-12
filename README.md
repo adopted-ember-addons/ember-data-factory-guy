@@ -1663,7 +1663,7 @@ Usage:
   profile.save() //=> will fail
 ````
 
-*mocking a failed update and retry with succees*
+*mocking a failed update and retry with success*
 
 ```javascript
   let profile = make('profile');
@@ -1689,7 +1689,7 @@ Usage:
 
 ##### mockDelete
   - Need to wrap tests using mockDelete with: Ember.run(function() { 'your test' })
-  - To handle deleteing a model
+  - To handle deleting a model
     - Pass in a record ( or a typeName and id )
 
 Usage:
@@ -1739,8 +1739,8 @@ Usage:
 ##### Tips and Tricks
 
 ###### Tip 1: Fun with makeList/buildList and traits
-  - This is probably the funnest thing in FactoryGuy, if your not using this
-  syntax yet, you are truely missing out.
+  - This is probably the funnest thing in FactoryGuy, if you're not using this
+  syntax yet, you are truly missing out.
   
   ```javascript
    
@@ -1765,7 +1765,7 @@ Usage:
   // app/serializers/person.js
   export default DS.RESTSerializer.extend({
 
-    // let's say your modifying all names to be Japanese honorific style
+    // let's say you're modifying all names to be Japanese honorific style
     serialize: function(snapshot, options) {
       var json = this._super(snapshot, options);
   
