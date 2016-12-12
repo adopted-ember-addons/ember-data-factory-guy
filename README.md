@@ -1514,12 +1514,14 @@ Usage:
 ##### mockCreate
 
   - Use chainable methods to build the response
-    - match
-      - Attributes that must be in request json
+    - match: takes a hash with attributes or a matching function
+      1. attributes that must be in request json
         - These will be added to the response json automatically, so
           you don't need to include them in the returns hash.
         - If you match on a belongsTo association, you don't have to include that in
-          the returns hash either ( same idea ).
+          the returns hash either ( same idea )
+      1. a function that can be used to perform an arbitrary match against the request
+          json, returning `true` if there is a match, `false` otherwise.
     - returns
       - Attributes ( including relationships ) to include in response json
   - Need to wrap tests using mockCreate with: Ember.run(function() { 'your test' })
@@ -1558,6 +1560,9 @@ Usage:
   // Match all attributes
   mockCreate('project').match({name: "Moo", user: user});
 
+  // Match using a function that checks that the request's top level attribute "name" equals 'Moo'
+  mockCreate('project').match(requestData => requestData.name === 'Moo');
+
   // Exactly matching attributes, and returning extra attributes
   mockCreate('project')
     .match({name: "Moo", user: user})
@@ -1594,8 +1599,10 @@ Usage:
   - mockUpdate(modelType, id)
     - Two arguments: modelType ( like 'profile' ) , and the profile id that will updated
   - Use chainable methods to help build response:
-    - match
-      - Attributes with values that must be present on the model you are updating
+    - match: takes a hash with attributes or a matching function
+      1. attributes with values that must be present on the model you are updating
+      1. a function that can be used to perform an arbitrary match against the request
+        json, returning `true` if there is a match, `false` otherwise.
     - returns
       - Attributes ( including relationships ) to include in response json
   - Need to wrap tests using mockUpdate with: Ember.run(function() { 'your test' })
@@ -1636,6 +1643,12 @@ Usage:
   profile.set('name', "woo");
   let mock = mockUpdate(profile).match({name: "moo"});
   profile.save();  // will not be mocked since the mock you set says the name must be "woo"
+
+  // using match() method to specify a matching function
+  let profile = make('profile');
+  profile.set('name', "woo");
+  let mock = mockUpdate(profile).match(requestData => requestData.name === "moo");
+  profile.save();  // will not be mocked since the mock you set requires the request's top level attribute "name" to equal "moo"
 
   // either set the name to "moo" which will now be mocked correctly
   profile.set('name', "moo");
