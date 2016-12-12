@@ -1098,6 +1098,44 @@ SharedBehavior.mockCreateTests = function() {
     });
   });
 
+  test("match can take a function - if it returns true it registers a match", function(assert) {
+    assert.expect(2);
+    Ember.run(() => {
+      let done = assert.async();
+
+      let mock = mockCreate('profile');
+
+      mock.match(function(/*requestData*/) {
+        ok(true, 'matching function is called');
+        return true;
+      });
+
+      FactoryGuy.store.createRecord('profile').save().then(function(/*profile*/) {
+        equal(mock.timesCalled, 1);
+        done();
+      });
+    });
+  });
+
+  test("match can take a function - if it returns false it does not register a match", function(assert) {
+    assert.expect(2);
+    Ember.run(() => {
+      let done = assert.async();
+
+      let mock = mockCreate('profile');
+
+      mock.match(function(/*requestData*/) {
+        ok(true, 'matching function is called');
+        return false;
+      });
+
+      FactoryGuy.store.createRecord('profile').save().catch(() => {
+        equal(mock.timesCalled, 0);
+        done();
+      });
+    });
+  });
+
   test("match some attributes", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
@@ -1570,6 +1608,47 @@ SharedBehavior.mockUpdateTests = function() {
     });
   });
 
+  test("match can take a function - if it returns true it registers a match", function(assert) {
+    assert.expect(2);
+    Ember.run(() => {
+      let done = assert.async();
+      let customDescription = "special description";
+      let profile = make('profile');
+
+      let updateMock = mockUpdate(profile);
+
+      updateMock.match(function(/*requestData*/) {
+        ok(true, 'matching function is called');
+        return true;
+      });
+      profile.set('description', customDescription);
+      profile.save().then(function(/*profile*/) {
+        equal(updateMock.timesCalled, 1);
+        done();
+      });
+    });
+  });
+
+  test("match can take a function - if it returns false it does not register a match", function(assert) {
+    assert.expect(2);
+    Ember.run(() => {
+      let done = assert.async();
+      let customDescription = "special description";
+      let profile = make('profile');
+
+      let updateMock = mockUpdate(profile);
+
+      updateMock.match(function(/*requestData*/) {
+        ok(true, 'matching function is called');
+        return false;
+      });
+      profile.set('description', customDescription);
+      profile.save().catch(() => {
+        equal(updateMock.timesCalled, 0);
+        done();
+      });
+    });
+  });
   test("match some attributes", function(assert) {
     Ember.run(()=> {
       let done = assert.async();

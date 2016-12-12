@@ -31,8 +31,10 @@ const AttributeMatcher = (superclass) => class extends superclass {
   extraRequestMatches(settings) {
     if (this.matchArgs) {
       let requestData = JSON.parse(settings.data);
-      if (!this.attributesMatch(requestData)) {
-        return false;
+      if (typeof this.matchArgs === 'function') {
+        return this.matchArgs(requestData);
+      } else {
+        return this.attributesMatch(requestData);
       }
     }
     return true;
