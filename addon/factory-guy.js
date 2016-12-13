@@ -201,9 +201,7 @@ class FactoryGuy {
    @returns {Function} wrapper function that will build the association json
    */
   belongsTo(fixtureName, opts) {
-    return ()=> {
-      return this.buildRaw(fixtureName, opts);
-    };
+    return ()=> this.buildRaw(fixtureName, opts);
   }
 
   /**
@@ -235,9 +233,7 @@ class FactoryGuy {
    @returns {Function} wrapper function that will build the association json
    */
   hasMany(...args) {
-    return ()=> {
-      return this.buildRawList.apply(this, args);
-    };
+    return ()=> this.buildRawList.apply(this, args);
   }
 
   /**
