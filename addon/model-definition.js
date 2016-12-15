@@ -139,9 +139,7 @@ class ModelDefinition {
   build(name, opts, traitArgs) {
     let traitsObj = {};
     traitArgs.forEach((trait)=> {
-      if (!this.traits[trait]) {
-        Ember.warn(`[ember-data-factory-guy] You're trying to use a trait [${trait}] for model ${this.modelName} but that trait can not be found.`, null, { id: 'ember-data-factory-guy-trait-does-not-exist' });
-      }
+      Ember.assert(`You're trying to use a trait [${trait}] for model ${this.modelName} but that trait can't be found.`, this.traits[trait]);
       $.extend(traitsObj, this.traits[trait]);
     });
     let modelAttributes = this.namedModels[name] || {};

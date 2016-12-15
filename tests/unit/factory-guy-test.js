@@ -134,12 +134,12 @@ test("can use non model attributes to help setup attributes", function(assert) {
   assert.equal(dog2.get('sound'), `${volume} Woof`, 'uses your extra attribute');
 });
 
-test("emits warning when trait is not found", function(assert) {
-  sinon.spy(Ember, 'warn');
-//  Ember.warn = (args)=> console.log('do doo', args);
-  build('user', "non_existent_trait");
-  assert.ok(Ember.warn.getCall(0).args[0].match('non_existent_trait'));
-  Ember.warn.restore();
+test("causes an assertion error when a trait is not found", function(assert) {
+  try {
+    build('user', 'non_existent_trait');
+  } catch (error) {
+    assert.equal(error.message, "Assertion Failed: You're trying to use a trait [non_existent_trait] for model user but that trait can't be found.");
+  }
 });
 
 test("handles hash attribute with hash value as default value", function(assert) {

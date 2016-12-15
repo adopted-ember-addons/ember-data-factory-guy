@@ -263,7 +263,7 @@ test("with errors in response", function(assert) {
     const done = assert.async();
 
     const response = { errors: { description: ['bad'] } };
-    const mock = mockFindRecord('profile', 1).fails({ response });
+    const mock = mockFindRecord('profile').fails({ response });
 
     FactoryGuy.store.findRecord('profile', 1)
       .catch((res)=> {
