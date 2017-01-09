@@ -1,7 +1,8 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
+import {stripQueryParams} from '../utils/helper-functions';
+
 const assign = Ember.assign || Ember.merge;
-/* global URI */
 
 export default class {
 
@@ -105,9 +106,7 @@ export default class {
   }
 
   urlMatch(settings) {
-    const uri = new URI(settings.url);
-    const mockUri = new URI(this.getUrl());
-    return uri.path() === mockUri.path();
+    return stripQueryParams(settings.url) === stripQueryParams(this.getUrl());
   }
 
   // Only check the uri path, not the host name and or query params.

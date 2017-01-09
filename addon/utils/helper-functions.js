@@ -71,3 +71,7 @@ export function requireFiles(filePattern) {
 export function escapeRegExp(str) {
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
+
+export function stripQueryParams(uri) {
+  return uri.split('?')[0];
+}
