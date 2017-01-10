@@ -8,20 +8,6 @@ var Funnel = require('broccoli-funnel');
 module.exports = {
   name: 'ember-data-factory-guy',
 
-  treeForVendor: function() {
-    var files = [];
-
-    var urijsPath = path.dirname(require.resolve('urijs'));
-    files.push(new Funnel(urijsPath, {
-      files: [
-        'URI.js'
-      ],
-      destDir: 'urijs'
-    }));
-
-    return mergeTrees(files);
-  },
-
   treeForApp: function(appTree) {
     var trees = [appTree];
 
@@ -48,7 +34,6 @@ module.exports = {
 
     if (this.includeFactoryGuyFiles()) {
       app.import(path.join(app.bowerDirectory, 'jquery-mockjax', 'dist', 'jquery.mockjax.js'));
-      app.import(path.join('vendor', 'urijs', 'URI.js'));
     }
   },
 
