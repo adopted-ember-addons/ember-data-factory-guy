@@ -17,9 +17,10 @@ Factories simplify the process of testing, making you more efficient and your te
 
 **Why is FactoryGuy so awesome**
 - Since you using ember data, you don't need to create any ORM like things.
-- You don't need to add any files to re create all the relationships in your models and serializers
+- You don't need to add any files to re create all the relationships in your models
+- Any custom methods like: serialize / serializeAttribute in a serializer will be used automatically
+- If you set up custom methods like: buildURL / urlForFindRecord in an adapter, they will be used automatically
 - You don't have to setup anything besides making factories.
-- If you set a custom buildURL / urlForFindRecord method in adapter it will be used automatically  
 - Everything just works.
 
 Questions: Slack => [factory-guy](https://embercommunity.slack.com/messages/e-factory-guy/)
