@@ -1862,13 +1862,14 @@ import {Scenario}  from 'ember-data-factory-guy';
 
 export default class extends Scenario {
 
-  run(opts={}) {
-    this.permissionGroups = this.makeList('permission-group',
-      ['default', { company }],
-      ['basic', { company }],
-      ['empty', { company }]);
+  run() {
+    this.createGroups();
   }
-
+  
+  createGroups() {
+    this.permissionGroups = this.makeList('permission-group', 3);
+  }
+  
   groupNames() {
     return this.permissionGroups.mapBy('name').sort();
   }
@@ -1884,10 +1885,6 @@ describe('Admin View', function() {
   beforeEach(function() {
     scenario = new Scenario();
     scenario.run();
-  });
-
-  afterEach(()=> {
-    mocaAfter(application);
   });
 
   describe('group', function() {
