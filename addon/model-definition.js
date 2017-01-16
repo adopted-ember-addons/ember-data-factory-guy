@@ -39,6 +39,10 @@ class ModelDefinition {
    @returns {Boolean} true if it's a model fragment
    */
   isModelAFragment() {
+    if(FactoryGuy.store.isFragment) { //added in `ember-data-model-fragments` v2.11.0
+      return FactoryGuy.store.isFragment(this.modelName);
+    }
+
     try {
       if (FactoryGuy.store.createFragment) {
         return !!FactoryGuy.store.createFragment(this.modelName);
