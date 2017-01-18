@@ -9,6 +9,9 @@ import ActiveModelFixtureBuilder from './active-model-fixture-builder';
 let ActiveModelSerializer, DjangoSerializer;
 try {
   ActiveModelSerializer = require('active-model-adapter').ActiveModelSerializer;
+} catch (e) {
+}
+try {
   DjangoSerializer = require('ember-django-adapter/serializers/drf').default;
 } catch (e) {
 }
