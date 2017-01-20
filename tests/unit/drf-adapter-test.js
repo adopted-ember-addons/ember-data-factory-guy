@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import {moduleFor, test} from 'ember-qunit';
-import FactoryGuy, {buildList, mockQuery} from 'ember-data-factory-guy';
+import FactoryGuy, {build, buildList, mockQuery} from 'ember-data-factory-guy';
 
 import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
 import {inlineSetup} from '../helpers/utility-methods';
@@ -52,5 +52,15 @@ test("with proxy payload", function(assert) {
       done();
     });
   });
+});
+
+moduleFor('serializer:application', `${serializer} FactoryGuy#build get`, inlineSetup(serializerType));
+
+test("returns all attributes with no key", function(assert) {
+  let user = build('user');
+
+  assert.deepEqual(user.get(), { id: 1, name: 'User1', style: "normal" });
+  assert.equal(user.get().id, 1);
+  assert.equal(user.get().name, 'User1');
 });
 
