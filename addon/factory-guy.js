@@ -330,7 +330,7 @@ class FactoryGuy {
   }
 
   /**
-   Make new fixture and save to store.
+   Make new model and save to store.
 
    @param {String} name  fixture name
    @param {String} trait  optional trait names ( one or more )
@@ -356,6 +356,33 @@ class FactoryGuy {
     if (definition.hasAfterMake()) {
       definition.applyAfterMake(model, args.opts);
     }
+    return model;
+  }
+
+  /**
+   Make new model.
+
+   @param {String} name  fixture name
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} options  optional fixture options that will override default fixture values
+   @returns {DS.Model} record
+   */
+  makeNew() {
+    let args = extractArguments.apply(this, arguments);
+
+    Ember.assert(
+      `FactoryGuy does not have the application's store.
+       Use manualSetup(this.container) in model/component test
+       before using makeNew`, this.store
+    );
+
+    let modelName = lookupModelForFixtureName(args.name);
+    let fixture = this.buildRaw.apply(this, arguments);
+    let data = this.fixtureBuilder(modelName).convertForBuild(modelName, fixture);
+    data = data.get();
+    delete data.id;
+    
+    const model = Ember.run(()=> this.store.createRecord(modelName, data));
     return model;
   }
 
@@ -537,10 +564,11 @@ class FactoryGuy {
 let factoryGuy = new FactoryGuy();
 
 let make = factoryGuy.make.bind(factoryGuy);
+let makeNew = factoryGuy.makeNew.bind(factoryGuy);
 let makeList = factoryGuy.makeList.bind(factoryGuy);
 let build = factoryGuy.build.bind(factoryGuy);
 let buildList = factoryGuy.buildList.bind(factoryGuy);
 let clearStore = factoryGuy.clearStore.bind(factoryGuy);
 
-export {make, makeList, build, buildList, clearStore};
+export {make, makeNew, makeList, build, buildList, clearStore};
 export default factoryGuy;

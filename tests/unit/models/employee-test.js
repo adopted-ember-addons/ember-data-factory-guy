@@ -24,6 +24,7 @@ moduleForModel('employee', 'Unit | Model | employee', {
 // NAME FRAGMENT
 test('default employee', function(assert) {
   let employee = make('employee');
+
   //Should I need a run loop?
   run(() => {
     assert.ok(employee.get('name.firstName') === 'Tyrion');

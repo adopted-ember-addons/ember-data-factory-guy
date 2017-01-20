@@ -1,7 +1,7 @@
 import {moduleFor, test} from 'ember-qunit';
 import DS from 'ember-data';
 import Ember from 'ember';
-import FactoryGuy, {make, makeList, build, buildList, clearStore} from 'ember-data-factory-guy';
+import FactoryGuy, {make, makeNew, makeList, build, buildList, clearStore} from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 
 import {inlineSetup} from '../helpers/utility-methods';
@@ -175,6 +175,17 @@ test("with a number and extra options", function(assert) {
   assert.equal(heros.get(1).name, "Bob");
 });
 
+
+moduleFor('serializer:application', 'FactoryGuy#makeNew', inlineSetup('-json-api'));
+
+test("creates record but does not save to store", function(assert) {
+  let user = makeNew('user', 'silly', {name: 'Bozo'});
+  assert.ok(user instanceof User, 'creates record');
+  assert.equal(user.get('style'), 'silly', 'uses trait attributes');
+  assert.equal(user.get('name'),'Bozo', 'uses optional attributes');
+  assert.equal(user.id, null, 'no id');
+  assert.ok(user.get('isNew'), 'is in isNew state');
+});
 
 moduleFor('serializer:application', 'FactoryGuy#makeList', inlineSetup('-json-api'));
 

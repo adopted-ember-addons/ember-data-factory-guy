@@ -1352,7 +1352,7 @@ Usage:
   mockReload(profile).returns({ attrs: { description: "moo" } });
   profile.reload(); // description is now "moo"
 ```
-- Using `returns({json})` to return new all new attributes
+- Using `returns({json})` to return all new attributes
 ```javascript
   let profile = make('profile', { description: "tomatoes" });
   // all new values EXCEPT the profile id ( you should keep that id the same )
