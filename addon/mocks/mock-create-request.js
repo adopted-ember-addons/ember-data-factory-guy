@@ -17,15 +17,15 @@ export default class MockCreateRequest extends AttributeMatcher(MockRequest) {
   }
 
   /**
-   This returns is different than the one for GET requests, because
-   you don't prefix the returns with json or models etc...
-   The returns arguments are those attributes or relationships that
+   This returns only accepts attrs key
+   These attrs are those attributes or relationships that
    you would like returned with the model when the create succeeds.
 
    @param {Object} returns attributes and or relationships to return with payload
    */
   returns(returns) {
-    this.returnArgs = returns;
+    this.validateReturnsOptions(returns);
+    this.returnArgs = returns.attrs;
     return this;
   }
 

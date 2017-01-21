@@ -32,7 +32,7 @@ test("returns camelCase attributes", function(assert) {
     let done = assert.async();
     let customDescription = "special description";
 
-    mockCreate('profile').returns({ camel_case_description: customDescription });
+    mockCreate('profile').returns({attrs: { camel_case_description: customDescription }});
 
     FactoryGuy.store.createRecord('profile', { camel_case_description: 'description' })
       .save().then((profile)=> {

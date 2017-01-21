@@ -18,18 +18,21 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
   }
 
   /**
-   This returns is different than the one for GET requests, because
-   you don't prefix the returns with json or models etc...
-   The returns arguments are those attributes or relationships that
+   This returns only accepts attrs key
+   These attrs are those attributes or relationships that
    you would like returned with the model when the update succeeds.
 
    @param {Object} returns attributes and or relationships to send with payload
    */
   returns(returns) {
+    this.validateReturnsOptions(returns);
+
     if (!this.id) {
-      Ember.assert(`[ember-data-factory-guy] Can't use returns in mockUpdate when update only has modelName and no id`, this.id);
+      Ember.assert(`[ember-data-factory-guy] Can't use returns in 
+      mockUpdate when update only has modelName and no id`, this.id);
     }
-    this.returnArgs = returns;
+
+    this.returnArgs = returns.attrs;
     return this;
   }
 

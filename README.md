@@ -861,16 +861,18 @@ You would use this to make models like:
 ### Using in Other Environments
 
 - You can set up scenarios for you app that use all your factories from tests
-- In config/environment.js place a flag => factoryGuy: true
-- NOTE: Do not set the flag => factoryGuy: true in the `test` environment. Factories are enabled
+- In config/environment.js you can put settings that will enable scenarios and or factory guy
+
+- NOTE: Do not use settings in the `test` environment. Factories are enabled
   by default for the `test` environment and setting the flag tells factory-guy to load the app/scenarios
   files which are not needed for using factory-guy in testing. This will result in errors being generated if
   the app/scenarios files do not exist.
   
   ```js
     // file: config/environment.js
+    // in development you don't have to set enabled to true since that is default
     if (environment === 'development') {
-      ENV.factoryGuy = true;
+      ENV.factoryGuy = { useScenarios: true }; 
       ENV.locationType = 'auto';
       ENV.rootURL = '/';
     }
@@ -878,7 +880,7 @@ You would use this to make models like:
     or
 
     if (environment === 'production') {
-      ENV.factoryGuy = true;
+      ENV.factoryGuy = {enabled: true, useScenarios: true};
       ENV.locationType = 'auto';
       ENV.rootURL = '/';
     }
@@ -1572,11 +1574,11 @@ Usage:
 
   // Returning belongsTo relationship. Assume outfit belongsTo 'person'
   let person = build('super-hero'); // it's polymorphic
-  mockCreate('outfit').returns({ person });
+  mockCreate('outfit').returns({attrs: { person }});
 
   // Returning hasMany relationship. Assume super-hero hasMany 'outfits'
   let outfits = buildList('outfit', 2);
-  mockCreate('super-hero').returns({ outfits });
+  mockCreate('super-hero').returns({attrs: { outfits }});
 
 ```
 

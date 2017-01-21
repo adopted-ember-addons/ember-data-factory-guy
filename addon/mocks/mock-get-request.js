@@ -43,7 +43,7 @@ class MockGetRequest extends MockRequest {
 
   validateReturnsOptions(options) {
     const responseKeys = Object.keys(options);
-    Ember.assert(`[ember-data-factory-guy] You can pass zero or one one output key to 'returns',
+    Ember.assert(`[ember-data-factory-guy] You can pass zero or one key to 'returns',
                 you passed these keys: ${responseKeys}`, responseKeys.length <= 1);
 
     const [ responseKey ] = responseKeys;

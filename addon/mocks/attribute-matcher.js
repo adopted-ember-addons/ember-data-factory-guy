@@ -28,6 +28,17 @@ const AttributeMatcher = (superclass) => class extends superclass {
     return this;
   }
 
+  validateReturnsOptions(options) {
+    const responseKeys = Object.keys(options);
+    let validKey = responseKeys.length === 1 && responseKeys[0] === 'attrs';
+    
+    Ember.assert(`[ember-data-factory-guy] You passed an invalid key for 
+      'returns' function. The only valid keys is 'attrs'. You passed these 
+      keys: ${responseKeys}`, 
+      validKey
+    );
+  }
+  
   extraRequestMatches(settings) {
     if (this.matchArgs) {
       let requestData = JSON.parse(settings.data);

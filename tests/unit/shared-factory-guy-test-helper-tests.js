@@ -40,7 +40,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       let done = assert.async();
 
       let profileId = 1;
-      mockCreate('profile').returns({ id: profileId });
+      mockCreate('profile').returns({attrs: { id: profileId }});
       mockFindRecord('profile').returns({ id: profileId });
 
       let newRecord = FactoryGuy.store.createRecord('profile', { description: 'foo' });
@@ -1065,7 +1065,7 @@ SharedBehavior.mockCreateTests = function() {
       let done = assert.async();
       let customDescription = "special description";
 
-      let mock = mockCreate('profile', {
+      mockCreate('profile', {
         match: { description: customDescription }
       });
 
@@ -1073,7 +1073,7 @@ SharedBehavior.mockCreateTests = function() {
 
       return FactoryGuy.store.createRecord('profile', {
         description: customDescription
-      }).save().then(function(profile) {
+      }).save().then((profile)=> {
         ok(FactoryGuy.store.peekAll('profile').get('content.length') === 1, 'No extra records created');
         ok(profile instanceof Profile, 'Creates the correct type of record');
         ok(profile.get('description') === customDescription, 'Passes along the match attributes');
@@ -1088,13 +1088,13 @@ SharedBehavior.mockCreateTests = function() {
       let done = assert.async();
       let customName = "special name";
 
-      let mock = mockCreate('super-hero', {
-        match: { name: customName }
-      });
+      mockCreate('super-hero', { match: { name: customName } });
+
       ok(FactoryGuy.store.peekAll('super-hero').get('content.length') === 0);
+
       FactoryGuy.store.createRecord('super-hero', {
         name: customName
-      }).save().then(function(superHero) {
+      }).save().then((superHero)=> {
         ok(FactoryGuy.store.peekAll('super-hero').get('content.length') === 1, 'No extra records created');
         ok(superHero instanceof SuperHero, 'Creates the correct type of record');
         ok(superHero.get('name') === customName, 'Passes along the match attributes');
@@ -1108,7 +1108,7 @@ SharedBehavior.mockCreateTests = function() {
     Ember.run(()=> {
       let done = assert.async();
 
-      let mock = mockCreate('profile');
+      mockCreate('profile');
 
       FactoryGuy.store.createRecord('profile', { description: 'whatever' })
         .save().then((profile)=> {
@@ -1124,7 +1124,7 @@ SharedBehavior.mockCreateTests = function() {
     Ember.run(()=> {
       let done = assert.async();
 
-      let mock = mockCreate('profile');
+      mockCreate('profile');
 
       let promises = [1, 2, 3].map(function() {
         return FactoryGuy.store.createRecord('profile', { description: 'whatever' }).save();
@@ -1189,7 +1189,7 @@ SharedBehavior.mockCreateTests = function() {
       let customDescription = "special description";
       let date = new Date();
 
-      let mock = mockCreate('profile').match({ description: customDescription });
+      mockCreate('profile').match({ description: customDescription });
 
       FactoryGuy.store.createRecord('profile', {
         description: customDescription, created_at: date
@@ -1209,7 +1209,7 @@ SharedBehavior.mockCreateTests = function() {
       let customDescription = "special description";
       let date = new Date();
 
-      let mock = mockCreate('profile').match({ description: customDescription, created_at: date });
+      mockCreate('profile').match({ description: customDescription, created_at: date });
 
       FactoryGuy.store.createRecord('profile', {
         description: customDescription, created_at: date
@@ -1229,10 +1229,10 @@ SharedBehavior.mockCreateTests = function() {
       let done = assert.async();
       let company = make('company');
 
-      let mock = mockCreate('profile').match({ company: company });
+      mockCreate('profile').match({ company: company });
 
       FactoryGuy.store.createRecord('profile', { company: company }).save()
-        .then(function(profile) {
+        .then((profile)=> {
           ok(profile.get('company') === company);
 
           done();
@@ -1244,7 +1244,7 @@ SharedBehavior.mockCreateTests = function() {
     Ember.run(()=> {
       let done = assert.async();
       let group = make('big-group');
-      let mock = mockCreate('profile').match({ group: group });
+      mockCreate('profile').match({ group: group });
 
       FactoryGuy.store.createRecord('profile', { group: group }).save()
         .then(function(profile) {
@@ -1261,7 +1261,7 @@ SharedBehavior.mockCreateTests = function() {
       let done = assert.async();
       let date = new Date();
 
-      let mock = mockCreate('profile').returns({ created_at: date });
+      mockCreate('profile').returns({attrs: { created_at: date }});
 
       FactoryGuy.store.createRecord('profile').save().then(function(profile) {
         ok(profile.get('created_at').toString() === date.toString());
@@ -1277,7 +1277,7 @@ SharedBehavior.mockCreateTests = function() {
       let done = assert.async();
       let id = 42;
 
-      let mock = mockCreate('profile').returns({ id: id });
+      mockCreate('profile').returns({attrs: { id: id }});
 
       FactoryGuy.store.createRecord('profile').save().then(function(profile) {
         assert.equal(profile.get('id'), id);
@@ -1297,9 +1297,9 @@ SharedBehavior.mockCreateTests = function() {
       let company = make('company');
       let group = make('big-group');
 
-      let mock = mockCreate('profile')
+      mockCreate('profile')
         .match({ description: customDescription, company: company, group: group })
-        .returns({ created_at: date });
+        .returns({attrs: { created_at: date }});
 
       FactoryGuy.store.createRecord('profile', {
         description: customDescription, company: company, group: group
@@ -1401,7 +1401,7 @@ SharedBehavior.mockCreateReturnsAssociations = function(serializer, serializerTy
     Ember.run(()=> {
       let done = assert.async();
       let company = build('company');
-      mockCreate('profile').returns({ company });
+      mockCreate('profile').returns({attrs: { company }});
 
       FactoryGuy.store.createRecord('profile').save().then(function(profile) {
         equal(profile.get('company.id'), company.get('id').toString());
@@ -1415,7 +1415,7 @@ SharedBehavior.mockCreateReturnsAssociations = function(serializer, serializerTy
     Ember.run(()=> {
       let done = assert.async();
       let person = build('super-hero');
-      mockCreate('outfit').returns({ person });
+      mockCreate('outfit').returns({attrs: { person }});
 
       FactoryGuy.store.createRecord('outfit').save().then(function(outfit) {
         equal(outfit.get('person.id'), person.get('id').toString());
@@ -1429,7 +1429,7 @@ SharedBehavior.mockCreateReturnsAssociations = function(serializer, serializerTy
     Ember.run(()=> {
       let done = assert.async();
       let outfits = buildList('outfit', 2);
-      mockCreate('super-hero').returns({ outfits });
+      mockCreate('super-hero').returns({attrs: { outfits }});
 
       FactoryGuy.store.createRecord('super-hero').save().then(function(hero) {
         deepEqual(hero.get('outfits').mapBy('id'), ['1', '2']);
@@ -1449,7 +1449,7 @@ SharedBehavior.mockCreateReturnsEmbeddedAssociations = function(serializer, seri
     Ember.run(()=> {
       let done = assert.async();
       let company = build('company');
-      mockCreate('comic-book').returns({ company });
+      mockCreate('comic-book').returns({attrs: { company }});
 
       FactoryGuy.store.createRecord('comic-book').save().then(function(comic) {
         equal(comic.get('company.id'), company.get('id').toString());
@@ -1484,7 +1484,7 @@ SharedBehavior.mockUpdateTests = function() {
       let done = assert.async();
       let profile = make('profile');
       let date = new Date(2016, 1, 4);
-      mockUpdate('profile', profile.id).returns({ created_at: date });
+      mockUpdate('profile', profile.id).returns({attrs: { created_at: date }});
 
       profile.set('description', 'new desc');
       profile.save().then(function(profile) {
@@ -1543,7 +1543,7 @@ SharedBehavior.mockUpdateTests = function() {
       let done = assert.async();
       let profile = make('profile');
       let date = new Date(2016, 1, 4);
-      mockUpdate(profile).returns({ created_at: date });
+      mockUpdate(profile).returns({attrs: { created_at: date }});
 
       profile.set('description', 'new desc');
       profile.save().then(function(profile) {
@@ -1723,12 +1723,12 @@ SharedBehavior.mockUpdateTests = function() {
 
       mockUpdate('profile').match({ description: customDescription });
 
-      profile.save().then(function(profile) {
+      profile.save().then((profile)=> {
         ok(profile instanceof Profile);
         ok(profile.id === '1');
         ok(profile.get('description') === customDescription);
 
-        profile2.save().then(function(profile) {
+        profile2.save().then((profile)=> {
           ok(profile2 instanceof Profile);
           ok(profile2.id === '2');
           ok(profile2.get('description') === customDescription);
@@ -1745,11 +1745,13 @@ SharedBehavior.mockUpdateTests = function() {
       let profile = make('profile', { created_at: date, aBooleanField: false });
       let customDescription = "special description";
 
-      mockUpdate('profile', profile.id).match({ description: customDescription, created_at: date, aBooleanField: true });
+      mockUpdate('profile', profile.id).match({ 
+        description: customDescription, created_at: date, aBooleanField: true 
+      });
 
       profile.set('description', customDescription);
       profile.set('aBooleanField', true);
-      profile.save().then(function(profile) {
+      profile.save().then((profile)=> {
         ok(profile instanceof Profile);
         ok(profile.id === '1');
         ok(profile.get('description') === customDescription);
@@ -1803,7 +1805,7 @@ SharedBehavior.mockUpdateTests = function() {
 
       mockUpdate('profile', profile.id)
         .match({ description: customDescription, company: company, group: group })
-        .returns({ created_at: date });
+        .returns({attrs: { created_at: date }});
 
       profile.save().then(function(profile) {
         ok(profile.get('created_at').toString() === date.toString());
@@ -1890,7 +1892,7 @@ SharedBehavior.mockUpdateTests = function() {
 
       mockUpdate(profile)
         .match({ created_at: null }) // serializer removes date
-        .returns({ created_at: date });
+        .returns({attrs: { created_at: date }});
 
       profile.save().then(function(profile) {
         ok(profile.get('created_at').toString() === date.toString());
@@ -1941,7 +1943,7 @@ SharedBehavior.mockUpdateReturnsAssociations = function(serializer, serializerTy
       profile.set('description', 'new desc');
 
       let company = build('company');
-      mockUpdate(profile).returns({ company });
+      mockUpdate(profile).returns({attrs: { company }});
 
       profile.save().then(function(profile) {
         equal(profile.get('company.id'), company.get('id').toString());
@@ -1960,7 +1962,7 @@ SharedBehavior.mockUpdateReturnsAssociations = function(serializer, serializerTy
       outfit.set('name', newValue);
 
       let person = build('super-hero');
-      mockUpdate(outfit).returns({ person });
+      mockUpdate(outfit).returns({attrs: { person }});
 
       outfit.save().then(function(outfit) {
         equal(outfit.get('name'), newValue);
@@ -1980,7 +1982,7 @@ SharedBehavior.mockUpdateReturnsAssociations = function(serializer, serializerTy
       superHero.set('name', newValue);
 
       let outfits = buildList('outfit', 2);
-      mockUpdate(superHero).returns({ outfits });
+      mockUpdate(superHero).returns({attrs: { outfits }});
 
       superHero.save().then(function(hero) {
         equal(hero.get('name'), newValue);
@@ -2005,7 +2007,7 @@ SharedBehavior.mockUpdateReturnsEmbeddedAssociations = function(serializer, seri
       comicBook.set('name', newValue);
 
       let company = build('company');
-      mockUpdate(comicBook).returns({ company });
+      mockUpdate(comicBook).returns({attrs: { company }});
 
       comicBook.save().then(function(comic) {
         equal(comic.get('name'), newValue);
