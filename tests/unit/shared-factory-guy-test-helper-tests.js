@@ -21,7 +21,7 @@ let SharedBehavior = {};
 //////// mockFindRecord common /////////
 SharedBehavior.mockFindRecordCommonTests = function() {
 
-  test("the basic returns id", function(assert) {
+  test("the basic returns default attributes", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
       let mock = mockFindRecord('profile');
@@ -32,6 +32,53 @@ SharedBehavior.mockFindRecordCommonTests = function() {
         equal(profile.get('description'), 'Text goes here');
         done();
       });
+    });
+  });
+
+  test("returns id succeeds and returns model when id for model type found in store after createRecord", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+
+      let profileId = 1;
+      mockCreate('profile').returns({ id: profileId });
+      mockFindRecord('profile').returns({ id: profileId });
+
+      let newRecord = FactoryGuy.store.createRecord('profile', { description: 'foo' });
+      newRecord.save().then((profile)=> {
+        FactoryGuy.store.findRecord('profile', profileId).then((profile)=> {
+          equal(profile.get('id'), profileId);
+          equal(profile.get('description'), 'foo');
+          done();
+        });
+      });
+    });
+  });
+
+  test("returns id succeeds and returns model when id for model type found in store", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+
+      let existingProfile = make('profile');
+      mockFindRecord('profile').returns({ id: existingProfile.get('id') });
+
+      FactoryGuy.store.findRecord('profile', existingProfile.get('id')).then((profile)=> {
+        equal(profile.get('id'), existingProfile.get('id'));
+        done();
+      });
+    });
+  });
+
+  test("returns id fails with 404 if record for id and model type not found in store", function(assert) {
+    Ember.run(()=> {
+      let done = assert.async();
+      let profileId = 1;
+      mockFindRecord('profile').returns({ id: profileId });
+
+      FactoryGuy.store.findRecord('profile', profileId)
+        .catch((reason)=> {
+          equal(reason.errors[0].status,'404');
+          done();
+        });
     });
   });
 

@@ -62,16 +62,16 @@ class MockGetRequest extends MockRequest {
 
   _setReturns(responseKey, options) {
     let json, model, models, modelName = this.modelName;
+
     switch (responseKey) {
-
       case 'id':
-        model = FactoryGuy.store.peekRecord(modelName, options.id);
-
-        Ember.assert(`argument ( id ) should refer to a model of type ${modelName} that is in
-         the store. But no ${modelName} with id ${options.id} was found in the store`,
-          (model instanceof Model && model.constructor.modelName === modelName));
-
-        return this.returns({ model });
+        // if you want to return existing model with an id, set up the json
+        // as if it might be found, but check later during request match to
+        // see if it really exists
+        json = { id: options.id };
+        this.idSearch = true;
+        this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, json));
+        break;
 
       case 'model':
         model = options.model;
@@ -141,7 +141,6 @@ class MockGetRequest extends MockRequest {
     }
     return true;
   }
-
 
   extraRequestMatches(settings) {
     return this.paramsMatch(settings);
