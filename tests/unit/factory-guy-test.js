@@ -262,12 +262,12 @@ test("default values and sequences are inherited", function(assert) {
 test("config is not destroyed", function(assert) {
   var config = {
     default: {
-      color: 'yellow'
+      name: 'hi'
     }
   };
 
-  FactoryGuy.define('apple', config);
-  assert.deepEqual(config, { default: { color: 'yellow' } });
+  FactoryGuy.define('stoner', config);
+  assert.deepEqual(config, { default: { name: 'hi' } });
 });
 
 test("using polymorphic:false to use a type attribute name on non polymorphic model", function(assert) {

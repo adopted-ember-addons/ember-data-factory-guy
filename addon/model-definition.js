@@ -1,8 +1,16 @@
+/* global require */
 import Ember from 'ember';
 import FactoryGuy from './factory-guy';
 import Sequence from './sequence';
 import MissingSequenceError from './missing-sequence-error';
 import $ from 'jquery';
+
+let Fragment;
+try {
+  let MF = require('model-fragments');
+  Fragment = MF.default.Fragment;
+} catch (e) {
+}
 
 /**
  A ModelDefinition encapsulates a model's definition
@@ -39,12 +47,9 @@ class ModelDefinition {
    @returns {Boolean} true if it's a model fragment
    */
   isModelAFragment() {
-    try {
-      if (FactoryGuy.store.createFragment) {
-        return !!FactoryGuy.store.createFragment(this.modelName);
-      }
-    } catch (e) {
-      // do nothing
+    if (Fragment) {
+      let type = FactoryGuy.store.modelFor(this.modelName);
+      return Fragment.detect(type);
     }
     return false;
   }
