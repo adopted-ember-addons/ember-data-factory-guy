@@ -40,7 +40,7 @@ module.exports = {
   includeFactoryGuyFiles: function() {
     var includeFiles = false;
 
-    if (this.app.env.match(/test/)) {
+    if (this.app.env.match(/test|development/)) {
       includeFiles = true;
     } else {
       includeFiles = this.factoryGuyEnabled;
