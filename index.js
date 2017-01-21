@@ -11,7 +11,7 @@ module.exports = {
   treeForApp: function(appTree) {
     var trees = [appTree];
 
-    if (this.includeFactoryGuyFiles()) {
+    if (this.includeFactoryGuyFiles) {
       try {
         if (fs.statSync('tests/factories').isDirectory()) {
           var factoriesTree = new Funnel('tests/factories', {
@@ -30,30 +30,29 @@ module.exports = {
   included: function(app) {
     this._super.included(app);
     this.app = app;
-    this.factoryGuyEnabled = Boolean(this.app.project.config(app.env).factoryGuy);
 
-    if (this.includeFactoryGuyFiles()) {
+    this.setupFactoryGuyInclude(app);
+    
+    if (this.includeFactoryGuyFiles) {
       app.import(path.join(app.bowerDirectory, 'jquery-mockjax', 'dist', 'jquery.mockjax.js'));
     }
   },
 
-  includeFactoryGuyFiles: function() {
-    var includeFiles = false;
+  setupFactoryGuyInclude: function(app) {
+    let defaultEnabled = /test|development/.test(app.env);
+    let defaultSettings = { enabled: defaultEnabled, useScenarios: false };
+    let userSettings = app.project.config(app.env).factoryGuy || {};
+    let settings = Object.assign(defaultSettings, userSettings);
+    if (settings.useScenarios) { settings.enabled = true; }
 
-    if (this.app.env.match(/test/)) {
-      includeFiles = true;
-    } else {
-      includeFiles = this.factoryGuyEnabled;
-    }
-
-    return includeFiles;
+    this.includeFactoryGuyFiles = settings.enabled;
   },
-
+  
   treeFor: function(name) {
     // Not sure why this is necessary, but this stops the factory guy files
     // from being added to app tree. Would have thought that this would have
     // happened in treeForApp above, but not the case
-    if (!this.includeFactoryGuyFiles() && name === 'app') {
+    if (!this.includeFactoryGuyFiles && name === 'app') {
       return;
     }
     return this._super.treeFor.apply(this, arguments);
