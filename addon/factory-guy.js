@@ -529,9 +529,9 @@ class FactoryGuy {
    @param {String} id
    @return {String} url
    */
-  buildURL(modelName, id = null, requestType) {
+  buildURL(modelName, id = null, requestType, queryParams) {
     const adapter = this.store.adapterFor(modelName);
-    return adapter.buildURL(modelName, id, null, requestType);
+    return adapter.buildURL(modelName, id, null, requestType, queryParams);
   }
 
   /**

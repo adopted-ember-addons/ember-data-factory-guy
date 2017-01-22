@@ -363,11 +363,12 @@ test("have access to handler being used by mockjax", function(assert) {
 });
 
 test("#getUrl uses urlForQuery if it is set on the adapter", function(assert) {
-  let mock1 = mockQuery('user');
+  let queryParams = {zip: 'it'};
+  let mock1 = mockQuery('user', queryParams);
   assert.equal(mock1.getUrl(), '/users');
 
   let adapter = FactoryGuy.store.adapterFor('user');
-  sinon.stub(adapter, 'urlForQuery').returns('/dudes');
+  sinon.stub(adapter, 'urlForQuery').withArgs(queryParams, 'user').returns('/dudes');
 
   assert.equal(mock1.getUrl(), '/dudes');
   adapter.urlForQuery.restore();
@@ -470,11 +471,13 @@ test("using returns 'model' with array of DS.Models throws error", function(asse
 });
 
 test("#getUrl uses urlForQueryRecord if it is set on the adapter", function(assert) {
-  let mock1 = mockQueryRecord('user', {zip: 'it'});
+  let queryParams = {zip: 'it'};
+  let mock1 = mockQueryRecord('user', queryParams);
+  
   assert.equal(mock1.getUrl(), '/users');
 
   let adapter = FactoryGuy.store.adapterFor('user');
-  sinon.stub(adapter, 'urlForQueryRecord').returns('/dudes');
+  sinon.stub(adapter, 'urlForQueryRecord').withArgs(queryParams, 'user').returns('/dudes');
 
   assert.equal(mock1.getUrl(), '/dudes');
   adapter.urlForQueryRecord.restore();

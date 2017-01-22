@@ -35,7 +35,7 @@ export default class {
   }
 
   getUrl() {
-    return FactoryGuy.buildURL(this.modelName, this.get('id'), this.requestType);
+    return FactoryGuy.buildURL(this.modelName, this.get('id'), this.requestType, this.queryParams);
   }
 
   getType() {
