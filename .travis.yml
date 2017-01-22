@@ -23,6 +23,9 @@ matrix:
     - env: EMBER_TRY_SCENARIO=ember-ember-data-canary
 
 before_install:
+  - npm config set spin false
+  - npm install -g bower
+  - bower --version
   - export CHROME_BIN=/usr/bin/google-chrome
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
