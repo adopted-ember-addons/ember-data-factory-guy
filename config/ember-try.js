@@ -8,15 +8,15 @@ module.exports = {
       }
     },
     {
-      name: 'ember/ember-data#2.4',
+      name: 'ember/ember-data#2.6',
       bower: {
         dependencies: {
-          'ember': 'components/ember#2.4',
-          'ember-data': 'components/ember-data#2.4'
+          'ember': 'components/ember#2.6',
+          'ember-data': 'components/ember-data#2.6'
         },
         resolutions: {
-          'ember': '2.4',
-          'ember-data': '2.4'
+          'ember': '2.6',
+          'ember-data': '2.6'
         }
       }
     },
