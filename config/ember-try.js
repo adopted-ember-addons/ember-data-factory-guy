@@ -11,10 +11,6 @@ module.exports = {
       name: 'ember-ember-data-2.6',
       npm: {
         devDependencies: {
-          'ember-data': 'emberjs/data#2.6.2',
-          'ember-data-model-fragments': '2.3.3'
-        },
-        resolutions: {
           'ember-data': '2.6.2',
           'ember-data-model-fragments': '2.3.3'
         }
@@ -32,9 +28,6 @@ module.exports = {
       },
       npm: {
         devDependencies: {
-          'ember-data': 'emberjs/data#release'
-        },
-        resolutions: {
           'ember-data': 'release'
         }
       }
@@ -51,9 +44,6 @@ module.exports = {
       },
       npm: {
         devDependencies: {
-          'ember-data': 'emberjs/data#beta'
-        },
-        resolutions: {
           'ember-data': 'beta'
         }
       }
@@ -70,9 +60,6 @@ module.exports = {
       },
       npm: {
         devDependencies: {
-          'ember-data': 'emberjs/data#canary'
-        },
-        resolutions: {
           'ember-data': 'canary'
         }
       }
