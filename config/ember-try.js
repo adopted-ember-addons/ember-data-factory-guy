@@ -4,13 +4,13 @@ module.exports = {
     {
       name: 'default',
       bower: {
-        dependencies: {}
+        devDependencies: {}
       }
     },
     {
       name: 'ember-ember-data-2.6',
       bower: {
-        dependencies: {
+        devDependencies: {
           'ember': 'components/ember#2.6'
         },
         resolutions: {
@@ -31,7 +31,7 @@ module.exports = {
     {
       name: 'ember-ember-data-release',
       bower: {
-        dependencies: {
+        devDependencies: {
           'ember': 'components/ember#release'
         },
         resolutions: {
@@ -50,7 +50,7 @@ module.exports = {
     {
       name: 'ember-ember-data-beta',
       bower: {
-        dependencies: {
+        devDependencies: {
           'ember': 'components/ember#beta'
         },
         resolutions: {
@@ -69,7 +69,7 @@ module.exports = {
     {
       name: 'ember-ember-data-canary',
       bower: {
-        dependencies: {
+        devDependencies: {
           'ember': 'components/ember#canary'
         },
         resolutions: {
