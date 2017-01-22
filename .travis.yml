@@ -1,14 +1,15 @@
 ---
 language: node_js
 node_js:
-  - "6"
+  - "4.6"
 
 sudo: required
 dist: trusty
 
 cache:
   directories:
-    - node_modules
+    - $HOME/.npm
+    - $HOME/.cache # includes bowers cache
 
 env:
   - EMBER_TRY_SCENARIO=ember-ember-data-2.6
@@ -31,9 +32,8 @@ before_install:
   - sudo dpkg -i google-chrome*.deb
 
 install:
-  - npm install -g bower
   - npm install
   - bower install
 
 script:
-  - ember test
+  - ember try:one $EMBER_TRY_SCENARIO test --skip-cleanup
