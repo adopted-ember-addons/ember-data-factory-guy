@@ -20,7 +20,7 @@ module.exports = {
       npm: {
         devDependencies: {
           'ember-data': 'emberjs/data#2.6',
-          'ember-data-model-fragments': 'ember-data-model-fragments#2.3.3'
+          'ember-data-model-fragments': '2.3.3'
         },
         resolutions: {
           'ember-data': '2.6',

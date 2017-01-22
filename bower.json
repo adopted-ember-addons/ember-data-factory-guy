@@ -27,8 +27,7 @@
     "tests"
   ],
   "dependencies": {
-    "jquery-mockjax": "2.2.1",
-    "ember-qunit-notifications": "0.1.0"
+    "jquery-mockjax": "2.2.1"
   },
   "devDependencies": {
     "jquery": ">1.9.0",
