@@ -1632,14 +1632,14 @@ Usage:
   let outfit = make('outfit');
   let person = build('super-hero'); // it's polymorphic
   outfit.set('name','outrageous');
-  mockUpdate(outfit).returns({ person });
+  mockUpdate(outfit).returns({attrs: { person }});
   outfit.save(); //=> saves and returns superhero
 
   // Returning hasMany relationship. Assume super-hero hasMany 'outfits'
   let superHero = make('super-hero');
   let outfits = buildList('outfit', 2, {name:'bell bottoms'});
   superHero.set('style','laid back');
-  mockUpdate(superHero).returns({ outfits });
+  mockUpdate(superHero).returns({attrs: { outfits }});
   superHero.save(); // => saves and returns outfits
 
   // using match() method to specify attribute values
