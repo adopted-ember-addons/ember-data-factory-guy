@@ -2,7 +2,7 @@ import {module, test} from 'qunit';
 
 import {
   Scenario,
-  make, makeList, build, buildList,
+  make, makeNew, makeList, build, buildList,
   mockFindRecord, mockFindAll, mockReload, mockQuery, mockQueryRecord,
   mockCreate, mockUpdate, mockDelete, mockSetup
 } from 'ember-data-factory-guy';
@@ -12,6 +12,7 @@ module('scenario');
 test("proxies all build/make methods", function(assert) {
   let scenario = new Scenario();
   assert.equal(scenario.make,  make);
+  assert.equal(scenario.makeNew,  makeNew);
   assert.equal(scenario.makeList,  makeList);
   assert.equal(scenario.build,  build);
   assert.equal(scenario.buildList, buildList);
