@@ -5,7 +5,7 @@ import {hasMany, belongsTo} from 'ember-data/relationships';
 
 export default Model.extend({
   name: attr('string'),
-  style: attr('string'),
+  style: attr(), // purposely leave this blank just for making sure these attr types work
   info: attr('object'),
   company: belongsTo('company', { async: true, inverse: 'users', polymorphic: true }),
   properties: hasMany('property', { async: true, inverse: 'owners' }),
