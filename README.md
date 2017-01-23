@@ -198,6 +198,8 @@ In other words, don't do this:
 
  - FactoryGuy.make
    - Loads model instance into the store
+ - FactoryGuy.makeNew
+   - Create new model instance but does not load it to the store
  - FactoryGuy.makeList
    - Loads zero to many model instances into the store
  - FactoryGuy.build
@@ -258,6 +260,10 @@ Usage:
 
 ```
 
+##### makeNew
+  - Same api as make
+    - The model returned will not be loaded into store
+    
 ##### makeList
   - check out [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'bob' user and 'with_car' trait
 
@@ -1701,7 +1707,6 @@ Usage:
   // Try that update again
   profile.save() //=> will succeed!
 ````
-
 
 
 ##### mockDelete
