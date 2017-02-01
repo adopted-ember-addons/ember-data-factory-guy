@@ -187,6 +187,15 @@ test("creates record but does not save to store", function(assert) {
   assert.ok(user.get('isNew'), 'is in isNew state');
 });
 
+test("handles camelCase and snake case attributes", function(assert) {
+  let profile = makeNew('profile',  {
+    camelCaseDescription: 'camelMan',
+    snake_case_description: 'snakeMan'
+  });
+  assert.equal(profile.get('camelCaseDescription'), 'camelMan', 'camel case');
+  assert.equal(profile.get('snake_case_description'),'snakeMan', 'snake case');
+});
+
 moduleFor('serializer:application', 'FactoryGuy#makeList', inlineSetup('-json-api'));
 
 test("with number as 0 returns an empty array of model instances", function(assert) {
