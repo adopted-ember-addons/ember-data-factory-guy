@@ -146,6 +146,15 @@ export default class {
       return this.defaultValueTransformFn;
     }
     let container = Ember.getOwner ? Ember.getOwner(this.store) : this.store.container;
+    let transform = container.lookup('transform:' + type);
+
+    Ember.assert(`[ember-data-factory-guy] could not find
+    the [ ${type} ] transform. If you are in a unit test, be sure 
+    to include it in the list of needs as [ transform:${type} ],  Or set your 
+    unit test to be [ integration: true ] and include everything.`,
+      transform
+    );
+
     return container.lookup('transform:' + type).serialize;
   }
 
