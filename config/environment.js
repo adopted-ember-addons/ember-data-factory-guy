@@ -6,7 +6,7 @@ module.exports = function(/* environment, appConfig */) {
 
   ENV.contentSecurityPolicy = {
     'style-src': "'self' 'unsafe-inline' 'unsave-eval'"
-  }
+  };
   return ENV;
 
 };

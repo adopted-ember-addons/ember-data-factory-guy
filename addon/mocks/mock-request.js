@@ -89,7 +89,7 @@ export default class {
     if (FactoryGuy.logLevel > 0) {
       let json = JSON.parse(JSON.stringify(this.responseJson));
       let name = this.constructor.name.replace('Request', '');
-      let info = ['[factory-guy]', `${name}(${this.modelName})`, json]
+      let info = ['[factory-guy]', `${name}(${this.modelName})`, json];
       if (!Ember.$.isEmptyObject(this.queryParams)) {
         info = info.concat(['queryParams:', this.queryParams]);
       }

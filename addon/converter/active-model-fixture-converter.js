@@ -6,7 +6,7 @@ import RESTFixtureConverter from './rest-fixture-converter';
 export default class extends RESTFixtureConverter {
   /**
    * In `serializeMode` use convert a relationship from "company" to "company_id"
-   * which REST / JSON converters overrride to strip that _id
+   * which REST / JSON converters override to strip that _id
    *
    * @param relationship
    * @returns {*}

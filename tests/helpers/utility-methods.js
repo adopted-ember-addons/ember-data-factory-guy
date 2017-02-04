@@ -26,7 +26,7 @@ import {ActiveModelSerializer} from 'active-model-adapter';
 //};
 
 // custom serializer options for the various models 
-// which are applied to the currently testing  model's serialier ( JSONAPI, REST, ActiveModel, etc ) 
+// which are applied to the currently testing  model's serializer ( JSONAPI, REST, ActiveModel, etc )
 const serializerOptions = {
   'entry-type': {
     attrs: {

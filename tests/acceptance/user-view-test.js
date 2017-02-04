@@ -44,7 +44,7 @@ test("Show user with projects by build(ing) json and using returns with json", f
 });
 
 test("Add a project to a user with mockCreate", function(assert) {
-  // mockFind will build a default user for the json payload
+  // mockFindRecord will build a default user for the json payload
   let mock = mockFindRecord('user');
 
   visit('/user/' + mock.get('id'));
