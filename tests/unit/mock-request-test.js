@@ -195,7 +195,7 @@ test("can enable, disable, and destroy mock", function(assert) {
     let mock1 = mockQueryRecord('user', { id: 1 }).returns({ json: json1 });
     let mock2 = mockQueryRecord('user', {}).returns({ json: json2 });
 
-    notOk(mock1.isDestroyed, "isDestroyed is false initially")
+    notOk(mock1.isDestroyed, "isDestroyed is false initially");
 
     FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
       assert.equal(data.get('id'), json1.get('id'), "the first mock works initially");
@@ -206,7 +206,7 @@ test("can enable, disable, and destroy mock", function(assert) {
         FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
           assert.equal(data.get('id'), json1.get('id'), "the first mock works again after enabling");
           mock1.destroy();
-          assert.ok(mock1.isDestroyed, "isDestroyed is set to true once the mock is destroyed")
+          assert.ok(mock1.isDestroyed, "isDestroyed is set to true once the mock is destroyed");
           FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
             assert.equal(data.get('id'), json2.get('id'), "the destroyed first mock doesn't work");
             done();
@@ -302,7 +302,7 @@ test("#getUrl uses urlForFindAll if it is set on the adapter", function(assert) 
 moduleFor('serializer:application', 'MockQuery', inlineSetup(serializerType));
 
 test("#get method to access payload", function(assert) {
-  let json = buildList('user', 2)
+  let json = buildList('user', 2);
   let mock = mockQuery('user', {}).returns({ json });
   assert.deepEqual(mock.get(0), json.get(0));
 });
@@ -377,7 +377,7 @@ test("#getUrl uses urlForQuery if it is set on the adapter", function(assert) {
 moduleFor('serializer:application', 'mockQueryRecord', inlineSetup(serializerType));
 
 test("#get method to access payload", function(assert) {
-  let json = build('user')
+  let json = build('user');
   let mock = mockQueryRecord('user', {}).returns({ json });
   assert.deepEqual(mock.get(), json.get());
 });

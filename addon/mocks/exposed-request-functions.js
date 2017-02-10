@@ -58,7 +58,7 @@ export function mockTeardown() {
 export function mockFindRecord(...args) {
   let modelName;
 
-  Ember.assert(`[ember-data-factory-guy] mockFind requires at least a model
+  Ember.assert(`[ember-data-factory-guy] mockFindRecord requires at least a model
      name as first parameter`, args.length > 0);
 
   if (args[0] instanceof Model) {
