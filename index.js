@@ -56,7 +56,7 @@ module.exports = {
     // Not sure why this is necessary, but this stops the factory guy files
     // from being added to app tree. Would have thought that this would have
     // happened in treeForApp above, but not the case
-    if (!this.includeFactoryGuyFiles && this.treeExcludeRegex.test(name)) {
+    if (!this.includeFactoryGuyFiles && this.treeExcludeRegex && this.treeExcludeRegex.test(name)) {
       return;
     }
     return this._super.treeFor.apply(this, arguments);
