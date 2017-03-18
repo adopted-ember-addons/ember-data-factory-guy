@@ -8,18 +8,11 @@ module.exports = {
       }
     },
     {
-      name: 'ember-ember-data-2.6',
-      bower: {
-        devDependencies: {
-          'ember': 'components/ember#2.6.2'
-        },
-        resolutions: {
-          'ember': '2.6.2'
-        }
-      },
+      name: 'ember-ember-data-2.11',
       npm: {
         devDependencies: {
-          'ember-data': '2.6.2',
+          'ember-source': '2.11',
+          'ember-data': '2.11',
           'ember-data-model-fragments': '2.11'
         }
       }

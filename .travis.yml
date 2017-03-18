@@ -12,7 +12,7 @@ cache:
     - $HOME/.cache # includes bowers cache
 
 env:
-  - EMBER_TRY_SCENARIO=ember-ember-data-2.6
+  - EMBER_TRY_SCENARIO=ember-ember-data-2.11
   - EMBER_TRY_SCENARIO=default
   - EMBER_TRY_SCENARIO=ember-ember-data-beta
 
