@@ -18,7 +18,7 @@ moduleFor('serializer:application', 'FixtureBuilderFactory', {
   }
 });
 
-test("returns the correct fixtureBuilder for serializer type of modelName", function() {
+test("returns the correct fixtureBuilder for serializer type of modelName", function(assert) {
   let tests = [
     // serializer type   expected FixtureBuilder
     [DS.RESTSerializer, RESTFixtureBuilder],
@@ -37,6 +37,6 @@ test("returns the correct fixtureBuilder for serializer type of modelName", func
     let [serializerType, expectedFixtureBuilder] = test;
     serializer = serializerType && (new serializerType);
     let fixtureBuilder = factory.fixtureBuilder(modelName);
-    ok(fixtureBuilder instanceof expectedFixtureBuilder, `${serializerType} returns ${expectedFixtureBuilder.name}`);
+    assert.ok(fixtureBuilder instanceof expectedFixtureBuilder, `${serializerType} returns ${expectedFixtureBuilder.name}`);
   }
 });

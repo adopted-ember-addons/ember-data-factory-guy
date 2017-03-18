@@ -184,7 +184,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
     Ember.run(()=> {
       let mock = mockFindRecord('profile').fails();
       FactoryGuy.store.findRecord('profile', mock.get('id')).catch(()=> {
-        equal(mock.timesCalled, 1);
+        assert.equal(mock.timesCalled, 1);
         done();
       });
     });
@@ -299,7 +299,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function(serializer, serializerT
       FactoryGuy.store.findRecord('profile', profileId, { reload: true }).then(function(profile) {
         assert.ok(profile.get('company.name') === 'Silly corp');
         assert.ok(profile.get('superHero.name') === 'BatMan');
-        equal(FactoryGuy.store.peekAll('profile').get('content').length, 1, "does not make another profile");
+        assert.equal(FactoryGuy.store.peekAll('profile').get('content').length, 1, "does not make another profile");
         done();
       });
     });
@@ -395,7 +395,7 @@ SharedBehavior.mockReloadTests = function() {
 
       FactoryGuy.store.findRecord('profile', 1)
         .catch(()=> {
-            equal(mock.timesCalled, 1);
+            assert.equal(mock.timesCalled, 1);
             assert.ok(true);
             done();
           }
@@ -559,7 +559,7 @@ SharedBehavior.mockFindAllSideloadingTests = function(serializer, serializerType
     FactoryGuy.store.findAll('profile').then(function(profiles) {
       assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
       assert.ok(profiles.get('lastObject.superHero.name') === 'BatMan');
-      equal(FactoryGuy.store.peekAll('profile').get('content').length, 2, "does not make new profiles");
+      assert.equal(FactoryGuy.store.peekAll('profile').get('content').length, 2, "does not make new profiles");
       done();
     });
   });
@@ -625,7 +625,7 @@ SharedBehavior.mockQueryTests = function() {
       mockQuery('user', { name: 'Bob' });
 
       FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
-        equal(users.get('length'), 0, "nothing returned");
+        assert.equal(users.get('length'), 0, "nothing returned");
         done();
       });
     });
@@ -650,7 +650,7 @@ SharedBehavior.mockQueryTests = function() {
       let mock = mockQuery('user').fails({ status: 422, response: errors });
       FactoryGuy.store.query('user', {})
         .catch(()=> {
-          equal(mock.timesCalled, 1);
+          assert.equal(mock.timesCalled, 1);
           assert.ok(true);
           done();
         });
@@ -681,7 +681,7 @@ SharedBehavior.mockQueryTests = function() {
       mockQuery('company', { name: { like: 'Dude*' } }).returns({ models });
 
       FactoryGuy.store.query('company', { name: { like: 'Dude*' } }).then(function(companies) {
-        deepEqual(A(companies).mapBy('id'), A(models).mapBy('id'));
+        assert.deepEqual(A(companies).mapBy('id'), A(models).mapBy('id'));
         done();
       });
     });
@@ -692,7 +692,7 @@ SharedBehavior.mockQueryTests = function() {
       let done = assert.async();
       mockQuery('user', { name: 'Bob' }).returns({ models: [] });
       FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
-        equal(users.get('length'), 0, "nothing returned");
+        assert.equal(users.get('length'), 0, "nothing returned");
         done();
       });
     });
@@ -706,9 +706,9 @@ SharedBehavior.mockQueryTests = function() {
       mockQuery('user', { name: 'Bob' }).returns({ models: [bob] });
 
       FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
-        equal(users.get('length'), 1);
-        equal(users.get('firstObject'), bob);
-        equal(FactoryGuy.store.peekAll('user').get('content').length, 1, "does not make another user");
+        assert.equal(users.get('length'), 1);
+        assert.equal(users.get('firstObject'), bob);
+        assert.equal(FactoryGuy.store.peekAll('user').get('content').length, 1, "does not make another user");
         done();
       });
     });
@@ -721,14 +721,14 @@ SharedBehavior.mockQueryTests = function() {
       let models = makeList('user', 2, 'with_hats');
       mockQuery('user', { name: 'Bob' }).returns({ models });
 
-      equal(FactoryGuy.store.peekAll('user').get('content.length'), 2, 'start out with 2 instances');
+      assert.equal(FactoryGuy.store.peekAll('user').get('content.length'), 2, 'start out with 2 instances');
 
       FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
-        equal(users.get('length'), 2);
-        equal(users.get('firstObject.name'), 'User1');
-        equal(users.get('firstObject.hats.length'), 2);
-        equal(users.get('lastObject.name'), 'User2');
-        equal(FactoryGuy.store.peekAll('user').get('content.length'), 2, 'no new instances created');
+        assert.equal(users.get('length'), 2);
+        assert.equal(users.get('firstObject.name'), 'User1');
+        assert.equal(users.get('firstObject.hats.length'), 2);
+        assert.equal(users.get('lastObject.name'), 'User2');
+        assert.equal(FactoryGuy.store.peekAll('user').get('content.length'), 2, 'no new instances created');
         done();
       });
     });
@@ -741,15 +741,15 @@ SharedBehavior.mockQueryTests = function() {
       let models = makeList('company', 2, 'with_projects', 'with_profile');
       mockQuery('company', { name: 'Dude Company' }).returns({ models });
 
-      equal(FactoryGuy.store.peekAll('company').get('content.length'), 2, 'start out with 2 instances');
+      assert.equal(FactoryGuy.store.peekAll('company').get('content.length'), 2, 'start out with 2 instances');
 
       FactoryGuy.store.query('company', { name: 'Dude Company' }).then(function(companies) {
-        equal(companies.get('length'), 2);
+        assert.equal(companies.get('length'), 2);
         assert.ok(companies.get('firstObject.profile') instanceof Profile);
-        equal(companies.get('firstObject.projects.length'), 2);
+        assert.equal(companies.get('firstObject.projects.length'), 2);
         assert.ok(companies.get('lastObject.profile') instanceof Profile);
-        equal(companies.get('lastObject.projects.length'), 2);
-        equal(FactoryGuy.store.peekAll('company').get('content.length'), 2, 'no new instances created');
+        assert.equal(companies.get('lastObject.projects.length'), 2);
+        assert.equal(FactoryGuy.store.peekAll('company').get('content.length'), 2, 'no new instances created');
         done();
       });
     });
@@ -762,9 +762,9 @@ SharedBehavior.mockQueryTests = function() {
       let json = buildList('user', 1);
       mockQuery('user', { name: 'Bob' }).returns({ json });
       FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
-        equal(users.get('length'), 1);
+        assert.equal(users.get('length'), 1);
         // makes the user after getting query response
-        equal(FactoryGuy.store.peekAll('user').get('content').length, 1);
+        assert.equal(FactoryGuy.store.peekAll('user').get('content').length, 1);
         done();
       });
     });
@@ -779,10 +779,10 @@ SharedBehavior.mockQueryTests = function() {
       mockQuery('user', { name: 'Bob' }).returns({ ids });
 
       FactoryGuy.store.query('user', { name: 'Bob' }).then(function(users) {
-        equal(users.get('length'), 1);
-        equal(users.get('firstObject'), bob);
+        assert.equal(users.get('length'), 1);
+        assert.equal(users.get('firstObject'), bob);
         // does not create a new model
-        equal(FactoryGuy.store.peekAll('user').get('content').length, 1);
+        assert.equal(FactoryGuy.store.peekAll('user').get('content').length, 1);
         done();
       });
     });
@@ -797,7 +797,7 @@ SharedBehavior.mockQueryTests = function() {
       let bobQueryHander = mockQuery('user', { name: 'Bob' });
 
       store.query('user', { name: 'Bob' }).then(function(users) {
-        equal(users.get('length'), 0);
+        assert.equal(users.get('length'), 0);
 
         mockCreate('user', { name: 'Bob' });
         store.createRecord('user', { name: 'Bob' }).save().then(function(user) {
@@ -805,7 +805,7 @@ SharedBehavior.mockQueryTests = function() {
           bobQueryHander.returns({ models: [user] });
 
           store.query('user', { name: 'Bob' }).then(function(users) {
-            equal(users.get('length'), 1);
+            assert.equal(users.get('length'), 1);
             done();
           });
         });
@@ -824,10 +824,10 @@ SharedBehavior.mockQueryTests = function() {
       mockQuery('company', { type: 'Small' }).returns({ models: companies2 });
 
       FactoryGuy.store.query('company', { name: 'Dude' }).then(function(companies) {
-        equal(A(companies).mapBy('id') + '', A(companies1).mapBy('id') + '');
+        assert.equal(A(companies).mapBy('id') + '', A(companies1).mapBy('id') + '');
 
         FactoryGuy.store.query('company', { type: 'Small' }).then(function(companies) {
-          equal(A(companies).mapBy('id') + '', A(companies2).mapBy('id') + '');
+          assert.equal(A(companies).mapBy('id') + '', A(companies2).mapBy('id') + '');
           done();
         });
       });
@@ -856,12 +856,12 @@ SharedBehavior.mockQueryTests = function() {
       let request2 = FactoryGuy.store.query('company', { type: 'Small', name: 'Dude' });
 
       request1.then(function(returnedCompanies) {
-        equal(A(companies).mapBy('id') + '', A(returnedCompanies).mapBy('id') + '');
+        assert.equal(A(companies).mapBy('id') + '', A(returnedCompanies).mapBy('id') + '');
         finalizeTest();
       });
 
       request2.then(function(returnedCompanies) {
-        equal(A(companies).mapBy('id') + '', A(returnedCompanies).mapBy('id') + '');
+        assert.equal(A(companies).mapBy('id') + '', A(returnedCompanies).mapBy('id') + '');
         finalizeTest();
       });
     });
@@ -876,11 +876,11 @@ SharedBehavior.mockQueryTests = function() {
 
       let queryHandler = mockQuery('company', { name: 'Dude' }).returns({ models: companies1 });
       FactoryGuy.store.query('company', { name: 'Dude' }).then(function(companies) {
-        equal(A(companies).mapBy('id') + '', A(companies1).mapBy('id') + '');
+        assert.equal(A(companies).mapBy('id') + '', A(companies1).mapBy('id') + '');
 
         queryHandler.withParams({ type: 'Small' }).returns({ models: companies2 });
         FactoryGuy.store.query('company', { type: 'Small' }).then(function(companies) {
-          equal(A(companies).mapBy('id') + '', A(companies2).mapBy('id') + '');
+          assert.equal(A(companies).mapBy('id') + '', A(companies2).mapBy('id') + '');
           done();
         });
       });
@@ -898,10 +898,10 @@ SharedBehavior.mockQueryTests = function() {
       let allQueryHandler = mockQuery('company').returns({ models: companies2 });
 
       FactoryGuy.store.query('company', { name: 'Dude', page: 1 }).then(function(companies) {
-        equal(A(companies).mapBy('id') + '', A(companies1).mapBy('id') + '');
+        assert.equal(A(companies).mapBy('id') + '', A(companies1).mapBy('id') + '');
 
         FactoryGuy.store.query('company', { name: 'Other', page: 1 }).then(function(companies) {
-          equal(A(companies).mapBy('id') + '', A(companies2).mapBy('id') + '');
+          assert.equal(A(companies).mapBy('id') + '', A(companies2).mapBy('id') + '');
           done();
         });
       });
@@ -925,11 +925,11 @@ SharedBehavior.mockQueryMetaTests = function(serializer, serializerType) {
       mockQuery('profile', { page: 3 }).returns({ json: json2 });
 
       FactoryGuy.store.query('profile', { page: 2 }).then(function(profiles) {
-        deepEqual(profiles.mapBy('id'), ["1", "2"]);
+        assert.deepEqual(profiles.mapBy('id'), ["1", "2"]);
         assert.ok(isEquivalent(profiles.get('meta'), { previous: '/profiles?page=1', next: '/profiles?page=3' }));
 
         FactoryGuy.store.query('profile', { page: 3 }).then(function(profiles2) {
-          deepEqual(profiles2.mapBy('id'), ["3", "4"]);
+          assert.deepEqual(profiles2.mapBy('id'), ["3", "4"]);
           assert.ok(isEquivalent(profiles2.get('meta'), { previous: '/profiles?page=2', next: '/profiles?page=4' }));
           done();
         });
@@ -970,10 +970,10 @@ SharedBehavior.mockQueryRecordTests = function() {
       let bob = build('user', { name: 'Bob' });
       mockQueryRecord('user', { name: 'Bob' }).returns({ json: bob });
       FactoryGuy.store.queryRecord('user', { name: 'Bob' }).then(function(user) {
-        equal(user.id, bob.get('id'));
-        equal(user.get('name'), bob.get('name'));
+        assert.equal(user.id, bob.get('id'));
+        assert.equal(user.get('name'), bob.get('name'));
         // makes the user after getting query response
-        equal(FactoryGuy.store.peekAll('user').get('content').length, 1);
+        assert.equal(FactoryGuy.store.peekAll('user').get('content').length, 1);
         done();
       });
     });
@@ -987,8 +987,8 @@ SharedBehavior.mockQueryRecordTests = function() {
       mockQueryRecord('user', { name: 'Bob' }).returns({ model: bob });
 
       FactoryGuy.store.queryRecord('user', { name: 'Bob' }).then(function(user) {
-        equal(user, bob, "returns the same user");
-        equal(FactoryGuy.store.peekAll('user').get('content').length, 1, "does not create a new model");
+        assert.equal(user, bob, "returns the same user");
+        assert.equal(FactoryGuy.store.peekAll('user').get('content').length, 1, "does not create a new model");
         done();
       });
     });
@@ -1002,8 +1002,8 @@ SharedBehavior.mockQueryRecordTests = function() {
       mockQueryRecord('user', { name: 'Bob' }).returns({ id: bob.id });
 
       FactoryGuy.store.queryRecord('user', { name: 'Bob' }).then(function(user) {
-        equal(user, bob, "returns the same user");
-        equal(FactoryGuy.store.peekAll('user').get('content').length, 1, "does not create a new model");
+        assert.equal(user, bob, "returns the same user");
+        assert.equal(FactoryGuy.store.peekAll('user').get('content').length, 1, "does not create a new model");
         done();
       });
     });
@@ -1020,10 +1020,10 @@ SharedBehavior.mockQueryRecordTests = function() {
       mockQueryRecord('company', { type: 'Small' }).returns({ json: company2 });
 
       FactoryGuy.store.queryRecord('company', { name: 'Dude' }).then(function(company) {
-        equal(company.get('id'), company1.get('id'));
+        assert.equal(company.get('id'), company1.get('id'));
 
         FactoryGuy.store.queryRecord('company', { type: 'Small' }).then(function(company) {
-          equal(company.get('id'), company2.get('id'));
+          assert.equal(company.get('id'), company2.get('id'));
           done();
         });
       });
@@ -1039,11 +1039,11 @@ SharedBehavior.mockQueryRecordTests = function() {
 
       let mockQuery = mockQueryRecord('company', { name: 'Dude' }).returns({ json: company1 });
       FactoryGuy.store.queryRecord('company', { name: 'Dude' }).then(function(company) {
-        equal(company.get('id'), company1.get('id'));
+        assert.equal(company.get('id'), company1.get('id'));
 
         mockQuery.withParams({ type: 'Small' }).returns({ json: company2 });
         FactoryGuy.store.queryRecord('company', { type: 'Small' }).then(function(company) {
-          equal(company.get('id'), company2.get('id'));
+          assert.equal(company.get('id'), company2.get('id'));
           done();
         });
       });
@@ -1133,8 +1133,8 @@ SharedBehavior.mockCreateTests = function() {
         let descriptions = profiles.map(function(profile) {
           return profile.get('description');
         });
-        deepEqual(ids, ['1', '2', '3']);
-        deepEqual(descriptions, ['whatever', 'whatever', 'whatever']);
+        assert.deepEqual(ids, ['1', '2', '3']);
+        assert.deepEqual(descriptions, ['whatever', 'whatever', 'whatever']);
 
         done();
       });
@@ -1154,7 +1154,7 @@ SharedBehavior.mockCreateTests = function() {
       });
 
       FactoryGuy.store.createRecord('profile').save().then(function(/*profile*/) {
-        equal(mock.timesCalled, 1);
+        assert.equal(mock.timesCalled, 1);
         done();
       });
     });
@@ -1173,7 +1173,7 @@ SharedBehavior.mockCreateTests = function() {
       });
 
       FactoryGuy.store.createRecord('profile').save().catch(() => {
-        equal(mock.timesCalled, 0);
+        assert.equal(mock.timesCalled, 0);
         done();
       });
     });
@@ -1320,7 +1320,7 @@ SharedBehavior.mockCreateTests = function() {
       FactoryGuy.store.createRecord('profile').save()
         .catch(()=> {
           assert.ok(true);
-          equal(mock.timesCalled, 1);
+          assert.equal(mock.timesCalled, 1);
 
           done();
         });
@@ -1337,7 +1337,7 @@ SharedBehavior.mockCreateTests = function() {
         .catch(()=> {
           assert.ok(true);
           // our mock was NOT called
-          equal(mock.timesCalled, 0);
+          assert.equal(mock.timesCalled, 0);
           done();
         });
     });
@@ -1353,7 +1353,7 @@ SharedBehavior.mockCreateTests = function() {
       FactoryGuy.store.createRecord('profile', { description: description }).save()
         .catch(()=> {
           assert.ok(true);
-          equal(mock.timesCalled, 1);
+          assert.equal(mock.timesCalled, 1);
 
           done();
         });
@@ -1378,8 +1378,8 @@ SharedBehavior.mockCreateFailsWithErrorResponse = function(serializer, serialize
       profile.save()
         .catch(()=> {
           let errorMessages = profile.get('errors.messages');
-          deepEqual(errorMessages, ['bad dog', 'bad dude']);
-          equal(mock.timesCalled, 1);
+          assert.deepEqual(errorMessages, ['bad dog', 'bad dude']);
+          assert.equal(mock.timesCalled, 1);
           assert.ok(true);
           done();
         });
@@ -1400,8 +1400,8 @@ SharedBehavior.mockCreateReturnsAssociations = function(serializer, serializerTy
       mockCreate('profile').returns({ attrs: { company } });
 
       FactoryGuy.store.createRecord('profile').save().then(function(profile) {
-        equal(profile.get('company.id'), company.get('id').toString());
-        equal(profile.get('company.name'), company.get('name'));
+        assert.equal(profile.get('company.id'), company.get('id').toString());
+        assert.equal(profile.get('company.name'), company.get('name'));
         done();
       });
     });
@@ -1414,8 +1414,8 @@ SharedBehavior.mockCreateReturnsAssociations = function(serializer, serializerTy
       mockCreate('outfit').returns({ attrs: { person } });
 
       FactoryGuy.store.createRecord('outfit').save().then(function(outfit) {
-        equal(outfit.get('person.id'), person.get('id').toString());
-        equal(outfit.get('person.name'), person.get('name'));
+        assert.equal(outfit.get('person.id'), person.get('id').toString());
+        assert.equal(outfit.get('person.name'), person.get('name'));
         done();
       });
     });
@@ -1428,8 +1428,8 @@ SharedBehavior.mockCreateReturnsAssociations = function(serializer, serializerTy
       mockCreate('super-hero').returns({ attrs: { outfits } });
 
       FactoryGuy.store.createRecord('super-hero').save().then(function(hero) {
-        deepEqual(hero.get('outfits').mapBy('id'), ['1', '2']);
-        deepEqual(hero.get('outfits').mapBy('name'), ['Outfit-1', 'Outfit-2']);
+        assert.deepEqual(hero.get('outfits').mapBy('id'), ['1', '2']);
+        assert.deepEqual(hero.get('outfits').mapBy('name'), ['Outfit-1', 'Outfit-2']);
         done();
       });
     });
@@ -1448,8 +1448,8 @@ SharedBehavior.mockCreateReturnsEmbeddedAssociations = function(serializer, seri
       mockCreate('comic-book').returns({ attrs: { company } });
 
       FactoryGuy.store.createRecord('comic-book').save().then(function(comic) {
-        equal(comic.get('company.id'), company.get('id').toString());
-        equal(comic.get('company.name'), company.get('name').toString());
+        assert.equal(comic.get('company.id'), company.get('id').toString());
+        assert.equal(comic.get('company.name'), company.get('name').toString());
         done();
       });
     });
@@ -1499,7 +1499,7 @@ SharedBehavior.mockUpdateTests = function() {
 
       profile.set('description', 'new desc');
       profile.save().then(function(profile) {
-        equal(profile.get('description'), 'new desc');
+        assert.equal(profile.get('description'), 'new desc');
         done();
       });
     });
@@ -1514,7 +1514,7 @@ SharedBehavior.mockUpdateTests = function() {
 
       profile.set('description', 'new desc');
       profile.save().then(function(profile) {
-        equal(profile.get('description'), 'new desc');
+        assert.equal(profile.get('description'), 'new desc');
         done();
       });
     });
@@ -1528,7 +1528,7 @@ SharedBehavior.mockUpdateTests = function() {
 
       employee.set('gender', 'new gender');
       employee.save().then(function(model) {
-        equal(model.get('gender'), 'new gender');
+        assert.equal(model.get('gender'), 'new gender');
         done();
       });
     });
@@ -1600,7 +1600,7 @@ SharedBehavior.mockUpdateTests = function() {
       profile.save().catch(
         function(reason) {
           let error = reason.errors[0];
-          equal(error.status, "500");
+          assert.equal(error.status, "500");
           done();
         }
       );
@@ -1619,7 +1619,7 @@ SharedBehavior.mockUpdateTests = function() {
       profile.save().catch(
         function(reason) {
           let error = reason.errors[0];
-          equal(error.status, "401");
+          assert.equal(error.status, "401");
           done();
         }
       );
@@ -1666,7 +1666,7 @@ SharedBehavior.mockUpdateTests = function() {
       });
       profile.set('description', customDescription);
       profile.save().then(function(/*profile*/) {
-        equal(updateMock.timesCalled, 1);
+        assert.equal(updateMock.timesCalled, 1);
         done();
       });
     });
@@ -1687,7 +1687,7 @@ SharedBehavior.mockUpdateTests = function() {
       });
       profile.set('description', customDescription);
       profile.save().catch(() => {
-        equal(updateMock.timesCalled, 0);
+        assert.equal(updateMock.timesCalled, 0);
         done();
       });
     });
@@ -1824,7 +1824,7 @@ SharedBehavior.mockUpdateTests = function() {
       profile.save()
         .catch(()=> {
           assert.ok(true);
-          equal(mock.timesCalled, 0);
+          assert.equal(mock.timesCalled, 0);
           done();
         });
     });
@@ -1842,12 +1842,12 @@ SharedBehavior.mockUpdateTests = function() {
       profile.save()
         .then(()=> {
           assert.ok(true);
-          equal(mock.timesCalled, 1);
+          assert.equal(mock.timesCalled, 1);
 
           profile2.save()
             .catch(()=> {
               assert.ok(true);
-              equal(mock.timesCalled, 1);
+              assert.equal(mock.timesCalled, 1);
               done();
             });
         });
@@ -1865,7 +1865,7 @@ SharedBehavior.mockUpdateTests = function() {
       profile.save()
         .catch(()=> {
           assert.ok(true);
-          equal(mock.timesCalled, 1);
+          assert.equal(mock.timesCalled, 1);
           done();
         });
     });
@@ -1918,7 +1918,7 @@ SharedBehavior.mockUpdateWithErrorMessages = function(serializer, serializerType
       profile.save().catch(
         function(reason) {
           let errors = reason.errors;
-          equal(errors.description, "invalid data", "custom description shows up in errors");
+          assert.equal(errors.description, "invalid data", "custom description shows up in errors");
           done();
         }
       );
@@ -1942,8 +1942,8 @@ SharedBehavior.mockUpdateReturnsAssociations = function(serializer, serializerTy
       mockUpdate(profile).returns({ attrs: { company } });
 
       profile.save().then(function(profile) {
-        equal(profile.get('company.id'), company.get('id').toString());
-        equal(profile.get('company.name'), company.get('name'));
+        assert.equal(profile.get('company.id'), company.get('id').toString());
+        assert.equal(profile.get('company.name'), company.get('name'));
         done();
       });
     });
@@ -1961,9 +1961,9 @@ SharedBehavior.mockUpdateReturnsAssociations = function(serializer, serializerTy
       mockUpdate(outfit).returns({ attrs: { person } });
 
       outfit.save().then(function(outfit) {
-        equal(outfit.get('name'), newValue);
-        equal(outfit.get('person.id'), person.get('id').toString());
-        equal(outfit.get('person.name'), person.get('name'));
+        assert.equal(outfit.get('name'), newValue);
+        assert.equal(outfit.get('person.id'), person.get('id').toString());
+        assert.equal(outfit.get('person.name'), person.get('name'));
         done();
       });
     });
@@ -1981,9 +1981,9 @@ SharedBehavior.mockUpdateReturnsAssociations = function(serializer, serializerTy
       mockUpdate(superHero).returns({ attrs: { outfits } });
 
       superHero.save().then(function(hero) {
-        equal(hero.get('name'), newValue);
-        deepEqual(hero.get('outfits').mapBy('id'), ['1', '2']);
-        deepEqual(hero.get('outfits').mapBy('name'), ['Outfit-1', 'Outfit-2']);
+        assert.equal(hero.get('name'), newValue);
+        assert.deepEqual(hero.get('outfits').mapBy('id'), ['1', '2']);
+        assert.deepEqual(hero.get('outfits').mapBy('name'), ['Outfit-1', 'Outfit-2']);
         done();
       });
     });
@@ -2006,9 +2006,9 @@ SharedBehavior.mockUpdateReturnsEmbeddedAssociations = function(serializer, seri
       mockUpdate(comicBook).returns({ attrs: { company } });
 
       comicBook.save().then(function(comic) {
-        equal(comic.get('name'), newValue);
-        equal(comic.get('company.id'), company.get('id').toString());
-        equal(comic.get('company.name'), company.get('name').toString());
+        assert.equal(comic.get('name'), newValue);
+        assert.equal(comic.get('company.id'), company.get('id').toString());
+        assert.equal(comic.get('company.name'), company.get('name').toString());
         done();
       });
     });
@@ -2026,10 +2026,10 @@ SharedBehavior.mockDeleteTests = function() {
       let profile = profiles[0];
       mockDelete('profile');
 
-      equal(FactoryGuy.store.peekAll('profile').get('content.length'), 2);
+      assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 2);
 
       profile.destroyRecord().then(function() {
-        equal(FactoryGuy.store.peekAll('profile').get('content.length'), 1);
+        assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 1);
         done();
       });
     });
@@ -2042,7 +2042,7 @@ SharedBehavior.mockDeleteTests = function() {
       mockDelete('profile', profile.id);
 
       profile.destroyRecord().then(function() {
-        equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
+        assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
         done();
       });
     });
@@ -2055,7 +2055,7 @@ SharedBehavior.mockDeleteTests = function() {
       mockDelete(profile);
 
       profile.destroyRecord().then(function() {
-        equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
+        assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
         done();
       });
     });
@@ -2068,7 +2068,7 @@ SharedBehavior.mockDeleteTests = function() {
       mockDelete(employee);
 
       employee.destroyRecord().then(function() {
-        equal(FactoryGuy.store.peekAll('employee').get('content.length'), 0);
+        assert.equal(FactoryGuy.store.peekAll('employee').get('content.length'), 0);
         done();
       });
     });
@@ -2083,8 +2083,8 @@ SharedBehavior.mockDeleteTests = function() {
 
       profile.destroyRecord().catch(function(reason) {
         let error = reason.errors[0];
-        equal(error.status, "500");
-        equal(mock.timesCalled, 1);
+        assert.equal(error.status, "500");
+        assert.equal(mock.timesCalled, 1);
         assert.ok(true);
         done();
       });
@@ -2099,8 +2099,8 @@ SharedBehavior.mockDeleteTests = function() {
 
       profile.destroyRecord().catch(function(reason) {
         let error = reason.errors[0];
-        equal(error.status, "500");
-        equal(mock.timesCalled, 1);
+        assert.equal(error.status, "500");
+        assert.equal(mock.timesCalled, 1);
         assert.ok(true);
         done();
       });
@@ -2117,7 +2117,7 @@ SharedBehavior.mockDeleteTests = function() {
       profile.destroyRecord().catch(
         function(reason) {
           let error = reason.errors[0];
-          equal(error.status, "401");
+          assert.equal(error.status, "401");
           done();
         }
       );
@@ -2137,7 +2137,7 @@ SharedBehavior.mockDeleteTests = function() {
           deleteMock.succeeds();
 
           profile.destroyRecord().then(function() {
-            equal(FactoryGuy.store.peekAll('profile').get('content.length'), 1);
+            assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 1);
             done();
           });
         });
@@ -2157,7 +2157,7 @@ SharedBehavior.mockDeleteTests = function() {
           deleteMock.succeeds();
 
           profile.destroyRecord().then(function() {
-            equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
+            assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
             done();
           });
         });
@@ -2177,7 +2177,7 @@ SharedBehavior.mockDeleteTests = function() {
           deleteMock.succeeds();
 
           profile.destroyRecord().then(function() {
-            equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
+            assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
             done();
           });
         });

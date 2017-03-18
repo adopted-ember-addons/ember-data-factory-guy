@@ -31,8 +31,6 @@
   },
   "devDependencies": {
     "jquery": ">1.9.0",
-    "qunit": "~2.0.0",
-    "ember-qunit": "latest",
-    "ember-qunit-notifications": "latest"
+    "qunit": "~2.0.0"
   }
 }

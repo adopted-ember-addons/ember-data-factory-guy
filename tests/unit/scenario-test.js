@@ -1,4 +1,5 @@
-import {module, test} from 'qunit';
+import {test} from 'ember-qunit';
+import {module} from 'qunit';
 
 import {
   Scenario,

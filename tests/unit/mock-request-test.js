@@ -195,7 +195,7 @@ test("can enable, disable, and destroy mock", function(assert) {
     let mock1 = mockQueryRecord('user', { id: 1 }).returns({ json: json1 });
     let mock2 = mockQueryRecord('user', {}).returns({ json: json2 });
 
-    notOk(mock1.isDestroyed, "isDestroyed is false initially");
+    assert.notOk(mock1.isDestroyed, "isDestroyed is false initially");
 
     FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
       assert.equal(data.get('id'), json1.get('id'), "the first mock works initially");
