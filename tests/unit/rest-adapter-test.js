@@ -281,7 +281,7 @@ test("sideloads 2 levels of records ( buildList => hasMany , build => belongsTo 
       {
         id: 1,
         name: "User1",
-        hats: [{ id: 1, type: "big_hat" }, { id: 2, type: "big_hat" }],
+        hats: [{ id: 1, type: "big-hat" }, { id: 2, type: "big-hat" }],
         style: "normal"
       }
     ],
@@ -359,8 +359,8 @@ test("sideloads hasMany records which are built from fixture definition", functi
       name: 'User1',
       style: "normal",
       hats: [
-        { type: 'big_hat', id: 1 },
-        { type: 'big_hat', id: 2 }
+        { type: 'big-hat', id: 1 },
+        { type: 'big-hat', id: 2 }
       ],
     },
     'big-hats': [
@@ -384,8 +384,8 @@ test("sideloads hasMany records passed as prebuilt ( buildList ) json", function
       name: 'User1',
       style: "normal",
       hats: [
-        { type: 'big_hat', id: 1 },
-        { type: 'big_hat', id: 2 }
+        { type: 'big-hat', id: 1 },
+        { type: 'big-hat', id: 2 }
       ],
     },
     'big-hats': [
@@ -411,8 +411,8 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) json", fun
       name: 'User1',
       style: "normal",
       hats: [
-        { type: 'big_hat', id: 1 },
-        { type: 'big_hat', id: 2 }
+        { type: 'big-hat', id: 1 },
+        { type: 'big-hat', id: 2 }
       ],
     },
     'big-hats': [
@@ -744,8 +744,8 @@ test("sideloads hasMany records", function(assert) {
         name: 'User1',
         style: "normal",
         hats: [
-          { type: 'big_hat', id: 1 },
-          { type: 'big_hat', id: 2 }
+          { type: 'big-hat', id: 1 },
+          { type: 'big-hat', id: 2 }
         ]
       },
       {
@@ -753,8 +753,8 @@ test("sideloads hasMany records", function(assert) {
         name: 'User2',
         style: "normal",
         hats: [
-          { type: 'big_hat', id: 3 },
-          { type: 'big_hat', id: 4 }
+          { type: 'big-hat', id: 3 },
+          { type: 'big-hat', id: 4 }
         ]
       }
     ],

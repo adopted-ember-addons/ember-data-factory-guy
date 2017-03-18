@@ -125,8 +125,8 @@ test("sideloads hasMany records built from fixture definition", function(assert)
       name: 'User1',
       style: "normal",
       hats: [
-        { type: 'big_hat', id: 1 },
-        { type: 'big_hat', id: 2 }
+        { type: 'big-hat', id: 1 },
+        { type: 'big-hat', id: 2 }
       ],
     },
     'big-hats': [
@@ -151,8 +151,8 @@ test("sideloads hasMany records passed as prebuilt ( buildList ) attribute", fun
       name: 'User1',
       style: "normal",
       hats: [
-        { type: 'big_hat', id: 1 },
-        { type: 'big_hat', id: 2 }
+        { type: 'big-hat', id: 1 },
+        { type: 'big-hat', id: 2 }
       ],
     },
     'big-hats': [
@@ -178,8 +178,8 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) attribute"
       name: 'User1',
       style: "normal",
       hats: [
-        { type: 'big_hat', id: 1 },
-        { type: 'big_hat', id: 2 }
+        { type: 'big-hat', id: 1 },
+        { type: 'big-hat', id: 2 }
       ],
     },
     'big-hats': [
