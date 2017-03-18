@@ -7,7 +7,7 @@ import $ from 'jquery';
 
 let Fragment;
 try {
-  let MF = require('model-fragments');
+  let MF = require('ember-data-model-fragments');
   Fragment = MF.default.Fragment;
 } catch (e) {
 }
