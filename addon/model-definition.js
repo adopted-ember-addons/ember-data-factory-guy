@@ -5,11 +5,17 @@ import Sequence from './sequence';
 import MissingSequenceError from './missing-sequence-error';
 import $ from 'jquery';
 
-let Fragment;
+let MF, Fragment;
 try {
-  let MF = require('ember-data-model-fragments');
+  MF = require('ember-data-model-fragments');
   Fragment = MF.default.Fragment;
 } catch (e) {
+  try {
+    MF = require('model-fragments'); // older versions of model-fragments
+    Fragment = MF.default.Fragment;
+  } catch (e) {
+
+  }
 }
 
 /**

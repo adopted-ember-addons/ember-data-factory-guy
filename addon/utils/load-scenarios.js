@@ -10,12 +10,10 @@ const scenarioFileRegExp = new RegExp('/scenarios/main$');
  * there you can include other scenarios, and compose whatever
  * grand scheme you have in mind
  *
- * NOTE: container.owner.resolveRegistration('config:environment') works as well
- *
  * @param container
  */
 export default function (container) {
-  let config = container.lookupFactory('config:environment') || {};
+  let config = container.owner.resolveRegistration('config:environment') || {};
   let { factoryGuy } = config;
   if (factoryGuy && factoryGuy.useScenarios) {
     let [Scenario] = requireFiles(scenarioFileRegExp);
