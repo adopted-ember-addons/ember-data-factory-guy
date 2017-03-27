@@ -2,10 +2,451 @@
 
 ## [Unreleased](https://github.com/danielspaniel/ember-data-factory-guy/tree/HEAD)
 
-[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.4.4...HEAD)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.12.2...HEAD)
+
+**Closed issues:**
+
+- SyntaxError: ember-data-factory-guy/scenario.js: Unexpected token \(6:21\) [\#278](https://github.com/danielspaniel/ember-data-factory-guy/issues/278)
+
+## [v2.12.2](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.12.2) (2017-03-23)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.12.1...v2.12.2)
+
+## [v2.12.1](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.12.1) (2017-03-22)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.12.0...v2.12.1)
 
 **Merged pull requests:**
 
+- Silence JavaScript preprocessor deprecation warning on Ember 2.12 [\#277](https://github.com/danielspaniel/ember-data-factory-guy/pull/277) ([vluoto](https://github.com/vluoto))
+
+## [v2.12.0](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.12.0) (2017-03-18)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.11.7...v2.12.0)
+
+## [v2.11.7](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.11.7) (2017-03-14)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.11.6...v2.11.7)
+
+**Merged pull requests:**
+
+- fix build if ember-data-factory-guy used for tests inside addon [\#276](https://github.com/danielspaniel/ember-data-factory-guy/pull/276) ([canufeel](https://github.com/canufeel))
+
+## [v2.11.6](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.11.6) (2017-02-16)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.11.5...v2.11.6)
+
+**Closed issues:**
+
+- mockFindAll fails in route test on Ember 2.11 [\#273](https://github.com/danielspaniel/ember-data-factory-guy/issues/273)
+
+**Merged pull requests:**
+
+- Add 'addon' guard to treeFor method [\#275](https://github.com/danielspaniel/ember-data-factory-guy/pull/275) ([tschoartschi](https://github.com/tschoartschi))
+- Some tweaks to the README [\#274](https://github.com/danielspaniel/ember-data-factory-guy/pull/274) ([lorcan](https://github.com/lorcan))
+
+## [v2.11.5](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.11.5) (2017-02-02)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.11.4...v2.11.5)
+
+## [v2.11.4](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.11.4) (2017-02-01)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.11.3...v2.11.4)
+
+**Closed issues:**
+
+- .add\({ meta: not working [\#272](https://github.com/danielspaniel/ember-data-factory-guy/issues/272)
+
+**Merged pull requests:**
+
+- Update package.json to be the correct release number [\#271](https://github.com/danielspaniel/ember-data-factory-guy/pull/271) ([patocallaghan](https://github.com/patocallaghan))
+
+## [v2.11.3](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.11.3) (2017-01-26)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.11.2...v2.11.3)
+
+## [v2.11.2](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.11.2) (2017-01-26)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.11.1...v2.11.2)
+
+## [v2.11.1](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.11.1) (2017-01-24)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.11.0...v2.11.1)
+
+**Closed issues:**
+
+- add ability to make models in the new state [\#269](https://github.com/danielspaniel/ember-data-factory-guy/issues/269)
+
+## [v2.11.0](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.11.0) (2017-01-23)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.10.1...v2.11.0)
+
+## [v2.10.1](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.10.1) (2017-01-21)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.10.0...v2.10.1)
+
+**Merged pull requests:**
+
+- Fix DjangoSerializer import [\#270](https://github.com/danielspaniel/ember-data-factory-guy/pull/270) ([erkarl](https://github.com/erkarl))
+
+## [v2.10.0](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.10.0) (2017-01-10)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.9.8...v2.10.0)
+
+**Merged pull requests:**
+
+- Use assert rather than warn for missing traits [\#266](https://github.com/danielspaniel/ember-data-factory-guy/pull/266) ([lorcan](https://github.com/lorcan))
+
+## [v2.9.8](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.9.8) (2016-12-13)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.9.7...v2.9.8)
+
+**Merged pull requests:**
+
+- Misc. typo fixes [\#265](https://github.com/danielspaniel/ember-data-factory-guy/pull/265) ([lorcan](https://github.com/lorcan))
+- Allow mockCreate/mockUpdate to receive a matching function [\#263](https://github.com/danielspaniel/ember-data-factory-guy/pull/263) ([lorcan](https://github.com/lorcan))
+
+## [v2.9.7](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.9.7) (2016-11-30)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.9.5...v2.9.7)
+
+## [v2.9.5](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.9.5) (2016-11-29)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.9.4...v2.9.5)
+
+**Closed issues:**
+
+- `Cannot read property '\_super' of undefined` with Ember 2.10.0 [\#260](https://github.com/danielspaniel/ember-data-factory-guy/issues/260)
+
+## [v2.9.4](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.9.4) (2016-11-29)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.9.3...v2.9.4)
+
+**Implemented enhancements:**
+
+- allow for afterMake callbacks in named definitions [\#79](https://github.com/danielspaniel/ember-data-factory-guy/issues/79)
+
+## [v2.9.3](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.9.3) (2016-11-16)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.9.2...v2.9.3)
+
+**Implemented enhancements:**
+
+- implement the rest of the urlFor... methods ..  urlForFindRecord is only one currently supported [\#246](https://github.com/danielspaniel/ember-data-factory-guy/issues/246)
+
+**Merged pull requests:**
+
+- Fix typo for defining fragment factories [\#258](https://github.com/danielspaniel/ember-data-factory-guy/pull/258) ([supremebeing7](https://github.com/supremebeing7))
+- addIncludedArray\(\) replacing payload data with included [\#253](https://github.com/danielspaniel/ember-data-factory-guy/pull/253) ([cristinawithout](https://github.com/cristinawithout))
+
+## [v2.9.2](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.9.2) (2016-11-07)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.9.1...v2.9.2)
+
+## [v2.9.1](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.9.1) (2016-11-05)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.9.0...v2.9.1)
+
+**Closed issues:**
+
+- Using different adapter/serializer for different models may cause an issue if different from application adapter/serilizer [\#256](https://github.com/danielspaniel/ember-data-factory-guy/issues/256)
+
+## [v2.9.0](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.9.0) (2016-11-04)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.8.2...v2.9.0)
+
+## [v2.8.2](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.8.2) (2016-10-27)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.8.1...v2.8.2)
+
+**Closed issues:**
+
+- Add support for using factory-guy in other environments besides development and test [\#254](https://github.com/danielspaniel/ember-data-factory-guy/issues/254)
+
+**Merged pull requests:**
+
+- Add support for using factory-guy in other environments [\#255](https://github.com/danielspaniel/ember-data-factory-guy/pull/255) ([juwara0](https://github.com/juwara0))
+
+## [v2.8.1](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.8.1) (2016-10-20)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.8.0...v2.8.1)
+
+**Merged pull requests:**
+
+- Fix a link to mockFindRecord in the readme [\#252](https://github.com/danielspaniel/ember-data-factory-guy/pull/252) ([whatthewhat](https://github.com/whatthewhat))
+
+## [v2.8.0](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.8.0) (2016-09-26)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.10...v2.8.0)
+
+## [v2.7.10](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.10) (2016-09-20)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.9...v2.7.10)
+
+**Closed issues:**
+
+- Deprecation warnings on Ember 2.8 [\#250](https://github.com/danielspaniel/ember-data-factory-guy/issues/250)
+
+**Merged pull requests:**
+
+- Use Array.includes instead of deprecated contains if possible [\#251](https://github.com/danielspaniel/ember-data-factory-guy/pull/251) ([mdentremont](https://github.com/mdentremont))
+
+## [v2.7.9](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.9) (2016-09-13)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.8...v2.7.9)
+
+**Closed issues:**
+
+- mockFind with RESTAdaptor clobbers type attribute on model [\#248](https://github.com/danielspaniel/ember-data-factory-guy/issues/248)
+- Test Helpers in Factory break development build [\#247](https://github.com/danielspaniel/ember-data-factory-guy/issues/247)
+
+## [v2.7.8](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.8) (2016-09-11)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.7...v2.7.8)
+
+**Closed issues:**
+
+- Manually adding model fragment causing error [\#244](https://github.com/danielspaniel/ember-data-factory-guy/issues/244)
+
+## [v2.7.7](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.7) (2016-09-08)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.6...v2.7.7)
+
+**Closed issues:**
+
+- Having a property called "type" on your model causes `make` to fail [\#242](https://github.com/danielspaniel/ember-data-factory-guy/issues/242)
+- Mock URL matching not working with query params [\#239](https://github.com/danielspaniel/ember-data-factory-guy/issues/239)
+
+## [v2.7.6](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.6) (2016-09-06)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.5...v2.7.6)
+
+**Closed issues:**
+
+- Mocking a singularized endpoint [\#241](https://github.com/danielspaniel/ember-data-factory-guy/issues/241)
+- You can no longer create model fragments on their own using make or makeList [\#238](https://github.com/danielspaniel/ember-data-factory-guy/issues/238)
+- Field called type raises error [\#237](https://github.com/danielspaniel/ember-data-factory-guy/issues/237)
+- FactoryGuy.define devours the supplied config object [\#235](https://github.com/danielspaniel/ember-data-factory-guy/issues/235)
+- Build strategies for related data [\#234](https://github.com/danielspaniel/ember-data-factory-guy/issues/234)
+- Latest change in 2.7.4 breaks models that have an attribute `type` [\#233](https://github.com/danielspaniel/ember-data-factory-guy/issues/233)
+
+**Merged pull requests:**
+
+- Added test to check url matching of mockDelete and mockUpdate [\#240](https://github.com/danielspaniel/ember-data-factory-guy/pull/240) ([danielspaniel](https://github.com/danielspaniel))
+- es6 args destructuring removed from public api on mocks [\#236](https://github.com/danielspaniel/ember-data-factory-guy/pull/236) ([youroff](https://github.com/youroff))
+
+## [v2.7.5](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.5) (2016-08-25)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.4...v2.7.5)
+
+**Closed issues:**
+
+- Bizarre issue with make and makeList [\#232](https://github.com/danielspaniel/ember-data-factory-guy/issues/232)
+- Returning inherited models of various types [\#231](https://github.com/danielspaniel/ember-data-factory-guy/issues/231)
+- How to mock requests to custom endpoints in integration test [\#230](https://github.com/danielspaniel/ember-data-factory-guy/issues/230)
+- TypeError: uri.path is not a function [\#225](https://github.com/danielspaniel/ember-data-factory-guy/issues/225)
+
+## [v2.7.4](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.4) (2016-08-22)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.3...v2.7.4)
+
+**Closed issues:**
+
+- mockFindAll, mockQuery, etc weird behavior with fails [\#224](https://github.com/danielspaniel/ember-data-factory-guy/issues/224)
+- Strange behavior when using custom serializers [\#223](https://github.com/danielspaniel/ember-data-factory-guy/issues/223)
+- A typo in scenario.js [\#222](https://github.com/danielspaniel/ember-data-factory-guy/issues/222)
+
+**Merged pull requests:**
+
+- Update README to reflect mockTeardown\(\) usage in component tests [\#229](https://github.com/danielspaniel/ember-data-factory-guy/pull/229) ([oniofchaos](https://github.com/oniofchaos))
+- disable\(\), enable\(\), and destroy\(\) methods for mocks [\#228](https://github.com/danielspaniel/ember-data-factory-guy/pull/228) ([ryedeer](https://github.com/ryedeer))
+- withSomeParams modifier for mockGetRequest [\#227](https://github.com/danielspaniel/ember-data-factory-guy/pull/227) ([youroff](https://github.com/youroff))
+
+## [v2.7.3](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.3) (2016-08-01)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.2...v2.7.3)
+
+## [v2.7.2](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.2) (2016-07-26)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.1...v2.7.2)
+
+**Closed issues:**
+
+- Non-integer primary keys are forced to the model's `id` during make/build [\#220](https://github.com/danielspaniel/ember-data-factory-guy/issues/220)
+
+**Merged pull requests:**
+
+- mockFind does not return a failed response [\#221](https://github.com/danielspaniel/ember-data-factory-guy/pull/221) ([daibhin](https://github.com/daibhin))
+
+## [v2.7.1](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.1) (2016-07-13)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.0...v2.7.1)
+
+**Closed issues:**
+
+- \[FEATURE REQUEST\] Add support for serializer renamed fields \(ie: `attrs: { localKey: 'serverKey'}`\) [\#219](https://github.com/danielspaniel/ember-data-factory-guy/issues/219)
+
+## [v2.7.0](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.0) (2016-07-12)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.0-beta.11...v2.7.0)
+
+**Closed issues:**
+
+- Make throws a registry.resolve error [\#218](https://github.com/danielspaniel/ember-data-factory-guy/issues/218)
+
+## [v2.7.0-beta.11](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.0-beta.11) (2016-07-08)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.0-beta.10...v2.7.0-beta.11)
+
+**Closed issues:**
+
+- .match\(\) for mockUpdate\(\) [\#216](https://github.com/danielspaniel/ember-data-factory-guy/issues/216)
+
+## [v2.7.0-beta.10](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.0-beta.10) (2016-07-07)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.0-beta.9...v2.7.0-beta.10)
+
+**Implemented enhancements:**
+
+- Fix =\> DEPRECATION: `InvalidError` expects json-api formatted errors. [\#123](https://github.com/danielspaniel/ember-data-factory-guy/issues/123)
+
+**Closed issues:**
+
+- fails\(\)'s convertResponseErrors\(\) doesn't allow for using error 'meta' property or returning exact response passed [\#215](https://github.com/danielspaniel/ember-data-factory-guy/issues/215)
+
+**Merged pull requests:**
+
+- Tests for mockUpdate.match \#216 [\#217](https://github.com/danielspaniel/ember-data-factory-guy/pull/217) ([cristinawithout](https://github.com/cristinawithout))
+
+## [v2.7.0-beta.9](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.0-beta.9) (2016-07-04)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.0-beta.8...v2.7.0-beta.9)
+
+**Closed issues:**
+
+- match\(\) fails with JSONAPI for relationship when serializer's payloadKeyFromModelName\(\) doesn't pluralize [\#213](https://github.com/danielspaniel/ember-data-factory-guy/issues/213)
+
+## [v2.7.0-beta.8](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.0-beta.8) (2016-06-30)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.0-beta.7...v2.7.0-beta.8)
+
+**Merged pull requests:**
+
+- Issue 213 jsonapi payloadkey [\#214](https://github.com/danielspaniel/ember-data-factory-guy/pull/214) ([cristinawithout](https://github.com/cristinawithout))
+
+## [v2.7.0-beta.7](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.0-beta.7) (2016-06-28)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.0-beta.6...v2.7.0-beta.7)
+
+## [v2.7.0-beta.6](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.0-beta.6) (2016-06-27)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.0-beta.5...v2.7.0-beta.6)
+
+## [v2.7.0-beta.5](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.0-beta.5) (2016-06-23)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.0-beta.4...v2.7.0-beta.5)
+
+## [v2.7.0-beta.4](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.0-beta.4) (2016-06-23)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.0-beta.3...v2.7.0-beta.4)
+
+## [v2.7.0-beta.3](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.0-beta.3) (2016-06-21)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.0-beta.2...v2.7.0-beta.3)
+
+**Implemented enhancements:**
+
+- Make Factory Guy available in development  [\#206](https://github.com/danielspaniel/ember-data-factory-guy/issues/206)
+
+## [v2.7.0-beta.2](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.0-beta.2) (2016-06-18)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.7.0-beta.1...v2.7.0-beta.2)
+
+## [v2.7.0-beta.1](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.7.0-beta.1) (2016-06-18)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.6.7...v2.7.0-beta.1)
+
+**Closed issues:**
+
+- Make vs build, debugging mockjax requests [\#210](https://github.com/danielspaniel/ember-data-factory-guy/issues/210)
+
+**Merged pull requests:**
+
+- Adding factories to the app instead [\#211](https://github.com/danielspaniel/ember-data-factory-guy/pull/211) ([taras](https://github.com/taras))
+
+## [v2.6.7](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.6.7) (2016-06-15)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.6.6...v2.6.7)
+
+**Closed issues:**
+
+- 'undefined' is not a function \(evaluating 'factoryGuy.make.bind\(factoryGuy\)'\) [\#208](https://github.com/danielspaniel/ember-data-factory-guy/issues/208)
+
+**Merged pull requests:**
+
+- Make more resilient about adding query parameters at levels below Ember [\#209](https://github.com/danielspaniel/ember-data-factory-guy/pull/209) ([YoranBrondsema](https://github.com/YoranBrondsema))
+
+## [v2.6.6](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.6.6) (2016-06-01)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.6.5...v2.6.6)
+
+**Closed issues:**
+
+- ActiveModel sideload or a mockQuery update/create variant [\#205](https://github.com/danielspaniel/ember-data-factory-guy/issues/205)
+
+## [v2.6.5](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.6.5) (2016-05-31)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.6.4...v2.6.5)
+
+**Closed issues:**
+
+- Proposal - add mockDeleteAny [\#201](https://github.com/danielspaniel/ember-data-factory-guy/issues/201)
+- using .andFail with a status that isn't an error code [\#115](https://github.com/danielspaniel/ember-data-factory-guy/issues/115)
+
+## [v2.6.4](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.6.4) (2016-05-28)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.6.3...v2.6.4)
+
+**Merged pull requests:**
+
+- Add support for deleting any model to mockDelete [\#207](https://github.com/danielspaniel/ember-data-factory-guy/pull/207) ([mattmcginnis](https://github.com/mattmcginnis))
+
+## [v2.6.3](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.6.3) (2016-05-27)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.6.2...v2.6.3)
+
+**Closed issues:**
+
+- handleCreate does not allow response to include nested associations [\#172](https://github.com/danielspaniel/ember-data-factory-guy/issues/172)
+- handleCreate\(\).match does not work with ActiveModelSerializer [\#165](https://github.com/danielspaniel/ember-data-factory-guy/issues/165)
+- handleCreate does not mock response with relationships [\#141](https://github.com/danielspaniel/ember-data-factory-guy/issues/141)
+
+## [v2.6.2](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.6.2) (2016-05-26)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.6.1...v2.6.2)
+
+**Closed issues:**
+
+- Custom API format section of README is out of date [\#195](https://github.com/danielspaniel/ember-data-factory-guy/issues/195)
+
+**Merged pull requests:**
+
+- Delete LICENSE [\#203](https://github.com/danielspaniel/ember-data-factory-guy/pull/203) ([oniofchaos](https://github.com/oniofchaos))
+- Update README.md [\#202](https://github.com/danielspaniel/ember-data-factory-guy/pull/202) ([oniofchaos](https://github.com/oniofchaos))
+
+## [v2.6.1](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.6.1) (2016-05-20)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.6.0...v2.6.1)
+
+## [v2.6.0](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.6.0) (2016-05-15)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.5.6...v2.6.0)
+
+**Closed issues:**
+
+- Error due to primaryKey in serializer [\#198](https://github.com/danielspaniel/ember-data-factory-guy/issues/198)
+
+## [v2.5.6](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.5.6) (2016-05-12)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.5.5...v2.5.6)
+
+**Closed issues:**
+
+- Model named "computed" is not found. [\#197](https://github.com/danielspaniel/ember-data-factory-guy/issues/197)
+- "getModelPayload isProxy get add unwrap".w is not a function [\#196](https://github.com/danielspaniel/ember-data-factory-guy/issues/196)
+
+**Merged pull requests:**
+
+- Support embedding records using `deserialize: 'records'` [\#200](https://github.com/danielspaniel/ember-data-factory-guy/pull/200) ([patocallaghan](https://github.com/patocallaghan))
+- Add support for primaryKey in serializers [\#199](https://github.com/danielspaniel/ember-data-factory-guy/pull/199) ([mattmcginnis](https://github.com/mattmcginnis))
+
+## [v2.5.5](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.5.5) (2016-05-09)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.5.4...v2.5.5)
+
+## [v2.5.4](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.5.4) (2016-05-09)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.5.3...v2.5.4)
+
+**Merged pull requests:**
+
+- Updated README with documentation about using ember-data-model-fragments [\#194](https://github.com/danielspaniel/ember-data-factory-guy/pull/194) ([patocallaghan](https://github.com/patocallaghan))
+
+## [v2.5.3](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.5.3) (2016-05-03)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.5.2...v2.5.3)
+
+**Merged pull requests:**
+
+- Fix type.match crasher [\#193](https://github.com/danielspaniel/ember-data-factory-guy/pull/193) ([patocallaghan](https://github.com/patocallaghan))
+
+## [v2.5.2](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.5.2) (2016-05-01)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.5.1...v2.5.2)
+
+**Closed issues:**
+
+- how to know if mock request was sent? [\#186](https://github.com/danielspaniel/ember-data-factory-guy/issues/186)
+
+## [v2.5.1](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.5.1) (2016-05-01)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.5.0...v2.5.1)
+
+## [v2.5.0](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.5.0) (2016-05-01)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.4.5...v2.5.0)
+
+**Merged pull requests:**
+
+- Added tests for Ember Data Model Fragment factory support in unit tests [\#188](https://github.com/danielspaniel/ember-data-factory-guy/pull/188) ([patocallaghan](https://github.com/patocallaghan))
+
+## [v2.4.5](https://github.com/danielspaniel/ember-data-factory-guy/tree/v2.4.5) (2016-04-21)
+[Full Changelog](https://github.com/danielspaniel/ember-data-factory-guy/compare/v2.4.4...v2.4.5)
+
+**Merged pull requests:**
+
+- Wrap arrays that use prototype extensions in Ember.A\(\) [\#192](https://github.com/danielspaniel/ember-data-factory-guy/pull/192) ([gilest](https://github.com/gilest))
+- refactor the equivalence function so that it works with arrays as well [\#191](https://github.com/danielspaniel/ember-data-factory-guy/pull/191) ([bryanaka](https://github.com/bryanaka))
+- Add changelog [\#190](https://github.com/danielspaniel/ember-data-factory-guy/pull/190) ([Robdel12](https://github.com/Robdel12))
 - Fix deprecation warning Ember.merge \> Ember.assign for ember@2.5.0 [\#189](https://github.com/danielspaniel/ember-data-factory-guy/pull/189) ([krasnoukhov](https://github.com/krasnoukhov))
 - Handle active model formatted request data properly [\#187](https://github.com/danielspaniel/ember-data-factory-guy/pull/187) ([ccleung](https://github.com/ccleung))
 
