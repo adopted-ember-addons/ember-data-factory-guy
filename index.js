@@ -28,7 +28,8 @@ module.exports = {
   },
 
   treeForVendor: function(tree) {
-    var trees = [tree];
+    // tree can be undefined.
+    var trees = tree ? [tree] : [];
 
     if (this.includeFactoryGuyFiles) {
       var packagePath = path.dirname(require.resolve('jquery-mockjax'));
@@ -49,7 +50,7 @@ module.exports = {
     this.setupFactoryGuyInclude(app);
 
     if (this.includeFactoryGuyFiles) {
-      app.import('vender/jquery-mockjax/dist/jquery-mockjax.js');
+      app.import('vendor/jquery-mockjax/jquery.mockjax.js');
     }
   },
 
