@@ -32,10 +32,6 @@ module.exports = {
     this.app = app;
 
     this.setupFactoryGuyInclude(app);
-    
-    if (this.includeFactoryGuyFiles) {
-      app.import(path.join(app.bowerDirectory, 'jquery-mockjax', 'dist', 'jquery.mockjax.js'));
-    }
   },
 
   setupFactoryGuyInclude: function(app) {
@@ -51,7 +47,7 @@ module.exports = {
     let trees = /test|development/.test(app.env) ? 'app' : 'app|addon';
     this.treeExcludeRegex = new RegExp(trees);
   },
-  
+
   treeFor: function(name) {
     // Not sure why this is necessary, but this stops the factory guy files
     // from being added to app tree. Would have thought that this would have
