@@ -50,7 +50,7 @@ module.exports = {
     this.setupFactoryGuyInclude(app);
 
     if (this.includeFactoryGuyFiles) {
-      app.import('vendor/jquery-mockjax/jquery.mockjax.js');
+      app.import(path.join('vendor', 'jquery-mockjax', 'jquery.mockjax.js'));
     }
   },
 
