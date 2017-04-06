@@ -27,7 +27,6 @@
     "tests"
   ],
   "dependencies": {
-    "jquery-mockjax": "2.2.1"
   },
   "devDependencies": {
     "jquery": ">1.9.0",

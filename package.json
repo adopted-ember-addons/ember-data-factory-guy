@@ -46,6 +46,7 @@
     "ember-resolver": "3.0.0",
     "ember-sinon": "0.6.0",
     "ember-source": "2.12",
+    "jquery-mockjax": "^2.2.1",
     "loader.js": "4.2.3"
   },
   "keywords": [
