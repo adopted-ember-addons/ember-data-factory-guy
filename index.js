@@ -27,11 +27,30 @@ module.exports = {
     return mergeTrees(trees);
   },
 
+  treeForVendor: function(tree) {
+    var trees = [tree];
+
+    if (this.includeFactoryGuyFiles) {
+      var packagePath = path.dirname(require.resolve('jquery-mockjax'));
+      var packageTree = new Funnel(this.treeGenerator(packagePath), {
+        srcDir: '/',
+        destDir: 'jquery-mockjax'
+      });
+      trees.push(packageTree);
+    }
+
+    return mergeTrees(trees);
+  },
+
   included: function(app) {
     this._super.included(app);
     this.app = app;
 
     this.setupFactoryGuyInclude(app);
+
+    if (this.includeFactoryGuyFiles) {
+      app.import('vender/jquery-mockjax/dist/jquery-mockjax.js');
+    }
   },
 
   setupFactoryGuyInclude: function(app) {
