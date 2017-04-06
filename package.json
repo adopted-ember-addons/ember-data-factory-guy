@@ -24,7 +24,8 @@
   "dependencies": {
     "broccoli-funnel": "^1.0.1",
     "broccoli-merge-trees": "^1.1.1",
-    "ember-cli-babel": "latest"
+    "ember-cli-babel": "latest",
+    "jquery-mockjax": "^2.2.1"
   },
   "devDependencies": {
     "active-model-adapter": "2.1.1",
@@ -46,7 +47,6 @@
     "ember-resolver": "3.0.0",
     "ember-sinon": "0.6.0",
     "ember-source": "2.12",
-    "jquery-mockjax": "^2.2.1",
     "loader.js": "4.2.3"
   },
   "keywords": [
