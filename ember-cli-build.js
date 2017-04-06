@@ -10,7 +10,7 @@ module.exports = function(defaults) {
     }
   });
 
-  app.import('bower_components/jquery-mockjax/dist/jquery.mockjax.js');
+  app.import('vendor/jquery-mockjax/jquery.mockjax.js');
 
   return app.toTree();
 };

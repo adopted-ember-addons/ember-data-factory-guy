@@ -27,14 +27,30 @@ module.exports = {
     return mergeTrees(trees);
   },
 
+  treeForVendor: function(tree) {
+    // tree can be undefined.
+    var trees = tree ? [tree] : [];
+
+    if (this.includeFactoryGuyFiles) {
+      var packagePath = path.dirname(require.resolve('jquery-mockjax'));
+      var packageTree = new Funnel(this.treeGenerator(packagePath), {
+        srcDir: '/',
+        destDir: 'jquery-mockjax'
+      });
+      trees.push(packageTree);
+    }
+
+    return mergeTrees(trees);
+  },
+
   included: function(app) {
     this._super.included(app);
     this.app = app;
 
     this.setupFactoryGuyInclude(app);
-    
+
     if (this.includeFactoryGuyFiles) {
-      app.import(path.join(app.bowerDirectory, 'jquery-mockjax', 'dist', 'jquery.mockjax.js'));
+      app.import(path.join('vendor', 'jquery-mockjax', 'jquery.mockjax.js'));
     }
   },
 
@@ -51,7 +67,7 @@ module.exports = {
     let trees = /test|development/.test(app.env) ? 'app' : 'app|addon';
     this.treeExcludeRegex = new RegExp(trees);
   },
-  
+
   treeFor: function(name) {
     // Not sure why this is necessary, but this stops the factory guy files
     // from being added to app tree. Would have thought that this would have
