@@ -44,7 +44,7 @@ Visit the EmberJS Community [#e-factory-guy](https://embercommunity.slack.com/me
   - [Changelog](#changelog)
 
 ### How it works
-  - You create factories for you models.
+  - You create factories for your models.
     - put them in the `tests/factories` directory
   - Use these factories to create models for your tests
     - you can make records that persist in the store
