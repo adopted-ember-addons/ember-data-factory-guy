@@ -7,25 +7,22 @@ import DRFFixtureBuilder from './drf-fixture-builder';
 import ActiveModelFixtureBuilder from './active-model-fixture-builder';
 
 let ActiveModelSerializer, DjangoSerializer;
-let loadModules = function() {
-  try {
-    let activeModel = require('active-model-adapter');
-    ActiveModelSerializer = activeModel.ActiveModelSerializer;
-  } catch (e) {
-  }
+try {
+  let activeModel = require('active-model-adapter');
+  ActiveModelSerializer = activeModel.ActiveModelSerializer;
+} catch (e) {
+}
 
-  try {
-    let drf = require('ember-django-adapter/serializers/drf');
-    DjangoSerializer = drf && drf.default;
-  } catch (e) {
-  }
-};
+try {
+  let drf = require('ember-django-adapter/serializers/drf');
+  DjangoSerializer = drf && drf.default;
+} catch (e) {
+}
 
 export default class {
 
   constructor(store) {
     this.store = store;
-    loadModules();
   }
 
   /**

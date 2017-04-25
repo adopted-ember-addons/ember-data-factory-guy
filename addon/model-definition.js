@@ -6,13 +6,11 @@ import $ from 'jquery';
 import require from 'require';
 
 let Fragment;
-let loadFragment = function() {
-  try {
-    let MF = require('ember-data-model-fragments');
-    Fragment = MF && MF.default.Fragment;
-  } catch (e) {
-  }
-};
+try {
+  let MF = require('ember-data-model-fragments');
+  Fragment = MF && MF.default.Fragment;
+} catch (e) {
+}
 
 /**
  A ModelDefinition encapsulates a model's definition
@@ -24,7 +22,6 @@ let loadFragment = function() {
 class ModelDefinition {
 
   constructor(model, config) {
-    loadFragment();
     this.modelName = model;
     this.modelId = 1;
     this.originalConfig = $.extend(true, {}, config);
