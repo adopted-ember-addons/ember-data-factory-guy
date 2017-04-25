@@ -1,7 +1,7 @@
-/* global requirejs, require */
+/* global requirejs */
 /*jslint node: true */
-
 import Ember from 'ember';
+import require  from 'require';
 
 export function isEquivalent(a, b) {
   var type = Ember.typeOf(a);

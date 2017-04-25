@@ -29,7 +29,6 @@
   "dependencies": {
   },
   "devDependencies": {
-    "jquery": ">1.9.0",
-    "qunit": "~2.0.0"
+    "jquery": ">1.9.0"
   }
 }

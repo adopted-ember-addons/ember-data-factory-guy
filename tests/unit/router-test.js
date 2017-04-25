@@ -21,7 +21,7 @@ test('profiles', function(assert) {
   let regex = new RegExp("\\[ember-data-factory-guy\\] could not find\\s*the \\[ just-a-string \\] transform");
   assert.throws(
     ()=>mockFindAll('profile', 2),
-    (err)=>{
-       return regex.test(err.toString());
-    });
+    regex,
+    'factory guy produces a nice error message when you forget to needs a transform'
+    );
 });

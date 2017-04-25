@@ -1,4 +1,4 @@
-/* global require */
+import require from 'require';
 import DS from 'ember-data';
 import JSONAPIFixtureBuilder from './jsonapi-fixture-builder';
 import RESTFixtureBuilder from './rest-fixture-builder';
@@ -7,22 +7,25 @@ import DRFFixtureBuilder from './drf-fixture-builder';
 import ActiveModelFixtureBuilder from './active-model-fixture-builder';
 
 let ActiveModelSerializer, DjangoSerializer;
-try {
-  let activeModel = require('active-model-adapter');
-  ActiveModelSerializer = activeModel && activeModel.ActiveModelSerializer;
-} catch (e) {
-}
+let loadModules = function() {
+  try {
+    let activeModel = require('active-model-adapter');
+    ActiveModelSerializer = activeModel.ActiveModelSerializer;
+  } catch (e) {
+  }
 
-try {
-  let drf = require('ember-django-adapter/serializers/drf');
-  DjangoSerializer = drf && drf.default;
-} catch (e) {
-}
+  try {
+    let drf = require('ember-django-adapter/serializers/drf');
+    DjangoSerializer = drf && drf.default;
+  } catch (e) {
+  }
+};
 
 export default class {
-  
+
   constructor(store) {
     this.store = store;
+    loadModules();
   }
 
   /**

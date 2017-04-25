@@ -7,21 +7,6 @@ const assign = Ember.assign || Ember.merge;
 let modelDefinitions = {};
 
 /**
- Given a fixture name like 'person' or 'dude' determine what model this name
- refers to. In this case it's 'person' for each one.
-
- @param {String} name  a fixture name could be model name like 'person'
- or a named person in model definition like 'dude'
- @returns {String} model  name associated with fixture name or undefined if not found
- */
-let lookupModelForFixtureName = function(name) {
-  let definition = lookupDefinitionForFixtureName(name);
-  if (definition) {
-    return definition.modelName;
-  }
-};
-
-/**
 
  @param {String} name a fixture name could be model name like 'person'
  or a named person in model definition like 'dude'
@@ -33,6 +18,21 @@ let lookupDefinitionForFixtureName = function(name) {
     if (definition.matchesName(name)) {
       return definition;
     }
+  }
+};
+
+/**
+ Given a fixture name like 'person' or 'dude' determine what model this name
+ refers to. In this case it's 'person' for each one.
+
+ @param {String} name  a fixture name could be model name like 'person'
+ or a named person in model definition like 'dude'
+ @returns {String} model  name associated with fixture name or undefined if not found
+ */
+let lookupModelForFixtureName = function(name) {
+  let definition = lookupDefinitionForFixtureName(name);
+  if (definition) {
+    return definition.modelName;
   }
 };
 

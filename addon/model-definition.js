@@ -1,16 +1,18 @@
-/* global require */
 import Ember from 'ember';
 import FactoryGuy from './factory-guy';
 import Sequence from './sequence';
 import MissingSequenceError from './missing-sequence-error';
 import $ from 'jquery';
+import require from 'require';
 
 let Fragment;
-try {
-  let MF = require('ember-data-model-fragments');
-  Fragment = MF.default.Fragment;
-} catch (e) {
-}
+let loadFragment = function() {
+  try {
+    let MF = require('ember-data-model-fragments');
+    Fragment = MF && MF.default.Fragment;
+  } catch (e) {
+  }
+};
 
 /**
  A ModelDefinition encapsulates a model's definition
@@ -22,6 +24,7 @@ try {
 class ModelDefinition {
 
   constructor(model, config) {
+    loadFragment();
     this.modelName = model;
     this.modelId = 1;
     this.originalConfig = $.extend(true, {}, config);
@@ -142,7 +145,7 @@ class ModelDefinition {
    */
   build(name, opts, traitArgs) {
     let traitsObj = {};
-    traitArgs.forEach((trait)=> {
+    traitArgs.forEach((trait) => {
       Ember.assert(`You're trying to use a trait [${trait}] for model ${this.modelName} but that trait can't be found.`, this.traits[trait]);
       $.extend(traitsObj, this.traits[trait]);
     });
