@@ -8,17 +8,19 @@ import ActiveModelFixtureBuilder from './active-model-fixture-builder';
 
 let ActiveModelSerializer, DjangoSerializer;
 try {
-  ActiveModelSerializer = require('active-model-adapter').ActiveModelSerializer;
+  let activeModel = require('active-model-adapter');
+  ActiveModelSerializer = activeModel && activeModel.ActiveModelSerializer;
 } catch (e) {
 }
 
 try {
-  DjangoSerializer = require('ember-django-adapter/serializers/drf').default;
+  let drf = require('ember-django-adapter/serializers/drf');
+  DjangoSerializer = drf && drf.default;
 } catch (e) {
 }
 
 export default class {
-
+  
   constructor(store) {
     this.store = store;
   }
