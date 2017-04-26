@@ -1220,6 +1220,23 @@ SharedBehavior.mockCreateTests = function() {
     });
   });
 
+  test("don't match bogus attributes", function(assert) {
+    assert.expect(2);
+    Ember.run(() => {
+      let done = assert.async();
+      let customDescription = "special description";
+
+      let mock = mockCreate('profile').match({bogus: customDescription});
+
+      FactoryGuy.store.createRecord('profile').save().catch(() => {
+        ok(true);
+        // our mock was NOT called
+        equal(mock.timesCalled, 0);
+        done();
+      });
+    });
+  });
+
   test("match belongsTo association", function(assert) {
     Ember.run(()=> {
       let done = assert.async();
@@ -1753,6 +1770,25 @@ SharedBehavior.mockUpdateTests = function() {
         assert.ok(profile.get('description') === customDescription);
         assert.ok(profile.get('created_at').toString() === date.toString());
         assert.ok(profile.get('aBooleanField') === true);
+        done();
+      });
+    });
+  });
+
+  test("don't match bogus attributes", function(assert) {
+    assert.expect(2);
+    Ember.run(() => {
+      let done = assert.async();
+      let customDescription = "special description";
+      let profile = make('profile');
+
+      mockUpdate('profile', profile.id).match({bogus: customDescription});
+
+      profile.set('description', customDescription);
+      profile.save().catch(() => {
+        ok(true);
+        // our mock was NOT called
+        equal(mock.timesCalled, 0);
         done();
       });
     });
