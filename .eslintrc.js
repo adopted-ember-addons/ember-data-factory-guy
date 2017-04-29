@@ -1,4 +1,3 @@
-/* jshint node:true */
 module.exports = {
   root: true,
   parserOptions: {
@@ -10,5 +9,6 @@ module.exports = {
     browser: true
   },
   rules: {
+    "no-console": "off"
   }
 };

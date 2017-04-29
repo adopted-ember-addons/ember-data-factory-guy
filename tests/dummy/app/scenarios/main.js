@@ -1,7 +1,7 @@
 import {Scenario} from 'ember-data-factory-guy';
 
 import Users from './users';
-import UsersB from './usersB';
+//import UsersB from './usersB';
 
 Scenario.settings({
   mockjaxLogLevel: 1,

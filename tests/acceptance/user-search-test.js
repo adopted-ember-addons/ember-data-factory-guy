@@ -1,5 +1,5 @@
-import {module, test} from 'qunit';
-import { make, makeList, build, buildList, mockQuery } from 'ember-data-factory-guy';
+import {test} from 'qunit';
+import {make, makeList, buildList, mockQuery} from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
 moduleForAcceptance('Acceptance | User Search');
@@ -8,112 +8,88 @@ moduleForAcceptance('Acceptance | User Search');
 // FactoryGuy before and after setup is in moduleForAcceptance helper
 
 var search = function(name) {
-  andThen(()=> {
-    fillIn('input.user-name', name);
-    click('button.find-user');
-  });
+  fillIn('input.user-name', name);
+  return click('button.find-user');
 };
 
-var visitAndSearch = function(name) {
-  visit('/search');
-  search(name);
-};
-
-test("mockQuery without params matches store.query with any parameters", function(assert) {
-  let dude = buildList('user', {name: 'Dude'});
+test("mockQuery without params matches store.query with any parameters", async function(assert) {
+  let dude = buildList('user', { name: 'Dude' });
 
   // no query parameters set in the mock so it will match
   // a query for {name: "Bif"} and return the dude
-  mockQuery('user').returns({json: dude});
+  mockQuery('user').returns({ json: dude });
 
-  visitAndSearch("Bif"); // still returns dude
+  await visit('/search');
+  await search("Bif"); // still returns dude
 
-  andThen(()=> {
-    assert.ok(find('.user .name').length === 1);
-    assert.ok(find('.user .name').text().match("Dude"));
-  });
-
+  assert.ok(find('.user .name').length === 1);
+  assert.ok(find('.user .name').text().match("Dude"));
 });
 
-
-test("mockQuery with params matches store.query with those parameters", function(assert) {
-  let dude = buildList('user', {name: 'Dude'});
+test("mockQuery with params matches store.query with those parameters", async function(assert) {
+  let dude = buildList('user', { name: 'Dude' });
 
   // asking to mock only exact match of 'user'
   // with these parameters: {name: "Dude"}
-  mockQuery('user', {name: "Dude"}).returns({json: dude});
+  mockQuery('user', { name: "Dude" }).returns({ json: dude });
 
-  visitAndSearch("Dude");
+  await visit('/search');
+  await search("Dude"); // still returns dude
 
-  andThen(()=> {
-    assert.ok(find('.user .name').length === 1);
-    assert.ok(find('.user .name').text().match("Dude"));
-  });
-
+  assert.ok(find('.user .name').length === 1);
+  assert.ok(find('.user .name').text().match("Dude"));
 });
 
-test("reusing mockQuery to return different results with different parameters", function(assert) {
-  let sillyPeople = buildList('user', {name: 'Bo'}, {name: "Bif"});
+test("reusing mockQuery to return different results with different parameters", async function(assert) {
+  let sillyPeople = buildList('user', { name: 'Bo' }, { name: "Bif" });
 
   // nothing is returned with these parameters: {name: "Dude"}
-  let mock = mockQuery('user', {name: "Dude"});
+  let mock = mockQuery('user', { name: "Dude" });
 
-  visitAndSearch("Dude");
+  await visit('/search');
+  await search("Dude");
 
-  andThen(()=> {
-    assert.ok(find('.user .name').length === 0);
-  });
+  assert.ok(find('.user .name').length === 0);
 
-  andThen(()=>{
-    mock.withParams({name: "silly"}).returns({json: sillyPeople});
-    search("silly");
-  });
+  mock.withParams({ name: "silly" }).returns({ json: sillyPeople });
+  await search("silly");
 
-  andThen(()=>{
-    assert.ok(find('.user .name').length === 2);
-    assert.ok(find('.user .name:first').text().match("Bo"));
-    assert.ok(find('.user .name:last').text().match("Bif"));
-  });
-
+  assert.ok(find('.user .name').length === 2);
+  assert.ok(find('.user .name:first').text().match("Bo"));
+  assert.ok(find('.user .name:last').text().match("Bif"));
 });
 
-
-test("using returns( models )", function(assert) {
+test("using returns( models )", async function(assert) {
   let bobs = makeList("bob", 2);
 
-  mockQuery('user', {name: "bob"}).returns({models: bobs});
+  mockQuery('user', { name: "bob" }).returns({ models: bobs });
 
-  visitAndSearch("bob");
+  await visit('/search');
+  await search("bob");
 
-  andThen(()=> {
-    assert.ok(find('.user').length === 2);
-  });
-
+  assert.ok(find('.user').length === 2);
 });
 
-test("using returns( ids )", function(assert) {
+test("using returns( ids )", async function(assert) {
   let bob = make("bob");
-  let user = make("user");
+  make("user");
 
-  mockQuery('user').returns({ids:[bob.id]});
+  mockQuery('user').returns({ ids: [bob.id] });
 
-  visitAndSearch("user2");
+  await visit('/search');
+  await search("user2");
 
-  andThen(()=> {
-    assert.ok(find('.user').length === 1);
-    assert.ok(find('.user .name').text().match("Bob"));
-  });
-
+  assert.ok(find('.user').length === 1);
+  assert.ok(find('.user .name').text().match("Bob"));
 });
 
 
-test("using fails to mock a failed query", function(assert) {
-  let errors = {errors: {description: ['invalid']}};
-  mockQuery('user').fails({status: 422, response: errors});
+test("using fails to mock a failed query", async function(assert) {
+  let errors = { errors: { description: ['invalid'] } };
+  mockQuery('user').fails({ status: 422, response: errors });
 
-  visitAndSearch("Allen");
+  await visit('/search');
+  await search("Allen");
 
-  andThen(()=> {
-    assert.ok(find('.results').text().match('Errors'));
-  });
+  assert.ok(find('.results').text().match('Errors'));
 });

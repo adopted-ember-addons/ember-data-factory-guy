@@ -12,7 +12,7 @@ export default DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
     }
   },
 
-  keyForAttribute(attr, method) {
+  keyForAttribute() {
     return this._super(...arguments);
   }
   

@@ -1,12 +1,13 @@
 import {moduleFor, test} from 'ember-qunit';
 import Ember from 'ember';
 import FactoryGuy, {
-  make, makeList, build, buildList, clearStore,
-  mockFindRecord, mockFindAll, mockReload, mockQuery, mockQueryRecord,
+  make, makeList, build, buildList,
+  mockFindRecord, mockFindAll, mockQuery, mockQueryRecord,
   mockCreate, mockUpdate, mockDelete, mockSetup
 } from 'ember-data-factory-guy';
 import {inlineSetup} from '../helpers/utility-methods';
 import MockRequest from 'ember-data-factory-guy/mocks/mock-request';
+import sinon from 'sinon';
 
 const serializerType = '-json-api';
 
@@ -134,8 +135,8 @@ moduleFor('serializer:application', 'MockRequest#basicRequestMatches', inlineSet
 
 test("fails if the types don't match", function(assert) {
   const mock = new MockRequest('user');
-  const getType = sinon.stub(mock, 'getType').returns('POST');
-  const getUrl = sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
+  sinon.stub(mock, 'getType').returns('POST');
+  sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
 
   const settings = {
     type: 'GET',
@@ -147,8 +148,8 @@ test("fails if the types don't match", function(assert) {
 
 test("fails if the URLs don't match", function(assert) {
   const mock = new MockRequest('user');
-  const getType = sinon.stub(mock, 'getType').returns('GET');
-  const getUrl = sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
+  sinon.stub(mock, 'getType').returns('GET');
+  sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
 
   const settings = {
     type: 'GET',
@@ -160,8 +161,8 @@ test("fails if the URLs don't match", function(assert) {
 
 test("succeeds if the URLs and the types match", function(assert) {
   const mock = new MockRequest('user');
-  const getType = sinon.stub(mock, 'getType').returns('GET');
-  const getUrl = sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
+  sinon.stub(mock, 'getType').returns('GET');
+  sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
 
   const settings = {
     type: 'GET',
@@ -173,8 +174,8 @@ test("succeeds if the URLs and the types match", function(assert) {
 
 test("succeeds even if the given URL has query parameters that don't match", function(assert) {
   const mock = new MockRequest('user');
-  const getType = sinon.stub(mock, 'getType').returns('GET');
-  const getUrl = sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
+  sinon.stub(mock, 'getType').returns('GET');
+  sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
 
   const settings = {
     type: 'GET',
@@ -193,7 +194,7 @@ test("can enable, disable, and destroy mock", function(assert) {
     let json1 = build('user');
     let json2 = build('user');
     let mock1 = mockQueryRecord('user', { id: 1 }).returns({ json: json1 });
-    let mock2 = mockQueryRecord('user', {}).returns({ json: json2 });
+    mockQueryRecord('user', {}).returns({ json: json2 });
 
     assert.notOk(mock1.isDestroyed, "isDestroyed is false initially");
 
@@ -266,7 +267,7 @@ test("with errors in response", function(assert) {
     const mock = mockFindRecord('profile').fails({ response });
 
     FactoryGuy.store.findRecord('profile', 1)
-      .catch((res)=> {
+      .catch(()=> {
         assert.equal(mock.timesCalled, 1);
         assert.ok(true);
         done();
@@ -453,9 +454,9 @@ test("using returns with headers adds the headers to the response", function(ass
   const handler = mockQueryRecord('company', queryParams);
   handler.returns({ headers: { 'X-Testing': 'absolutely' } });
 
-  $(document).ajaxComplete(function(event, xhr) {
+  Ember.$(document).ajaxComplete(function(event, xhr) {
     assert.equal(xhr.getResponseHeader('X-Testing'), 'absolutely');
-    $(document).off('ajaxComplete');
+    Ember.$(document).off('ajaxComplete');
     done();
   });
 

@@ -2,25 +2,25 @@ import {moduleFor, test} from 'ember-qunit';
 import Ember from 'ember';
 import FactoryGuy, {make, build, buildList, mockCreate} from 'ember-data-factory-guy';
 
-import SharedAdapterBehavior from './shared-adapter-tests';
-import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
+import SharedCommonBehavior from './shared-common-behaviour';
+import SharedAdapterBehaviour from './shared-adapter-behaviour';
 import {inlineSetup} from '../helpers/utility-methods';
 
 let serializer = 'DS.JSONAPISerializer';
 let serializerType = '-json-api';
 
-SharedAdapterBehavior.all(serializer, serializerType);
+SharedCommonBehavior.all(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockFindRecordSideloadingTests(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(serializer, serializerType);
+SharedAdapterBehaviour.mockFindRecordSideloadingTests(serializer, serializerType);
+SharedAdapterBehaviour.mockFindAllSideloadingTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(serializer, serializerType);
+SharedAdapterBehaviour.mockQueryMetaTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsAssociations(serializer, serializerType);
+SharedAdapterBehaviour.mockUpdateWithErrorMessages(serializer, serializerType);
+SharedAdapterBehaviour.mockUpdateReturnsAssociations(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(serializer, serializerType);
+SharedAdapterBehaviour.mockCreateReturnsAssociations(serializer, serializerType);
+SharedAdapterBehaviour.mockCreateFailsWithErrorResponse(serializer, serializerType);
 
 moduleFor('serializer:application', `${serializer} #mockCreate custom`, inlineSetup(serializerType));
 

@@ -2,41 +2,41 @@ import Ember from 'ember';
 import {moduleFor, test} from 'ember-qunit';
 import FactoryGuy, {build, buildList, mockQuery} from 'ember-data-factory-guy';
 
-import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
+import SharedAdapterBehaviour from './shared-adapter-behaviour';
 import {inlineSetup} from '../helpers/utility-methods';
 import {isEquivalent} from 'ember-data-factory-guy/utils/helper-functions';
 
 let serializer = 'DRFSerializer';
 let serializerType = '-drf';
 
-SharedFactoryGuyTestHelperBehavior.mockFindRecordEmbeddedTests(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(serializer, serializerType);
+SharedAdapterBehaviour.mockFindRecordEmbeddedTests(serializer, serializerType);
+SharedAdapterBehaviour.mockFindAllEmbeddedTests(serializer, serializerType);
 
 moduleFor('serializer:application', `${serializer} #mockFindRecord`, inlineSetup(serializerType));
-SharedFactoryGuyTestHelperBehavior.mockFindRecordCommonTests();
+SharedAdapterBehaviour.mockFindRecordCommonTests();
 
 moduleFor('serializer:application', `${serializer} #mockReload`, inlineSetup(serializerType));
-SharedFactoryGuyTestHelperBehavior.mockReloadTests();
+SharedAdapterBehaviour.mockReloadTests();
 
 moduleFor('serializer:application', `${serializer} #mockFindAll`, inlineSetup(serializerType));
-SharedFactoryGuyTestHelperBehavior.mockFindAllCommonTests();
+SharedAdapterBehaviour.mockFindAllCommonTests();
 
 moduleFor('serializer:application', `${serializer} #mockQuery`, inlineSetup(serializerType));
-SharedFactoryGuyTestHelperBehavior.mockQueryTests();
+SharedAdapterBehaviour.mockQueryTests();
 
 moduleFor('serializer:application', `${serializer} #mockQueryRecord`, inlineSetup(serializerType));
-SharedFactoryGuyTestHelperBehavior.mockQueryRecordTests();
+SharedAdapterBehaviour.mockQueryRecordTests();
 
 moduleFor('serializer:application', `${serializer} #mockCreate`, inlineSetup(serializerType));
-SharedFactoryGuyTestHelperBehavior.mockCreateTests();
-SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(serializer, serializerType);
+SharedAdapterBehaviour.mockCreateTests();
+SharedAdapterBehaviour.mockCreateReturnsEmbeddedAssociations(serializer, serializerType);
 
 moduleFor('serializer:application', `${serializer} #mockUpdate`, inlineSetup(serializerType));
-SharedFactoryGuyTestHelperBehavior.mockUpdateTests();
-SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(serializer, serializerType);
+SharedAdapterBehaviour.mockUpdateTests();
+SharedAdapterBehaviour.mockUpdateReturnsEmbeddedAssociations(serializer, serializerType);
 
 moduleFor('serializer:application', `${serializer} #mockDelete`, inlineSetup(serializerType));
-SharedFactoryGuyTestHelperBehavior.mockDeleteTests();
+SharedAdapterBehaviour.mockDeleteTests();
 
 moduleFor('serializer:application', `${serializer} DRFAdapter | #mockQuery | meta`, inlineSetup(serializerType));
 // drf serializer takes the previous and next and extracts the page number

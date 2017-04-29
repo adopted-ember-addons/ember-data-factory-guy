@@ -10,6 +10,7 @@ try {
   let MF = require('ember-data-model-fragments');
   Fragment = MF && MF.default.Fragment;
 } catch (e) {
+  // do nothing
 }
 
 /**

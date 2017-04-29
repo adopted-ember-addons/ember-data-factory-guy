@@ -46,7 +46,7 @@ class MockGetRequest extends MockRequest {
     Ember.assert(`[ember-data-factory-guy] You can pass zero or one key to 'returns',
                 you passed these keys: ${responseKeys}`, responseKeys.length <= 1);
 
-    const [ responseKey ] = responseKeys;
+    const [responseKey] = responseKeys;
 
     Ember.assert(`[ember-data-factory-guy] You passed an invalid key for 'returns' function.
       Valid keys are ${this.validReturnsKeys}. You used this key: ${responseKey}`,
@@ -83,35 +83,36 @@ class MockGetRequest extends MockRequest {
         this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, json));
         break;
 
-      case 'ids':
+      case 'ids': {
         const store = FactoryGuy.store;
-        models = options.ids.map((id)=> store.peekRecord(modelName, id));
-        return this.returns({ models });
-
-      case 'models':
+        models = options.ids.map((id) => store.peekRecord(modelName, id));
+        this.returns({ models });
+        break;
+      }
+      case 'models': {
         models = options.models;
         Ember.assert(`argument ( models ) must be an array - found type:'
           ${Ember.typeOf(models)}`, Ember.isArray(models));
 
-        json = models.map(function(model) {
+        json = models.map(model => {
           return { id: model.id, type: model.constructor.modelName };
         });
 
         json = this.fixtureBuilder.convertForBuild(modelName, json);
         this.setResponseJson(json);
         break;
-
+      }
       case 'json':
         this.setResponseJson(options.json);
         break;
 
-      case 'attrs':
+      case 'attrs': {
         let currentId = this.responseJson.get('id');
         let modelParams = assign({ id: currentId }, options.attrs);
         json = this.fixtureBuilder.convertForBuild(modelName, modelParams);
         this.setResponseJson(json);
         break;
-
+      }
       case 'headers':
         this.addResponseHeaders(options.headers);
         break;

@@ -1,6 +1,6 @@
 import {test} from 'ember-qunit';
 import Ember from 'ember';
-import FactoryGuy, {make, makeList, build, buildList} from 'ember-data-factory-guy';
+import FactoryGuy, {make, buildList} from 'ember-data-factory-guy';
 
 import User from 'dummy/models/user';
 import BigHat from 'dummy/models/big-hat';

@@ -1,5 +1,5 @@
 import {moduleFor, test} from 'ember-qunit';
-import {make, makeList, build, buildList} from 'ember-data-factory-guy';
+import {build} from 'ember-data-factory-guy';
 
 import {inlineSetup} from '../../helpers/utility-methods';
 

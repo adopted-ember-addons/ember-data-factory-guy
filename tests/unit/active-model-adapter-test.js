@@ -1,29 +1,28 @@
 import {moduleFor, test} from 'ember-qunit';
-import {module} from 'qunit';
 import Ember from 'ember';
-import FactoryGuy, {build, buildList, make, makeList, mockCreate, manualSetup} from 'ember-data-factory-guy';
+import FactoryGuy, {build, buildList, mockCreate} from 'ember-data-factory-guy';
 
-import SharedAdapterBehavior from './shared-adapter-tests';
-import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
+import SharedCommonBehavior from './shared-common-behaviour';
+import SharedAdapterBehaviour from './shared-adapter-behaviour';
 import {inlineSetup} from '../helpers/utility-methods';
 
 let serializer = 'DS.ActiveModelSerializer';
 let serializerType = '-active-model';
 
-SharedAdapterBehavior.all(serializer, serializerType);
+SharedCommonBehavior.all(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockFindRecordSideloadingTests(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(serializer, serializerType);
+SharedAdapterBehaviour.mockFindRecordSideloadingTests(serializer, serializerType);
+SharedAdapterBehaviour.mockFindAllSideloadingTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(serializer, serializerType);
+SharedAdapterBehaviour.mockQueryMetaTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsAssociations(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(serializer, serializerType);
+SharedAdapterBehaviour.mockUpdateWithErrorMessages(serializer, serializerType);
+SharedAdapterBehaviour.mockUpdateReturnsAssociations(serializer, serializerType);
+SharedAdapterBehaviour.mockUpdateReturnsEmbeddedAssociations(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(serializer, serializerType);
+SharedAdapterBehaviour.mockCreateReturnsAssociations(serializer, serializerType);
+SharedAdapterBehaviour.mockCreateFailsWithErrorResponse(serializer, serializerType);
+SharedAdapterBehaviour.mockCreateReturnsEmbeddedAssociations(serializer, serializerType);
 
 moduleFor('serializer:application', `${serializer} #mockCreate custom`, inlineSetup(serializerType));
 

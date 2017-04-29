@@ -1,23 +1,23 @@
 import {moduleFor, test} from 'ember-qunit';
-import { build, buildList, make, makeList, mockFindRecord, mockFindAll } from 'ember-data-factory-guy';
+import {build, buildList} from 'ember-data-factory-guy';
 
-import SharedAdapterBehavior from './shared-adapter-tests';
-import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
-import { inlineSetup } from '../helpers/utility-methods';
+import SharedCommonBehavior from './shared-common-behaviour';
+import SharedAdapterBehaviour from './shared-adapter-behaviour';
+import {inlineSetup} from '../helpers/utility-methods';
 
 let serializer = 'DS.RESTAdapter/JSONSerializer';
 let serializerType = '-json';
 
-SharedAdapterBehavior.all(serializer, serializerType);
+SharedCommonBehavior.all(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockFindRecordEmbeddedTests(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(serializer, serializerType);
+SharedAdapterBehaviour.mockFindRecordEmbeddedTests(serializer, serializerType);
+SharedAdapterBehaviour.mockFindAllEmbeddedTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(serializer, serializerType);
+SharedAdapterBehaviour.mockUpdateWithErrorMessages(serializer, serializerType);
+SharedAdapterBehaviour.mockUpdateReturnsEmbeddedAssociations(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(serializer, serializerType);
+SharedAdapterBehaviour.mockCreateReturnsEmbeddedAssociations(serializer, serializerType);
+SharedAdapterBehaviour.mockCreateFailsWithErrorResponse(serializer, serializerType);
 
 moduleFor('serializer:application', `${serializer} FactoryGuy#build get`, inlineSetup(serializerType));
 

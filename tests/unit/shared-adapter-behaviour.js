@@ -4,7 +4,6 @@ import {isEquivalent} from 'ember-data-factory-guy/utils/helper-functions';
 
 import FactoryGuy, {
   make, makeList, build, buildList,
-  mockSetup, mockTeardown,
   mockFindRecord, mockFindAll, mockReload, mockQuery,
   mockQueryRecord, mockCreate, mockUpdate, mockDelete
 } from 'ember-data-factory-guy';
@@ -44,7 +43,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       mockFindRecord('profile').returns({ id: profileId });
 
       let newRecord = FactoryGuy.store.createRecord('profile', { description: 'foo' });
-      newRecord.save().then((profile)=> {
+      newRecord.save().then(()=> {
         FactoryGuy.store.findRecord('profile', profileId).then((profile)=> {
           assert.equal(profile.get('id'), profileId);
           assert.equal(profile.get('description'), 'foo');
@@ -196,7 +195,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       let mock = mockFindRecord('profile').returns({ model }).fails();
 
       return FactoryGuy.store.findRecord('profile', model.id, { reload: true })
-        .catch((error)=> {
+        .catch(()=> {
           assert.equal(mock.timesCalled, 1);
           assert.equal(mock.status, 500);
         });
@@ -210,7 +209,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
     let mock = mockFindRecord(profile).fails();
     Ember.run(()=> {
       FactoryGuy.store.findRecord('profile', profile.id, { reload: true })
-        .catch((error)=> {
+        .catch(()=> {
           assert.equal(mock.timesCalled, 1, 'mock called once');
           assert.equal(mock.status, 500, 'stats 500');
           done();
@@ -899,9 +898,10 @@ SharedBehavior.mockQueryTests = function() {
 
       FactoryGuy.store.query('company', { name: 'Dude', page: 1 }).then(function(companies) {
         assert.equal(A(companies).mapBy('id') + '', A(companies1).mapBy('id') + '');
-
+        assert.equal(matchQueryHandler.timesCalled, 1);
         FactoryGuy.store.query('company', { name: 'Other', page: 1 }).then(function(companies) {
           assert.equal(A(companies).mapBy('id') + '', A(companies2).mapBy('id') + '');
+          assert.equal(allQueryHandler.timesCalled, 1);
           done();
         });
       });
@@ -1724,7 +1724,7 @@ SharedBehavior.mockUpdateTests = function() {
         assert.ok(profile.id === '1');
         assert.ok(profile.get('description') === customDescription);
 
-        profile2.save().then((profile)=> {
+        profile2.save().then(()=> {
           assert.ok(profile2 instanceof Profile);
           assert.ok(profile2.id === '2');
           assert.ok(profile2.get('description') === customDescription);

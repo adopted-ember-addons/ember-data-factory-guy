@@ -1,4 +1,4 @@
-import {module, test} from 'qunit';
+import {test} from 'qunit';
 import { mockFindAll, mockDelete, makeList } from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 

@@ -5,7 +5,7 @@ import {
   Scenario,
   make, makeNew, makeList, build, buildList,
   mockFindRecord, mockFindAll, mockReload, mockQuery, mockQueryRecord,
-  mockCreate, mockUpdate, mockDelete, mockSetup
+  mockCreate, mockUpdate, mockDelete
 } from 'ember-data-factory-guy';
 
 module('scenario');

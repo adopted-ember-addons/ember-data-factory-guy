@@ -11,12 +11,14 @@ try {
   let activeModel = require('active-model-adapter');
   ActiveModelSerializer = activeModel.ActiveModelSerializer;
 } catch (e) {
+  // do nothing
 }
 
 try {
   let drf = require('ember-django-adapter/serializers/drf');
   DjangoSerializer = drf && drf.default;
 } catch (e) {
+  // do nothing
 }
 
 export default class {

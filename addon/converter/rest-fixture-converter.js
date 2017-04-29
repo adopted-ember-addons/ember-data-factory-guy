@@ -52,11 +52,11 @@ export default class extends JSONFixtureConverter {
    * @param payload
    */
   addIncludedArray(payload) {
-    Object.keys(this.included).forEach((key)=> {
+    Object.keys(this.included).forEach((key) => {
       if (!payload[key]) {
         payload[key] = this.included[key];
       } else {
-      	Array.prototype.push.apply(payload[key], this.included[key]);
+        Array.prototype.push.apply(payload[key], this.included[key]);
       }
     });
   }
@@ -77,7 +77,7 @@ export default class extends JSONFixtureConverter {
 
     let modelRelationships = this.included[relationshipKey];
 
-    let found = Ember.A(modelRelationships).find((existing)=> {
+    let found = Ember.A(modelRelationships).find((existing) => {
       return existing.id === data.id;
     });
 
@@ -93,9 +93,9 @@ export default class extends JSONFixtureConverter {
    @param proxy json payload proxy
    */
   addToIncludedFromProxy(proxy) {
-    proxy.includeKeys().forEach((modelKey)=> {
+    proxy.includeKeys().forEach((modelKey) => {
       let includedModels = proxy.getInclude(modelKey);
-      includedModels.forEach((data)=> {
+      includedModels.forEach((data) => {
         this.addToIncluded(data, modelKey);
       });
     });

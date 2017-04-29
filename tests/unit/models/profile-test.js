@@ -1,4 +1,4 @@
-import { manualSetup, make, makeList } from 'ember-data-factory-guy';
+import { manualSetup, make } from 'ember-data-factory-guy';
 import { test, moduleForModel } from 'ember-qunit';
 
 moduleForModel('profile', 'Unit | Model | profile', {

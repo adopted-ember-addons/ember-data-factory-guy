@@ -1,19 +1,17 @@
-import {module, test} from 'qunit';
-import { build, buildList, makeList, mockFindAll } from 'ember-data-factory-guy';
+import {test} from 'qunit';
+import {buildList, makeList, mockFindAll} from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
 moduleForAcceptance('Acceptance | Users View');
 // NOTE
 // FactoryGuy before and after setup is in moduleForAcceptance helper
 
-test("Show users by using mockFindAll to create default users", function(assert) {
+test("Show users by using mockFindAll to create default users", async function(assert) {
   mockFindAll('user', 3);
-  visit('/users');
+  await visit('/users');
 
-  andThen(()=> {
-    let users = find('li.user');
-    assert.ok(users.length === 3);
-  });
+  let users = find('li.user');
+  assert.ok(users.length === 3);
 });
 
 test("Show users with projects by build(ing) json and using returns with json", function(assert) {
@@ -23,7 +21,7 @@ test("Show users with projects by build(ing) json and using returns with json", 
 
   visit('/users');
 
-  andThen(()=> {
+  andThen(() => {
     let users = find('li.user');
     assert.ok(users.length === 1);
   });
@@ -36,7 +34,7 @@ test("Show users by make(ing) list of models and using returns with those models
 
   visit('/users');
 
-  andThen(()=> {
+  andThen(() => {
     let users = find('li.user');
     assert.ok(find('li.user:first').text().match(users.get('firstObject.name')));
     assert.ok(find('li.user:last').text().match(users.get('lastObject.name')));
@@ -49,14 +47,14 @@ test("reuse mockFindAll to show return different users", function(assert) {
 
   visit('/users');
 
-  andThen(()=> {
+  andThen(() => {
     assert.equal(find('li.user').length, 0);
     let sillyPeople = makeList('user', { name: "Bo" }, { name: "Bif" });
     mock.returns({ models: sillyPeople });
     visit('/users');
   });
 
-  andThen(()=> {
+  andThen(() => {
     assert.equal(find('.user').length, 2);
     assert.ok(find('.user:first').text().match("Bo"));
     assert.ok(find('.user:last').text().match("Bif"));

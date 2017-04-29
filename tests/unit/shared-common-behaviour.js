@@ -1,51 +1,51 @@
-import SharedFactoryGuyBehavior from './shared-factory-guy-tests';
 import {moduleFor} from 'ember-qunit';
-import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
+import SharedFactoryGuyBehaviour from './shared-factory-guy-behaviour';
+import SharedAdapterBehaviour from './shared-adapter-behaviour';
 import {inlineSetup} from '../helpers/utility-methods';
 
-let SharedAdapterBehavior = {};
+let SharedBehavior = {};
 
-SharedAdapterBehavior.all = function(serializer, serializerType) {
+SharedBehavior.all = function(serializer, serializerType) {
 
   moduleFor('serializer:application', `${serializer} FactoryGuy#make`, inlineSetup(serializerType));
-  SharedFactoryGuyBehavior.makeTests();
+  SharedFactoryGuyBehaviour.makeTests();
 
 
   moduleFor('serializer:application', `${serializer} FactoryGuy#makeList`, inlineSetup(serializerType));
-  SharedFactoryGuyBehavior.makeListTests();
+  SharedFactoryGuyBehaviour.makeListTests();
 
 
   moduleFor('serializer:application', `${serializer} #mockFindRecord`, inlineSetup(serializerType));
-  SharedFactoryGuyTestHelperBehavior.mockFindRecordCommonTests();
+  SharedAdapterBehaviour.mockFindRecordCommonTests();
 
 
   moduleFor('serializer:application', `${serializer} #mockReload`, inlineSetup(serializerType));
-  SharedFactoryGuyTestHelperBehavior.mockReloadTests();
+  SharedAdapterBehaviour.mockReloadTests();
 
 
   moduleFor('serializer:application', `${serializer} #mockFindAll`, inlineSetup(serializerType));
-  SharedFactoryGuyTestHelperBehavior.mockFindAllCommonTests();
+  SharedAdapterBehaviour.mockFindAllCommonTests();
 
 
   moduleFor('serializer:application', `${serializer} #mockQuery`, inlineSetup(serializerType));
-  SharedFactoryGuyTestHelperBehavior.mockQueryTests();
+  SharedAdapterBehaviour.mockQueryTests();
 
 
   moduleFor('serializer:application', `${serializer} #mockQueryRecord`, inlineSetup(serializerType));
-  SharedFactoryGuyTestHelperBehavior.mockQueryRecordTests();
+  SharedAdapterBehaviour.mockQueryRecordTests();
 
 
   moduleFor('serializer:application', `${serializer} #mockCreate`, inlineSetup(serializerType));
-  SharedFactoryGuyTestHelperBehavior.mockCreateTests();
+  SharedAdapterBehaviour.mockCreateTests();
 
 
   moduleFor('serializer:application', `${serializer} #mockUpdate`, inlineSetup(serializerType));
-  SharedFactoryGuyTestHelperBehavior.mockUpdateTests();
+  SharedAdapterBehaviour.mockUpdateTests();
 
 
   moduleFor('serializer:application', `${serializer} #mockDelete`, inlineSetup(serializerType));
-  SharedFactoryGuyTestHelperBehavior.mockDeleteTests();
+  SharedAdapterBehaviour.mockDeleteTests();
 
 };
 
-export default SharedAdapterBehavior;
+export default SharedBehavior;

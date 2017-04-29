@@ -1,43 +1,43 @@
 import Ember from 'ember';
 import {moduleFor, test} from 'ember-qunit';
-import FactoryGuy, {build, buildList, make, makeList, mockCreate, mockFindRecord, mockFindAll, manualSetup} from 'ember-data-factory-guy';
+import FactoryGuy, {build, buildList, make, mockCreate} from 'ember-data-factory-guy';
 
-import SharedAdapterBehavior from './shared-adapter-tests';
-import SharedFactoryGuyTestHelperBehavior from './shared-factory-guy-test-helper-tests';
+import SharedCommonBehavior from './shared-common-behaviour';
+import SharedAdapterBehavior from './shared-adapter-behaviour';
 import {inlineSetup} from '../helpers/utility-methods';
 
 let serializer = 'DS.RESTSerializer';
 let serializerType = '-rest';
 
-SharedAdapterBehavior.all(serializer, serializerType);
+SharedCommonBehavior.all(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockFindRecordSideloadingTests(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockFindAllSideloadingTests(serializer, serializerType);
+SharedAdapterBehavior.mockFindRecordSideloadingTests(serializer, serializerType);
+SharedAdapterBehavior.mockFindAllSideloadingTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockFindRecordEmbeddedTests(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockFindAllEmbeddedTests(serializer, serializerType);
+SharedAdapterBehavior.mockFindRecordEmbeddedTests(serializer, serializerType);
+SharedAdapterBehavior.mockFindAllEmbeddedTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockQueryMetaTests(serializer, serializerType);
+SharedAdapterBehavior.mockQueryMetaTests(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockUpdateWithErrorMessages(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsAssociations(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockUpdateReturnsEmbeddedAssociations(serializer, serializerType);
+SharedAdapterBehavior.mockUpdateWithErrorMessages(serializer, serializerType);
+SharedAdapterBehavior.mockUpdateReturnsAssociations(serializer, serializerType);
+SharedAdapterBehavior.mockUpdateReturnsEmbeddedAssociations(serializer, serializerType);
 
-SharedFactoryGuyTestHelperBehavior.mockCreateReturnsAssociations(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockCreateReturnsEmbeddedAssociations(serializer, serializerType);
-SharedFactoryGuyTestHelperBehavior.mockCreateFailsWithErrorResponse(serializer, serializerType);
+SharedAdapterBehavior.mockCreateReturnsAssociations(serializer, serializerType);
+SharedAdapterBehavior.mockCreateReturnsEmbeddedAssociations(serializer, serializerType);
+SharedAdapterBehavior.mockCreateFailsWithErrorResponse(serializer, serializerType);
 
 moduleFor('serializer:application', `${serializer} #mockCreate custom`, inlineSetup(serializerType));
 
 test("match belongsTo with custom payloadKeyFromModelName function", function(assert) {
-  Ember.run(()=> {
+  Ember.run(() => {
     let done = assert.async();
 
     let entryType = make('entry-type');
     mockCreate('entry').match({ entryType: entryType });
 
     FactoryGuy.store.createRecord('entry', { entryType: entryType }).save()
-      .then((entry)=> {
+      .then((entry) => {
         assert.equal(entry.get('entryType.id'), entryType.id);
         done();
       });
@@ -45,14 +45,14 @@ test("match belongsTo with custom payloadKeyFromModelName function", function(as
 });
 
 test("match hasMany with custom payloadKeyFromModelName function", function(assert) {
-  Ember.run(()=> {
+  Ember.run(() => {
     let done = assert.async();
 
     let entry = make('entry');
     mockCreate('entry-type').match({ entries: [entry] });
 
     FactoryGuy.store.createRecord('entry-type', { entries: [entry] }).save()
-      .then((entryType)=> {
+      .then((entryType) => {
         let entries = entryType.get('entries');
         assert.deepEqual(entries.mapBy('id'), [entry.id]);
         done();

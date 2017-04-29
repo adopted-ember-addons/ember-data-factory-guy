@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy, {makeList, manualSetup} from 'ember-data-factory-guy';
+import FactoryGuy, {manualSetup} from 'ember-data-factory-guy';
 import DS from 'ember-data';
 import DRFAdapter from 'ember-django-adapter/adapters/drf';
 import DRFSerializer from 'ember-django-adapter/serializers/drf';
@@ -62,17 +62,17 @@ const serializerOptions = {
   ]
 };
 
-function setupCustomAdapter(container, adapterType, options) {
-  let store = container.lookup('service:store');
-  let modelAdapter = container.lookup('adapter:' + adapterType);
-  if (Ember.typeOf(options) === 'array') {
-    modelAdapter.reopen.apply(modelAdapter, options);
-  } else {
-    modelAdapter.reopen(options);
-  }
-  modelAdapter.store = store;
-  return modelAdapter;
-}
+//function setupCustomAdapter(container, adapterType, options) {
+//  let store = container.lookup('service:store');
+//  let modelAdapter = container.lookup('adapter:' + adapterType);
+//  if (Ember.typeOf(options) === 'array') {
+//    modelAdapter.reopen.apply(modelAdapter, options);
+//  } else {
+//    modelAdapter.reopen(options);
+//  }
+//  modelAdapter.store = store;
+//  return modelAdapter;
+//}
 
 function setupCustomSerializer(container, serializerType, options) {
   let store = container.lookup('service:store');
@@ -107,7 +107,7 @@ function containerSetup(container, serializerType) {
     serializerType = serializerType === '-json' ? '-default' : serializerType;
     let serializer = container.lookup('serializer:' + serializerType);
 
-    store.adapterFor = function(modelName) {
+    store.adapterFor = function() {
 //      if (modelName.match(/(employee)/)) {
 //        let options = adapterOptions[modelName];
 //        return setupCustomAdapter(container, adapterType, options);
@@ -139,9 +139,9 @@ function containerSetup(container, serializerType) {
   }
 }
 
-function theUsualTeardown(App) {
+function theUsualTeardown() {
   Ember.run(function() {
-    $.mockjax.clear();
+    Ember.$.mockjax.clear();
   });
 }
 
@@ -156,7 +156,7 @@ function inlineSetup(serializerType) {
     }, 
     afterEach: function() {
       Ember.run(function() {
-        $.mockjax.clear();
+        Ember.$.mockjax.clear();
       });
     }
   };

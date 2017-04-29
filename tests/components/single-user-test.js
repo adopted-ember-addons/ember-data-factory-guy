@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FactoryGuy, { make }  from 'ember-data-factory-guy';
+import { make }  from 'ember-data-factory-guy';
 import hbs from 'htmlbars-inline-precompile';
 import startApp from '../helpers/start-app';
 

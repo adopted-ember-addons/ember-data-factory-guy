@@ -3,7 +3,7 @@ import DS from 'ember-data';
 import Ember from 'ember';
 import FactoryGuy, {make, makeNew, makeList, build, buildList, clearStore} from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
-
+import sinon from 'sinon';
 import {inlineSetup} from '../helpers/utility-methods';
 import User from 'dummy/models/user';
 
@@ -76,7 +76,7 @@ test("exposes clearStore method which is a shortcut for FactoryGuy.clearStore", 
 test("#clearStore clears the store of models, and resets the model definition", function(assert) {
   Ember.run(function() {
     let project = make('project');
-    let user = make('user', { projects: [project] });
+    make('user', { projects: [project] });
     let model, definition;
 
     for (model in FactoryGuy.modelDefinitions) {
