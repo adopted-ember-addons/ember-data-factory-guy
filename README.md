@@ -1013,14 +1013,14 @@ In case your API doesn't follow any of these conventions, you can still make a c
 
 #### `FactoryGuy.cacheOnlyMode`
   - Allows you to setup the adapters to prevent them from fetching data with ajax calls
-    - for single models ( `find` ) you have to put something in the store
+    - for single models ( `findRecord` ) you have to put something in the store
     - for collections ( `findAll` ) you don't have to put anything in the store
   - Takes `except` parameter as a list of models you don't want to cache
     - These model requests will go to the server with ajax calls and will need to be mocked
 
 This is helpful, when:
   - you want to set up the test data with `make`/`makeList`, and then prevent
-    calls like `store.find` or `store.findAll` from fetching more data, since you have
+    calls like `store.findRecord` or `store.findAll` from fetching more data, since you have
     already setup the store with `make`/`makeList` data.
   - you have an application that starts up and loads data that is not relevant
     to the test page you are working on.
@@ -1035,7 +1035,7 @@ moduleForAcceptance('Acceptance | Profiles View');
 
 test("Using FactoryGuy.cacheOnlyMode", function() {
   FactoryGuy.cacheOnlyMode();
-  // the store.find call for the user will go out unless there is a user
+  // the store.findRecord call for the user will go out unless there is a user
   // in the store
   make('user', {name: 'current'});
   // the application starts up and makes calls to findAll a few things, but
@@ -1202,7 +1202,7 @@ The `isDestroyed` property is set to `true` when the mock is destroyed.
 
 
 ##### `FactoryGuy.mockFindRecord`
-  - For dealing with finding one record of a model type => `store.find('modelType')`
+  - For dealing with finding one record of a model type => `store.findRecord('modelType', id)`
   - Can pass in arguments just like you would for [`make`](#factoryguymake) or [`build`](#factoryguybuild)
     - `mockFindRecord`( fixture or model name, optional traits, optional attributes object)
   - Takes modifier method `returns()` for controlling the response payload
