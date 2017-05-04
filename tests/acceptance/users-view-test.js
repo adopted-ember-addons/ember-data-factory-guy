@@ -14,51 +14,40 @@ test("Show users by using mockFindAll to create default users", async function(a
   assert.ok(users.length === 3);
 });
 
-test("Show users with projects by build(ing) json and using returns with json", function(assert) {
+test("Show users with projects by build(ing) json and using returns with json", async function(assert) {
   // build a json payload with list of users
   let users = buildList('user', 1);
   mockFindAll('user').returns({ json: users });
 
-  visit('/users');
+  await visit('/users');
 
-  andThen(() => {
-    let users = find('li.user');
-    assert.ok(users.length === 1);
-  });
+  assert.ok(find('li.user').length === 1);
 });
 
-test("Show users by make(ing) list of models and using returns with those models", function(assert) {
+test("Show users by make(ing) list of models and using returns with those models", async function(assert) {
   // make a user with projects ( which will be in the store )
-  let users = makeList('user', { name: "Bo" }, { name: "Bif" });
-  mockFindAll('user').returns({ models: users });
+  let [bo, bif] = makeList('user', { name: "Bo" }, { name: "Bif" });
+  mockFindAll('user').returns({ models: [bo, bif] });
 
-  visit('/users');
+  await visit('/users');
 
-  andThen(() => {
-    let users = find('li.user');
-    assert.ok(find('li.user:first').text().match(users.get('firstObject.name')));
-    assert.ok(find('li.user:last').text().match(users.get('lastObject.name')));
-  });
-
+  assert.ok(find('li.user:first').text().match(bo.get('name')));
+  assert.ok(find('li.user:last').text().match(bif.get('name')));
 });
 
-test("reuse mockFindAll to show return different users", function(assert) {
+test("reuse mockFindAll to show return different users", async function(assert) {
   let mock = mockFindAll('user'); // returns no users
 
-  visit('/users');
+  await visit('/users');
 
-  andThen(() => {
-    assert.equal(find('li.user').length, 0);
-    let sillyPeople = makeList('user', { name: "Bo" }, { name: "Bif" });
-    mock.returns({ models: sillyPeople });
-    visit('/users');
-  });
+  assert.equal(find('li.user').length, 0);
 
-  andThen(() => {
-    assert.equal(find('.user').length, 2);
-    assert.ok(find('.user:first').text().match("Bo"));
-    assert.ok(find('.user:last').text().match("Bif"));
-  });
+  let [bo, bif] = makeList('user', { name: "Bo" }, { name: "Bif" });
+  mock.returns({ models: [bo, bif] });
+  await visit('/users');
 
+  assert.equal(find('.user').length, 2);
+  assert.ok(find('.user:first').text().match(bo.get('name')));
+  assert.ok(find('.user:last').text().match(bif.get('name')));
 });
 
