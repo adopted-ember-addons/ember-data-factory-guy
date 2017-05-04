@@ -34,8 +34,18 @@ export default class {
     }
   }
 
+  /**
+   * Using adapterOptions for snapshot in GET requests
+   * @returns {String}
+   */
   getUrl() {
-    return FactoryGuy.buildURL(this.modelName, this.get('id'), this.requestType, this.queryParams);
+    return FactoryGuy.buildURL(
+      this.modelName,
+      this.get('id'),
+      { adapterOptions: this._adapterOptions },
+      this.requestType,
+      this.queryParams
+    );
   }
 
   getType() {

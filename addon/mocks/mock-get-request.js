@@ -14,6 +14,11 @@ class MockGetRequest extends MockRequest {
     this.queryParams = {};
   }
 
+  adapterOptions(options) {
+    this._adapterOptions = options;
+    return this;
+  }
+
   /**
    Used for inspecting the response that this mock will generate
 

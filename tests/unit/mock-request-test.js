@@ -18,13 +18,13 @@ test("accepts parameters", function(assert) {
   Ember.$.mockjaxSettings.responseTime = 0;
   Ember.$.mockjaxSettings.logging = 0;
 
-  mockSetup({logLevel: 1});
+  mockSetup({ logLevel: 1 });
   assert.equal(FactoryGuy.logLevel, 1);
 
-  mockSetup({responseTime: 10});
+  mockSetup({ responseTime: 10 });
   assert.equal(Ember.$.mockjaxSettings.responseTime, 10);
 
-  mockSetup({mockjaxLogLevel: 4});
+  mockSetup({ mockjaxLogLevel: 4 });
   assert.equal(Ember.$.mockjaxSettings.logging, 4);
 
   FactoryGuy.logLevel = 0;
@@ -38,13 +38,13 @@ moduleFor('serializer:application', 'MockRequest #fails', inlineSetup(serializer
 test("status must be 3XX, 4XX or 5XX", function(assert) {
   const mock = new MockRequest('user');
 
-  assert.throws(()=> {
+  assert.throws(() => {
     mock.fails({ status: 201 });
   });
-  assert.throws(()=> {
+  assert.throws(() => {
     mock.fails({ status: 292 });
   });
-  assert.throws(()=> {
+  assert.throws(() => {
     mock.fails({ status: 104 });
   });
 
@@ -79,7 +79,7 @@ test("with convertErrors set to false, does not convert errors", function(assert
 test("with errors response that will be converted but does not have errors as object key", function(assert) {
   const mock = new MockRequest('user');
   let errors = { phrase: 'poorly worded' };
-  assert.throws(()=> {
+  assert.throws(() => {
     mock.fails({ response: errors, convertErrors: true });
   });
 });
@@ -87,12 +87,12 @@ test("with errors response that will be converted but does not have errors as ob
 moduleFor('serializer:application', 'MockRequest#timeCalled', inlineSetup(serializerType));
 
 test("can verify how many times a queryRecord call was mocked", function(assert) {
-  Ember.run(()=> {
+  Ember.run(() => {
     const done = assert.async();
     const mock = mockQueryRecord('company', {}).returns({ json: build('company') });
 
-    FactoryGuy.store.queryRecord('company', {}).then(()=> {
-      FactoryGuy.store.queryRecord('company', {}).then(()=> {
+    FactoryGuy.store.queryRecord('company', {}).then(() => {
+      FactoryGuy.store.queryRecord('company', {}).then(() => {
         assert.equal(mock.timesCalled, 2);
         done();
       });
@@ -101,12 +101,12 @@ test("can verify how many times a queryRecord call was mocked", function(assert)
 });
 
 test("can verify how many times a findAll call was mocked", function(assert) {
-  Ember.run(()=> {
+  Ember.run(() => {
     const done = assert.async();
     const mock = mockFindAll('company');
 
-    FactoryGuy.store.findAll('company').then(()=> {
-      FactoryGuy.store.findAll('company').then(()=> {
+    FactoryGuy.store.findAll('company').then(() => {
+      FactoryGuy.store.findAll('company').then(() => {
         assert.equal(mock.timesCalled, 2);
         done();
       });
@@ -115,15 +115,15 @@ test("can verify how many times a findAll call was mocked", function(assert) {
 });
 
 test("can verify how many times an update call was mocked", function(assert) {
-  Ember.run(()=> {
+  Ember.run(() => {
     const done = assert.async();
     const company = make('company');
     const mock = mockUpdate(company);
 
     company.set('name', 'ONE');
-    company.save().then(()=> {
+    company.save().then(() => {
       company.set('name', 'TWO');
-      company.save().then(()=> {
+      company.save().then(() => {
         assert.equal(mock.timesCalled, 2);
         done();
       });
@@ -189,7 +189,7 @@ test("succeeds even if the given URL has query parameters that don't match", fun
 moduleFor('serializer:application', 'MockRequest #disable, #enable, and #destroy', inlineSetup(serializerType));
 
 test("can enable, disable, and destroy mock", function(assert) {
-  Ember.run(()=> {
+  Ember.run(() => {
     const done = assert.async();
     let json1 = build('user');
     let json2 = build('user');
@@ -198,17 +198,17 @@ test("can enable, disable, and destroy mock", function(assert) {
 
     assert.notOk(mock1.isDestroyed, "isDestroyed is false initially");
 
-    FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
+    FactoryGuy.store.queryRecord('user', { id: 1 }).then((data) => {
       assert.equal(data.get('id'), json1.get('id'), "the first mock works initially");
       mock1.disable();
-      FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
+      FactoryGuy.store.queryRecord('user', { id: 1 }).then((data) => {
         assert.equal(data.get('id'), json2.get('id'), "the first mock doesn't work once it's disabled");
         mock1.enable();
-        FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
+        FactoryGuy.store.queryRecord('user', { id: 1 }).then((data) => {
           assert.equal(data.get('id'), json1.get('id'), "the first mock works again after enabling");
           mock1.destroy();
           assert.ok(mock1.isDestroyed, "isDestroyed is set to true once the mock is destroyed");
-          FactoryGuy.store.queryRecord('user', { id: 1 }).then((data)=> {
+          FactoryGuy.store.queryRecord('user', { id: 1 }).then((data) => {
             assert.equal(data.get('id'), json2.get('id'), "the destroyed first mock doesn't work");
             done();
           });
@@ -230,18 +230,6 @@ test("#get method to access payload", function(assert) {
   assert.equal(mock.get('name'), 'User1');
 });
 
-test("#getUrl uses urlForFindRecord if it is set on the adapter", function(assert) {
-  let mock1 = mockFindRecord('user');
-  assert.equal(mock1.getUrl(), '/users/1');
-
-  let adapter = FactoryGuy.store.adapterFor('user');
-  sinon.stub(adapter, 'urlForFindRecord').returns('/dude/1');
-
-  assert.equal(mock1.getUrl(), '/dude/1');
-  adapter.urlForFindRecord.restore();
-});
-
-
 moduleFor('serializer:application', 'MockFindRecord #getUrl', inlineSetup(serializerType));
 
 test("with proxy", function(assert) {
@@ -256,18 +244,45 @@ test("with json", function(assert) {
   assert.equal(mock.getUrl(), '/users/1');
 });
 
+test("uses urlForFindRecord if it is set on the adapter", function(assert) {
+  let mock = mockFindRecord('user');
+  assert.equal(mock.getUrl(), '/users/1', 'default ember-data findRecord url');
+
+  let adapter = FactoryGuy.store.adapterFor('user');
+  let findRecordStub = sinon.stub(adapter, 'urlForFindRecord').returns('/dude/1');
+
+  assert.equal(mock.getUrl(), '/dude/1', 'factory guy uses urlForFindRecord from adapter');
+  assert.ok(findRecordStub.calledOnce);
+  assert.ok(findRecordStub.calledWith(1, 'user'), 'correct parameters passed to urlForFindRecord');
+
+  adapter.urlForFindRecord.restore();
+});
+
+test("passes adapterOptions to urlForFindRecord", function(assert) {
+  let options = { e: 1 };
+  let mock = mockFindRecord('user').adapterOptions(options);
+
+  let adapter = FactoryGuy.store.adapterFor('user');
+  let findRecordStub = sinon.stub(adapter, 'urlForFindRecord');
+
+  mock.getUrl();
+  assert.ok(findRecordStub.calledOnce);
+  assert.ok(findRecordStub.calledWith(1, 'user', { adapterOptions: options }), 'adapterOptions passed to urlForFindRecord');
+
+  adapter.urlForFindRecord.restore();
+});
 
 moduleFor('serializer:application', 'MockFindRecord #fails', inlineSetup(serializerType));
 
 test("with errors in response", function(assert) {
-  Ember.run(()=> {
+  Ember.run(() => {
     const done = assert.async();
 
     const response = { errors: { description: ['bad'] } };
     const mock = mockFindRecord('profile').fails({ response });
 
     FactoryGuy.store.findRecord('profile', 1)
-      .catch(()=> {
+      .catch(() => {
         assert.equal(mock.timesCalled, 1);
         assert.ok(true);
         done();
@@ -288,17 +303,35 @@ test("#get method to access payload", function(assert) {
   assert.deepEqual(mock.get(0), { id: 1, name: 'User1', style: 'normal' });
 });
 
-test("#getUrl uses urlForFindAll if it is set on the adapter", function(assert) {
-  let mock1 = mockFindAll('user');
-  assert.equal(mock1.getUrl(), '/users');
+moduleFor('serializer:application', 'MockFindAll #getUrl', inlineSetup(serializerType));
+
+test("uses urlForFindAll if it is set on the adapter", function(assert) {
+  let mock = mockFindAll('user');
+  assert.equal(mock.getUrl(), '/users', 'default ember-data findRecord url');
 
   let adapter = FactoryGuy.store.adapterFor('user');
-  sinon.stub(adapter, 'urlForFindAll').returns('/zombies');
+  let findAllStub = sinon.stub(adapter, 'urlForFindAll').returns('/zombies');
 
-  assert.equal(mock1.getUrl(), '/zombies');
+  assert.equal(mock.getUrl(), '/zombies', 'factory guy uses urlForFindRecord from adapter');
+  assert.ok(findAllStub.calledOnce);
+  assert.ok(findAllStub.calledWith('user'), 'correct parameters passed to urlForFindAll');
+
   adapter.urlForFindAll.restore();
 });
 
+test("#getUrl passes adapterOptions to urlForFindAll", function(assert) {
+  let options = { e: 1 };
+  let mock = mockFindAll('user').adapterOptions(options);
+
+  let adapter = FactoryGuy.store.adapterFor('user');
+  let findRecordStub = sinon.stub(adapter, 'urlForFindAll');
+
+  mock.getUrl();
+  assert.ok(findRecordStub.calledOnce);
+  assert.ok(findRecordStub.calledWith('user', { adapterOptions: options }), 'adapterOptions passed to urlForFindAll');
+
+  adapter.urlForFindAll.restore();
+});
 
 moduleFor('serializer:application', 'MockQuery', inlineSetup(serializerType));
 
@@ -321,28 +354,28 @@ test("json payload argument should be an object", function(assert) {
 test("mock query returns() accepts only ids, or models or json keys", function(assert) {
   const handler = mockQuery('user', { name: 'Bob' });
   // In those tests, values don't matter
-  assert.throws(()=> {
+  assert.throws(() => {
     handler.returns({
       ids: undefined,
       models: undefined
     });
   });
 
-  assert.throws(()=> {
+  assert.throws(() => {
     handler.returns({
       ids: undefined,
       json: undefined
     });
   });
 
-  assert.throws(()=> {
+  assert.throws(() => {
     handler.returns({
       models: undefined,
       json: undefined
     });
   });
 
-  assert.throws(()=> {
+  assert.throws(() => {
     handler.returns({
       ids: undefined,
       models: undefined,
@@ -364,7 +397,7 @@ test("have access to handler being used by mockjax", function(assert) {
 });
 
 test("#getUrl uses urlForQuery if it is set on the adapter", function(assert) {
-  let queryParams = {zip: 'it'};
+  let queryParams = { zip: 'it' };
   let mock1 = mockQuery('user', queryParams);
   assert.equal(mock1.getUrl(), '/users');
 
@@ -386,40 +419,40 @@ test("#get method to access payload", function(assert) {
 test("returns() method accepts only id, model, json or header as keys", function(assert) {
   const handler = mockQueryRecord('user');
 
-  assert.throws(()=> {
+  assert.throws(() => {
     handler.returns({
       ids: undefined,
     });
   });
 
-  assert.throws(()=> {
+  assert.throws(() => {
     handler.returns({
       models: undefined,
     });
   });
 
-  assert.throws(()=> {
+  assert.throws(() => {
     handler.returns({
       id: undefined,
       model: undefined
     });
   });
 
-  assert.throws(()=> {
+  assert.throws(() => {
     handler.returns({
       id: undefined,
       json: undefined
     });
   });
 
-  assert.throws(()=> {
+  assert.throws(() => {
     handler.returns({
       model: undefined,
       json: undefined
     });
   });
 
-  assert.throws(()=> {
+  assert.throws(() => {
     handler.returns({
       id: undefined,
       model: undefined,
@@ -434,12 +467,12 @@ test("have access to handler being used by mockjax", function(assert) {
 });
 
 test("using fails makes the request fail", function(assert) {
-  Ember.run(()=> {
+  Ember.run(() => {
     let done = assert.async();
 
     mockQueryRecord('user').fails();
     FactoryGuy.store.queryRecord('user', {})
-      .catch(()=> {
+      .catch(() => {
         assert.ok(true);
         done();
       });
@@ -460,7 +493,7 @@ test("using returns with headers adds the headers to the response", function(ass
     done();
   });
 
-  FactoryGuy.store.queryRecord('company', queryParams).catch(()=> {
+  FactoryGuy.store.queryRecord('company', queryParams).catch(() => {
   });
 });
 
@@ -472,9 +505,9 @@ test("using returns 'model' with array of DS.Models throws error", function(asse
 });
 
 test("#getUrl uses urlForQueryRecord if it is set on the adapter", function(assert) {
-  let queryParams = {zip: 'it'};
+  let queryParams = { zip: 'it' };
   let mock1 = mockQueryRecord('user', queryParams);
-  
+
   assert.equal(mock1.getUrl(), '/users');
 
   let adapter = FactoryGuy.store.adapterFor('user');

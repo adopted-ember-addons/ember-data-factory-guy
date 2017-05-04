@@ -525,13 +525,15 @@ class FactoryGuy {
   /**
    Build url's for the mockjax calls. Proxy to the adapters buildURL method.
 
-   @param {String} typeName model type name like 'user' for User model
+   @param {String} modelName model type name like 'user' for User model
    @param {String} id
-   @return {String} url
+   @param {String} snapshot usually null, but passing adapterOptions for GET requests
+   @return {String} requestType string like 'findRecord', 'queryRecord'
+   @return {String} queryParams optional
    */
-  buildURL(modelName, id = null, requestType, queryParams) {
+  buildURL(modelName, id = null, snapshot, requestType, queryParams) {
     const adapter = this.store.adapterFor(modelName);
-    return adapter.buildURL(modelName, id, null, requestType, queryParams);
+    return adapter.buildURL(modelName, id, snapshot, requestType, queryParams);
   }
 
   /**
