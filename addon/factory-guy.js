@@ -67,7 +67,7 @@ class FactoryGuy {
    *
    * logLevel: 0 is off, 1 is on
    *
-   * @param opts
+   * @param logLevel [0/1]
    */
   settings({ logLevel = 0 } = {}) {
     this.logLevel = logLevel;
@@ -155,7 +155,7 @@ class FactoryGuy {
 
    ```
 
-   @param   {String|Function} value previously declared sequence name or
+   @param {String|Function} nameOrFunction value previously declared sequence name or
    an inline function to use as the sequence
    @returns {Function} wrapper function that is called by the model
    definition containing the sequence
@@ -201,7 +201,7 @@ class FactoryGuy {
    @returns {Function} wrapper function that will build the association json
    */
   belongsTo(fixtureName, opts) {
-    return ()=> this.buildRaw(fixtureName, opts);
+    return () => this.buildRaw(fixtureName, opts);
   }
 
   /**
@@ -233,7 +233,7 @@ class FactoryGuy {
    @returns {Function} wrapper function that will build the association json
    */
   hasMany(...args) {
-    return ()=> this.buildRawList.apply(this, args);
+    return () => this.buildRawList.apply(this, args);
   }
 
   /**
@@ -350,7 +350,7 @@ class FactoryGuy {
     let fixture = this.buildRaw.apply(this, arguments);
     let data = this.fixtureBuilder(modelName).convertForMake(modelName, fixture);
 
-    const model = Ember.run(()=> this.store.push(data));
+    const model = Ember.run(() => this.store.push(data));
 
     let definition = lookupDefinitionForFixtureName(args.name);
     if (definition.hasAfterMake()) {
@@ -382,7 +382,7 @@ class FactoryGuy {
 
     let data = this.fixtureBuilder(modelName).convertForBuild(modelName, fixture, { transformKeys: false });
 
-    const model = Ember.run(()=> this.store.createRecord(modelName, data.get()));
+    const model = Ember.run(() => this.store.createRecord(modelName, data.get()));
     return model;
   }
 
@@ -431,7 +431,7 @@ class FactoryGuy {
       return arr;
     }
 
-    return args.map((innerArgs)=> {
+    return args.map((innerArgs) => {
       if (Ember.typeOf(innerArgs) !== 'array') {
         innerArgs = [innerArgs];
       }
@@ -542,13 +542,13 @@ class FactoryGuy {
 
    @params {Array} except list of models you don't want to mark as cached
    */
-  cacheOnlyMode({ except=[] }={}) {
+  cacheOnlyMode({ except = [] } = {}) {
     let store = this.store;
     let findAdapter = store.adapterFor.bind(store);
 
     store.adapterFor = function(name) {
       let adapter = findAdapter(name);
-      let shouldCache = ()=> {
+      let shouldCache = () => {
         if (Ember.isPresent(except)) {
           return (Ember.A(except).includes(name));
         }
