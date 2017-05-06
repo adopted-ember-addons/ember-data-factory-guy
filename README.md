@@ -1130,7 +1130,6 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
       ```javascript
         let mock = mockFindAll('user').returns({headers: {'X-Man': "Wolverine"});
         mock.returns({headers: {'X-Weapon': "Claws"});
-      ```
   - these mocks are are reusable
     - so you can simulate making the same ajax call ( url ) and return a different payload
 - http POST/PUT/DELETE
@@ -1207,6 +1206,7 @@ The `isDestroyed` property is set to `true` when the mock is destroyed.
     - `mockFindRecord`( fixture or model name, optional traits, optional attributes object)
   - Takes modifier method `returns()` for controlling the response payload
     - returns( model / json / id )
+  - Takes modifier method `adapterOptions()` for setting adapterOptions ( get passed to urlForFindRecord )
   - Sample acceptance tests using `mockFindRecord`: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
 Usage:
@@ -1267,13 +1267,26 @@ Usage:
   mockFindRecord(profile).fails();
   // mock.get('id') === profile.id
 ```
-
+- To use adapterOptions
+```javascript
+  let mock = mockFindRecord('user').adapterOptions({friendly: true});
+  // used when urlForFindRecord (defnied in adapter) uses them
+  urlForFindRecord(id, modelName, snapshot) {
+    if (snapshot && snapshot.adapterOptions) {
+       let { adapterOptions }  = snapshot; // => {friendly: true}
+       // ... blah blah blah 
+    }
+    // ... blah blah   
+  }
+```
 ##### `FactoryGuy.mockFindAll`
   - For dealing with finding all records for a model type => `store.findAll(modelType)`
   - Takes same parameters as [makeList](#factoryguymakelist)
     - `mockFindAll`( fixture or model name, optional number, optional traits, optional attributes object)
   - Takes modifier method `returns()` for controlling the response payload
     - returns( models / json / ids )
+  - Takes modifier method `adapterOptions()` for setting adapterOptions ( get passed to urlForFindRecord )
+    - used just as in mockFindRecord ( see example there )
   - Sample acceptance tests using `mockFindAll`: [users-view-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
 
 Usage:
