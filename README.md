@@ -1270,7 +1270,7 @@ Usage:
 - To use adapterOptions
 ```javascript
   let mock = mockFindRecord('user').adapterOptions({friendly: true});
-  // used when urlForFindRecord (defnied in adapter) uses them
+  // used when urlForFindRecord (defined in adapter) uses them
   urlForFindRecord(id, modelName, snapshot) {
     if (snapshot && snapshot.adapterOptions) {
        let { adapterOptions }  = snapshot; // => {friendly: true}
