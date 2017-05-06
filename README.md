@@ -1285,7 +1285,7 @@ Usage:
     - `mockFindAll`( fixture or model name, optional number, optional traits, optional attributes object)
   - Takes modifier method `returns()` for controlling the response payload
     - returns( models / json / ids )
-  - Takes modifier method `adapterOptions()` for setting adapterOptions ( get passed to urlForFindRecord )
+  - Takes modifier method `adapterOptions()` for setting adapterOptions ( get passed to urlForFindAll )
     - used just as in mockFindRecord ( see example there )
   - Sample acceptance tests using `mockFindAll`: [users-view-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
 
