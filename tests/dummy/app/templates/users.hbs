@@ -1,1 +1,7 @@
 {{user-list users=model deleteUser=(action "deleteUser")}}
+{{#if next}}
+  <span class="meta">Next Page</span>
+{{/if}}
+{{#if previous}}
+  <span class="meta">Previous Page</span>
+{{/if}}

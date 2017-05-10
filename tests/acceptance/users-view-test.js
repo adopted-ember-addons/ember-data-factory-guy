@@ -1,5 +1,5 @@
 import {test} from 'qunit';
-import {buildList, makeList, mockFindAll} from 'ember-data-factory-guy';
+import {buildList, makeList, mockFindAll, mockQuery}  from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
 moduleForAcceptance('Acceptance | Users View');
@@ -51,3 +51,11 @@ test("reuse mockFindAll to show return different users", async function(assert) 
   assert.ok(find('.user:last').text().match(bif.get('name')));
 });
 
+test('Load meta data returned from the server', async function(assert) {
+  let users = buildList('user', 1).add({ meta: { previous: '/profiles?page=1', next: '/profiles?page=3' }});
+  mockQuery('user', { page: 1 }).returns({ json: users });
+
+  await visit('/users');
+
+  assert.equal(find('.meta').length, 2);
+});
