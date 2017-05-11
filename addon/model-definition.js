@@ -181,6 +181,7 @@ class ModelDefinition {
     }
 
     if (this.isModelAFragment()) {
+
       delete fixture.id;
     }
     delete fixture._generatedId;

@@ -83,6 +83,15 @@ test("using returns( ids )", async function(assert) {
   assert.ok(find('.user .name').text().match("Bob"));
 });
 
+test('Load meta data returned from the server', async function(assert) {
+  let users = buildList('user', 1).add({ meta: { previous: '/search?page=1', next: '/search?page=3' } });
+  mockQuery('user').returns({ json: users });
+
+  await visit('/search');
+  await search("Anyone");
+
+  assert.equal(find('.meta').length, 2);
+});
 
 test("using fails to mock a failed query", async function(assert) {
   let errors = { errors: { description: ['invalid'] } };

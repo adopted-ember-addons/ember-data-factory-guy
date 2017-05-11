@@ -4,3 +4,9 @@
 {{#if model.errors}}
   <div>Errors {{model.message}}</div>
 {{/if}}
+{{#if nextPage}}
+  <span class="meta">Next Page</span>
+{{/if}}
+{{#if previousPage}}
+  <span class="meta">Previous Page</span>
+{{/if}}
