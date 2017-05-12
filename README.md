@@ -1899,5 +1899,53 @@ describe('Admin View', function() {
 });
 ```
 
+#### Tip 5: Mocking ember-data store in unit test
+ - Whenever mocking a function from the store that will perform a request to your server, the test needs to be written with assert.sync();
+ - Assuming you have such service:
+
+ ```
+//app/services/user-list.js
+import Ember from 'ember';
+
+export default Ember.Service.extend({
+  store: Ember.inject.service(),
+
+  fetch() {
+    return this.get('store').query('user', {});
+  },
+});
+```
+ - Here is the equivalent test:
+```
+//tests/unit/services/user-list.js
+import { moduleFor, test } from 'ember-qunit';
+import { mockSetup, mockTeardown, manualSetup, mockQuery } from 'ember-data-factory-guy';
+
+moduleFor('service:user-list', 'Unit | Service | User List', {
+  needs: [
+    'model:user',
+  ],
+
+  beforeEach() {
+    manualSetup(this.container);
+    mockSetup();
+  },
+
+  afterEach() {
+    mockTeardown();
+  },
+});
+
+test('it fetches users', function(assert) {
+  let done = assert.async();
+  let service = this.subject();
+  mockQuery('user', {});
+  service.fetch().then((data) => {
+    assert.ok(true);
+    done();
+  });
+});
+ ```
+
 ### ChangeLog
   - [Release Notes](/releases)
