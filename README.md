@@ -1869,11 +1869,11 @@ describe('Admin View', function() {
  - You want to use mockFindRecord, mockQuery etc... in unit test
    - Have to remember to call mockSetup, mockTeardown
  - Two ways to handle asyncronous test
-   - async / await ( most elegant ) 
+   - async / await ( most elegant ) [Sample test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L44) 
      - need to declare polyfill for ember-cli-babel options 
-       in ember-cli-brocolli
+       in [ember-cli-build](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/ember-cli-build.js#L7)
          
-   - qunit: `assert.async()` /  mocha: `done`  
+   - using `assert.async()` (qunit) / `done` (mocha) [Sample test]([Sample test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L53))  
     
  
 #### Tip 5: Testing model's custom `serialize()` method
