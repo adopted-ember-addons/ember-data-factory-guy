@@ -48,3 +48,51 @@ test("Show employee by building(ing) json ( with hasMany fragment added manually
   assert.ok(find('.name').text().match(`${employee.get('name').firstName} ${employee.get('name').lastName}`));
   assert.equal(find('.department-employment').length, 2, "fragment array works");
 });
+
+test("The right content is returned when passing the model to mockFind", function () {
+  let employee = make('employee', 'jon');
+
+  mockFind(employee);
+  visit('/employee/' + employee.get('id'));
+
+  andThen(()=>{
+    ok(find('.name').text().match(`Jon Snow`));
+    equal(find('.type').text(), `Employment Type: contractor`);
+  });
+});
+
+test("The right content is returned when using json", function () {
+  let employee = build('employee', 'jon');
+
+  mockFind('employee').returns({json: employee});
+  visit('/employee/' + employee.get('id'));
+
+  andThen(()=>{
+    ok(find('.name').text().match(`Jon Snow`));
+    equal(find('.type').text(), `Employment Type: contractor`);
+  });
+});
+
+test("The right content is returned when using model", function () {
+  let employee = make('employee', 'jon');
+
+  mockFind('employee').returns({model: employee});
+  visit('/employee/' + employee.get('id'));
+
+  andThen(()=>{
+    ok(find('.name').text().match(`Jon Snow`));
+    equal(find('.type').text(), `Employment Type: contractor`);
+  });
+});
+
+test("The right content is returned when using id", function () {
+  let employee = make('employee', 'jon');
+
+  mockFind('employee').returns({id: employee.get('id')});
+  visit('/employee/' + employee.get('id'));
+
+  andThen(()=>{
+    ok(find('.name').text().match(`Jon Snow`));
+    equal(find('.type').text(), `Employment Type: contractor`);
+  });
+});

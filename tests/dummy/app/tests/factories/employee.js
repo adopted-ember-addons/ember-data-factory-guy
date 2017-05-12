@@ -1,11 +1,13 @@
 import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define('employee', {
+  polymorphic: false,
   default: {
     name: FactoryGuy.belongsTo('name'),
     titles: ['Mr.', 'Dr.'],
     gender: 'Male',
-    birthDate: new Date('2016-05-01')
+    birthDate: new Date('2016-05-01'),
+    type: 'contractor'
   },
   traits: {
     with_designation:{
