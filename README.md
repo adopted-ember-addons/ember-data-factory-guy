@@ -1768,42 +1768,7 @@ Usage:
 
   - Check out [makeList](#factoryguymakelist) and [buildList](#factoryguybuildlist) for more ideas
 
-#### Tip 2: Testing model's custom `serialize()` method
-  - The fact that you can match on attributes in `mockUpdate` and `mockCreate` means
-   that you can test a custom `serialize()` method in a model serializer
-
-```javascript
-
-  // app/serializers/person.js
-  export default DS.RESTSerializer.extend({
-
-    // let's say you're modifying all names to be Japanese honorific style
-    serialize: function(snapshot, options) {
-      var json = this._super(snapshot, options);
-  
-      let honorificName = [snapshot.record.get('name'), 'san'].join('-');
-      json.name = honorificName;
-  
-      return json;
-    }
-  });
-
-  // somewhere in your tests
-  let person = make('person', {name: "Daniel"});
-  mockUpdate(person).match({name: "Daniel-san"});
-  person.save(); // will succeed
-  // and voila, you have just tested the serializer is converting the name properly
-```
-
-- You could also test ```serialize()``` method in a simpler way by doing this:
-
-```javascript  
-  let person = make('person', {name: "Daniel"});
-  let json = person.serialize();
-  assert.equal(json.name, 'Daniel-san');
-```
-
-#### Tip 3: Building static / fixture like data into the factories.
+#### Tip 2: Building static / fixture like data into the factories.
 
  - States are the classic case. There is a state model, and there are 50 US states. 
  - You could use a strategy to get them with traits like this:
@@ -1847,7 +1812,7 @@ Usage:
   let states = makeList('state', 3); // or however many states you have 
 ```
 
-#### Tip 4: Using Scenario class in tests
+#### Tip 3: Using Scenario class in tests
   - encapsulate data interaction in a scenario class
     - sets up data 
     - has helper methods to retrieve data 
@@ -1897,6 +1862,53 @@ describe('Admin View', function() {
     });
   });
 });
+```
+
+#### Tip 4: Testing mocks ( async testing ) in unit tests
+
+ - You want to use mockFindRecord, mockQuery etc... in unit test
+   - Have to remember to call mockSetup, mockTeardown
+ - Two ways to handle asyncronous test
+   - async / await ( most elegant ) 
+     - need to declare polyfill for ember-cli-babel options 
+       in ember-cli-brocolli
+         
+   - qunit: `assert.async()` /  mocha: `done`  
+    
+ 
+#### Tip 5: Testing model's custom `serialize()` method
+  - The fact that you can match on attributes in `mockUpdate` and `mockCreate` means
+   that you can test a custom `serialize()` method in a model serializer
+
+```javascript
+
+  // app/serializers/person.js
+  export default DS.RESTSerializer.extend({
+
+    // let's say you're modifying all names to be Japanese honorific style
+    serialize: function(snapshot, options) {
+      var json = this._super(snapshot, options);
+  
+      let honorificName = [snapshot.record.get('name'), 'san'].join('-');
+      json.name = honorificName;
+  
+      return json;
+    }
+  });
+
+  // somewhere in your tests
+  let person = make('person', {name: "Daniel"});
+  mockUpdate(person).match({name: "Daniel-san"});
+  person.save(); // will succeed
+  // and voila, you have just tested the serializer is converting the name properly
+```
+
+- You could also test ```serialize()``` method in a simpler way by doing this:
+
+```javascript  
+  let person = make('person', {name: "Daniel"});
+  let json = person.serialize();
+  assert.equal(json.name, 'Daniel-san');
 ```
 
 ### ChangeLog
