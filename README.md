@@ -495,13 +495,12 @@ Then to build the fixture:
 
 
 ### Callbacks 
-  - `afterMake` ( Going to be deprecated soon )
-  - Uses transient attributes
-  - Unfortunately the model will fire 'onload' event before this `afterMake` is called.
-    - So all data will not be setup by then if you rely on `afterMake` to finish by the
+  - `afterMake`
+    - Uses transient attributes
+    - Unfortunately the model will fire 'onload' event before this `afterMake` is called.
+      - So all data will not be setup by then if you rely on `afterMake` to finish by the
      time `onload` is called.
-    - In this case, just use transient attributes without the `afterMake`
-    - Probably will remove `afterMake` soon due to this issue
+      - In this case, just use transient attributes without the `afterMake`
       
 Assuming the factory-guy model definition defines `afterMake` function:
 
