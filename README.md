@@ -1758,7 +1758,7 @@ Usage:
   ```javascript
    let json    = buildList('widget', 'square', 'round', ['round','broken']);
    let widgets = makeList('widget', 'square', 'round', ['round','broken']);
-   let [roundWidget, squareWidget, roundBrokenWidget] = widgets;
+   let [squareWidget, roundWidget, roundBrokenWidget] = widgets;
   ```
     - you just built/made 3 different widgets from traits ('square', 'round', 'broken')
     - the first will have the square trait
