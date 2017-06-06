@@ -157,7 +157,6 @@ export default class {
 
     let transformer = container.lookup('transform:' + type);
     return transformer.serialize.bind(transformer);
-//    return container.lookup('transform:' + type).serialize;
   }
 
   extractAttributes(modelName, fixture) {
