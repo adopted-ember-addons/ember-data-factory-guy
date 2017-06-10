@@ -1,6 +1,6 @@
 import {moduleFor, test} from 'ember-qunit';
 import Ember from 'ember';
-import FactoryGuy, {make, build, buildList, mockCreate} from 'ember-data-factory-guy';
+import FactoryGuy, {make, build, buildList, mockFindRecord, mockCreate} from 'ember-data-factory-guy';
 
 import SharedCommonBehavior from './shared-common-behaviour';
 import SharedAdapterBehaviour from './shared-adapter-behaviour';
@@ -22,17 +22,34 @@ SharedAdapterBehaviour.mockUpdateReturnsAssociations(serializer, serializerType)
 SharedAdapterBehaviour.mockCreateReturnsAssociations(serializer, serializerType);
 SharedAdapterBehaviour.mockCreateFailsWithErrorResponse(serializer, serializerType);
 
+moduleFor('serializer:application', `${serializer} #mockFindRecord custom`, inlineSetup(serializerType));
+
+test("when returns json (plain) is used", function(assert) {
+  Ember.run(() => {
+    let done      = assert.async(),
+        json      = { data: { id: 1, type: 'profile', attributes: { description: 'the desc' } } },
+        mock      = mockFindRecord('profile').returns({ json }),
+        profileId = mock.get('id');
+
+    FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
+      assert.equal(profile.get('id'), profileId);
+      assert.equal(profile.get('description'), json.get('description'));
+      done();
+    });
+  });
+});
+
 moduleFor('serializer:application', `${serializer} #mockCreate custom`, inlineSetup(serializerType));
 
 test("match belongsTo with custom payloadKeyFromModelName function", function(assert) {
-  Ember.run(()=> {
+  Ember.run(() => {
     let done = assert.async();
 
     let entryType = make('entry-type');
     mockCreate('entry').match({ entryType: entryType });
 
     FactoryGuy.store.createRecord('entry', { entryType: entryType }).save()
-      .then((entry)=> {
+      .then((entry) => {
         assert.equal(entry.get('entryType.id'), entryType.id);
         done();
       });
@@ -40,14 +57,14 @@ test("match belongsTo with custom payloadKeyFromModelName function", function(as
 });
 
 test("match hasMany with custom payloadKeyFromModelName function", function(assert) {
-  Ember.run(()=> {
+  Ember.run(() => {
     let done = assert.async();
 
     let entry = make('entry');
     mockCreate('entry-type').match({ entries: [entry] });
 
     FactoryGuy.store.createRecord('entry-type', { entries: [entry] }).save()
-      .then((entryType)=> {
+      .then((entryType) => {
         let entries = entryType.get('entries');
         assert.deepEqual(entries.mapBy('id'), [entry.id]);
         done();
@@ -635,7 +652,7 @@ test("using custom serializer with property forbidden for serialization", functi
       serialize: false
     }
   };
-  let profile = build('profile', 'with_created_at', {created_at: date});
+  let profile = build('profile', 'with_created_at', { created_at: date });
   assert.equal(profile.get("created-at"), date.toJSON());
 });
 
@@ -810,7 +827,7 @@ test("with model that has primaryKey defined in serializer ( FactoryGuy sets pri
 });
 
 test("with model that has primaryKey defined in serializer ( user sets primaryKey value )", function(assert) {
-  let cat = build('cat', {catId: 'meow1'});
+  let cat = build('cat', { catId: 'meow1' });
 
   assert.equal(cat.get('id'), 'meow1');
 });

@@ -26,10 +26,10 @@ export default class {
    * @returns {*}
    */
   transformKey(modelName, key) {
-    let converter = this.getConverter();
-    let model = this.store.modelFor(modelName);
-    var relationshipsByName = Ember.get(model, 'relationshipsByName');
-    var relationship = relationshipsByName.get(key);
+    let converter           = this.getConverter(),
+        model               = this.store.modelFor(modelName),
+        relationshipsByName = Ember.get(model, 'relationshipsByName'),
+        relationship        = relationshipsByName.get(key);
     if (relationship) {
       return converter.transformRelationshipKey(relationship);
     }
@@ -63,7 +63,7 @@ export default class {
     this.wrapPayload(modelName, json, converter);
     return json;
   }
-  
+
   /**
    Convert to the ember-data JSONAPI adapter specification, since FactoryGuy#make
    pushes jsonapi data into the store. For make builds, don't transform attr keys,
@@ -96,9 +96,9 @@ export default class {
     Ember.assert('[ember-data-factory-guy] Your error response must have an errors key. The errors hash format is: {errors: {name: ["name too short"]}}', object.errors);
     let errors = object.errors;
     for (let key in errors) {
-      let description = Ember.typeOf(errors[key]) === "array" ? errors[key][0] : errors[key];
-      let source = { pointer: "data/attributes/" + key };
-      let newError = { detail: description, title: "invalid " + key, source: source };
+      let description = Ember.typeOf(errors[key]) === "array" ? errors[key][0] : errors[key],
+          source      = { pointer: "data/attributes/" + key },
+          newError    = { detail: description, title: "invalid " + key, source: source };
       jsonAPIErrors.push(newError);
     }
     return { errors: jsonAPIErrors };

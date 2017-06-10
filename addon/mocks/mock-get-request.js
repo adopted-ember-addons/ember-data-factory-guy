@@ -108,9 +108,13 @@ class MockGetRequest extends MockRequest {
         break;
       }
       case 'json':
-        this.setResponseJson(options.json);
+        json = options.json;
+        if (!json.get) {
+          // need to wrap a payload so the json can at least respond to 'get' method
+          this.fixtureBuilder.wrapPayload(modelName, json);
+        }
+        this.setResponseJson(json);
         break;
-
       case 'attrs': {
         let currentId = this.responseJson.get('id');
         let modelParams = assign({ id: currentId }, options.attrs);

@@ -239,7 +239,7 @@ test("with proxy", function(assert) {
 });
 
 test("with json", function(assert) {
-  const json = { id: 1, name: "Dan" };
+  const json = { data: { id: 1, name: "Dan" } };
   const mock = mockFindRecord('user').returns({ json });
   assert.equal(mock.getUrl(), '/users/1');
 });

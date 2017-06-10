@@ -1,5 +1,6 @@
+import Ember from 'ember';
 import {moduleFor, test} from 'ember-qunit';
-import {build, buildList} from 'ember-data-factory-guy';
+import FactoryGuy, {build, buildList, mockFindRecord} from 'ember-data-factory-guy';
 
 import SharedCommonBehavior from './shared-common-behaviour';
 import SharedAdapterBehaviour from './shared-adapter-behaviour';
@@ -18,6 +19,23 @@ SharedAdapterBehaviour.mockUpdateReturnsEmbeddedAssociations(serializer, seriali
 
 SharedAdapterBehaviour.mockCreateReturnsEmbeddedAssociations(serializer, serializerType);
 SharedAdapterBehaviour.mockCreateFailsWithErrorResponse(serializer, serializerType);
+
+moduleFor('serializer:application', `${serializer} #mockFindRecord custom`, inlineSetup(serializerType));
+
+test("when returns json (plain) is used", function(assert) {
+  Ember.run(() => {
+    let done      = assert.async(),
+        json      = { id: 1, description: 'the desc' },
+        mock      = mockFindRecord('profile').returns({ json }),
+        profileId = mock.get('id');
+
+    FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
+      assert.equal(profile.get('id'), profileId);
+      assert.equal(profile.get('description'), json.get('description'));
+      done();
+    });
+  });
+});
 
 moduleFor('serializer:application', `${serializer} FactoryGuy#build get`, inlineSetup(serializerType));
 
