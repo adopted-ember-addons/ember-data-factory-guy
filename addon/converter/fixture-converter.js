@@ -1,4 +1,5 @@
 import Ember from 'ember';
+
 /**
  Base class for converting the base fixture that factory guy creates to
  the payload expected by ember data adapter.
@@ -15,7 +16,7 @@ import Ember from 'ember';
  If there are associations in the base fixture, they will be added to the
  new fixture as 'side loaded' elements, even if they are another json payload
  built with the build/buildList methods.
- 
+
  @param {DS.Store} store
  @param {Object} options
  transformKeys transform keys and values in fixture if true
@@ -29,7 +30,7 @@ export default class {
     this.serializeMode = options.serializeMode;
     this.store = store;
     this.listType = false;
-    this.noTransformFn = (x)=> x;
+    this.noTransformFn = (x) => x;
     this.defaultValueTransformFn = this.noTransformFn;
   }
 
@@ -47,7 +48,7 @@ export default class {
 
     if (Ember.typeOf(fixture) === 'array') {
       this.listType = true;
-      data = fixture.map((single)=> {
+      data = fixture.map((single) => {
         return this.convertSingle(modelName, single);
       });
     } else {
@@ -80,8 +81,8 @@ export default class {
    * @param fixture
    */
   addPrimaryKey(modelName, data, fixture) {
-    let primaryKey = this.store.serializerFor(modelName).get('primaryKey');
-    let primaryKeyValue = fixture[primaryKey] || fixture.id;
+    let primaryKey      = this.store.serializerFor(modelName).get('primaryKey'),
+        primaryKeyValue = fixture[primaryKey] || fixture.id;
     // model fragments will have no primaryKey and don't want them to have id
     if (primaryKeyValue) {
       // need to set the id for all as a baseline
@@ -106,8 +107,8 @@ export default class {
     if (!this.serializeMode) {
       return true;
     }
-    let serializer = this.store.serializerFor(modelName);
-    let attrOptions = this.attrsOption(serializer, attribute);
+    let serializer  = this.store.serializerFor(modelName),
+        attrOptions = this.attrsOption(serializer, attribute);
     if (attrOptions && attrOptions.serialize === false) {
       return false;
     }
@@ -119,13 +120,13 @@ export default class {
       return this.noTransformFn;
     }
 
-    let serializer = this.store.serializerFor(modelName);
-    let keyFn = serializer['keyFor' + type] || this.defaultKeyTransformFn;
+    let serializer = this.store.serializerFor(modelName),
+        keyFn      = serializer['keyFor' + type] || this.defaultKeyTransformFn;
 
-    return ((attribute, method)=> {
+    return ((attribute, method) => {
       // if there is an attrs override in serializer, return that first
-      let attrOptions = this.attrsOption(serializer, attribute);
-      let attrName;
+      let attrOptions = this.attrsOption(serializer, attribute),
+          attrName;
       if (attrOptions) {
         if (attrOptions.key) {
           attrName = attrOptions.key;
@@ -145,8 +146,8 @@ export default class {
     if (!type) {
       return this.defaultValueTransformFn;
     }
-    let container = Ember.getOwner ? Ember.getOwner(this.store) : this.store.container;
-    let transform = container.lookup('transform:' + type);
+    let container = Ember.getOwner ? Ember.getOwner(this.store) : this.store.container,
+        transform = container.lookup('transform:' + type);
 
     Ember.assert(`[ember-data-factory-guy] could not find
     the [ ${type} ] transform. If you are in a unit test, be sure 
@@ -160,13 +161,13 @@ export default class {
   }
 
   extractAttributes(modelName, fixture) {
-    let attributes = {};
-    let transformKeyFunction = this.getTransformKeyFunction(modelName, 'Attribute');
+    let attributes           = {},
+        transformKeyFunction = this.getTransformKeyFunction(modelName, 'Attribute');
 
-    this.store.modelFor(modelName).eachAttribute((attribute, meta)=> {
+    this.store.modelFor(modelName).eachAttribute((attribute, meta) => {
       if (this.attributeIncluded(attribute, modelName)) {
-        let attributeKey = transformKeyFunction(attribute);
-        let transformValueFunction = this.getTransformValueFunction(meta.type);
+        let attributeKey           = transformKeyFunction(attribute),
+            transformValueFunction = this.getTransformValueFunction(meta.type);
 
         if (fixture.hasOwnProperty(attribute)) {
           attributes[attributeKey] = transformValueFunction(fixture[attribute]);
@@ -188,7 +189,7 @@ export default class {
   extractRelationships(modelName, fixture) {
     let relationships = {};
 
-    this.store.modelFor(modelName).eachRelationship((key, relationship)=> {
+    this.store.modelFor(modelName).eachRelationship((key, relationship) => {
       if (fixture.hasOwnProperty(key)) {
         if (relationship.kind === 'belongsTo') {
           this.extractBelongsTo(fixture, relationship, modelName, relationships);
@@ -209,13 +210,10 @@ export default class {
    @param relationships
    */
   extractBelongsTo(fixture, relationship, parentModelName, relationships) {
-    let belongsToRecord = fixture[relationship.key];
-
-    let isEmbedded = this.isEmbeddedRelationship(parentModelName, relationship.key);
-
-    let data = this.extractSingleRecord(belongsToRecord, relationship, isEmbedded);
-
-    let relationshipKey = isEmbedded ? relationship.key : this.transformRelationshipKey(relationship);
+    let belongsToRecord = fixture[relationship.key],
+        isEmbedded      = this.isEmbeddedRelationship(parentModelName, relationship.key),
+        data            = this.extractSingleRecord(belongsToRecord, relationship, isEmbedded),
+        relationshipKey = isEmbedded ? relationship.key : this.transformRelationshipKey(relationship);
 
     relationships[relationshipKey] = this.assignRelationship(data);
   }
@@ -223,23 +221,22 @@ export default class {
   // Borrowed from ember data
   // checks config for attrs option to embedded (always)
   isEmbeddedRelationship(modelName, attr) {
-    let serializer = this.store.serializerFor(modelName);
-    var option = this.attrsOption(serializer, attr);
+    let serializer = this.store.serializerFor(modelName),
+        option     = this.attrsOption(serializer, attr);
     return option && (option.embedded === 'always' || option.deserialize === 'records');
   }
 
   attrsOption(serializer, attr) {
-    var attrs = serializer.get('attrs');
-    let option = attrs && (attrs[Ember.String.camelize(attr)] || attrs[attr]);
+    let attrs  = serializer.get('attrs'),
+        option = attrs && (attrs[Ember.String.camelize(attr)] || attrs[attr]);
     return option;
     //    return (option && option.key) ? option.key : option;
   }
 
   extractHasMany(fixture, relationship, parentModelName, relationships) {
-    let hasManyRecords = fixture[relationship.key];
-
-    let relationshipKey = this.transformRelationshipKey(relationship);
-    let isEmbedded = this.isEmbeddedRelationship(parentModelName, relationshipKey);
+    let hasManyRecords  = fixture[relationship.key],
+        relationshipKey = this.transformRelationshipKey(relationship),
+        isEmbedded      = this.isEmbeddedRelationship(parentModelName, relationshipKey);
 
     if (hasManyRecords.isProxy) {
       return this.addListProxyData(hasManyRecords, relationship, relationships, isEmbedded);
@@ -249,7 +246,7 @@ export default class {
       return;
     }
 
-    let records = hasManyRecords.map((hasManyRecord)=> {
+    let records = hasManyRecords.map((hasManyRecord) => {
       return this.extractSingleRecord(hasManyRecord, relationship, isEmbedded);
     });
 
@@ -290,9 +287,9 @@ export default class {
   }
 
   addData(embeddedFixture, relationship, isEmbedded) {
-    let relationshipType = this.getRelationshipType(relationship, embeddedFixture);
-    // find possibly more embedded fixtures
-    let data = this.convertSingle(relationshipType, embeddedFixture);
+    let relationshipType = this.getRelationshipType(relationship, embeddedFixture),
+        // find possibly more embedded fixtures
+        data             = this.convertSingle(relationshipType, embeddedFixture);
     if (isEmbedded) {
       return data;
     }
@@ -302,8 +299,8 @@ export default class {
 
   // proxy data is data that was build with FactoryGuy.build method
   addProxyData(jsonProxy, relationship, isEmbedded) {
-    let data = jsonProxy.getModelPayload();
-    let relationshipType = this.getRelationshipType(relationship, data);
+    let data             = jsonProxy.getModelPayload(),
+        relationshipType = this.getRelationshipType(relationship, data);
     if (isEmbedded) {
       this.addToIncludedFromProxy(jsonProxy);
       return data;
@@ -317,7 +314,7 @@ export default class {
   addListProxyData(jsonProxy, relationship, relationships, isEmbedded) {
     let relationshipKey = this.transformRelationshipKey(relationship);
 
-    let records = jsonProxy.getModelPayload().map((data)=> {
+    let records = jsonProxy.getModelPayload().map((data) => {
       if (isEmbedded) {
         return data;
       }

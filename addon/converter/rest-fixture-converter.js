@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import JSONFixtureConverter from './json-fixture-converter';
+
 const { pluralize, dasherize } = Ember.String;
 
 /**
@@ -37,8 +38,8 @@ export default class extends JSONFixtureConverter {
    * @returns {*}
    */
   getPayloadKey(modelName) {
-    let serializer = this.store.serializerFor(modelName);
-    let payloadKey = modelName;
+    let serializer = this.store.serializerFor(modelName),
+        payloadKey = modelName;
     // model fragment serializer does not have payloadKeyFromModelName method
     if (serializer.payloadKeyFromModelName) {
       payloadKey = serializer.payloadKeyFromModelName(modelName);
@@ -75,11 +76,8 @@ export default class extends JSONFixtureConverter {
       this.included[relationshipKey] = [];
     }
 
-    let modelRelationships = this.included[relationshipKey];
-
-    let found = Ember.A(modelRelationships).find((existing) => {
-      return existing.id === data.id;
-    });
+    let modelRelationships = this.included[relationshipKey],
+        found              = Ember.A(modelRelationships).find(existing => existing.id === data.id);
 
     if (!found) {
       modelRelationships.push(data);

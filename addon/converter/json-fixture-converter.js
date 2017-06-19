@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import Converter from './fixture-converter';
+
 const { underscore, dasherize } = Ember.String;
 
 /**
@@ -50,14 +51,14 @@ export default class extends Converter {
    @param {Object} fixture
    */
   convertSingle(modelName, fixture) {
-    let data = {};
-    let attributes = this.extractAttributes(modelName, fixture);
-    let relationships = this.extractRelationships(modelName, fixture);
+    let data          = {},
+        attributes    = this.extractAttributes(modelName, fixture),
+        relationships = this.extractRelationships(modelName, fixture);
 
-    Object.keys(attributes).forEach((key)=> {
+    Object.keys(attributes).forEach((key) => {
       data[key] = attributes[key];
     });
-    Object.keys(relationships).forEach((key)=> {
+    Object.keys(relationships).forEach((key) => {
       data[key] = relationships[key];
     });
 
