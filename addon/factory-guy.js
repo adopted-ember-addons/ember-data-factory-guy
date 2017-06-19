@@ -257,17 +257,17 @@ class FactoryGuy {
    @returns {Object} json fixture
    */
   build() {
-    let args = extractArguments.apply(this, arguments);
-    let fixture = this.buildRaw.apply(this, arguments);
-    let modelName = lookupModelForFixtureName(args.name);
+    let args      = extractArguments.apply(this, arguments),
+        fixture   = this.buildRaw.apply(this, arguments),
+        modelName = lookupModelForFixtureName(args.name);
 
     return this.fixtureBuilder(modelName).convertForBuild(modelName, fixture);
   }
 
   buildRaw() {
-    let args = extractArguments.apply(this, arguments);
+    let args       = extractArguments.apply(this, arguments),
+        definition = lookupDefinitionForFixtureName(args.name);
 
-    let definition = lookupDefinitionForFixtureName(args.name);
     if (!definition) {
       throw new Error('Can\'t find that factory named [' + args.name + ']');
     }
@@ -298,17 +298,16 @@ class FactoryGuy {
   buildList(...args) {
     Ember.assert("buildList needs at least a name ( of model or named factory definition )", args.length > 0);
 
-    let list = this.buildRawList.apply(this, arguments);
-
-    let name = args.shift();
-    let modelName = lookupModelForFixtureName(name);
+    let list      = this.buildRawList.apply(this, arguments),
+        name      = args.shift(),
+        modelName = lookupModelForFixtureName(name);
 
     return this.fixtureBuilder(modelName).convertForBuild(modelName, list);
   }
 
   buildRawList(...args) {
-    let name = args.shift();
-    let definition = lookupDefinitionForFixtureName(name);
+    let name       = args.shift(),
+        definition = lookupDefinitionForFixtureName(name);
     if (!definition) {
       throw new Error("Can't find that factory named [" + name + "]");
     }
@@ -346,11 +345,10 @@ class FactoryGuy {
        before using make/makeList`, this.store
     );
 
-    let modelName = lookupModelForFixtureName(args.name);
-    let fixture = this.buildRaw.apply(this, arguments);
-    let data = this.fixtureBuilder(modelName).convertForMake(modelName, fixture);
-
-    const model = Ember.run(() => this.store.push(data));
+    let modelName = lookupModelForFixtureName(args.name),
+        fixture   = this.buildRaw.apply(this, arguments),
+        data      = this.fixtureBuilder(modelName).convertForMake(modelName, fixture),
+        model     = Ember.run(() => this.store.push(data));
 
     let definition = lookupDefinitionForFixtureName(args.name);
     if (definition.hasAfterMake()) {
@@ -376,14 +374,13 @@ class FactoryGuy {
        before using makeNew`, this.store
     );
 
-    let modelName = lookupModelForFixtureName(args.name);
-    let fixture = this.buildRaw.apply(this, arguments);
+    let modelName = lookupModelForFixtureName(args.name),
+        fixture   = this.buildRaw.apply(this, arguments);
     delete fixture.id;
 
     let data = this.fixtureBuilder(modelName).convertForBuild(modelName, fixture, { transformKeys: false });
 
-    const model = Ember.run(() => this.store.createRecord(modelName, data.get()));
-    return model;
+    return Ember.run(() => this.store.createRecord(modelName, data.get()));
   }
 
   /**
@@ -417,8 +414,8 @@ class FactoryGuy {
 
     Ember.assert("makeList needs at least a name ( of model or named factory definition )", args.length >= 1);
 
-    let name = args.shift();
-    let definition = lookupDefinitionForFixtureName(name);
+    let name       = args.shift(),
+        definition = lookupDefinitionForFixtureName(name);
     Ember.assert("Can't find that factory named [" + name + "]", !!definition);
 
     let number = args[0] || 0;
@@ -463,54 +460,6 @@ class FactoryGuy {
    */
   clearModels() {
     this.store.unloadAll();
-  }
-
-  /**
-   Push fixture to model's FIXTURES array.
-   Used when store's adapter is a DS.FixtureAdapter.
-
-   @param {DS.Model} modelClass
-   @param {Object} fixture the fixture to add
-   @returns {Object} json fixture data
-   */
-  pushFixture(modelClass, fixture) {
-    let index;
-    if (!modelClass.FIXTURES) {
-      modelClass.FIXTURES = [];
-    }
-
-    index = this.indexOfFixture(modelClass.FIXTURES, fixture);
-
-    if (index > -1) {
-      modelClass.FIXTURES.splice(index, 1);
-    }
-
-    modelClass.FIXTURES.push(fixture);
-
-    return fixture;
-  }
-
-  /**
-   Used in compliment with pushFixture in order to
-   ensure we don't push duplicate fixtures
-
-   @private
-   @param {Array} fixtures
-   @param {String|Integer} id of fixture to find
-   @returns {Object} fixture
-   */
-  indexOfFixture(fixtures, fixture) {
-    let index = -1,
-        id    = fixture.id + '';
-    Ember.A(fixtures).find(function(r, i) {
-      if ('' + Ember.get(r, 'id') === id) {
-        index = i;
-        return true;
-      } else {
-        return false;
-      }
-    });
-    return index;
   }
 
   /**
@@ -563,14 +512,13 @@ class FactoryGuy {
   }
 }
 
-let factoryGuy = new FactoryGuy();
-
-let make = factoryGuy.make.bind(factoryGuy);
-let makeNew = factoryGuy.makeNew.bind(factoryGuy);
-let makeList = factoryGuy.makeList.bind(factoryGuy);
-let build = factoryGuy.build.bind(factoryGuy);
-let buildList = factoryGuy.buildList.bind(factoryGuy);
-let clearStore = factoryGuy.clearStore.bind(factoryGuy);
+let factoryGuy = new FactoryGuy(),
+    make       = factoryGuy.make.bind(factoryGuy),
+    makeNew    = factoryGuy.makeNew.bind(factoryGuy),
+    makeList   = factoryGuy.makeList.bind(factoryGuy),
+    build      = factoryGuy.build.bind(factoryGuy),
+    buildList  = factoryGuy.buildList.bind(factoryGuy),
+    clearStore = factoryGuy.clearStore.bind(factoryGuy);
 
 export {make, makeNew, makeList, build, buildList, clearStore};
 export default factoryGuy;

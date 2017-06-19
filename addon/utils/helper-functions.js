@@ -1,7 +1,7 @@
 /* global requirejs */
 /*jslint node: true */
 import Ember from 'ember';
-import require  from 'require';
+import require from 'require';
 
 export function isEquivalent(a, b) {
   var type = Ember.typeOf(a);
@@ -34,15 +34,15 @@ function arrayIsEquivalent(arrayA, arrayB) {
 }
 
 function objectIsEquivalent(objectA, objectB) {
-  var aProps = Object.keys(objectA);
-  var bProps = Object.keys(objectB);
+  let aProps = Object.keys(objectA),
+      bProps = Object.keys(objectB);
   if (aProps.length !== bProps.length) {
     return false;
   }
   for (let i = 0; i < aProps.length; i++) {
-    let propName = aProps[i];
-    let aEntry = objectA[propName];
-    let bEntry = objectB[propName];
+    let propName = aProps[i],
+        aEntry   = objectA[propName],
+        bEntry   = objectB[propName];
     if (!isEquivalent(aEntry, bEntry)) {
       return false;
     }
@@ -63,9 +63,9 @@ export const excludeRegex = new RegExp('[^\s]+(\\.(jscs|jshint))$', 'i');
 export function requireFiles(filePattern) {
   let filesSeen = Object.keys(requirejs._eak_seen);
 
-  return filesSeen.filter((moduleName)=> {
+  return filesSeen.filter((moduleName) => {
     return !excludeRegex.test(moduleName) && filePattern.test(moduleName);
-  }).map((moduleName)=> require(moduleName, null, null, true));
+  }).map((moduleName) => require(moduleName, null, null, true));
 }
 
 export function escapeRegExp(str) {

@@ -89,9 +89,9 @@ const AttributeMatcher = (superclass) => class extends superclass {
     builder.wrapPayload(this.modelName, requestData);
 
     // success if all values match
-    return matchCheckKeys.map((key)=> {
+    return matchCheckKeys.every((key)=> {
       return isEquivalent(expectedData.get(key), requestData.get(key));
-    }).every((value)=> value);
+    });//.every((value)=> value);
   }
 };
 

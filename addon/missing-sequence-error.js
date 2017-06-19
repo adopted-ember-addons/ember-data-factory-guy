@@ -1,5 +1,5 @@
 export default function(message) {
-  this.toString = function () {
+  this.toString = function() {
     return message;
   };
 }

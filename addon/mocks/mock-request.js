@@ -70,9 +70,9 @@ export default class {
   }
 
   fails(opts = {}) {
-    var convertErrors = opts.hasOwnProperty('convertErrors') ? opts.convertErrors : true;
-    var status = opts.status || 500;
-    var response = opts.response || null;
+    let convertErrors = opts.hasOwnProperty('convertErrors') ? opts.convertErrors : true,
+        status        = opts.status || 500,
+        response      = opts.response || null;
     Ember.assert(`[ember-data-factory-guy] 'fails' method status code must be 3XX, 4XX or 5XX,
         you are using: ${status}`, this.isErrorStatus(status));
 
@@ -97,9 +97,9 @@ export default class {
 
   logInfo() {
     if (FactoryGuy.logLevel > 0) {
-      let json = JSON.parse(JSON.stringify(this.responseJson));
-      let name = this.constructor.name.replace('Request', '');
-      let info = ['[factory-guy]', `${name}(${this.modelName})`, json];
+      let json = JSON.parse(JSON.stringify(this.responseJson)),
+          name = this.constructor.name.replace('Request', ''),
+          info = ['[factory-guy]', `${name}(${this.modelName})`, json];
       if (!Ember.$.isEmptyObject(this.queryParams)) {
         info = info.concat(['queryParams:', this.queryParams]);
       }
