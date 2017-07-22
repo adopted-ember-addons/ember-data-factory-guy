@@ -35,6 +35,7 @@
     "ember-cli-eslint": "^3.0.3",
     "ember-cli-htmlbars": "1.3.0",
     "ember-cli-htmlbars-inline-precompile": "0.4.0",
+    "ember-cli-inject-live-reload": "^1.7.0",
     "ember-cli-qunit": "^4.0.0",
     "ember-cli-shims": "1.2.0-beta.2",
     "ember-cli-sri": "^2.1.1",

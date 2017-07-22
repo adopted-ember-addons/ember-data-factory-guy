@@ -303,6 +303,19 @@ test("#get method to access payload", function(assert) {
   assert.deepEqual(mock.get(0), { id: 1, name: 'User1', style: 'normal' });
 });
 
+test("mockFindAll (when declared FIRST ) won't be used if mockQuery is present with query ", async function(assert) {
+  let mockF = mockFindAll('user', 2);
+  let mockQ = mockQuery('user', { name: 'Sleepy' });
+
+  await FactoryGuy.store.query('user', {});
+  assert.equal(mockF.timesCalled, 1, 'mockFindAll used since no query params exist');
+  assert.equal(mockQ.timesCalled, 0, 'mockQuery not used');
+
+  await FactoryGuy.store.query('user', { name: 'Sleepy' });
+  assert.equal(mockF.timesCalled, 1, 'mockFindAll not used since query params exist');
+  assert.equal(mockQ.timesCalled, 1, 'now mockQuery is used');
+});
+
 moduleFor('serializer:application', 'MockFindAll #getUrl', inlineSetup(serializerType));
 
 test("uses urlForFindAll if it is set on the adapter", function(assert) {
