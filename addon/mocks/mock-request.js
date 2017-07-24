@@ -146,12 +146,22 @@ export default class {
       this.timesCalled++;
       let response = this.getResponse();
       this.logInfo();
+      if (this.useOnce) {
+        this.disable();
+      }
       return response;
     }.bind(this);
 
     this.mockId = Ember.$.mockjax(handler);
 
     return handler;
+  }
+
+  // once the mock is used, it will disable itself, so it can't be used again.
+  // most usefull when using mockCreate to make the same type of model
+  // over and over again, and the returning id is different.
+  singleUse() {
+    this.useOnce = true;
   }
 
   disable() {
