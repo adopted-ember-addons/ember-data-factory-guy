@@ -252,6 +252,13 @@ test("default values and sequences are inherited", function(assert) {
     }
   });
 
+  FactoryGuy.define('cool-stoner', {
+    extends: 'stoner',
+    sequences: {
+      personName: (i)=> `cool stoner #${i}`
+    }
+  });
+
   let json;
 
   json = FactoryGuy.build('person').data;
@@ -265,6 +272,9 @@ test("default values and sequences are inherited", function(assert) {
 
   json = FactoryGuy.build('stoner').data;
   assert.equal(json.attributes.name, 'stoner #1', 'uses local sequence with inherited parent default attribute function');
+
+  json = FactoryGuy.build('cool-stoner').data;
+  assert.equal(json.attributes.name, 'cool stoner #1', 'uses local sequence with inherited parent default attribute function');
 
 });
 
