@@ -286,6 +286,8 @@ class ModelDefinition {
     let otherConfig = $.extend(true, {}, otherDefinition.originalConfig);
     delete otherConfig.extends;
     this.mergeSection(config, otherConfig, 'sequences');
+    // not sure why I have to use main definition for default,
+    // but it works, so umm .. errr .. yeah
     this.mergeSection(config, otherDefinition, 'default');
     this.mergeSection(config, otherConfig, 'traits');
   }
@@ -299,7 +301,6 @@ class ModelDefinition {
       you are trying to extend. Make sure it was created/imported before
       you define [ ${this.modelName} ]`, definition);
     this.merge(config, definition);
-//    console.log(this.modelName, 'mergeConfig ', Object.keys(config),Object.values(config), 'extended definition', definition);
   }
 
   parseDefault(config) {
