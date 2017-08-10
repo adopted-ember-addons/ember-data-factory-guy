@@ -149,7 +149,7 @@ class ModelDefinition {
     });
     let modelAttributes = this.namedModels[name] || {};
     // merge default, modelAttributes, traits and opts to get the rough fixture
-    let fixture = $.extend({}, this.defaultAttributes, modelAttributes, traitsObj, opts);
+    let fixture = $.extend({}, this.default, modelAttributes, traitsObj, opts);
 
     if (this.notPolymorphic !== undefined) {
       fixture._notPolymorphic = true;
@@ -286,7 +286,7 @@ class ModelDefinition {
     let otherConfig = $.extend(true, {}, otherDefinition.originalConfig);
     delete otherConfig.extends;
     this.mergeSection(config, otherConfig, 'sequences');
-    this.mergeSection(config, otherConfig, 'default');
+    this.mergeSection(config, otherDefinition, 'default');
     this.mergeSection(config, otherConfig, 'traits');
   }
 
@@ -299,10 +299,11 @@ class ModelDefinition {
       you are trying to extend. Make sure it was created/imported before
       you define [ ${this.modelName} ]`, definition);
     this.merge(config, definition);
+//    console.log(this.modelName, 'mergeConfig ', Object.keys(config),Object.values(config), 'extended definition', definition);
   }
 
   parseDefault(config) {
-    this.defaultAttributes = config.default || {};
+    this.default = config.default || {};
     delete config.default;
   }
 
@@ -333,6 +334,7 @@ class ModelDefinition {
     delete config.sequences;
     for (let sequenceName in this.sequences) {
       let sequenceFn = this.sequences[sequenceName];
+//      console.log('sequenceFn',sequenceFn, Ember.typeOf(sequenceFn));
       if (Ember.typeOf(sequenceFn) !== 'function') {
         throw new Error(
           `Problem with [${sequenceName}] sequence definition.
