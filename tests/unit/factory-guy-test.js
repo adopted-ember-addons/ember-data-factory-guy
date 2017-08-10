@@ -1,4 +1,4 @@
-import {moduleFor, test} from 'ember-qunit';
+  import {moduleFor, test} from 'ember-qunit';
 import DS from 'ember-data';
 import Ember from 'ember';
 import FactoryGuy, {make, makeNew, makeList, build, buildList, clearStore} from 'ember-data-factory-guy';
@@ -249,22 +249,37 @@ test("default values and sequences are inherited", function(assert) {
     extends: 'person',
     sequences: {
       personName: (i)=> `stoner #${i}`
+    },
+    default: {
+      style: 'chill'
+    }
+  });
+
+  FactoryGuy.define('cool-stoner', {
+    extends: 'stoner',
+    sequences: {
+      personName: (i)=> `cool stoner #${i}`
     }
   });
 
   let json;
 
-  json = FactoryGuy.build('person').data;
-  assert.equal(json.attributes.name, 'person #1');
+  json = FactoryGuy.build('person');
+  assert.equal(json.get('name'), 'person #1');
 
-  json = FactoryGuy.build('philosopher').data;
+  json = FactoryGuy.build('philosopher');
   // since the sequence ( personName ) that was inherited from person is owned by stoner,
   // the person # starts at 1 again, and is not person #2
-  assert.equal(json.attributes.name, 'person #1', 'inherits parent default attribute functions and sequences');
-  assert.equal(json.attributes.style, 'thinker', 'local attributes override parent attributes');
+  assert.equal(json.get('name'), 'person #1', 'inherits parent default attribute functions and sequences');
+  assert.equal(json.get('style'), 'thinker', 'local attributes override parent attributes');
 
-  json = FactoryGuy.build('stoner').data;
-  assert.equal(json.attributes.name, 'stoner #1', 'uses local sequence with inherited parent default attribute function');
+  json = FactoryGuy.build('stoner');
+  assert.equal(json.get('name'), 'stoner #1', 'uses local sequence and parent default attribute function with one level of inheritance ');
+  assert.equal(json.get('style'), 'chill', 'uses local default attribute with one level of inheritance');
+
+  json = FactoryGuy.build('cool-stoner');
+  assert.equal(json.get('name'), 'cool stoner #1', 'uses local sequence and parent default attribute function with two levels of inheritance');
+  assert.equal(json.get('style'), 'chill', 'uses inherited default attribute with two levels of inheritance');
 
 });
 
