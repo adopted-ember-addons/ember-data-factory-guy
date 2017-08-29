@@ -717,7 +717,7 @@ Usage:
   - to inspect the json use the `get()` method
     - can use `get(index)` to get an individual item from the list
   - use the [`add`](#using-add-method) method
-    - to add extra sideloaded data to the payload => `.add({json})`
+    - to add extra sideloaded data to the payload => `.add(payload)`
     - to add meta data => `.add({meta})`
 
 Usage:
