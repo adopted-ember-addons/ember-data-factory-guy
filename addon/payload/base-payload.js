@@ -30,7 +30,7 @@ export default class {
    Usage:
    ```
    let batMen = buildList('bat_man', 2);
-   let user = build('user').add({json: batMen});
+   let user = build('user').add(batMen);
    ```
 
    but you can also add meta data:

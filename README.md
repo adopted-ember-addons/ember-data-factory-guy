@@ -745,15 +745,17 @@ Usage:
 
 ##### Using `add()` method
  - when you need to add more json to payload
-  - will be sideloaded
-    - only JSONAPI, and REST based serializers can do sideloading
-    - so DRFSerializer and JSONSerializer users can not use this feature
-
+   - will be sideloaded
+     - only JSONAPI, and REST based serializers can do sideloading
+     - so DRFSerializer and JSONSerializer users can not use this feature
+   - you dont need to use json key as in ```build('user').add({json: batMan})```
+     you can just add the payload directly as ```build('user').add(batMan)``` 
+       
 Usage:
 
 ```javascript
   let batMan = build('bat_man');
-  let userPayload = build('user').add({ json: batMan });
+  let userPayload = build('user').add(batMan);
 
   userPayload = {
     user: {

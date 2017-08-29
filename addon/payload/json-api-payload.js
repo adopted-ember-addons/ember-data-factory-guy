@@ -13,6 +13,12 @@ export default class extends BasePayload {
     return this.data;
   }
 
+  /**
+   * Override base add method for special json-api handling to
+   * add more things to payload like meta or more json to sideload
+   *
+   * @param more
+   */
   add(more) {
     if (more.meta) {
       this.addMeta(more.meta);
