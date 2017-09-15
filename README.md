@@ -1079,6 +1079,30 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - Use `moduleForModel` ( ember-qunit ), or `describeModel` ( ember-mocha ) test helper
   - manually set up FactoryGuy
 
+- Sample controller test: 
+  - Set `needs` array in `moduleFor`
+  - manually set up FactoryGuy
+
+  ```javascript
+  import { moduleFor, test } from 'ember-qunit';
+  import { make, makeList, manualSetup } from 'ember-data-factory-guy';
+
+  moduleFor('controller:cameras', 'Unit | Controller | cameras', {
+    // Specify the other units that are required for this test.
+    needs: ['model:post'],
+    beforeEach: function () {
+      manualSetup(this.container);
+    }
+  });
+
+  // Replace this with your real tests.
+  test('it exists', function(assert) {
+    let controller = this.subject();
+    makeList('post', 7);
+    assert.ok(controller);
+  });
+  ```
+  
 - Sample component test #1: [single-user-manual-setup-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/single-user-manual-setup-test.js)
   - Using `moduleForComponent` ( ember-qunit ), or `describeComponent` ( ember-mocha ) helper
   - manually sets up FactoryGuy ( so it's faster )
