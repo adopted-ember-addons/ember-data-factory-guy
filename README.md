@@ -6,8 +6,7 @@ Feel the thrill and enjoyment of testing when using Factories instead of Fixture
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
 **Ember Data 2.14+ has this [bug](https://github.com/emberjs/data/issues/5055) that affects polymorphic relationships. 
- You can still use factory guy with ED 2.14+, but polymorphic relationships 
- sometimes will not work as expected.
+ You can still use factory guy with ED 2.14+, but polymorphic relationships sometimes will not work as expected.
    
 **NEW and Improved** starting with v2.7.0
   - Support for using your factories in development environment
@@ -25,7 +24,7 @@ Factories simplify the process of testing, making you more efficient and your te
 - Any custom methods like: serialize / serializeAttribute / keyForAttribute etc... in a serializer will be used automatically
 - If you set up custom methods like: buildURL / urlForFindRecord in an adapter, they will be used automatically
 - You don't have to setup anything besides making your factories
-- Everything just works
+- You can push models and their complex relationships directory to the store
 
 ### Questions / Get in Touch
 Visit the EmberJS Community [#e-factory-guy](https://embercommunity.slack.com/messages/e-factory-guy/) Slack channel
