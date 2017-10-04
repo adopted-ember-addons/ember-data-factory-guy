@@ -13,7 +13,8 @@ module.exports = {
         devDependencies: {
           'ember-source': '2.11',
           'ember-data': '2.11',
-          'ember-data-model-fragments': '2.11'
+          'ember-data-model-fragments': '2.11',
+          'ember-inflector': '1.9.4'
         }
       }
     },
