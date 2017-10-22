@@ -1,11 +1,26 @@
 import {module, test} from 'qunit';
-import {isEquivalent, isPartOf} from 'ember-data-factory-guy/utils/helper-functions';
+import {isEquivalent, isEmptyObject, isPartOf} from 'ember-data-factory-guy/utils/helper-functions';
 
 module('isEquivalent | Helper Function');
 
 let tomster = { name: 'Tomster', friends: ['Zoey', 'Yahuda', 'Tom'] };
 let zoey = { name: 'Zoey', friends: ['Tomster', 'Yahuda', 'Tom'] };
 let daniel = { name: 'Daniel', friends: ['Zoey', 'Yahuda', 'Tom'] };
+
+test('#isEmptyObject', function(assert) {
+  let tests = [
+    [null, false, 'null'],
+    [undefined, false, 'undefined'],
+    [[], false, '[]'],
+    [{}, true, '{}'],
+    [{ a: 1 }, true, '{a:1}']
+  ];
+
+  for (let test of tests) {
+    let [object, expected, message] = test;
+    assert.equal(isEmptyObject(object), expected, message);
+  }
+});
 
 test('#isEquivalent with numbers', function(assert) {
   assert.ok(isEquivalent(1, 1), 'Equivalent numbers should return true');

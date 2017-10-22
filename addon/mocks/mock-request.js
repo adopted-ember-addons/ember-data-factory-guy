@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
-import {stripQueryParams} from '../utils/helper-functions';
+import {isEmptyObject} from '../utils/helper-functions';
+import RequestManager from './request-manager';
 
 const assign = Ember.assign || Ember.merge;
 
@@ -16,7 +17,7 @@ export default class {
     this.errorResponse = null;
     this.isDisabled = false;
     this.isDestroyed = false;
-    this.handler = this.setupHandler();
+    //    this.handler = this.setupHandler();
     this.timesCalled = 0;
   }
 
@@ -88,8 +89,9 @@ export default class {
   }
 
   getResponse() {
+    let responseText = this.isErrorStatus(this.status) ? this.errorResponse : this.responseJson;
     return {
-      responseText: this.isErrorStatus(this.status) ? this.errorResponse : this.responseJson,
+      responseText: JSON.stringify(responseText),
       headers: this.responseHeaders,
       status: this.status
     };
@@ -100,7 +102,7 @@ export default class {
       let json = JSON.parse(JSON.stringify(this.responseJson)),
           name = this.constructor.name.replace('Request', ''),
           info = ['[factory-guy]', `${name}(${this.modelName})`, json];
-      if (!Ember.$.isEmptyObject(this.queryParams)) {
+      if (!isEmptyObject(this.queryParams)) {
         info = info.concat(['queryParams:', this.queryParams]);
       }
       console.log(...info);
@@ -111,50 +113,84 @@ export default class {
     return true;
   }
 
-  typeMatch(settings) {
-    return settings.type === this.getType();
-  }
+  //  typeMatch(settings) {
+  //    return settings.type === this.getType();
+  //  }
 
-  urlMatch(settings) {
-    return stripQueryParams(settings.url) === stripQueryParams(this.getUrl());
-  }
+  //  urlMatch(settings) {
+  //    return stripQueryParams(settings.url) === stripQueryParams(this.getUrl());
+  //  }
 
   // Only check the uri path, not the host name and or query params.
   // The query params will be checked for mockQuery, mockQueryRecord,
   // but for the other mocks ignore them
-  basicRequestMatches(settings) {
-    return this.typeMatch(settings) && this.urlMatch(settings);
+  //  basicRequestMatches(settings) {
+  //    return this.typeMatch(settings) && this.urlMatch(settings);
+  //  }
+
+  extraRequestMatches(/*request*/) {
+    return true;
   }
 
-  extraRequestMatches(/*settings*/) {
+  matches(request) {
+    if (this.isDisabled) {
+      return false;
+    }
+
+    if (!this.extraRequestMatches(request)) {
+      return false;
+    }
+
+    this.timesCalled++;
+    this.logInfo();
+
+    if (this.useOnce) {
+      this.disable();
+    }
     return true;
   }
 
   //////////////  common handler for all requests ////////////
+  //  setupHandler() {
+  //    let handler = function(request) {
+  //      if (this.isDisabled) {
+  //        return false;
+  //      }
+  //      //      if (!this.basicRequestMatches(settings)) {
+  //      //        return false;
+  //      //      }
+  //      if (!this.extraRequestMatches(request)) {
+  //        return false;
+  //      }
+  //
+  //      this.timesCalled++;
+  //      let response = this.getResponse();
+  //      this.logInfo();
+  //      if (this.useOnce) {
+  //        this.disable();
+  //      }
+  //      return response;
+  //    }.bind(this);
+  //
+  //    this.mockId = Ember.$.mockjax(handler);
+  //    return handler;
+  //  }
+  oldUrl() {
+    return this.mockId && this.mockId.url
+  }
+
+  changedUrl() {
+    return this.getUrl() !== this.oldUrl();
+  }
+
   setupHandler() {
-    let handler = function(settings) {
-      if (this.isDisabled) {
-        return false;
-      }
-      if (!this.basicRequestMatches(settings)) {
-        return false;
-      }
-      if (!this.extraRequestMatches(settings)) {
-        return false;
-      }
-
-      this.timesCalled++;
-      let response = this.getResponse();
-      this.logInfo();
-      if (this.useOnce) {
-        this.disable();
-      }
-      return response;
-    }.bind(this);
-
-    this.mockId = Ember.$.mockjax(handler);
-
-    return handler;
+    //    console.log('setupHandler',this.id);
+    if (!this.mockId) {
+      RequestManager.addHandler(this);
+    } else if (this.changedUrl()) {
+      RequestManager.replaceHandler(this);
+    }
+//    console.log('setupHandler', 'url', this.getType(), this.getUrl(), 'id:', this.mockId,  'model id:',this.get('id'));
   }
 
   // once the mock is used, it will disable itself, so it can't be used again.
@@ -173,7 +209,8 @@ export default class {
   }
 
   destroy() {
-    Ember.$.mockjax.clear(this.mockId);
+    RequestManager.removeHandler(this);
+//    Ember.$.mockjax.clear(this.mockId);
     this.isDestroyed = true;
   }
 }

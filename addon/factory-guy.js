@@ -2,8 +2,9 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import ModelDefinition from './model-definition';
 import FixtureBuilderFactory from './builder/fixture-builder-factory';
+import RequestManager from './mocks/request-manager';
 
-const assign = Ember.assign || Ember.merge;
+//const assign = Ember.assign || Ember.merge;
 let modelDefinitions = {};
 
 /**
@@ -58,7 +59,7 @@ let extractArguments = function(...args) {
   if (!name) {
     throw new Error('Build needs a factory name to build');
   }
-  return assign({ name: name }, extractArgumentsShort.apply(this, args));
+  return Object.assign({ name: name }, extractArgumentsShort.apply(this, args));
 };
 
 class FactoryGuy {
@@ -443,6 +444,18 @@ class FactoryGuy {
   clearStore() {
     this.resetDefinitions();
     this.clearModels();
+  }
+
+  reset() {
+    this.resetDefinitions();
+    this.resetMockAjax();
+  }
+
+  /**
+   Reset all mock ajax calls
+   */
+  resetMockAjax() {
+    RequestManager.reset();
   }
 
   /**

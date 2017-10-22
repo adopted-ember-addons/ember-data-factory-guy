@@ -7,7 +7,7 @@ export default function(ownerOrContainer) {
   let owner = ownerOrContainer.owner || ownerOrContainer;
 
   FactoryGuy.setStore(owner.lookup('service:store'));
-  FactoryGuy.resetDefinitions();
+  FactoryGuy.reset();
   loadFactories();
   loadScenarios(owner);
 }

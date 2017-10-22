@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
-import {isEquivalent} from '../utils/helper-functions';
-const { isEmpty } = Ember;
+import {isEmptyObject, isEquivalent} from '../utils/helper-functions';
+//const { isEmpty } = Ember;
 
 /**
  This is a mixin used by MockUpdate and MockCreateRequest
@@ -39,13 +39,14 @@ const AttributeMatcher = (superclass) => class extends superclass {
     );
   }
   
-  extraRequestMatches(settings) {
+  extraRequestMatches(request) {
     if (this.matchArgs) {
-      let requestData = JSON.parse(settings.data);
+      let requestBody = JSON.parse(request.requestBody),
+          requestData = requestBody[this.modelName];
       if (typeof this.matchArgs === 'function') {
         return this.matchArgs(requestData);
       } else {
-        return this.attributesMatch(requestData);
+        return this.attributesMatch(requestBody);
       }
     }
     return true;
@@ -70,24 +71,26 @@ const AttributeMatcher = (superclass) => class extends superclass {
    */
   attributesMatch(requestData) {
     let matchArgs = this.matchArgs;
-    if (isEmpty(Object.keys(matchArgs))) {
+    if (isEmptyObject(matchArgs)) {
       return true;
     }
 
     let builder = FactoryGuy.fixtureBuilder(this.modelName);
 
     // transform they match keys
+//    console.log('matchArgs',matchArgs,Object.keys(matchArgs));
     let matchCheckKeys = Object.keys(matchArgs).map((key)=> {
       return builder.transformKey(this.modelName, key);
     });
-
+//    console.log('matchCheckKeys',matchCheckKeys);
     // build the match args into a JSONPayload class
     let buildOpts = { serializeMode: true, transformKeys: true };
     let expectedData = builder.convertForBuild(this.modelName, matchArgs, buildOpts);
 
     // wrap request data in a JSONPayload class
     builder.wrapPayload(this.modelName, requestData);
-
+//    console.log('requestData',requestData);
+//    console.log('expectedData',requestData.get());
     // success if all values match
     return matchCheckKeys.every((key)=> {
       return isEquivalent(expectedData.get(key), requestData.get(key));

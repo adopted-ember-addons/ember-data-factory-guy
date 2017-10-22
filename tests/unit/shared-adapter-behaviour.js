@@ -34,34 +34,31 @@ SharedBehavior.mockFindRecordCommonTests = function() {
     });
   });
 
-  test("when returns json (from build) is used", function(assert) {
-    Ember.run(() => {
-      let done      = assert.async(),
-          json      = build('profile'),
+  test("when returns json is used", async function(assert) {
+    return Ember.run(async () => {
+      let json      = build('profile'),
           mock      = mockFindRecord('profile').returns({ json }),
           profileId = mock.get('id');
 
-      FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
-        assert.equal(profile.get('id'), profileId);
-        assert.equal(profile.get('description'), json.get('description'));
-        done();
-      });
+      let profile = await FactoryGuy.store.findRecord('profile', profileId);
+      assert.equal(profile.get('id'), profileId);
+      assert.equal(profile.get('description'), json.get('description'));
     });
   });
 
   test("returns id succeeds and returns model when id for model type found in store after createRecord", function(assert) {
     Ember.run(() => {
       let done = assert.async();
+      let profileId = 1,
+          { store } = FactoryGuy;
 
-      let profileId = 1;
       mockCreate('profile').returns({ attrs: { id: profileId } });
       mockFindRecord('profile').returns({ id: profileId });
 
-      let newRecord = FactoryGuy.store.createRecord('profile', { description: 'foo' });
-      newRecord.save().then(() => {
-        FactoryGuy.store.findRecord('profile', profileId).then((profile) => {
-          assert.equal(profile.get('id'), profileId);
-          assert.equal(profile.get('description'), 'foo');
+      let newRecord = store.createRecord('profile', { description: 'foo' });
+      newRecord.save().then(newRecord => {
+        store.findRecord('profile', profileId).then(foundRecord => {
+          assert.deepEqual(foundRecord, newRecord);
           done();
         });
       });
@@ -94,6 +91,52 @@ SharedBehavior.mockFindRecordCommonTests = function() {
     });
   });
 
+  //  test("returns model succeeds", function(assert) {
+  //    Ember.run(() => {
+  //      let done = assert.async();
+  //      let cat = make('cat', { type: 'Cutest' });
+  //      let mock = mockFindRecord(cat);//.returns({ model: cat });
+  //      console.log(mock.index, cat.get('id'));
+  //      FactoryGuy.store.findRecord('cat', mock.get('id'), { reload: true }).then(function(catA) {
+  //        assert.equal(catA.get('type'), 'Cutest');
+  //        done();
+  //      });
+  //    });
+  //  });
+  //
+  //  test("with model that has attribute named type, is not polymorphic, and returns model", function(assert) {
+  //    Ember.run(() => {
+  //      let done = assert.async();
+  //      let cat = make('cat', { type: 'Cutest' });
+  //      let mock = mockFindRecord(cat);//.returns({ model: cat });
+  //      console.log(mock.index, cat.get('id'));
+  //      FactoryGuy.store.findRecord('cat', mock.get('id'), { reload: true }).then(function(catA) {
+  //        assert.equal(catA.get('type'), 'Cutest');
+  //        done();
+  //      });
+  //    });
+  //  });
+
+  test("returns model that has attribute named type, but is not polymorphic", async function(assert) {
+    return Ember.run(async () => {
+      let cat = make('cat', { type: 'Cutest' });
+      let mock = mockFindRecord('cat').returns({ model: cat });
+
+      let catA = await FactoryGuy.store.findRecord('cat', mock.get('id'), { reload: true });
+      assert.equal(catA.get('type'), 'Cutest');
+    });
+  });
+
+  test("when using model as the param of modelName to find record", async function(assert) {
+    return Ember.run(async () => {
+      let cat  = make('cat'),
+          mock = mockFindRecord(cat);
+
+      let catA = await FactoryGuy.store.findRecord('cat', mock.get('id'), { reload: true });
+      assert.deepEqual(catA, cat);
+    });
+  });
+
   // test for issue # 219
   test("with model that has attribute key defined in serializer attrs", function(assert) {
     Ember.run(() => {
@@ -119,19 +162,6 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       FactoryGuy.store.findRecord('dog', mock.get('id')).then(function(dog) {
         assert.equal(dog.get('id'), 'Dog1');
         assert.equal(dog.get('dogNumber'), 'Dog1');
-        done();
-      });
-    });
-  });
-
-  test("with model that has attribute named type, is not polymorphic, and returns model", function(assert) {
-    Ember.run(() => {
-      let done = assert.async();
-      let cat = make('cat', { type: 'Cutest' });
-      let mock = mockFindRecord('cat').returns({ model: cat });
-
-      FactoryGuy.store.findRecord('cat', mock.get('id'), { reload: true }).then(function(catA) {
-        assert.equal(catA.get('type'), 'Cutest');
         done();
       });
     });
@@ -1024,44 +1054,37 @@ SharedBehavior.mockQueryRecordTests = function() {
     });
   });
 
-  test("twice using returns with different json and different params returns different results", function(assert) {
-    Ember.run(() => {
-      let done = assert.async();
+  test("twice using returns with different json and different params returns different results", async function(assert) {
+    return Ember.run(async () => {
 
-      let company1 = build('company');
+      let company1 = build('company'),
+          company2 = build('company');
+
       mockQueryRecord('company', { name: 'Dude' }).returns({ json: company1 });
-
-      let company2 = build('company');
       mockQueryRecord('company', { type: 'Small' }).returns({ json: company2 });
 
-      FactoryGuy.store.queryRecord('company', { name: 'Dude' }).then(function(company) {
-        assert.equal(company.get('id'), company1.get('id'));
+      let company = await FactoryGuy.store.queryRecord('company', { name: 'Dude' });
+      assert.equal(company.get('id'), company1.get('id'));
 
-        FactoryGuy.store.queryRecord('company', { type: 'Small' }).then(function(company) {
-          assert.equal(company.get('id'), company2.get('id'));
-          done();
-        });
-      });
+      company = await FactoryGuy.store.queryRecord('company', { type: 'Small' });
+      assert.equal(company.get('id'), company2.get('id'));
     });
   });
 
-  test("reusing mock using returns with different json and withParams with different params returns different results", function(assert) {
-    Ember.run(() => {
-      let done = assert.async();
-
-      let company1 = build('company');
-      let company2 = build('company');
+  test("reusing mock using returns with different json and withParams with different params returns different results", async function(assert) {
+    return Ember.run(async () => {
+      let company1 = build('company'),
+          company2 = build('company');
 
       let mockQuery = mockQueryRecord('company', { name: 'Dude' }).returns({ json: company1 });
-      FactoryGuy.store.queryRecord('company', { name: 'Dude' }).then(function(company) {
-        assert.equal(company.get('id'), company1.get('id'));
+      let company = await FactoryGuy.store.queryRecord('company', { name: 'Dude' });
 
-        mockQuery.withParams({ type: 'Small' }).returns({ json: company2 });
-        FactoryGuy.store.queryRecord('company', { type: 'Small' }).then(function(company) {
-          assert.equal(company.get('id'), company2.get('id'));
-          done();
-        });
-      });
+      assert.equal(company.get('id'), company1.get('id'));
+
+      mockQuery.withParams({ type: 'Small' }).returns({ json: company2 });
+      company = await FactoryGuy.store.queryRecord('company', { type: 'Small' });
+
+      assert.equal(company.get('id'), company2.get('id'));
     });
   });
 

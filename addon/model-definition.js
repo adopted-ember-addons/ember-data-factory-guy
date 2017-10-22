@@ -2,7 +2,7 @@ import Ember from 'ember';
 import FactoryGuy from './factory-guy';
 import Sequence from './sequence';
 import MissingSequenceError from './missing-sequence-error';
-import $ from 'jquery';
+import {isEmptyObject, mergeDeep} from './utils/helper-functions';
 import require from 'require';
 
 let Fragment;
@@ -25,7 +25,7 @@ class ModelDefinition {
   constructor(model, config) {
     this.modelName = model;
     this.modelId = 1;
-    this.originalConfig = $.extend(true, {}, config);
+    this.originalConfig = mergeDeep({}, config);
     this.parseConfig(Ember.copy(config));
   }
 
@@ -145,11 +145,11 @@ class ModelDefinition {
     let traitsObj = {};
     traitArgs.forEach((trait) => {
       Ember.assert(`You're trying to use a trait [${trait}] for model ${this.modelName} but that trait can't be found.`, this.traits[trait]);
-      $.extend(traitsObj, this.traits[trait]);
+      Object.assign(traitsObj, this.traits[trait]);
     });
     let modelAttributes = this.namedModels[name] || {};
     // merge default, modelAttributes, traits and opts to get the rough fixture
-    let fixture = $.extend({}, this.default, modelAttributes, traitsObj, opts);
+    let fixture = Object.assign({}, this.default, modelAttributes, traitsObj, opts);
 
     if (this.notPolymorphic !== undefined) {
       fixture._notPolymorphic = true;
@@ -200,7 +200,7 @@ class ModelDefinition {
 
     if (this.isModelFragmentAttribute(attribute)) {
       let payload = fixture[attribute];
-      if ($.isEmptyObject(payload)) {
+      if (isEmptyObject(payload)) {
         // make a payload, but make sure it's the correct fragment type
         let actualType = this.fragmentType(attribute);
         payload = FactoryGuy.buildRaw(actualType, {});
@@ -248,7 +248,7 @@ class ModelDefinition {
   applyAfterMake(model, opts) {
     if (this.afterMake) {
       // passed in options override transient setting
-      let options = $.extend({}, this.transient, opts);
+      let options = Object.assign({}, this.transient, opts);
       this.afterMake(model, options);
     }
   }
@@ -283,7 +283,7 @@ class ModelDefinition {
    @param {ModelDefinition} otherDefinition
    */
   merge(config, otherDefinition) {
-    let otherConfig = $.extend(true, {}, otherDefinition.originalConfig);
+    let otherConfig = mergeDeep({}, otherDefinition.originalConfig);
     delete otherConfig.extends;
     this.mergeSection(config, otherConfig, 'sequences');
     // not sure why I have to use main definition for default,

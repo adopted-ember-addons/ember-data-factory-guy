@@ -1,7 +1,86 @@
 /* global requirejs */
-/*jslint node: true */
 import Ember from 'ember';
 import require from 'require';
+
+
+export function toParams(obj) {
+  return parseParms(decodeURIComponent(Ember.$.param(obj)));
+  //  return Object.keys(obj).map(function(k) {
+  //      return encodeURIComponent(k) + "=" + encodeURIComponent(obj[k]);
+  //  }).join('&');
+}
+
+function parseParms(str) {
+  let pieces = str.split("&"),
+      data   = {},
+      i, parts, key, value;
+
+  // Process each query pair
+  for (i = 0; i < pieces.length; i++) {
+    parts = pieces[i].split("=");
+
+    // No value, only key
+    if (parts.length < 2) {
+      parts.push("");
+    }
+
+    key = decodeURIComponent(parts[0]);
+    value = decodeURIComponent(parts[1]);
+
+    // Key is an array
+    if (key.indexOf("[]") !== -1) {
+      key = key.substring(0, key.indexOf("[]"));
+
+      // Check already there
+      if ("undefined" === typeof data[key]) {
+        data[key] = [];
+      }
+
+      data[key].push(value);
+    } else {
+      data[key] = value;
+    }
+  }
+  return data;
+}
+
+export function isEmptyObject(obj) {
+  return !isObject(obj) || Object.keys(obj).length === 0;
+}
+
+/**
+ * Simple object check.
+ * @param item
+ * @returns {boolean}
+ */
+export function isObject(item) {
+  return (item && typeof item === 'object' && !Array.isArray(item));
+}
+
+/**
+ * Deep merge two objects.
+ * @param target
+ * @param ...sources
+ */
+export function mergeDeep(target, ...sources) {
+  if (!sources.length) return target;
+  const source = sources.shift();
+
+  if (isObject(target) && isObject(source)) {
+    for (const key in source) {
+      if (isObject(source[key])) {
+        if (!target[key]) {
+          Object.assign(target, { [key]: {} });
+        }
+        mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(target, { [key]: source[key] });
+      }
+    }
+  }
+
+  return mergeDeep(target, ...sources);
+}
 
 export function isEquivalent(a, b) {
   var type = Ember.typeOf(a);

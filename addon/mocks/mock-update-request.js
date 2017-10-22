@@ -11,6 +11,7 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
     this.id = id;
     this.returnArgs = {};
     this.matchArgs = {};
+    this.setupHandler();
   }
 
   getType() {
@@ -45,8 +46,8 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
   getResponse() {
     this.responseJson = null;
     if (this.id) {
-      let args = Ember.$.extend({}, this.matchArgs, this.returnArgs),
-          json = Ember.$.extend({}, args, { id: this.id });
+      let args = Object.assign({}, this.matchArgs, this.returnArgs),
+          json = Object.assign({}, args, { id: this.id });
       this.responseJson = this.fixtureBuilder.convertForBuild(this.modelName, json);
     }
     return super.getResponse();

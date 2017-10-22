@@ -11,6 +11,7 @@ export default class MockCreateRequest extends AttributeMatcher(MockRequest) {
     super(modelName, 'createRecord');
     this.returnArgs = {};
     this.matchArgs = {};
+    this.setupHandler();
   }
 
   getType() {
@@ -48,8 +49,8 @@ export default class MockCreateRequest extends AttributeMatcher(MockRequest) {
    Need to clone the responseJson and add id at the very last minute
    */
   getResponse() {
-    let args = Ember.$.extend({}, this.matchArgs, this.returnArgs),
-        json = Ember.$.extend({}, args, { id: this.modelId() });
+    let args = Object.assign({}, this.matchArgs, this.returnArgs),
+        json = Object.assign({}, args, { id: this.modelId() });
     this.responseJson = this.fixtureBuilder.convertForBuild(this.modelName, json);
     return super.getResponse();
   }

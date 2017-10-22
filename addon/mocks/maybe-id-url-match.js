@@ -19,7 +19,19 @@ const MaybeIdUrlMatch = (superclass) => class extends superclass {
       return this.id;
     }
   }
-  
+
+  /**
+   *
+   * @returns {String} url
+   */
+  getUrl() {
+    let url = super.getUrl();
+    if (!this.id) {
+      url = `${url}/:id`;
+    }
+    return url;
+  }
+
   urlMatch(settings) {
     /**
      If no id is specified, match any url with an id,
