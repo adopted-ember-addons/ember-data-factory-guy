@@ -1,19 +1,15 @@
 import {module, test} from 'qunit';
 import {isEquivalent, isEmptyObject, isPartOf} from 'ember-data-factory-guy/utils/helper-functions';
 
-module('isEquivalent | Helper Function');
-
-let tomster = { name: 'Tomster', friends: ['Zoey', 'Yahuda', 'Tom'] };
-let zoey = { name: 'Zoey', friends: ['Tomster', 'Yahuda', 'Tom'] };
-let daniel = { name: 'Daniel', friends: ['Zoey', 'Yahuda', 'Tom'] };
+module('Unit | Helper Functions');
 
 test('#isEmptyObject', function(assert) {
   let tests = [
-    [null, false, 'null'],
-    [undefined, false, 'undefined'],
-    [[], false, '[]'],
+    [null, true, 'null'],
+    [undefined, true, 'undefined'],
+    [[], true, '[]'],
     [{}, true, '{}'],
-    [{ a: 1 }, true, '{a:1}']
+    [{ a: 1 }, false, '{a:1}']
   ];
 
   for (let test of tests) {
@@ -21,6 +17,10 @@ test('#isEmptyObject', function(assert) {
     assert.equal(isEmptyObject(object), expected, message);
   }
 });
+
+let tomster = { name: 'Tomster', friends: ['Zoey', 'Yahuda', 'Tom'] };
+let zoey = { name: 'Zoey', friends: ['Tomster', 'Yahuda', 'Tom'] };
+let daniel = { name: 'Daniel', friends: ['Zoey', 'Yahuda', 'Tom'] };
 
 test('#isEquivalent with numbers', function(assert) {
   assert.ok(isEquivalent(1, 1), 'Equivalent numbers should return true');
@@ -50,35 +50,9 @@ test('#isEquivalent with arrays', function(assert) {
   assert.ok(!isEquivalent(tomster.friends, zoey.friends), 'arrays with non-equivalent contents return false');
   assert.ok(!isEquivalent(tomster.friends, ['Zoey', 'Tom', 'Yahuda']), 'arrays with equivalent contents but in a different order return false');
 
-  assert.ok(isEquivalent([
-      1,
-      [
-        'a',
-        [true]
-      ]
-    ],
-    [
-      1,
-      [
-        'a',
-        [true]
-      ]
-    ]), 'matches equivalence on deeply nested arrays');
+  assert.ok(isEquivalent([1, ['a', [true]]], [1, ['a', [true]]]), 'matches equivalence on deeply nested arrays');
 
-  assert.ok(!isEquivalent([
-      1,
-      [
-        'a',
-        [true]
-      ]
-    ],
-    [
-      1,
-      [
-        'b',
-        [true]
-      ]
-    ]), 'filters equivalence on deeply nested arrays');
+  assert.ok(!isEquivalent([1, ['a', [true]]], [1, ['b', [true]]]), 'filters equivalence on deeply nested arrays');
 });
 
 test('#isEquivalent with objects', function(assert) {

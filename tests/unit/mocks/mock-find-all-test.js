@@ -38,9 +38,6 @@ test("mockFindAll (when declared FIRST ) won't be used if mockQuery is present w
   let mockF = mockFindAll('user', 2);
   let mockQ = mockQuery('user', { name: 'Sleepy' });
 
-  console.log('mockF', mockF.mockId);
-  console.log('mockQ', mockQ.mockId);
-
   await FactoryGuy.store.query('user', {});
 
   assert.equal(mockF.timesCalled, 1, 'mockFindAll used since no query params exist');

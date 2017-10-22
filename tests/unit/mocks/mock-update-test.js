@@ -18,12 +18,12 @@ test("with incorrect parameters", function(assert) {
 
 test("mock has mockId when using id", function(assert) {
   let mock = mockUpdate('user', 1);
-  assert.deepEqual(mock.mockId, { type: 'PUT', url: '/users/1', num: 0 });
+  assert.deepEqual(mock.mockId, { type: 'PATCH', url: '/users/1', num: 0 });
 });
 
 test("mock has mockId when not using id", function(assert) {
   let mock = mockUpdate('user');
-  assert.deepEqual(mock.mockId, { type: 'PUT', url: '/users/:id', num: 0 });
+  assert.deepEqual(mock.mockId, { type: 'PATCH', url: '/users/:id', num: 0 });
 });
 
 test("using returns when only setting modelName", function(assert) {
