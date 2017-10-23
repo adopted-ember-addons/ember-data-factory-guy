@@ -27,31 +27,11 @@ module.exports = {
     return mergeTrees(trees);
   },
 
-  treeForVendor: function(tree) {
-    // tree can be undefined.
-    var trees = tree ? [tree] : [];
-
-    if (this.includeFactoryGuyFiles) {
-//      var packagePath = path.dirname(require.resolve('jquery-mockjax'));
-//      var packageTree = new Funnel(this.treeGenerator(packagePath), {
-//        srcDir: '/',
-//        destDir: 'jquery-mockjax'
-//      });
-//      trees.push(packageTree);
-    }
-
-    return mergeTrees(trees);
-  },
-
   included: function(app) {
     this._super.included.apply(this, arguments);
     this.app = app;
 
     this.setupFactoryGuyInclude(app);
-
-    if (this.includeFactoryGuyFiles) {
-//      app.import(path.join('vendor', 'jquery-mockjax', 'jquery.mockjax.js'));
-    }
   },
 
   setupFactoryGuyInclude: function(app) {
