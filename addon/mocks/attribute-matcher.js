@@ -78,23 +78,20 @@ const AttributeMatcher = (superclass) => class extends superclass {
     let builder = FactoryGuy.fixtureBuilder(this.modelName);
 
     // transform they match keys
-//    console.log('matchArgs',matchArgs,Object.keys(matchArgs));
     let matchCheckKeys = Object.keys(matchArgs).map((key)=> {
       return builder.transformKey(this.modelName, key);
     });
-//    console.log('matchCheckKeys',matchCheckKeys);
     // build the match args into a JSONPayload class
     let buildOpts = { serializeMode: true, transformKeys: true };
     let expectedData = builder.convertForBuild(this.modelName, matchArgs, buildOpts);
 
     // wrap request data in a JSONPayload class
     builder.wrapPayload(this.modelName, requestData);
-//    console.log('requestData',requestData);
-//    console.log('expectedData',requestData.get());
+
     // success if all values match
     return matchCheckKeys.every((key)=> {
       return isEquivalent(expectedData.get(key), requestData.get(key));
-    });//.every((value)=> value);
+    });
   }
 };
 

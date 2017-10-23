@@ -4,45 +4,56 @@ import Pretender from 'pretender';
 let wrappers = {};
 let pretender = null;
 
+/**
+ *
+ */
 export default class {
 
   static getKey(type, url) {
     return [type, url].join(' ');
   }
 
-  static assignHandlerId(type, url, index, handler) {
-    handler.mockId = { type, url, num: index };
+  /**
+   * Give each handler a mockId that is an object that holds information
+   * about what it is mocking { type, url, num }
+   *
+   * @param {String} type like GET or POST
+   * @param {String} url like '/users'
+   * @param {Number} num a sequential number for each handler
+   * @param handler
+   */
+  static assignMockId(type, url, num, handler) {
+    handler.mockId = { type, url, num };
   }
 
+  /**
+   * Add a handler to the correct wrapper and assign it a mockId
+   *
+   * @param handler
+   */
   static addHandler(handler) {
-    //    console.log('addHandler A ', type, url, 'handler.index:', handler.index, 'wrapper keys:',Object.keys(wrappers).length);
-    //    if (handler.id) {
-    //      return;
-    //    }
-
     let { type, url } = this.getTypeUrl(handler),
         key           = this.getKey(type, url),
         wrapper       = wrappers[key];
+
     if (!wrapper) {
       wrapper = new RequestWrapper();
       this.getPretender()[type.toLowerCase()].call(pretender, url, wrapper);
       wrappers[key] = wrapper;
     }
+
     let index = wrapper.addHandler(handler);
-    this.assignHandlerId(type, url, index, handler);
-    //    console.log('addHandler',key, handler.index, wrapper.indexes());
+    this.assignMockId(type, url, index, handler);
   }
 
-  static findWrapper({ handler, type, url }) {
-    if (handler) {
-      type = handler.getType();
-      url = handler.getUrl();
-    }
-    let key = this.getKey(type, url);
-    return wrappers[key];
-  }
-
+  /**
+   * Remove a handler from the wrapper it was in
+   *
+   * @param handler
+   */
   static removeHandler(handler) {
+    // get the old type, url info from last mockId
+    // in order to find the wrapper it was in
     let { type, url } = handler.mockId,
         key           = this.getKey(type, url),
         wrapper       = wrappers[key];
@@ -50,13 +61,26 @@ export default class {
     if (wrapper) {
       wrapper.removeHandler(handler);
     }
-    //    console.log('removeHandler wrapper:',key, 'num:',wrapper.num());
-    //    handler.index = undefined;
   }
 
+  /**
+   * Replace a handler from old wrapper to new one
+   *
+   * @param handler
+   */
   static replaceHandler(handler) {
     this.removeHandler(handler);
     this.addHandler(handler);
+  }
+
+  // used for testing
+  static findWrapper({ handler, type, url }) {
+    if (handler) {
+      type = handler.getType();
+      url = handler.getUrl();
+    }
+    let key = this.getKey(type, url);
+    return wrappers[key];
   }
 
   static getTypeUrl(handler) {

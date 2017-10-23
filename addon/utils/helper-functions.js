@@ -3,11 +3,12 @@ import Ember from 'ember';
 import require from 'require';
 
 
+/**
+ *
+ * @param obj
+ */
 export function toParams(obj) {
   return parseParms(decodeURIComponent(Ember.$.param(obj)));
-  //  return Object.keys(obj).map(function(k) {
-  //      return encodeURIComponent(k) + "=" + encodeURIComponent(obj[k]);
-  //  }).join('&');
 }
 
 function parseParms(str) {
@@ -145,12 +146,4 @@ export function requireFiles(filePattern) {
   return filesSeen.filter((moduleName) => {
     return !excludeRegex.test(moduleName) && filePattern.test(moduleName);
   }).map((moduleName) => require(moduleName, null, null, true));
-}
-
-export function escapeRegExp(str) {
-  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-}
-
-export function stripQueryParams(uri) {
-  return uri.split('?')[0];
 }

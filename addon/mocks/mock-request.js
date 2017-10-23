@@ -17,7 +17,6 @@ export default class {
     this.errorResponse = null;
     this.isDisabled = false;
     this.isDestroyed = false;
-    //    this.handler = this.setupHandler();
     this.timesCalled = 0;
   }
 
@@ -113,21 +112,6 @@ export default class {
     return true;
   }
 
-  //  typeMatch(settings) {
-  //    return settings.type === this.getType();
-  //  }
-
-  //  urlMatch(settings) {
-  //    return stripQueryParams(settings.url) === stripQueryParams(this.getUrl());
-  //  }
-
-  // Only check the uri path, not the host name and or query params.
-  // The query params will be checked for mockQuery, mockQueryRecord,
-  // but for the other mocks ignore them
-  //  basicRequestMatches(settings) {
-  //    return this.typeMatch(settings) && this.urlMatch(settings);
-  //  }
-
   extraRequestMatches(/*request*/) {
     return true;
   }
@@ -147,34 +131,11 @@ export default class {
     if (this.useOnce) {
       this.disable();
     }
+
     return true;
   }
 
-  //////////////  common handler for all requests ////////////
-  //  setupHandler() {
-  //    let handler = function(request) {
-  //      if (this.isDisabled) {
-  //        return false;
-  //      }
-  //      //      if (!this.basicRequestMatches(settings)) {
-  //      //        return false;
-  //      //      }
-  //      if (!this.extraRequestMatches(request)) {
-  //        return false;
-  //      }
-  //
-  //      this.timesCalled++;
-  //      let response = this.getResponse();
-  //      this.logInfo();
-  //      if (this.useOnce) {
-  //        this.disable();
-  //      }
-  //      return response;
-  //    }.bind(this);
-  //
-  //    this.mockId = Ember.$.mockjax(handler);
-  //    return handler;
-  //  }
+  // mockId holds the url for this mock request
   oldUrl() {
     return this.mockId && this.mockId.url
   }
@@ -184,13 +145,11 @@ export default class {
   }
 
   setupHandler() {
-    //    console.log('setupHandler',this.id);
     if (!this.mockId) {
       RequestManager.addHandler(this);
     } else if (this.changedUrl()) {
       RequestManager.replaceHandler(this);
     }
-//    console.log('setupHandler', 'url', this.getType(), this.getUrl(), 'id:', this.mockId,  'model id:',this.get('id'));
   }
 
   // once the mock is used, it will disable itself, so it can't be used again.
@@ -210,7 +169,6 @@ export default class {
 
   destroy() {
     RequestManager.removeHandler(this);
-//    Ember.$.mockjax.clear(this.mockId);
     this.isDestroyed = true;
   }
 }

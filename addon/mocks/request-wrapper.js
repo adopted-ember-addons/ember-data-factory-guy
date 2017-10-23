@@ -1,3 +1,29 @@
+/**
+ * This request wrapper controls what will be returned by one url / http verb
+ * Normally when you set up pretender, you give it one function to handle one url / verb.
+ *
+ * So, for example, you would:
+ *
+ *  ```
+ *    pretender.get('/users', myfunction )
+ *  ```
+ *
+ *  to mock a [GET /users] call
+ *
+ *  This wrapper allows that GET /users call to be handled my many functions
+ *  instead of just one, since this request handler hold the ability to take
+ *  a list of hanlders.
+ *
+ *  That way you can setup a few mocks like
+ *
+ *  ```
+ *    mockFindAll('user')
+ *    mockQuery('user', {name: 'Dude'})
+ *  ```
+ *
+ *  and both of these hanlders will reside in the list for the wrapper that
+ *  belongs to [GET /users]
+ */
 export default class {
 
   constructor() {
@@ -6,26 +32,25 @@ export default class {
     return this.generateRequestHandler();
   }
 
-  // add proxy methods to json object
+  /**
+   * Generating a function that we can hand off to pretender that
+   * will handle the request.
+   *
+   * Before passing back that function, add some other functions
+   * to control the handlers array
+   *
+   * @returns {function(this:T)}
+   */
   generateRequestHandler() {
     let requestHandler = this.handleRequest.bind(this),
-        methods        = ['num', 'addHandler', 'removeHandler', 'indexes', 'getHandlers'];
+        methods        = ['addHandler', 'removeHandler', 'indexes', 'getHandlers'];
     methods.forEach(method => requestHandler[method] = this[method].bind(this));
     return requestHandler;
   }
 
-  num() {
-    //    console.log('num this.handlers',this.handlers.map(h=>h.index));
-    return this.handlers.length;
-  }
-
+  // mainly for tests to inspect
   getHandlers() {
     return this.handlers;
-  }
-
-  indexes() {
-    //    console.log('num this.handlers',this.handlers.map(h=>h.index));
-    return this.handlers.map(h => h.mockId);
   }
 
   addHandler(handler) {
@@ -37,14 +62,19 @@ export default class {
     this.handlers = this.handlers.filter(h => h.mockId !== handler.mockId);
   }
 
+  /**
+   * This is the method that pretender will call to handle the request.
+   *
+   * Flip though the list to find a handler that matches and return
+   * the response if you find a handler.
+   *
+   * @param {FakeRequest} request pretenders object
+   * @returns {[null,null,null]}
+   */
   handleRequest(request) {
-//        console.log('handleRequest request', request);
-    //    console.log('handleRequest this.handlers', this.handlers);
     let handler = this.handlers.find(handler => handler.matches(request));
-//        console.log('handler', handler);
     if (handler) {
       let { status, headers, responseText } = handler.getResponse();
-//            console.log('responseText',responseText);
       return [status, headers, responseText]
     }
   }
