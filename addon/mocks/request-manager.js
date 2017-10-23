@@ -1,13 +1,37 @@
+import Ember from 'ember';
 import RequestWrapper from './request-wrapper';
 import Pretender from 'pretender';
 
-let wrappers = {};
-let pretender = null;
+let wrappers  = {},
+    pretender = null,
+    delay     = 0;
 
 /**
+ * RequestManager controls setting up pretender to handle the mocks that are
+ * created.
  *
+ * For each request type / url like [GET /users] or [POST /user/1]
+ * the request manager will assign a RequestWrapper class to handle it's response.
+ *
+ * This class will take the mock handler classes and assign them to a wrapper,
+ * and also allow you to remove the handler or replace it from it's current
+ * wrapper to new one.
  */
 export default class {
+
+  /**
+   * For now, you can only set the response delay.
+   *
+   * @param {Number} responseTime
+   * @returns {{responseTime: number}} the current settings
+   */
+  static settings({ responseTime } = {}) {
+    if (Ember.isPresent(responseTime)) {
+      delay = responseTime;
+    }
+    // return current settings
+    return { responseTime: delay };
+  }
 
   static getKey(type, url) {
     return [type, url].join(' ');
@@ -38,7 +62,7 @@ export default class {
 
     if (!wrapper) {
       wrapper = new RequestWrapper();
-      this.getPretender()[type.toLowerCase()].call(pretender, url, wrapper);
+      this.getPretender()[type.toLowerCase()].call(pretender, url, wrapper, delay);
       wrappers[key] = wrapper;
     }
 
@@ -91,6 +115,7 @@ export default class {
     wrappers = {};
     pretender && pretender.shutdown();
     pretender = null;
+    delay = 0;
   }
 
   static getPretender() {

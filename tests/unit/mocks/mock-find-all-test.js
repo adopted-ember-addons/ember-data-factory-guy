@@ -43,10 +43,9 @@ test("mockFindAll (when declared FIRST ) won't be used if mockQuery is present w
   assert.equal(mockF.timesCalled, 1, 'mockFindAll used since no query params exist');
   assert.equal(mockQ.timesCalled, 0, 'mockQuery not used');
 
-  // TODO .. is this what I really want?
-//  await FactoryGuy.store.query('user', { name: 'Sleepy' });
-//  assert.equal(mockF.timesCalled, 1, 'mockFindAll not used since query params exist');
-//  assert.equal(mockQ.timesCalled, 1, 'now mockQuery is used');
+  await FactoryGuy.store.query('user', { name: 'Sleepy' });
+  assert.equal(mockF.timesCalled, 1, 'mockFindAll not used since query params exist');
+  assert.equal(mockQ.timesCalled, 1, 'now mockQuery is used');
 });
 
 moduleFor('serializer:application', 'MockFindAll #getUrl', inlineSetup(serializerType));

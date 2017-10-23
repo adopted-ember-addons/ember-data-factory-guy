@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import FactoryGuy from 'ember-data-factory-guy';
 import * as fgMethods from 'ember-data-factory-guy';
 
@@ -17,8 +16,6 @@ export default class {
   }
 
   static settings(opts = {}) {
-    Ember.$.mockjaxSettings.logging = opts.mockjaxLogLevel || 1;
-    Ember.$.mockjaxSettings.responseTime = opts.responseTime || 0;
     FactoryGuy.settings(opts);
   }
 

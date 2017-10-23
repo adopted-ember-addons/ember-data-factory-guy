@@ -5,6 +5,7 @@ import FactoryGuy, {
 } from 'ember-data-factory-guy';
 import {inlineSetup} from '../../helpers/utility-methods';
 import MockRequest from 'ember-data-factory-guy/mocks/mock-request';
+import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
 
 const serializerType = '-json-api';
 
@@ -12,21 +13,13 @@ moduleFor('serializer:application', 'mockSetup', inlineSetup(serializerType));
 
 test("accepts parameters", function(assert) {
   FactoryGuy.logLevel = 0;
-  Ember.$.mockjaxSettings.responseTime = 0;
-  Ember.$.mockjaxSettings.logging = 0;
+  RequestManager.settings({responseTime: 0});
 
   mockSetup({ logLevel: 1 });
   assert.equal(FactoryGuy.logLevel, 1);
 
   mockSetup({ responseTime: 10 });
-  assert.equal(Ember.$.mockjaxSettings.responseTime, 10);
-
-  mockSetup({ mockjaxLogLevel: 4 });
-  assert.equal(Ember.$.mockjaxSettings.logging, 4);
-
-  FactoryGuy.logLevel = 0;
-  Ember.$.mockjaxSettings.responseTime = 0;
-  Ember.$.mockjaxSettings.logging = 0;
+  assert.equal(RequestManager.settings().responseTime, 10);
 });
 
 

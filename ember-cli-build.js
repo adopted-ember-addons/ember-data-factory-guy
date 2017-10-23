@@ -11,7 +11,5 @@ module.exports = function(defaults) {
     }
   });
 
-  app.import('vendor/jquery-mockjax/jquery.mockjax.js');
-
   return app.toTree();
 };

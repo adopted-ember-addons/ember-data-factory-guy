@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
 import {isEmptyObject, isEquivalent} from '../utils/helper-functions';
-//const { isEmpty } = Ember;
 
 /**
  This is a mixin used by MockUpdate and MockCreateRequest

@@ -752,11 +752,12 @@ Usage:
      - only JSONAPI, and REST based serializers can do sideloading
      - so DRFSerializer and JSONSerializer users can not use this feature
    - you dont need to use json key as in: ```build('user').add({json: batMan})```
-            
-     you can just add the payload directly as: ```build('user').add(batMan)``` 
+   - you can just add the payload directly as: ```build('user').add(batMan)``` 
+     
        
-Usage:
+Usage:  
 
+ - when the sideloaded data is NOT related to payooad 
 ```javascript
   let batMan = build('bat_man');
   let userPayload = build('user').add(batMan);
@@ -772,6 +773,28 @@ Usage:
         id: 1,
         name: "BatMan",
         type: "SuperHero"
+      }
+    ]
+  };
+```
+ - when the sideloaded data IS related to payload 
+```javascript
+  let projects = buildList('projects', 1);
+  let userPayload = build('user', {projects}).add(buildList);
+
+  userPayload = {
+    user: {
+      id: 1,
+      name: 'User1',
+      style: 'normal',
+      projects: [
+        { id: 1, type: 'projects' }
+      ]
+    },
+    projects: [
+      {
+        id: 1,
+        title: "FooFoo"
       }
     ]
   };

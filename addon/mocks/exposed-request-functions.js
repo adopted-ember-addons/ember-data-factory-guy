@@ -10,14 +10,12 @@ import MockReloadRequest from './mock-reload-request';
 import MockFindAllRequest from './mock-find-all-request';
 import MockDeleteRequest from './mock-delete-request';
 
-export function mockSetup({ mockjaxLogLevel = 1, responseTime = 0, logLevel = 0 }={}) {
-  Ember.$.mockjaxSettings.logging = mockjaxLogLevel; // set to 4 for maximum logging output
-  Ember.$.mockjaxSettings.responseTime = responseTime;
-  FactoryGuy.settings({ logLevel });
+export function mockSetup({ responseTime, logLevel = 0 } = {}) {
+  FactoryGuy.settings({ logLevel, responseTime });
 }
 
 export function mockTeardown() {
-  Ember.$.mockjax.clear();
+  FactoryGuy.resetMockAjax();
 }
 
 /**
@@ -186,7 +184,7 @@ export function mockFindAll(...args) {
  @param {String} queryParams  the parameters that will be queried
  @param {Array}  array of Model records to be 'returned' by query
  */
-export function mockQuery(modelName, queryParams={}) {
+export function mockQuery(modelName, queryParams = {}) {
   Ember.assert('The second argument ( queryParams ) must be an object', Ember.typeOf(queryParams) === 'object');
 
   return new MockQueryRequest(modelName, queryParams);
@@ -288,7 +286,7 @@ export function mockQueryRecord(modelName, queryParams) {
  */
 export function mockCreate(modelName) {
   Ember.assert(`[ember-data-factory-guy] mockCreate requires at least a model type name`, modelName);
-  
+
   return new MockCreateRequest(modelName);
 }
 

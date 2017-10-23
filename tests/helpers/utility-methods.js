@@ -90,7 +90,7 @@ function setupCustomSerializer(container, serializerType, options) {
 // serializerType like -rest or -active-model, -json-api, -json
 function containerSetup(container, serializerType) {
   manualSetup(container);
-  
+
   // brute force setting the adapter/serializer on the store.
   if (serializerType) {
     container.registry.register('adapter:-drf', DRFAdapter, { singleton: false });
@@ -108,10 +108,10 @@ function containerSetup(container, serializerType) {
     let serializer = container.lookup('serializer:' + serializerType);
 
     store.adapterFor = function() {
-//      if (modelName.match(/(employee)/)) {
-//        let options = adapterOptions[modelName];
-//        return setupCustomAdapter(container, adapterType, options);
-//      }
+      //      if (modelName.match(/(employee)/)) {
+      //        let options = adapterOptions[modelName];
+      //        return setupCustomAdapter(container, adapterType, options);
+      //      }
       return adapter;
     };
 
@@ -139,24 +139,16 @@ function containerSetup(container, serializerType) {
   }
 }
 
-function theUsualTeardown() {
-  Ember.run(function() {
-    Ember.$.mockjax.clear();
-  });
-}
-
 function inlineSetup(serializerType) {
   return {
     integration: true,
     beforeEach: function() {
-      Ember.$.mockjaxSettings.responseTime = 0;
-      Ember.$.mockjaxSettings.logging = 1;
-      FactoryGuy.settings({logLevel: 0});
       containerSetup(this.container, serializerType);
-    }, 
+      FactoryGuy.settings({ responseTime: 0, logLevel: 0 });
+    },
     afterEach: function() {
       Ember.run(function() {
-        Ember.$.mockjax.clear();
+        FactoryGuy.reset();
       });
     }
   };
@@ -166,4 +158,4 @@ function title(adapter, testName) {
   return [adapter, testName].join(' | ');
 }
 
-export {title, inlineSetup, containerSetup, theUsualTeardown};
+export {title, inlineSetup, containerSetup};
