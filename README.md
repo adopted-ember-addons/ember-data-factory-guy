@@ -1142,15 +1142,15 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
 
 ##### Using mock methods
 
-- Uses mockjax
+- Uses pretender
   - for mocking the ajax calls made by ember-data
   - this library is installed with FactoryGuy
 - http GET mocks
-  - [FactoryGuy.mockFindRecord](#factoryguymockfindrecord)
-  - [FactoryGuy.mockFindAll](#factoryguymockfindall)
-  - [FactoryGuy.mockReload](#factoryguymockreload)
-  - [FactoryGuy.mockQuery](#factoryguymockquery)
-  - [FactoryGuy.mockQueryRecord](#factoryguymockqueryrecord)
+  - [mockFindRecord](#factoryguymockfindrecord)
+  - [mockFindAll](#factoryguymockfindall)
+  - [mockReload](#factoryguymockreload)
+  - [mockQuery](#factoryguymockquery)
+  - [mockQueryRecord](#factoryguymockqueryrecord)
   - takes modifier method `returns()` for setting the payload response
     - `returns()` accepts parameters like: json, model, models, id, ids, headers
       - headers are cumulative so you can add as many as you like
@@ -1161,9 +1161,9 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - these mocks are are reusable
     - so you can simulate making the same ajax call ( url ) and return a different payload
 - http POST/PUT/DELETE
-  - [FactoryGuy.mockCreate](#factoryguymockcreate)
-  - [FactoryGuy.mockUpdate](#factoryguymockupdate)
-  - [FactoryGuy.mockDelete](#factoryguymockdelete)
+  - [mockCreate](#factoryguymockcreate)
+  - [mockUpdate](#factoryguymockupdate)
+  - [mockDelete](#factoryguymockdelete)
 
 - Use method `fails()` to simulate failure
 - Use method `succeeds()` to simulate success
@@ -1188,7 +1188,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
 - Use method `disable()` to temporarily disable the mock. You can re-enable
 the disabled mock using `enable()`.
 
-- Use method `destroy()` to completely remove the mockjax handler for the mock.
+- Use method `destroy()` to completely remove the mock handler for the mock.
 The `isDestroyed` property is set to `true` when the mock is destroyed.
 
 
@@ -1197,10 +1197,9 @@ The `isDestroyed` property is set to `true` when the mock is destroyed.
    - set logging options here:
       - logLevel ( 0 - off , 1 - on ) for seeing the FactoryGuy responses
       - responseTime ( in millis )  for simulating slower responses
-      - mockjaxLogLevel ( 1 - 4 max ) for seeing mockjax logging
     - Example:
     ```javascript
-      mockSetup({logLevel: 1, responseTime: 1000, mockjaxLogLevel: 4});
+      mockSetup({logLevel: 1, responseTime: 1000});
     ```
   - Use ```mockTeardown()``` in test teardown/afterEach
   - Easiest is to set them up in [module-for-acceptance.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/helpers/module-for-acceptance.js)
@@ -1228,7 +1227,7 @@ The `isDestroyed` property is set to `true` when the mock is destroyed.
   ```
 
 
-##### `FactoryGuy.mockFindRecord`
+##### `mockFindRecord`
   - For dealing with finding one record of a model type => `store.findRecord('modelType', id)`
   - Can pass in arguments just like you would for [`make`](#factoryguymake) or [`build`](#factoryguybuild)
     - `mockFindRecord`( fixture or model name, optional traits, optional attributes object)
@@ -1307,7 +1306,7 @@ Usage:
     // ... blah blah   
   }
 ```
-##### `FactoryGuy.mockFindAll`
+##### `mockFindAll`
   - For dealing with finding all records for a model type => `store.findAll(modelType)`
   - Takes same parameters as [makeList](#factoryguymakelist)
     - `mockFindAll`( fixture or model name, optional number, optional traits, optional attributes object)
@@ -1361,7 +1360,7 @@ Usage:
    mockFindAll('user').fails();
 ```
 
-##### `FactoryGuy.mockReload`
+##### `mockReload`
   - To handle reloading a model
     - Pass in a record ( or a typeName and id )
 
@@ -1394,7 +1393,7 @@ Usage:
   mockReload('profile', 1).fails();
 ```
 
-##### `FactoryGuy.mockQuery`
+##### `mockQuery`
   - For dealing with querying for all records for a model type => `store.query(modelType, params)`
     - Takes modifier method `returns()` for controlling the response payload
       - returns( models / json / ids )
@@ -1482,7 +1481,7 @@ Usage:
   store.query('user', {name:'Bob', age: 10, hair: 'brown'}})
 ```
 
-##### `FactoryGuy.mockQueryRecord`
+##### `mockQueryRecord`
   - For dealing with querying for one record for a model type => `store.queryRecord(modelType, params)`
     - takes modifier method `returns()` for controlling the response payload
       - returns( model / json / id )
@@ -1541,7 +1540,7 @@ Usage:
 
 ```
 
-##### `FactoryGuy.mockCreate`
+##### `mockCreate`
 
   - Use chainable methods to build the response
     - match: takes a hash with attributes or a matching function
@@ -1622,7 +1621,7 @@ Usage:
 ```
 
 
-##### `FactoryGuy.mockUpdate`
+##### `mockUpdate`
 
   - `mockUpdate(model)`
     - Single argument ( the model instance that will be updated )
@@ -1729,7 +1728,7 @@ Usage:
 ````
 
 
-##### `FactoryGuy.mockDelete`
+##### `mockDelete`
   - Need to wrap tests using `mockDelete` with: `Ember.run(function() { 'your test' })`
   - To handle deleting a model
     - Pass in a record ( or a typeName and id )
