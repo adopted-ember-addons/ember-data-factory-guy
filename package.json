@@ -47,7 +47,7 @@
     "ember-django-adapter": "1.1.3",
     "ember-load-initializers": "^1.0.0",
     "ember-resolver": "4.1.0",
-    "ember-sinon": "0.6.0",
+    "ember-sinon": "1.0.0",
     "ember-source": "2.13",
     "loader.js": "4.4.0"
   },

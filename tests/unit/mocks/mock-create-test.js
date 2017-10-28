@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import {moduleFor, test} from 'ember-qunit';
+import Model from 'ember-data/model';
 import FactoryGuy, {build, mockCreate} from 'ember-data-factory-guy';
 import {inlineSetup} from '../../helpers/utility-methods';
 import sinon from 'sinon';
@@ -44,5 +45,25 @@ test("#getUrl uses urlForCreateRecord if it is set on the adapter", function(ass
   sinon.stub(adapter, 'urlForCreateRecord').returns('/makeMeAZombie');
 
   assert.equal(mock1.getUrl(), '/makeMeAZombie');
+  adapter.urlForCreateRecord.restore();
+});
+
+test('snapshot has record and adapterOptions in adapter#urlForCreateRecord', async function(assert) {
+  mockCreate('user');
+
+  let adapter        = FactoryGuy.store.adapterFor('user'),
+      adapterOptions = { name: 'Bob' };
+
+  let fakeUrlForCreateRecord = function(modelName, snapshot) {
+    assert.ok(snapshot.record instanceof Model);
+    assert.deepEqual(snapshot.adapterOptions, adapterOptions);
+    return '/users';
+  };
+
+  sinon.stub(adapter, 'urlForCreateRecord').callsFake(fakeUrlForCreateRecord);
+
+  await Ember.run(() => {
+    return FactoryGuy.store.createRecord('user').save({ adapterOptions });
+  });
   adapter.urlForCreateRecord.restore();
 });

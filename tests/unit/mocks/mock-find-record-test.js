@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import {moduleFor, test} from 'ember-qunit';
-import FactoryGuy, {build,mockFindRecord} from 'ember-data-factory-guy';
+import FactoryGuy, {build, mockFindRecord} from 'ember-data-factory-guy';
 import {inlineSetup} from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
@@ -47,11 +47,10 @@ test("uses urlForFindRecord if it is set on the adapter", function(assert) {
 });
 
 test("passes adapterOptions to urlForFindRecord", function(assert) {
-  let options = { e: 1 };
-  let mock = mockFindRecord('user').adapterOptions(options);
-
-  let adapter = FactoryGuy.store.adapterFor('user');
-  let findRecordStub = sinon.stub(adapter, 'urlForFindRecord');
+  let options        = { e: 1 },
+      mock           = mockFindRecord('user').adapterOptions(options),
+      adapter        = FactoryGuy.store.adapterFor('user'),
+      findRecordStub = sinon.stub(adapter, 'urlForFindRecord');
 
   mock.getUrl();
   assert.ok(findRecordStub.calledOnce);
@@ -64,10 +63,9 @@ moduleFor('serializer:application', 'MockFindRecord #fails', inlineSetup(seriali
 
 test("with errors in response", function(assert) {
   Ember.run(() => {
-    const done = assert.async();
-
-    const response = { errors: { description: ['bad'] } };
-    const mock = mockFindRecord('profile').fails({ response });
+    const done     = assert.async(),
+          response = { errors: { description: ['bad'] } },
+          mock     = mockFindRecord('profile').fails({ response });
 
     FactoryGuy.store.findRecord('profile', 1)
       .catch(() => {
