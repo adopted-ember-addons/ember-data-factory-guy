@@ -1,7 +1,7 @@
 import {moduleFor, test} from 'ember-qunit';
 import Ember from 'ember';
 import FactoryGuy, {
-  make, build, mockFindAll, mockQueryRecord, mockUpdate, mockSetup
+  make, build, mockFindAll, mockQueryRecord, mockUpdate, mockSetup, mock
 } from 'ember-data-factory-guy';
 import {inlineSetup} from '../../helpers/utility-methods';
 import MockRequest from 'ember-data-factory-guy/mocks/mock-request';
@@ -13,7 +13,7 @@ moduleFor('serializer:application', 'mockSetup', inlineSetup(serializerType));
 
 test("accepts parameters", function(assert) {
   FactoryGuy.logLevel = 0;
-  RequestManager.settings({responseTime: 0});
+  RequestManager.settings({ responseTime: 0 });
 
   mockSetup({ logLevel: 1 });
   assert.equal(FactoryGuy.logLevel, 1);
@@ -109,60 +109,34 @@ test("can verify how many times an update call was mocked", async function(asser
   assert.equal(mock.timesCalled, 2);
 });
 
-//moduleFor('serializer:application', 'MockRequest#basicRequestMatches', inlineSetup(serializerType));
-//
-//test("fails if the types don't match", function(assert) {
-//  const mock = new MockRequest('user');
-//  sinon.stub(mock, 'getType').returns('POST');
-//  sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
-//
-//  const settings = {
-//    type: 'GET',
-//    url: '/api/ember-data-factory-guy'
-//  };
-//
-//  assert.ok(!mock.basicRequestMatches(settings));
-//});
-//
-//test("fails if the URLs don't match", function(assert) {
-//  const mock = new MockRequest('user');
-//  sinon.stub(mock, 'getType').returns('GET');
-//  sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
-//
-//  const settings = {
-//    type: 'GET',
-//    url: '/api/ember-data-factory-guy/123'
-//  };
-//
-//  assert.ok(!mock.basicRequestMatches(settings));
-//});
-//
-//test("succeeds if the URLs and the types match", function(assert) {
-//  const mock = new MockRequest('user');
-//  sinon.stub(mock, 'getType').returns('GET');
-//  sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
-//
-//  const settings = {
-//    type: 'GET',
-//    url: '/api/ember-data-factory-guy'
-//  };
-//
-//  assert.ok(mock.basicRequestMatches(settings));
-//});
-//
-//test("succeeds even if the given URL has query parameters that don't match", function(assert) {
-//  const mock = new MockRequest('user');
-//  sinon.stub(mock, 'getType').returns('GET');
-//  sinon.stub(mock, 'getUrl').returns('/api/ember-data-factory-guy');
-//
-//  const settings = {
-//    type: 'GET',
-//    url: '/api/ember-data-factory-guy?page=2'
-//  };
-//
-//  assert.ok(mock.basicRequestMatches(settings));
-//});
+moduleFor('serializer:application', 'MockRequest ad hoc mocks', inlineSetup(serializerType));
 
+test("get", async function(assert) {
+  const callOpts     = {
+          type: 'GET',
+          url: '/api/get-stuff',
+        },
+        responseText = { what: 'up' },
+        mockOpts     = Object.assign({ responseText }, callOpts);
+
+  mock(mockOpts);
+  let json = await Ember.$.ajax(callOpts);
+  assert.deepEqual(JSON.parse(json), responseText);
+});
+
+test("put", async function(assert) {
+  const callOpts     = {
+          type: 'PUT',
+          url: '/api/put-stuff',
+          data: { number: 1 }
+        },
+        responseText = { what: 'up' },
+        mockOpts     = Object.assign({ responseText }, callOpts);
+
+  mock(mockOpts);
+  let json = await Ember.$.ajax(callOpts);
+  assert.deepEqual(JSON.parse(json), responseText);
+});
 
 moduleFor('serializer:application', 'MockRequest #disable, #enable, and #destroy', inlineSetup(serializerType));
 
