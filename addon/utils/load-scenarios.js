@@ -15,6 +15,7 @@ const scenarioFileRegExp = new RegExp('/scenarios/main$');
 export default function(owner) {
   let config         = owner.resolveRegistration('config:environment') || {},
       { factoryGuy } = config;
+
   if (factoryGuy && factoryGuy.useScenarios) {
     let [Scenario] = requireFiles(scenarioFileRegExp);
     Ember.assert(`[ember-data-factory-guy] No app/scenarios/main.js file was found.

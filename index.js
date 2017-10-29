@@ -2,11 +2,56 @@
 'use strict';
 var fs = require('fs');
 var path = require('path');
-var mergeTrees = require('broccoli-merge-trees');
+var MergeTrees = require('broccoli-merge-trees');
 var Funnel = require('broccoli-funnel');
 
 module.exports = {
   name: 'ember-data-factory-guy',
+
+  // borrowed from ember-cli-pretender
+  _findPretenderPaths: function() {
+    if (!this._pretenderPath) {
+      var resolve = require('resolve');
+
+      this._pretenderPath = resolve.sync('pretender');
+      this._pretenderDir = path.dirname(this._pretenderPath);
+      this._routeRecognizerPath = resolve.sync('route-recognizer', { basedir: this._pretenderDir });
+      this._fakeRequestPath = resolve.sync('fake-xml-http-request', { basedir: this._pretenderDir });
+    }
+  },
+
+  // borrowed from ember-cli-pretender
+  treeForVendor: function(tree) {
+    this._findPretenderPaths();
+
+    var pretenderTree = new Funnel(this._pretenderDir, {
+      files: [path.basename(this._pretenderPath)],
+      destDir: '/pretender',
+    });
+
+    var routeRecognizerFilename = path.basename(this._routeRecognizerPath);
+    var routeRecognizerTree = new Funnel(path.dirname(this._routeRecognizerPath), {
+      files: [routeRecognizerFilename, routeRecognizerFilename + '.map'],
+      destDir: '/route-recognizer',
+    });
+
+    var fakeRequestTree = new Funnel(path.dirname(this._fakeRequestPath), {
+      files: [path.basename(this._fakeRequestPath)],
+      destDir: '/fake-xml-http-request',
+    });
+
+    var trees = [
+      tree,
+      pretenderTree,
+      routeRecognizerTree,
+      fakeRequestTree,
+      // tree is not always defined, so filter out if empty
+    ].filter(Boolean);
+
+    return new MergeTrees(trees, {
+      annotation: 'pretender-and-friends: treeForVendor'
+    });
+  },
 
   treeForApp: function(appTree) {
     var trees = [appTree];
@@ -24,7 +69,7 @@ module.exports = {
       }
     }
 
-    return mergeTrees(trees);
+    return MergeTrees(trees);
   },
 
   included: function(app) {
@@ -32,6 +77,19 @@ module.exports = {
     this.app = app;
 
     this.setupFactoryGuyInclude(app);
+
+    if (this.includeFactoryGuyFiles) {
+      this._findPretenderPaths();
+
+      app.import('vendor/fake-xml-http-request/' + path.basename(this._fakeRequestPath));
+      app.import('vendor/route-recognizer/' + path.basename(this._routeRecognizerPath));
+      app.import('vendor/pretender/' + path.basename(this._pretenderPath));
+      // not sure why this one is needed (but it is) borrowed it from mirage
+      app.import('vendor/pretender-shim.js', {
+        type: 'vendor',
+        exports: { 'pretender': ['default'] }
+      });
+    }
   },
 
   setupFactoryGuyInclude: function(app) {
@@ -39,7 +97,9 @@ module.exports = {
     let defaultSettings = { enabled: defaultEnabled, useScenarios: false };
     let userSettings = app.project.config(app.env).factoryGuy || {};
     let settings = Object.assign(defaultSettings, userSettings);
-    if (settings.useScenarios) { settings.enabled = true; }
+    if (settings.useScenarios) {
+      settings.enabled = true;
+    }
 
     this.includeFactoryGuyFiles = settings.enabled;
     // Have to be carefull not to exclude factory guy from addon tree
