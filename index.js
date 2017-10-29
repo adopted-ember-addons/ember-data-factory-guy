@@ -77,7 +77,7 @@ module.exports = {
     this.app = app;
 
     this.setupFactoryGuyInclude(app);
-
+    
     if (this.includeFactoryGuyFiles) {
       this._findPretenderPaths();
 
@@ -93,15 +93,17 @@ module.exports = {
   },
 
   setupFactoryGuyInclude: function(app) {
-    let defaultEnabled = /test|development/.test(app.env);
-    let defaultSettings = { enabled: defaultEnabled, useScenarios: false };
-    let userSettings = app.project.config(app.env).factoryGuy || {};
-    let settings = Object.assign(defaultSettings, userSettings);
+    let defaultEnabled  = /test|development/.test(app.env),
+        defaultSettings = { enabled: defaultEnabled, useScenarios: false },
+        userSettings    = app.project.config(app.env).factoryGuy || {},
+        settings        = Object.assign(defaultSettings, userSettings);
+
     if (settings.useScenarios) {
       settings.enabled = true;
     }
 
     this.includeFactoryGuyFiles = settings.enabled;
+
     // Have to be carefull not to exclude factory guy from addon tree
     // in development or test env
     let trees = /test|development/.test(app.env) ? 'app' : 'app|addon';
