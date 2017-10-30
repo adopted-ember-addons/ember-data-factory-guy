@@ -72,7 +72,7 @@ class FactoryGuy {
    * @param logLevel [0/1]
    */
   settings({ logLevel = 0, responseTime = null } = {}) {
-    RequestManager.settings({responseTime});
+    RequestManager.settings({ responseTime });
     this.logLevel = logLevel;
   }
 
@@ -348,12 +348,12 @@ class FactoryGuy {
        before using make/makeList`, this.store
     );
 
-    let modelName = lookupModelForFixtureName(args.name),
-        fixture   = this.buildRaw.apply(this, arguments),
-        data      = this.fixtureBuilder(modelName).convertForMake(modelName, fixture),
-        model     = Ember.run(() => this.store.push(data));
+    let modelName  = lookupModelForFixtureName(args.name),
+        fixture    = this.buildRaw.apply(this, arguments),
+        data       = this.fixtureBuilder(modelName).convertForMake(modelName, fixture),
+        model      = Ember.run(() => this.store.push(data)),
+        definition = lookupDefinitionForFixtureName(args.name);
 
-    let definition = lookupDefinitionForFixtureName(args.name);
     if (definition.hasAfterMake()) {
       definition.applyAfterMake(model, args.opts);
     }
