@@ -84,11 +84,6 @@ module.exports = {
       app.import('vendor/fake-xml-http-request/' + path.basename(this._fakeRequestPath));
       app.import('vendor/route-recognizer/' + path.basename(this._routeRecognizerPath));
       app.import('vendor/pretender/' + path.basename(this._pretenderPath));
-      // not sure why this one is needed (but it is) borrowed it from mirage
-      app.import('vendor/pretender-shim.js', {
-        type: 'vendor',
-        exports: { 'pretender': ['default'] }
-      });
     }
   },
 
