@@ -1,4 +1,4 @@
-import {isEmptyObject} from '../utils/helper-functions';
+import { isEmptyObject } from '../utils/helper-functions';
 
 /**
  * This request wrapper controls what will be returned by one url / http verb
@@ -26,7 +26,7 @@ import {isEmptyObject} from '../utils/helper-functions';
  *  and both of these hanlders will reside in the list for the wrapper that
  *  belongs to [GET /users]
  */
-export default class {
+export default class RequestWrapper {
 
   constructor() {
     this.index = 0;
@@ -58,12 +58,7 @@ export default class {
   getHandlers(request) {
     if (request && !isEmptyObject(request.queryParams)) {
       // reverse sort so query comes before findAll
-      return this.handlers.sort((a, b) => {
-        if (b.requestType < a.requestType) {
-          return -1;
-        }
-        return (b.requestType > a.requestType) ? 1 : 0;
-      });
+      return this.handlers.sort(RequestWrapper.reverseSortByRequestType);
     }
     return this.handlers;
   }
@@ -105,8 +100,15 @@ export default class {
   handleRequest(request) {
     let handler = this.getHandlers(request).find(handler => handler.matches(request));
     if (handler) {
-      let { status, headers, responseText } = handler.getResponse();
+      let {status, headers, responseText} = handler.getResponse();
       return [status, headers, responseText]
     }
+  }
+
+  static reverseSortByRequestType(a, b) {
+    if (b.requestType < a.requestType) {
+      return -1;
+    }
+    return (b.requestType > a.requestType) ? 1 : 0;
   }
 }
