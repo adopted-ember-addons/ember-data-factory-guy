@@ -74,7 +74,6 @@ module.exports = {
 
   included: function(app) {
     this._super.included.apply(this, arguments);
-    this.app = app;
 
     this.setupFactoryGuyInclude(app);
     
@@ -84,7 +83,16 @@ module.exports = {
       app.import('vendor/fake-xml-http-request/' + path.basename(this._fakeRequestPath));
       app.import('vendor/route-recognizer/' + path.basename(this._routeRecognizerPath));
       app.import('vendor/pretender/' + path.basename(this._pretenderPath));
+
+      // this seems like a stupid thing to do, but it is needed in fastboot environment / borrowed it from mirage
+      // eventually what I should do is not load any factory guy files in fastboot environment,
+      // but that is a real pain, so for now this will do. 
+      app.import('vendor/pretender-shim.js', {
+        type: 'vendor',
+        exports: { 'pretender': ['default'] }
+      });
     }
+
   },
 
   setupFactoryGuyInclude: function(app) {
