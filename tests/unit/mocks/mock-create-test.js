@@ -1,8 +1,8 @@
 import Ember from 'ember';
-import {moduleFor, test} from 'ember-qunit';
+import { moduleFor, test } from 'ember-qunit';
 import Model from 'ember-data/model';
-import FactoryGuy, {build, mockCreate} from 'ember-data-factory-guy';
-import {inlineSetup} from '../../helpers/utility-methods';
+import FactoryGuy, { build, makeNew, mockCreate } from 'ember-data-factory-guy';
+import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
 const serializerType = '-json-api';
@@ -17,12 +17,36 @@ test("with incorrect parameters", function(assert) {
 
 });
 
+test("logging response", async function(assert) {
+  FactoryGuy.settings({logLevel: 1});
+
+  const consoleStub = sinon.spy(console, 'log'),
+        profile     = makeNew('profile'),
+        mock        = mockCreate(profile).returns({attrs: {id: 2}});
+
+  await Ember.run(async () => profile.save());
+
+  let response     = JSON.parse(mock.getResponse().responseText),
+      expectedArgs = [
+        "[factory-guy]",
+        "MockCreate",
+        "POST",
+        "[200]",
+        `/profiles`,
+        response
+      ];
+
+  assert.deepEqual(consoleStub.getCall(0).args, expectedArgs);
+
+  console.log.restore();
+});
+
 test("#singleUse", async function(assert) {
   let user1 = build('user');
   let user2 = build('user');
 
-  mockCreate('user').returns({ attrs: { id: user1.get('id') } }).singleUse();
-  mockCreate('user').returns({ attrs: { id: user2.get('id') } });
+  mockCreate('user').returns({attrs: {id: user1.get('id')}}).singleUse();
+  mockCreate('user').returns({attrs: {id: user2.get('id')}});
 
   Ember.run(async () => {
     let model1 = FactoryGuy.store.createRecord('user', user1.get());
@@ -52,7 +76,7 @@ test('snapshot has record and adapterOptions in adapter#urlForCreateRecord', asy
   mockCreate('user');
 
   let adapter        = FactoryGuy.store.adapterFor('user'),
-      adapterOptions = { name: 'Bob' };
+      adapterOptions = {name: 'Bob'};
 
   let fakeUrlForCreateRecord = function(modelName, snapshot) {
     assert.ok(snapshot.record instanceof Model);
@@ -63,7 +87,7 @@ test('snapshot has record and adapterOptions in adapter#urlForCreateRecord', asy
   sinon.stub(adapter, 'urlForCreateRecord').callsFake(fakeUrlForCreateRecord);
 
   await Ember.run(() => {
-    return FactoryGuy.store.createRecord('user').save({ adapterOptions });
+    return FactoryGuy.store.createRecord('user').save({adapterOptions});
   });
   adapter.urlForCreateRecord.restore();
 });

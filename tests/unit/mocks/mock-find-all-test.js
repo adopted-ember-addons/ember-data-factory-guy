@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import {moduleFor, test} from 'ember-qunit';
 import FactoryGuy, {mockFindAll, mockQuery} from 'ember-data-factory-guy';
 import {inlineSetup} from '../../helpers/utility-methods';
@@ -11,6 +12,36 @@ moduleFor('serializer:application', 'MockFindAll', inlineSetup(serializerType));
 test("mock has mockId", function(assert) {
   let mock = mockFindAll('user');
   assert.deepEqual(mock.mockId, { type: 'GET', url: '/users', num: 0 });
+});
+
+test("logging response", async function(assert) {
+  FactoryGuy.settings({logLevel: 1});
+
+  const consoleStub = sinon.spy(console, 'log'),
+        mock        = mockFindAll('profile');
+
+  await Ember.run(async () => FactoryGuy.store.findAll('profile'));
+
+  let response     = JSON.parse(mock.actualResponseJson()),
+      expectedArgs = [
+        "[factory-guy]",
+        "MockFindAll",
+        "GET",
+        "[200]",
+        "/profiles",
+        response
+      ];
+
+  assert.deepEqual(consoleStub.getCall(0).args, expectedArgs, 'without query params');
+
+  const queryParams = {include: 'company'};
+  mock.withParams(queryParams);
+  await Ember.run(async () => FactoryGuy.store.findAll('profile', queryParams));
+  expectedArgs[4] = `/profiles?${Ember.$.param(queryParams)}`;
+
+  assert.deepEqual(consoleStub.getCall(1).args, expectedArgs, 'with query params');
+
+  console.log.restore();
 });
 
 test("#get method to access payload", function(assert) {

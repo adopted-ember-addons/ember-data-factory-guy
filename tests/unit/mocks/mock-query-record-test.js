@@ -1,7 +1,7 @@
 import Ember from 'ember';
-import {moduleFor, test} from 'ember-qunit';
-import FactoryGuy, {build, makeList, mockQueryRecord} from 'ember-data-factory-guy';
-import {inlineSetup} from '../../helpers/utility-methods';
+import { moduleFor, test } from 'ember-qunit';
+import FactoryGuy, { build, makeList, mockQueryRecord } from 'ember-data-factory-guy';
+import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
 const serializerType = '-json-api';
@@ -10,8 +10,32 @@ moduleFor('serializer:application', 'mockQueryRecord', inlineSetup(serializerTyp
 
 test("#get method to access payload", function(assert) {
   let json = build('user');
-  let mock = mockQueryRecord('user', {}).returns({ json });
+  let mock = mockQueryRecord('user', {}).returns({json});
   assert.deepEqual(mock.get(), json.get());
+});
+
+test("logging response", async function(assert) {
+  FactoryGuy.settings({logLevel: 1});
+
+  const queryParams = {include: 'company'},
+        consoleStub = sinon.spy(console, 'log'),
+        mock        = mockQueryRecord('profile').withParams(queryParams);
+
+  await Ember.run(async () => FactoryGuy.store.queryRecord('profile', queryParams));
+
+  let response     = JSON.parse(mock.actualResponseJson()),
+      expectedArgs = [
+        "[factory-guy]",
+        "MockQueryRecord",
+        "GET",
+        "[200]",
+        `/profiles?${Ember.$.param(queryParams)}`,
+        response
+      ];
+
+  assert.deepEqual(consoleStub.getCall(0).args, expectedArgs);
+
+  console.log.restore();
 });
 
 test("returns() method accepts only id, model, json or header as keys", function(assert) {
@@ -61,7 +85,7 @@ test("returns() method accepts only id, model, json or header as keys", function
 
 test("mock has mockId", function(assert) {
   let mock = mockQueryRecord('user');
-  assert.deepEqual(mock.mockId, { type: 'GET', url: '/users', num: 0 });
+  assert.deepEqual(mock.mockId, {type: 'GET', url: '/users', num: 0});
 });
 
 test("using fails makes the request fail", function(assert) {
@@ -80,11 +104,11 @@ test("using fails makes the request fail", function(assert) {
 
 test("using returns with headers adds the headers to the response", function(assert) {
   let done = assert.async();
-  const queryParams = { name: 'MyCompany' };
+  const queryParams = {name: 'MyCompany'};
   const handler = mockQueryRecord('company', queryParams);
-  handler.returns({ headers: { 'X-Testing': 'absolutely' } });
+  handler.returns({headers: {'X-Testing': 'absolutely'}});
   let {headers} = handler.getResponse();
-  assert.deepEqual(headers, { 'X-Testing': 'absolutely' });
+  assert.deepEqual(headers, {'X-Testing': 'absolutely'});
 
   Ember.$(document).ajaxComplete(function(event, xhr) {
     assert.equal(xhr.getResponseHeader('X-Testing'), 'absolutely');
@@ -92,18 +116,19 @@ test("using returns with headers adds the headers to the response", function(ass
     done();
   });
 
-  FactoryGuy.store.queryRecord('company', queryParams).catch(() =>{});
+  FactoryGuy.store.queryRecord('company', queryParams).catch(() => {
+  });
 });
 
 test("using returns 'model' with array of DS.Models throws error", function(assert) {
   assert.throws(function() {
-    let bobs = makeList('user', 2, { name: 'Bob' });
-    mockQueryRecord('user', { name: 'Bob' }).returns({ model: bobs });
+    let bobs = makeList('user', 2, {name: 'Bob'});
+    mockQueryRecord('user', {name: 'Bob'}).returns({model: bobs});
   }, "can't pass array of models to mock queryRecord");
 });
 
 test("#getUrl uses urlForQueryRecord if it is set on the adapter", function(assert) {
-  let queryParams = { zip: 'it' };
+  let queryParams = {zip: 'it'};
   let mock1 = mockQueryRecord('user', queryParams);
 
   assert.equal(mock1.getUrl(), '/users');

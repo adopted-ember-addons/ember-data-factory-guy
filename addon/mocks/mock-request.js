@@ -1,6 +1,6 @@
 import Ember from 'ember';
+import { isEmptyObject } from '../utils/helper-functions';
 import FactoryGuy from '../factory-guy';
-import {isEmptyObject} from '../utils/helper-functions';
 import RequestManager from './request-manager';
 
 const assign = Ember.assign || Ember.merge;
@@ -42,7 +42,7 @@ export default class {
     return FactoryGuy.buildURL(
       this.modelName,
       this.get('id'),
-      { adapterOptions: this._adapterOptions },
+      {adapterOptions: this._adapterOptions},
       this.requestType,
       this.queryParams
     );
@@ -104,12 +104,19 @@ export default class {
 
   logInfo() {
     if (FactoryGuy.logLevel > 0) {
-      let json = JSON.parse(this.actualResponseJson()),
-          name = this.constructor.name.replace('Request', ''),
-          info = ['[factory-guy]', `${name}(${this.modelName})`, json];
+      const json   = JSON.parse(this.getResponse().responseText),
+            name   = this.constructor.name.replace('Request', ''),
+            type   = this.getType(),
+            status = `[${this.status}]`,
+            url    = this.getUrl();
+
+      let fullUrl = url;
       if (!isEmptyObject(this.queryParams)) {
-        info = info.concat(['queryParams:', this.queryParams]);
+        fullUrl = [url, '?', Ember.$.param(this.queryParams)].join('');
       }
+
+      const info = ['[factory-guy]', name, type, status, fullUrl, json];
+
       console.log(...info);
     }
   }

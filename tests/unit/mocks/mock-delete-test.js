@@ -1,6 +1,7 @@
-import {moduleFor, test} from 'ember-qunit';
-import FactoryGuy, {mockDelete} from 'ember-data-factory-guy';
-import {inlineSetup} from '../../helpers/utility-methods';
+import Ember from 'ember';
+import { moduleFor, test } from 'ember-qunit';
+import FactoryGuy, { make, mockDelete } from 'ember-data-factory-guy';
+import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
 const serializerType = '-json-api';
@@ -14,6 +15,30 @@ test("with incorrect parameters", function(assert) {
     mockDelete();
   }, "missing modelName");
 
+});
+
+test("logging response", async function(assert) {
+  FactoryGuy.settings({logLevel: 1});
+
+  let profile = make('profile');
+  const consoleStub = sinon.spy(console, 'log'),
+        mock        = mockDelete(profile);
+
+  await Ember.run(async () => profile.destroyRecord());
+
+  let response     = JSON.parse(mock.actualResponseJson()),
+      expectedArgs = [
+        "[factory-guy]",
+        "MockDelete",
+        "DELETE",
+        "[200]",
+        `/profiles/1`,
+        response
+      ];
+
+  assert.deepEqual(consoleStub.getCall(0).args, expectedArgs);
+
+  console.log.restore();
 });
 
 test("#getUrl uses urlForDeleteRecord if it is set on the adapter", function(assert) {
