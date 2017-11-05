@@ -639,7 +639,9 @@ Usage:
   - use the [`add`](#using-add-method) method
     - to include extra sideloaded data to the payload
     - to include meta data
-
+    - REMEMBER, all relationships will be automatically sideloaded, 
+      so you don't need to add them with the `add()` method
+   
 Usage:
 
 ```javascript
@@ -753,11 +755,9 @@ Usage:
      - so DRFSerializer and JSONSerializer users can not use this feature
    - you dont need to use json key as in: ```build('user').add({json: batMan})```
    - you can just add the payload directly as: ```build('user').add(batMan)``` 
-     
        
 Usage:  
 
- - when the sideloaded data is NOT related to payooad 
 ```javascript
   let batMan = build('bat_man');
   let userPayload = build('user').add(batMan);
@@ -777,28 +777,7 @@ Usage:
     ]
   };
 ```
- - when the sideloaded data IS related to payload 
-```javascript
-  let projects = buildList('projects', 1);
-  let userPayload = build('user', {projects}).add(projects);
 
-  userPayload = {
-    user: {
-      id: 1,
-      name: 'User1',
-      style: 'normal',
-      projects: [
-        { id: 1, type: 'projects' }
-      ]
-    },
-    projects: [
-      {
-        id: 1,
-        title: "FooFoo"
-      }
-    ]
-  };
-```
 - when you want to add meta data to payload
   - only JSONAPI, and REST based and serializers and DRFSerializer can handle meta data
   - so JSONSerializer users can not use this feature ( though this might be a bug on my part )
