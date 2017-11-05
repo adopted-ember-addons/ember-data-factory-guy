@@ -3,7 +3,7 @@ import FactoryGuy from '../factory-guy';
 import MockRequest from './mock-request';
 import AttributeMatcher from './attribute-matcher';
 
-const { isPresent } = Ember;
+const {isPresent} = Ember;
 
 export default class MockCreateRequest extends AttributeMatcher(MockRequest) {
 
@@ -50,7 +50,7 @@ export default class MockCreateRequest extends AttributeMatcher(MockRequest) {
    */
   getResponse() {
     let args = Object.assign({}, this.matchArgs, this.returnArgs),
-        json = Object.assign({}, args, { id: this.modelId() });
+        json = Object.assign({}, args, {id: this.modelId()});
     this.responseJson = this.fixtureBuilder.convertForBuild(this.modelName, json);
     return super.getResponse();
   }
