@@ -780,7 +780,7 @@ Usage:
  - when the sideloaded data IS related to payload 
 ```javascript
   let projects = buildList('projects', 1);
-  let userPayload = build('user', {projects}).add(buildList);
+  let userPayload = build('user', {projects}).add(projects);
 
   userPayload = {
     user: {
