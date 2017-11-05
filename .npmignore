@@ -7,7 +7,6 @@
 /stats
 /tmp
 /tests
-/vendor
 .bowerrc
 .editorconfig
 .watchmanconfig
