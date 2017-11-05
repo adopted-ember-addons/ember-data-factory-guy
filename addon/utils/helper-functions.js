@@ -2,7 +2,6 @@
 import Ember from 'ember';
 import require from 'require';
 
-
 /**
  *
  * @param obj
