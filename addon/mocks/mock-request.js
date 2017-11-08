@@ -30,7 +30,7 @@ export default class {
    */
   withAdapterOptions(options) {
     this.adapterOptions = options;
-//    this.setupHandler();
+    this.setupHandler();
     return this;
   }
 

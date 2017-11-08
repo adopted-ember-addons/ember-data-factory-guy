@@ -78,13 +78,14 @@ test("uses urlForFindRecord if it is set on the adapter", function(assert) {
 
 test("passes adapterOptions to urlForFindRecord", function(assert) {
   let options        = {e: 1},
-      mock           = mockFindRecord('user').adapterOptions(options),
+      mock           = mockFindRecord('user').withAdapterOptions(options),
       adapter        = FactoryGuy.store.adapterFor('user'),
       findRecordStub = sinon.stub(adapter, 'urlForFindRecord');
 
   mock.getUrl();
+  
   assert.ok(findRecordStub.calledOnce);
-  assert.ok(findRecordStub.calledWith(1, 'user', {adapterOptions: options}), 'adapterOptions passed to urlForFindRecord');
+  assert.ok(findRecordStub.calledWith(1, 'user', {adapterOptions: options, record: undefined}), 'adapterOptions passed to urlForFindRecord');
 
   adapter.urlForFindRecord.restore();
 });
