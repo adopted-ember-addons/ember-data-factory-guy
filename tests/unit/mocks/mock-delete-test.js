@@ -13,7 +13,7 @@ test("mockId", function(assert) {
   let user = make('user'),
       mock = mockDelete(user);
 
-  assert.deepEqual(mock.mockId, {type: 'DELETE', url: `/user/${user.id}`, num: 0});
+  assert.deepEqual(mock.mockId, {type: 'DELETE', url: `/users/${user.id}`, num: 0});
 });
 
 test("with incorrect parameters", function(assert) {
