@@ -20,6 +20,20 @@ export default class {
     this.timesCalled = 0;
   }
 
+//  with(options={}) {
+//  }
+
+  /**
+   * Set the adapter options that this mockCreate will be using
+   *
+   * @param {Object} options adapterOptions
+   */
+  withAdapterOptions(options) {
+    this.adapterOptions = options;
+//    this.setupHandler();
+    return this;
+  }
+
   /**
    Used by getUrl to => this.get('id')
 
@@ -36,16 +50,26 @@ export default class {
 
   /**
    * Using adapterOptions for snapshot in GET requests
+   *
    * @returns {String}
    */
   getUrl() {
     return FactoryGuy.buildURL(
       this.modelName,
       this.get('id'),
-      {adapterOptions: this._adapterOptions},
+      this.makeSnapshot(),
       this.requestType,
       this.queryParams
     );
+  }
+
+  /**
+   * Create fake snaphot with adapterOptions and record
+   *
+   * @returns {{adapterOptions: (*|Object), record: (*|DS.Model)}}
+   */
+  makeSnapshot() {
+    return {adapterOptions: this.adapterOptions, record: this.model};
   }
 
   getType() {

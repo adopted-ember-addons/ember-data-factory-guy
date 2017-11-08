@@ -6,9 +6,10 @@ import MaybeIdUrlMatch from './maybe-id-url-match';
 
 export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(MockRequest)) {
 
-  constructor(modelName, id) {
+  constructor(modelName, {id, model} = {}) {
     super(modelName, 'updateRecord');
     this.id = id;
+    this.model = model;
     this.returnArgs = {};
     this.matchArgs = {};
     this.setupHandler();
@@ -17,7 +18,7 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
   getType() {
     return FactoryGuy.updateHTTPMethod(this.modelName);
   }
-
+ 
   /**
    This returns only accepts attrs key
    These attrs are those attributes or relationships that
@@ -47,7 +48,7 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
     this.responseJson = null;
     if (this.id) {
       let args = Object.assign({}, this.matchArgs, this.returnArgs),
-          json = Object.assign({}, args, { id: this.id });
+          json = Object.assign({}, args, {id: this.id});
       this.responseJson = this.fixtureBuilder.convertForBuild(this.modelName, json);
     }
     return super.getResponse();

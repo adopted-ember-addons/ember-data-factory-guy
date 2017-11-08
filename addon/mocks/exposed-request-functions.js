@@ -309,7 +309,7 @@ export function mockCreate(...args) {
 
   Ember.assert(`[ember-data-factory-guy] To mockUpdate pass in a model instance or a modelName`, modelName);
 
-  return new MockCreateRequest(modelName).returns({attrs});
+  return new MockCreateRequest(modelName, {model}).returns({attrs});
 }
 
 /**
@@ -350,7 +350,7 @@ export function mockUpdate(...args) {
 
   Ember.assert("[ember-data-factory-guy] To mockUpdate pass in a model instance or a modelName and an id or just a modelName", modelName);
 
-  return new MockUpdateRequest(modelName, id);
+  return new MockUpdateRequest(modelName, {id, model});
 }
 
 /**
