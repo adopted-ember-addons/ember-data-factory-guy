@@ -73,21 +73,31 @@ test("#getUrl uses urlForCreateRecord if it is set on the adapter", function(ass
 });
 
 test('snapshot has record and adapterOptions in adapter#urlForCreateRecord', async function(assert) {
-  mockCreate('user');
+//  let company = FactoryGuy.make('company');
+  const
+        user           = Ember.run(()=>FactoryGuy.store.createRecord('user')),//,{company})),
+//        user           = makeNew('user',{company}),
+        adapter        = FactoryGuy.store.adapterFor('user'),
+        adapterOptions = {name: 'Bob'};
 
-  let adapter        = FactoryGuy.store.adapterFor('user'),
-      adapterOptions = {name: 'Bob'};
+  let spy = sinon.spy(adapter, 'urlForCreateRecord');
+//  FactoryGuy.settings({logLevel: 1});
+  mockCreate(user).withAdapterOptions(adapterOptions);
+//  console.log('user.serialize',user.serialize());
+  await Ember.run(async () => user.save({adapterOptions}));
 
-  let fakeUrlForCreateRecord = function(modelName, snapshot) {
-    assert.ok(snapshot.record instanceof Model);
-    assert.deepEqual(snapshot.adapterOptions, adapterOptions);
-    return '/users';
-  };
+  // this is the first call to urlForFindAll
+  let [modelName, snapshot] = spy.getCall(0).args;
+//  console.log("snapshot 0",'record',snapshot.record+'','adapterOptions',snapshot.adapterOptions);
+  assert.equal(modelName, 'user');
+  assert.ok(snapshot.record instanceof Model);
+  assert.deepEqual(snapshot.adapterOptions, adapterOptions);
+//  assert.deepEqual(snapshot.adapterOptions, undefined);
 
-  sinon.stub(adapter, 'urlForCreateRecord').callsFake(fakeUrlForCreateRecord);
+  // note this is the second call to urlForFindAll ( not the first )
+//  [, snapshot] = spy.getCall(1).args;
+//  console.log("snapshot 1",'record',snapshot.record+'','adapterOptions',snapshot.adapterOptions);
+//  assert.deepEqual(snapshot.adapterOptions, adapterOptions);
 
-  await Ember.run(() => {
-    return FactoryGuy.store.createRecord('user').save({adapterOptions});
-  });
   adapter.urlForCreateRecord.restore();
 });

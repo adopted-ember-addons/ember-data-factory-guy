@@ -8,8 +8,11 @@ const serializerType = '-json-api';
 
 moduleFor('serializer:application', 'MockFindRecord', inlineSetup(serializerType));
 
-test("mock has mockId", function(assert) {
+test("mock has mockId", async function(assert) {
   let mock = mockFindRecord('user');
+
+  await Ember.run(async () => FactoryGuy.store.find('user', mock.get('id')));
+
   assert.deepEqual(mock.mockId, {type: 'GET', url: '/users/1', num: 0});
 });
 
@@ -40,9 +43,10 @@ test("logging response", async function(assert) {
 
   const queryParams = {include: 'company'};
   mock.withParams(queryParams);
-  await Ember.run(async () => FactoryGuy.store.findRecord('profile', 1, queryParams));
-  expectedArgs[4] = `/profiles/1?${Ember.$.param(queryParams)}`;
 
+  await Ember.run(async () => FactoryGuy.store.findRecord('profile', 1, queryParams));
+
+  expectedArgs[4] = `/profiles/1?${Ember.$.param(queryParams)}`;
   assert.deepEqual(consoleStub.getCall(1).args, expectedArgs, 'with query params');
 
   console.log.restore();
@@ -50,15 +54,17 @@ test("logging response", async function(assert) {
 
 moduleFor('serializer:application', 'MockFindRecord #getUrl', inlineSetup(serializerType));
 
-test("with proxy", function(assert) {
-  const json = build('user');
-  const mock = mockFindRecord('user').returns({json});
+test("with json proxy", function(assert) {
+  const json = build('user'),
+        mock = mockFindRecord('user').returns({json});
+
   assert.equal(mock.getUrl(), '/users/1');
 });
 
 test("with json", function(assert) {
-  const json = {data: {id: 1, name: "Dan"}};
-  const mock = mockFindRecord('user').returns({json});
+  const json = {data: {id: 1, name: "Dan"}},
+        mock = mockFindRecord('user').returns({json});
+
   assert.equal(mock.getUrl(), '/users/1');
 });
 
@@ -77,14 +83,15 @@ test("uses urlForFindRecord if it is set on the adapter", function(assert) {
 });
 
 test("passes adapterOptions to urlForFindRecord", function(assert) {
-  let options        = {e: 1},
-      mock           = mockFindRecord('user').adapterOptions(options),
+  let adapterOptions = {e: 1},
+      mock           = mockFindRecord('user').withAdapterOptions(adapterOptions),
       adapter        = FactoryGuy.store.adapterFor('user'),
       findRecordStub = sinon.stub(adapter, 'urlForFindRecord');
 
   mock.getUrl();
-  assert.ok(findRecordStub.calledOnce);
-  assert.ok(findRecordStub.calledWith(1, 'user', {adapterOptions: options}), 'adapterOptions passed to urlForFindRecord');
+
+  let [, , snapshot] = findRecordStub.getCall(0).args;
+  assert.deepEqual(snapshot.adapterOptions, adapterOptions, 'adapterOptions passed to urlForFindRecord');
 
   adapter.urlForFindRecord.restore();
 });

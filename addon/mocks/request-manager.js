@@ -2,9 +2,12 @@ import Ember from 'ember';
 import RequestWrapper from './request-wrapper';
 import Pretender from 'pretender';
 
-let wrappers  = {},
-    pretender = null,
-    delay     = 0;
+let wrappers         = {},
+    xhrListenerSetup = false,
+    cache            = Ember.A([]),
+    pretender        = null,
+    handlersSetup    = false,
+    delay            = 0;
 
 /**
  * RequestManager controls setting up pretender to handle the mocks that are
@@ -17,7 +20,7 @@ let wrappers  = {},
  * and also allow you to remove the handler or replace it from it's current
  * wrapper to new one.
  */
-export default class {
+export default class RequestManager {
 
   /**
    * For now, you can only set the response delay.
@@ -25,12 +28,12 @@ export default class {
    * @param {Number} responseTime
    * @returns {{responseTime: number}} the current settings
    */
-  static settings({ responseTime } = {}) {
+  static settings({responseTime} = {}) {
     if (Ember.isPresent(responseTime)) {
       delay = responseTime;
     }
     // return current settings
-    return { responseTime: delay };
+    return {responseTime: delay};
   }
 
   static getKey(type, url) {
@@ -47,7 +50,25 @@ export default class {
    * @param handler
    */
   static assignMockId(type, url, num, handler) {
-    handler.mockId = { type, url, num };
+    handler.mockId = {type, url, num};
+  }
+
+  static xhrStart() {
+    if (!handlersSetup) {
+      handlersSetup = true;
+      cache.forEach(handler => RequestManager.setupHandler(handler));
+    }
+  }
+
+  static setupXHRListener() {
+    xhrListenerSetup = true;
+    Ember.$(document).on('ajaxStart', RequestManager.xhrStart);
+    //    let xhrProxy = window.XMLHttpRequest.prototype.open;
+    //    window.XMLHttpRequest.prototype.open = function(...args) {
+    //      console.warn('started xhr', args);
+    //      RequestManager.xhrStart();
+    //      return xhrProxy.apply(this, args);
+    //    };
   }
 
   /**
@@ -56,9 +77,19 @@ export default class {
    * @param handler
    */
   static addHandler(handler) {
-    let { type, url } = this.getTypeUrl(handler),
-        key           = this.getKey(type, url),
-        wrapper       = wrappers[key];
+    if (!xhrListenerSetup) {
+      this.setupXHRListener();
+    }
+    if (!handlersSetup) {
+      return cache.addObject(handler);
+    }
+    this.setupHandler(handler);
+  }
+
+  static setupHandler(handler) {
+    let {type, url} = this.getTypeUrl(handler),
+        key         = this.getKey(type, url),
+        wrapper     = wrappers[key];
 
     if (!wrapper) {
       wrapper = new RequestWrapper();
@@ -78,9 +109,9 @@ export default class {
   static removeHandler(handler) {
     // get the old type, url info from last mockId
     // in order to find the wrapper it was in
-    let { type, url } = handler.mockId,
-        key           = this.getKey(type, url),
-        wrapper       = wrappers[key];
+    let {type, url} = handler.mockId,
+        key         = this.getKey(type, url),
+        wrapper     = wrappers[key];
 
     if (wrapper) {
       wrapper.removeHandler(handler);
@@ -98,7 +129,7 @@ export default class {
   }
 
   // used for testing
-  static findWrapper({ handler, type, url }) {
+  static findWrapper({handler, type, url}) {
     if (handler) {
       type = handler.getType();
       url = handler.getUrl();
@@ -108,7 +139,7 @@ export default class {
   }
 
   static getTypeUrl(handler) {
-    return { type: handler.getType(), url: handler.getUrl() };
+    return {type: handler.getType(), url: handler.getUrl()};
   }
 
   static adHockMock({url, type, responseText}) {
@@ -121,7 +152,11 @@ export default class {
   static reset() {
     wrappers = {};
     pretender && pretender.shutdown();
-    pretender = null;
+    pretender = undefined;
+    cache = Ember.A([]);
+    Ember.$(document).off('ajaxStart', RequestManager.xhrStart);
+    xhrListenerSetup = false;
+    handlersSetup = false;
     delay = 0;
   }
 

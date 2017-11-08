@@ -1,7 +1,7 @@
 import Ember from 'ember';
-import {moduleFor, test} from 'ember-qunit';
-import FactoryGuy, {mockFindAll, mockQuery} from 'ember-data-factory-guy';
-import {inlineSetup} from '../../helpers/utility-methods';
+import { moduleFor, test } from 'ember-qunit';
+import FactoryGuy, { mockFindAll, mockQuery } from 'ember-data-factory-guy';
+import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
 
@@ -9,9 +9,10 @@ const serializerType = '-json-api';
 
 moduleFor('serializer:application', 'MockFindAll', inlineSetup(serializerType));
 
-test("mock has mockId", function(assert) {
+test("mock has mockId after setup", async function(assert) {
   let mock = mockFindAll('user');
-  assert.deepEqual(mock.mockId, { type: 'GET', url: '/users', num: 0 });
+  await Ember.run(async () => FactoryGuy.store.findAll('user'));
+  assert.deepEqual(mock.mockId, {type: 'GET', url: '/users', num: 0});
 });
 
 test("logging response", async function(assert) {
@@ -46,35 +47,45 @@ test("logging response", async function(assert) {
 
 test("#get method to access payload", function(assert) {
   let mock = mockFindAll('user', 2);
-  assert.deepEqual(mock.get(0), { id: 1, name: 'User1', style: 'normal' });
+  assert.deepEqual(mock.get(0), {id: 1, name: 'User1', style: 'normal'});
 });
 
-test("RequestManager creates wrapper with one mockFindAll mock", function(assert) {
+test("RequestManager creates wrapper with one mockFindAll mock", async function(assert) {
   let mock = mockFindAll('user', 2);
-  let wrapper = RequestManager.findWrapper({ handler: mock });
-  let ids = wrapper.getHandlers().map(h => h.mockId);
-  assert.deepEqual(ids, [{ type: 'GET', url: '/users', num: 0 }]);
+
+  await Ember.run(async () => FactoryGuy.store.findAll('user'));
+
+  let wrapper = RequestManager.findWrapper({handler: mock}),
+      ids     = wrapper.getHandlers().map(h => h.mockId);
+
+  assert.deepEqual(ids, [{type: 'GET', url: '/users', num: 0}]);
 });
 
-test("RequestManager creates wrapper with two mockFindAll mocks", function(assert) {
-  mockFindAll('user', 2),
+test("RequestManager creates wrapper with two mockFindAll mocks", async function(assert) {
+  mockFindAll('user', 2);
   mockFindAll('user', 1);
 
-  let wrapper = RequestManager.findWrapper({ type: 'GET', url: '/users' });
-  let ids = wrapper.getHandlers().map(h => h.mockId);
-  assert.deepEqual(ids, [{ type: 'GET', url: '/users', num: 0 }, { type: 'GET', url: '/users', num: 1 }]);
+  await Ember.run(async () => FactoryGuy.store.findAll('user'));
+
+  let wrapper = RequestManager.findWrapper({type: 'GET', url: '/users'}),
+      ids     = wrapper.getHandlers().map(h => h.mockId);
+
+  assert.deepEqual(ids, [
+    {type: 'GET', url: '/users', num: 0},
+    {type: 'GET', url: '/users', num: 1}
+  ]);
 });
 
 test("mockFindAll (when declared FIRST ) won't be used if mockQuery is present with query ", async function(assert) {
   let mockF = mockFindAll('user', 2);
-  let mockQ = mockQuery('user', { name: 'Sleepy' });
+  let mockQ = mockQuery('user', {name: 'Sleepy'});
 
   await FactoryGuy.store.query('user', {});
 
   assert.equal(mockF.timesCalled, 1, 'mockFindAll used since no query params exist');
   assert.equal(mockQ.timesCalled, 0, 'mockQuery not used');
 
-  await FactoryGuy.store.query('user', { name: 'Sleepy' });
+  await FactoryGuy.store.query('user', {name: 'Sleepy'});
   assert.equal(mockF.timesCalled, 1, 'mockFindAll not used since query params exist');
   assert.equal(mockQ.timesCalled, 1, 'now mockQuery is used');
 });
@@ -96,15 +107,15 @@ test("uses urlForFindAll if it is set on the adapter", function(assert) {
 });
 
 test("#getUrl passes adapterOptions to urlForFindAll", function(assert) {
-  let options = { e: 1 };
-  let mock = mockFindAll('user').adapterOptions(options);
+  let adapterOptions = {e: 1},
+      adapter        = FactoryGuy.store.adapterFor('user'),
+      findRecordStub = sinon.stub(adapter, 'urlForFindAll');
 
-  let adapter = FactoryGuy.store.adapterFor('user');
-  let findRecordStub = sinon.stub(adapter, 'urlForFindAll');
+  mockFindAll('user').withAdapterOptions(adapterOptions).getUrl();
 
-  mock.getUrl();
-  assert.ok(findRecordStub.calledOnce);
-  assert.ok(findRecordStub.calledWith('user', { adapterOptions: options }), 'adapterOptions passed to urlForFindAll');
+  let [modelName, snapshot] = findRecordStub.getCall(0).args;
+  assert.equal(modelName, 'user', 'modelName param is correct');
+  assert.deepEqual(snapshot.adapterOptions, adapterOptions, 'adapterOptions present in snapshot param');
 
   adapter.urlForFindAll.restore();
 });
