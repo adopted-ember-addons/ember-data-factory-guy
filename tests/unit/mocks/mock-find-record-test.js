@@ -8,7 +8,7 @@ const serializerType = '-json-api';
 
 moduleFor('serializer:application', 'MockFindRecord', inlineSetup(serializerType));
 
-test("mock has mockId", function(assert) {
+test("mockId", function(assert) {
   let mock = mockFindRecord('user');
   assert.deepEqual(mock.mockId, {type: 'GET', url: '/users/1', num: 0});
 });

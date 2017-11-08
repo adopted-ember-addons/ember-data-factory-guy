@@ -18,7 +18,22 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
   getType() {
     return FactoryGuy.updateHTTPMethod(this.modelName);
   }
- 
+
+  /**
+   * Create fake snaphot with adapterOptions and record.
+   * Override the parent to find the model in the store if there is
+   * an id available
+   *
+   * @returns {{adapterOptions: (*|Object), record: (*|DS.Model)}}
+   */
+  makeFakeSnapshot() {
+    let snapshot = super.makeFakeSnapshot();
+    if (this.id && !this.model) {
+      snapshot.record = FactoryGuy.store.peekRecord(this.modelName, this.id);
+    }
+    return snapshot;
+  }
+
   /**
    This returns only accepts attrs key
    These attrs are those attributes or relationships that

@@ -9,6 +9,13 @@ const serializerType = '-json-api';
 
 moduleFor('serializer:application', 'MockDelete', inlineSetup(serializerType));
 
+test("mockId", function(assert) {
+  let user = make('user'),
+      mock = mockDelete(user);
+
+  assert.deepEqual(mock.mockId, {type: 'DELETE', url: `/user/${user.id}`, num: 0});
+});
+
 test("with incorrect parameters", function(assert) {
 
   assert.throws(function() {

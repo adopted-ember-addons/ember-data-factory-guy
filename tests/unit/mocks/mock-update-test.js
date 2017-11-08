@@ -41,14 +41,50 @@ test("logging response", async function(assert) {
   console.log.restore();
 });
 
-test("mock has mockId when using id", function(assert) {
+test("makeSnapshot when modelName, id available", function(assert) {
   let mock = mockUpdate('user', 1);
   assert.deepEqual(mock.mockId, {type: 'PATCH', url: '/users/1', num: 0});
 });
 
-test("mock has mockId when not using id", function(assert) {
-  let mock = mockUpdate('user');
-  assert.deepEqual(mock.mockId, {type: 'PATCH', url: '/users/:id', num: 0});
+test("makeSnapshot", function(assert) {
+  let user = make('user');
+
+  let tests = [
+    [[user], user, 'with model as arguments'],
+    [['user', user.id], user, 'with modelName, id as arguments'],
+    [['user'], undefined, 'with only modelName as arguments']
+  ];
+
+  for (let test of tests) {
+    let [args, expectedRecord, message] = test;
+    let mock     = mockUpdate(...args),
+        snapshot = mock.makeFakeSnapshot(),
+        {record} = snapshot;
+    assert.deepEqual(record, expectedRecord, message);
+  }
+});
+
+test("mockId", function(assert) {
+  let mock = mockUpdate('user', 1);
+  assert.deepEqual(mock.mockId, {type: 'PATCH', url: '/users/1', num: 0});
+});
+
+test("getUrl", function(assert) {
+  let user = make('user');
+
+  let tests = [
+    [[user], `/users/${user.id}`, "url when using model"],
+    [['user', user.id], `/users/${user.id}`, "url when using modelName, id"],
+    [['user'], `/users/:id`, "url when not using id"]
+  ];
+
+  for (let test of tests) {
+    let [args, expectedUrl, message] = test;
+    let mock = mockUpdate(...args),
+        url  = mock.getUrl();
+
+    assert.equal(url, expectedUrl, message);
+  }
 });
 
 test("using returns when only setting modelName", function(assert) {

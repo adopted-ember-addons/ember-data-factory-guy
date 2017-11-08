@@ -88,7 +88,7 @@ test("mock query using returns with an instance of DS.Model throws error", funct
   }, "can't pass a DS.Model instance to mock query");
 });
 
-test("mock has mockId", function(assert) {
+test("mockId", function(assert) {
   let mock = mockQuery('user');
   assert.deepEqual(mock.mockId, {type: 'GET', url: '/users', num: 0});
 });

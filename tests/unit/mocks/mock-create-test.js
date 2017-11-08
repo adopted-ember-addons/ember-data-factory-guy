@@ -9,6 +9,12 @@ const serializerType = '-json-api';
 
 moduleFor('serializer:application', 'MockCreate', inlineSetup(serializerType));
 
+test("mockId", function(assert) {
+  let mock = mockCreate('user');
+
+  assert.deepEqual(mock.mockId, {type: 'POST', url: `/users`, num: 0});
+});
+
 test("with incorrect parameters", function(assert) {
 
   assert.throws(function() {

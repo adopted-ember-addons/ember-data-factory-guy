@@ -57,7 +57,7 @@ export default class {
     return FactoryGuy.buildURL(
       this.modelName,
       this.get('id'),
-      this.makeSnapshot(),
+      this.makeFakeSnapshot(),
       this.requestType,
       this.queryParams
     );
@@ -68,7 +68,7 @@ export default class {
    *
    * @returns {{adapterOptions: (*|Object), record: (*|DS.Model)}}
    */
-  makeSnapshot() {
+  makeFakeSnapshot() {
     return {adapterOptions: this.adapterOptions, record: this.model};
   }
 
