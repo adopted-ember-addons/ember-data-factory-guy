@@ -83,7 +83,7 @@ test("returns() method accepts only id, model, json or header as keys", function
   });
 });
 
-test("mock has mockId", function(assert) {
+test("mockId", function(assert) {
   let mock = mockQueryRecord('user');
   assert.deepEqual(mock.mockId, {type: 'GET', url: '/users', num: 0});
 });
