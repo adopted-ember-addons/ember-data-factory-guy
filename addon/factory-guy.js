@@ -80,6 +80,12 @@ class FactoryGuy {
     Ember.assert("FactoryGuy#setStore needs a valid store instance.You passed in [" + aStore + "]", aStore instanceof DS.Store);
     this.store = aStore;
     this.fixtureBuilderFactory = new FixtureBuilderFactory(this.store);
+
+    aStore.willDestroy = function(...args) {
+      this._super(...args);
+      this.store = null;
+      this.fixtureBuilderFactory = null;
+    };
   }
 
   fixtureBuilder(modelName) {
