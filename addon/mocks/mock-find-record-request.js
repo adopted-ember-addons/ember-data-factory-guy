@@ -10,7 +10,7 @@ export default class MockFindRecordRequest extends MockGetRequest {
 
   /**
    * When using returns({id: id}), this is flagged as an idSearch, so
-   * that at the last moment when mockjax is handling the request,
+   * that at the last moment when this handler is returning the request response,
    * we can check the store and see if a model with that id exists.
    *
    * If not, then this will be a 404 not found error

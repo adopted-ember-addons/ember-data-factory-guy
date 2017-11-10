@@ -109,7 +109,7 @@ export default class {
     return this;
   }
 
-  // for a fails response, the response you might have set ( like a payload ) will actually
+  // for a fails response, the response you might have set ( like a payload ) will
   // be discarded in favour of the error response that was built for you in fails method
   actualResponseJson() {
     let responseText = this.isErrorStatus(this.status) ? this.errorResponse : this.responseJson;

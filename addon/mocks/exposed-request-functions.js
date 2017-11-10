@@ -9,7 +9,7 @@ import MockFindRecordRequest from './mock-find-record-request';
 import MockReloadRequest from './mock-reload-request';
 import MockFindAllRequest from './mock-find-all-request';
 import MockDeleteRequest from './mock-delete-request';
-import RequestManager from './request-manager';
+import MockAnyRequest from './mock-any-request';
 
 export function mockSetup({responseTime, logLevel = 0} = {}) {
   FactoryGuy.settings({logLevel, responseTime});
@@ -20,7 +20,7 @@ export function mockTeardown() {
 }
 
 export function mock({type, url, responseText} = {}) {
-  return RequestManager.adHockMock({type, url, responseText});
+  return new MockAnyRequest({type, url, responseText});
 }
 
 /**

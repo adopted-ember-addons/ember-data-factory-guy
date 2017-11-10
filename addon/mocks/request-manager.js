@@ -111,13 +111,6 @@ export default class {
     return { type: handler.getType(), url: handler.getUrl() };
   }
 
-  static adHockMock({url, type, responseText}) {
-    let responseHandler = function() {
-      return [200, {}, JSON.stringify(responseText)];
-    };
-    this.getPretender()[type.toLowerCase()].call(pretender, url, responseHandler, delay);
-  }
-
   static reset() {
     wrappers = {};
     pretender && pretender.shutdown();
