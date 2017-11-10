@@ -1,4 +1,4 @@
-import FactoryGuy, { make, makeNew, makeList, build, buildList, clearStore } from './factory-guy';
+import FactoryGuy, { make, makeNew, makeList, build, buildList } from './factory-guy';
 
 import {
   mockSetup, mockTeardown,
@@ -18,7 +18,7 @@ export default FactoryGuy;
 
 export { JSONFixtureBuilder, RESTFixtureBuilder, JSONAPIFixtureBuilder };
 
-export { make, makeNew, makeList, build, buildList, clearStore, manualSetup, Scenario };
+export { make, makeNew, makeList, build, buildList, manualSetup, Scenario };
 
 export {
   mockSetup, mockTeardown,

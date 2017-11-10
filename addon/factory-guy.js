@@ -444,16 +444,7 @@ class FactoryGuy {
       return this.make(...[name, ...innerArgs]);
     });
   }
-
-  /**
-   Clear model instances from store cache.
-   Reset the id sequence for the models back to zero.
-   */
-  clearStore() {
-    this.resetDefinitions();
-    this.clearModels();
-  }
-
+  
   reset() {
     this.resetDefinitions();
     this.resetMockAjax();
@@ -476,20 +467,14 @@ class FactoryGuy {
     }
   }
 
-  /**
-   Clear model instances from store cache.
-   */
-  clearModels() {
-    this.store.unloadAll();
-  }
-
-  /**
-   Clears all model definitions
-   */
-  clearDefinitions(opts) {
-    if (!opts) {
-      this.modelDefinitions = {};
-    }
+  // Hook into store willDestroy to cleanup variables in Factory Guy
+  afterDestroyStore(store) {
+    const self = this;
+    store.willDestroy = function(...args) {
+      this._super(...args);
+      self.store = null;
+      self.fixtureBuilderFactory = null;
+    };
   }
 
   /**
@@ -538,8 +523,7 @@ let factoryGuy = new FactoryGuy(),
     makeNew    = factoryGuy.makeNew.bind(factoryGuy),
     makeList   = factoryGuy.makeList.bind(factoryGuy),
     build      = factoryGuy.build.bind(factoryGuy),
-    buildList  = factoryGuy.buildList.bind(factoryGuy),
-    clearStore = factoryGuy.clearStore.bind(factoryGuy);
+    buildList  = factoryGuy.buildList.bind(factoryGuy);
 
-export {make, makeNew, makeList, build, buildList, clearStore};
+export { make, makeNew, makeList, build, buildList };
 export default factoryGuy;

@@ -1,10 +1,10 @@
-  import {moduleFor, test} from 'ember-qunit';
+import { moduleFor, test } from 'ember-qunit';
 import DS from 'ember-data';
 import Ember from 'ember';
-import FactoryGuy, {make, makeNew, makeList, build, buildList, clearStore} from 'ember-data-factory-guy';
+import FactoryGuy, { make, makeNew, makeList, build, buildList, clearStore } from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import sinon from 'sinon';
-import {inlineSetup} from '../helpers/utility-methods';
+import { inlineSetup } from '../helpers/utility-methods';
 import User from 'dummy/models/user';
 
 const A = Ember.A;
@@ -65,32 +65,24 @@ test("exposes buildList method which is shortcut for FactoryGuy.buildList", func
   assert.ok(userList.data.length === 2);
 });
 
-test("exposes clearStore method which is a shortcut for FactoryGuy.clearStore", function(assert) {
-  Ember.run(function() {
-    makeList('user', 2);
-    clearStore();
-    assert.equal(FactoryGuy.store.peekAll('user').get('content').length, 0);
-  });
-});
-
-test("#clearStore clears the store of models, and resets the model definition", function(assert) {
+test("#resetDefinitions resets the model definition", function(assert) {
   Ember.run(function() {
     let project = make('project');
-    make('user', { projects: [project] });
-    let model, definition;
+    make('user', {projects: [project]});
 
-    for (model in FactoryGuy.modelDefinitions) {
-      definition = FactoryGuy.modelDefinitions[model];
+    let model,
+        definition,
+        definitions = FactoryGuy.getModelDefinitions();
+
+    for (model in definitions) {
+      definition = definitions[model];
       sinon.spy(definition, 'reset');
     }
 
-    FactoryGuy.clearStore();
+    FactoryGuy.resetDefinitions();
 
-    assert.equal(FactoryGuy.store.peekAll('user').get('content.length'), 0);
-    assert.equal(FactoryGuy.store.peekAll('project').get('content.length'), 0);
-
-    for (model in FactoryGuy.modelDefinitions) {
-      definition = FactoryGuy.modelDefinitions[model];
+    for (model in definitions) {
+      definition = definitions[model];
       assert.ok(definition.reset.calledOnce);
       definition.reset.restore();
     }
@@ -118,7 +110,7 @@ moduleFor('serializer:application', 'FactoryGuy#build', inlineSetup('-rest'));
 
 test("with one level of hasMany relationship", function(assert) {
   let hats = buildList('big-hat', 2);
-  let user = build('user', { hats: hats });
+  let user = build('user', {hats: hats});
 
   assert.ok(user['user']);
   assert.equal(user['big-hats'].length, 2);
@@ -129,7 +121,7 @@ test("can use non model attributes to help setup attributes", function(assert) {
   assert.equal(dog1.get('sound'), 'Normal Woof', 'no extra attribute');
 
   let volume = 'Soft';
-  let dog2 = build('dog', { volume });
+  let dog2 = build('dog', {volume});
 
   assert.equal(dog2.get('sound'), `${volume} Woof`, 'uses your extra attribute');
 });
@@ -144,12 +136,12 @@ test("causes an assertion error when a trait is not found", function(assert) {
 
 test("handles hash attribute with hash value as default value", function(assert) {
   let dog = build('dog');
-  assert.deepEqual(dog.get('tag'), { num: 1 });
+  assert.deepEqual(dog.get('tag'), {num: 1});
 });
 
 test("handles hash attribute with hash value in options", function(assert) {
   let dog = build('dog', {tag: {num: 10}});
-  assert.deepEqual(dog.get('tag'), { num: 10 });
+  assert.deepEqual(dog.get('tag'), {num: 10});
 });
 
 moduleFor('serializer:application', 'FactoryGuy#buildList', inlineSetup('-rest'));
@@ -160,7 +152,7 @@ test("without a number returns a empty json payload", function(assert) {
 });
 
 test("without a number but with options returns array with diverse attributes", function(assert) {
-  let profiles = buildList('profile', 'goofy_description', ['with_company', { description: 'Noodles' }], 'with_bat_man');
+  let profiles = buildList('profile', 'goofy_description', ['with_company', {description: 'Noodles'}], 'with_bat_man');
   assert.equal(profiles.get().length, 3);
   assert.ok(profiles.get(0).description === 'goofy');
   assert.ok(profiles.get(1).company === 1);
@@ -169,7 +161,7 @@ test("without a number but with options returns array with diverse attributes", 
 });
 
 test("with a number and extra options", function(assert) {
-  let heros = buildList('super-hero', 2, { name: "Bob" });
+  let heros = buildList('super-hero', 2, {name: "Bob"});
   assert.equal(heros.get().length, 2);
   assert.equal(heros.get(0).name, "Bob");
   assert.equal(heros.get(1).name, "Bob");
@@ -182,18 +174,18 @@ test("creates record but does not save to store", function(assert) {
   let user = makeNew('user', 'silly', {name: 'Bozo'});
   assert.ok(user instanceof User, 'creates record');
   assert.equal(user.get('style'), 'silly', 'uses trait attributes');
-  assert.equal(user.get('name'),'Bozo', 'uses optional attributes');
+  assert.equal(user.get('name'), 'Bozo', 'uses optional attributes');
   assert.equal(user.id, null, 'no id');
   assert.ok(user.get('isNew'), 'is in isNew state');
 });
 
 test("handles camelCase and snake case attributes", function(assert) {
-  let profile = makeNew('profile',  {
+  let profile = makeNew('profile', {
     camelCaseDescription: 'camelMan',
     snake_case_description: 'snakeMan'
   });
   assert.equal(profile.get('camelCaseDescription'), 'camelMan', 'camel case');
-  assert.equal(profile.get('snake_case_description'),'snakeMan', 'snake case');
+  assert.equal(profile.get('snake_case_description'), 'snakeMan', 'snake case');
 });
 
 moduleFor('serializer:application', 'FactoryGuy#makeList', inlineSetup('-json-api'));
@@ -215,7 +207,7 @@ test("without a number returns an array of 0 model instances", function(assert) 
 });
 
 test("without a number but with options returns array of models", function(assert) {
-  let profiles = makeList('profile', 'goofy_description', ['with_company', { description: 'Noodles' }], 'with_bat_man');
+  let profiles = makeList('profile', 'goofy_description', ['with_company', {description: 'Noodles'}], 'with_bat_man');
   assert.equal(profiles.length, 3);
   assert.ok(A(profiles).objectAt(0).get('description') === 'goofy');
   assert.ok(A(profiles).objectAt(1).get('company.name') === 'Silly corp');
@@ -230,7 +222,7 @@ moduleFor('serializer:application', 'FactoryGuy#define', inlineSetup('-json-api'
 test("default values and sequences are inherited", function(assert) {
   FactoryGuy.define('person', {
     sequences: {
-      personName: (i)=> `person #${i}`
+      personName: (i) => `person #${i}`
     },
     default: {
       style: 'normal',
@@ -248,7 +240,7 @@ test("default values and sequences are inherited", function(assert) {
   FactoryGuy.define('stoner', {
     extends: 'person',
     sequences: {
-      personName: (i)=> `stoner #${i}`
+      personName: (i) => `stoner #${i}`
     },
     default: {
       style: 'chill'
@@ -258,7 +250,7 @@ test("default values and sequences are inherited", function(assert) {
   FactoryGuy.define('cool-stoner', {
     extends: 'stoner',
     sequences: {
-      personName: (i)=> `cool stoner #${i}`
+      personName: (i) => `cool stoner #${i}`
     }
   });
 
@@ -291,11 +283,11 @@ test("config is not destroyed", function(assert) {
   };
 
   FactoryGuy.define('stoner', config);
-  assert.deepEqual(config, { default: { name: 'hi' } });
+  assert.deepEqual(config, {default: {name: 'hi'}});
 });
 
 test("using polymorphic:false to use a type attribute name on non polymorphic model", function(assert) {
-  let cat = build('cat', { type: 'fluffy' });
+  let cat = build('cat', {type: 'fluffy'});
 
   assert.equal(cat.data.type, 'cat');
   assert.equal(cat.get('type'), 'fluffy');
@@ -304,14 +296,14 @@ test("using polymorphic:false to use a type attribute name on non polymorphic mo
 test("traits are inherited", function(assert) {
   FactoryGuy.define('person', {
     traits: {
-      lazy_style: { style: 'Super Lazy' }
+      lazy_style: {style: 'Super Lazy'}
     }
   });
 
   FactoryGuy.define('stoner', {
     extends: 'person',
     traits: {
-      real_name: { name: 'Stoned Guy' }
+      real_name: {name: 'Stoned Guy'}
     }
   });
 
@@ -355,7 +347,7 @@ test("id can be a function", function(assert) {
   FactoryGuy.define('stoner', {
 
     sequences: {
-      stonerId: (i)=>`stoner-${i}`,
+      stonerId: (i) => `stoner-${i}`,
     },
 
     bif: {
@@ -619,8 +611,8 @@ test("Using sequences", function(assert) {
 
   FactoryGuy.define('person', {
     sequences: {
-      personName: (num)=> `person #${num}`,
-      personType: (num)=> `person type #${num}`
+      personName: (num) => `person #${num}`,
+      personType: (num) => `person type #${num}`
     },
     default: {
       type: 'normal',
@@ -640,11 +632,11 @@ test("Using sequences", function(assert) {
   });
 
   let json = FactoryGuy.buildRaw('person');
-  let expected = { id: 1, name: 'person #1', type: 'normal' };
+  let expected = {id: 1, name: 'person #1', type: 'normal'};
   assert.deepEqual(json, expected, 'in default attributes');
 
   json = FactoryGuy.buildRaw('dude');
-  expected = { id: 2, name: 'person #2', type: 'person type #1' };
+  expected = {id: 2, name: 'person #2', type: 'person type #1'};
   assert.deepEqual(json, expected, 'in named attributes');
 
   assert.throws(function() {
@@ -655,12 +647,12 @@ test("Using sequences", function(assert) {
   );
 
   json = FactoryGuy.buildRaw('dude_inline');
-  expected = { id: 3, name: 'person #3', type: 'Dude #1' };
+  expected = {id: 3, name: 'person #3', type: 'Dude #1'};
   assert.deepEqual(json, expected, 'as inline sequence function #1');
 
 
   json = FactoryGuy.buildRaw('dude_inline');
-  expected = { id: 4, name: 'person #4', type: 'Dude #2' };
+  expected = {id: 4, name: 'person #4', type: 'Dude #2'};
   assert.deepEqual(json, expected, 'as inline sequence function #2');
 });
 
@@ -673,33 +665,33 @@ test("Referring to other attributes in attribute definition", function(assert) {
       type: 'normal'
     },
     funny_person: {
-      type: (f)=> `funny ${f.name}`
+      type: (f) => `funny ${f.name}`
     },
     index_name: {
-      name: (f)=> `Person ${f.id}`
+      name: (f) => `Person ${f.id}`
     },
     missing_person: {
-      type: (f)=> `level ${f.brain_size}`
+      type: (f) => `level ${f.brain_size}`
     }
   });
 
   let json = FactoryGuy.buildRaw('index_name');
-  let expected = { id: 1, name: 'Person 1', type: 'normal' };
+  let expected = {id: 1, name: 'Person 1', type: 'normal'};
   assert.deepEqual(json, expected, 'id is available');
 
   json = FactoryGuy.buildRaw('funny_person');
-  expected = { id: 2, name: 'Bob', type: 'funny Bob' };
+  expected = {id: 2, name: 'Bob', type: 'funny Bob'};
   assert.deepEqual(json, expected, 'works when attribute exists');
 
   json = FactoryGuy.buildRaw('missing_person');
-  expected = { id: 3, name: 'Bob', type: 'level undefined' };
+  expected = {id: 3, name: 'Bob', type: 'level undefined'};
   assert.deepEqual(json, expected, 'still works when attribute does not exists');
 });
 
 
 test("Using default belongsTo associations in attribute definition", function(assert) {
   let json = FactoryGuy.buildRaw('project_with_user');
-  let expected = { id: 1, title: 'Project1', user: { id: 1, name: 'User1', style: "normal" } };
+  let expected = {id: 1, title: 'Project1', user: {id: 1, name: 'User1', style: "normal"}};
   assert.deepEqual(json, expected);
 });
 
@@ -708,7 +700,7 @@ test("creates association with optional attributes", function(assert) {
   let expected = {
     id: 1,
     title: 'Project1',
-    user: { id: 1, name: 'Dude', style: "normal" }
+    user: {id: 1, name: 'Dude', style: "normal"}
   };
   assert.deepEqual(json, expected);
 });
@@ -719,7 +711,7 @@ test("creates association using named attribute", function(assert) {
   let expected = {
     id: 1,
     title: 'Project1',
-    user: { id: 1, name: 'Admin', style: "super" }
+    user: {id: 1, name: 'Admin', style: "super"}
   };
   assert.deepEqual(json, expected);
 });
@@ -730,7 +722,7 @@ test("belongsTo association name differs from model name", function(assert) {
   let expected = {
     id: 1,
     title: 'Project1',
-    parent: { id: 2, title: 'Project2' }
+    parent: {id: 2, title: 'Project2'}
   };
   assert.deepEqual(json, expected);
 });
@@ -742,7 +734,7 @@ test("Using hasMany associations in attribute definition", function(assert) {
     id: 1,
     name: 'User1',
     style: "normal",
-    projects: [{ id: 1, title: 'Project1' }, { id: 2, title: 'Project2' }]
+    projects: [{id: 1, title: 'Project1'}, {id: 2, title: 'Project2'}]
   };
   assert.deepEqual(json, expected);
 });
@@ -750,14 +742,14 @@ test("Using hasMany associations in attribute definition", function(assert) {
 
 test("with traits defining model attributes", function(assert) {
   let json = FactoryGuy.buildRaw('project', 'big');
-  let expected = { id: 1, title: 'Big Project' };
+  let expected = {id: 1, title: 'Big Project'};
   assert.deepEqual(json, expected);
 });
 
 test("with traits defining belongsTo association", function(assert) {
   let json = FactoryGuy.buildRaw('project', 'with_user');
   let expected = {
-    id: 1, title: 'Project1', user: { id: 1, name: 'User1', style: "normal" }
+    id: 1, title: 'Project1', user: {id: 1, name: 'User1', style: "normal"}
   };
   assert.deepEqual(json, expected);
 });
@@ -766,17 +758,17 @@ test("with more than one trait used", function(assert) {
   let json = FactoryGuy.buildRaw('project', 'big', 'with_user');
   let expected = {
     id: 1, title: 'Big Project',
-    user: { id: 1, name: 'User1', style: "normal" }
+    user: {id: 1, name: 'User1', style: "normal"}
   };
   assert.deepEqual(json, expected);
 });
 
 test("with more than one trait and custom attributes", function(assert) {
-  let json = FactoryGuy.buildRaw('project', 'big', 'with_user', { title: 'Crazy Project' });
+  let json = FactoryGuy.buildRaw('project', 'big', 'with_user', {title: 'Crazy Project'});
   let expected = {
     id: 1,
     title: 'Crazy Project',
-    user: { id: 1, name: 'User1', style: "normal" }
+    user: {id: 1, name: 'User1', style: "normal"}
   };
   assert.deepEqual(json, expected);
 });
@@ -786,7 +778,7 @@ test("with trait with custom belongsTo association object", function(assert) {
   let expected = {
     id: 1,
     title: 'Big Project',
-    user: { id: 1, name: 'Dude', style: "normal" }
+    user: {id: 1, name: 'Dude', style: "normal"}
   };
   assert.deepEqual(json, expected);
 });
@@ -796,14 +788,14 @@ test("using trait with association using FactoryGuy.belongsTo method", function(
   let expected = {
     id: 1,
     title: 'Project1',
-    user: { id: 1, name: 'Admin', style: "super" }
+    user: {id: 1, name: 'Admin', style: "super"}
   };
   assert.deepEqual(json, expected);
 });
 
 test("with attribute using sequence", function(assert) {
   let json = FactoryGuy.buildRaw('project', 'with_title_sequence');
-  let expected = { id: 1, title: 'Project1' };
+  let expected = {id: 1, title: 'Project1'};
   assert.deepEqual(json, expected);
 });
 
@@ -813,7 +805,7 @@ test("with trait defining association using FactoryGuy.hasMany method", function
     id: 1,
     name: 'User1',
     style: "normal",
-    projects: [{ id: 1, title: 'Project1' }, { id: 2, title: 'Project2' }]
+    projects: [{id: 1, title: 'Project1'}, {id: 2, title: 'Project2'}]
   };
   assert.deepEqual(json, expected);
 });
@@ -825,9 +817,9 @@ test("with trait defining association using FactoryGuy.hasMany method that uses 
     name: 'User1',
     style: "normal",
     projects: [
-      { id: 1, title: 'Big Project' },
-      { id: 2, title: 'Small Project' },
-      { id: 3, title: 'Cool Project' }
+      {id: 1, title: 'Big Project'},
+      {id: 2, title: 'Small Project'},
+      {id: 3, title: 'Cool Project'}
     ]
   };
   assert.deepEqual(json, expected);
@@ -835,35 +827,35 @@ test("with trait defining association using FactoryGuy.hasMany method that uses 
 
 test("creates default json for model", function(assert) {
   let json = FactoryGuy.buildRaw('user');
-  let expected = { id: 1, name: 'User1', style: "normal" };
+  let expected = {id: 1, name: 'User1', style: "normal"};
   assert.deepEqual(json, expected);
 });
 
 
 test("can override default model attributes", function(assert) {
-  let json = FactoryGuy.buildRaw('user', { name: 'bob' });
-  let expected = { id: 1, name: 'bob', style: "normal" };
+  let json = FactoryGuy.buildRaw('user', {name: 'bob'});
+  let expected = {id: 1, name: 'bob', style: "normal"};
   assert.deepEqual(json, expected);
 });
 
 
 test("with named model definition with custom attributes", function(assert) {
   let json = FactoryGuy.buildRaw('admin');
-  let expected = { id: 1, name: 'Admin', style: "super" };
+  let expected = {id: 1, name: 'Admin', style: "super"};
   assert.deepEqual(json, expected);
 });
 
 
 test("overrides named model attributes", function(assert) {
-  let json = FactoryGuy.buildRaw('admin', { name: 'AdminGuy' });
-  let expected = { id: 1, name: 'AdminGuy', style: "super" };
+  let json = FactoryGuy.buildRaw('admin', {name: 'AdminGuy'});
+  let expected = {id: 1, name: 'AdminGuy', style: "super"};
   assert.deepEqual(json, expected);
 });
 
 
 test("ignores transient attributes", function(assert) {
   let json = FactoryGuy.buildRaw('property');
-  let expected = { id: 1, name: 'Silly property' };
+  let expected = {id: 1, name: 'Silly property'};
   assert.deepEqual(json, expected);
 });
 
@@ -874,7 +866,7 @@ test("removes id for model fragment attribute", function(assert) {
 
 test("removes id for model fragmentArray attribute", function(assert) {
   let json = FactoryGuy.buildRaw('employee', 'with_department_employments');
-  let ids = Ember.A(json.departmentEmployments.map((obj)=>obj.id)).compact();
+  let ids = Ember.A(json.departmentEmployments.map((obj) => obj.id)).compact();
   assert.deepEqual(ids, []);
 });
 
@@ -883,34 +875,34 @@ moduleFor('serializer:application', 'FactoryGuy#buildRawList', inlineSetup('-jso
 
 test("basic", function(assert) {
   let userList = FactoryGuy.buildRawList('user', 2);
-  let expected = [{ id: 1, name: 'User1', style: "normal" }, { id: 2, name: 'User2', style: "normal" }];
+  let expected = [{id: 1, name: 'User1', style: "normal"}, {id: 2, name: 'User2', style: "normal"}];
   assert.deepEqual(userList, expected);
 });
 
 test("using custom attributes", function(assert) {
-  let userList = FactoryGuy.buildRawList('user', 2, { name: 'Crazy' });
-  let expected = [{ id: 1, name: 'Crazy', style: "normal" }, { id: 2, name: 'Crazy', style: "normal" }];
+  let userList = FactoryGuy.buildRawList('user', 2, {name: 'Crazy'});
+  let expected = [{id: 1, name: 'Crazy', style: "normal"}, {id: 2, name: 'Crazy', style: "normal"}];
   assert.deepEqual(userList, expected);
 });
 
 test("using traits", function(assert) {
   let projectList = FactoryGuy.buildRawList('project', 2, 'big');
-  let expected = [{ id: 1, title: 'Big Project' }, { id: 2, title: 'Big Project' }];
+  let expected = [{id: 1, title: 'Big Project'}, {id: 2, title: 'Big Project'}];
   assert.deepEqual(projectList, expected);
 });
 
 test("using traits and custom attributes", function(assert) {
-  let projectList = FactoryGuy.buildRawList('project', 2, 'big', { title: 'Really Big' });
-  let expected = [{ id: 1, title: 'Really Big' }, { id: 2, title: 'Really Big' }];
+  let projectList = FactoryGuy.buildRawList('project', 2, 'big', {title: 'Really Big'});
+  let expected = [{id: 1, title: 'Really Big'}, {id: 2, title: 'Really Big'}];
   assert.deepEqual(projectList, expected);
 });
 
 test("using diverse attributes", function(assert) {
-  let projectList = FactoryGuy.buildRawList('project', 'big', { title: 'Really Big' }, ['with_dude', { title: 'I have a dude' }]);
+  let projectList = FactoryGuy.buildRawList('project', 'big', {title: 'Really Big'}, ['with_dude', {title: 'I have a dude'}]);
   let expected = [
-    { id: 1, title: 'Big Project' },
-    { id: 2, title: 'Really Big' },
-    { id: 3, title: 'I have a dude', user: { id: 1, name: 'Dude', style: "normal" } }];
+    {id: 1, title: 'Big Project'},
+    {id: 2, title: 'Really Big'},
+    {id: 3, title: 'I have a dude', user: {id: 1, name: 'Dude', style: "normal"}}];
   assert.deepEqual(projectList, expected);
 });
 
