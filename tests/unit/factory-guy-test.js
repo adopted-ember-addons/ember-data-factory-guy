@@ -1,7 +1,7 @@
 import { moduleFor, test } from 'ember-qunit';
 import DS from 'ember-data';
 import Ember from 'ember';
-import FactoryGuy, { make, makeNew, makeList, build, buildList, clearStore } from 'ember-data-factory-guy';
+import FactoryGuy, { make, makeNew, makeList, build, buildList } from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import sinon from 'sinon';
 import { inlineSetup } from '../helpers/utility-methods';

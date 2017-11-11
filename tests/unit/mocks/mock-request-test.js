@@ -4,7 +4,7 @@ import FactoryGuy, {
   make, build, mockFindAll, mockQueryRecord, mockUpdate, mockSetup, mock
 } from 'ember-data-factory-guy';
 import {inlineSetup} from '../../helpers/utility-methods';
-import MockRequest from 'ember-data-factory-guy/mocks/mock-request';
+import MockRequest from 'ember-data-factory-guy/mocks/mock-typed-request';
 import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
 
 const serializerType = '-json-api';

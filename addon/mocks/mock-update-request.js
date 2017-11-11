@@ -1,10 +1,10 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
-import MockRequest from './mock-request';
+import MockTypedRequest from './mock-typed-request';
 import AttributeMatcher from './attribute-matcher';
 import MaybeIdUrlMatch from './maybe-id-url-match';
 
-export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(MockRequest)) {
+export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(MockTypedRequest)) {
 
   constructor(modelName, {id, model} = {}) {
     super(modelName, 'updateRecord');
