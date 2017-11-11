@@ -67,7 +67,7 @@ test("#singleUse", async function(assert) {
   });
 });
 
-test("#getUrl uses urlForCreateRecord if it is set on the adapter", function(assert) {
+test("#getUrl uses customized adapter#urlForCreateRecord", function(assert) {
   let mock1 = mockCreate('user');
   assert.equal(mock1.getUrl(), '/users');
 
