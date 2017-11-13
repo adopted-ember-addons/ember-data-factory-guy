@@ -1,10 +1,10 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
-import MockTypedRequest from './mock-typed-request';
+import MockStoreRequest from './mock-store-request';
 import AttributeMatcher from './attribute-matcher';
 import MaybeIdUrlMatch from './maybe-id-url-match';
 
-export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(MockTypedRequest)) {
+export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(MockStoreRequest)) {
 
   constructor(modelName, {id, model} = {}) {
     super(modelName, 'updateRecord');
@@ -21,6 +21,7 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
 
   /**
    * Create fake snaphot with adapterOptions and record.
+   *
    * Override the parent to find the model in the store if there is
    * an id available
    *
@@ -50,6 +51,7 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
     }
 
     this.returnArgs = returns.attrs;
+    this.add = returns.add;
     return this;
   }
 

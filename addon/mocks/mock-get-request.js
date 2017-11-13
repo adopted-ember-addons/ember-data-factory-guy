@@ -1,12 +1,12 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
 import Model from 'ember-data/model';
-import MockTypedRequest from './mock-typed-request';
-import {toParams, isEquivalent, isEmptyObject, isPartOf} from '../utils/helper-functions';
+import MockStoreRequest from './mock-store-request';
+import { toParams, isEquivalent, isEmptyObject, isPartOf } from '../utils/helper-functions';
 
 const assign = Ember.assign || Ember.merge;
 
-class MockGetRequest extends MockTypedRequest {
+class MockGetRequest extends MockStoreRequest {
 
   constructor(modelName, requestType, defaultResponse) {
     super(modelName, requestType);
@@ -46,14 +46,16 @@ class MockGetRequest extends MockTypedRequest {
 
   validateReturnsOptions(options) {
     const responseKeys = Object.keys(options);
-    Ember.assert(`[ember-data-factory-guy] You can pass zero or one key to 'returns',
-                you passed these keys: ${responseKeys}`, responseKeys.length <= 1);
+
+    Ember.assert(`[ember-data-factory-guy] You can pass one key to 'returns',
+                you passed these keys: ${responseKeys}`, responseKeys.length === 1);
 
     const [responseKey] = responseKeys;
 
-    Ember.assert(`[ember-data-factory-guy] You passed an invalid key for 'returns' function.
-      Valid keys are ${this.validReturnsKeys}. You used this key: ${responseKey}`,
-      Ember.A(this.validReturnsKeys).includes(responseKey));
+    Ember.assert(`[ember-data-factory-guy] You passed an invalid keys for 'returns' function.
+      Valid keys are ${this.validReturnsKeys}. You used this invalid key: ${responseKey}`,
+      this.validReturnsKeys.includes(responseKey));
+
     return responseKey;
   }
 
@@ -71,7 +73,7 @@ class MockGetRequest extends MockTypedRequest {
         // if you want to return existing model with an id, set up the json
         // as if it might be found, but check later during request match to
         // see if it really exists
-        json = { id: options.id };
+        json = {id: options.id};
         this.idSearch = true;
         this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, json));
         break;
@@ -82,14 +84,14 @@ class MockGetRequest extends MockTypedRequest {
         Ember.assert(`argument ( model ) must be a Model instance - found type:'
           ${Ember.typeOf(model)}`, (model instanceof Model));
 
-        json = { id: model.id };
+        json = {id: model.id};
         this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, json));
         break;
 
       case 'ids': {
         const store = FactoryGuy.store;
         models = options.ids.map((id) => store.peekRecord(modelName, id));
-        this.returns({ models });
+        this.returns({models});
         break;
       }
       case 'models': {
@@ -98,7 +100,7 @@ class MockGetRequest extends MockTypedRequest {
           ${Ember.typeOf(models)}`, Ember.isArray(models));
 
         json = models.map(model => {
-          return { id: model.id, type: model.constructor.modelName };
+          return {id: model.id, type: model.constructor.modelName};
         });
 
         json = this.fixtureBuilder.convertForBuild(modelName, json);
@@ -116,7 +118,7 @@ class MockGetRequest extends MockTypedRequest {
 
       case 'attrs': {
         let currentId   = this.responseJson.get('id'),
-            modelParams = assign({ id: currentId }, options.attrs);
+            modelParams = assign({id: currentId}, options.attrs);
         json = this.fixtureBuilder.convertForBuild(modelName, modelParams);
         this.setResponseJson(json);
         break;
