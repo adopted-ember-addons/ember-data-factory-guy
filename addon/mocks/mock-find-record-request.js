@@ -23,7 +23,7 @@ export default class MockFindRecordRequest extends MockGetRequest {
       let model = FactoryGuy.store.peekRecord(this.modelName, this.get('id'));
       if (!model) {
         // the match still succeeds but the response is failure
-        this.fails({ status: 404 });
+        this.fails({status: 404});
       }
     }
     return super.extraRequestMatches(settings);

@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
 import { moduleFor, test } from 'ember-qunit';
 import Model from 'ember-data/model';
 import FactoryGuy, { build, makeNew, mockCreate } from 'ember-data-factory-guy';
@@ -30,7 +30,7 @@ test("logging response", async function(assert) {
         profile     = makeNew('profile'),
         mock        = mockCreate(profile).returns({attrs: {id: 2}});
 
-  await Ember.run(async () => profile.save());
+  await run(async () => profile.save());
 
   let response     = JSON.parse(mock.getResponse().responseText),
       expectedArgs = [
@@ -54,13 +54,13 @@ test("#singleUse", async function(assert) {
   mockCreate('user').returns({attrs: {id: user1.get('id')}}).singleUse();
   mockCreate('user').returns({attrs: {id: user2.get('id')}});
 
-  Ember.run(async () => {
+  run(async () => {
     let model1 = FactoryGuy.store.createRecord('user', user1.get());
     await model1.save();
     assert.equal(model1.id, user1.get('id'));
   });
 
-  Ember.run(async () => {
+  run(async () => {
     let model2 = FactoryGuy.store.createRecord('user', user2.get());
     await model2.save();
     assert.equal(model2.id, user2.get('id'));
@@ -92,8 +92,26 @@ test('snapshot has record and adapterOptions in adapter#urlForCreateRecord', asy
 
   sinon.stub(adapter, 'urlForCreateRecord').callsFake(fakeUrlForCreateRecord);
 
-  await Ember.run(() => {
+  await run(() => {
     return FactoryGuy.store.createRecord('user').save({adapterOptions});
   });
+
   adapter.urlForCreateRecord.restore();
+});
+
+test("#makeFakeSnapshot", function(assert) {
+  let user = makeNew('user');
+
+  let tests = [
+    [[user], user, 'has record when model in arguments'],
+    [['user'], undefined, 'does not have record when only modelName in arguments']
+  ];
+
+  for (let test of tests) {
+    let [args, expectedRecord, message] = test;
+    let mock     = mockCreate(...args),
+        snapshot = mock.makeFakeSnapshot(),
+        {record} = snapshot;
+    assert.deepEqual(record, expectedRecord, message);
+  }
 });

@@ -57,9 +57,9 @@ test("#makeFakeSnapshot", function(assert) {
   let user = make('user');
 
   let tests = [
-    [[user], user, 'has record when model as arguments'],
-    [['user', user.id], user, 'has record when modelName, id as arguments'],
-    [['user'], undefined, 'does not have record when only modelName as arguments']
+    [[user], user, 'has record when model in arguments'],
+    [['user', user.id], user, 'has record when modelName, id in arguments'],
+    [['user'], undefined, 'does not have record when only modelName in arguments']
   ];
 
   for (let test of tests) {

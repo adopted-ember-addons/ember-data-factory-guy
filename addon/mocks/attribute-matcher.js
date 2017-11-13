@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
-import {isEmptyObject, isEquivalent} from '../utils/helper-functions';
+import { isEmptyObject, isEquivalent } from '../utils/helper-functions';
 
 /**
  This is a mixin used by MockUpdate and MockCreateRequest
@@ -27,17 +27,24 @@ const AttributeMatcher = (superclass) => class extends superclass {
     return this;
   }
 
+  /**
+   Update and Create mocks can accept 2 return keys 'attrs' and 'add'
+
+   @param options
+   @returns {Array}
+   */
   validateReturnsOptions(options) {
-    const responseKeys = Object.keys(options);
-    let validKey = responseKeys.length === 1 && responseKeys[0] === 'attrs';
+    const responseKeys     = Object.keys(options),
+          validReturnsKeys = ['attrs', 'add'],
+          invalidKeys      = responseKeys.filter(key => !validReturnsKeys.includes(key));
     
-    Ember.assert(`[ember-data-factory-guy] You passed an invalid key for 
-      'returns' function. The only valid keys is 'attrs'. You passed these 
-      keys: ${responseKeys}`, 
-      validKey
-    );
+    Ember.assert(`[ember-data-factory-guy] You passed invalid keys for 'returns' function.
+      Valid keys are ${validReturnsKeys}. You used these invalid keys: ${invalidKeys}`,
+      invalidKeys.length === 0);
+
+    return responseKeys;
   }
-  
+
   extraRequestMatches(request) {
     if (this.matchArgs) {
       let requestBody = JSON.parse(request.requestBody),
@@ -77,18 +84,18 @@ const AttributeMatcher = (superclass) => class extends superclass {
     let builder = FactoryGuy.fixtureBuilder(this.modelName);
 
     // transform they match keys
-    let matchCheckKeys = Object.keys(matchArgs).map((key)=> {
+    let matchCheckKeys = Object.keys(matchArgs).map((key) => {
       return builder.transformKey(this.modelName, key);
     });
     // build the match args into a JSONPayload class
-    let buildOpts = { serializeMode: true, transformKeys: true };
+    let buildOpts = {serializeMode: true, transformKeys: true};
     let expectedData = builder.convertForBuild(this.modelName, matchArgs, buildOpts);
 
     // wrap request data in a JSONPayload class
     builder.wrapPayload(this.modelName, requestData);
 
     // success if all values match
-    return matchCheckKeys.every((key)=> {
+    return matchCheckKeys.every((key) => {
       return isEquivalent(expectedData.get(key), requestData.get(key));
     });
   }
