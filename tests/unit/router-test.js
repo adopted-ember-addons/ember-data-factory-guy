@@ -1,16 +1,11 @@
-import {mockFindAll, mockSetup, mockTeardown, manualSetup} from 'ember-data-factory-guy';
+import {mockFindAll, manualSetup} from 'ember-data-factory-guy';
 import {moduleFor, test} from 'ember-qunit';
 
 moduleFor('route:profiles', 'Unit | forgetting to needs transform', {
   beforeEach() {
     manualSetup(this.container);
-    mockSetup();
   },
 
-  afterEach() {
-    mockTeardown();
-  },
-   
   needs: [
     'model:profile',
 //    'transform:just-a-string'  ( it's common to forget this needs )

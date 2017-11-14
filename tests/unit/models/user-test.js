@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import {test, moduleForModel} from 'ember-qunit';
-import FactoryGuy, {make, manualSetup, mockFindRecord, mockSetup, mockTeardown}  from 'ember-data-factory-guy';
+import { test, moduleForModel } from 'ember-qunit';
+import FactoryGuy, { make, manualSetup, mockFindRecord } from 'ember-data-factory-guy';
 
 moduleForModel('user', 'Unit | Model | user', {
   // using integration: true to have all models registered in the container
@@ -9,16 +9,11 @@ moduleForModel('user', 'Unit | Model | user', {
 
   setup: function() {
     manualSetup(this.container);
-    mockSetup();
-  },
-
-  teardown: function() {
-    mockTeardown();
   }
 });
 
 test('has funny name', function(assert) {
-  let user = make('user', { name: 'Dude' });
+  let user = make('user', {name: 'Dude'});
   assert.equal(user.get('funnyName'), 'funny Dude');
 });
 

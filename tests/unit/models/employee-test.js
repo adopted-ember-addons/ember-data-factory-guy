@@ -1,8 +1,7 @@
-import {manualSetup, build, make, buildList} from 'ember-data-factory-guy';
-import {test, moduleForModel} from 'ember-qunit';
-import Ember from 'ember';
-const { run } = Ember;
- 
+import { manualSetup, build, make, buildList } from 'ember-data-factory-guy';
+import { test, moduleForModel } from 'ember-qunit';
+import { run } from '@ember/runloop';
+
 moduleForModel('employee', 'Unit | Model | employee', {
   needs: [
     'model:name',
@@ -50,7 +49,7 @@ test('making employee with attribute this differently named than fragment type',
     designation: {}
    },
  }
-*/
+ */
 test('making employee with attribute this differently named than fragment type with empty declaration in definition', function(assert) {
   let employee = make('employee', 'with_designation');
   //Should I need a run loop?
@@ -106,7 +105,7 @@ test('default employee and titles', function(assert) {
 test('employee hasMany departmentEmployments setup manually', function(assert) {
   run(() => {
     let departmentEmployments = buildList('department-employment', 2).get();
-    let employee = make('employee', { departmentEmployments });
+    let employee = make('employee', {departmentEmployments});
     assert.equal(employee.get('departmentEmployments.length'), 2);
   });
 });

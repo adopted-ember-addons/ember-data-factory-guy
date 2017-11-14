@@ -393,7 +393,7 @@ class FactoryGuy {
       return this.make(...[name, ...innerArgs]);
     });
   }
-  
+
   reset() {
     this.resetDefinitions();
     this.resetMockAjax();
@@ -416,13 +416,21 @@ class FactoryGuy {
     }
   }
 
-  // Hook into store willDestroy to cleanup variables in Factory Guy
+  /**
+   Hook into store willDestroy to cleanup variables in Factory Guy and
+   reset definitions/mock ajax setup.
+
+   This eliminates the need to call mockTeardown manually in tests
+
+   @param store
+   */
   afterDestroyStore(store) {
     const self = this;
     store.willDestroy = function(...args) {
       this._super(...args);
       self.store = null;
       self.fixtureBuilderFactory = null;
+      self.reset();
     };
   }
 

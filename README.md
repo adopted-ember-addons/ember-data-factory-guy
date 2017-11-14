@@ -1180,7 +1180,6 @@ The `isDestroyed` property is set to `true` when the mock is destroyed.
     ```javascript
       mockSetup({logLevel: 1, responseTime: 1000});
     ```
-  - Use ```mockTeardown()``` in test teardown/afterEach
   - Easiest is to set them up in [module-for-acceptance.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/helpers/module-for-acceptance.js)
 
 ##### Using fails method
@@ -1872,8 +1871,6 @@ describe('Admin View', function() {
 
 #### Tip 4: Testing mocks ( async testing ) in unit tests
 
- - You want to use mockFindRecord, mockQuery etc... in unit test
-   - Have to remember to call mockSetup, mockTeardown [before](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L26) and [after](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L30) test
  - Two ways to handle asyncronous test
    - async / await ( most elegant ) [Sample test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L44)     
       - need to declare polyfill for ember-cli-babel options 
