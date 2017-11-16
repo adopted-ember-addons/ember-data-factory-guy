@@ -5,7 +5,22 @@ import { inlineSetup } from '../../helpers/utility-methods';
 
 const serializerType = '-json-api';
 
-moduleFor('serializer:application', 'MockRequest ad hoc mocks', inlineSetup(serializerType));
+moduleFor('serializer:application', 'MockAny', inlineSetup(serializerType));
+
+test("with incorrect parameters", function(assert) {
+
+  assert.throws(function() {
+    mock({url: null})
+  }, "missing url");
+  
+});
+
+test("defaults values for type, status", function(assert) {
+  let mockAny = mock({url: '/meep-meep'});
+
+  assert.equal(mockAny.getType(), 'GET');
+  assert.equal(mockAny.status, '200');
+});
 
 test("get", async function(assert) {
   const callOpts     = {

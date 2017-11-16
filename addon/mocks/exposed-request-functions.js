@@ -12,19 +12,21 @@ import MockDeleteRequest from './mock-delete-request';
 import MockAnyRequest from './mock-any-request';
 
 export function mockSetup({responseTime, logLevel = 0} = {}) {
-  Ember.deprecate(`[ember-data-factory-guy] mockSetup is no longer needed. Use FactoryGuy.settings instead`,
+  Ember.deprecate(`[ember-data-factory-guy] mockSetup is no longer needed. If you want to set logLevel or responseTime, use FactoryGuy.settings instead. If you don't need to set anything, it is safe to remove mockSetup`,
     false,
     {id: 'ember-data-factory-guy.mock-setup', until: '2.14.0'});
   FactoryGuy.settings({logLevel, responseTime});
 }
 
 export function mockTeardown() {
-  Ember.deprecate(`[ember-data-factory-guy] mockTeardown is no longer needed. Mock teardown is done automatically now after every test.`,
+  Ember.deprecate(`[ember-data-factory-guy] mockTeardown is no longer needed. Mock teardown is now done automatically after every test.`,
     false,
     {id: 'ember-data-factory-guy.mock-teardown', until: '2.14.0'});
 }
 
 export function mock({type, url, responseText} = {}) {
+  Ember.assert("[ember-data-factory-guy] mock requires at least a url", url);
+
   return new MockAnyRequest({type, url, responseText});
 }
 
