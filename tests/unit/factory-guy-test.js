@@ -116,6 +116,13 @@ test("with one level of hasMany relationship", function(assert) {
   assert.equal(user['big-hats'].length, 2);
 });
 
+test("when hasMany relationship is null", function(assert) {
+  let user = build('user', {hats: null});
+
+  assert.ok(user['user'], 'have user info');
+  assert.notOk(user['big-hats'], 'hasMany does not exist');
+});
+
 test("can use non model attributes to help setup attributes", function(assert) {
   let dog1 = build('dog');
   assert.equal(dog1.get('sound'), 'Normal Woof', 'no extra attribute');
