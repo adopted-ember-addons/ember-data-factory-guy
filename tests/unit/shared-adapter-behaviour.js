@@ -1370,7 +1370,7 @@ SharedBehavior.mockCreateReturnsAssociations = function(serializer, serializerTy
 
   moduleFor('serializer:application', `${serializer} #mockCreate | returns association`, inlineSetup(serializerType));
 
-  test("belongsTo", function(assert) {
+  test("belongsTo", async function(assert) {
     run(async () => {
       let company = build('company'),
           profile = FactoryGuy.store.createRecord('profile');
@@ -1418,7 +1418,7 @@ SharedBehavior.mockCreateReturnsEmbeddedAssociations = function(serializer, seri
 
   moduleFor('serializer:application', `${serializer} #mockCreate | returns embedded association`, inlineSetup(serializerType));
 
-  test("belongsTo", function(assert) {
+  test("belongsTo", async function(assert) {
     run(async () => {
       let company   = build('company'),
           comitBook = FactoryGuy.store.createRecord('comic-book');

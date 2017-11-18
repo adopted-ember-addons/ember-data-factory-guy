@@ -6,8 +6,10 @@ import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error'
 import sinon from 'sinon';
 import { inlineSetup } from '../helpers/utility-methods';
 import User from 'dummy/models/user';
+import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
 
 const A = Ember.A;
+
 
 moduleFor('serializer:application', 'FactoryGuy', inlineSetup('-json-api'));
 
@@ -15,7 +17,18 @@ test("has store set in initializer", function(assert) {
   assert.ok(FactoryGuy.store instanceof DS.Store);
 });
 
-test('make throws exception if there is NO store setup', function(assert) {
+test("#settings", function(assert) {
+  FactoryGuy.logLevel = 0;
+  FactoryGuy.settings({responseTime: 0});
+
+  FactoryGuy.settings({logLevel: 1});
+  assert.equal(FactoryGuy.logLevel, 1);
+
+  FactoryGuy.settings({responseTime: 10});
+  assert.equal(RequestManager.settings().responseTime, 10);
+});
+
+test('#make throws exception if there is NO store setup', function(assert) {
   FactoryGuy.store = null;
   assert.throws(
     function() {
@@ -26,7 +39,7 @@ test('make throws exception if there is NO store setup', function(assert) {
     });
 });
 
-test('makeList throws exception if there is NO store setup', function(assert) {
+test('#makeList throws exception if there is NO store setup', function(assert) {
   FactoryGuy.store = null;
   assert.throws(
     function() {

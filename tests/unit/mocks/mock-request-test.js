@@ -1,27 +1,12 @@
 import { moduleFor, test } from 'ember-qunit';
 import Ember from 'ember';
 import FactoryGuy, {
-  make, build, mockFindAll, mockQueryRecord, mockUpdate, mockSetup
+  make, build, mockFindAll, mockQueryRecord, mockUpdate
 } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import MockRequest from 'ember-data-factory-guy/mocks/mock-store-request';
-import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
 
 const serializerType = '-json-api';
-
-moduleFor('serializer:application', 'mockSetup', inlineSetup(serializerType));
-
-test("accepts parameters", function(assert) {
-  FactoryGuy.logLevel = 0;
-  RequestManager.settings({responseTime: 0});
-
-  mockSetup({logLevel: 1});
-  assert.equal(FactoryGuy.logLevel, 1);
-
-  mockSetup({responseTime: 10});
-  assert.equal(RequestManager.settings().responseTime, 10);
-});
-
 
 moduleFor('serializer:application', 'MockRequest #fails', inlineSetup(serializerType));
 
