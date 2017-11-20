@@ -1752,7 +1752,6 @@ Usage:
     mockDelete(profile).fails();
 ```
 
-
 ### Tips and Tricks
 
 #### Tip 1: Fun with `makeList`/`buildList` and traits
