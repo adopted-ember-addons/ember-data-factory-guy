@@ -1177,7 +1177,7 @@ The `isDestroyed` property is set to `true` when the mock is destroyed.
     - responseTime ( in millis )  for simulating slower responses
     - Example:
     ```javascript
-      FactoryGuy.settiongs({logLevel: 1, responseTime: 1000});
+      FactoryGuy.settings({logLevel: 1, responseTime: 1000});
     ```
 
 ##### Using fails method

@@ -158,7 +158,7 @@ export default class {
   }
 
   // once the mock is used, it will disable itself, so it can't be used again.
-  // most usefull when using mockCreate to make the same type of model
+  // most useful when using mockCreate to make the same type of model
   // over and over again, and the returning id is different.
   singleUse() {
     this.useOnce = true;
