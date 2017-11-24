@@ -37,7 +37,7 @@ test("Show employee by make(ing) a model and using returns with that model", asy
   assert.equal(find('.department-employment').length, 2, "fragment array works");
 });
 
-test("Show employee by building(ing) json and using returns with that json", async function(assert) {
+test("Show employee by build(ing) json and using returns with that json", async function(assert) {
   // 'with_department_employments' is a trait that build the has many in the employee factory
   let employee = build('employee', 'with_department_employments');
 
@@ -48,7 +48,7 @@ test("Show employee by building(ing) json and using returns with that json", asy
   assert.equal(find('.department-employment').length, 2, "fragment array works");
 });
 
-test("Show employee by building(ing) json ( with hasMany fragment added manually ) and using returns with that json", async function(assert) {
+test("Show employee by build(ing) json ( with hasMany fragment added manually ) and using returns with that json", async function(assert) {
   let departmentEmployments = buildList('department-employment', 2).get();
   let employee = build('employee', { departmentEmployments });
 
@@ -57,4 +57,42 @@ test("Show employee by building(ing) json ( with hasMany fragment added manually
 
   assert.ok(find('.name').text().match(`${employee.get('name').firstName} ${employee.get('name').lastName}`));
   assert.equal(find('.department-employment').length, 2, "fragment array works");
+});
+
+test("Show employee by make(ing) a model ( with belongsTo fragment with custom serializer added manually ) and using returns with that model", async function(assert) {
+  let role = build('role').get();
+  let employee = make('employee', { role });
+
+  mockFindRecord('employee').returns({ model: employee });
+  await visit('/employee/' + employee.get('id'));
+
+  assert.ok(find('.role').text().match(`${employee.get('role.seniority_level')} ${employee.get('role.specialization_domain')}`));
+});
+
+test("Show employee by make(ing) a model ( with belongsTo fragment with custom serializer ) and using returns with that model", async function(assert) {
+  let employee = make('employee');
+
+  mockFindRecord('employee').returns({ model: employee });
+  await visit('/employee/' + employee.get('id'));
+
+  assert.ok(find('.role').text().match(`${employee.get('role.seniorityLevel')} ${employee.get('role.specializationDomain')}`));
+});
+
+test("Show employee by build(ing) json ( with belongsTo fragment with custom serializer ) and using returns with that json", async function(assert) {
+  let employee = build('employee');
+
+  mockFindRecord('employee').returns({ json: employee });
+  await visit('/employee/' + employee.get('id'));
+
+  assert.ok(find('.role').text().match(`${employee.get('role.seniorityLevel')} ${employee.get('role.specializationDomain')}`));
+});
+
+test("Show employee by build(ing) json ( with belongsTo fragment with custom serializer added manually ) and using returns with that json", async function(assert) {
+  let role = build('role').get();
+  let employee = build('employee', { role });
+  debugger;
+  mockFindRecord('employee').returns({ json: employee });
+  await visit('/employee/' + employee.get('id'));
+  pauseTest();
+  assert.ok(find('.role').text().match(`${employee.get('role.seniority_level')} ${employee.get('role.specialization_domain')}`));
 });

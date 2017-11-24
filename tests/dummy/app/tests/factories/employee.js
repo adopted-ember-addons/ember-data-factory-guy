@@ -5,7 +5,8 @@ FactoryGuy.define('employee', {
     name: FactoryGuy.belongsTo('name'),
     titles: ['Mr.', 'Dr.'],
     gender: 'Male',
-    birthDate: new Date('2016-05-01')
+    birthDate: new Date('2016-05-01'),
+    role: FactoryGuy.belongsTo('role'),
   },
   traits: {
     with_designation:{
