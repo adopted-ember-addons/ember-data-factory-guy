@@ -6,6 +6,7 @@ let wrappers         = {},
     xhrListenerSetup = false,
     cache            = Ember.A([]),
     pretender        = null,
+    nativeXhrOpen    = null,
     handlersSetup    = false,
     delay            = 0;
 
@@ -62,13 +63,12 @@ export default class RequestManager {
 
   static setupXHRListener() {
     xhrListenerSetup = true;
-    Ember.$(document).on('ajaxStart', RequestManager.xhrStart);
-    //    let xhrProxy = window.XMLHttpRequest.prototype.open;
-    //    window.XMLHttpRequest.prototype.open = function(...args) {
-    //      console.warn('started xhr', args);
-    //      RequestManager.xhrStart();
-    //      return xhrProxy.apply(this, args);
-    //    };
+    this.getPretender();
+    nativeXhrOpen = window.XMLHttpRequest.prototype.open;
+    window.XMLHttpRequest.prototype.open = function(...args) {
+      RequestManager.xhrStart();
+      return nativeXhrOpen.apply(this, args);
+    };
   }
 
   /**
@@ -152,9 +152,10 @@ export default class RequestManager {
   static reset() {
     wrappers = {};
     pretender && pretender.shutdown();
+    window.XMLHttpRequest.prototype.open = nativeXhrOpen;
+    nativeXhrOpen = null;
     pretender = undefined;
     cache = Ember.A([]);
-    Ember.$(document).off('ajaxStart', RequestManager.xhrStart);
     xhrListenerSetup = false;
     handlersSetup = false;
     delay = 0;
