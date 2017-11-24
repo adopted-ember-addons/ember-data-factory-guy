@@ -90,9 +90,9 @@ test("Show employee by build(ing) json ( with belongsTo fragment with custom ser
 test("Show employee by build(ing) json ( with belongsTo fragment with custom serializer added manually ) and using returns with that json", async function(assert) {
   let role = build('role').get();
   let employee = build('employee', { role });
-  debugger;
+
   mockFindRecord('employee').returns({ json: employee });
   await visit('/employee/' + employee.get('id'));
-  pauseTest();
+
   assert.ok(find('.role').text().match(`${employee.get('role.seniority_level')} ${employee.get('role.specialization_domain')}`));
 });
