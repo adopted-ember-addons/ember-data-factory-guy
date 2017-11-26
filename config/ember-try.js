@@ -19,6 +19,16 @@ module.exports = {
       }
     },
     {
+      name: 'ember-ember-data-2.14',
+      npm: {
+        devDependencies: {
+          'ember-source': '2.14',
+          'ember-data': '2.14',
+          'ember-data-model-fragments': '2.14'
+        }
+      }
+    },
+    {
       name: 'ember-ember-data-release',
       bower: {
         devDependencies: {
