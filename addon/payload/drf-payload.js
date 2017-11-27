@@ -1,12 +1,13 @@
 import Ember from 'ember';
 import JSONPayload from './json-payload';
+import { assign } from '@ember/polyfills';
 
 export default class extends JSONPayload {
 
   // only add the meta data if there is query ( results key is present )
   addMeta(data) {
     if (this.json.results) {
-      Object.assign(this.json, data);
+      assign(this.json, data);
     }
   }
 

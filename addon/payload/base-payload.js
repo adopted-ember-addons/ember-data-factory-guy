@@ -1,12 +1,13 @@
 import Ember from 'ember';
 const { w } = Ember.String;
+import { assign } from '@ember/polyfills';
 
 export default class {
 
   /**
    Proxy class for getting access to a json payload.
-   Allows you to: 
-     - inspect a payload with friendly .get(attr)  syntax 
+   Allows you to:
+     - inspect a payload with friendly .get(attr)  syntax
      - add to json payload with more json built from build and buildList methods.
 
    @param {String} modelName name of model for payload
@@ -63,19 +64,19 @@ export default class {
   /**
     Add new meta data to the json payload, which will
     overwrite any existing meta data with same keys
-   
+
     @param {Object} data meta data to add
    */
   addMeta(data) {
     this.json.meta = this.json.meta || {};
-    Object.assign(this.json.meta, data);
+    assign(this.json.meta, data);
   }
 
   // marker function for saying "I am a proxy"
   isProxy() {
   }
 
-  // get the top level model's payload ( without the includes or meta data ) 
+  // get the top level model's payload ( without the includes or meta data )
   getModelPayload() {
     return this.get();
   }

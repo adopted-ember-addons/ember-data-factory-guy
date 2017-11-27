@@ -3,6 +3,7 @@ import FactoryGuy from '../factory-guy';
 import MockStoreRequest from './mock-store-request';
 import AttributeMatcher from './attribute-matcher';
 import MaybeIdUrlMatch from './maybe-id-url-match';
+import { assign } from '@ember/polyfills';
 
 export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(MockStoreRequest)) {
 
@@ -46,7 +47,7 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
     this.validateReturnsOptions(returns);
 
     if (!this.id) {
-      Ember.assert(`[ember-data-factory-guy] Can't use returns in 
+      Ember.assert(`[ember-data-factory-guy] Can't use returns in
       mockUpdate when update only has modelName and no id`, this.id);
     }
 
@@ -64,8 +65,8 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
   getResponse() {
     this.responseJson = null;
     if (this.id) {
-      let args = Object.assign({}, this.matchArgs, this.returnArgs),
-          json = Object.assign({}, args, {id: this.id});
+      let args = assign({}, this.matchArgs, this.returnArgs),
+          json = assign({}, args, {id: this.id});
       this.responseJson = this.fixtureBuilder.convertForBuild(this.modelName, json);
     }
     return super.getResponse();

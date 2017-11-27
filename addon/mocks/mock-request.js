@@ -2,6 +2,7 @@ import Ember from 'ember';
 import { isEmptyObject } from '../utils/helper-functions';
 import FactoryGuy from '../factory-guy';
 import RequestManager from './request-manager';
+import { assign } from '@ember/polyfills';
 
 export default class {
 
@@ -48,7 +49,7 @@ export default class {
   }
 
   addResponseHeaders(headers) {
-    Object.assign(this.responseHeaders, headers);
+    assign(this.responseHeaders, headers);
   }
 
   succeeds(opts = {}) {
