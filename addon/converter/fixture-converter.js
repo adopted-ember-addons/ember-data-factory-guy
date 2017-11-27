@@ -25,9 +25,9 @@ import Ember from 'ember';
  */
 export default class {
 
-  constructor(store, options = { transformKeys: true, serializeMode: false }) {
-    this.transformKeys = options.transformKeys;
-    this.serializeMode = options.serializeMode;
+  constructor(store, {transformKeys = true, serializeMode = false} = {}) {
+    this.transformKeys = transformKeys;
+    this.serializeMode = serializeMode;
     this.store = store;
     this.listType = false;
     this.noTransformFn = (x) => x;
@@ -275,7 +275,7 @@ export default class {
           `Polymorphic relationships cannot be specified by id you
           need to supply an object with id and type`, !relationship.options.polymorphic
         );
-        record = { id: record, type: relationship.type };
+        record = {id: record, type: relationship.type};
         data = this.normalizeAssociation(record, relationship);
     }
 

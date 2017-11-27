@@ -1,17 +1,19 @@
 import Ember from 'ember';
 import Converter from './fixture-converter';
-const { dasherize } = Ember.String;
+
+const {dasherize} = Ember.String;
 
 /**
  * Using `serializeMode` to create a payload the way ember-data would serialize types
- * when returning a payload to a server that accepts JSON-API wherin the types are 
+ * when returning a payload to a server that accepts JSON-API wherin the types are
  * pluralized
- * 
+ *
  */
 class JSONAPIFixtureConverter extends Converter {
 
-  constructor(store, options = { transformKeys: true, serializeMode: false }) {
-    super(store, options);
+  constructor(store, {transformKeys = true, serializeMode = false} = {}) {
+    console.log({transformKeys});
+    super(store, {transformKeys, serializeMode});
     this.typeTransformFn = this.serializeMode ? this.typeTransformViaSerializer : dasherize;
     this.defaultKeyTransformFn = dasherize;
     this.polymorphicTypeTransformFn = dasherize;
@@ -19,11 +21,11 @@ class JSONAPIFixtureConverter extends Converter {
   }
 
   typeTransformViaSerializer(modelName) {
-      let serializer = this.store.serializerFor(modelName);
-      return serializer.payloadKeyFromModelName(modelName);
+    let serializer = this.store.serializerFor(modelName);
+    return serializer.payloadKeyFromModelName(modelName);
   }
 
-  emptyResponse(_, options={}) {
+  emptyResponse(_, options = {}) {
     return {data: options.useValue || null};
   }
 
@@ -36,7 +38,7 @@ class JSONAPIFixtureConverter extends Converter {
    * @returns {*}
    */
   createPayload(modelName, fixture) {
-    return { data: fixture };
+    return {data: fixture};
   }
 
   /**
@@ -60,9 +62,9 @@ class JSONAPIFixtureConverter extends Converter {
    */
   normalizeAssociation(record) {
     if (Ember.typeOf(record) === 'object') {
-      return { type: this.typeTransformFn(record.type), id: record.id };
+      return {type: this.typeTransformFn(record.type), id: record.id};
     } else {
-      return { type: this.typeTransformFn(record.constructor.modelName), id: record.id };
+      return {type: this.typeTransformFn(record.constructor.modelName), id: record.id};
     }
   }
 
@@ -104,7 +106,7 @@ class JSONAPIFixtureConverter extends Converter {
    Add the model to included array unless it's already there.
    */
   addToIncluded(data) {
-    let found = Ember.A(this.included).find((model)=> {
+    let found = Ember.A(this.included).find((model) => {
       return model.id === data.id && model.type === data.type;
     });
     if (!found) {
@@ -113,13 +115,13 @@ class JSONAPIFixtureConverter extends Converter {
   }
 
   addToIncludedFromProxy(proxy) {
-    proxy.includes().forEach((data)=> {
+    proxy.includes().forEach((data) => {
       this.addToIncluded(data);
     });
   }
 
   assignRelationship(object) {
-    return { data: object };
+    return {data: object};
   }
 
 }
