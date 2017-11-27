@@ -4,6 +4,7 @@ import Sequence from './sequence';
 import MissingSequenceError from './missing-sequence-error';
 import {isEmptyObject, mergeDeep} from './utils/helper-functions';
 import require from 'require';
+import { assign } from '@ember/polyfills';
 
 let Fragment;
 try {
@@ -145,11 +146,11 @@ class ModelDefinition {
     let traitsObj = {};
     traitArgs.forEach((trait) => {
       Ember.assert(`You're trying to use a trait [${trait}] for model ${this.modelName} but that trait can't be found.`, this.traits[trait]);
-      Object.assign(traitsObj, this.traits[trait]);
+      assign(traitsObj, this.traits[trait]);
     });
     let modelAttributes = this.namedModels[name] || {};
     // merge default, modelAttributes, traits and opts to get the rough fixture
-    let fixture = Object.assign({}, this.default, modelAttributes, traitsObj, opts);
+    let fixture = assign({}, this.default, modelAttributes, traitsObj, opts);
 
     if (this.notPolymorphic !== undefined) {
       fixture._notPolymorphic = true;
@@ -247,7 +248,7 @@ class ModelDefinition {
   applyAfterMake(model, opts) {
     if (this.afterMake) {
       // passed in options override transient setting
-      let options = Object.assign({}, this.transient, opts);
+      let options = assign({}, this.transient, opts);
       this.afterMake(model, options);
     }
   }
