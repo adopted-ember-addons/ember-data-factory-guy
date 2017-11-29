@@ -13,8 +13,8 @@ test("#getTransformKeyFunction with custom serializer keyForAttribute function",
     manager: {
       id: 1,
       name: {
-        firstName: 'Tyrion',
-        lastName: 'Lannister'
+        first_name: 'Tyrion',
+        last_name: 'Lannister'
       }
     }
   };

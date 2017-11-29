@@ -1,4 +1,4 @@
-import { manualSetup, build, make, buildList } from 'ember-data-factory-guy';
+import FactoryGuy, { mockFindRecord, manualSetup, build, make, buildList } from 'ember-data-factory-guy';
 import { test, moduleForModel } from 'ember-qunit';
 import { run } from '@ember/runloop';
 
@@ -10,6 +10,7 @@ moduleForModel('employee', 'Unit | Model | employee', {
     'model:nested-fragment/address',
     'model:mailing-address',
     'model:billing-address',
+    'serializer:name',
     'transform:fragment',
     'transform:fragment-array',
     'transform:array'
@@ -24,7 +25,6 @@ moduleForModel('employee', 'Unit | Model | employee', {
 test('default employee', function(assert) {
   let employee = make('employee');
 
-  //Should I need a run loop?
   run(() => {
     assert.ok(employee.get('name.firstName') === 'Tyrion');
     assert.ok(employee.get('name.lastName') === 'Lannister');
@@ -34,8 +34,8 @@ test('default employee', function(assert) {
 // FRAGMENT attribute this differently named than fragment type
 // passing in a value you built manually
 test('making employee with attribute this differently named than fragment type', function(assert) {
-  let employee = make('employee', {designation: build('name').get()});
-  //Should I need a run loop?
+  let employee = make('employee', {designation: make('name')});
+
   run(() => {
     assert.ok(employee.get('designation.firstName') === 'Tyrion');
     assert.ok(employee.get('designation.lastName') === 'Lannister');
@@ -52,7 +52,7 @@ test('making employee with attribute this differently named than fragment type',
  */
 test('making employee with attribute this differently named than fragment type with empty declaration in definition', function(assert) {
   let employee = make('employee', 'with_designation');
-  //Should I need a run loop?
+
   run(() => {
     assert.ok(employee.get('designation.firstName') === 'Tyrion');
     assert.ok(employee.get('designation.lastName') === 'Lannister');
@@ -86,7 +86,7 @@ test('default employee with trait with custom name belongsTo', function(assert) 
 test('manual setting up employee name', function(assert) {
   let firstName = 'Joe',
       lastName  = 'Black',
-      name      = build('name', {firstName, lastName}).get(),
+      name      = {firstName: 'Joe', lastName: 'Black'},
       employee  = make('employee', {name});
 
   run(() => {
@@ -102,6 +102,52 @@ test('default employee and titles', function(assert) {
     assert.ok(employee.get('titles.length') === 2);
     assert.deepEqual(employee.get('titles.content'), ['Mr.', 'Dr.']);
   });
+});
+
+test("Show employee by build(ing) a model ( with belongsTo fragment added manually ) and using returns with that model", async function(assert) {
+  let firstName = 'Joe',
+      lastName  = 'Black',
+      name      = build('name', {firstName, lastName}).get(),
+      employee  = build('employee', 'with_department_employments', {name});
+
+  mockFindRecord('employee').returns({json: employee});
+
+  let model = await run(async () => FactoryGuy.store.findRecord('employee', employee.get('id')));
+  let names = run(() => model.get('name').getProperties(['firstName', 'lastName']));
+  assert.deepEqual(names, {firstName, lastName});
+});
+
+//test("Show employee by make(ing) a model and using returns with that model", async function(assert) {
+//  let employee = make('employee', 'with_department_employments');
+//
+//  mockFindRecord('employee').returns({ model: employee });
+//  let model = await FactoryGuy.store.findRecord('employee' + employee.get('id'));
+//
+//  assert.ok(find('.name').text().match(`${employee.get('name.firstName')} ${employee.get('name.lastName')}`));
+//  assert.equal(find('.department-employment').length, 2, "fragment array works");
+//});
+
+//test("Show employee by make(ing) a model ( with belongsTo fragment added manually ) and using returns with that model", async function(assert) {
+//   let name = build('name', { firstName: 'Joe', lastName: 'Black' }).get();
+//   let employee = make('employee', { name });
+//
+//   mockFindRecord('employee').returns({ model: employee });
+//   await visit('/employee/' + employee.get('id'));
+//
+//   assert.ok(find('.name').text().match(`${employee.get('name.firstName')} ${employee.get('name.lastName')}`));
+// });
+
+test("Show employee by make(ing) a model ( with belongsTo fragment added manually ) and using returns with that model", async function(assert) {
+  let firstName = 'Joe',
+      lastName  = 'Black',
+      name      = {firstName: 'Joe', lastName: 'Black'},
+      employee  = make('employee', {name});
+
+  mockFindRecord('employee').returns({model: employee});
+
+  let model = await run(async () => FactoryGuy.store.findRecord('employee', employee.get('id')));
+  let names = run(() => model.get('name').getProperties(['firstName', 'lastName']));
+  assert.deepEqual(names, {firstName, lastName});
 });
 
 // DEPARTMENT EMPLOYMENT

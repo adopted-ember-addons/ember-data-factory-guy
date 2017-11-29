@@ -111,7 +111,7 @@ export default class {
       const info = ['[factory-guy]', name, type, status, fullUrl, json];
 
       console.log(...info);
-      console.log(json.data.attributes.name);
+//      console.log(json.data.attributes.name);
     }
   }
 

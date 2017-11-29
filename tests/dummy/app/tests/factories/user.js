@@ -2,7 +2,7 @@ import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define('user', {
   sequences: {
-    name: function(num) {return 'User' + num;}
+    name: (num)=> `User${num}`
   },
   // default values for 'user' attributes
   default: {

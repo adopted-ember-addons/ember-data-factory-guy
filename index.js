@@ -8,6 +8,18 @@ var Funnel = require('broccoli-funnel');
 module.exports = {
   name: 'ember-data-factory-guy',
 
+  init: function() {
+    this._super.init && this._super.init.apply(this, arguments);
+
+    this.options = this.options || {};
+    this.options.babel = this.options.babel || {};
+    this.options.babel.plugins = this.options.babel.plugins || [];
+
+    if (this.options.babel.plugins.indexOf('transform-object-rest-spread') === -1) {
+      this.options.babel.plugins.push('transform-object-rest-spread');
+    }
+  },
+
   // borrowed from ember-cli-pretender
   _findPretenderPaths: function() {
     if (!this._pretenderPath) {
