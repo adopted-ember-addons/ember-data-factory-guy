@@ -5,7 +5,7 @@
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
-**Ember Data 2.14+ has this [bug](https://github.com/emberjs/data/issues/5055) that affects polymorphic relationships. 
+**Ember Data 2.14+** has this [bug](https://github.com/emberjs/data/issues/5055) that affects polymorphic relationships. 
  You can still use factory guy with ED 2.14+, but polymorphic relationships sometimes will not work as expected.
    
 **NEW and Improved** starting with v2.7.0
@@ -546,6 +546,7 @@ You would use this to make models like:
 
  - [`FactoryGuy.make`](#factoryguymake)
    - Loads a model instance into the store
+   - makes a fragment hash ( if it is a model fragment )
  - [`FactoryGuy.makeNew`](#factoryguymakenew)
    - Create a new model instance but doesn't load it to the store
  - [`FactoryGuy.makeList`](#factoryguymakelist)
@@ -601,6 +602,9 @@ You would use this to make models like:
   let user = make('user', {company: company});
   user.toJSON({includeId: true})  // => {id: 7, name: 'User3', style: 'normal', company: 1}
 
+  // for model fragments you get an object
+  let object = make('name'); // => {firstName: 'Boba', lastName: 'Fett'}
+  
 ```
 
 ##### `FactoryGuy.makeNew`
@@ -677,7 +681,7 @@ Usage:
 
   // build user with company relationship ( belongsTo ) composed of a pre 'built' company
   let company = build('company');
-  let json = build('user', {company: company});
+  let json = build('user', {company});
   json.get() // => {id: 7, name: 'User3', style: 'normal', company: 1}
 
   // build and compose relationships to unlimited degree
