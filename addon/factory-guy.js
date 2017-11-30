@@ -184,7 +184,7 @@ class FactoryGuy {
   belongsTo(...originalArgs) {
     let args = FactoryGuy.extractArguments(...originalArgs);
     return (fixture, buildType) => {
-      let modelName = FactoryGuy.lookupModelForFixtureName(args.name);
+      let modelName = FactoryGuy.lookupModelForFixtureName(args.name, true);
       if (this.isModelAFragment(modelName) && buildType === 'build') {
         return this.build(...originalArgs).get();
       }
@@ -224,7 +224,7 @@ class FactoryGuy {
   hasMany(...originalArgs) {
     let args = FactoryGuy.extractListArguments(...originalArgs);
     return (fixture, buildType) => {
-      let modelName = FactoryGuy.lookupModelForFixtureName(args.name);
+      let modelName = FactoryGuy.lookupModelForFixtureName(args.name, true);
       if (this.isModelAFragment(modelName) && buildType === 'build') {
         return this.buildList(...originalArgs).get();
       }
