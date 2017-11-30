@@ -188,7 +188,7 @@ class FactoryGuy {
       if (this.isModelAFragment(modelName) && buildType === 'build') {
         return this.build(...originalArgs).get();
       }
-      return this.buildRaw({...args, buildType});
+      return this.buildRaw(assign(args, {buildType}));
     }
   }
 
@@ -228,7 +228,7 @@ class FactoryGuy {
       if (this.isModelAFragment(modelName) && buildType === 'build') {
         return this.buildList(...originalArgs).get();
       }
-      return this.buildRawList({...args, buildType});
+      return this.buildRawList(assign(args, {buildType}));
     }
   }
 
@@ -256,7 +256,7 @@ class FactoryGuy {
     let args        = FactoryGuy.extractArguments(...originalArgs),
         definition  = FactoryGuy.lookupDefinitionForFixtureName(args.name, true),
         {modelName} = definition,
-        fixture     = this.buildRaw({...args, buildType: 'build'});
+        fixture     = this.buildRaw(assign(args, {buildType: 'build'}));
 
     return this.fixtureBuilder(modelName).convertForBuild(modelName, fixture);
   }
@@ -292,7 +292,7 @@ class FactoryGuy {
 
     args = FactoryGuy.extractListArguments(...args);
 
-    let list      = this.buildRawList({...args, buildType: 'build'}),
+    let list      = this.buildRawList(assign(args, {buildType: 'build'})),
         modelName = FactoryGuy.lookupModelForFixtureName(args.name);
 
     return this.fixtureBuilder(modelName).convertForBuild(modelName, list);
@@ -330,7 +330,7 @@ class FactoryGuy {
     let args        = FactoryGuy.extractArguments(...originalArgs),
         definition  = FactoryGuy.lookupDefinitionForFixtureName(args.name, true),
         {modelName} = definition,
-        fixture     = this.buildRaw({...args, buildType: 'make'});
+        fixture     = this.buildRaw(assign(args, {buildType: 'make'}));
 
     if (this.isModelAFragment(modelName)) {
       return fixture;
@@ -358,7 +358,7 @@ class FactoryGuy {
 
     let args      = FactoryGuy.extractArguments(...originalArgs),
         modelName = FactoryGuy.lookupModelForFixtureName(args.name, true),
-        fixture   = this.buildRaw({...args, buildType: 'make'});
+        fixture   = this.buildRaw(assign(args, {buildType: 'make'}));
 
     delete fixture.id;
 

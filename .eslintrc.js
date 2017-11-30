@@ -2,10 +2,7 @@ module.exports = {
   root: true,
   parserOptions: {
     ecmaVersion: 2017,
-    sourceType: 'module',
-    ecmaFeatures: {
-      'experimentalObjectRestSpread': true,
-    }
+    sourceType: 'module'
   },
   extends: 'eslint:recommended',
   env: {
