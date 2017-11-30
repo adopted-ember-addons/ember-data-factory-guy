@@ -253,18 +253,16 @@ class FactoryGuy {
    @returns {Object} json fixture
    */
   build(...originalArgs) {
-    let args      = FactoryGuy.extractArguments(...originalArgs),
-        modelName = FactoryGuy.lookupModelForFixtureName(args.name),
-        fixture   = this.buildRaw({...args, buildType: 'build'});
+    let args        = FactoryGuy.extractArguments(...originalArgs),
+        definition  = FactoryGuy.lookupDefinitionForFixtureName(args.name, true),
+        {modelName} = definition,
+        fixture     = this.buildRaw({...args, buildType: 'build'});
 
     return this.fixtureBuilder(modelName).convertForBuild(modelName, fixture);
   }
 
   buildRaw({name, opts, traits, buildType = 'build'} = {}) {
-    let definition = FactoryGuy.lookupDefinitionForFixtureName(name);
-    if (!definition) {
-      throw new Error(`[ember-data-factory-guy] Can't find that factory named [ ${name} ]`);
-    }
+    let definition = FactoryGuy.lookupDefinitionForFixtureName(name, true);
 
     return definition.build(name, opts, traits, buildType);
   }
@@ -301,10 +299,7 @@ class FactoryGuy {
   }
 
   buildRawList({name, number, opts, buildType = 'build'} = {}) {
-    let definition = FactoryGuy.lookupDefinitionForFixtureName(name);
-    if (!definition) {
-      throw new Error(`[ember-data-factory-guy] Can't find that factory named [ ${name} ]`);
-    }
+    let definition = FactoryGuy.lookupDefinitionForFixtureName(name, true);
 
     if (number) {
       let parts = FactoryGuy.extractArgumentsShort(...opts);
@@ -332,17 +327,17 @@ class FactoryGuy {
   make(...originalArgs) {
     this.ensureStore();
 
-    let args      = FactoryGuy.extractArguments(...originalArgs),
-        modelName = FactoryGuy.lookupModelForFixtureName(args.name),
-        fixture   = this.buildRaw({...args, buildType: 'make'});
+    let args        = FactoryGuy.extractArguments(...originalArgs),
+        definition  = FactoryGuy.lookupDefinitionForFixtureName(args.name, true),
+        {modelName} = definition,
+        fixture     = this.buildRaw({...args, buildType: 'make'});
 
     if (this.isModelAFragment(modelName)) {
       return fixture;
     }
 
-    let data       = this.fixtureBuilder(modelName).convertForMake(modelName, fixture),
-        model      = Ember.run(() => this.store.push(data)),
-        definition = FactoryGuy.lookupDefinitionForFixtureName(args.name);
+    let data  = this.fixtureBuilder(modelName).convertForMake(modelName, fixture),
+        model = Ember.run(() => this.store.push(data));
 
     if (definition.hasAfterMake()) {
       definition.applyAfterMake(model, args.opts);
@@ -362,7 +357,7 @@ class FactoryGuy {
     this.ensureStore();
 
     let args      = FactoryGuy.extractArguments(...originalArgs),
-        modelName = FactoryGuy.lookupModelForFixtureName(args.name),
+        modelName = FactoryGuy.lookupModelForFixtureName(args.name, true),
         fixture   = this.buildRaw({...args, buildType: 'make'});
 
     delete fixture.id;
@@ -400,12 +395,7 @@ class FactoryGuy {
 
     let {name, number, opts} = FactoryGuy.extractListArguments(...args);
 
-    let definition = FactoryGuy.lookupDefinitionForFixtureName(name);
-
-    Ember.assert(
-      `[ember-data-factory-guy] makeList can't find that factory named [ ${name} ]`,
-      !!definition
-    );
+    this.ensureNameIsValid(name);
 
     if (number) {
       return Array(number).fill().map(() => this.make(...[name, ...opts]));
@@ -433,6 +423,10 @@ class FactoryGuy {
        Use manualSetup(this.container) in model/component test
        before using make/makeList`, this.store
     );
+  }
+
+  ensureNameIsValid(name) {
+    FactoryGuy.lookupDefinitionForFixtureName(name, true);
   }
 
   reset() {
@@ -575,15 +569,22 @@ class FactoryGuy {
 
    @param {String} name a fixture name could be model name like 'person'
    or a named person in model definition like 'dude'
+   @param {Boolean} assertItExists true if you want to throw assertion if no definition found
    @returns {ModelDefinition} ModelDefinition associated with model or undefined if not found
    */
-  static lookupDefinitionForFixtureName(name) {
+  static lookupDefinitionForFixtureName(name, assertItExists = false) {
+    let definition;
     for (let model in modelDefinitions) {
-      let definition = modelDefinitions[model];
+      definition = modelDefinitions[model];
       if (definition.matchesName(name)) {
         return definition;
       }
     }
+
+    Ember.assert(
+      `[ember-data-factory-guy] Can't find that factory named [ ${name} ]`,
+      !definition && assertItExists
+    );
   }
 
   /**
@@ -594,8 +595,8 @@ class FactoryGuy {
    or a named person in model definition like 'dude'
    @returns {String} model  name associated with fixture name or undefined if not found
    */
-  static lookupModelForFixtureName(name) {
-    let definition = this.lookupDefinitionForFixtureName(name);
+  static lookupModelForFixtureName(name, assertItExists = false) {
+    let definition = this.lookupDefinitionForFixtureName(name, assertItExists);
     if (definition) {
       return definition.modelName;
     }

@@ -28,18 +28,6 @@ test("#settings", function(assert) {
   assert.equal(RequestManager.settings().responseTime, 10);
 });
 
-test('#makeList throws exception if there is NO store setup', function(assert) {
-  FactoryGuy.store = null;
-  assert.throws(
-    function() {
-      makeList('profile');
-    },
-    function(err) {
-      return !!err.toString().match(/Use manualSetup\(this.container\) in model\/component test/);
-    }
-  );
-});
-
 test("exposes make method which is shortcut for FactoryGuy.make", function(assert) {
   assert.ok(make('user') instanceof User);
 });
@@ -88,7 +76,7 @@ test("#resetDefinitions resets the model definition", function(assert) {
 
 moduleFor('serializer:application', 'FactoryGuy#make', inlineSetup('-rest'));
 
-test('#make throws exception if there is NO store setup', function(assert) {
+test('throws exception if there is NO store setup', function(assert) {
   FactoryGuy.store = null;
   assert.throws(
     function() {
@@ -99,12 +87,23 @@ test('#make throws exception if there is NO store setup', function(assert) {
     });
 });
 
-test("#make returns a model instance", function(assert) {
+test('throws exception if model name is not found', function(assert) {
+  assert.throws(
+    function() {
+      make('BigBobModel');
+    },
+    function(err) {
+      return !!err.toString().match(/\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/);
+    }
+  );
+});
+
+test("returns a model instance", function(assert) {
   let user = FactoryGuy.make('user');
   assert.ok(user instanceof User);
 });
 
-test("#make returns a json for model fragment", function(assert) {
+test("returns a json for model fragment", function(assert) {
   let json = FactoryGuy.make('name');
   assert.deepEqual(json, {firstName: 'Tyrion', lastName: 'Lannister'});
 });
@@ -112,12 +111,28 @@ test("#make returns a json for model fragment", function(assert) {
 
 moduleFor('serializer:application', 'FactoryGuy#hasMany', inlineSetup('-rest'));
 
-test("#when model fragment ", function(assert) {
+//test("with model and buildType 'make'", function(assert) {
+//  let hasMany    = FactoryGuy.hasMany('employee', 1),
+//      json       = hasMany({}, 'make'),
+//      [employee] = json;
+//
+//  assert.deepEqual(employee.name, {firstName: 'Tyrion', lastName: 'Lannister'});
+//});
+
+test("with model with model fragment and buildType 'make'", function(assert) {
   let hasMany    = FactoryGuy.hasMany('employee', 1),
       json       = hasMany({}, 'make'),
       [employee] = json;
 
   assert.deepEqual(employee.name, {firstName: 'Tyrion', lastName: 'Lannister'});
+});
+
+test("with model with model fragment and buildType 'build'", function(assert) {
+  let hasMany    = FactoryGuy.hasMany('employee', 1),
+      json       = hasMany({}, 'build'),
+      [employee] = json;
+
+  assert.deepEqual(employee.name, {first_name: 'Tyrion', last_name: 'Lannister'});
 });
 
 
@@ -139,6 +154,17 @@ test("with namespace and host", function(assert) {
 
 
 moduleFor('serializer:application', 'FactoryGuy#build', inlineSetup('-rest'));
+
+test('throws exception if model name is not found', function(assert) {
+  assert.throws(
+    function() {
+      build('BigBobModel');
+    },
+    function(err) {
+      return !!err.toString().match(/\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/);
+    }
+  );
+});
 
 test("with one level of hasMany relationship", function(assert) {
   let hats = buildList('big-hat', 2);
@@ -185,6 +211,28 @@ test("handles hash attribute with hash value in options", function(assert) {
 
 moduleFor('serializer:application', 'FactoryGuy#buildList', inlineSetup('-rest'));
 
+test('throws exception if arguments are missing the model name', function(assert) {
+  assert.throws(
+    function() {
+      buildList();
+    },
+    function(err) {
+      return !!err.toString().match(/\[ember-data-factory-guy\] buildList needs at least a name/);
+    }
+  );
+});
+
+test('throws exception if model name is not found', function(assert) {
+  assert.throws(
+    function() {
+      buildList('BigBobModel');
+    },
+    function(err) {
+      return !!err.toString().match(/\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/);
+    }
+  );
+});
+
 test("without a number returns a empty json payload", function(assert) {
   let users = buildList('user');
   assert.equal(users.get().length, 0);
@@ -209,6 +257,17 @@ test("with a number and extra options", function(assert) {
 
 moduleFor('serializer:application', 'FactoryGuy#makeNew', inlineSetup('-json-api'));
 
+test('throws exception if model name is not found', function(assert) {
+  assert.throws(
+    function() {
+      makeNew('BigBobModel');
+    },
+    function(err) {
+      return !!err.toString().match(/\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/);
+    }
+  );
+});
+
 test("creates record but does not save to store", function(assert) {
   let user = makeNew('user', 'silly', {name: 'Bozo'});
   assert.ok(user instanceof User, 'creates record');
@@ -228,6 +287,40 @@ test("handles camelCase and snake case attributes", function(assert) {
 });
 
 moduleFor('serializer:application', 'FactoryGuy#makeList', inlineSetup('-json-api'));
+
+test('throws exception if there is NO store setup', function(assert) {
+  FactoryGuy.store = null;
+  assert.throws(
+    function() {
+      makeList('profile');
+    },
+    function(err) {
+      return !!err.toString().match(/Use manualSetup\(this.container\) in model\/component test/);
+    }
+  );
+});
+
+test('throws exception if arguments are missing the model name', function(assert) {
+  assert.throws(
+    function() {
+      makeList();
+    },
+    function(err) {
+      return !!err.toString().match(/\[ember-data-factory-guy\] makeList needs at least a name/);
+    }
+  );
+});
+
+test('throws exception if model name is not found', function(assert) {
+  assert.throws(
+    function() {
+      makeList('BigBobModel');
+    },
+    function(err) {
+      return !!err.toString().match(/\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/);
+    }
+  );
+});
 
 test("with number as 0 returns an empty array of model instances", function(assert) {
   let users = makeList('user', 0);
@@ -403,250 +496,6 @@ test("id can be a function", function(assert) {
   let json = FactoryGuy.build('bif').data;
   assert.equal(json.id, 'stoner-1');
 });
-
-//moduleFor('serializer:application', 'FactoryGuy#define', inlineSetup(App));
-
-//test("Using sequences", function () {
-//
-//  FactoryGuy.define('person', {
-//    sequences: {
-//      personName: function (num) {
-//        return 'person #' + num;
-//      },
-//      personType: function (num) {
-//        return 'person type #' + num;
-//      }
-//    },
-//    default: {
-//      type: 'normal',
-//      name: FactoryGuy.generate('personName')
-//    },
-//    dude: {
-//      type: FactoryGuy.generate('personType')
-//    },
-//    bro: {
-//      type: FactoryGuy.generate('broType')
-//    },
-//    dude_inline: {
-//      type: FactoryGuy.generate(function (num) {
-//        return 'Dude #' + num;
-//      })
-//    }
-//  });
-//
-//  let json = FactoryGuy.build('person').data;
-//  deepEqual(json, {
-//    id: 1,
-//    type: 'person',
-//    attributes: {
-//      name: 'person #1',
-//      type: 'normal'
-//    }
-//  }, 'in default attributes');
-//
-//
-//  json = FactoryGuy.build('dude').data;
-//  deepEqual(json, {
-//    id: 2,
-//    type: 'person',
-//    attributes: {
-//      name: 'person #2',
-//      type: 'person type #1'
-//    }
-//  }, 'in named attributes');
-//
-//
-//  throws(function () {
-//      FactoryGuy.build('bro');
-//    },
-//    MissingSequenceError,
-//    "throws error when sequence name not found"
-//  );
-//
-//  json = FactoryGuy.build('dude_inline').data;
-//  deepEqual(json, {
-//    id: 3,
-//    type: 'person',
-//    attributes: {
-//      name: 'person #3',
-//      type: 'Dude #1'
-//    }
-//  }, 'as inline sequence function #1');
-//
-//
-//  json = FactoryGuy.build('dude_inline').data;
-//  deepEqual(json, {
-//    id: 4,
-//    type: 'person',
-//    attributes: {
-//      name: 'person #4',
-//      type: 'Dude #2'
-//    }
-//  }, 'as inline sequence function #2');
-//});
-
-
-//test("Referring to other attributes in attribute definition", function () {
-//
-//  FactoryGuy.define('person', {
-//    default: {
-//      name: 'Bob',
-//      type: 'normal'
-//    },
-//    funny_person: {
-//      type: function (f) {
-//        return 'funny ' + f.name;
-//      }
-//    },
-//    missing_person: {
-//      type: function (f) {
-//        return 'level ' + f.brain_size;
-//      }
-//    }
-//  });
-//
-//  let json = FactoryGuy.build('funny_person').data;
-//  deepEqual(json, {
-//    id: 1,
-//    type: 'person',
-//    attributes: {
-//      name: 'Bob',
-//      type: 'funny Bob'
-//    }
-//  }, 'works when attribute exists');
-//
-//  json = FactoryGuy.build('missing_person').data;
-//  deepEqual(json, {
-//    id: 2,
-//    type: 'person',
-//    attributes: {
-//      name: 'Bob',
-//      type: 'level undefined'
-//    }
-//  }, 'still works when attribute does not exists');
-//
-//});
-
-
-//test("Using belongsTo associations in attribute definition", function () {
-//  let json = FactoryGuy.build('project_with_user');
-//  let relationships = json.data.relationships;
-//  let included = json.included[0];
-//  deepEqual(relationships,
-//    {
-//      user: {
-//        data: {id: 1, type: 'user'}
-//      }
-//    },
-//    'creates relationship in parent');
-//  deepEqual(included,
-//    {
-//      id: 1,
-//      type: "user",
-//      attributes: {
-//        name: "User1"
-//      }
-//    }, 'creates default association in included hash');
-//
-//  json = FactoryGuy.build('project_with_dude');
-//  relationships = json.data.relationships;
-//  included = json.included[0];
-//  deepEqual(relationships,
-//    {
-//      user: {
-//        data: {id: 2, type: 'user'}
-//      }
-//    },
-//    'creates relationship in parent');
-//  deepEqual(included,
-//    {
-//      id: 2,
-//      type: "user",
-//      attributes: {
-//        name: "Dude"
-//      }
-//    }, 'creates association with optional attributes in included hash');
-//
-//
-//  json = FactoryGuy.build('project_with_admin');
-//  relationships = json.data.relationships;
-//  included = json.included[0];
-//  deepEqual(relationships,
-//    {
-//      user: {
-//        data: {id: 3, type: 'user'}
-//      }
-//    },
-//    'creates relationship in parent');
-//  deepEqual(included,
-//    {
-//      id: 3,
-//      type: "user",
-//      attributes: {
-//        name: "Admin"
-//      }
-//    }, 'creates association using named attribute');
-//
-//
-//  json = FactoryGuy.build('project_with_parent');
-//  relationships = json.data.relationships;
-//  included = json.included[0];
-//  deepEqual(relationships,
-//    {
-//      parent: {
-//        data: {id: 4, type: 'project'}
-//      }
-//    }, 'creates relationship in parent');
-//  deepEqual(included,
-//    {
-//      id: 4,
-//      type: "project",
-//      attributes: {
-//        title: "Project5"
-//      }
-//    }, 'belongsTo association name differs from model name');
-//});
-//
-//
-//test("Using hasMany associations in attribute definition", function () {
-//  let json = FactoryGuy.build('user_with_projects');
-//  deepEqual(json,
-//    {
-//      data: {
-//        id: 1,
-//        type: 'user',
-//        attributes: {
-//          name: 'User1'
-//        },
-//        relationships: {
-//          projects: {
-//            data: [
-//              {id: 1, type: 'project'},
-//              {id: 2, type: 'project'}
-//            ]
-//          }
-//        }
-//      },
-//      included: [
-//        {
-//          id: 1,
-//          type: "project",
-//          attributes: {
-//            title: "Project1"
-//          }
-//        },
-//        {
-//          id: 2,
-//          type: "project",
-//          attributes: {
-//            title: "Project2"
-//          }
-//        }
-//      ]
-//    }
-//  );
-//
-//});
 
 
 moduleFor('serializer:application', 'FactoryGuy#buildRaw', inlineSetup('-json-api'));
