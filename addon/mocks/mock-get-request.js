@@ -100,7 +100,7 @@ class MockGetRequest extends MockStoreRequest {
           ${Ember.typeOf(models)}`, Ember.isArray(models));
 
         json = models.map(model => {
-          return {id: model.id, type: model.constructor.modelName};
+          return {id: model.id}
         });
 
         json = this.fixtureBuilder.convertForBuild(modelName, json);
