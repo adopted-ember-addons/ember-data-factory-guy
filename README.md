@@ -326,6 +326,7 @@ attributes will override any trait attributes or default attributes
 - Can setup belongsTo or hasMany associations manually
   - With `FactoryGuy.build`/`FactoryGuy.buildList` and `FactoryGuy.make`/`FactoryGuy.makeList`
     - Can compose relationships to any level
+  - When setting up manually do not mix `build` and `make` - you either `build` JSON in every levels of associations or `make` objects. `build` is taking serializer into account for every model which means that output from `build` might be different than expected input defined in factory in `make`.
 
 ##### Setup belongsTo associations in Factory Definitions
 
@@ -639,6 +640,7 @@ Usage:
   - for building json that you can pass as json payload in [acceptance tests](#acceptance-tests)
   - takes the same arguments as `FactoryGuy.make`
   - can compose relationships with other `FactoryGuy.build`/`FactoryGuy.buildList` payloads
+  - takes serializer for model into consideration
   - to inspect the json use the `get` method
   - use the [`add`](#using-add-method) method
     - to include extra sideloaded data to the payload
@@ -723,6 +725,7 @@ Usage:
   - for building json that you can pass as json payload in [acceptance tests](#acceptance-tests)
   - takes the same arguments as `FactoryGuy.makeList`
   - can compose relationships with other `build`/`buildList` payloads
+  - takes serializer for model into consideration
   - to inspect the json use the `get()` method
     - can use `get(index)` to get an individual item from the list
   - use the [`add`](#using-add-method) method
@@ -983,12 +986,18 @@ FactoryGuy.define('phone-number', {
     type: 'home'
   }
 });
+```
 
-// TIP: You can set up associations manually ( and not necessarily in a factory )
-// To set up an employee ( hasMany ) phone numbers manually, try this:
-let phoneNumbers = buildList('phone-numbers', 2).get();
+To set up associations manually ( and not necessarily in a factory ), you should do:
+
+```
+let phoneNumbers = makeList('phone-numbers', 2);
 let employee = make('employee', { phoneNumbers });
 
+// OR
+
+let phoneNumbers = buildList('phone-numbers', 2).get();
+let employee = build('employee', { phoneNumbers }).get();
 ```
 
 For a more detailed example of setting up fragments have a look at:
