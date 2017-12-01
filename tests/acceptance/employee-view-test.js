@@ -1,5 +1,5 @@
 import {test} from 'qunit';
-import FactoryGuy,{make, build, buildList, mockFindRecord} from 'ember-data-factory-guy';
+import {make, build, buildList, mockFindRecord} from 'ember-data-factory-guy';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
 moduleForAcceptance('Acceptance | Employee View ( model-fragments )');
@@ -17,6 +17,16 @@ test("Show employee by make(ing) a model ( with hasMany fragment added manually 
   assert.equal(find('.department-employment').length, 2, "fragment array works");
 });
 
+test("Show employee by make(ing) a model ( with belongsTo fragment added manually ) and using returns with that model", async function(assert) {
+  let name = make('name', { firstName: 'Joe', lastName: 'Black' });
+  let employee = make('employee', { name });
+
+  mockFindRecord('employee').returns({ model: employee });
+  await visit('/employee/' + employee.get('id'));
+
+  assert.ok(find('.name').text().match(`${employee.get('name.firstName')} ${employee.get('name.lastName')}`));
+});
+
 test("Show employee by make(ing) a model and using returns with that model", async function(assert) {
   let employee = make('employee', 'with_department_employments');
 
@@ -27,11 +37,9 @@ test("Show employee by make(ing) a model and using returns with that model", asy
   assert.equal(find('.department-employment').length, 2, "fragment array works");
 });
 
-test("Show employee by building(ing) json and using returns with that json", async function(assert) {
-  FactoryGuy.settings({logLevel: 1});
-//  console.log('me build',build('name', {firstName:'FFirst', lastName:'LLast'}));
-  // 'with_department_employments' is a trait that build the has many in the employee factory
+test("Show employee by build(ing) json and using returns with that json", async function(assert) {
   let employee = build('employee', 'with_department_employments');
+
   mockFindRecord('employee').returns({ json: employee });
   await visit('/employee/' + employee.get('id'));
 
@@ -39,7 +47,7 @@ test("Show employee by building(ing) json and using returns with that json", asy
   assert.equal(find('.department-employment').length, 2, "fragment array works");
 });
 
-test("Show employee by building(ing) json ( with hasMany fragment added manually ) and using returns with that json", async function(assert) {
+test("Show employee by build(ing) json ( with hasMany fragment added manually ) and using returns with that json", async function(assert) {
   let departmentEmployments = buildList('department-employment', 2).get();
   let employee = build('employee', { departmentEmployments });
 
