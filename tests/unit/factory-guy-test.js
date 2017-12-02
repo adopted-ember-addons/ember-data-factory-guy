@@ -10,7 +10,6 @@ import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
 
 const A = Ember.A;
 
-
 moduleFor('serializer:application', 'FactoryGuy', inlineSetup('-json-api'));
 
 test("has store set in initializer", function(assert) {

@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { moduleFor, test } from 'ember-qunit';
-import FactoryGuy, { mockFindAll, mockQuery } from 'ember-data-factory-guy';
+import FactoryGuy, { make, mockFindAll, mockQuery } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
@@ -42,6 +42,21 @@ test("logging response", async function(assert) {
   assert.deepEqual(consoleStub.getCall(1).args, expectedArgs, 'with query params');
 
   console.log.restore();
+});
+
+// fixes bug for issue #318
+test('returns({models}) for non polymorphic type does does not alter type attribute', async function(assert) {
+  let cat = make('cat', {type: 'Cuddly'});
+  mockFindAll('cat').returns({models: [cat]});
+  await FactoryGuy.store.findAll('cat');
+  assert.equal(cat.get('type'), 'Cuddly');
+});
+
+test('returns({models}) for polymorphic type does does not alter type attribute', async function(assert) {
+  let hat = make('big-hat');
+  mockFindAll('big-hat').returns({models: [hat]});
+  await FactoryGuy.store.findAll('big-hat');
+  assert.equal(hat.get('type'), 'BigHat'); // default type value
 });
 
 test("#get method to access payload", function(assert) {
