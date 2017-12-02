@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { moduleFor, test } from 'ember-qunit';
-import FactoryGuy, { make, mockFindAll, mockQuery } from 'ember-data-factory-guy';
+import FactoryGuy, { make, buildList, mockFindAll, mockQuery } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
@@ -12,6 +12,20 @@ moduleFor('serializer:application', 'MockFindAll', inlineSetup(serializerType));
 test("mockId", function(assert) {
   let mock = mockFindAll('user');
   assert.deepEqual(mock.mockId, {type: 'GET', url: '/users', num: 0});
+});
+
+test("mockFindAll returns() accepts only ids, or models or json keys", function(assert) {
+  const cat     = make('cat'),
+        handler = mockFindAll('cat');
+
+  handler.returns({ids: [cat.id]});
+  handler.returns({models: [cat]});
+  handler.returns({json: buildList('cat')});
+
+  // values don't matter here
+  assert.throws(() => handler.returns({id: undefined}));
+  assert.throws(() => handler.returns({model: undefined}));
+  assert.throws(() => handler.returns({ids: undefined, json: undefined}));
 });
 
 test("logging response", async function(assert) {
