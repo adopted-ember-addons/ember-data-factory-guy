@@ -1096,9 +1096,9 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - Use `moduleForModel` ( ember-qunit ), or `describeModel` ( ember-mocha ) test helper
   - manually set up FactoryGuy
 
-- Sample component test #1: [single-user-manual-setup-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/single-user-manual-setup-test.js)
+- Sample component test: [single-user-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/single-user-test.js)
   - Using `moduleForComponent` ( ember-qunit ), or `describeComponent` ( ember-mocha ) helper
-  - manually sets up FactoryGuy ( so it's faster )
+  - manually sets up FactoryGuy 
 
   ```javascript
   import { make, manualSetup }  from 'ember-data-factory-guy';
@@ -1123,11 +1123,6 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
     ok(this.$('.funny-name').text().match(user.get('funnyName')));
   });
   ```
-
-- Sample component test #2: [single-user-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/single-user-test.js)
-  - Using `moduleForComponent` ( ember-qunit ), or `describeComponent` ( ember-mocha ) helper
-  - Starts a new application with `startApp()` before each test  ( slower )
-
 
 ### Acceptance Tests
 
@@ -1158,8 +1153,8 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
 
 - Use method `fails()` to simulate failure
 - Use method `succeeds()` to simulate success
- - Only used if the mock was set to fail with ```fails()```  and you want to set the
-   mock to succeed to simulate a successful retry
+  - Only used if the mock was set to fail with ```fails()```  and you want to set the
+    mock to succeed to simulate a successful retry
 
 - Use property ```timesCalled``` to verify how many times the ajax call was mocked
   - works when you are using `mockQuery`, `mockQueryRecord`, `mockFindAll`, `mockReload`, or `mockUpdate`

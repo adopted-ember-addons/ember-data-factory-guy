@@ -1,27 +1,16 @@
-import Ember from 'ember';
-import { make }  from 'ember-data-factory-guy';
+import { make, manualSetup }  from 'ember-data-factory-guy';
 import hbs from 'htmlbars-inline-precompile';
-import startApp from '../helpers/start-app';
-
 import { test, moduleForComponent } from 'ember-qunit';
 
-let App = null;
-
-moduleForComponent('single-user', 'Integration | Component | single-user', {
+moduleForComponent('single-user', 'Integration | Component | single-user (manual setup)', {
   integration: true,
 
-  setup: function () {
-    Ember.run(function () {
-      App = startApp();
-    });
-  },
-
-  teardown: function () {
-    Ember.run(App,'destroy');
+  beforeEach: function () {
+    manualSetup(this.container);
   }
 });
 
-test("can translate original word", function(assert) {
+test("shows user information", function(assert) {
   let user = make('user', {name: 'Rob'});
 
   this.set('createProject', ()=>{});
