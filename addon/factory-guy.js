@@ -253,14 +253,22 @@ class FactoryGuy {
    @returns {Object} json fixture
    */
   build(...originalArgs) {
-    let args        = FactoryGuy.extractArguments(...originalArgs),
-        definition  = FactoryGuy.lookupDefinitionForFixtureName(args.name, true),
-        {modelName} = definition,
-        fixture     = this.buildRaw(assign(args, {buildType: 'build'}));
+    let args      = FactoryGuy.extractArguments(...originalArgs),
+        modelName = FactoryGuy.lookupModelForFixtureName(args.name, true),
+        fixture   = this.buildRaw(assign(args, {buildType: 'build'}));
 
     return this.fixtureBuilder(modelName).convertForBuild(modelName, fixture);
   }
 
+  /**
+   Find the factory definition and use that to build the fixture
+
+   @param name fixture name
+   @param {Array} traits trait names
+   @param {Object} opts  fixture options that will override default fixture values
+   @param buildType 'build' or 'make'
+   @returns {Object}
+   */
   buildRaw({name, opts, traits, buildType = 'build'} = {}) {
     let definition = FactoryGuy.lookupDefinitionForFixtureName(name, true);
 
@@ -298,6 +306,15 @@ class FactoryGuy {
     return this.fixtureBuilder(modelName).convertForBuild(modelName, list);
   }
 
+  /**
+   Find the factory definition and use that to build the fixture.
+
+   @param name fixture name
+   @param {Array} traits trait names
+   @param {Object} opts  fixture options that will override default fixture values
+   @param buildType 'build' or 'make'
+   @returns {Object}
+   */
   buildRawList({name, number, opts, buildType = 'build'} = {}) {
     let definition = FactoryGuy.lookupDefinitionForFixtureName(name, true);
 
