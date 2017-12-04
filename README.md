@@ -1561,11 +1561,16 @@ chainable methods.
 Usage:
 
 ```javascript
-  import { mockCreate } from 'ember-data-factory-guy';
+  import { makeNew, mockCreate } from 'ember-data-factory-guy';
 
   // Simplest case
   // Don't care about a match just handle createRecord for any project
   mockCreate('project');
+
+  // use a model you created already from store.createRecord or makeNew
+  // need to use this style if you need the model in the urlForCreateRecord snapshot
+  let project = makeNew('project');
+  mockCreate(project);
 
   // Matching some attributes
   mockCreate('project').match({name: "Moo"});

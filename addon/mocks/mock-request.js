@@ -111,7 +111,6 @@ export default class {
       const info = ['[factory-guy]', name, type, status, fullUrl, json];
 
       console.log(...info);
-//      console.log(json.data.attributes.name);
     }
   }
 
@@ -144,7 +143,7 @@ export default class {
 
   // mockId holds the url for this mock request
   oldUrl() {
-    return this.mockId && this.mockId.url
+    return this.mockId && this.mockId.url;
   }
 
   changedUrl() {
