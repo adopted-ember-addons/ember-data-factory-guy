@@ -168,7 +168,6 @@ class ModelDefinition {
 
   // function might be a sequence, an inline attribute function or an association
   addFunctionAttribute(fixture, attribute, buildType) {
-//    console.log(`addFunctionAttribute fixture[${attribute}]`,fixture[attribute]);
     fixture[attribute] = fixture[attribute].call(this, fixture, buildType);
   }
 
@@ -205,7 +204,7 @@ class ModelDefinition {
    @returns array of fixtures
    */
   buildList(name, number, traits, opts, buildType) {
-    return Array(number).fill().map(()=>this.build(name, opts, traits, buildType));
+    return Array(number).fill().map(() => this.build(name, opts, traits, buildType));
   }
 
   // Set the modelId back to 1, and reset the sequences
