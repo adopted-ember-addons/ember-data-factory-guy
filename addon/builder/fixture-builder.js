@@ -55,7 +55,6 @@ export default class {
    @param converterOptions
    */
   convertForBuild(modelName, fixture, converterOptions) {
-//    console.log('convertForBuild',modelName, 'converterOptions',converterOptions);
     let converter = this.getConverter(converterOptions);
     if (!fixture) {
       return converter.emptyResponse(modelName, converterOptions);

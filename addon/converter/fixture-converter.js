@@ -230,7 +230,6 @@ export default class {
     let attrs  = serializer.get('attrs'),
         option = attrs && (attrs[Ember.String.camelize(attr)] || attrs[attr]);
     return option;
-    //    return (option && option.key) ? option.key : option;
   }
 
   extractHasMany(fixture, relationship, parentModelName, relationships) {
