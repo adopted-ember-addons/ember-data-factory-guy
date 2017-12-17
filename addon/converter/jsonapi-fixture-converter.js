@@ -115,9 +115,11 @@ class JSONAPIFixtureConverter extends Converter {
   }
 
   addToIncludedFromProxy(proxy) {
-    proxy.includes().forEach((data) => {
-      this.addToIncluded(data);
-    });
+    if (proxy.isSideload()) {
+      proxy.includes().forEach((data) => {
+        this.addToIncluded(data);
+      });
+    }
   }
 
   assignRelationship(object) {

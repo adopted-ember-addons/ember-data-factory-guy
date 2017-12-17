@@ -2,7 +2,8 @@ import Ember from 'ember';
 import JSONFixtureConverter from './json-fixture-converter';
 
 import { pluralize } from 'ember-inflector';
-const { dasherize } = Ember.String;
+
+const {dasherize} = Ember.String;
 
 /**
  Convert base fixture to a REST Serializer formatted payload.
@@ -18,7 +19,7 @@ export default class extends JSONFixtureConverter {
   }
 
   emptyResponse(modelName, options = {}) {
-    return { [modelName]: options.useValue || null };
+    return {[modelName]: options.useValue || null};
   }
 
   /**
@@ -29,7 +30,7 @@ export default class extends JSONFixtureConverter {
    * @returns {*}
    */
   createPayload(modelName, fixture) {
-    return { [this.getPayloadKey(modelName)]: fixture };
+    return {[this.getPayloadKey(modelName)]: fixture};
   }
 
   /**
@@ -92,12 +93,14 @@ export default class extends JSONFixtureConverter {
    @param proxy json payload proxy
    */
   addToIncludedFromProxy(proxy) {
-    proxy.includeKeys().forEach((modelKey) => {
-      let includedModels = proxy.getInclude(modelKey);
-      includedModels.forEach((data) => {
-        this.addToIncluded(data, modelKey);
+    if (proxy.isSideload()) {
+      proxy.includeKeys().forEach((modelKey) => {
+        let includedModels = proxy.getInclude(modelKey);
+        includedModels.forEach((data) => {
+          this.addToIncluded(data, modelKey);
+        });
       });
-    });
+    }
   }
 
 }

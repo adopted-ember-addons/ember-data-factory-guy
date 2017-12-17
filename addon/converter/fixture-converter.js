@@ -304,8 +304,10 @@ export default class {
       this.addToIncludedFromProxy(jsonProxy);
       return data;
     }
-    this.addToIncluded(data, relationshipType);
-    this.addToIncludedFromProxy(jsonProxy);
+    if (jsonProxy.isSideload()) {
+      this.addToIncluded(data, relationshipType);
+      this.addToIncludedFromProxy(jsonProxy);
+    }
     return this.normalizeAssociation(data, relationship);
   }
 
@@ -318,7 +320,9 @@ export default class {
         return data;
       }
       let relationshipType = this.getRelationshipType(relationship, data);
-      this.addToIncluded(data, relationshipType);
+      if (jsonProxy.isSideload()) {
+        this.addToIncluded(data, relationshipType);
+      }
       return this.normalizeAssociation(data, relationship);
     });
 

@@ -167,10 +167,11 @@ test('throws exception if model name is not found', function(assert) {
 
 test("with one level of hasMany relationship", function(assert) {
   let hats = buildList('big-hat', 2);
-  let user = build('user', {hats: hats});
+  let user = build('user', {hats});
 
   assert.ok(user['user']);
-  assert.equal(user['big-hats'].length, 2);
+  assert.equal(user['user']['hats'].length, 2, 'shows hasMany relationships in model');
+  assert.equal(user['big-hats'].length, 2, 'sideloads hasMany by default');
 });
 
 test("when hasMany relationship is null", function(assert) {

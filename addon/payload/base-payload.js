@@ -1,14 +1,15 @@
 import Ember from 'ember';
-const { w } = Ember.String;
 import { assign } from '@ember/polyfills';
+
+const {w} = Ember.String;
 
 export default class {
 
   /**
    Proxy class for getting access to a json payload.
    Allows you to:
-     - inspect a payload with friendly .get(attr)  syntax
-     - add to json payload with more json built from build and buildList methods.
+   - inspect a payload with friendly .get(attr)  syntax
+   - add to json payload with more json built from build and buildList methods.
 
    @param {String} modelName name of model for payload
    @param {Object} json json payload being proxied
@@ -19,8 +20,29 @@ export default class {
     this.json = json;
     this.converter = converter;
     this.listType = converter.listType || false;
-    this.proxyMethods = w("getModelPayload isProxy get add unwrap");
+    this.proxyMethods = w("getModelPayload isProxy get as isSideload isLink add unwrap");
+    this.sideload = true;
+    this.link = false;
     this.wrap(this.proxyMethods);
+  }
+
+  /**
+   *
+   * @param sideload
+   * @param link
+   */
+  as({sideload, link}) {
+    this.sideload = sideload;
+    this.link = link;
+    return this;
+  }
+
+  isSideload() {
+    return this.sideload;
+  }
+
+  isLink() {
+    return this.link;
   }
 
   /**
@@ -46,10 +68,10 @@ export default class {
   add(more) {
     this.converter.included = this.json;
     Ember.A(Object.getOwnPropertyNames(more))
-      .reject(key=> Ember.A(this.proxyMethods).includes(key))
-      .forEach(key=> {
+      .reject(key => Ember.A(this.proxyMethods).includes(key))
+      .forEach(key => {
         if (Ember.typeOf(more[key]) === "array") {
-          more[key].forEach(data=> this.converter.addToIncluded(data, key));
+          more[key].forEach(data => this.converter.addToIncluded(data, key));
         } else {
           if (key === "meta") {
             this.addMeta(more[key]);
@@ -62,10 +84,10 @@ export default class {
   }
 
   /**
-    Add new meta data to the json payload, which will
-    overwrite any existing meta data with same keys
+   Add new meta data to the json payload, which will
+   overwrite any existing meta data with same keys
 
-    @param {Object} data meta data to add
+   @param {Object} data meta data to add
    */
   addMeta(data) {
     this.json.meta = this.json.meta || {};

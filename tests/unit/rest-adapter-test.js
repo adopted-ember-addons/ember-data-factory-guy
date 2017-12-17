@@ -441,6 +441,27 @@ test("sideloads hasMany records passed as prebuilt ( array of build ) json", fun
   assert.deepEqual(buildJson, expectedJson);
 });
 
+test("does not sideload hasMany relationship when sideload => false", function(assert) {
+  let hats = buildList('big-hat', 2);
+  let buildJson = build('user', {hats: hats.as({sideload: false})});
+
+  buildJson.unwrap();
+
+  let expectedJson = {
+    user: {
+      id: 1,
+      name: 'User1',
+      style: "normal",
+      hats: [
+        {type: 'big-hat', id: 1},
+        {type: 'big-hat', id: 2}
+      ],
+    }
+  };
+
+  assert.deepEqual(buildJson, expectedJson);
+});
+
 
 test("embeds belongsTo record when serializer attrs => embedded: always ", function(assert) {
 
