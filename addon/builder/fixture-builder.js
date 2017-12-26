@@ -75,7 +75,7 @@ export default class {
    @returns {*} new converted fixture
    */
   convertForMake(modelName, fixture) {
-    let converter = new JSONAPIFixtureConverter(this.store, { transformKeys: false });
+    let converter = new JSONAPIFixtureConverter(this.store, {transformKeys: false});
     return converter.convert(modelName, fixture);
   }
 
@@ -92,15 +92,21 @@ export default class {
    @returns {{}}  JSONAPI formatted errors
    */
   convertResponseErrors(object) {
-    let jsonAPIErrors = [];
-    Ember.assert('[ember-data-factory-guy] Your error response must have an errors key. The errors hash format is: {errors: {name: ["name too short"]}}', object.errors);
-    let errors = object.errors;
+    let jsonAPIErrors = [],
+        {errors}      = object;
+
+    Ember.assert(
+      `[ember-data-factory-guy] Your error response must have an errors key. 
+      The errors hash format is: {errors: {name: ["name too short"]}}`,
+      errors
+    );
+
     for (let key in errors) {
       let description = Ember.typeOf(errors[key]) === "array" ? errors[key][0] : errors[key],
-          source      = { pointer: "data/attributes/" + key },
-          newError    = { detail: description, title: "invalid " + key, source: source };
+          source      = {pointer: "data/attributes/" + key},
+          newError    = {detail: description, title: "invalid " + key, source: source};
       jsonAPIErrors.push(newError);
     }
-    return { errors: jsonAPIErrors };
+    return {errors: jsonAPIErrors};
   }
 }

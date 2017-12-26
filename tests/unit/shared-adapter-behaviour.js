@@ -4,7 +4,7 @@ import { moduleFor, test } from 'ember-qunit';
 import { isEquivalent } from 'ember-data-factory-guy/utils/helper-functions';
 
 import FactoryGuy, {
-  make, makeList, build, buildList,
+  make, makeNew, makeList, build, buildList,
   mockFindRecord, mockFindAll, mockReload, mockQuery,
   mockQueryRecord, mockCreate, mockUpdate, mockDelete
 } from 'ember-data-factory-guy';
@@ -85,10 +85,10 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       mockFindRecord('profile').returns({id: profileId});
 
       FactoryGuy.store.findRecord('profile', profileId)
-        .catch((reason) => {
-          assert.equal(reason.errors[0].status, '404');
-          done();
-        });
+      .catch((reason) => {
+        assert.equal(reason.errors[0].status, '404');
+        done();
+      });
     });
   });
 
@@ -241,10 +241,10 @@ SharedBehavior.mockFindRecordCommonTests = function() {
       let mock = mockFindRecord('profile').returns({model}).fails();
 
       return FactoryGuy.store.findRecord('profile', model.id, {reload: true})
-        .catch(() => {
-          assert.equal(mock.timesCalled, 1);
-          assert.equal(mock.status, 500);
-        });
+      .catch(() => {
+        assert.equal(mock.timesCalled, 1);
+        assert.equal(mock.status, 500);
+      });
     });
   });
 
@@ -255,11 +255,11 @@ SharedBehavior.mockFindRecordCommonTests = function() {
     let mock = mockFindRecord(profile).fails();
     run(() => {
       FactoryGuy.store.findRecord('profile', profile.id, {reload: true})
-        .catch(() => {
-          assert.equal(mock.timesCalled, 1, 'mock called once');
-          assert.equal(mock.status, 500, 'stats 500');
-          done();
-        });
+      .catch(() => {
+        assert.equal(mock.timesCalled, 1, 'mock called once');
+        assert.equal(mock.status, 500, 'stats 500');
+        done();
+      });
     });
   });
 
@@ -439,12 +439,12 @@ SharedBehavior.mockReloadTests = function() {
       let mock = mockReload('profile', 1).fails();
 
       FactoryGuy.store.findRecord('profile', 1)
-        .catch(() => {
-            assert.equal(mock.timesCalled, 1);
-            assert.ok(true);
-            done();
-          }
-        );
+      .catch(() => {
+          assert.equal(mock.timesCalled, 1);
+          assert.ok(true);
+          done();
+        }
+      );
     });
   });
 
@@ -680,10 +680,10 @@ SharedBehavior.mockQueryTests = function() {
     var done = assert.async();
     mockQuery('user');
     FactoryGuy.store.query('user', {name: 'Bob'})
-      .then(() => {
-        assert.ok(true);
-        done();
-      });
+    .then(() => {
+      assert.ok(true);
+      done();
+    });
   });
 
   test("using fails makes the request fail", function(assert) {
@@ -694,11 +694,11 @@ SharedBehavior.mockQueryTests = function() {
 
       let mock = mockQuery('user').fails({status: 422, response: errors});
       FactoryGuy.store.query('user', {})
-        .catch(() => {
-          assert.equal(mock.timesCalled, 1);
-          assert.ok(true);
-          done();
-        });
+      .catch(() => {
+        assert.equal(mock.timesCalled, 1);
+        assert.ok(true);
+        done();
+      });
     });
   });
 
@@ -1074,11 +1074,11 @@ SharedBehavior.mockQueryRecordTests = function() {
 
 SharedBehavior.mockCreateTests = function() {
 
-  test("the basic", async function(assert) {
+  test("the basic with model name", async function(assert) {
     run(async () => {
       let customDescription = "special description";
 
-      mockCreate('profile', {match: {description: customDescription}});
+      mockCreate('profile').match({description: customDescription});
 
       assert.ok(FactoryGuy.store.peekAll('profile').get('content.length') === 0);
 
@@ -1091,11 +1091,29 @@ SharedBehavior.mockCreateTests = function() {
     });
   });
 
+  test("the basic with new model", async function(assert) {
+    run(async () => {
+      let description          = "special description",
+          camelCaseDescription = "special camelcase description",
+          profile              = makeNew('profile', {description, camelCaseDescription});
+
+      mockCreate(profile).match({camelCaseDescription, description});
+      await profile.save();
+
+      assert.ok(!profile.get('isNew'), 'Profile is saved');
+      assert.deepEqual(
+        profile.getProperties(['description', 'camelCaseDescription']),
+        {camelCaseDescription, description},
+        'correct model attributes present'
+      );
+    });
+  });
+
   test("with dasherized model name", async function(assert) {
     run(async () => {
       let customName = "special name";
 
-      mockCreate('super-hero', {match: {name: customName}});
+      mockCreate('super-hero').match({name: customName});
 
       assert.ok(FactoryGuy.store.peekAll('super-hero').get('content.length') === 0);
 
@@ -1271,8 +1289,8 @@ SharedBehavior.mockCreateTests = function() {
           group             = make('big-group');
 
       mockCreate('profile')
-        .match({description: customDescription, company: company, group: group})
-        .returns({attrs: {created_at: date}});
+      .match({description: customDescription, company: company, group: group})
+      .returns({attrs: {created_at: date}});
 
       let profile = FactoryGuy.store.createRecord('profile', {
         description: customDescription, company: company, group: group
@@ -1294,11 +1312,11 @@ SharedBehavior.mockCreateTests = function() {
       let mock = mockCreate('profile').fails();
 
       FactoryGuy.store.createRecord('profile').save()
-        .catch(() => {
-          assert.ok(true);
-          assert.equal(mock.timesCalled, 1);
-          done();
-        });
+      .catch(() => {
+        assert.ok(true);
+        assert.equal(mock.timesCalled, 1);
+        done();
+      });
     });
   });
 
@@ -1309,12 +1327,12 @@ SharedBehavior.mockCreateTests = function() {
       let mock = mockCreate('profile').match({description: 'correct description'});
 
       FactoryGuy.store.createRecord('profile', {description: 'wrong description'}).save()
-        .catch(() => {
-          assert.ok(true);
-          // our mock was NOT called
-          assert.equal(mock.timesCalled, 0);
-          done();
-        });
+      .catch(() => {
+        assert.ok(true);
+        // our mock was NOT called
+        assert.equal(mock.timesCalled, 0);
+        done();
+      });
     });
   });
 
@@ -1326,12 +1344,12 @@ SharedBehavior.mockCreateTests = function() {
       let mock = mockCreate('profile').match({description: description}).fails();
 
       FactoryGuy.store.createRecord('profile', {description: description}).save()
-        .catch(() => {
-          assert.ok(true);
-          assert.equal(mock.timesCalled, 1);
+      .catch(() => {
+        assert.ok(true);
+        assert.equal(mock.timesCalled, 1);
 
-          done();
-        });
+        done();
+      });
     });
   });
 };
@@ -1349,13 +1367,13 @@ SharedBehavior.mockCreateFailsWithErrorResponse = function(serializer, serialize
 
       let profile = FactoryGuy.store.createRecord('profile');
       profile.save()
-        .catch(() => {
-          let errorMessages = profile.get('errors.messages');
-          assert.deepEqual(errorMessages, ['bad dog', 'bad dude']);
-          assert.equal(mock.timesCalled, 1);
-          assert.ok(true);
-          done();
-        });
+      .catch(() => {
+        let errorMessages = profile.get('errors.messages');
+        assert.deepEqual(errorMessages, ['bad dog', 'bad dude']);
+        assert.equal(mock.timesCalled, 1);
+        assert.ok(true);
+        done();
+      });
     });
   });
 };
@@ -1585,18 +1603,18 @@ SharedBehavior.mockUpdateTests = function() {
 
       profile.set('description', 'new desc');
       profile.save()
-        .catch(() => assert.ok(true, 'update failed the first time'))
-        .then(() => {
-          updateMock.succeeds();
-          assert.ok(!profile.get('valid'), "Profile is invalid.");
+      .catch(() => assert.ok(true, 'update failed the first time'))
+      .then(() => {
+        updateMock.succeeds();
+        assert.ok(!profile.get('valid'), "Profile is invalid.");
 
-          profile.save().then(() => {
-              assert.ok(!profile.get('saving'), "Saved model");
-              assert.ok(profile.get('description') === 'new desc', "Description was updated.");
-              done();
-            }
-          );
-        });
+        profile.save().then(() => {
+            assert.ok(!profile.get('saving'), "Saved model");
+            assert.ok(profile.get('description') === 'new desc', "Description was updated.");
+            done();
+          }
+        );
+      });
     });
   });
 
@@ -2048,15 +2066,15 @@ SharedBehavior.mockDeleteTests = function() {
       let deleteMock = mockDelete('profile').fails();
 
       profile.destroyRecord()
-        .catch(() => assert.ok(true, 'delete failed the first time'))
-        .then(() => {
-          deleteMock.succeeds();
+      .catch(() => assert.ok(true, 'delete failed the first time'))
+      .then(() => {
+        deleteMock.succeeds();
 
-          profile.destroyRecord().then(function() {
-            assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 1);
-            done();
-          });
+        profile.destroyRecord().then(function() {
+          assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 1);
+          done();
         });
+      });
     });
   });
 
@@ -2068,15 +2086,15 @@ SharedBehavior.mockDeleteTests = function() {
       let deleteMock = mockDelete('profile', profile.id).fails();
 
       profile.destroyRecord()
-        .catch(() => assert.ok(true, 'delete failed the first time'))
-        .then(() => {
-          deleteMock.succeeds();
+      .catch(() => assert.ok(true, 'delete failed the first time'))
+      .then(() => {
+        deleteMock.succeeds();
 
-          profile.destroyRecord().then(function() {
-            assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
-            done();
-          });
+        profile.destroyRecord().then(function() {
+          assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
+          done();
         });
+      });
     });
   });
 
@@ -2088,15 +2106,15 @@ SharedBehavior.mockDeleteTests = function() {
       let deleteMock = mockDelete(profile).fails();
 
       profile.destroyRecord()
-        .catch(() => assert.ok(true, 'delete failed the first time'))
-        .then(() => {
-          deleteMock.succeeds();
+      .catch(() => assert.ok(true, 'delete failed the first time'))
+      .then(() => {
+        deleteMock.succeeds();
 
-          profile.destroyRecord().then(function() {
-            assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
-            done();
-          });
+        profile.destroyRecord().then(function() {
+          assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
+          done();
         });
+      });
     });
   });
 };

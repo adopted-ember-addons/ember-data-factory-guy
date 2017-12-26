@@ -297,17 +297,10 @@ export function mockQueryRecord(modelName, queryParams) {
  @param {String} modelName  name of model you're creating like 'profile' for Profile
  */
 export function mockCreate(...args) {
-
-  let model, modelName, attrs = {};
+  let model, modelName;
   if (args[0] instanceof Model) {
     model = args[0];
     modelName = model.constructor.modelName;
-    // need (rest style) object with attributes.
-    // convert the json if it is json-api to this style
-    let json    = model.toJSON(),
-        builder = FactoryGuy.fixtureBuilder(modelName);
-    builder.wrapPayload(modelName, json);
-    attrs = json.get();
   } else {
     if (typeof args[0] === "string") {
       [modelName] = args;
@@ -316,7 +309,7 @@ export function mockCreate(...args) {
 
   Ember.assert(`[ember-data-factory-guy] To mockUpdate pass in a model instance or a modelName`, modelName);
 
-  return new MockCreateRequest(modelName, {model}).returns({attrs});
+  return new MockCreateRequest(modelName, {model});
 }
 
 /**
