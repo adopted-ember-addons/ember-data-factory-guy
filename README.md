@@ -8,9 +8,8 @@ Factories simplify the process of testing, making you more efficient and your te
 **Ember Data 2.14+** has this [bug](https://github.com/emberjs/data/issues/5055) that affects polymorphic relationships. 
  You can still use factory guy with ED 2.14+, but polymorphic relationships sometimes will not work as expected.
    
-**NEW and Improved** starting with v2.7.0
-  - Support for using your factories in development environment
-  - Change your [scenarios](#using-in-other-environments), hit refresh and the development data changes
+**NEW and Improved** starting with v2.13.22
+  - Traits can be functions  
 
 **Older but still fun things**
 - Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
@@ -1921,6 +1920,36 @@ describe('Admin View', function() {
   let json = person.serialize();
   assert.equal(json.name, 'Daniel-san');
 ```
+
+#### Tip 6: Using traits as functions
+
+```js
+import FactoryGuy from 'ember-data-factory-guy';
+
+FactoryGuy.define("project", {
+  default: {
+    title: (f) => `Project ${f.id}`
+  },
+  traits: {
+    //  this trait is a function
+    medium: (f) => {  
+      f.title = `Medium Project ${f.id}`
+    }
+  }
+});
+```
+
+So, when you make / build  a project like: 
+
+```js
+let project =  make('project', 'medium');
+project.get('title'); //=> 'Medium Project 1'
+
+let project2 =  build('project', 'medium');
+project2.get('title'); //=> 'Medium Project 2'
+```
+
+Your trait function assigns the title as you described in the function
 
 ### ChangeLog
   - [Release Notes](/releases)
