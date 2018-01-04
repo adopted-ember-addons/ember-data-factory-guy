@@ -479,7 +479,23 @@ test("named types are not inherited", function(assert) {
   assert.equal(definition.matchesName('dude'), undefined);
 });
 
-test("id can be a function", function(assert) {
+test("id can be a function in default attributes", function(assert) {
+  FactoryGuy.define('stoner', {
+
+    sequences: {
+      stonerId: (i) => `stoner-${i}`,
+    },
+
+    default: {
+      id: FactoryGuy.generate('stonerId')
+    }
+  });
+
+  let json = FactoryGuy.build('stoner').data;
+  assert.equal(json.id, 'stoner-1');
+});
+
+test("id can be a function in named attributes", function(assert) {
   FactoryGuy.define('stoner', {
 
     sequences: {
@@ -635,6 +651,12 @@ test("Using hasMany associations in attribute definition", function(assert) {
 test("with traits defining model attributes", function(assert) {
   let json = FactoryGuy.buildRaw({name: 'project', traits: ['big']});
   let expected = {id: 1, title: 'Big Project'};
+  assert.deepEqual(json, expected);
+});
+
+test("with traits that are functions", function(assert) {
+  let json = FactoryGuy.buildRaw({name: 'project', traits: ['medium']});
+  let expected = {id: 1, title: 'Medium Project 1'};
   assert.deepEqual(json, expected);
 });
 

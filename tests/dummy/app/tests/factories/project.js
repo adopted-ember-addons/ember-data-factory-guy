@@ -2,19 +2,22 @@ import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define("project", {
   sequences: {
-    title: (num)=> `Project${num}`
+    title: (num) => `Project${num}`
   },
   traits: {
-    big: { title: 'Big Project' },
-    small: { title: 'Small Project' },
-    with_title_sequence: { title: FactoryGuy.generate('title') },
-    with_user: { user: {} },
-    with_parent: { project: {} },
-    with_user_having_hats: { user: FactoryGuy.belongsTo('user', 'with_hats') },
-    with_user_having_hats_belonging_to_user: { user: FactoryGuy.belongsTo('user', 'with_hats_belonging_to_user') },
-    with_user_having_hats_belonging_to_outfit: { user: FactoryGuy.belongsTo('user', 'with_hats_belonging_to_outfit') },
-    with_dude: { user: {name: 'Dude'} },
-    with_admin: { user: FactoryGuy.belongsTo('admin') }
+    big: {title: 'Big Project'},
+    medium: (f) => { // using function for trait
+      f.title = `Medium Project ${f.id}`
+    },
+    small: {title: 'Small Project'},
+    with_title_sequence: {title: FactoryGuy.generate('title')},
+    with_user: {user: {}},
+    with_parent: {project: {}},
+    with_user_having_hats: {user: FactoryGuy.belongsTo('user', 'with_hats')},
+    with_user_having_hats_belonging_to_user: {user: FactoryGuy.belongsTo('user', 'with_hats_belonging_to_user')},
+    with_user_having_hats_belonging_to_outfit: {user: FactoryGuy.belongsTo('user', 'with_hats_belonging_to_outfit')},
+    with_dude: {user: {name: 'Dude'}},
+    with_admin: {user: FactoryGuy.belongsTo('admin')}
   },
   default: {
     title: FactoryGuy.generate('title')
