@@ -1932,8 +1932,14 @@ FactoryGuy.define("project", {
   },
   traits: {
     //  this trait is a function
+    // note that the fixure is passed in that will have 
+    // default attributes like id at a minimum and in this 
+    // case also a title ( `Project 1` ) which is default
     medium: (f) => {  
       f.title = `Medium Project ${f.id}`
+    },
+    goofy: (f) => {  
+      f.title = `Goofy ${f.title}`
     }
   }
 });
@@ -1945,8 +1951,8 @@ So, when you make / build  a project like:
 let project =  make('project', 'medium');
 project.get('title'); //=> 'Medium Project 1'
 
-let project2 =  build('project', 'medium');
-project2.get('title'); //=> 'Medium Project 2'
+let project2 =  build('project', 'goofy');
+project2.get('title'); //=> 'Goofy Project 2'
 ```
 
 Your trait function assigns the title as you described in the function
