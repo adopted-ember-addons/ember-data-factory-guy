@@ -9,7 +9,7 @@ Factories simplify the process of testing, making you more efficient and your te
  You can still use factory guy with ED 2.14+, but polymorphic relationships sometimes will not work as expected.
    
 **NEW and Improved** starting with v2.13.22
-  - Traits can be functions  
+  - Traits can be functions [How It Works](#tip-6-using-traits-as-functions) 
 
 **Older but still fun things**
 - Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
