@@ -1959,3 +1959,4 @@ Your trait function assigns the title as you described in the function
 
 ### ChangeLog
   - [Release Notes](/releases)
+
