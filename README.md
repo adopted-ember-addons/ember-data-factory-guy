@@ -1131,11 +1131,11 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - for mocking the ajax calls made by ember-data
   - this library is installed with FactoryGuy
 - http GET mocks
-  - [mockFindRecord](#factoryguymockfindrecord)
-  - [mockFindAll](#factoryguymockfindall)
-  - [mockReload](#factoryguymockreload)
-  - [mockQuery](#factoryguymockquery)
-  - [mockQueryRecord](#factoryguymockqueryrecord)
+  - [mockFindRecord](#mockfindrecord)
+  - [mockFindAll](#mockfindall)
+  - [mockReload](#mockreload)
+  - [mockQuery](#mockquery)
+  - [mockQueryRecord](#mockqueryrecord)
   - takes modifier method `returns()` for setting the payload response
     - `returns()` accepts parameters like: json, model, models, id, ids, headers
       - headers are cumulative so you can add as many as you like
@@ -1146,9 +1146,9 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - these mocks are are reusable
     - so you can simulate making the same ajax call ( url ) and return a different payload
 - http POST/PUT/DELETE
-  - [mockCreate](#factoryguymockcreate)
-  - [mockUpdate](#factoryguymockupdate)
-  - [mockDelete](#factoryguymockdelete)
+  - [mockCreate](#mockcreate)
+  - [mockUpdate](#mockupdate)
+  - [mockDelete](#mockdelete)
 
 - Use method `fails()` to simulate failure
 - Use method `succeeds()` to simulate success
