@@ -7,6 +7,10 @@ let SharedBehavior = {};
 
 SharedBehavior.all = function(serializer, serializerType) {
 
+  moduleFor('serializer:application', `${serializer} FactoryGuy#makeNew`, inlineSetup(serializerType));
+  SharedFactoryGuyBehaviour.makeNewTests();
+
+
   moduleFor('serializer:application', `${serializer} FactoryGuy#make`, inlineSetup(serializerType));
   SharedFactoryGuyBehaviour.makeTests();
 

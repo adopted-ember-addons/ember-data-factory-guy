@@ -379,9 +379,7 @@ class FactoryGuy {
 
     delete fixture.id;
 
-    let data = this.fixtureBuilder(modelName).convertForBuild(modelName, fixture, {transformKeys: false});
-
-    return Ember.run(() => this.store.createRecord(modelName, data.get()));
+    return Ember.run(() => this.store.createRecord(modelName, fixture));
   }
 
   /**
