@@ -19,6 +19,7 @@ env:
 matrix:
   fast_finish: true
   allow_failures:
+    - env: EMBER_TRY_SCENARIO=ember-ember-data-2.11
     - env: EMBER_TRY_SCENARIO=ember-ember-data-beta
 
 before_install:
