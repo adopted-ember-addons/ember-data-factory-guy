@@ -24,7 +24,6 @@ matrix:
 
 before_install:
   - npm config set spin false
-  - npm install -g bower
   - export CHROME_BIN=/usr/bin/google-chrome
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
@@ -34,8 +33,7 @@ before_install:
   - sudo dpkg -i google-chrome*.deb
 
 install:
-  - npm install
-  - bower install
+  - yarn install
 
 script:
-  - ember try:one $EMBER_TRY_SCENARIO test --skip-cleanup
+  - ember test
