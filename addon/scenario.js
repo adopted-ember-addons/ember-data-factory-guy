@@ -5,7 +5,7 @@ let proxyFx = [
   'make', 'makeNew', 'makeList', 'build', 'buildList',
   'mockFind', 'mockFindRecord', 'mockFindAll',
   'mockReload', 'mockQuery', 'mockQueryRecord',
-  'mockUpdate', 'mockCreate', 'mockDelete'
+  'mockUpdate', 'mockCreate', 'mockDelete', 'mock'
 ];
 
 export default class {
