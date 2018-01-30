@@ -1,15 +1,15 @@
-# Ember Data Factory Guy 
+# Ember Data Factory Guy
 
 [![Build Status](https://secure.travis-ci.org/danielspaniel/ember-data-factory-guy.png?branch=master)](http://travis-ci.org/danielspaniel/ember-data-factory-guy) [![Ember Observer Score](http://emberobserver.com/badges/ember-data-factory-guy.svg)](http://emberobserver.com/addons/ember-data-factory-guy) [![npm version](https://badge.fury.io/js/ember-data-factory-guy.svg)](http://badge.fury.io/js/ember-data-factory-guy)
 
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
-**Ember Data 2.14+** has this [bug](https://github.com/emberjs/data/issues/5055) that affects polymorphic relationships. 
+**Ember Data 2.14+** has this [bug](https://github.com/emberjs/data/issues/5055) that affects polymorphic relationships.
  You can still use factory guy with ED 2.14+, but polymorphic relationships sometimes will not work as expected.
-   
+
 **NEW and Improved** starting with v2.13.22
-  - Traits can be functions [Check it out](#tip-6-using-traits-as-functions) 
+  - Traits can be functions [Check it out](#tip-6-using-traits-as-functions)
 
 **Older but still fun things**
 - Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
@@ -497,14 +497,14 @@ Then to build the fixture:
 ```
 
 
-### Callbacks 
+### Callbacks
   - `afterMake`
     - Uses transient attributes
     - Unfortunately the model will fire 'onload' event before this `afterMake` is called.
       - So all data will not be setup by then if you rely on `afterMake` to finish by the
      time `onload` is called.
       - In this case, just use transient attributes without the `afterMake`
-      
+
 Assuming the factory-guy model definition defines `afterMake` function:
 
 ```javascript
@@ -604,7 +604,7 @@ You would use this to make models like:
 
   // for model fragments you get an object
   let object = make('name'); // => {firstName: 'Boba', lastName: 'Fett'}
-  
+
 ```
 
 ##### `FactoryGuy.makeNew`
@@ -644,9 +644,9 @@ Usage:
   - use the [`add`](#using-add-method) method
     - to include extra sideloaded data to the payload
     - to include meta data
-    - REMEMBER, all relationships will be automatically sideloaded, 
+    - REMEMBER, all relationships will be automatically sideloaded,
       so you don't need to add them with the `add()` method
-   
+
 Usage:
 
 ```javascript
@@ -760,9 +760,9 @@ Usage:
      - only JSONAPI, and REST based serializers can do sideloading
      - so DRFSerializer and JSONSerializer users can not use this feature
    - you dont need to use json key as in: ```build('user').add({json: batMan})```
-   - you can just add the payload directly as: ```build('user').add(batMan)``` 
-       
-Usage:  
+   - you can just add the payload directly as: ```build('user').add(batMan)```
+
+Usage:
 
 ```javascript
   let batMan = build('bat_man');
@@ -867,12 +867,12 @@ Usage:
   by default for the `test` environment and setting the flag tells factory-guy to load the app/scenarios
   files which are not needed for using factory-guy in testing. This will result in errors being generated if
   the app/scenarios files do not exist.
-  
+
   ```javascript
     // file: config/environment.js
     // in development you don't have to set enabled to true since that is default
     if (environment === 'development') {
-      ENV.factoryGuy = { useScenarios: true }; 
+      ENV.factoryGuy = { useScenarios: true };
       ENV.locationType = 'auto';
       ENV.rootURL = '/';
     }
@@ -909,6 +909,11 @@ Usage:
       run() {
          this.include([Users]);   // include other scenarios
          this.mockFindAll('products', 3);  // mock some finds
+         this.mock({
+           type: 'POST',
+           url: '/api/v1/users/sign_in',
+           responseText: { token:"0123456789-ab" }
+         });  // mock a custom endpoint
       }
     }
   ```
@@ -1097,7 +1102,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
 
 - Sample component test: [single-user-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/single-user-test.js)
   - Using `moduleForComponent` ( ember-qunit ), or `describeComponent` ( ember-mocha ) helper
-  - manually sets up FactoryGuy 
+  - manually sets up FactoryGuy
 
   ```javascript
   import { make, manualSetup }  from 'ember-data-factory-guy';
@@ -1149,6 +1154,8 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   - [mockCreate](#mockcreate)
   - [mockUpdate](#mockupdate)
   - [mockDelete](#mockdelete)
+- Custom mocks (http GET/POST/PUT/DELETE)
+  - [mock](#mock)
 
 - Use method `fails()` to simulate failure
 - Use method `succeeds()` to simulate success
@@ -1177,7 +1184,7 @@ the disabled mock using `enable()`.
 The `isDestroyed` property is set to `true` when the mock is destroyed.
 
 
-##### setup 
+##### setup
   - As of v2.13.15 mockSetup and mockTeardown are no longer needed
   - Use FactoryGuy.settings to set:
     - logLevel ( 0 - off , 1 - on ) for seeing the FactoryGuy responses
@@ -1284,9 +1291,9 @@ Usage:
   urlForFindRecord(id, modelName, snapshot) {
     if (snapshot && snapshot.adapterOptions) {
        let { adapterOptions }  = snapshot; // => {friendly: true}
-       // ... blah blah blah 
+       // ... blah blah blah
     }
-    // ... blah blah   
+    // ... blah blah
   }
 ```
 ##### `mockFindAll`
@@ -1764,12 +1771,45 @@ Usage:
     mockDelete(profile).fails();
 ```
 
+##### `mock`
+  Well, you have read about all the other `mock*` methods, but what if you have
+  endpoints that do not use Ember Data? Well, `mock` is for you.
+
+  - mock({type, url, responseText, status)
+    - type: The HTTP verb (`GET`, `POST`, etc.) Defaults to `GET`
+    - url: The endpoint URL you are trying to mock
+    - responseText: This can be whatever you want to return, even a JavaScript object
+    - status: The status code of the response. Defaults to `200`
+
+Usage:
+
+- Simple case
+
+```javascript
+  import { mock } from 'ember-data-factory-guy';
+
+  this.mock({ url: '/users' });
+```
+
+- Returning a JavaScript object
+
+```javascript
+  import { mock } from 'ember-data-factory-guy';
+
+  this.mock({
+    type: 'POST',
+    url: '/users/sign_in',
+    responseText: { token: "0123456789-ab" }
+  });
+
+```
+
 ### Tips and Tricks
 
 #### Tip 1: Fun with `makeList`/`buildList` and traits
   - This is probably the funnest thing in FactoryGuy, if you're not using this
   syntax yet, you're missing out.
-  
+
   ```javascript
    let json    = buildList('widget', 'square', 'round', ['round','broken']);
    let widgets = makeList('widget', 'square', 'round', ['round','broken']);
@@ -1784,29 +1824,29 @@ Usage:
 
 #### Tip 2: Building static / fixture like data into the factories.
 
- - States are the classic case. There is a state model, and there are 50 US states. 
+ - States are the classic case. There is a state model, and there are 50 US states.
  - You could use a strategy to get them with traits like this:
- 
+
 ```javascript
   import FactoryGuy from 'ember-data-factory-guy';
-  
+
   FactoryGuy.define('state', {
-  
+
     traits: {
       NY: { name: "New York", id: "NY" },
       NJ: { name: "New Jersey", id: "NJ" },
       CT: { name: "Connecticut", id: "CT" }
     }
   });
-  
-  // then in your tests you would do 
-  let [ny, nj, ct] = makeList('state', 'ny', 'nj', 'ct'); 
+
+  // then in your tests you would do
+  let [ny, nj, ct] = makeList('state', 'ny', 'nj', 'ct');
 ```
 - Or you could use a strategy to get them like this:
 
 ```javascript
   import FactoryGuy from 'ember-data-factory-guy';
-  
+
   const states = [
     { name: "New York", id: "NY" },
     { name: "New Jersey", id: "NJ" },
@@ -1815,21 +1855,21 @@ Usage:
   ];
 
   FactoryGuy.define('state', {
-  
+
     default: {
       id: FactoryGuy.generate((i)=> states[i-1].id),
       name: FactoryGuy.generate((i)=> states[i-1].name)
     }
   });
-  
-  // then in your tests you would do 
-  let states = makeList('state', 3); // or however many states you have 
+
+  // then in your tests you would do
+  let states = makeList('state', 3); // or however many states you have
 ```
 
 #### Tip 3: Using Scenario class in tests
   - encapsulate data interaction in a scenario class
-    - sets up data 
-    - has helper methods to retrieve data 
+    - sets up data
+    - has helper methods to retrieve data
   - similar to how page objects abstract away the interaction with a page/component
 
 Example:
@@ -1844,11 +1884,11 @@ export default class extends Scenario {
   run() {
     this.createGroups();
   }
-  
+
   createGroups() {
     this.permissionGroups = this.makeList('permission-group', 3);
   }
-  
+
   groupNames() {
     return this.permissionGroups.mapBy('name').sort();
   }
@@ -1881,11 +1921,11 @@ describe('Admin View', function() {
 #### Tip 4: Testing mocks ( async testing ) in unit tests
 
  - Two ways to handle asyncronous test
-   - async / await ( most elegant ) [Sample test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L44)     
-      - need to declare polyfill for ember-cli-babel options 
+   - async / await ( most elegant ) [Sample test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L44)
+      - need to declare polyfill for ember-cli-babel options
        in [ember-cli-build](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/ember-cli-build.js#L7)
-   - using `assert.async()` (qunit) / `done` (mocha) [Sample test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L53)   
-        
+   - using `assert.async()` (qunit) / `done` (mocha) [Sample test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L53)
+
 #### Tip 5: Testing model's custom `serialize()` method
   - The fact that you can match on attributes in `mockUpdate` and `mockCreate` means
    that you can test a custom `serialize()` method in a model serializer
@@ -1898,10 +1938,10 @@ describe('Admin View', function() {
     // let's say you're modifying all names to be Japanese honorific style
     serialize: function(snapshot, options) {
       var json = this._super(snapshot, options);
-  
+
       let honorificName = [snapshot.record.get('name'), 'san'].join('-');
       json.name = honorificName;
-  
+
       return json;
     }
   });
@@ -1915,7 +1955,7 @@ describe('Admin View', function() {
 
 - You could also test ```serialize()``` method in a simpler way by doing this:
 
-```javascript  
+```javascript
   let person = make('person', {name: "Daniel"});
   let json = person.serialize();
   assert.equal(json.name, 'Daniel-san');
@@ -1932,20 +1972,20 @@ FactoryGuy.define("project", {
   },
   traits: {
     //  this trait is a function
-    // note that the fixure is passed in that will have 
-    // default attributes like id at a minimum and in this 
+    // note that the fixure is passed in that will have
+    // default attributes like id at a minimum and in this
     // case also a title ( `Project 1` ) which is default
-    medium: (f) => {  
+    medium: (f) => {
       f.title = `Medium Project ${f.id}`
     },
-    goofy: (f) => {  
+    goofy: (f) => {
       f.title = `Goofy ${f.title}`
     }
   }
 });
 ```
 
-So, when you make / build  a project like: 
+So, when you make / build  a project like:
 
 ```js
 let project =  make('project', 'medium');
@@ -1959,4 +1999,3 @@ Your trait function assigns the title as you described in the function
 
 ### ChangeLog
   - [Release Notes](/releases)
-
