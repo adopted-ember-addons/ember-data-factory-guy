@@ -106,7 +106,7 @@ class ModelDefinition {
     let sequence = this.sequences[name];
     if (!sequence) {
       throw new MissingSequenceError(
-        `Can not find that sequence named [${name}] in '${this.modelName}' definition`
+        `[ember-data-factory-guy] Can't find that sequence named [${name}] in '${this.modelName}' definition`
       );
     }
     return sequence.next();
@@ -142,7 +142,10 @@ class ModelDefinition {
     traitNames.forEach(traitName => {
       let trait = this.traits[traitName];
       Ember.assert(
-        `[ember-data-factory-guy] You're trying to use a trait [${traitName}] for model ${this.modelName} but that trait can't be found.`, trait);
+        `[ember-data-factory-guy] You're trying to use a trait [${traitName}] 
+        for model ${this.modelName} but that trait can't be found.`,
+        trait
+      );
       if (Ember.typeOf(trait) === 'function') {
         trait(fixture);
       }

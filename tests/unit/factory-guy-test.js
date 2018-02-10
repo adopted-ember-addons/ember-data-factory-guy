@@ -82,7 +82,7 @@ test('throws exception if there is NO store setup', function(assert) {
       make('profile');
     },
     function(err) {
-      return !!err.toString().match(/Use manualSetup\(this.container\) in model\/component test/);
+      return !!err.toString().match(/Use manualSetup\(this\) in model\/component test/);
     });
 });
 
@@ -194,7 +194,7 @@ test("causes an assertion error when a trait is not found", function(assert) {
   try {
     build('user', 'non_existent_trait');
   } catch (error) {
-    assert.equal(error.message, "Assertion Failed: You're trying to use a trait [non_existent_trait] for model user but that trait can't be found.");
+    assert.ok(error.message.match(/\[ember-data-factory-guy\] You're trying to use a trait \[non_existent_trait\]/));
   }
 });
 
@@ -294,7 +294,7 @@ test('throws exception if there is NO store setup', function(assert) {
       makeList('profile');
     },
     function(err) {
-      return !!err.toString().match(/Use manualSetup\(this.container\) in model\/component test/);
+      return !!err.toString().match(/Use manualSetup\(this\) in model\/component test/);
     }
   );
 });
