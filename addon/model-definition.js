@@ -142,7 +142,7 @@ class ModelDefinition {
     traitNames.forEach(traitName => {
       let trait = this.traits[traitName];
       Ember.assert(
-        `You're trying to use a trait [${traitName}] for model ${this.modelName} but that trait can't be found.`, trait);
+        `[ember-data-factory-guy] You're trying to use a trait [${traitName}] for model ${this.modelName} but that trait can't be found.`, trait);
       if (Ember.typeOf(trait) === 'function') {
         trait(fixture);
       }
@@ -279,7 +279,7 @@ class ModelDefinition {
     let extending = config.extends;
     let definition = FactoryGuy.findModelDefinition(extending);
     Ember.assert(
-      `You are trying to extend [${this.modelName}] with [ ${extending} ].
+      `[ember-data-factory-guy] You are trying to extend [${this.modelName}] with [ ${extending} ].
       But FactoryGuy can't find that definition [ ${extending} ]
       you are trying to extend. Make sure it was created/imported before
       you define [ ${this.modelName} ]`, definition);

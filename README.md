@@ -1094,7 +1094,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
 ### Testing models, controllers, components
 
 - FactoryGuy needs to setup the factories before the test run.
-  - By default, you only need to call `manualSetup(this.container)` in unit/component tests
+  - By default, you only need to call `manualSetup(this)` in unit/component tests
 
 - Sample model test: [profile-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
   - Use `moduleForModel` ( ember-qunit ), or `describeModel` ( ember-mocha ) test helper
@@ -1113,7 +1113,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
     integration: true,
 
     beforeEach: function () {
-      manualSetup(this.container);
+      manualSetup(this);
     }
   });
 

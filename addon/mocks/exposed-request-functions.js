@@ -24,7 +24,7 @@ export function mockTeardown() {
     {id: 'ember-data-factory-guy.mock-teardown', until: '2.14.0'});
 }
 
-export function mock({type, url, responseText} = {}) {
+export function mock({type = 'GET', url, responseText} = {}) {
   Ember.assert("[ember-data-factory-guy] mock requires at least a url", url);
 
   return new MockAnyRequest({type, url, responseText});
@@ -197,7 +197,7 @@ export function mockFindAll(...args) {
  @param {Array}  array of Model records to be 'returned' by query
  */
 export function mockQuery(modelName, queryParams = {}) {
-  Ember.assert('The second argument ( queryParams ) must be an object', Ember.typeOf(queryParams) === 'object');
+  Ember.assert('[ember-data-factory-guy] The second argument ( queryParams ) must be an object', Ember.typeOf(queryParams) === 'object');
 
   return new MockQueryRequest(modelName, queryParams);
 }

@@ -34,7 +34,7 @@ class FactoryGuy {
 
   setStore(aStore) {
     Ember.assert(
-      `FactoryGuy#setStore needs a valid store instance. You passed in [${aStore}]`,
+      `[ember-data-factory-guy] FactoryGuy#setStore needs a valid store instance. You passed in [${aStore}]`,
       aStore instanceof DS.Store
     );
     this.store = aStore;
@@ -435,7 +435,7 @@ class FactoryGuy {
   ensureStore() {
     Ember.assert(
       `[ember-data-factory-guy] FactoryGuy does not have the application's store.
-       Use manualSetup(this.container) in model/component test
+       Use manualSetup(this) in model/component test
        before using make/makeList`, this.store
     );
   }
