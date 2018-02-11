@@ -8,6 +8,9 @@ Factories simplify the process of testing, making you more efficient and your te
 **Ember Data 2.14+** has this [bug](https://github.com/emberjs/data/issues/5055) that affects polymorphic relationships.
  You can still use factory guy with ED 2.14+, but polymorphic relationships sometimes will not work as expected.
 
+**NEW** starting with v2.13.24
+  - Links support for async relationships [Check it out](#tip-7-setting-up-links)
+
 **NEW and Improved** starting with v2.13.22
   - Traits can be functions [Check it out](#tip-6-using-traits-as-functions)
 
@@ -1997,5 +2000,31 @@ project2.get('title'); //=> 'Goofy Project 2'
 
 Your trait function assigns the title as you described in the function
 
+
+#### Tip 7: Setting up links
+
+-Setup up a links in factory is as easy as:
+    
+```js
+import FactoryGuy from 'ember-data-factory-guy';
+
+FactoryGuy.define("user", {
+  default: {
+    company: (f) => ({links: `/users/${f.id}/company`})
+  },
+  traits: {
+    propertiesLink: (f) => {
+      f.properties = {links: `/users/${f.id}/properties`}
+    }
+  }
+});
+```
+
+Or, you can pass the links values when you make / build a model like:
+
+
+
 ### ChangeLog
   - [Release Notes](/releases)
+
+

@@ -354,6 +354,20 @@ SharedBehavior.makeTests = function() {
     });
   });
 
+  test("with links for belongsTo relationship", function(assert) {
+    let companyLink = '/user/1/company',
+        user         = make('user', {company: {links: companyLink}});
+
+    assert.equal(user.belongsTo('company').link(), companyLink)
+  });
+
+  test("with links for hasMany relationship", function(assert) {
+    let propertyLink = '/user/1/properties',
+        user         = make('user', {properties: {links: propertyLink}});
+
+    assert.equal(user.hasMany('properties').link(), propertyLink)
+  });
+
 };
 
 SharedBehavior.makeListTests = function() {

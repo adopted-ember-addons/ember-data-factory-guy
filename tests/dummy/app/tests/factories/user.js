@@ -2,12 +2,13 @@ import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define('user', {
   sequences: {
-    name: (num)=> `User${num}`
+    name: (num) => `User${num}`
   },
   // default values for 'user' attributes
   default: {
     style: 'normal',
-    name: FactoryGuy.generate('name')
+    name: FactoryGuy.generate('name'),
+    company: (f) => ({links: `/users/${f.id}/company`}),
   },
   // named 'user' type with custom attributes
   admin: {
@@ -55,6 +56,9 @@ FactoryGuy.define('user', {
     },
     with_hats_belonging_to_outfit: {
       hats: FactoryGuy.hasMany('big-hat', 2, 'belonging_to_outfit')
+    },
+    propertiesLink: (f) => {
+      f.properties = {links: `/users/${f.id}/properties`}
     }
   }
 });
