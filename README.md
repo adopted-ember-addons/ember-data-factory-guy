@@ -10,6 +10,7 @@ Factories simplify the process of testing, making you more efficient and your te
 
 **NEW** starting with v2.13.24
   - Links support for async relationships [Check it out](#tip-7-setting-up-links)
+  - manualSetup streamlined to ```manualSetup(this)```
 
 **NEW and Improved** starting with v2.13.22
   - Traits can be functions [Check it out](#tip-6-using-traits-as-functions)
