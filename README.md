@@ -260,7 +260,7 @@ In other words, don't do this:
     traits: {
       boring: {
         style: (f)=> `${f.id} boring`
-      }
+      },
       funny: {
         style: (f)=> `funny ${f.name}`
       }
@@ -325,6 +325,7 @@ attributes will override any trait attributes or default attributes
 - Can setup belongsTo or hasMany associations in factory definitions
     - As inline attribute definition
     - With traits
+    - as links for async relationships
 - Can setup belongsTo or hasMany associations manually
   - With `FactoryGuy.build`/`FactoryGuy.buildList` and `FactoryGuy.make`/`FactoryGuy.makeList`
     - Can compose relationships to any level
@@ -332,46 +333,26 @@ attributes will override any trait attributes or default attributes
 
 ##### Setup belongsTo associations in Factory Definitions
 
+- using traits are the best practice
+  
 ```javascript
-  // Recall ( from above setup ) that there is a user belongsTo on the Project model
-  // Also, assume 'user' factory is same as from 'user' factory definition above in
-  // 'Defining Factories' section
   FactoryGuy.define('project', {
-
-    project_with_user: {
-      // create user model with default attributes
-      user: {}
-    },
-    project_with_bob: {
-      // create user model with custom attributes
-      user: {name: 'Bob'}
-    },
-    project_with_admin: {
-      // create a named user model with the FactoryGuy.belongsTo helper method
-      user: FactoryGuy.belongsTo('admin')
-    }
-  });
-
-  let project = FactoryGuy.make('project_with_admin');
-  project.get('user.name') // => 'Admin'
-  project.get('user.style') // => 'super'
-
-```
-
-*You could also accomplish the above with traits:*
-
-```javascript
-
-  FactoryGuy.define('project', {
+    
     traits: {
-      with_user: { user: {} },
-      with_admin: { user: FactoryGuy.belongsTo('admin') }
+      withUser: { user: {} },
+      withAdmin: { user: FactoryGuy.belongsTo('user', 'admin') },
+      withManagerLink(f) { 
+        f.manager = {links: `/projects/${f.id}/manager`} 
+      }
     }
   });
 
-  let user = FactoryGuy.make('project', 'with_user');
+  let user = make('project', 'withUser');
   project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
 
+  user = make('user', 'withManagerLink');
+  user.belongsTo('manager').link(); // => "/projects/1/manager"
+   
 ```
 
 
@@ -379,8 +360,8 @@ attributes will override any trait attributes or default attributes
 See `FactoryGuy.build`/`FactoryGuy.buildList` for more ideas
 
 ```javascript
-  let user = FactoryGuy.make('user');
-  let project = FactoryGuy.make('project', {user: user});
+  let user = make('user');
+  let project = make('project', {user});
 
   project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
 ```
@@ -395,45 +376,53 @@ the reverse user hasMany 'projects' association is being setup for you on the us
 
 ##### Setup hasMany associations in the Factory Definition
 
-``` javascript
-  FactoryGuy.define('user', {
-    user_with_projects: { projects: FactoryGuy.hasMany('project', 2) }
-  });
-
-  let user = FactoryGuy.make('user_with_projects');
-  user.get('projects.length') // => 2
-
-```
-
-*You could also accomplish the above with traits:*
+ - using traits are the best practice
 
 ```javascript
 
-  FactoryGuy.define('project', {
+  FactoryGuy.define('user', {
     traits: {
-      with_projects: {
+      withProjects: {
         projects: FactoryGuy.hasMany('project', 2)
+      },
+      withPropertiesLink(f) { // f is the fixture being created 
+        f.properties = {links: `/projects/${f.id}/properties`} 
       }
     }
   });
 
-  let user = FactoryGuy.make('user', 'with_projects');
+  let user = FactoryGuy.make('user', 'withProjects');
   user.get('projects.length') // => 2
+  
+  user == FactoryGuy.make('user', 'withPropertiesLink'); 
+  user.hasMany('properties').link(); // => "/projects/1/properties"
+```
 
+*You could also setup a custom named user definition:*
+
+```javascript
+  FactoryGuy.define('user', {
+    
+    userWithProjects: { projects: FactoryGuy.hasMany('project', 2) }
+  
+  });
+
+  let user = make('userWithProjects');
+  user.get('projects.length') // => 2
 ```
 
 ##### Setup hasMany associations manually
 See `FactoryGuy.build`/`FactoryGuy.makeList` for more ideas
 
 ```javascript
-  let project1 = FactoryGuy.make('project');
-  let project2 = FactoryGuy.make('project');
-  let user = FactoryGuy.make('user', {projects: [project1,project2]});
+  let project1 = make('project');
+  let project2 = make('project');
+  let user = make('user', {projects: [project1, project2]});
   user.get('projects.length') // => 2
 
   // or
-  let projects = FactoryGuy.makeList('project', 2);
-  let user = FactoryGuy.make('user', {projects: projects});
+  let projects = makeList('project', 2);
+  let user = make('user', {projects: projects});
   user.get('projects.length') // => 2
 
 ```
@@ -463,7 +452,7 @@ There is a sample Factory using inheritance here: [`big-group.js`](https://githu
     - Pass in any attribute you like to build a fixture
     - Usually helps you to build some other attribute
     - These attributes will be removed when fixture is done building
-  - Can be used in `FactoryGuy.make`/`FactoryGuy.makeList`/`FactoryGuy.build`/`FactoryGuy.buildList`
+  - Can be used in `make`/`makeList`/`build`/`buildList`
 
 Let's say you have a model and a factory like this:
 
@@ -548,8 +537,7 @@ You would use this to make models like:
 ### Using Factories
 
  - [`FactoryGuy.make`](#factoryguymake)
-   - Loads a model instance into the store
-   - makes a fragment hash ( if it is a model fragment )
+   - push model instances into store
  - [`FactoryGuy.makeNew`](#factoryguymakenew)
    - Create a new model instance but doesn't load it to the store
  - [`FactoryGuy.makeList`](#factoryguymakelist)
@@ -566,8 +554,14 @@ You would use this to make models like:
  - Can add attributes or relationships with [traits](#traits)
  - Can compose relationships
     - By passing in other objects you've made with `build`/`buildList` or `make`/`makeList`
-
+ - Can setup links for async relationships with `build`/`buildList` or `make`/`makeList`
+ 
 ##### `FactoryGuy.make`
+  - Loads a model instance into the store
+  - makes a fragment hash ( if it is a model fragment )
+  - can compose relationships with other `FactoryGuy.make`/`FactoryGuy.makeList`
+  - can add relationship links to payload
+
 ```javascript
 
   import { make } from 'ember-data-factory-guy';
@@ -605,6 +599,12 @@ You would use this to make models like:
   let user = make('user', {company: company});
   user.toJSON({includeId: true})  // => {id: 7, name: 'User3', style: 'normal', company: 1}
 
+  // make user with links to async hasMany properties
+  let user = make('user', {properties: {links: '/users/1/properties'}});
+  
+  // make user with links to async belongsTo company
+  let user = make('user', {company: {links: '/users/1/company'}});
+
   // for model fragments you get an object
   let object = make('name'); // => {firstName: 'Boba', lastName: 'Fett'}
 
@@ -612,7 +612,7 @@ You would use this to make models like:
 
 ##### `FactoryGuy.makeNew`
   - Same api as `FactoryGuy.make`
-    - except that the model will not be loaded into store
+    - except that the model will be a newly created record with no id 
 
 ##### `FactoryGuy.makeList`
   - check out [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'bob' user and 'with_car' trait
@@ -642,6 +642,7 @@ Usage:
   - for building json that you can pass as json payload in [acceptance tests](#acceptance-tests)
   - takes the same arguments as `FactoryGuy.make`
   - can compose relationships with other `FactoryGuy.build`/`FactoryGuy.buildList` payloads
+  - can add relationship links to payload
   - takes serializer for model into consideration
   - to inspect the json use the `get` method
   - use the [`add`](#using-add-method) method
@@ -694,6 +695,12 @@ Usage:
   let owners = buildList('user', { company:company1 }, { company:company2 });
   let buildJson = build('property', { owners });
 
+  // build user with links to async hasMany properties
+  let user = build('user', {properties: {links: '/users/1/properties'}});
+  
+  // build user with links to async belongsTo company
+  let user = build('user', {company: {links: '/users/1/company'}});
+  
 ```
 - Example of what json payload from build looks like
  - Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters
@@ -1060,7 +1067,7 @@ import moduleForAcceptance from '../helpers/module-for-acceptance';
 
 moduleForAcceptance('Acceptance | Profiles View');
 
-test("Using FactoryGuy.cacheOnlyMode", function() {
+test("Using FactoryGuy.cacheOnlyMode", async function() {
   FactoryGuy.cacheOnlyMode();
   // the store.findRecord call for the user will go out unless there is a user
   // in the store
@@ -1071,14 +1078,12 @@ test("Using FactoryGuy.cacheOnlyMode", function() {
   // for this test I care about just testing profiles
   makeList("profile", 2);
 
-  visit('/profiles');
+  await visit('/profiles');
 
-  andThen(()=> {
-    // test stuff
-  });
+  // test stuff
 });
 
-test("Using FactoryGuy.cacheOnlyMode with except", function() {
+test("Using FactoryGuy.cacheOnlyMode with except", async function() {
   FactoryGuy.cacheOnlyMode({except: ['profile']});
 
   make('user', {name: 'current'});
@@ -1086,11 +1091,9 @@ test("Using FactoryGuy.cacheOnlyMode with except", function() {
   // this time I want to allow the ajax call so I can return built json payload
   mockFindAll("profile", 2);
 
-  visit('/profiles');
+  await visit('/profiles');
 
-  andThen(()=> {
-    // test stuff
-  });
+  // test stuff
 });
 ```
 
@@ -2013,6 +2016,7 @@ FactoryGuy.define("user", {
     company: (f) => ({links: `/users/${f.id}/company`})
   },
   traits: {
+    // luckily traits can use functions, so the settup is easy 
     propertiesLink: (f) => {
       f.properties = {links: `/users/${f.id}/properties`}
     }
@@ -2020,9 +2024,12 @@ FactoryGuy.define("user", {
 });
 ```
 
-Or, you can pass the links values when you make / build a model like:
+-Or, you can pass the links values when you make / build a model like:
 
-
+```js
+let user1 = make('user', {properties: {links: '/users/1/properties'}});
+let user2 = build('user', {properties: {links: '/users/2/properties'}});
+```
 
 ### ChangeLog
   - [Release Notes](/releases)
