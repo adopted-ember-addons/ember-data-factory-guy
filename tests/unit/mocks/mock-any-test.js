@@ -55,12 +55,12 @@ test("returns", async function(assert) {
         whatsUp = {whats: 'up'},
         whatsUpDoc = {whats: 'up doc'};
 
-  let theMock = mock({url});
-  theMock.returns(whatsUp);
+  let theMock = mock({url}).returns(whatsUp);
+
   let json = await Ember.$.ajax({type, url});
   assert.deepEqual(JSON.parse(json), whatsUp, 'returns json that is set');
 
-  theMock.returns(whatsUpDoc)
+  theMock.returns(whatsUpDoc);
   json = await Ember.$.ajax({type, url});
   assert.deepEqual(JSON.parse(json), whatsUpDoc, 'returns next json that is set');
 });
