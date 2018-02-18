@@ -44,33 +44,16 @@ test("hasMany links returns buildList payload", async function(assert) {
   let user       = make('user', 'propertiesLink'),
       properties = buildList('property', 1);
 
-  mockLinks(user, 'properties').returns(properties);
+  mockLinks(user, 'properties').returns({json: properties});
   let userProperties = await user.get('properties');
   assert.deepEqual(userProperties.mapBy('id'), properties.get().map(f => String(f.id)));
 });
 
 test("hasMany links returns makeList payload", async function(assert) {
-  let user       = make('user', 'propertiesLink'),
-      properties = makeList('property', 1);
+  let user = make('user', 'propertiesLink');
+  let properties = makeList('property', 1);
 
-  mockLinks(user, 'properties').returns(properties);
+  mockLinks(user, 'properties').returns({models: properties});
   let userProperties = await user.get('properties');
-  assert.deepEqual(userProperties.mapBy('id'), properties.get().map(f => String(f.id)));
+  assert.deepEqual(userProperties.toArray(), properties);
 });
-
-
-//test("get", async function(assert) {
-//  const callOpts     = {
-//          type: 'GET',
-//          url: '/api/get-stuff',
-//        },
-//        responseText = {what: 'up'},
-//        mockOpts     = Object.assign({responseText}, callOpts);
-//
-//  mock(mockOpts);
-//  let json = await Ember.$.ajax(callOpts);
-//  assert.deepEqual(JSON.parse(json), responseText);
-//});
-
-//test("returns", async function(assert) {
-//});
