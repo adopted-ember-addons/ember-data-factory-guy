@@ -1,83 +1,100 @@
-import {test} from 'qunit';
-import {make, build, buildList, mockFindRecord, mockCreate} from 'ember-data-factory-guy';
-import moduleForAcceptance from '../helpers/module-for-acceptance';
+import { module, test } from 'qunit';
+import {
+  make,
+  makeList,
+  build,
+  buildList,
+  manualSetup,
+  mockFindRecord,
+  mockCreate
+} from 'ember-data-factory-guy';
+import { setupApplicationTest } from 'ember-qunit';
+import { visit, fillIn, click } from '@ember/test-helpers';
 
-moduleForAcceptance('Acceptance | User View');
 // NOTE
-// FactoryGuy before and after setup is in moduleForAcceptance helper
+// New ember-qunit and qunit-dom style of testing
+module('Acceptance | User View', function(hooks) {
+  setupApplicationTest(hooks);
 
-test("Show user by make(ing) a model and using returns with that model", async function(assert) {
-  // make a user with projects ( which will be in the store )
-  // if you need the computed properties on the model this is best bet
-  let user     = make('user', 'with_projects'),
-      projects = user.get('projects'),
-      mock     = mockFindRecord('user').returns({ model: user });
+  hooks.beforeEach(function() {
+    manualSetup(this);
+  });
 
-  await visit('/user/' + mock.get('id'));
+  test("Show user by make(ing) a model and using returns with that model", async function(assert) {
+    // if you need to test computed properties on projects or users this is best bet
+    // => make a user with projects ( which will be in the store )
+    let [project1, project2] = makeList('project', 2),
+        user                 = make('user', {projects: [project1, project2]}),
+        // => the store.findRecord will now 'return' the very user you just created, voila!
+        mock                 = mockFindRecord('user').returns({model: user});
 
-  assert.ok(find('.name').text().match(user.get('name')));
-  // the power of making a model instead of json is that you can access
-  // computed properties on the model to use in your tests
-  assert.ok(find('.funny-name').text().match(user.get('funnyName')));
-  assert.ok(find('li.project:first').text().match(projects.get('firstObject.title')));
-  assert.ok(find('li.project:last').text().match(projects.get('lastObject.title')));
-});
+    await visit('/user/' + mock.get('id'));
 
-test("Show user with projects by build(ing) json and using returns with json", async function(assert) {
-  // build a user with projects ( which will be sideloaded into the payload, and
-  // therefore be put in the store when user is loaded )
-  let projects = buildList('project', { title: 'Moo' }, { title: 'Zoo' }),
-      user     = build('user', { projects: projects }),
-      mock     = mockFindRecord('user').returns({ json: user });
+    assert.dom('.name').containsText(user.get('name'));
+    // the power of making a model instead of json is that you can access
+    // computed properties on the model to use in your tests
+    assert.dom('.funny-name').containsText(user.get('funnyName'));
 
-  await visit('/user/' + mock.get('id'));
+    assert.dom('li.project:first-child').containsText(project1.get('title'));
+    assert.dom('li.project:last-child').containsText(project2.get('title'));
+  });
 
-  assert.ok(find('.name').text().match(user.get('name')));
-  // can't test the funny name computed property ( so easily )
-  // as you could when using models because you only have json
-  assert.ok(find('li.project:first').text().match(projects.get(0).title));
-  assert.ok(find('li.project:last').text().match(projects.get(1).title));
-});
+  test("Show user with projects by build(ing) json and using returns with json", async function(assert) {
+    // build a user with projects ( which will be sideloaded into the payload, and
+    // therefore be put in the store when user is loaded )
+    let projects = buildList('project', {title: 'Moo'}, {title: 'Zoo'}),
+        user     = build('user', {projects: projects}),
+        mock     = mockFindRecord('user').returns({json: user});
 
-test("Add a project to a user with mockCreate", async function(assert) {
-  // mockFindRecord will build a default user for the json payload
-  let mock = mockFindRecord('user');
+    await visit('/user/' + mock.get('id'));
 
-  await visit('/user/' + mock.get('id'));
+    // can't test the funny name computed property ( so easily )
+    // as you could when using models because you only have json
+    assert.dom('.name').containsText(user.get('name'));
 
-  let newProjectTitle = "Gonzo Project";
+    assert.dom('li.project:first-child').containsText(projects.get(0).title);
+    assert.dom('li.project:last-child').containsText(projects.get(1).title);
+  });
 
-  // should be no projects
-  assert.equal(find('li.project').length, 0);
+  test("Add a project to a user with mockCreate", async function(assert) {
+    // mockFindRecord will build a default user for the json payload
+    let mock = mockFindRecord('user');
 
-  await fillIn('input.project-title', newProjectTitle);
+    await visit('/user/' + mock.get('id'));
 
-  // Remember, this is for handling an exact match, if you did not care about
-  // matching attributes, you could just do: mockCreate('project')
-  mockCreate('project').match({ title: newProjectTitle });
+    let newProjectTitle = "Gonzo Project";
 
-  /**
-   Let's say that clicking this 'button:contains(Add New User)', triggers action in the
-   view to create project record and looks something like this:
+    // should be no projects
+    assert.dom('li.project').doesNotExist('No projects shown');
 
-   actions: {
+    await fillIn('input.project-title', newProjectTitle);
+
+    // Remember, this is for handling an exact match, if you did not care about
+    // matching attributes, you could just do: mockCreate('project')
+    mockCreate('project').match({title: newProjectTitle});
+
+    /**
+     Let's say that clicking this a button, triggers action in the
+     view to create project record and looks something like this:
+
+     actions: {
        addProject: function (user) {
          let title = this.$('input.project-title').val();
-         let store = this.get('controller.store');
-         store.createRecord('project', {title: title, user: user}).save();
+         let store = this.get('store');
+         store.createRecord('project', {title, user}).save();
        }
      }
 
-   */
-  await click('button:contains(Add New User)');
+     */
+    await click('button.add-project');
 
-  let newProjectDiv = find('li.project:contains(' + newProjectTitle + ')');
-  assert.ok(newProjectDiv[0]);
-});
+    assert.dom('li.project').exists('One project shown');
+  });
 
-test("Request failure shows a error message", async function(assert) {
-  let mock = mockFindRecord('user').fails({ status: 404 });
-  await visit('/user/' + mock.get('id'));
+  test("Request failure shows a error message", async function(assert) {
+    let mock = mockFindRecord('user').fails({status: 404});
+    await visit('/user/' + mock.get('id'));
 
-  assert.equal(find('.error').text(), 'User not found');
+    assert.dom('.error').hasText('User not found');
+  });
 });
