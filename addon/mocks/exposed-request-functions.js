@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import Model from 'ember-data/model';
 import FactoryGuy from '../factory-guy';
+
 import MockUpdateRequest from './mock-update-request';
 import MockCreateRequest from './mock-create-request';
 import MockQueryRequest from './mock-query-request';
@@ -10,6 +11,7 @@ import MockReloadRequest from './mock-reload-request';
 import MockFindAllRequest from './mock-find-all-request';
 import MockDeleteRequest from './mock-delete-request';
 import MockAnyRequest from './mock-any-request';
+import MockLinksRequest from './mock-links-request';
 
 export function mockSetup({responseTime, logLevel = 0} = {}) {
   Ember.deprecate(`[ember-data-factory-guy] mockSetup is no longer needed. If you want to set logLevel or responseTime, use FactoryGuy.settings instead. If you don't need to set anything, it is safe to remove mockSetup`,
@@ -28,6 +30,12 @@ export function mock({type = 'GET', url, responseText} = {}) {
   Ember.assert("[ember-data-factory-guy] mock requires at least a url", url);
 
   return new MockAnyRequest({type, url, responseText});
+}
+
+export function mockLinks(model, relationshipKey) {
+  Ember.assert("[ember-data-factory-guy] mockLinks requires at least model and relationshipKey", model, relationshipKey);
+
+  return new MockLinksRequest(model, relationshipKey);
 }
 
 /**
