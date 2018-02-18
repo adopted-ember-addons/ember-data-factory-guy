@@ -9,7 +9,7 @@ Factories simplify the process of testing, making you more efficient and your te
  You can still use factory guy with ED 2.14+, but polymorphic relationships sometimes will not work as expected.
  99% of the time though, you will not even notice. Factory Guy is used in many ED 2.13+ projects with no problems.
   
-**NEW** If using new style of ember-qunit acceptance tests with ```setupApplicationTest``` check [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
+**NEW** If using new style of ember-qunit acceptance tests with ```setupApplicationTest``` check out demo here: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
 **NEW** starting with v2.13.24
   - Links support for async relationships [Check it out](#tip-7-setting-up-links)
@@ -1140,7 +1140,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", async function() {
 
 ### Acceptance Tests
 
-- For using new style of ember-qunit with ```setupApplicationTest``` check [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
+- For using new style of ember-qunit with ```setupApplicationTest``` check out demo here: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
 ##### Using mock methods
 
