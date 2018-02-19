@@ -29,7 +29,7 @@ Factories simplify the process of testing, making you more efficient and your te
 - You don't need to add any files to recreate the relationships in your models
 - Any custom methods like: serialize / serializeAttribute / keyForAttribute etc... in a serializer will be used automatically
 - If you set up custom methods like: buildURL / urlForFindRecord in an adapter, they will be used automatically
-- You don't have to setup anything besides making your factories
+- You have no config file with tons of spew, because you declare all the mocks and make everything declaratively in the test 
 - You can push models and their complex relationships directory to the store
 
 ### Questions / Get in Touch
