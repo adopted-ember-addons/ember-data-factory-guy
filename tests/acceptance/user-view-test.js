@@ -4,7 +4,7 @@ import {
   makeList,
   build,
   buildList,
-  manualSetup,
+  setupFactoryGuy,
   mockFindRecord,
   mockCreate
 } from 'ember-data-factory-guy';
@@ -15,10 +15,7 @@ import { visit, fillIn, click } from '@ember/test-helpers';
 // New ember-qunit and qunit-dom style of testing
 module('Acceptance | User View', function(hooks) {
   setupApplicationTest(hooks);
-
-  hooks.beforeEach(function() {
-    manualSetup(this);
-  });
+  setupFactoryGuy(hooks);
 
   test("Show user by make(ing) a model and using returns with that model", async function(assert) {
     // if you need to test computed properties on projects or users this is best bet

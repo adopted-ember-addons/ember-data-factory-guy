@@ -26,3 +26,8 @@ export {
   mockQueryRecord, mockCreate, mockUpdate, mockDelete, mock, mockLinks
 };
 
+export function setupFactoryGuy(hooks) {
+  hooks.beforeEach(function() {
+    manualSetup(this);
+  });
+}
