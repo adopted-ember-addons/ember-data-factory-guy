@@ -1108,18 +1108,17 @@ test("Using FactoryGuy.cacheOnlyMode with except", async function() {
   - Or you can use the new setupFactoryGuy(hooks) method if your using the new qunit style tests
   
     - Sample usage: (works the same in any type of test)
-
-```js
-module('Acceptance | User View', function(hooks) {
-  setupApplicationTest(hooks);
-  setupFactoryGuy(hooks);
-
-  test("blah blah", async function(assert) {
-     await visit('work');
-     assert.ok('bah was spoken');
-  });
-});
-```
+    ```js
+    module('Acceptance | User View', function(hooks) {
+      setupApplicationTest(hooks);
+      setupFactoryGuy(hooks);
+    
+      test("blah blah", async function(assert) {
+         await visit('work');
+         assert.ok('bah was spoken');
+      });
+    });
+    ```
 - Sample model test: [profile-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
   - Use `moduleForModel` ( ember-qunit ), or `describeModel` ( ember-mocha ) test helper
   - manually set up FactoryGuy
