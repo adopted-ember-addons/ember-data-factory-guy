@@ -1107,7 +1107,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", async function() {
   - By default, you only need to call `manualSetup(this)` in unit/component/acceptance tests
   - Or you can use the new setupFactoryGuy(hooks) method if your using the new qunit style tests
   
-Sample usage: (works the same in any type of test)
+    - Sample usage: (works the same in any type of test)
 
 ```js
 module('Acceptance | User View', function(hooks) {
