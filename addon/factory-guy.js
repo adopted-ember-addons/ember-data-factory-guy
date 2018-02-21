@@ -333,6 +333,32 @@ class FactoryGuy {
   }
 
   /**
+   Creates object with model attributes and relationships combined
+   based on your traits and options
+
+   @param {String} name  fixture name
+   @param {String} trait  optional trait names ( one or more )
+   @param {Object} options  optional fixture options that will override default fixture values
+   @returns {Object} object with attributes and relationships combined
+   */
+  attributesFor(...originalArgs) {
+    this.ensureStore();
+
+    let args        = FactoryGuy.extractArguments(...originalArgs),
+        definition  = FactoryGuy.lookupDefinitionForFixtureName(args.name, true),
+        {modelName} = definition,
+        fixture     = this.buildRaw(assign(args, {buildType: 'make'}));
+
+    if (this.isModelAFragment(modelName)) {
+      return fixture;
+    }
+
+    let data = this.fixtureBuilder(modelName).convertForMake(modelName, fixture);
+
+    return data.data.attributes;
+  }
+
+  /**
    Make new model and save to store.
    If the model type is a fragment, return the raw fixture
 
@@ -619,12 +645,13 @@ class FactoryGuy {
 
 }
 
-let factoryGuy = new FactoryGuy(),
-    make       = factoryGuy.make.bind(factoryGuy),
-    makeNew    = factoryGuy.makeNew.bind(factoryGuy),
-    makeList   = factoryGuy.makeList.bind(factoryGuy),
-    build      = factoryGuy.build.bind(factoryGuy),
-    buildList  = factoryGuy.buildList.bind(factoryGuy);
+let factoryGuy    = new FactoryGuy(),
+    make          = factoryGuy.make.bind(factoryGuy),
+    makeNew       = factoryGuy.makeNew.bind(factoryGuy),
+    makeList      = factoryGuy.makeList.bind(factoryGuy),
+    build         = factoryGuy.build.bind(factoryGuy),
+    buildList     = factoryGuy.buildList.bind(factoryGuy),
+    attributesFor = factoryGuy.attributesFor.bind(factoryGuy);
 
-export { make, makeNew, makeList, build, buildList };
+export { make, makeNew, makeList, build, buildList, attributesFor };
 export default factoryGuy;

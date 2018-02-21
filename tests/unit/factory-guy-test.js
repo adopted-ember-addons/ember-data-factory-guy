@@ -1,7 +1,9 @@
 import { moduleFor, test } from 'ember-qunit';
 import DS from 'ember-data';
 import Ember from 'ember';
-import FactoryGuy, { make, makeNew, makeList, build, buildList } from 'ember-data-factory-guy';
+import FactoryGuy, {
+  make, makeNew, makeList, build, buildList, attributesFor
+} from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import sinon from 'sinon';
 import { inlineSetup } from '../helpers/utility-methods';
@@ -72,6 +74,42 @@ test("#resetDefinitions resets the model definition", function(assert) {
     }
   });
 });
+
+moduleFor('serializer:application', 'FactoryGuy#attributesFor', inlineSetup('-json-api'));
+
+test("just modelName", function(assert) {
+  let attrs = attributesFor('user');
+
+  let expectedAttrs = {
+    "name": "User1",
+    "style": "normal"
+  };
+
+  assert.deepEqual(attrs, expectedAttrs);
+});
+
+test("with traits", function(assert) {
+  let attrs = attributesFor('user' , 'silly');
+
+  let expectedAttrs = {
+    "name": "User1",
+    "style": "silly"
+  };
+
+  assert.deepEqual(attrs, expectedAttrs);
+});
+
+test("with traits and options", function(assert) {
+  let attrs = attributesFor('user' , 'silly', {name: 'bob'});
+
+  let expectedAttrs = {
+    "name": "bob",
+    "style": "silly"
+  };
+
+  assert.deepEqual(attrs, expectedAttrs);
+});
+
 
 moduleFor('serializer:application', 'FactoryGuy#make', inlineSetup('-rest'));
 
