@@ -1,6 +1,6 @@
 {
   "name": "ember-data-factory-guy",
-  "version": "2.16.0",
+  "version": "2.18.0",
   "description": "Factories for testing Ember applications using EmberData",
   "directories": {
     "doc": "doc",
@@ -30,7 +30,7 @@
   "devDependencies": {
     "active-model-adapter": "2.1.1",
     "broccoli-asset-rev": "^2.1.2",
-    "ember-cli": "2.16",
+    "ember-cli": "2.18",
     "ember-cli-dependency-checker": "^2.1.0",
     "ember-cli-deprecation-workflow": "^0.2.4",
     "ember-cli-eslint": "^4.0.3",
@@ -42,7 +42,7 @@
     "ember-cli-sri": "^2.1.1",
     "ember-cli-test-loader": "2.2.0",
     "ember-cli-uglify": "1.2.0",
-    "ember-data": "2.16",
+    "ember-data": "2.18",
     "ember-data-model-fragments": "2.14",
     "ember-disable-prototype-extensions": "1.1.0",
     "ember-django-adapter": "2.0.0",
@@ -50,7 +50,7 @@
     "ember-load-initializers": "^1.0.0",
     "ember-resolver": "4.5.0",
     "ember-sinon": "1.0.0",
-    "ember-source": "2.16",
+    "ember-source": "2.18",
     "loader.js": "4.6.0",
     "qunit-dom": "^0.5.0"
   },
