@@ -11,7 +11,7 @@ Factories simplify the process of testing, making you more efficient and your te
 **NEW** If using new style of ember-qunit acceptance tests with ```setupApplicationTest``` check out demo here: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
 **NEW** starting with v2.13.27
-  - get attributes for factory defined model with ```attributesFor```
+  - get attributes for factory defined models with ```attributesFor```
 
 **NEW** starting with v2.13.24
   - Links support for async relationships [Check it out](#tip-7-setting-up-links)
