@@ -133,7 +133,7 @@ function objectIsEquivalent(objectA, objectB) {
 }
 
 // always exclude jshint or jscs files
-export const excludeRegex = new RegExp('[^\s]+(\\.(jscs|jshint))$', 'i');
+export const excludeRegex = new RegExp('[^\\s]+(\\.(jscs|jshint))$', 'i');
 
 /**
  * Find files that have been seen by some tree in the application
