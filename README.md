@@ -5,13 +5,8 @@
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
-**Ember Data 2.14+** has this [bug](https://github.com/emberjs/data/issues/5055) that affects polymorphic relationships.
- You can still use factory guy with ED 2.14+, but polymorphic relationships sometimes will not work as expected.
- 99% of the time though, you will not even notice. Factory Guy is used in many ED 2.13+ projects with no problems.
-
 **NEW** You can use factory guy in ember-twiddle
-  - Using [make/mockFindRecord](https://ember-twiddle.com/24f526bd329ac563a15c23514a415ebd?openFiles=tests.unit.model.user-test.js%2C) 
-  - Using [build/mockFindRecord](https://ember-twiddle.com/b6f438deb2435a70f7c8a7dfc86b27ba?openFiles=templates.application.hbs%2C)
+  - Using [Scenarios](https://ember-twiddle.com/421f16ecc55b5d35783c243b8d99f2be?openFiles=tests.unit.model.user-test.js%2C) 
      
 **NEW** If using new style of ember-qunit acceptance tests with ```setupApplicationTest``` check out demo here: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
