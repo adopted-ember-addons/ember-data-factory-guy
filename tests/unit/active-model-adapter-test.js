@@ -42,6 +42,25 @@ test("returns camelCase attributes", async function(assert) {
 
 moduleFor('serializer:application', `${serializer} FactoryGuy#build custom`, inlineSetup(serializerType));
 
+test("embeds polymorphic hasMany record when serializer attrs => embedded: always ", function(assert) {
+
+  let buildJson = build('comic-book', 'with_bad_guys');
+  buildJson.unwrap();
+
+  let expectedJson = {
+    comic_book: {
+      id: 1,
+      name: 'Comic Times #1',
+      characters: [
+        { id: 1, type: 'Villain', name: 'BadGuy#1' },
+        { id: 2, type: 'Villain', name: 'BadGuy#2' },
+      ]
+    }
+  };
+
+  assert.deepEqual(buildJson, expectedJson);
+});
+
 test("embeds belongsTo record when serializer attrs => embedded: always ", function(assert) {
 
   let buildJson = build('comic-book', 'marvel');
