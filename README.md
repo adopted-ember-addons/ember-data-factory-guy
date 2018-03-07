@@ -32,7 +32,7 @@ Factories simplify the process of testing, making you more efficient and your te
 - Any custom methods like: serialize / serializeAttribute / keyForAttribute etc... in a serializer will be used automatically
 - If you set up custom methods like: buildURL / urlForFindRecord in an adapter, they will be used automatically
 - You have no config file with tons of spew, because you declare all the mocks and make everything declaratively in the test 
-- You can push models and their complex relationships directory to the store
+- You can push models and their complex relationships directly to the store
 
 ### Questions / Get in Touch
 Visit the EmberJS Community [#e-factory-guy](https://embercommunity.slack.com/messages/e-factory-guy/) Slack channel
@@ -292,7 +292,8 @@ In other words, don't do this:
 - For grouping attributes together
 - Can use one or more traits
  - Each trait overrides any values defined in traits before it in the argument list
-
+- traits can be functions ( this is mega powerful )
+ 
 ```javascript
 
   FactoryGuy.define('user', {
@@ -324,6 +325,51 @@ attributes will override any trait attributes or default attributes
   user.get('style') // => 'Friendly'
 
 ```
+
+
+##### Using traits as functions
+
+```js     
+import FactoryGuy from 'ember-data-factory-guy';
+
+FactoryGuy.define("project", {
+  default: {
+    title: (f) => `Project ${f.id}`
+  },
+  traits: {
+    // this trait is a function
+    // note that the fixure is passed in that will have
+    // default attributes like id at a minimum and in this
+    // case also a title ( `Project 1` ) which is default
+    medium: (f) => {
+      f.title = `Medium Project ${f.id}`
+    },
+    goofy: (f) => {
+      f.title = `Goofy ${f.title}`
+    }
+    withUser: (f) => {
+      // NOTE: you're not using FactoryGuy.belongsTo as you would
+      // normally in a fixture definition
+      f.user = FactoryGuy.make('user')
+    }
+  }
+});
+```
+
+So, when you make / build  a project like:
+
+```js
+let project =  make('project', 'medium');
+project.get('title'); //=> 'Medium Project 1'
+
+let project2 =  build('project', 'goofy');
+project2.get('title'); //=> 'Goofy Project 2'
+
+let project3 =  build('project', 'withUser');
+project3.get('user.name'); //=> 'User 1'
+```
+
+Your trait function assigns the title as you described in the function
 
 
 #### Associations
@@ -541,7 +587,8 @@ You would use this to make models like:
 ```
 
 ### Using Factories
-
+ - [`FactoryGuy.attributesFor`](#factoryguyattributesFor)
+   - returns attributes ( for now no relationship info )
  - [`FactoryGuy.make`](#factoryguymake)
    - push model instances into store
  - [`FactoryGuy.makeNew`](#factoryguymakenew)
@@ -562,6 +609,19 @@ You would use this to make models like:
     - By passing in other objects you've made with `build`/`buildList` or `make`/`makeList`
  - Can setup links for async relationships with `build`/`buildList` or `make`/`makeList`
  
+##### `FactoryGuy.attributesFor`
+  - nice way to get attibutes for a factory without making a model or payload
+  - same arguments as make/build
+  - no id is returned 
+```javascript
+
+  import { attributesFor } from 'ember-data-factory-guy';
+
+  // make a user with the default attributes in user factory
+  attributesFor('user', 'silly', {name: 'Fred'}); // => { name: 'Fred', style: 'silly'}
+  
+```
+
 ##### `FactoryGuy.make`
   - Loads a model instance into the store
   - makes a fragment hash ( if it is a model fragment )
@@ -1988,44 +2048,7 @@ describe('Admin View', function() {
   assert.equal(json.name, 'Daniel-san');
 ```
 
-#### Tip 6: Using traits as functions
-
-```js
-import FactoryGuy from 'ember-data-factory-guy';
-
-FactoryGuy.define("project", {
-  default: {
-    title: (f) => `Project ${f.id}`
-  },
-  traits: {
-    //  this trait is a function
-    // note that the fixure is passed in that will have
-    // default attributes like id at a minimum and in this
-    // case also a title ( `Project 1` ) which is default
-    medium: (f) => {
-      f.title = `Medium Project ${f.id}`
-    },
-    goofy: (f) => {
-      f.title = `Goofy ${f.title}`
-    }
-  }
-});
-```
-
-So, when you make / build  a project like:
-
-```js
-let project =  make('project', 'medium');
-project.get('title'); //=> 'Medium Project 1'
-
-let project2 =  build('project', 'goofy');
-project2.get('title'); //=> 'Goofy Project 2'
-```
-
-Your trait function assigns the title as you described in the function
-
-
-#### Tip 7: Setting up links
+#### Tip 6: Setting up links
 
 -Setup up a links in factory is as easy as:
     
