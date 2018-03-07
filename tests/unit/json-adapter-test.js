@@ -127,6 +127,23 @@ test("embeds belongsTo record passed as prebuilt ( build ) json when serializer 
 
 test("embeds hasMany records when serializer attrs => embedded: always", function(assert) {
 
+  let buildJson = build('comic-book', 'with_included_villains');
+  buildJson.unwrap();
+
+  let expectedJson = {
+    id: 1,
+    name: 'Comic Times #1',
+    includedVillains: [
+      {id: 1, type: 'Villain', name: 'BadGuy#1'},
+      {id: 2, type: 'Villain', name: 'BadGuy#2'}
+    ]
+  };
+
+  assert.deepEqual(buildJson, expectedJson);
+});
+
+test("embeds polymorphic hasMany records when serializer attrs => embedded: always", function(assert) {
+
   let buildJson = build('comic-book', 'with_bad_guys');
   buildJson.unwrap();
 
