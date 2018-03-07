@@ -13,6 +13,9 @@ FactoryGuy.define('comic-book', {
     },
     with_good_guys: {
       characters: FactoryGuy.hasMany('bat_man', 2)
+    },
+    with_included_villains: {
+      includedVillains: FactoryGuy.hasMany('villain', 2)
     }
   }
 });
