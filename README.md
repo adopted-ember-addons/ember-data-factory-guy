@@ -1072,7 +1072,7 @@ FactoryGuy.define('phone-number', {
 
 To set up associations manually ( and not necessarily in a factory ), you should do:
 
-```
+```js
 let phoneNumbers = makeList('phone-numbers', 2);
 let employee = make('employee', { phoneNumbers });
 
