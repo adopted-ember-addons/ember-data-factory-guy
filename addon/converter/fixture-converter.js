@@ -94,7 +94,7 @@ export default class {
   }
 
   transformRelationshipKey(relationship) {
-    let transformFn = this.getTransformKeyFunction(relationship.type, 'Relationship');
+    let transformFn = this.getTransformKeyFunction(relationship.parentType.modelName, 'Relationship');
     return transformFn(relationship.key, relationship.kind);
   }
 
@@ -135,7 +135,7 @@ export default class {
           attrName = attrOptions;
         }
       }
-      return attrName || keyFn.apply(this, [attribute, method]);
+      return attrName || keyFn.apply(serializer, [attribute, method, 'serialize']);
     });
   }
 
@@ -240,7 +240,7 @@ export default class {
   extractHasMany(fixture, relationship, parentModelName, relationships) {
     let hasManyRecords  = fixture[relationship.key],
         relationshipKey = this.transformRelationshipKey(relationship),
-        isEmbedded      = this.isEmbeddedRelationship(parentModelName, relationshipKey),
+        isEmbedded      = this.isEmbeddedRelationship(parentModelName, relationship.key),
         isLinks         = hasManyRecords && hasManyRecords.links;
 
     if (isLinks) {
