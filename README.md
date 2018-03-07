@@ -613,6 +613,8 @@ You would use this to make models like:
   - nice way to get attibutes for a factory without making a model or payload
   - same arguments as make/build
   - no id is returned 
+  - no relationship info returned ( yet )  
+  
 ```javascript
 
   import { attributesFor } from 'ember-data-factory-guy';
