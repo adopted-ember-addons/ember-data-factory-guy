@@ -12,7 +12,6 @@ const {dasherize} = Ember.String;
 class JSONAPIFixtureConverter extends Converter {
 
   constructor(store, {transformKeys = true, serializeMode = false} = {}) {
-    //    console.log({transformKeys});
     super(store, {transformKeys, serializeMode});
     this.typeTransformFn = this.serializeMode ? this.typeTransformViaSerializer : dasherize;
     this.defaultKeyTransformFn = dasherize;
