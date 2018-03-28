@@ -816,7 +816,7 @@ Usage:
 
   let bobs = buildList('bob', 2);  // builds 2 Bob's
 
-  let bobs = buildList('bob', 2, {name: 'Rob'); // builds 2 Bob's with name of 'Rob'
+  let bobs = buildList('bob', 2, {name: 'Rob'}); // builds 2 Bob's with name of 'Rob'
 
   // builds 2 users, one with name 'Bob' , the next with name 'Rob'
   let users = buildList('user', { name:'Bob' }, { name:'Rob' });
