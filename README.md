@@ -288,7 +288,7 @@ In other words, don't do this:
 
 
 ### Traits
-- Used with `FactoryGuy.build`, `FactoryGuy.buildList`, `FactoryGuy.make`, or `FactoryGuy.makeList`
+- Used with `attributesFor , build/buildList , make/makeList`
 - For grouping attributes together
 - Can use one or more traits
  - Each trait overrides any values defined in traits before it in the argument list
@@ -527,7 +527,7 @@ Let's say you have a model and a factory like this:
   FactoryGuy.define('dog', {
     default: {
       dogNumber: (f)=> `Dog${f.id}`,
-      sound: (f) => `${f.volume||defaultVolume} Woof`
+      sound: (f) => `${f.volume || defaultVolume} Woof`
     },
   });
 ```
