@@ -1,5 +1,3 @@
-import { isEmptyObject } from '../utils/helper-functions';
-
 /**
  * This request wrapper controls what will be returned by one url / http verb
  * Normally when you set up pretender, you give it one function to handle one url / verb.
@@ -51,16 +49,11 @@ export default class RequestWrapper {
   }
 
   /**
-   * Sort the handlers by query's first if the request has query params
+   * Sort the handlers by those with query params first
    *
-   * @param request
    */
-  getHandlers(request) {
-    if (request && !isEmptyObject(request.queryParams)) {
-      // reverse sort so query comes before findAll
-      return this.handlers.sort(RequestWrapper.reverseSortByRequestType);
-    }
-    return this.handlers;
+  getHandlers() {
+    return this.handlers.sort((a, b) => b.hasQueryParams() - a.hasQueryParams());
   }
 
   addHandler(handler) {
@@ -78,8 +71,8 @@ export default class RequestWrapper {
    * Flip though the list of handlers to find one that matches and return
    * the response if one is found.
    *
-   * Special handling for mock query types  because they should take precedance over
-   * a mock find type since they share the same type / url.
+   * Special handling for mock that use query params because they should take precedance over
+   * a non query param mock find type since they share the same type / url.
    *
    * So, let's say you have mocked like this:
    *  ```
@@ -103,12 +96,5 @@ export default class RequestWrapper {
       let {status, headers, responseText} = handler.getResponse();
       return [status, headers, responseText]
     }
-  }
-
-  static reverseSortByRequestType(a, b) {
-    if (b.requestType < a.requestType) {
-      return -1;
-    }
-    return (b.requestType > a.requestType) ? 1 : 0;
   }
 }

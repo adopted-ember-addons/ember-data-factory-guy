@@ -94,7 +94,7 @@ test("RequestManager creates wrapper with two mockFindAll mocks", function(asser
   assert.deepEqual(ids, [{type: 'GET', url: '/users', num: 0}, {type: 'GET', url: '/users', num: 1}]);
 });
 
-test("mockFindAll (when declared FIRST ) won't be used if mockQuery is present with query ", async function(assert) {
+test("mockFindAll (when declared FIRST) won't be used if mockQuery is present with query ", async function(assert) {
   let mockF = mockFindAll('user', 2);
   let mockQ = mockQuery('user', {name: 'Sleepy'});
 
@@ -106,6 +106,21 @@ test("mockFindAll (when declared FIRST ) won't be used if mockQuery is present w
   await FactoryGuy.store.query('user', {name: 'Sleepy'});
   assert.equal(mockF.timesCalled, 1, 'mockFindAll not used since query params exist');
   assert.equal(mockQ.timesCalled, 1, 'now mockQuery is used');
+});
+
+test("mockFindAll with query params", async function(assert) {
+  let mockF = mockFindAll('user', 1);
+  let mockFQ = mockFindAll('user', 2).withParams({food: 'shrimp'});
+  let mockQ = mockQuery('user', {name: 'Sleepy'});
+
+  await FactoryGuy.store.query('user', {});
+  assert.equal(mockF.timesCalled, 1, 'mockFindAll with no query params used');
+
+  await FactoryGuy.store.query('user', {food: 'shrimp'});
+  assert.equal(mockFQ.timesCalled, 1, 'mockFindAll with query params used');
+
+  await FactoryGuy.store.query('user', {name: 'Sleepy'});
+  assert.equal(mockQ.timesCalled, 1, 'mockQuery is used');
 });
 
 moduleFor('serializer:application', 'MockFindAll #getUrl', inlineSetup(serializerType));
