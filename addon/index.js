@@ -10,7 +10,8 @@ import FactoryGuy, {
 import {
   mockSetup, mockTeardown,
   mockFind, mockFindRecord, mockFindAll, mockReload, mockQuery,
-  mockQueryRecord, mockCreate, mockUpdate, mockDelete, mock, mockLinks
+  mockQueryRecord, mockCreate, mockUpdate, mockDelete, mock, mockLinks,
+  getPretender, setPretender
 } from './mocks/exposed-request-functions';
 
 import manualSetup from './utils/manual-setup';
@@ -30,7 +31,8 @@ export { make, makeNew, makeList, build, buildList, attributesFor, manualSetup, 
 export {
   mockSetup, mockTeardown,
   mockFind, mockFindRecord, mockFindAll, mockReload, mockQuery,
-  mockQueryRecord, mockCreate, mockUpdate, mockDelete, mock, mockLinks
+  mockQueryRecord, mockCreate, mockUpdate, mockDelete, mock, mockLinks,
+  getPretender, setPretender
 };
 
 export function setupFactoryGuy(hooks) {

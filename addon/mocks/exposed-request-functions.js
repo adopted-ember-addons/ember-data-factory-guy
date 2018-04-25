@@ -12,6 +12,7 @@ import MockFindAllRequest from './mock-find-all-request';
 import MockDeleteRequest from './mock-delete-request';
 import MockAnyRequest from './mock-any-request';
 import MockLinksRequest from './mock-links-request';
+import RequestManager from './request-manager';
 
 export function mockSetup({responseTime, logLevel = 0} = {}) {
   Ember.deprecate(`[ember-data-factory-guy] mockSetup is no longer needed. If you want to set logLevel or responseTime, use FactoryGuy.settings instead. If you don't need to set anything, it is safe to remove mockSetup`,
@@ -383,4 +384,20 @@ export function mockDelete(...args) {
   Ember.assert(`[ember-data-factory-guy] mockDelete requires at least a model type name`, modelName);
 
   return new MockDeleteRequest(modelName, id);
+}
+
+/**
+ Returns the Pretender instance used for the mocks.
+*/
+export function getPretender() {
+  return RequestManager.getPretender();
+}
+
+/**
+ Sets the Pretender instance created by some other library to be used by FactoryGuy mocks.
+
+ @param {Pretender} instance the existing Pretender instance
+*/
+export function setPretender(instance) {
+  return RequestManager.setPretender(instance);
 }
