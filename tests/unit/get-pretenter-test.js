@@ -1,0 +1,22 @@
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
+import { mock, manualSetup, getPretender } from 'ember-data-factory-guy';
+import Pretender from 'pretender'
+
+module('Unit | getPretender', function(hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function() {
+    manualSetup(this);
+  });
+
+  test('getPretender basic usage', function(assert) {
+    assert.expect(3);
+    let pretender = getPretender();
+
+    assert.ok(pretender instanceof Pretender, "getPretender returns an instance of Pretender");
+    assert.equal(pretender.handlers.length, 0, "the handlers array is initially empty");
+    mock({url: "/api/whatever"});
+    assert.equal(pretender.handlers.length, 1, "the created mock is added to the handlers");
+  });
+});

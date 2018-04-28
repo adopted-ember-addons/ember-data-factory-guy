@@ -392,12 +392,3 @@ export function mockDelete(...args) {
 export function getPretender() {
   return RequestManager.getPretender();
 }
-
-/**
- Sets the Pretender instance created by some other library to be used by FactoryGuy mocks.
-
- @param {Pretender} instance the existing Pretender instance
-*/
-export function setPretender(instance) {
-  return RequestManager.setPretender(instance);
-}

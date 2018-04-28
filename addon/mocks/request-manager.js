@@ -124,10 +124,4 @@ export default class {
     }
     return pretender;
   }
-
-  static setPretender(instance) {
-    Ember.assert("[ember-data-factory-guy] Pretender is already instantiated. Call setPretender before adding mocks.", !pretender);
-    Ember.assert("[ember-data-factory-guy] You must pass an instance of Pretender as an argument to setPretender.", instance instanceof Pretender);
-    pretender = instance;
-  }
 }

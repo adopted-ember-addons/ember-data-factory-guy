@@ -11,7 +11,7 @@ import {
   mockSetup, mockTeardown,
   mockFind, mockFindRecord, mockFindAll, mockReload, mockQuery,
   mockQueryRecord, mockCreate, mockUpdate, mockDelete, mock, mockLinks,
-  getPretender, setPretender
+  getPretender
 } from './mocks/exposed-request-functions';
 
 import manualSetup from './utils/manual-setup';
@@ -32,7 +32,7 @@ export {
   mockSetup, mockTeardown,
   mockFind, mockFindRecord, mockFindAll, mockReload, mockQuery,
   mockQueryRecord, mockCreate, mockUpdate, mockDelete, mock, mockLinks,
-  getPretender, setPretender
+  getPretender
 };
 
 export function setupFactoryGuy(hooks) {
