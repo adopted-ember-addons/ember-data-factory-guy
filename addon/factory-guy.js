@@ -5,6 +5,7 @@ import FixtureBuilderFactory from './builder/fixture-builder-factory';
 import RequestManager from './mocks/request-manager';
 import require from 'require';
 import { assign } from '@ember/polyfills';
+import { join } from '@ember/runloop';
 
 let modelDefinitions = {};
 
@@ -380,7 +381,7 @@ class FactoryGuy {
     }
 
     let data  = this.fixtureBuilder(modelName).convertForMake(modelName, fixture),
-        model = Ember.run(() => this.store.push(data));
+        model = join(() => this.store.push(data));
 
     if (definition.hasAfterMake()) {
       definition.applyAfterMake(model, args.opts);
@@ -405,7 +406,7 @@ class FactoryGuy {
 
     delete fixture.id;
 
-    return Ember.run(() => this.store.createRecord(modelName, fixture));
+    return join(() => this.store.createRecord(modelName, fixture));
   }
 
   /**
@@ -452,7 +453,7 @@ class FactoryGuy {
 
   ensureNameInArguments(method, args) {
     Ember.assert(
-      `[ember-data-factory-guy] ${method} needs at least a name 
+      `[ember-data-factory-guy] ${method} needs at least a name
       ( of model or named factory definition )`,
       args.length > 0
     );
