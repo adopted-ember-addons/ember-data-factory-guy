@@ -8,13 +8,13 @@ const assign = Ember.assign || Ember.merge;
 
 class MockGetRequest extends MockStoreRequest {
 
-  constructor(modelName, requestType, defaultResponse) {
+  constructor(modelName, requestType, {defaultResponse, queryParams}={}) {
     super(modelName, requestType);
+    this.queryParams = queryParams;
     if (defaultResponse !== undefined) {
       this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, defaultResponse));
     }
     this.validReturnsKeys = [];
-    this.queryParams = {};
   }
 
   /**

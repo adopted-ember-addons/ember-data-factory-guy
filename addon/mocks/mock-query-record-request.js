@@ -9,8 +9,7 @@ export default class MockQueryRecordRequest extends MockGetRequest {
    * @param queryParams
    */
   constructor(modelName, queryParams = {}) {
-    super(modelName, 'queryRecord', null);
+    super(modelName, 'queryRecord', {defaultResponse: null, queryParams});
     this.setValidReturnsKeys(['model', 'json', 'id', 'headers']);
-    this.queryParams = queryParams;
   }
 }

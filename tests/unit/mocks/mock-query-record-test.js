@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import { moduleFor, test } from 'ember-qunit';
-import FactoryGuy, { build, makeList, mockQueryRecord } from 'ember-data-factory-guy';
+import FactoryGuy, { build, make, makeList, mockQueryRecord } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
@@ -94,10 +94,10 @@ test("using fails makes the request fail", function(assert) {
 
     mockQueryRecord('user').fails();
     FactoryGuy.store.queryRecord('user', {})
-      .catch(() => {
-        assert.ok(true);
-        done();
-      });
+              .catch(() => {
+                assert.ok(true);
+                done();
+              });
 
   });
 });
@@ -127,16 +127,20 @@ test("using returns 'model' with array of DS.Models throws error", function(asse
   }, "can't pass array of models to mock queryRecord");
 });
 
-test("#getUrl uses urlForQueryRecord if it is set on the adapter", function(assert) {
-  let queryParams = {zip: 'it'};
-  let mock1 = mockQueryRecord('user', queryParams);
+test("#getUrl uses urlForQueryRecord if it is set on the adapter", async function(assert) {
+  assert.expect(3);
 
-  assert.equal(mock1.getUrl(), '/users');
+  let queryParams = {zip: 'it'},
+      adapter     = FactoryGuy.store.adapterFor('user'),
+      user        = make('user');
 
-  let adapter = FactoryGuy.store.adapterFor('user');
-  sinon.stub(adapter, 'urlForQueryRecord').withArgs(queryParams, 'user').returns('/dudes');
+  adapter.urlForQueryRecord = (query) => {
+    assert.ok(query === queryParams, 'query params are passed in');
+    return '/users';
+  };
 
-  assert.equal(mock1.getUrl(), '/dudes');
-  adapter.urlForQueryRecord.restore();
+  mockQueryRecord('user', queryParams).returns({model: user});
+
+  await FactoryGuy.store.queryRecord('user', queryParams);
 });
 
