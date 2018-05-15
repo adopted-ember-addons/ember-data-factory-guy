@@ -1,15 +1,12 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { manualSetup, make } from 'ember-data-factory-guy';
+import { setupFactoryGuy, make } from 'ember-data-factory-guy';
 
 const modelType = 'profile';
 
 module(`Unit | Model | ${modelType}`, function(hooks) {
   setupTest(hooks);
-
-  hooks.beforeEach(function() {
-    manualSetup(this);
-  });
+  setupFactoryGuy(hooks);
 
   test('using only make for profile with company association', function(assert) {
     let profile = make('profile', 'with_company');

@@ -1,10 +1,10 @@
 import Ember from 'ember';
-import FactoryGuy, {manualSetup} from 'ember-data-factory-guy';
+import FactoryGuy, { manualSetup } from 'ember-data-factory-guy';
 import DS from 'ember-data';
 import DRFAdapter from 'ember-django-adapter/adapters/drf';
 import DRFSerializer from 'ember-django-adapter/serializers/drf';
 import ActiveModelAdapter from 'active-model-adapter';
-import {ActiveModelSerializer} from 'active-model-adapter';
+import { ActiveModelSerializer } from 'active-model-adapter';
 
 //// custom adapter options for the various models
 //// which are applied to the currently testing model's adapter ( JSONAPI, REST, ActiveModel, etc )
@@ -30,7 +30,7 @@ import {ActiveModelSerializer} from 'active-model-adapter';
 const serializerOptions = {
   'entry-type': {
     attrs: {
-      entries: { serialize: true }
+      entries: {serialize: true}
     },
     // don't pluralize the payload key.
     payloadKeyFromModelName(modelName) {
@@ -49,15 +49,15 @@ const serializerOptions = {
   cat: {
     primaryKey: 'catId',
     attrs: {
-      name: { key: 'catName' },
+      name: {key: 'catName'},
       friend: 'catFriend'
     }
   },
   'comic-book': [
     DS.EmbeddedRecordsMixin, {
       attrs: {
-        includedVillains: { embedded: 'always' },
-        company: { embedded: 'always' }, characters: { embedded: 'always' }
+        includedVillains: {embedded: 'always'},
+        company: {embedded: 'always'}, characters: {embedded: 'always'}
       }
     }
   ]
@@ -94,11 +94,11 @@ function containerSetup(container, serializerType) {
 
   // brute force setting the adapter/serializer on the store.
   if (serializerType) {
-    container.registry.register('adapter:-drf', DRFAdapter, { singleton: false });
-    container.registry.register('serializer:-drf', DRFSerializer, { singleton: false });
+    container.registry.register('adapter:-drf', DRFAdapter, {singleton: false});
+    container.registry.register('serializer:-drf', DRFSerializer, {singleton: false});
 
-    container.registry.register('adapter:-active-model', ActiveModelAdapter, { singleton: false });
-    container.registry.register('serializer:-active-model', ActiveModelSerializer, { singleton: false });
+    container.registry.register('adapter:-active-model', ActiveModelAdapter, {singleton: false});
+    container.registry.register('serializer:-active-model', ActiveModelSerializer, {singleton: false});
 
     let store = container.lookup('service:store');
 
@@ -140,12 +140,20 @@ function containerSetup(container, serializerType) {
   }
 }
 
+export function inlineSetup2(hooks, serializerType) {
+  hooks.beforeEach(function() {
+//    manualSetup(this);
+    containerSetup(this.owner.__container__, serializerType);
+    FactoryGuy.settings({responseTime: 0, logLevel: 0});
+  });
+}
+
 function inlineSetup(serializerType) {
   return {
     integration: true,
     beforeEach: function() {
       containerSetup(this.container, serializerType);
-      FactoryGuy.settings({ responseTime: 0, logLevel: 0 });
+      FactoryGuy.settings({responseTime: 0, logLevel: 0});
     }
   };
 }
@@ -154,4 +162,4 @@ function title(adapter, testName) {
   return [adapter, testName].join(' | ');
 }
 
-export {title, inlineSetup, containerSetup};
+export { title, inlineSetup, containerSetup };

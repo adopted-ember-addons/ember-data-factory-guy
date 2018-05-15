@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
-  mockFindRecord, manualSetup, build, make, buildList
+  mockFindRecord, setupFactoryGuy, build, make, buildList
 }
   from 'ember-data-factory-guy';
 import { run } from '@ember/runloop';
@@ -10,10 +10,7 @@ const modelType = 'employee';
 
 module(`Unit | Model | ${modelType}`, function(hooks) {
   setupTest(hooks);
-
-  hooks.beforeEach(function() {
-    manualSetup(this);
-  });
+  setupFactoryGuy(hooks);
 
   // NAME FRAGMENT
   test('default employee', function(assert) {

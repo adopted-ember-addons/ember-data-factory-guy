@@ -1,23 +1,26 @@
-import {moduleFor, test} from 'ember-qunit';
-import {build} from 'ember-data-factory-guy';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
+import { build } from 'ember-data-factory-guy';
+import { inlineSetup2 } from '../../helpers/utility-methods';
 
-import {inlineSetup} from '../../helpers/utility-methods';
+module('FixtureConverter', function(hooks) {
+  setupTest(hooks);
+  inlineSetup2(hooks, '-rest');
 
-moduleFor('serializer:application', 'FixtureConverter', inlineSetup('-rest'));
+  test("#getTransformKeyFunction with custom serializer keyForAttribute function", function(assert) {
+    let buildJson = build('manager');
+    buildJson.unwrap();
 
-test("#getTransformKeyFunction with custom serializer keyForAttribute function", function(assert) {
-  let buildJson = build('manager');
-  buildJson.unwrap();
-
-  let expectedJson = {
-    manager: {
-      id: 1,
-      name: {
-        first_name: 'Tyrion',
-        last_name: 'Lannister'
+    let expectedJson = {
+      manager: {
+        id: 1,
+        name: {
+          first_name: 'Tyrion',
+          last_name: 'Lannister'
+        }
       }
-    }
-  };
+    };
 
-  assert.deepEqual(buildJson, expectedJson);
+    assert.deepEqual(buildJson, expectedJson);
+  });
 });

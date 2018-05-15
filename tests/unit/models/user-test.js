@@ -1,16 +1,13 @@
 import Ember from 'ember';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import FactoryGuy, { make, manualSetup, mockFindRecord } from 'ember-data-factory-guy';
+import FactoryGuy, { make, setupFactoryGuy, mockFindRecord } from 'ember-data-factory-guy';
 
 const modelType = 'user';
 
 module(`Unit | Model | ${modelType}`, function(hooks) {
   setupTest(hooks);
-
-  hooks.beforeEach(function() {
-    manualSetup(this);
-  });
+  setupFactoryGuy(hooks);
 
   test('has funny name', function(assert) {
     let user = make('user', {name: 'Dude'});

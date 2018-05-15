@@ -1,101 +1,104 @@
 import Ember from 'ember';
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 import FactoryGuy, { make, mockUpdate } from 'ember-data-factory-guy';
-import { inlineSetup } from '../../helpers/utility-methods';
+import { inlineSetup2 } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
 const serializerType = '-json-api';
 
+module('MockUpdate', function(hooks) {
+  setupTest(hooks);
+  inlineSetup2(hooks, serializerType);
 
-moduleFor('serializer:application', 'MockUpdate', inlineSetup(serializerType));
+  test("with incorrect parameters", function(assert) {
 
-test("with incorrect parameters", function(assert) {
+    assert.throws(function() {
+      mockUpdate();
+    }, "missing everything");
 
-  assert.throws(function() {
-    mockUpdate();
-  }, "missing everything");
+  });
 
-});
+  test("using returns when only setting modelName", function(assert) {
+    assert.throws(function() {
+      mockUpdate('profile').returns({});
+    }, "can't user returns when only specifying modelName");
 
-test("using returns when only setting modelName", function(assert) {
-  assert.throws(function() {
-    mockUpdate('profile').returns({});
-  }, "can't user returns when only specifying modelName");
+  });
 
-});
+  test("mockId", function(assert) {
+    let mock = mockUpdate('user', 1);
+    assert.deepEqual(mock.mockId, {type: 'PATCH', url: '/users/1', num: 0});
+  });
 
-test("mockId", function(assert) {
-  let mock = mockUpdate('user', 1);
-  assert.deepEqual(mock.mockId, {type: 'PATCH', url: '/users/1', num: 0});
-});
+  test("logging response", async function(assert) {
+    FactoryGuy.settings({logLevel: 1});
 
-test("logging response", async function(assert) {
-  FactoryGuy.settings({logLevel: 1});
+    const consoleStub = sinon.spy(console, 'log'),
+          profile     = make('profile'),
+          mock        = mockUpdate(profile);
 
-  const consoleStub = sinon.spy(console, 'log'),
-        profile     = make('profile'),
-        mock        = mockUpdate(profile);
+    await Ember.run(async () => profile.save());
 
-  await Ember.run(async () => profile.save());
+    let response     = JSON.parse(mock.getResponse().responseText),
+        expectedArgs = [
+          "[factory-guy]",
+          "MockUpdate",
+          "PATCH",
+          "[200]",
+          `/profiles/1`,
+          response
+        ];
 
-  let response     = JSON.parse(mock.getResponse().responseText),
-      expectedArgs = [
-        "[factory-guy]",
-        "MockUpdate",
-        "PATCH",
-        "[200]",
-        `/profiles/1`,
-        response
-      ];
+    assert.deepEqual(consoleStub.getCall(0).args, expectedArgs);
 
-  assert.deepEqual(consoleStub.getCall(0).args, expectedArgs);
+    console.log.restore();
+  });
 
-  console.log.restore();
-});
+  test("#makeFakeSnapshot", function(assert) {
+    let user = make('user');
 
-test("#makeFakeSnapshot", function(assert) {
-  let user = make('user');
+    let tests = [
+      [[user], user, 'has record when model in arguments'],
+      [['user', user.id], user, 'has record when modelName, id in arguments'],
+      [['user'], undefined, 'does not have record when only modelName in arguments']
+    ];
 
-  let tests = [
-    [[user], user, 'has record when model in arguments'],
-    [['user', user.id], user, 'has record when modelName, id in arguments'],
-    [['user'], undefined, 'does not have record when only modelName in arguments']
-  ];
+    for (let test of tests) {
+      let [args, expectedRecord, message] = test;
+      let mock     = mockUpdate(...args),
+          snapshot = mock.makeFakeSnapshot(),
+          {record} = snapshot;
+      assert.deepEqual(record, expectedRecord, message);
+    }
+  });
 
-  for (let test of tests) {
-    let [args, expectedRecord, message] = test;
-    let mock     = mockUpdate(...args),
-        snapshot = mock.makeFakeSnapshot(),
-        {record} = snapshot;
-    assert.deepEqual(record, expectedRecord, message);
-  }
-});
+  test("#getUrl", function(assert) {
+    let user = make('user');
 
-test("#getUrl", function(assert) {
-  let user = make('user');
+    let tests = [
+      [[user], `/users/${user.id}`, "url when using model"],
+      [['user', user.id], `/users/${user.id}`, "url when using modelName, id"],
+      [['user'], `/users/:id`, "url when not using id"]
+    ];
 
-  let tests = [
-    [[user], `/users/${user.id}`, "url when using model"],
-    [['user', user.id], `/users/${user.id}`, "url when using modelName, id"],
-    [['user'], `/users/:id`, "url when not using id"]
-  ];
+    for (let test of tests) {
+      let [args, expectedUrl, message] = test;
+      let mock = mockUpdate(...args),
+          url  = mock.getUrl();
 
-  for (let test of tests) {
-    let [args, expectedUrl, message] = test;
-    let mock = mockUpdate(...args),
-        url  = mock.getUrl();
+      assert.equal(url, expectedUrl, message);
+    }
+  });
 
-    assert.equal(url, expectedUrl, message);
-  }
-});
+  test("#getUrl uses urlForUpdateRecord if it is set on the adapter", function(assert) {
+    let mock1 = mockUpdate('user', '1');
+    assert.equal(mock1.getUrl(), '/users/1');
 
-test("#getUrl uses urlForUpdateRecord if it is set on the adapter", function(assert) {
-  let mock1 = mockUpdate('user', '1');
-  assert.equal(mock1.getUrl(), '/users/1');
+    let adapter = FactoryGuy.store.adapterFor('user');
+    sinon.stub(adapter, 'urlForUpdateRecord').returns('/dudes/1');
 
-  let adapter = FactoryGuy.store.adapterFor('user');
-  sinon.stub(adapter, 'urlForUpdateRecord').returns('/dudes/1');
-
-  assert.equal(mock1.getUrl(), '/dudes/1');
-  adapter.urlForUpdateRecord.restore();
+    assert.equal(mock1.getUrl(), '/dudes/1');
+    adapter.urlForUpdateRecord.restore();
+  });
 });
