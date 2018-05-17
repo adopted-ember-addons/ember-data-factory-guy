@@ -2564,9 +2564,9 @@ ember-data@^2.17.0:
     semver "^5.1.0"
     silent-error "^1.0.0"
 
-ember-data@~3.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/ember-data/-/ember-data-3.1.1.tgz#8c17c97a4932b0a0a405cc3e38c43140880366d2"
+ember-data@~3.2.0-beta.3:
+  version "3.2.0-beta.3"
+  resolved "https://registry.yarnpkg.com/ember-data/-/ember-data-3.2.0-beta.3.tgz#4e4345566e465fdb97b2b0aa9536adaab96d8677"
   dependencies:
     "@ember/ordered-set" "^1.0.0"
     amd-name-resolver "0.0.7"
