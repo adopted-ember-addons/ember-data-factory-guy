@@ -1,13 +1,13 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { buildList, make, makeList, mockLinks } from 'ember-data-factory-guy';
-import { inlineSetup2 } from '../../helpers/utility-methods';
+import { inlineSetup } from '../../helpers/utility-methods';
 
 const serializerType = '-json-api';
 
 module('MockLinks', function(hooks) {
   setupTest(hooks);
-  inlineSetup2(hooks, serializerType);
+  inlineSetup(hooks, serializerType);
 
   test("with no parameters", function(assert) {
 

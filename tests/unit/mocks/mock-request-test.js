@@ -4,14 +4,14 @@ import Ember from 'ember';
 import FactoryGuy, {
   make, build, mockFindAll, mockQueryRecord, mockUpdate
 } from 'ember-data-factory-guy';
-import { inlineSetup2 } from '../../helpers/utility-methods';
+import { inlineSetup } from '../../helpers/utility-methods';
 import MockRequest from 'ember-data-factory-guy/mocks/mock-store-request';
 
 const serializerType = '-json-api';
 
 module('MockRequest', function(hooks) {
   setupTest(hooks);
-  inlineSetup2(hooks, serializerType);
+  inlineSetup(hooks, serializerType);
 
   module('#fails', function() {
     test("status must be 3XX, 4XX or 5XX", function(assert) {

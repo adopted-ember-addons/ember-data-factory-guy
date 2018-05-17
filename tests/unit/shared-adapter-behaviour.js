@@ -1,16 +1,25 @@
 import Ember from 'ember';
 import { run } from '@ember/runloop';
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
 import { isEquivalent } from 'ember-data-factory-guy/utils/helper-functions';
 
 import FactoryGuy, {
-  make, makeNew, makeList, build, buildList,
-  mockFindRecord, mockFindAll, mockReload, mockQuery,
-  mockQueryRecord, mockCreate, mockUpdate, mockDelete
+  build,
+  buildList,
+  make,
+  makeList,
+  makeNew,
+  mockCreate,
+  mockDelete,
+  mockFindAll,
+  mockFindRecord,
+  mockQuery,
+  mockQueryRecord,
+  mockReload,
+  mockUpdate
 } from 'ember-data-factory-guy';
 
 import $ from 'jquery';
-import { inlineSetup } from '../helpers/utility-methods';
 
 import Profile from 'dummy/models/profile';
 import SuperHero from 'dummy/models/super-hero';
@@ -64,7 +73,7 @@ SharedBehavior.mockFindRecordCommonTests = function() {
   test("returns id succeeds and returns model when id for model type found in store", async function(assert) {
 
     let existingProfile = make('profile'),
-        {store}   = FactoryGuy;
+        {store}         = FactoryGuy;
 
     mockFindRecord('profile').returns({id: existingProfile.get('id')});
 
@@ -260,118 +269,120 @@ SharedBehavior.mockFindRecordCommonTests = function() {
 
 };
 
-SharedBehavior.mockFindRecordSideloadingTests = function(serializer, serializerType) {
+SharedBehavior.mockFindRecordSideloadingTests = function() {
 
-  moduleFor('serializer:application', `${serializer} #mockFindRecord | sideloading`, inlineSetup(serializerType));
+  module('#mockFindRecord | sideloading', function() {
 
-  test("belongsTo association", function(assert) {
-    run(() => {
-      let done = assert.async();
-      let profile = mockFindRecord('profile', 'with_company', 'with_bat_man');
-      let profileId = profile.get('id');
+    test("belongsTo association", function(assert) {
+      run(() => {
+        let done = assert.async();
+        let profile = mockFindRecord('profile', 'with_company', 'with_bat_man');
+        let profileId = profile.get('id');
 
-      FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
-        assert.ok(profile.get('company.name') === 'Silly corp');
-        assert.ok(profile.get('superHero.name') === 'BatMan');
-        done();
+        FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
+          assert.ok(profile.get('company.name') === 'Silly corp');
+          assert.ok(profile.get('superHero.name') === 'BatMan');
+          done();
+        });
       });
     });
-  });
 
 
-  test("hasMany association", function(assert) {
-    run(() => {
-      let done = assert.async();
-      let user = mockFindRecord('user', 'with_hats');
-      let userId = user.get('id');
+    test("hasMany association", function(assert) {
+      run(() => {
+        let done = assert.async();
+        let user = mockFindRecord('user', 'with_hats');
+        let userId = user.get('id');
 
-      FactoryGuy.store.findRecord('user', userId).then(function(user) {
-        assert.ok(user.get('hats.length') === 2);
-        assert.ok(user.get('hats.firstObject.type') === 'BigHat');
-        done();
+        FactoryGuy.store.findRecord('user', userId).then(function(user) {
+          assert.ok(user.get('hats.length') === 2);
+          assert.ok(user.get('hats.firstObject.type') === 'BigHat');
+          done();
+        });
       });
     });
-  });
 
-  test("using returns with json", function(assert) {
-    run(() => {
-      let done = assert.async();
+    test("using returns with json", function(assert) {
+      run(() => {
+        let done = assert.async();
 
-      let json = build('profile', 'with_company', 'with_bat_man');
+        let json = build('profile', 'with_company', 'with_bat_man');
 
-      mockFindRecord('profile').returns({json});
-      let profileId = json.get('id');
+        mockFindRecord('profile').returns({json});
+        let profileId = json.get('id');
 
-      FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
-        assert.ok(profile.get('company.name') === 'Silly corp');
-        assert.ok(profile.get('superHero.name') === 'BatMan');
-        done();
+        FactoryGuy.store.findRecord('profile', profileId).then(function(profile) {
+          assert.ok(profile.get('company.name') === 'Silly corp');
+          assert.ok(profile.get('superHero.name') === 'BatMan');
+          done();
+        });
       });
     });
-  });
 
-  test("using returns with json with composed hasMany association", function(assert) {
-    run(() => {
-      let done = assert.async();
+    test("using returns with json with composed hasMany association", function(assert) {
+      run(() => {
+        let done = assert.async();
 
-      let hat1 = build('big-hat');
-      let hat2 = build('big-hat');
-      let json = build('user', {hats: [hat1, hat2]});
+        let hat1 = build('big-hat');
+        let hat2 = build('big-hat');
+        let json = build('user', {hats: [hat1, hat2]});
 
-      mockFindRecord('user').returns({json});
+        mockFindRecord('user').returns({json});
 
-      FactoryGuy.store.findRecord('user', json.get('id')).then(function(user) {
-        assert.ok(user.get('hats.firstObject.id') === hat1.get('id') + '');
-        assert.ok(user.get('hats.lastObject.id') === hat2.get('id') + '');
-        done();
+        FactoryGuy.store.findRecord('user', json.get('id')).then(function(user) {
+          assert.ok(user.get('hats.firstObject.id') === hat1.get('id') + '');
+          assert.ok(user.get('hats.lastObject.id') === hat2.get('id') + '');
+          done();
+        });
       });
     });
-  });
 
-  test("using returns with model", function(assert) {
-    run(() => {
-      let done = assert.async();
+    test("using returns with model", function(assert) {
+      run(() => {
+        let done = assert.async();
 
-      let model = make('profile', 'with_company', 'with_bat_man');
-      let profile = mockFindRecord('profile').returns({model});
-      let profileId = profile.get('id');
+        let model = make('profile', 'with_company', 'with_bat_man');
+        let profile = mockFindRecord('profile').returns({model});
+        let profileId = profile.get('id');
 
-      FactoryGuy.store.findRecord('profile', profileId, {reload: true}).then(function(profile) {
-        assert.ok(profile.get('company.name') === 'Silly corp');
-        assert.ok(profile.get('superHero.name') === 'BatMan');
-        assert.equal(FactoryGuy.store.peekAll('profile').get('content').length, 1, "does not make another profile");
-        done();
+        FactoryGuy.store.findRecord('profile', profileId, {reload: true}).then(function(profile) {
+          assert.ok(profile.get('company.name') === 'Silly corp');
+          assert.ok(profile.get('superHero.name') === 'BatMan');
+          assert.equal(FactoryGuy.store.peekAll('profile').get('content').length, 1, "does not make another profile");
+          done();
+        });
       });
     });
   });
 };
 
-SharedBehavior.mockFindRecordEmbeddedTests = function(serializer, serializerType) {
+SharedBehavior.mockFindRecordEmbeddedTests = function() {
 
-  moduleFor('serializer:application', `${serializer} #mockFindRecord | embedded`, inlineSetup(serializerType));
+  module('#mockFindRecord | embedded', function() {
 
-  test("belongsTo", function(assert) {
-    run(() => {
-      let done = assert.async();
-      let mock = mockFindRecord('comic-book', 'marvel');
+    test("belongsTo", function(assert) {
+      run(() => {
+        let done = assert.async();
+        let mock = mockFindRecord('comic-book', 'marvel');
 
-      FactoryGuy.store.findRecord('comic-book', mock.get('id')).then(function(comic) {
-        assert.ok(comic.get('name') === 'Comic Times #1');
-        assert.ok(comic.get('company.name') === 'Marvel Comics');
-        done();
+        FactoryGuy.store.findRecord('comic-book', mock.get('id')).then(function(comic) {
+          assert.ok(comic.get('name') === 'Comic Times #1');
+          assert.ok(comic.get('company.name') === 'Marvel Comics');
+          done();
+        });
       });
     });
-  });
 
-  test("hasMany", function(assert) {
-    run(() => {
-      let done = assert.async();
-      let mock = mockFindRecord('comic-book', 'with_bad_guys');
+    test("hasMany", function(assert) {
+      run(() => {
+        let done = assert.async();
+        let mock = mockFindRecord('comic-book', 'with_bad_guys');
 
-      FactoryGuy.store.findRecord('comic-book', mock.get('id')).then(function(comic) {
-        assert.ok(comic.get('name') === 'Comic Times #1');
-        assert.ok(comic.get('characters').mapBy('name') + '' === ['BadGuy#1', 'BadGuy#2'] + '');
-        done();
+        FactoryGuy.store.findRecord('comic-book', mock.get('id')).then(function(comic) {
+          assert.ok(comic.get('name') === 'Comic Times #1');
+          assert.ok(comic.get('characters').mapBy('name') + '' === ['BadGuy#1', 'BadGuy#2'] + '');
+          done();
+        });
       });
     });
   });
@@ -523,132 +534,132 @@ SharedBehavior.mockFindAllCommonTests = function() {
 };
 
 //////// mockFindAll with sideloading /////////
-SharedBehavior.mockFindAllSideloadingTests = function(serializer, serializerType) {
+SharedBehavior.mockFindAllSideloadingTests = function() {
 
-  moduleFor('serializer:application', `${serializer} #mockFindAll | sideloading`, inlineSetup(serializerType));
+  module('#mockFindAll | sideloading', function() {
 
-  test("with belongsTo association", function(assert) {
-    run(() => {
+    test("with belongsTo association", function(assert) {
+      run(() => {
+        let done = assert.async();
+        mockFindAll('profile', 2, 'with_company', 'with_bat_man');
+
+        FactoryGuy.store.findAll('profile').then(function(profiles) {
+          assert.ok(profiles.get('length') === 2);
+          assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
+          assert.ok(profiles.get('lastObject.superHero.name') === 'BatMan');
+          done();
+        });
+      });
+    });
+
+    test("with hasMany association", function(assert) {
+      run(() => {
+        let done = assert.async();
+
+        mockFindAll('user', 2, 'with_hats');
+
+        FactoryGuy.store.findAll('user').then(function(users) {
+          assert.ok(users.get('length') === 2);
+          assert.ok(A(users.get('lastObject.hats')).mapBy('type') + '' === ['BigHat', 'BigHat'] + '');
+          assert.ok(A(users.get('lastObject.hats')).mapBy('id') + '' === [3, 4] + '');
+          done();
+        });
+      });
+    });
+
+    test("with diverse models", function(assert) {
+      run(() => {
+        let done = assert.async();
+        mockFindAll('profile', 'goofy_description', {description: 'foo'}, ['goofy_description', {aBooleanField: true}]);
+
+        FactoryGuy.store.findAll('profile').then(function(profiles) {
+          assert.ok(profiles.get('length') === 3);
+          assert.ok(A(profiles).objectAt(0).get('description') === 'goofy');
+          assert.ok(A(profiles).objectAt(0).get('aBooleanField') === false);
+          assert.ok(A(profiles).objectAt(1).get('description') === 'foo');
+          assert.ok(A(profiles).objectAt(1).get('aBooleanField') === false);
+          assert.ok(A(profiles).objectAt(2).get('description') === 'goofy');
+          assert.ok(A(profiles).objectAt(2).get('aBooleanField') === true);
+          done();
+        });
+      });
+    });
+
+    test("using returns with json", function(assert) {
+      run(() => {
+        let done = assert.async();
+
+        let json = buildList('profile', 'with_company', 'with_bat_man');
+        mockFindAll('profile').returns({json});
+
+        FactoryGuy.store.findAll('profile').then(function(profiles) {
+          assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
+          assert.ok(profiles.get('lastObject.superHero.name') === 'BatMan');
+          done();
+        });
+      });
+    });
+
+    test("using returns with model", function(assert) {
       let done = assert.async();
-      mockFindAll('profile', 2, 'with_company', 'with_bat_man');
+
+      let models = makeList('profile', 'with_company', 'with_bat_man');
+      mockFindAll('profile').returns({models});
 
       FactoryGuy.store.findAll('profile').then(function(profiles) {
-        assert.ok(profiles.get('length') === 2);
         assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
         assert.ok(profiles.get('lastObject.superHero.name') === 'BatMan');
+        assert.equal(FactoryGuy.store.peekAll('profile').get('content').length, 2, "does not make new profiles");
         done();
       });
     });
+
+    //  test("handles include params", function(assert) {
+    //    run(()=> {
+    //      let done = assert.async();
+    //
+    //      let json = buildList('profile', 'with_company');
+    //      mockFindAll('profile').withParams({include: 'company'}).returns({ json });
+    //
+    //      FactoryGuy.store.findAll('profile', {include: 'company'}).then(function(profiles) {
+    //        assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
+    //        done();
+    //      });
+    //    });
+    //  });
   });
-
-
-  test("with hasMany association", function(assert) {
-    run(() => {
-      let done = assert.async();
-
-      mockFindAll('user', 2, 'with_hats');
-
-      FactoryGuy.store.findAll('user').then(function(users) {
-        assert.ok(users.get('length') === 2);
-        assert.ok(A(users.get('lastObject.hats')).mapBy('type') + '' === ['BigHat', 'BigHat'] + '');
-        assert.ok(A(users.get('lastObject.hats')).mapBy('id') + '' === [3, 4] + '');
-        done();
-      });
-    });
-  });
-
-  test("with diverse models", function(assert) {
-    run(() => {
-      let done = assert.async();
-      mockFindAll('profile', 'goofy_description', {description: 'foo'}, ['goofy_description', {aBooleanField: true}]);
-
-      FactoryGuy.store.findAll('profile').then(function(profiles) {
-        assert.ok(profiles.get('length') === 3);
-        assert.ok(A(profiles).objectAt(0).get('description') === 'goofy');
-        assert.ok(A(profiles).objectAt(0).get('aBooleanField') === false);
-        assert.ok(A(profiles).objectAt(1).get('description') === 'foo');
-        assert.ok(A(profiles).objectAt(1).get('aBooleanField') === false);
-        assert.ok(A(profiles).objectAt(2).get('description') === 'goofy');
-        assert.ok(A(profiles).objectAt(2).get('aBooleanField') === true);
-        done();
-      });
-    });
-  });
-
-  test("using returns with json", function(assert) {
-    run(() => {
-      let done = assert.async();
-
-      let json = buildList('profile', 'with_company', 'with_bat_man');
-      mockFindAll('profile').returns({json});
-
-      FactoryGuy.store.findAll('profile').then(function(profiles) {
-        assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
-        assert.ok(profiles.get('lastObject.superHero.name') === 'BatMan');
-        done();
-      });
-    });
-  });
-
-  test("using returns with model", function(assert) {
-    let done = assert.async();
-
-    let models = makeList('profile', 'with_company', 'with_bat_man');
-    mockFindAll('profile').returns({models});
-
-    FactoryGuy.store.findAll('profile').then(function(profiles) {
-      assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
-      assert.ok(profiles.get('lastObject.superHero.name') === 'BatMan');
-      assert.equal(FactoryGuy.store.peekAll('profile').get('content').length, 2, "does not make new profiles");
-      done();
-    });
-  });
-
-  //  test("handles include params", function(assert) {
-  //    run(()=> {
-  //      let done = assert.async();
-  //
-  //      let json = buildList('profile', 'with_company');
-  //      mockFindAll('profile').withParams({include: 'company'}).returns({ json });
-  //
-  //      FactoryGuy.store.findAll('profile', {include: 'company'}).then(function(profiles) {
-  //        assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
-  //        done();
-  //      });
-  //    });
-  //  });
-
 };
 
-SharedBehavior.mockFindAllEmbeddedTests = function(serializer, serializerType) {
+SharedBehavior.mockFindAllEmbeddedTests = function() {
 
-  moduleFor('serializer:application', `${serializer} #mockFindAll | embedded`, inlineSetup(serializerType));
+  module('#mockFindAll | embedded', function() {
 
-  test("belongsTo", function(assert) {
-    run(() => {
-      let done = assert.async();
+    test("belongsTo", function(assert) {
+      run(() => {
+        let done = assert.async();
 
-      mockFindAll('comic-book', 2, 'marvel');
+        mockFindAll('comic-book', 2, 'marvel');
 
-      FactoryGuy.store.findAll('comic-book').then(function(comics) {
-        assert.ok(comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + '');
-        assert.ok(comics.mapBy('company.name') + '' === ['Marvel Comics', 'Marvel Comics'] + '');
-        done();
+        FactoryGuy.store.findAll('comic-book').then(function(comics) {
+          assert.ok(comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + '');
+          assert.ok(comics.mapBy('company.name') + '' === ['Marvel Comics', 'Marvel Comics'] + '');
+          done();
+        });
       });
     });
-  });
 
-  test("hasMany", function(assert) {
-    run(() => {
-      let done = assert.async();
+    test("hasMany", function(assert) {
+      run(() => {
+        let done = assert.async();
 
-      mockFindAll('comic-book', 2, 'with_bad_guys');
+        mockFindAll('comic-book', 2, 'with_bad_guys');
 
-      FactoryGuy.store.findAll('comic-book').then(function(comics) {
-        assert.ok(comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + '');
-        assert.ok(comics.get('firstObject.characters').mapBy('name') + '' === ['BadGuy#1', 'BadGuy#2'] + '');
-        assert.ok(comics.get('lastObject.characters').mapBy('name') + '' === ['BadGuy#3', 'BadGuy#4'] + '');
-        done();
+        FactoryGuy.store.findAll('comic-book').then(function(comics) {
+          assert.ok(comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + '');
+          assert.ok(comics.get('firstObject.characters').mapBy('name') + '' === ['BadGuy#1', 'BadGuy#2'] + '');
+          assert.ok(comics.get('lastObject.characters').mapBy('name') + '' === ['BadGuy#3', 'BadGuy#4'] + '');
+          done();
+        });
       });
     });
   });
@@ -945,28 +956,29 @@ SharedBehavior.mockQueryTests = function() {
 
 };
 
-SharedBehavior.mockQueryMetaTests = function(serializer, serializerType) {
+SharedBehavior.mockQueryMetaTests = function() {
 
-  moduleFor('serializer:application', `${serializer} #mockQuery | meta`, inlineSetup(serializerType));
+  module('#mockQuery | meta', function() {
 
-  test("with proxy payload", function(assert) {
-    run(() => {
-      let done = assert.async();
+    test("with proxy payload", function(assert) {
+      run(() => {
+        let done = assert.async();
 
-      let json1 = buildList('profile', 2).add({meta: {previous: '/profiles?page=1', next: '/profiles?page=3'}});
-      let json2 = buildList('profile', 2).add({meta: {previous: '/profiles?page=2', next: '/profiles?page=4'}});
+        let json1 = buildList('profile', 2).add({meta: {previous: '/profiles?page=1', next: '/profiles?page=3'}});
+        let json2 = buildList('profile', 2).add({meta: {previous: '/profiles?page=2', next: '/profiles?page=4'}});
 
-      mockQuery('profile', {page: 2}).returns({json: json1});
-      mockQuery('profile', {page: 3}).returns({json: json2});
+        mockQuery('profile', {page: 2}).returns({json: json1});
+        mockQuery('profile', {page: 3}).returns({json: json2});
 
-      FactoryGuy.store.query('profile', {page: 2}).then(function(profiles) {
-        assert.deepEqual(profiles.mapBy('id'), ["1", "2"]);
-        assert.ok(isEquivalent(profiles.get('meta'), {previous: '/profiles?page=1', next: '/profiles?page=3'}));
+        FactoryGuy.store.query('profile', {page: 2}).then(function(profiles) {
+          assert.deepEqual(profiles.mapBy('id'), ["1", "2"]);
+          assert.ok(isEquivalent(profiles.get('meta'), {previous: '/profiles?page=1', next: '/profiles?page=3'}));
 
-        FactoryGuy.store.query('profile', {page: 3}).then(function(profiles2) {
-          assert.deepEqual(profiles2.mapBy('id'), ["3", "4"]);
-          assert.ok(isEquivalent(profiles2.get('meta'), {previous: '/profiles?page=2', next: '/profiles?page=4'}));
-          done();
+          FactoryGuy.store.query('profile', {page: 3}).then(function(profiles2) {
+            assert.deepEqual(profiles2.mapBy('id'), ["3", "4"]);
+            assert.ok(isEquivalent(profiles2.get('meta'), {previous: '/profiles?page=2', next: '/profiles?page=4'}));
+            done();
+          });
         });
       });
     });
@@ -1349,96 +1361,97 @@ SharedBehavior.mockCreateTests = function() {
   });
 };
 
-SharedBehavior.mockCreateFailsWithErrorResponse = function(serializer, serializerType) {
+SharedBehavior.mockCreateFailsWithErrorResponse = function() {
 
-  moduleFor('serializer:application', `${serializer} #mockCreate | fails with error response`, inlineSetup(serializerType));
+  module('#mockCreate | fails with error response;', function() {
 
-  test("failure with status code 422 and errors in response with fails method", function(assert) {
-    run(() => {
-      let done = assert.async();
+    test("failure with status code 422 and errors in response with fails method", function(assert) {
+      run(() => {
+        let done = assert.async();
 
-      let errors = {errors: {dog: ['bad dog'], dude: ['bad dude']}};
-      let mock = mockCreate('profile').fails({status: 422, response: errors});
+        let errors = {errors: {dog: ['bad dog'], dude: ['bad dude']}};
+        let mock = mockCreate('profile').fails({status: 422, response: errors});
 
-      let profile = FactoryGuy.store.createRecord('profile');
-      profile.save()
-             .catch(() => {
-               let errorMessages = profile.get('errors.messages');
-               assert.deepEqual(errorMessages, ['bad dog', 'bad dude']);
-               assert.equal(mock.timesCalled, 1);
-               assert.ok(true);
-               done();
-             });
+        let profile = FactoryGuy.store.createRecord('profile');
+        profile.save()
+               .catch(() => {
+                 let errorMessages = profile.get('errors.messages');
+                 assert.deepEqual(errorMessages, ['bad dog', 'bad dude']);
+                 assert.equal(mock.timesCalled, 1);
+                 assert.ok(true);
+                 done();
+               });
+      });
     });
   });
 };
 
-SharedBehavior.mockCreateReturnsAssociations = function(serializer, serializerType) {
+SharedBehavior.mockCreateReturnsAssociations = function() {
 
-  moduleFor('serializer:application', `${serializer} #mockCreate | returns association`, inlineSetup(serializerType));
+  module('#mockCreate | returns association', function() {
 
-  test("belongsTo", async function(assert) {
-    run(async () => {
-      let company = build('company'),
-          profile = FactoryGuy.store.createRecord('profile');
+    test("belongsTo", async function(assert) {
+      run(async () => {
+        let company = build('company'),
+            profile = FactoryGuy.store.createRecord('profile');
 
-      mockCreate('profile').returns({attrs: {company}});
+        mockCreate('profile').returns({attrs: {company}});
 
-      await profile.save();
+        await profile.save();
 
-      assert.equal(profile.get('company.id'), company.get('id').toString());
-      assert.equal(profile.get('company.name'), company.get('name'));
+        assert.equal(profile.get('company.id'), company.get('id').toString());
+        assert.equal(profile.get('company.name'), company.get('name'));
+      });
+    });
+
+    test("belongsTo ( polymorphic )", async function(assert) {
+      run(async () => {
+        let person = build('super-hero'),
+            outfit = FactoryGuy.store.createRecord('outfit');
+
+        mockCreate('outfit').returns({attrs: {person}});
+
+        await outfit.save()
+
+        assert.equal(outfit.get('person.id'), person.get('id').toString());
+        assert.equal(outfit.get('person.name'), person.get('name'));
+      });
+    });
+
+    test("hasMany", async function(assert) {
+      run(async () => {
+        let outfits = buildList('outfit', 2),
+            hero    = FactoryGuy.store.createRecord('super-hero');
+
+        mockCreate('super-hero').returns({attrs: {outfits}});
+
+        await hero.save();
+
+        assert.deepEqual(hero.get('outfits').mapBy('id'), ['1', '2']);
+        assert.deepEqual(hero.get('outfits').mapBy('name'), ['Outfit-1', 'Outfit-2']);
+      });
     });
   });
-
-  test("belongsTo ( polymorphic )", async function(assert) {
-    run(async () => {
-      let person = build('super-hero'),
-          outfit = FactoryGuy.store.createRecord('outfit');
-
-      mockCreate('outfit').returns({attrs: {person}});
-
-      await outfit.save()
-
-      assert.equal(outfit.get('person.id'), person.get('id').toString());
-      assert.equal(outfit.get('person.name'), person.get('name'));
-    });
-  });
-
-  test("hasMany", async function(assert) {
-    run(async () => {
-      let outfits = buildList('outfit', 2),
-          hero    = FactoryGuy.store.createRecord('super-hero');
-
-      mockCreate('super-hero').returns({attrs: {outfits}});
-
-      await hero.save();
-
-      assert.deepEqual(hero.get('outfits').mapBy('id'), ['1', '2']);
-      assert.deepEqual(hero.get('outfits').mapBy('name'), ['Outfit-1', 'Outfit-2']);
-    });
-  });
-
 };
 
-SharedBehavior.mockCreateReturnsEmbeddedAssociations = function(serializer, serializerType) {
+SharedBehavior.mockCreateReturnsEmbeddedAssociations = function() {
 
-  moduleFor('serializer:application', `${serializer} #mockCreate | returns embedded association`, inlineSetup(serializerType));
+  module('#mockCreate | returns embedded association', function() {
 
-  test("belongsTo", async function(assert) {
-    run(async () => {
-      let company   = build('company'),
-          comitBook = FactoryGuy.store.createRecord('comic-book');
+    test("belongsTo", async function(assert) {
+      run(async () => {
+        let company   = build('company'),
+            comitBook = FactoryGuy.store.createRecord('comic-book');
 
-      mockCreate('comic-book').returns({attrs: {company}});
+        mockCreate('comic-book').returns({attrs: {company}});
 
-      await comitBook.save();
+        await comitBook.save();
 
-      assert.equal(comitBook.get('company.id'), company.get('id').toString());
-      assert.equal(comitBook.get('company.name'), company.get('name').toString());
+        assert.equal(comitBook.get('company.id'), company.get('id').toString());
+        assert.equal(comitBook.get('company.name'), company.get('name').toString());
+      });
     });
   });
-
 };
 
 /////// mockUpdate //////////
@@ -1840,109 +1853,111 @@ SharedBehavior.mockUpdateTests = function() {
 
 };
 
-SharedBehavior.mockUpdateWithErrorMessages = function(serializer, serializerType) {
+SharedBehavior.mockUpdateWithErrorMessages = function() {
 
-  moduleFor('serializer:application', `${serializer} #mockUpdate | error messages`, inlineSetup(serializerType));
+  module('#mockUpdate | error messages', function() {
 
-  test("with model returns custom response", function(assert) {
-    run(() => {
-      let done = assert.async();
-      let profile = make('profile');
+    test("with model returns custom response", function(assert) {
+      run(() => {
+        let done = assert.async();
+        let profile = make('profile');
 
-      mockUpdate(profile).fails({
-        status: 400,
-        response: {errors: {description: ['invalid data']}},
-        convertErrors: false
+        mockUpdate(profile).fails({
+          status: 400,
+          response: {errors: {description: ['invalid data']}},
+          convertErrors: false
+        });
+
+        profile.set('description', 'new desc');
+        profile.save().catch(
+          function(reason) {
+            let errors = reason.errors;
+            assert.equal(errors.description, "invalid data", "custom description shows up in errors");
+            done();
+          }
+        );
       });
-
-      profile.set('description', 'new desc');
-      profile.save().catch(
-        function(reason) {
-          let errors = reason.errors;
-          assert.equal(errors.description, "invalid data", "custom description shows up in errors");
-          done();
-        }
-      );
     });
   });
 };
 
 
-SharedBehavior.mockUpdateReturnsAssociations = function(serializer, serializerType) {
+SharedBehavior.mockUpdateReturnsAssociations = function() {
 
-  moduleFor('serializer:application', `${serializer} #mockUpdate | returns association`, inlineSetup(serializerType));
+  module('#mockUpdate | returns association', function() {
 
-  test("belongsTo", async function(assert) {
-    run(async () => {
-      let profile = make('profile');
-      profile.set('description', 'new desc');
+    test("belongsTo", async function(assert) {
+      run(async () => {
+        let profile = make('profile');
+        profile.set('description', 'new desc');
 
-      let company = build('company');
-      mockUpdate(profile).returns({attrs: {company}});
+        let company = build('company');
+        mockUpdate(profile).returns({attrs: {company}});
 
-      await profile.save();
+        await profile.save();
 
-      assert.equal(profile.get('company.id'), company.get('id').toString());
-      assert.equal(profile.get('company.name'), company.get('name'));
+        assert.equal(profile.get('company.id'), company.get('id').toString());
+        assert.equal(profile.get('company.name'), company.get('name'));
+      });
     });
-  });
 
-  test("belongsTo ( polymorphic )", async function(assert) {
-    run(async () => {
-      let newValue = 'new name',
-          outfit   = make('outfit');
-      outfit.set('name', newValue);
+    test("belongsTo ( polymorphic )", async function(assert) {
+      run(async () => {
+        let newValue = 'new name',
+            outfit   = make('outfit');
+        outfit.set('name', newValue);
 
-      let person = build('super-hero');
-      mockUpdate(outfit).returns({attrs: {person}});
+        let person = build('super-hero');
+        mockUpdate(outfit).returns({attrs: {person}});
 
-      await outfit.save();
+        await outfit.save();
 
-      assert.equal(outfit.get('name'), newValue);
-      assert.equal(outfit.get('person.id'), person.get('id').toString());
-      assert.equal(outfit.get('person.name'), person.get('name'));
+        assert.equal(outfit.get('name'), newValue);
+        assert.equal(outfit.get('person.id'), person.get('id').toString());
+        assert.equal(outfit.get('person.name'), person.get('name'));
+      });
     });
-  });
 
-  test("hasMany", async function(assert) {
-    run(async () => {
-      let newValue = 'BoringMan',
-          hero     = make('bat_man');
-      hero.set('name', newValue);
+    test("hasMany", async function(assert) {
+      run(async () => {
+        let newValue = 'BoringMan',
+            hero     = make('bat_man');
+        hero.set('name', newValue);
 
-      let outfits = buildList('outfit', 2);
-      mockUpdate(hero).returns({attrs: {outfits}});
+        let outfits = buildList('outfit', 2);
+        mockUpdate(hero).returns({attrs: {outfits}});
 
-      await hero.save();
+        await hero.save();
 
-      assert.equal(hero.get('name'), newValue);
-      assert.deepEqual(hero.get('outfits').mapBy('id'), ['1', '2']);
-      assert.deepEqual(hero.get('outfits').mapBy('name'), ['Outfit-1', 'Outfit-2']);
+        assert.equal(hero.get('name'), newValue);
+        assert.deepEqual(hero.get('outfits').mapBy('id'), ['1', '2']);
+        assert.deepEqual(hero.get('outfits').mapBy('name'), ['Outfit-1', 'Outfit-2']);
+      });
     });
   });
 };
 
-SharedBehavior.mockUpdateReturnsEmbeddedAssociations = function(serializer, serializerType) {
+SharedBehavior.mockUpdateReturnsEmbeddedAssociations = function() {
 
-  moduleFor('serializer:application', `${serializer} #mockUpdate | returns embedded association`, inlineSetup(serializerType));
+  module('#mockUpdate | returns embedded association', function() {
 
-  test("belongsTo", async function(assert) {
-    run(async () => {
-      let newValue  = 'new name',
-          comicBook = make('comic-book', {characters: []});
-      comicBook.set('name', newValue);
+    test("belongsTo", async function(assert) {
+      run(async () => {
+        let newValue  = 'new name',
+            comicBook = make('comic-book', {characters: []});
+        comicBook.set('name', newValue);
 
-      let company = build('company');
-      mockUpdate(comicBook).returns({attrs: {company}});
+        let company = build('company');
+        mockUpdate(comicBook).returns({attrs: {company}});
 
-      await comicBook.save();
+        await comicBook.save();
 
-      assert.equal(comicBook.get('name'), newValue);
-      assert.equal(comicBook.get('company.id'), company.get('id').toString());
-      assert.equal(comicBook.get('company.name'), company.get('name').toString());
+        assert.equal(comicBook.get('name'), newValue);
+        assert.equal(comicBook.get('company.id'), company.get('id').toString());
+        assert.equal(comicBook.get('company.name'), company.get('name').toString());
+      });
     });
   });
-
 };
 
 /////// mockDelete //////////

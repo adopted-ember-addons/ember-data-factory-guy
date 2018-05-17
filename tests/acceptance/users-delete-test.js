@@ -1,48 +1,50 @@
-import {test} from 'qunit';
-import {mockFindAll, mockDelete, makeList} from 'ember-data-factory-guy';
-import moduleForAcceptance from '../helpers/module-for-acceptance';
+import { module, test } from 'qunit';
+import { setupApplicationTest } from 'ember-qunit';
+import { makeList, mockDelete, mockFindAll, setupFactoryGuy } from 'ember-data-factory-guy';
+import { visit, click } from '@ember/test-helpers';
 
-moduleForAcceptance('Acceptance | Users Delete');
-// NOTE
-// FactoryGuy before and after setup is in moduleForAcceptance helper
+module('Acceptance | Users Delete', function(hooks) {
+  setupApplicationTest(hooks);
+  setupFactoryGuy(hooks);
 
-test("Deleting any user with modelName", async function(assert) {
-  mockFindAll('user', 2);
-  mockDelete('user');
-  await visit('/users');
+  test("Deleting any user with modelName", async function(assert) {
+    mockFindAll('user', 2);
+    mockDelete('user');
+    await visit('/users');
 
-  assert.ok(find('li.user').length === 2);
+    assert.dom('li.user').exists({count: 2});
 
-  await click('li.user:first button');
+    await click('li.user:nth-child(1) button');
 
-  assert.ok(find('li.user').length === 1);
+    assert.dom('li.user').exists({count: 1});
 
-  await click('li.user:first button');
+    await click('li.user:nth-child(1) button');
 
-  assert.ok(find('li.user').length === 0);
-});
+    assert.dom('li.user').doesNotExist();
+  });
 
-test("Deleting a user with model", async function(assert) {
-  const users = makeList('user', 2);
-  const user = users[0];
-  mockFindAll('user').returns({ models: users });
-  mockDelete(user);
-  await visit('/users');
+  test("Deleting a user with model", async function(assert) {
+    const users = makeList('user', 2);
+    const user = users[0];
+    mockFindAll('user').returns({models: users});
+    mockDelete(user);
+    await visit('/users');
 
-  assert.ok(find('li.user').length === 2);
+    assert.dom('li.user').exists({count: 2});
 
-  await click('li.user:first button');
+    await click('li.user:nth-child(1) button');
 
-  assert.ok(find('li.user').length === 1);
-});
+    assert.dom('li.user').exists({count: 1});
+  });
 
-test("Deleting a user with modelName and id", async function(assert) {
-  mockFindAll('user', 2);
-  mockDelete('user', '1');
-  await visit('/users');
+  test("Deleting a user with modelName and id", async function(assert) {
+    mockFindAll('user', 2);
+    mockDelete('user', '1');
+    await visit('/users');
 
-  assert.ok(find('li.user').length === 2);
-  await click('li.user:first button');
+    assert.dom('li.user').exists({count: 2});
+    await click('li.user:nth-child(1) button');
 
-  assert.ok(find('li.user').length === 1);
+    assert.dom('li.user').exists({count: 1});
+  });
 });

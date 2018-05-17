@@ -1,11 +1,11 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { build } from 'ember-data-factory-guy';
-import { inlineSetup2 } from '../../helpers/utility-methods';
+import { inlineSetup } from '../../helpers/utility-methods';
 
 module('FixtureConverter', function(hooks) {
   setupTest(hooks);
-  inlineSetup2(hooks, '-rest');
+  inlineSetup(hooks, '-rest');
 
   test("#getTransformKeyFunction with custom serializer keyForAttribute function", function(assert) {
     let buildJson = build('manager');

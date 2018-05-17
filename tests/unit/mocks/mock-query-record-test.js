@@ -2,14 +2,14 @@ import Ember from 'ember';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, { build, make, makeList, mockQueryRecord } from 'ember-data-factory-guy';
-import { inlineSetup2 } from '../../helpers/utility-methods';
+import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
 const serializerType = '-json-api';
 
 module('MockQueryRecord', function(hooks) {
   setupTest(hooks);
-  inlineSetup2(hooks, serializerType);
+  inlineSetup(hooks, serializerType);
 
 
   test("#get method to access payload", function(assert) {

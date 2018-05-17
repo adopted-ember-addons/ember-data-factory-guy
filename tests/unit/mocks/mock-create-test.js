@@ -3,14 +3,14 @@ import { setupTest } from 'ember-qunit';
 import Model from 'ember-data/model';
 import FactoryGuy, { build, makeNew, mockCreate } from 'ember-data-factory-guy';
 import { run } from '@ember/runloop';
-import { inlineSetup2 } from '../../helpers/utility-methods';
+import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
 const serializerType = '-json-api';
 
 module('MockCreate', function(hooks) {
   setupTest(hooks);
-  inlineSetup2(hooks, serializerType);
+  inlineSetup(hooks, serializerType);
 
   test("with incorrect parameters", function(assert) {
 

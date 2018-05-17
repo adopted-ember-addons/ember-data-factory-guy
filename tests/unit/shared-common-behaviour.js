@@ -1,55 +1,54 @@
-import {moduleFor} from 'ember-qunit';
+import { module } from 'qunit';
 import SharedFactoryGuyBehaviour from './shared-factory-guy-behaviour';
 import SharedAdapterBehaviour from './shared-adapter-behaviour';
-import {inlineSetup} from '../helpers/utility-methods';
 
 let SharedBehavior = {};
 
-SharedBehavior.all = function(serializer, serializerType) {
+SharedBehavior.all = function() {
 
-  moduleFor('serializer:application', `${serializer} FactoryGuy#makeNew`, inlineSetup(serializerType));
-  SharedFactoryGuyBehaviour.makeNewTests();
+  module('FactoryGuy#makeNew', function() {
+    SharedFactoryGuyBehaviour.makeNewTests();
+  });
 
+  module('FactoryGuy#make', function() {
+    SharedFactoryGuyBehaviour.makeTests();
+  });
 
-  moduleFor('serializer:application', `${serializer} FactoryGuy#make`, inlineSetup(serializerType));
-  SharedFactoryGuyBehaviour.makeTests();
+  module('FactoryGuy#makeList', function() {
+    SharedFactoryGuyBehaviour.makeListTests();
+  });
 
+  module('#mockFindRecord', function() {
+    SharedAdapterBehaviour.mockFindRecordCommonTests();
+  });
 
-  moduleFor('serializer:application', `${serializer} FactoryGuy#makeList`, inlineSetup(serializerType));
-  SharedFactoryGuyBehaviour.makeListTests();
+  module('#mockReload', function() {
+    SharedAdapterBehaviour.mockReloadTests();
+  });
 
+  module('#mockFindAll', function() {
+    SharedAdapterBehaviour.mockFindAllCommonTests();
+  });
 
-  moduleFor('serializer:application', `${serializer} #mockFindRecord`, inlineSetup(serializerType));
-  SharedAdapterBehaviour.mockFindRecordCommonTests();
+  module('#mockQuery', function() {
+    SharedAdapterBehaviour.mockQueryTests();
+  });
 
+  module('#mockQueryRecord', function() {
+    SharedAdapterBehaviour.mockQueryRecordTests();
+  });
 
-  moduleFor('serializer:application', `${serializer} #mockReload`, inlineSetup(serializerType));
-  SharedAdapterBehaviour.mockReloadTests();
+  module('#mockCreate', function() {
+    SharedAdapterBehaviour.mockCreateTests();
+  });
 
+  module('#mockUpdate', function() {
+    SharedAdapterBehaviour.mockUpdateTests();
+  });
 
-  moduleFor('serializer:application', `${serializer} #mockFindAll`, inlineSetup(serializerType));
-  SharedAdapterBehaviour.mockFindAllCommonTests();
-
-
-  moduleFor('serializer:application', `${serializer} #mockQuery`, inlineSetup(serializerType));
-  SharedAdapterBehaviour.mockQueryTests();
-
-
-  moduleFor('serializer:application', `${serializer} #mockQueryRecord`, inlineSetup(serializerType));
-  SharedAdapterBehaviour.mockQueryRecordTests();
-
-
-  moduleFor('serializer:application', `${serializer} #mockCreate`, inlineSetup(serializerType));
-  SharedAdapterBehaviour.mockCreateTests();
-
-
-  moduleFor('serializer:application', `${serializer} #mockUpdate`, inlineSetup(serializerType));
-  SharedAdapterBehaviour.mockUpdateTests();
-
-
-  moduleFor('serializer:application', `${serializer} #mockDelete`, inlineSetup(serializerType));
-  SharedAdapterBehaviour.mockDeleteTests();
-
+  module('#mockDelete', function() {
+    SharedAdapterBehaviour.mockDeleteTests();
+  });
 };
 
 export default SharedBehavior;

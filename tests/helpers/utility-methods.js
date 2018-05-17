@@ -89,8 +89,7 @@ function setupCustomSerializer(container, serializerType, options) {
 
 
 // serializerType like -rest or -active-model, -json-api, -json
-function containerSetup(container, serializerType) {
-  manualSetup(container);
+export function containerSetup(container, serializerType) {
 
   // brute force setting the adapter/serializer on the store.
   if (serializerType) {
@@ -140,26 +139,14 @@ function containerSetup(container, serializerType) {
   }
 }
 
-export function inlineSetup2(hooks, serializerType) {
+export function inlineSetup(hooks, serializerType) {
   hooks.beforeEach(function() {
-//    manualSetup(this);
+    manualSetup(this);
     containerSetup(this.owner.__container__, serializerType);
     FactoryGuy.settings({responseTime: 0, logLevel: 0});
   });
 }
 
-function inlineSetup(serializerType) {
-  return {
-    integration: true,
-    beforeEach: function() {
-      containerSetup(this.container, serializerType);
-      FactoryGuy.settings({responseTime: 0, logLevel: 0});
-    }
-  };
-}
-
-function title(adapter, testName) {
+export function title(adapter, testName) {
   return [adapter, testName].join(' | ');
 }
-
-export { title, inlineSetup, containerSetup };

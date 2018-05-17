@@ -7,7 +7,7 @@ import FactoryGuy, {
 } from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import sinon from 'sinon';
-import { inlineSetup2 } from '../helpers/utility-methods';
+import { inlineSetup } from '../helpers/utility-methods';
 import User from 'dummy/models/user';
 import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
 
@@ -15,7 +15,7 @@ const A = Ember.A;
 
 module('FactoryGuy', function(hooks) {
   setupTest(hooks);
-  inlineSetup2(hooks, '-json-api');
+  inlineSetup(hooks, '-json-api');
 
   test("has store set in initializer", function(assert) {
     assert.ok(FactoryGuy.store instanceof DS.Store);
@@ -116,7 +116,7 @@ module('FactoryGuy', function(hooks) {
 
 
   module('FactoryGuy#make', function(hooks) {
-    inlineSetup2(hooks, '-rest');
+    inlineSetup(hooks, '-rest');
     test('throws exception if there is NO store setup', function(assert) {
       FactoryGuy.store = null;
       assert.throws(
@@ -152,7 +152,7 @@ module('FactoryGuy', function(hooks) {
 
 
   module('FactoryGuy#hasMany', function(hooks) {
-    inlineSetup2(hooks, '-rest');
+    inlineSetup(hooks, '-rest');
 
     //test("with model and buildType 'make'", function(assert) {
     //  let hasMany    = FactoryGuy.hasMany('employee', 1),
@@ -181,7 +181,7 @@ module('FactoryGuy', function(hooks) {
 
 
   module('FactoryGuy#buildURL', function(hooks) {
-    inlineSetup2(hooks, '-rest');
+    inlineSetup(hooks, '-rest');
 
     test("without namespace", function(assert) {
       assert.equal(FactoryGuy.buildURL('project'), '/projects', 'has no namespace by default');
@@ -200,7 +200,7 @@ module('FactoryGuy', function(hooks) {
 
 
   module('FactoryGuy#build', function(hooks) {
-    inlineSetup2(hooks, '-rest');
+    inlineSetup(hooks, '-rest');
 
     test('throws exception if model name is not found', function(assert) {
       assert.throws(
@@ -258,7 +258,7 @@ module('FactoryGuy', function(hooks) {
   });
 
   module('FactoryGuy#buildList', function(hooks) {
-    inlineSetup2(hooks, '-rest');
+    inlineSetup(hooks, '-rest');
 
     test('throws exception if arguments are missing the model name', function(assert) {
       assert.throws(
@@ -917,7 +917,7 @@ module('FactoryGuy', function(hooks) {
   });
 
   module('FactoryGuy and REST', function(hooks) {
-    inlineSetup2(hooks, '-rest');
+    inlineSetup(hooks, '-rest');
     test('#updateHTTPMethod with REST Serializer', function(assert) {
       const method = FactoryGuy.updateHTTPMethod('application');
       assert.equal(method, 'PUT');

@@ -2,13 +2,13 @@ import Ember from 'ember';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { mock } from 'ember-data-factory-guy';
-import { inlineSetup2 } from '../../helpers/utility-methods';
+import { inlineSetup } from '../../helpers/utility-methods';
 
 const serializerType = '-json-api';
 
 module('MockAny', function(hooks) {
   setupTest(hooks);
-  inlineSetup2(hooks, serializerType);
+  inlineSetup(hooks, serializerType);
 
   test("with incorrect parameters", function(assert) {
     assert.throws(function() {

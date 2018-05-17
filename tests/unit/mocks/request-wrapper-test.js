@@ -1,14 +1,14 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { mockFindAll, mockQuery } from 'ember-data-factory-guy';
-import { inlineSetup2 } from '../../helpers/utility-methods';
+import { inlineSetup } from '../../helpers/utility-methods';
 import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
 
 const serializerType = '-json-api';
 
 module('RequestWrapper', function(hooks) {
   setupTest(hooks);
-  inlineSetup2(hooks, serializerType);
+  inlineSetup(hooks, serializerType);
 
   test("#getHandlers", function(assert) {
     let mockF   = mockFindAll('user', 2),

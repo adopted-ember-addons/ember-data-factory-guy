@@ -2,7 +2,7 @@ import Ember from 'ember';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, { make, buildList, mockFindAll, mockQuery } from 'ember-data-factory-guy';
-import { inlineSetup2 } from '../../helpers/utility-methods';
+import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
 
@@ -10,7 +10,7 @@ const serializerType = '-json-api';
 
 module('MockFindAll', function(hooks) {
   setupTest(hooks);
-  inlineSetup2(hooks, serializerType);
+  inlineSetup(hooks, serializerType);
 
   test("mockId", function(assert) {
     let mock = mockFindAll('user');

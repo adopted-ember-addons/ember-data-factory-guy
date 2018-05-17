@@ -1,14 +1,11 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { mock, manualSetup, getPretender } from 'ember-data-factory-guy';
+import { mock, setupFactoryGuy, getPretender } from 'ember-data-factory-guy';
 import Pretender from 'pretender'
 
 module('Unit | getPretender', function(hooks) {
   setupTest(hooks);
-
-  hooks.beforeEach(function() {
-    manualSetup(this);
-  });
+  setupFactoryGuy(hooks);
 
   test('getPretender basic usage', function(assert) {
     assert.expect(3);
