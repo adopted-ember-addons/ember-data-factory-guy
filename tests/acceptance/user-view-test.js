@@ -88,6 +88,42 @@ module('Acceptance | User View', function(hooks) {
     assert.dom('li.project').exists('One project shown');
   });
 
+  test("Add a project to a user with mockCreate and a custom matching function", async function(assert) {
+    // mockFindRecord will build a default user for the json payload
+    let mock = mockFindRecord('user');
+
+    await visit('/user/' + mock.get('id'));
+
+    let newProjectTitle = "Gonzo Project";
+
+    // should be no projects
+    assert.dom('li.project').doesNotExist('No projects shown');
+
+    await fillIn('input.project-title', newProjectTitle);
+
+    // You can also implement your own custom matching function
+    mockCreate('project').match((requestBody) => {
+      return requestBody.data.attributes.title === newProjectTitle;
+    });
+
+    /**
+     Let's say that clicking this a button, triggers action in the
+     view to create project record and looks something like this:
+
+     actions: {
+       addProject: function (user) {
+         let title = this.$('input.project-title').val();
+         let store = this.get('store');
+         store.createRecord('project', {title, user}).save();
+       }
+     }
+
+     */
+    await click('button.add-project');
+
+    assert.dom('li.project').exists('One project shown');
+  });
+
   test("Request failure shows a error message", async function(assert) {
     let mock = mockFindRecord('user').fails({status: 404});
     await visit('/user/' + mock.get('id'));

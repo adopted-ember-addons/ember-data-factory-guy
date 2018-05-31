@@ -47,10 +47,9 @@ const AttributeMatcher = (superclass) => class extends superclass {
 
   extraRequestMatches(request) {
     if (this.matchArgs) {
-      let requestBody = JSON.parse(request.requestBody),
-          requestData = requestBody[this.modelName];
+      let requestBody = JSON.parse(request.requestBody);
       if (typeof this.matchArgs === 'function') {
-        return this.matchArgs(requestData);
+        return this.matchArgs(requestBody);
       } else {
         return this.attributesMatch(requestBody);
       }
