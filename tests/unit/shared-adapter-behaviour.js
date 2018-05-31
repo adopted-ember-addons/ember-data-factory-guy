@@ -1198,6 +1198,29 @@ SharedBehavior.mockCreateTests = function() {
     });
   });
 
+  test("match can take a function - supplied parameter is the json request body", async function(assert) {
+    assert.expect(2);
+    run(async () => {
+      let mock = mockCreate('profile');
+
+      mock.match(function(requestBody) {
+        assert.ok(true, 'matching function is called');
+        const description = (
+          (requestBody.description) || // DRFSerializer, RESTAdapter, JSONSerializer
+          (requestBody.profile && requestBody.profile.description) || // RESTSerializer, ActiveModelSerializer
+          (requestBody.data && requestBody.data.attributes.description) // JSONAPISerializer
+        );
+        return description === 'match me!';
+      });
+
+      let profile = FactoryGuy.store.createRecord('profile');
+      profile.set('description', 'match me!');
+      await profile.save();
+
+      assert.equal(mock.timesCalled, 1);
+    });
+  });
+
   test("match some attributes", async function(assert) {
     run(async () => {
       let customDescription = "special description",
