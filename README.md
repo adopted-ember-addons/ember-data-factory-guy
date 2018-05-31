@@ -1760,10 +1760,7 @@ Usage:
   // using match() method to specify a matching function
   let profile = make('profile');
   profile.set('name', "woo");
-  let mock = mockUpdate(profile).match((requestBody) => {
-    // this example uses a JSONAPI Adapter
-    return requestBody.data.attributes.name === "moo"
-  });
+  let mock = mockUpdate(profile).match(requestData => requestData.name === "moo");
   profile.save();  // will not be mocked since the mock you set requires the request's top level attribute "name" to equal "moo"
 
   // either set the name to "moo" which will now be mocked correctly
