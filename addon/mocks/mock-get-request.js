@@ -2,7 +2,6 @@ import Ember from 'ember';
 import FactoryGuy from '../factory-guy';
 import Model from 'ember-data/model';
 import MockStoreRequest from './mock-store-request';
-import { toParams, isEquivalent, isEmptyObject, isPartOf } from '../utils/helper-functions';
 
 const assign = Ember.assign || Ember.merge;
 
@@ -131,33 +130,33 @@ class MockGetRequest extends MockStoreRequest {
     this.setupHandler();
   }
 
-  withParams(queryParams) {
-    this.queryParams = queryParams;
-    return this;
-  }
-
-  hasQueryParams() {
-    return !isEmptyObject(this.queryParams);
-  }
-
-  withSomeParams(someQueryParams) {
-    this.someQueryParams = someQueryParams;
-    return this;
-  }
-
-  paramsMatch(request) {
-    if (!isEmptyObject(this.someQueryParams)) {
-      return isPartOf(request.queryParams, toParams(this.someQueryParams));
-    }
-    if (!isEmptyObject(this.queryParams)) {
-      return isEquivalent(request.queryParams, toParams(this.queryParams));
-    }
-    return true;
-  }
-
-  extraRequestMatches(request) {
-    return this.paramsMatch(request);
-  }
+//  withParams(queryParams) {
+//    this.queryParams = queryParams;
+//    return this;
+//  }
+//
+//  hasQueryParams() {
+//    return !isEmptyObject(this.queryParams);
+//  }
+//
+//  withSomeParams(someQueryParams) {
+//    this.someQueryParams = someQueryParams;
+//    return this;
+//  }
+//
+//  paramsMatch(request) {
+//    if (!isEmptyObject(this.someQueryParams)) {
+//      return isPartOf(request.queryParams, toParams(this.someQueryParams));
+//    }
+//    if (!isEmptyObject(this.queryParams)) {
+//      return isEquivalent(request.queryParams, toParams(this.queryParams));
+//    }
+//    return true;
+//  }
+//
+//  extraRequestMatches(request) {
+//    return this.paramsMatch(request);
+//  }
 
 }
 

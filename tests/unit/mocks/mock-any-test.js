@@ -65,4 +65,20 @@ module('MockAny', function(hooks) {
     json = await Ember.$.ajax({type, url});
     assert.deepEqual(JSON.parse(json), whatsUpDoc, 'returns next json that is set');
   });
+
+  test("with url params", async function(assert) {
+    const type       = 'GET',
+          url        = '/api/get-stuff',
+          whatsUp    = {whats: 'up'},
+          whatsUpDoc = {whats: 'up doc'};
+
+
+    let theMock = mock({url}).withParams(whatsUp).returns(whatsUp);
+    let json = await Ember.$.ajax({type, url, data: whatsUp});
+    assert.deepEqual(JSON.parse(json), whatsUp, 'returns json for url with params #1');
+
+    theMock.withParams(whatsUpDoc).returns(whatsUpDoc);
+    json = await Ember.$.ajax({type, url, data: whatsUpDoc});
+    assert.deepEqual(JSON.parse(json), whatsUpDoc, 'returns json for url matching params #2');
+  });
 });

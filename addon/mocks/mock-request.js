@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { isEmptyObject } from '../utils/helper-functions';
+import { isEmptyObject, isEquivalent, isPartOf, toParams } from '../utils/helper-functions';
 import FactoryGuy from '../factory-guy';
 import RequestManager from './request-manager';
 import { assign } from '@ember/polyfills';
@@ -114,16 +114,44 @@ export default class {
     }
   }
 
-  paramsMatch() {
-    return true;
+//  paramsMatch() {
+//    return true;
+//  }
+//
+//  hasQueryParams() {
+//    return false;
+//  }
+//
+//  extraRequestMatches(/*request*/) {
+//    return true;
+//  }
+
+  withParams(queryParams) {
+    this.queryParams = queryParams;
+    return this;
   }
 
   hasQueryParams() {
-    return false;
+    return !isEmptyObject(this.queryParams);
   }
 
-  extraRequestMatches(/*request*/) {
+  withSomeParams(someQueryParams) {
+    this.someQueryParams = someQueryParams;
+    return this;
+  }
+
+  paramsMatch(request) {
+    if (!isEmptyObject(this.someQueryParams)) {
+      return isPartOf(request.queryParams, toParams(this.someQueryParams));
+    }
+    if (!isEmptyObject(this.queryParams)) {
+      return isEquivalent(request.queryParams, toParams(this.queryParams));
+    }
     return true;
+  }
+
+  extraRequestMatches(request) {
+    return this.paramsMatch(request);
   }
 
   matches(request) {
