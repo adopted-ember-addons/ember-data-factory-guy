@@ -1,9 +1,11 @@
-import Ember from 'ember';
 import FactoryGuy from './factory-guy';
 import Sequence from './sequence';
 import MissingSequenceError from './missing-sequence-error';
 import { isEmptyObject, mergeDeep } from './utils/helper-functions';
+import { assert } from '@ember/debug';
+import { get } from '@ember/object';
 import { assign } from '@ember/polyfills';
+import { typeOf } from '@ember/utils';
 
 /**
  A ModelDefinition encapsulates a model's definition
@@ -18,7 +20,7 @@ class ModelDefinition {
     this.modelName = model;
     this.modelId = 1;
     this.originalConfig = mergeDeep({}, config);
-    this.parseConfig(Ember.copy(config));
+    this.parseConfig(assign({}, config));
   }
 
   /**
@@ -29,7 +31,7 @@ class ModelDefinition {
    */
   getRelationship(field) {
     let modelClass = FactoryGuy.store.modelFor(this.modelName);
-    let relationship = Ember.get(modelClass, 'relationshipsByName').get(field);
+    let relationship = get(modelClass, 'relationshipsByName').get(field);
     return relationship || null;
   }
 
@@ -41,7 +43,7 @@ class ModelDefinition {
    */
   modelFragmentInfo(attribute) {
     let modelClass = FactoryGuy.store.modelFor(this.modelName);
-    return Ember.get(modelClass, 'attributes').get(attribute);
+    return get(modelClass, 'attributes').get(attribute);
   }
 
   /**
@@ -141,12 +143,12 @@ class ModelDefinition {
 
     traitNames.forEach(traitName => {
       let trait = this.traits[traitName];
-      Ember.assert(
+      assert(
         `[ember-data-factory-guy] You're trying to use a trait [${traitName}] 
         for model ${this.modelName} but that trait can't be found.`,
         trait
       );
-      if (Ember.typeOf(trait) === 'function') {
+      if (typeOf(trait) === 'function') {
         trait(fixture);
       }
       assign(fixture, trait);
@@ -157,7 +159,7 @@ class ModelDefinition {
     try {
       // deal with attributes that are functions or objects
       for (let attribute in fixture) {
-        let attributeType = Ember.typeOf(fixture[attribute]);
+        let attributeType = typeOf(fixture[attribute]);
         if (attributeType === 'function') {
           this.addFunctionAttribute(fixture, attribute, buildType);
         } else if (attributeType === 'object') {
@@ -281,7 +283,7 @@ class ModelDefinition {
   mergeConfig(config) {
     let extending = config.extends;
     let definition = FactoryGuy.findModelDefinition(extending);
-    Ember.assert(
+    assert(
       `[ember-data-factory-guy] You are trying to extend [${this.modelName}] with [ ${extending} ].
       But FactoryGuy can't find that definition [ ${extending} ]
       you are trying to extend. Make sure it was created/imported before
@@ -322,7 +324,7 @@ class ModelDefinition {
     for (let sequenceName in this.sequences) {
       let sequenceFn = this.sequences[sequenceName];
 
-      if (Ember.typeOf(sequenceFn) !== 'function') {
+      if (typeOf(sequenceFn) !== 'function') {
         throw new Error(
           `Problem with [${sequenceName}] sequence definition.
           Sequences must be functions`);
