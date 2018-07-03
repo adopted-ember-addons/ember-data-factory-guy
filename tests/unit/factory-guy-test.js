@@ -376,6 +376,9 @@ module('FactoryGuy', function(hooks) {
     test("with number as 0 returns an empty array of model instances", function(assert) {
       let users = makeList('user', 0);
       assert.equal(users.length, 0);
+
+      users = makeList('user', 0, 'with_hats', {name: 'Pat'});
+      assert.equal(users.length, 0);
     });
 
     test("with number returns that many model instances", function(assert) {
@@ -889,6 +892,14 @@ module('FactoryGuy', function(hooks) {
         {id: 1, title: 'Really Big'},
         {id: 2, title: 'Really Big'}
       ];
+      assert.deepEqual(projectList, expected);
+
+      projectList = FactoryGuy.buildRawList({
+        name: 'project',
+        number: 0,
+        opts: ['big', {title: 'Really Big'}]
+      });
+      expected = [];
       assert.deepEqual(projectList, expected);
     });
 
