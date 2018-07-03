@@ -439,7 +439,7 @@ class FactoryGuy {
 
     this.ensureNameIsValid(name);
 
-    if (number) {
+    if (number != null) {
       return Array(number).fill().map(() => this.make(...[name, ...opts]));
     }
 

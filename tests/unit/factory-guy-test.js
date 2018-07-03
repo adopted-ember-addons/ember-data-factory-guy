@@ -376,6 +376,9 @@ module('FactoryGuy', function(hooks) {
     test("with number as 0 returns an empty array of model instances", function(assert) {
       let users = makeList('user', 0);
       assert.equal(users.length, 0);
+
+      users = makeList('user', 0, 'with_hats', {name: 'Pat'});
+      assert.equal(users.length, 0);
     });
 
     test("with number returns that many model instances", function(assert) {
