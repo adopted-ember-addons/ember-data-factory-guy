@@ -24,12 +24,14 @@ class FactoryGuy {
    *
    * responseTime: 0 is fastest
    * logLevel: 0 is off, 1 is on
+   * postSetup: a hook to run after Factory Guy sets up
    *
    * @param logLevel [0/1]
    */
-  settings({logLevel = 0, responseTime = null} = {}) {
+  settings({logLevel = 0, responseTime = null, postSetup = null} = {}) {
     RequestManager.settings({responseTime});
     this.logLevel = logLevel;
+    this.postSetup = postSetup;
     return RequestManager.settings();
   }
 

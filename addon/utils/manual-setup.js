@@ -10,5 +10,8 @@ export default function(scope) {
   FactoryGuy.setStore(owner.lookup('service:store'));
   loadFactories();
   loadScenarios(owner);
+  if (FactoryGuy.postSetup) {
+    FactoryGuy.postSetup();
+  }
 }
 
