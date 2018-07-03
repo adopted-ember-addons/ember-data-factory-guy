@@ -3,7 +3,7 @@ import { setupTest } from 'ember-qunit';
 import DS from 'ember-data';
 import Ember from 'ember';
 import FactoryGuy, {
-  make, makeNew, makeList, build, buildList, attributesFor
+  manualSetup, make, makeNew, makeList, build, buildList, attributesFor
 } from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import sinon from 'sinon';
@@ -23,13 +23,19 @@ module('FactoryGuy', function(hooks) {
 
   test("#settings", function(assert) {
     FactoryGuy.logLevel = 0;
-    FactoryGuy.settings({responseTime: 0});
+    FactoryGuy.settings({responseTime: 0, postSetup: null});
 
     FactoryGuy.settings({logLevel: 1});
     assert.equal(FactoryGuy.logLevel, 1);
 
     FactoryGuy.settings({responseTime: 10});
     assert.equal(RequestManager.settings().responseTime, 10);
+
+    let postSetup = sinon.spy();
+    FactoryGuy.settings({postSetup});
+    manualSetup(this);
+    assert.equal(FactoryGuy.postSetup, postSetup);
+    assert.ok(postSetup.called);
   });
 
   test("exposes make method which is shortcut for FactoryGuy.make", function(assert) {
