@@ -3,7 +3,7 @@ import { setupTest } from 'ember-qunit';
 import DS from 'ember-data';
 import Ember from 'ember';
 import FactoryGuy, {
-  make, makeNew, makeList, build, buildList, attributesFor
+  attributesFor, build, buildList, make, makeList, makeNew
 } from 'ember-data-factory-guy';
 import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
 import sinon from 'sinon';
@@ -373,14 +373,6 @@ module('FactoryGuy', function(hooks) {
       );
     });
 
-    test("with number as 0 returns an empty array of model instances", function(assert) {
-      let users = makeList('user', 0);
-      assert.equal(users.length, 0);
-
-      users = makeList('user', 0, 'with_hats', {name: 'Pat'});
-      assert.equal(users.length, 0);
-    });
-
     test("with number returns that many model instances", function(assert) {
       // important to test on model with NO traits
       let users = makeList('outfit', 2);
@@ -390,6 +382,14 @@ module('FactoryGuy', function(hooks) {
     test("with a number and a trait", function(assert) {
       let users = makeList('user', 2, 'with_hats');
       assert.equal(users.length, 2);
+    });
+
+    test("with number as 0 returns an empty array of model instances", function(assert) {
+      let users = makeList('user', 0);
+      assert.equal(users.length, 0, 'without traits or options');
+
+      users = makeList('user', 0, 'with_hats', {name: 'Pat'});
+      assert.equal(users.length, 0, 'with traits and options');
     });
 
     test("without a number returns an array of 0 model instances", function(assert) {
@@ -893,13 +893,16 @@ module('FactoryGuy', function(hooks) {
         {id: 2, title: 'Really Big'}
       ];
       assert.deepEqual(projectList, expected);
+    });
 
-      projectList = FactoryGuy.buildRawList({
+    test("when number is 0 the list will always be empty", function(assert) {
+      const projectList = FactoryGuy.buildRawList({
         name: 'project',
         number: 0,
         opts: ['big', {title: 'Really Big'}]
       });
-      expected = [];
+      const expected = [];
+
       assert.deepEqual(projectList, expected);
     });
 
