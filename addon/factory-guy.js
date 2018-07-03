@@ -319,7 +319,7 @@ class FactoryGuy {
   buildRawList({name, number, opts, buildType = 'build'} = {}) {
     let definition = FactoryGuy.lookupDefinitionForFixtureName(name, true);
 
-    if (number) {
+    if (number != null) {
       let parts = FactoryGuy.extractArgumentsShort(...opts);
       return definition.buildList(name, number, parts.traits, parts.opts, buildType);
     }

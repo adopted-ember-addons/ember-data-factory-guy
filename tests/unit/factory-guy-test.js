@@ -890,6 +890,14 @@ module('FactoryGuy', function(hooks) {
         {id: 2, title: 'Really Big'}
       ];
       assert.deepEqual(projectList, expected);
+
+      projectList = FactoryGuy.buildRawList({
+        name: 'project',
+        number: 0,
+        opts: ['big', {title: 'Really Big'}]
+      });
+      expected = [];
+      assert.deepEqual(projectList, expected);
     });
 
     test("using diverse attributes", function(assert) {
