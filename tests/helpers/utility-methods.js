@@ -89,31 +89,25 @@ function setupCustomSerializer(container, serializerType, options) {
 
 
 // serializerType like -rest or -active-model, -json-api, -json
-export function containerSetup(container, serializerType) {
+export function containerSetup(application, serializerType) {
 
   // brute force setting the adapter/serializer on the store.
   if (serializerType) {
-    container.registry.register('adapter:-drf', DRFAdapter, {singleton: false});
-    container.registry.register('serializer:-drf', DRFSerializer, {singleton: false});
+    application.register('adapter:-drf', DRFAdapter, {singleton: false});
+    application.register('serializer:-drf', DRFSerializer, {singleton: false});
 
-    container.registry.register('adapter:-active-model', ActiveModelAdapter, {singleton: false});
-    container.registry.register('serializer:-active-model', ActiveModelSerializer, {singleton: false});
+    application.register('adapter:-active-model', ActiveModelAdapter, {singleton: false});
+    application.register('serializer:-active-model', ActiveModelSerializer, {singleton: false});
 
-    let store = container.lookup('service:store');
+    let store = application.lookup('service:store');
 
     let adapterType = serializerType === '-json' ? '-rest' : serializerType;
-    let adapter = container.lookup('adapter:' + adapterType);
+    let adapter = application.lookup('adapter:' + adapterType);
 
     serializerType = serializerType === '-json' ? '-default' : serializerType;
-    let serializer = container.lookup('serializer:' + serializerType);
+    let serializer = application.lookup('serializer:' + serializerType);
 
-    store.adapterFor = function() {
-      //      if (modelName.match(/(employee)/)) {
-      //        let options = adapterOptions[modelName];
-      //        return setupCustomAdapter(container, adapterType, options);
-      //      }
-      return adapter;
-    };
+    store.adapterFor = () => adapter;
 
     let findSerializer = store.serializerFor.bind(store);
 
@@ -126,7 +120,7 @@ export function containerSetup(container, serializerType) {
       }
       if (modelName.match(/(entry|entry-type|comic-book|^cat$|^dog$)/)) {
         let options = serializerOptions[modelName];
-        return setupCustomSerializer(container, serializerType, options);
+        return setupCustomSerializer(application, serializerType, options);
       }
       return serializer;
     };
@@ -134,15 +128,13 @@ export function containerSetup(container, serializerType) {
     // this is cheesy .. but it works
     serializer.store = store;
     adapter.store = store;
-
-    FactoryGuy.setStore(store);
   }
 }
 
 export function inlineSetup(hooks, serializerType) {
   hooks.beforeEach(function() {
     manualSetup(this);
-    containerSetup(this.owner.__container__, serializerType);
+    containerSetup(this.owner, serializerType);
     FactoryGuy.settings({responseTime: 0, logLevel: 0});
   });
 }

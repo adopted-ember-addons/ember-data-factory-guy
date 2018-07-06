@@ -11,5 +11,5 @@ export default Model.extend({
   foo: attr('just-a-string'),
   superHero: belongsTo('super-hero', { async: false }),
   company: belongsTo('company', { async: false }),
-  group: belongsTo('group', { async: false, polymorphic: true })
+  group: belongsTo('group', { async: false, polymorphic: true, inverse: 'profiles' })
 });

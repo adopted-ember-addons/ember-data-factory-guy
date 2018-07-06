@@ -1,6 +1,6 @@
 import { test } from 'ember-qunit';
 import Ember from 'ember';
-import FactoryGuy, { make, makeList, makeNew, buildList } from 'ember-data-factory-guy';
+import FactoryGuy, { buildList, make, makeList, makeNew } from 'ember-data-factory-guy';
 
 import User from 'dummy/models/user';
 import BigHat from 'dummy/models/big-hat';
@@ -356,7 +356,7 @@ SharedBehavior.makeTests = function() {
 
   test("with links for belongsTo relationship", function(assert) {
     let companyLink = '/user/1/company',
-        user         = make('user', {company: {links: companyLink}});
+        user        = make('user', {company: {links: companyLink}});
 
     assert.equal(user.belongsTo('company').link(), companyLink)
   });
