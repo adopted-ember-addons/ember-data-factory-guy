@@ -16,9 +16,6 @@ export default class {
     this.timesCalled = 0;
   }
 
-  //  with(options={}) {
-  //  }
-
   /**
    * Set the adapter options that this mockCreate will be using
    *
@@ -113,18 +110,6 @@ export default class {
       console.log(...info);
     }
   }
-
-//  paramsMatch() {
-//    return true;
-//  }
-//
-//  hasQueryParams() {
-//    return false;
-//  }
-//
-//  extraRequestMatches(/*request*/) {
-//    return true;
-//  }
 
   withParams(queryParams) {
     this.queryParams = queryParams;

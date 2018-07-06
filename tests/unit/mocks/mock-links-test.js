@@ -43,6 +43,19 @@ module('MockLinks', function(hooks) {
     assert.equal(mockProperties.status, '200');
   });
 
+  test("handles links url with query parameters", async function(assert) {
+    let propertiesLink = '/users/1/properties?dudes=2',
+        user           = make('user', {properties: {links: propertiesLink}}),
+        json           = buildList('property', 1),
+        mockProperties = mockLinks(user, 'properties').returns({json});
+
+    assert.equal(mockProperties.getUrl(), '/users/1/properties');
+    assert.deepEqual(mockProperties.queryParams, {dudes: '2'});
+
+    await user.properties.toArray();
+    assert.equal(mockProperties.timesCalled, 1);
+  });
+
   test("hasMany links returns buildList payload", async function(assert) {
     let user       = make('user', 'propertiesLink'),
         properties = buildList('property', 1);

@@ -2,6 +2,7 @@ import Ember from 'ember';
 import MockRequest from './mock-request';
 import FactoryGuy from "../factory-guy";
 import Model from 'ember-data/model';
+import { parseUrl } from '../utils/helper-functions';
 
 export default class MockLinksRequest extends MockRequest {
 
@@ -14,6 +15,7 @@ export default class MockLinksRequest extends MockRequest {
     this.setValidReturnsKeys();
     this.type = 'GET';
     this.status = 200;
+    this.extractUrl();
     this.setupHandler();
   }
 
@@ -32,13 +34,24 @@ export default class MockLinksRequest extends MockRequest {
   }
 
   setValidReturnsKeys() {
-    let isBelongsTo = this.relationship.kind === 'belongsTo';
-    let validKeys = isBelongsTo ? ['model', 'json'] : ['models', 'json'];
+    const isBelongsTo = this.relationship.kind === 'belongsTo',
+          validKeys   = isBelongsTo ? ['model', 'json'] : ['models', 'json'];
     this.validReturnsKeys = validKeys;
   }
 
+  /**
+   * Links url's could have query parameters, and this extraction will pull
+   * that apart into the url and query parameters so pretender can make a match
+   */
+  extractUrl() {
+    const url = this.model[this.relationship.kind](this.relationshipKey).link();
+    const [urlPart, queryParams] = parseUrl(url);
+    this.withParams(queryParams);
+    this.url = urlPart;
+  }
+
   getUrl() {
-    return this.model[this.relationship.kind](this.relationshipKey).link();
+    return this.url;
   }
 
   getType() {

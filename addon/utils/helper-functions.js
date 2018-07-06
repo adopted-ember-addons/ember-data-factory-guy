@@ -72,11 +72,11 @@ export function mergeDeep(target, ...sources) {
       if (source.hasOwnProperty(key)) {
         if (isObject(source[key])) {
           if (!target[key]) {
-            assign(target, { [key]: {} });
+            assign(target, {[key]: {}});
           }
           mergeDeep(target[key], source[key]);
         } else {
-          assign(target, { [key]: source[key] });
+          assign(target, {[key]: source[key]});
         }
       }
     }
@@ -130,6 +130,26 @@ function objectIsEquivalent(objectA, objectB) {
     }
   }
   return true;
+}
+
+/**
+ * Used to split a url with query parms into url and queryParams
+ * MockLinks and Mock both use this
+ *
+ * @param url
+ * @returns {*[]}
+ */
+export function parseUrl(url) {
+  const [urlPart, query] = url.split('?');
+  const params = query && query
+  .split('&')
+  .reduce((params, param) => {
+    let [key, value] = param.split('=');
+    params[key] = value ? decodeURIComponent(value.replace(/\+/g, ' ')) : '';
+    return params;
+  }, {}) || {};
+
+  return [urlPart, params];
 }
 
 // always exclude jshint or jscs files
