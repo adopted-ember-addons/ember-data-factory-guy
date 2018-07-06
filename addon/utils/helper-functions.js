@@ -140,7 +140,7 @@ function objectIsEquivalent(objectA, objectB) {
  * @returns {*[]}
  */
 export function parseUrl(url) {
-  const [urlPart, query] = url.split('?');
+  const [urlPart, query] = (url || '').split('?');
   const params = query && query
   .split('&')
   .reduce((params, param) => {

@@ -2,9 +2,7 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
 import {
-  isEquivalent,
-  isEmptyObject,
-  isPartOf
+  isEmptyObject, isEquivalent, isPartOf, parseUrl
 } from 'ember-data-factory-guy/utils/helper-functions';
 
 module('Unit | Helper Functions', function(hooks) {
@@ -110,5 +108,23 @@ module('Unit | Helper Functions', function(hooks) {
 
     assert.notOk(isPartOf(tomster, {name: 'Tomster', number: 1}),
       'returns false if the first object does not contains key-value pairs from the second object');
+  });
+
+  test('parseUrl', function(assert) {
+    let tests = [
+      ['', ['', {}]],
+      [null, ['', {}]],
+      ['/fee', ['/fee', {}]],
+      ['/fee?fi=fo', ['/fee', {fi:'fo'}]],
+    ];
+
+    for (let test of tests) {
+      let [url, expected] = test;
+      const [expectedUrl, expectedParams] = expected,
+            [actualUrl, actualParams]     = parseUrl(url);
+
+      assert.equal(actualUrl, expectedUrl, `${actualUrl} expect url => ${expectedUrl}`);
+      assert.deepEqual(actualParams, expectedParams, `${actualParams} expect params => ${expectedParams}`);
+    }
   });
 });
