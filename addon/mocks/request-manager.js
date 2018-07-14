@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { isPresent } from '@ember/utils';
 import RequestWrapper from './request-wrapper';
 import Pretender from 'pretender';
 
@@ -26,7 +26,7 @@ export default class {
    * @returns {{responseTime: number}} the current settings
    */
   static settings({ responseTime } = {}) {
-    if (Ember.isPresent(responseTime)) {
+    if (isPresent(responseTime)) {
       delay = responseTime;
     }
     // return current settings

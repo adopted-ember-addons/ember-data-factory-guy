@@ -1,11 +1,13 @@
-import Ember from 'ember';
+import { assert } from '@ember/debug';
+import { isPresent, typeOf } from '@ember/utils';
+import { assign } from '@ember/polyfills';
+import { join } from '@ember/runloop';
+import { A } from '@ember/array';
+import require from 'require';
 import DS from 'ember-data';
 import ModelDefinition from './model-definition';
 import FixtureBuilderFactory from './builder/fixture-builder-factory';
 import RequestManager from './mocks/request-manager';
-import require from 'require';
-import { assign } from '@ember/polyfills';
-import { join } from '@ember/runloop';
 
 let modelDefinitions = {};
 
@@ -34,7 +36,7 @@ class FactoryGuy {
   }
 
   setStore(aStore) {
-    Ember.assert(
+    assert(
       `[ember-data-factory-guy] FactoryGuy#setStore needs a valid store instance. You passed in [${aStore}]`,
       aStore instanceof DS.Store
     );
@@ -145,7 +147,7 @@ class FactoryGuy {
     let sortaRandomName = Math.floor((1 + Math.random()) * 65536).toString(16) + Date.now();
     return function() {
       // this function will be called by ModelDefinition, which has it's own generate method
-      if (Ember.typeOf(nameOrFunction) === 'function') {
+      if (typeOf(nameOrFunction) === 'function') {
         return this.generate(sortaRandomName, nameOrFunction);
       } else {
         return this.generate(nameOrFunction);
@@ -325,7 +327,7 @@ class FactoryGuy {
     }
 
     return opts.map(function(innerArgs) {
-      if (Ember.typeOf(innerArgs) !== 'array') {
+      if (typeOf(innerArgs) !== 'array') {
         innerArgs = [innerArgs];
       }
       let parts = FactoryGuy.extractArgumentsShort(...innerArgs);
@@ -444,7 +446,7 @@ class FactoryGuy {
     }
 
     return opts.map(innerArgs => {
-      if (Ember.typeOf(innerArgs) !== 'array') {
+      if (typeOf(innerArgs) !== 'array') {
         innerArgs = [innerArgs];
       }
       return this.make(...[name, ...innerArgs]);
@@ -452,7 +454,7 @@ class FactoryGuy {
   }
 
   ensureNameInArguments(method, args) {
-    Ember.assert(
+    assert(
       `[ember-data-factory-guy] ${method} needs at least a name
       ( of model or named factory definition )`,
       args.length > 0
@@ -460,7 +462,7 @@ class FactoryGuy {
   }
 
   ensureStore() {
-    Ember.assert(
+    assert(
       `[ember-data-factory-guy] FactoryGuy does not have the application's store.
        Use manualSetup(this) in model/component test
        before using make/makeList`, this.store
@@ -539,8 +541,8 @@ class FactoryGuy {
     store.adapterFor = function(name) {
       let adapter = findAdapter(name);
       let shouldCache = () => {
-        if (Ember.isPresent(except)) {
-          return (Ember.A(except).includes(name));
+        if (isPresent(except)) {
+          return (A(except).includes(name));
         }
         return false;
       };
@@ -599,11 +601,11 @@ class FactoryGuy {
   static extractArgumentsShort(...args) {
     args = args.slice();
     let opts = {};
-    if (Ember.typeOf(args[args.length - 1]) === 'object') {
+    if (typeOf(args[args.length - 1]) === 'object') {
       opts = args.pop();
     }
     // whatever is left are traits
-    let traits = Ember.A(args).compact();
+    let traits = A(args).compact();
     return {opts, traits};
   }
 
@@ -623,7 +625,7 @@ class FactoryGuy {
       }
     }
 
-    Ember.assert(
+    assert(
       `[ember-data-factory-guy] Can't find that factory named [ ${name} ]`,
       !definition && assertItExists
     );

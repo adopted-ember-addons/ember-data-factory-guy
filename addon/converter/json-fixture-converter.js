@@ -1,7 +1,6 @@
-import Ember from 'ember';
+import { typeOf } from '@ember/utils';
+import { dasherize, underscore } from '@ember/string';
 import Converter from './fixture-converter';
-
-const {underscore, dasherize} = Ember.String;
 
 /**
  Convert base fixture to a JSON format payload.
@@ -84,7 +83,7 @@ export default class extends Converter {
     if (this.serializeMode) {
       return record.id;
     }
-    if (Ember.typeOf(record) === 'object') {
+    if (typeOf(record) === 'object') {
       if (relationship.options.polymorphic) {
         return {type: dasherize(record.type), id: record.id};
       } else {

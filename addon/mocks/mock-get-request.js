@@ -1,9 +1,10 @@
-import Ember from 'ember';
+import { assert } from '@ember/debug';
+import { typeOf } from '@ember/utils';
+import { isArray } from '@ember/array'
+import { assign } from '@ember/polyfills'
 import FactoryGuy from '../factory-guy';
 import Model from 'ember-data/model';
 import MockStoreRequest from './mock-store-request';
-
-const assign = Ember.assign || Ember.merge;
 
 class MockGetRequest extends MockStoreRequest {
 
@@ -46,12 +47,12 @@ class MockGetRequest extends MockStoreRequest {
   validateReturnsOptions(options) {
     const responseKeys = Object.keys(options);
 
-    Ember.assert(`[ember-data-factory-guy] You can pass one key to 'returns',
+    assert(`[ember-data-factory-guy] You can pass one key to 'returns',
                 you passed these keys: ${responseKeys}`, responseKeys.length === 1);
 
     const [responseKey] = responseKeys;
 
-    Ember.assert(`[ember-data-factory-guy] You passed an invalid keys for 'returns' function.
+    assert(`[ember-data-factory-guy] You passed an invalid keys for 'returns' function.
       Valid keys are ${this.validReturnsKeys}. You used this invalid key: ${responseKey}`,
       this.validReturnsKeys.includes(responseKey));
 
@@ -80,8 +81,8 @@ class MockGetRequest extends MockStoreRequest {
       case 'model':
         model = options.model;
 
-        Ember.assert(`[ember-data-factory-guy] argument ( model ) must be a Model instance - found type:'
-          ${Ember.typeOf(model)}`, (model instanceof Model));
+        assert(`[ember-data-factory-guy] argument ( model ) must be a Model instance - found type:'
+          ${typeOf(model)}`, (model instanceof Model));
 
         json = {id: model.id};
         this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, json));
@@ -95,8 +96,8 @@ class MockGetRequest extends MockStoreRequest {
       }
       case 'models': {
         models = options.models;
-        Ember.assert(`[ember-data-factory-guy] argument ( models ) must be an array - found type:'
-          ${Ember.typeOf(models)}`, Ember.isArray(models));
+        assert(`[ember-data-factory-guy] argument ( models ) must be an array - found type:'
+          ${typeOf(models)}`, isArray(models));
 
         json = models.map(model => ({id: model.id}));
 

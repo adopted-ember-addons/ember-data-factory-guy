@@ -1,7 +1,7 @@
-import Ember from 'ember';
+import { isEmpty, typeOf } from '@ember/utils';
+import { dasherize } from '@ember/string';
+import { A } from '@ember/array';
 import Converter from './fixture-converter';
-
-const {dasherize} = Ember.String;
 
 /**
  * Using `serializeMode` to create a payload the way ember-data would serialize types
@@ -46,7 +46,7 @@ class JSONAPIFixtureConverter extends Converter {
    * @param payload
    */
   addIncludedArray(payload) {
-    if (!Ember.isEmpty(this.included)) {
+    if (!isEmpty(this.included)) {
       payload.included = this.included;
     }
   }
@@ -60,7 +60,7 @@ class JSONAPIFixtureConverter extends Converter {
    @param {Object} relationship
    */
   normalizeAssociation(record) {
-    if (Ember.typeOf(record) === 'object') {
+    if (typeOf(record) === 'object') {
       return {type: this.typeTransformFn(record.type), id: record.id};
     } else {
       return {type: this.typeTransformFn(record.constructor.modelName), id: record.id};
@@ -105,7 +105,7 @@ class JSONAPIFixtureConverter extends Converter {
    Add the model to included array unless it's already there.
    */
   addToIncluded(data) {
-    let found = Ember.A(this.included).find((model) => {
+    let found = A(this.included).find((model) => {
       return model.id === data.id && model.type === data.type;
     });
     if (!found) {

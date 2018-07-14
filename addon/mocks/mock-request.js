@@ -1,8 +1,9 @@
-import Ember from 'ember';
+import { assert } from '@ember/debug';
+import { assign } from '@ember/polyfills';
+import $ from 'jquery';
 import { isEmptyObject, isEquivalent, isPartOf, toParams } from '../utils/helper-functions';
 import FactoryGuy from '../factory-guy';
 import RequestManager from './request-manager';
-import { assign } from '@ember/polyfills';
 
 export default class {
 
@@ -63,7 +64,7 @@ export default class {
     let convertErrors = opts.hasOwnProperty('convertErrors') ? opts.convertErrors : true,
         status        = opts.status || 500,
         response      = opts.response || null;
-    Ember.assert(`[ember-data-factory-guy] 'fails' method status code must be 3XX, 4XX or 5XX,
+    assert(`[ember-data-factory-guy] 'fails' method status code must be 3XX, 4XX or 5XX,
         you are using: ${status}`, this.isErrorStatus(status));
 
     this.status = status;
@@ -102,7 +103,7 @@ export default class {
 
       let fullUrl = url;
       if (!isEmptyObject(this.queryParams)) {
-        fullUrl = [url, '?', Ember.$.param(this.queryParams)].join('');
+        fullUrl = [url, '?', $.param(this.queryParams)].join('');
       }
 
       const info = ['[factory-guy]', name, type, status, fullUrl, json];

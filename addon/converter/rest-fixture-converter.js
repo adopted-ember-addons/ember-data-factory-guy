@@ -1,8 +1,8 @@
-import Ember from 'ember';
+import { dasherize } from '@ember/string';
+import { A } from '@ember/array';
 import JSONFixtureConverter from './json-fixture-converter';
 
 import { pluralize } from 'ember-inflector';
-const { dasherize } = Ember.String;
 
 /**
  Convert base fixture to a REST Serializer formatted payload.
@@ -78,7 +78,7 @@ export default class extends JSONFixtureConverter {
     }
 
     let modelRelationships = this.included[relationshipKey],
-        found              = Ember.A(modelRelationships).find(existing => existing.id === data.id);
+        found              = A(modelRelationships).find(existing => existing.id === data.id);
 
     if (!found) {
       modelRelationships.push(data);

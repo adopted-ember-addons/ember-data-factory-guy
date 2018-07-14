@@ -1,5 +1,6 @@
 /* global requirejs */
-import Ember from 'ember';
+import { typeOf } from '@ember/utils';
+import $ from 'jquery';
 import require from 'require';
 import { assign } from '@ember/polyfills';
 
@@ -8,7 +9,7 @@ import { assign } from '@ember/polyfills';
  * @param obj
  */
 export function toParams(obj) {
-  return parseParms(decodeURIComponent(Ember.$.param(obj)));
+  return parseParms(decodeURIComponent($.param(obj)));
 }
 
 function parseParms(str) {
@@ -86,8 +87,8 @@ export function mergeDeep(target, ...sources) {
 }
 
 export function isEquivalent(a, b) {
-  var type = Ember.typeOf(a);
-  if (type !== Ember.typeOf(b)) {
+  var type = typeOf(a);
+  if (type !== typeOf(b)) {
     return false;
   }
   switch (type) {

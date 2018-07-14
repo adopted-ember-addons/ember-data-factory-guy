@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import { isEmpty } from '@ember/utils';
+import { A } from '@ember/array';
 import BasePayload from './base-payload';
 
 export default class extends BasePayload {
@@ -10,8 +11,8 @@ export default class extends BasePayload {
   }
 
   includeKeys() {
-    let keys = Ember.A(Object.keys(this.json)).reject(key => this.payloadKey === key);
-    return Ember.A(keys).reject(key=> Ember.A(this.proxyMethods).includes(key)) || [];
+    let keys = A(Object.keys(this.json)).reject(key => this.payloadKey === key);
+    return A(keys).reject(key=> A(this.proxyMethods).includes(key)) || [];
   }
 
   getInclude(modelType) {
@@ -20,7 +21,7 @@ export default class extends BasePayload {
 
   getObjectKeys(key) {
     let attrs = this.json[this.payloadKey];
-    if (Ember.isEmpty(key)) {
+    if (isEmpty(key)) {
       return attrs;
     }
     return attrs[key];
@@ -28,7 +29,7 @@ export default class extends BasePayload {
 
   getListKeys(key) {
     let attrs = this.json[this.payloadKey];
-    if (Ember.isEmpty(key)) {
+    if (isEmpty(key)) {
       return attrs;
     }
     if (typeof key === 'number') {

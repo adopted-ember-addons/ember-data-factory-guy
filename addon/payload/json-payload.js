@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { isEmpty } from '@ember/utils';
 import BasePayload from './base-payload';
 
 export default class extends BasePayload {
@@ -19,7 +19,7 @@ export default class extends BasePayload {
 
   getObjectKeys(key) {
     let attrs = this.json;
-    if (Ember.isEmpty(key)) {
+    if (isEmpty(key)) {
       return JSON.parse(JSON.stringify(attrs));
     }
     return attrs[key];
@@ -27,7 +27,7 @@ export default class extends BasePayload {
 
   getListKeys(key) {
     let attrs = this.json;
-    if (Ember.isEmpty(key)) {
+    if (isEmpty(key)) {
       return JSON.parse(JSON.stringify(attrs));
     }
     if (typeof key === 'number') {

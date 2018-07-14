@@ -1,5 +1,7 @@
+import { assert } from '@ember/debug';
+import { typeOf } from '@ember/utils';
+import { get } from '@ember/object';
 import JSONAPIFixtureConverter from '../converter/jsonapi-fixture-converter';
-import Ember from 'ember';
 
 export default class {
 
@@ -28,7 +30,7 @@ export default class {
   transformKey(modelName, key) {
     let converter           = this.getConverter(),
         model               = this.store.modelFor(modelName),
-        relationshipsByName = Ember.get(model, 'relationshipsByName'),
+        relationshipsByName = get(model, 'relationshipsByName'),
         relationship        = relationshipsByName.get(key);
     if (relationship) {
       return converter.transformRelationshipKey(relationship);
@@ -95,14 +97,14 @@ export default class {
     let jsonAPIErrors = [],
         {errors}      = object;
 
-    Ember.assert(
+    assert(
       `[ember-data-factory-guy] Your error response must have an errors key. 
       The errors hash format is: {errors: {name: ["name too short"]}}`,
       errors
     );
 
     for (let key in errors) {
-      let description = Ember.typeOf(errors[key]) === "array" ? errors[key][0] : errors[key],
+      let description = typeOf(errors[key]) === "array" ? errors[key][0] : errors[key],
           source      = {pointer: "data/attributes/" + key},
           newError    = {detail: description, title: "invalid " + key, source: source};
       jsonAPIErrors.push(newError);

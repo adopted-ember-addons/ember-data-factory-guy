@@ -1,6 +1,6 @@
-import Ember from 'ember';
-import JSONPayload from './json-payload';
+import { isEmpty } from '@ember/utils';
 import { assign } from '@ember/polyfills';
+import JSONPayload from './json-payload';
 
 export default class extends JSONPayload {
 
@@ -13,7 +13,7 @@ export default class extends JSONPayload {
 
   getListKeys(key) {
     let attrs = this.json.results;
-    if (Ember.isEmpty(key)) {
+    if (isEmpty(key)) {
       return JSON.parse(JSON.stringify(attrs));
     }
     if (typeof key === 'number') {

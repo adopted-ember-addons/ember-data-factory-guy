@@ -1,4 +1,7 @@
-import Ember from 'ember';
+import { assert } from '@ember/debug';
+import { typeOf } from '@ember/utils';
+import { getOwner } from '@ember/application';
+import { camelize } from '@ember/string';
 
 /**
  Base class for converting the base fixture that factory guy creates to
@@ -46,7 +49,7 @@ export default class {
   convert(modelName, fixture) {
     let data;
 
-    if (Ember.typeOf(fixture) === 'array') {
+    if (typeOf(fixture) === 'array') {
       this.listType = true;
       data = fixture.map((single) => {
         return this.convertSingle(modelName, single);
@@ -133,7 +136,7 @@ export default class {
         if (attrOptions.key) {
           attrName = attrOptions.key;
         }
-        if (Ember.typeOf(attrOptions) === "string") {
+        if (typeOf(attrOptions) === "string") {
           attrName = attrOptions;
         }
       }
@@ -148,10 +151,10 @@ export default class {
     if (!type) {
       return this.defaultValueTransformFn;
     }
-    let container = Ember.getOwner ? Ember.getOwner(this.store) : this.store.container,
+    let container = getOwner(this.store),
         transform = container.lookup('transform:' + type);
 
-    Ember.assert(`[ember-data-factory-guy] could not find
+    assert(`[ember-data-factory-guy] could not find
     the [ ${type} ] transform. If you are in a unit test, be sure 
     to include it in the list of needs as [ transform:${type} ],  Or set your 
     unit test to be [ integration: true ] and include everything.`,
@@ -235,7 +238,7 @@ export default class {
 
   attrsOption(serializer, attr) {
     let attrs  = serializer.get('attrs'),
-        option = attrs && (attrs[Ember.String.camelize(attr)] || attrs[attr]);
+        option = attrs && (attrs[camelize(attr)] || attrs[attr]);
     return option;
   }
 
@@ -253,7 +256,7 @@ export default class {
       return this.addListProxyData(hasManyRecords, relationship, relationships, isEmbedded);
     }
 
-    if (Ember.typeOf(hasManyRecords) !== 'array') {
+    if (typeOf(hasManyRecords) !== 'array') {
       return;
     }
 
@@ -266,7 +269,7 @@ export default class {
 
   extractSingleRecord(record, relationship, isEmbedded) {
     let data;
-    switch (Ember.typeOf(record)) {
+    switch (typeOf(record)) {
 
       case 'object':
         if (record.isProxy) {
@@ -282,7 +285,7 @@ export default class {
 
       case 'number':
       case 'string':
-        Ember.assert(
+        assert(
           `Polymorphic relationships cannot be specified by id you
           need to supply an object with id and type`, !relationship.options.polymorphic
         );

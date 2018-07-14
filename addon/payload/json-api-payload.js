@@ -1,4 +1,6 @@
-import Ember from 'ember';
+import { isEmpty } from '@ember/utils';
+import { typeOf } from '@ember/utils';
+import $ from 'jquery';
 import BasePayload from './base-payload';
 
 export default class extends BasePayload {
@@ -29,7 +31,7 @@ export default class extends BasePayload {
       this.converter.included = this.json.included;
       // add the main moreJson model payload
       let data = more.getModelPayload();
-      if (Ember.typeOf(data) === "array") {
+      if (typeOf(data) === "array") {
         data.forEach(dati=> this.converter.addToIncluded(dati));
       } else {
         this.converter.addToIncluded(data);
@@ -45,7 +47,7 @@ export default class extends BasePayload {
     Object.keys(data.relationships||[]).forEach((key)=> {
       relationships[key] = data.relationships[key].data;
     });
-    let attrs = Ember.$.extend({}, data.attributes, relationships);
+    let attrs = $.extend({}, data.attributes, relationships);
     attrs.id = data.id;
     return attrs;
   }
@@ -66,7 +68,7 @@ export default class extends BasePayload {
 
   getListKeys(key) {
     let attrs = this.data.map((data)=> this.createAttrs(data));
-    if (Ember.isEmpty(key)) {
+    if (isEmpty(key)) {
       return attrs;
     }
     if (typeof key === 'number') {

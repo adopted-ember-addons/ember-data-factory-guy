@@ -1,9 +1,9 @@
-import Ember from 'ember';
+import { assert } from '@ember/debug';
+import { assign } from '@ember/polyfills';
 import FactoryGuy from '../factory-guy';
 import MockStoreRequest from './mock-store-request';
 import AttributeMatcher from './attribute-matcher';
 import MaybeIdUrlMatch from './maybe-id-url-match';
-import { assign } from '@ember/polyfills';
 
 export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(MockStoreRequest)) {
 
@@ -43,7 +43,7 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
    you would like returned with the model when the update succeeds.
 
    You can't user returns if you use mockUpdate with only a modelName like:
-     mockUpdate('user'); ( no id specified )
+   mockUpdate('user'); ( no id specified )
 
    @param {Object} returns attributes and or relationships to send with payload
    */
@@ -51,7 +51,7 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
     this.validateReturnsOptions(returns);
 
     if (!this.id) {
-      Ember.assert(`[ember-data-factory-guy] Can't use returns in
+      assert(`[ember-data-factory-guy] Can't use returns in
       mockUpdate when update only has modelName and no id`, this.id);
     }
 
@@ -64,7 +64,7 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
    Adapters freak out if update payload is non empty and there is no id.
 
    So, if you use mockUpdate like this:
-     mockUpdate('user'); ( no id specified ) this mock will return null
+   mockUpdate('user'); ( no id specified ) this mock will return null
 
    @returns {*}
    */

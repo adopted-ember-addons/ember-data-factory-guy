@@ -1,14 +1,15 @@
-import Ember from 'ember';
-const { w } = Ember.String;
+import { w } from '@ember/string';
+import { typeOf } from '@ember/utils';
 import { assign } from '@ember/polyfills';
+import { A } from '@ember/array';
 
 export default class {
 
   /**
    Proxy class for getting access to a json payload.
    Allows you to:
-     - inspect a payload with friendly .get(attr)  syntax
-     - add to json payload with more json built from build and buildList methods.
+   - inspect a payload with friendly .get(attr)  syntax
+   - add to json payload with more json built from build and buildList methods.
 
    @param {String} modelName name of model for payload
    @param {Object} json json payload being proxied
@@ -45,27 +46,27 @@ export default class {
    */
   add(more) {
     this.converter.included = this.json;
-    Ember.A(Object.getOwnPropertyNames(more))
-      .reject(key=> Ember.A(this.proxyMethods).includes(key))
-      .forEach(key=> {
-        if (Ember.typeOf(more[key]) === "array") {
-          more[key].forEach(data=> this.converter.addToIncluded(data, key));
+    A(Object.getOwnPropertyNames(more))
+    .reject(key => A(this.proxyMethods).includes(key))
+    .forEach(key => {
+      if (typeOf(more[key]) === "array") {
+        more[key].forEach(data => this.converter.addToIncluded(data, key));
+      } else {
+        if (key === "meta") {
+          this.addMeta(more[key]);
         } else {
-          if (key === "meta") {
-            this.addMeta(more[key]);
-          } else {
-            this.converter.addToIncluded(more[key], key);
-          }
+          this.converter.addToIncluded(more[key], key);
         }
-      });
+      }
+    });
     return this.json;
   }
 
   /**
-    Add new meta data to the json payload, which will
-    overwrite any existing meta data with same keys
+   Add new meta data to the json payload, which will
+   overwrite any existing meta data with same keys
 
-    @param {Object} data meta data to add
+   @param {Object} data meta data to add
    */
   addMeta(data) {
     this.json.meta = this.json.meta || {};

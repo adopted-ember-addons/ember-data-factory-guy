@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { assert } from '@ember/debug';
 import FactoryGuy from '../factory-guy';
 import { isEmptyObject, isEquivalent } from '../utils/helper-functions';
 
@@ -38,7 +38,7 @@ const AttributeMatcher = (superclass) => class extends superclass {
           validReturnsKeys = ['attrs', 'add'],
           invalidKeys      = responseKeys.filter(key => !validReturnsKeys.includes(key));
     
-    Ember.assert(`[ember-data-factory-guy] You passed invalid keys for 'returns' function.
+    assert(`[ember-data-factory-guy] You passed invalid keys for 'returns' function.
       Valid keys are ${validReturnsKeys}. You used these invalid keys: ${invalidKeys}`,
       invalidKeys.length === 0);
 

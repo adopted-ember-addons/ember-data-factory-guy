@@ -1,7 +1,8 @@
-import Ember from 'ember';
+import { typeOf } from '@ember/utils';
+import { deprecate } from '@ember/application/deprecations';
+import { assert } from '@ember/debug';
 import Model from 'ember-data/model';
 import FactoryGuy from '../factory-guy';
-
 import MockUpdateRequest from './mock-update-request';
 import MockCreateRequest from './mock-create-request';
 import MockQueryRequest from './mock-query-request';
@@ -15,26 +16,26 @@ import MockLinksRequest from './mock-links-request';
 import RequestManager from './request-manager';
 
 export function mockSetup({responseTime, logLevel = 0} = {}) {
-  Ember.deprecate(`[ember-data-factory-guy] mockSetup is no longer needed. If you want to set logLevel or responseTime, use FactoryGuy.settings instead. If you don't need to set anything, it is safe to remove mockSetup`,
+  deprecate(`[ember-data-factory-guy] mockSetup is no longer needed. If you want to set logLevel or responseTime, use FactoryGuy.settings instead. If you don't need to set anything, it is safe to remove mockSetup`,
     false,
     {id: 'ember-data-factory-guy.mock-setup', until: '2.14.0'});
   FactoryGuy.settings({logLevel, responseTime});
 }
 
 export function mockTeardown() {
-  Ember.deprecate(`[ember-data-factory-guy] mockTeardown is no longer needed. Mock teardown is now done automatically after every test.`,
+  deprecate(`[ember-data-factory-guy] mockTeardown is no longer needed. Mock teardown is now done automatically after every test.`,
     false,
     {id: 'ember-data-factory-guy.mock-teardown', until: '2.14.0'});
 }
 
 export function mock({type = 'GET', url, responseText} = {}) {
-  Ember.assert("[ember-data-factory-guy] mock requires at least a url", url);
+  assert("[ember-data-factory-guy] mock requires at least a url", url);
 
   return new MockAnyRequest({type, url, responseText});
 }
 
 export function mockLinks(model, relationshipKey) {
-  Ember.assert("[ember-data-factory-guy] mockLinks requires at least model and relationshipKey", model, relationshipKey);
+  assert("[ember-data-factory-guy] mockLinks requires at least model and relationshipKey", model, relationshipKey);
 
   return new MockLinksRequest(model, relationshipKey);
 }
@@ -77,7 +78,7 @@ export function mockLinks(model, relationshipKey) {
 export function mockFindRecord(...args) {
   let modelName;
 
-  Ember.assert(`[ember-data-factory-guy] mockFindRecord requires at least a model
+  assert(`[ember-data-factory-guy] mockFindRecord requires at least a model
      name as first parameter`, args.length > 0);
 
   if (args[0] instanceof Model) {
@@ -92,7 +93,7 @@ export function mockFindRecord(...args) {
 }
 
 export function mockFind() {
-  Ember.deprecate("`mockFind` - has been deprecated. Use `mockFindRecord` method instead`",
+  deprecate("`mockFind` - has been deprecated. Use `mockFindRecord` method instead`",
     false, {id: 'ember-data-factory-guy.mock-find', until: '2.8.0'});
   return mockFindRecord.apply(this, arguments);
 }
@@ -125,7 +126,7 @@ export function mockReload(...args) {
     id = args[1];
   }
 
-  Ember.assert("[ember-data-factory-guy] mockReload arguments are a model instance or a model type name and an id",
+  assert("[ember-data-factory-guy] mockReload arguments are a model instance or a model type name and an id",
     modelName && id);
 
   let json = FactoryGuy.fixtureBuilder(modelName).convertForBuild(modelName, {id: id});
@@ -159,7 +160,7 @@ export function mockReload(...args) {
 export function mockFindAll(...args) {
   let modelName = args[0];
 
-  Ember.assert(`[ember-data-factory-guy] mockFindAll requires at least a model
+  assert(`[ember-data-factory-guy] mockFindAll requires at least a model
      name as first parameter`, args.length > 0);
 
   let mock = new MockFindAllRequest(modelName);
@@ -206,7 +207,7 @@ export function mockFindAll(...args) {
  @param {Array}  array of Model records to be 'returned' by query
  */
 export function mockQuery(modelName, queryParams = {}) {
-  Ember.assert('[ember-data-factory-guy] The second argument ( queryParams ) must be an object', Ember.typeOf(queryParams) === 'object');
+  assert('[ember-data-factory-guy] The second argument ( queryParams ) must be an object', typeOf(queryParams) === 'object');
 
   return new MockQueryRequest(modelName, queryParams);
 }
@@ -259,7 +260,7 @@ export function mockQuery(modelName, queryParams = {}) {
  */
 export function mockQueryRecord(modelName, queryParams) {
   if (queryParams) {
-    Ember.assert('The second argument ( queryParams ) must be an object', Ember.typeOf(queryParams) === 'object');
+    assert('The second argument ( queryParams ) must be an object', typeOf(queryParams) === 'object');
   }
 
   return new MockQueryRecordRequest(modelName, queryParams);
@@ -316,7 +317,7 @@ export function mockCreate(...args) {
     }
   }
 
-  Ember.assert(`[ember-data-factory-guy] To mockUpdate pass in a model instance or a modelName`, modelName);
+  assert(`[ember-data-factory-guy] To mockUpdate pass in a model instance or a modelName`, modelName);
 
   return new MockCreateRequest(modelName, {model});
 }
@@ -357,7 +358,7 @@ export function mockUpdate(...args) {
     }
   }
 
-  Ember.assert("[ember-data-factory-guy] To mockUpdate pass in a model instance or a modelName and an id or just a modelName", modelName);
+  assert("[ember-data-factory-guy] To mockUpdate pass in a model instance or a modelName and an id or just a modelName", modelName);
 
   return new MockUpdateRequest(modelName, {id, model});
 }
@@ -381,14 +382,14 @@ export function mockDelete(...args) {
     id = args[1];
   }
 
-  Ember.assert(`[ember-data-factory-guy] mockDelete requires at least a model type name`, modelName);
+  assert(`[ember-data-factory-guy] mockDelete requires at least a model type name`, modelName);
 
   return new MockDeleteRequest(modelName, id);
 }
 
 /**
  Returns the Pretender instance used for the mocks.
-*/
+ */
 export function getPretender() {
   return RequestManager.getPretender();
 }

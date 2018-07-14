@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { assert } from '@ember/debug';
 import {requireFiles} from './helper-functions';
 
 const scenarioFileRegExp = new RegExp('/scenarios/main$');
@@ -18,7 +18,7 @@ export default function(owner) {
 
   if (factoryGuy && factoryGuy.useScenarios) {
     let [Scenario] = requireFiles(scenarioFileRegExp);
-    Ember.assert(`[ember-data-factory-guy] No app/scenarios/main.js file was found.
+    assert(`[ember-data-factory-guy] No app/scenarios/main.js file was found.
       If you have factoryGuy set to true in config/environment.js file,
       then you should setup a file app/scenarios/main.js to control what data will
       be like in the application.`, Scenario);
