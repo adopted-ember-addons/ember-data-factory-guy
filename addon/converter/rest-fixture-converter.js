@@ -1,8 +1,7 @@
 import { dasherize } from '@ember/string';
 import { A } from '@ember/array';
-import JSONFixtureConverter from './json-fixture-converter';
-
 import { pluralize } from 'ember-inflector';
+import JSONFixtureConverter from './json-fixture-converter';
 
 /**
  Convert base fixture to a REST Serializer formatted payload.
@@ -10,7 +9,7 @@ import { pluralize } from 'ember-inflector';
  @param store
  @constructor
  */
-export default class extends JSONFixtureConverter {
+export default class RESTFixtureConverter extends JSONFixtureConverter {
 
   constructor(store, options) {
     super(store, options);
@@ -18,7 +17,7 @@ export default class extends JSONFixtureConverter {
   }
 
   emptyResponse(modelName, options = {}) {
-    return { [modelName]: options.useValue || null };
+    return {[modelName]: options.useValue || null};
   }
 
   /**
@@ -29,7 +28,7 @@ export default class extends JSONFixtureConverter {
    * @returns {*}
    */
   createPayload(modelName, fixture) {
-    return { [this.getPayloadKey(modelName)]: fixture };
+    return {[this.getPayloadKey(modelName)]: fixture};
   }
 
   /**

@@ -354,18 +354,36 @@ SharedBehavior.makeTests = function() {
     });
   });
 
-  test("with links for belongsTo relationship", function(assert) {
-    let companyLink = '/user/1/company',
-        user        = make('user', {company: {links: companyLink}});
+  test("with only links for belongsTo relationship", function(assert) {
+    const companyLink = '/user/1/company',
+          user        = make('user', {links: {company: companyLink}});
 
-    assert.equal(user.belongsTo('company').link(), companyLink)
+    assert.equal(user.belongsTo('company').link(), companyLink);
   });
 
-  test("with links for hasMany relationship", function(assert) {
-    let propertyLink = '/user/1/properties',
-        user         = make('user', {properties: {links: propertyLink}});
+  test("with data and links for belongsTo relationship", function(assert) {
+    const company     = make('company'),
+          companyLink = '/user/1/company',
+          user        = make('user', {company, links: {company: companyLink}});
 
-    assert.equal(user.hasMany('properties').link(), propertyLink)
+    assert.equal(user.belongsTo('company').link(), companyLink, 'has link');
+    assert.deepEqual(user.get('company.content'), company, 'has model');
+  });
+
+  test("with only links for hasMany relationship", function(assert) {
+    const propertyLink = '/user/1/properties',
+          user         = make('user', {links: {properties: propertyLink}});
+
+    assert.equal(user.hasMany('properties').link(), propertyLink);
+  });
+
+  test("with data and links for hasMany relationship", function(assert) {
+    const properties   = makeList('property', 2),
+          propertyLink = '/user/1/properties',
+          user         = make('user', {properties, links: {properties: propertyLink}});
+
+    assert.equal(user.hasMany('properties').link(), propertyLink, 'has link');
+    assert.deepEqual(user.properties.toArray(), properties, 'has models');
   });
 
 };

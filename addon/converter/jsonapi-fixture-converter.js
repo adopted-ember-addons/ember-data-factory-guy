@@ -1,7 +1,8 @@
 import { isEmpty, typeOf } from '@ember/utils';
 import { dasherize } from '@ember/string';
 import { A } from '@ember/array';
-import Converter from './fixture-converter';
+import FixtureConverter from './fixture-converter';
+import { entries } from "../utils/helper-functions";
 
 /**
  * Using `serializeMode` to create a payload the way ember-data would serialize types
@@ -9,7 +10,7 @@ import Converter from './fixture-converter';
  * pluralized
  *
  */
-class JSONAPIFixtureConverter extends Converter {
+export default class JSONAPIFixtureConverter extends FixtureConverter {
 
   constructor(store, {transformKeys = true, serializeMode = false} = {}) {
     super(store, {transformKeys, serializeMode});
@@ -95,9 +96,14 @@ class JSONAPIFixtureConverter extends Converter {
     this.addPrimaryKey(modelName, data, fixture);
 
     let relationships = this.extractRelationships(modelName, fixture);
+
+    const links = this.getValidLinks(modelName, fixture);
+    this.assignLinks(links, relationships);
+
     if (Object.getOwnPropertyNames(relationships).length > 0) {
       data.relationships = relationships;
     }
+
     return data;
   }
 
@@ -123,10 +129,35 @@ class JSONAPIFixtureConverter extends Converter {
     return {data: object};
   }
 
-  assignLinks(object) {
-    return {links: {related: object.links}};
+  /**
+   * JSONAPI can have data and links in the same relationship definition
+   * so do special handling to make it happen
+   *
+   *  json = build('user', {links: {company: '/user/1/company'}});
+   *
+   *  {
+   *    data: {
+   *      id: 1,
+   *      type: 'user',
+   *      attributes: {
+   *        name: 'User1',
+   *        style: "normal"
+   *      },
+   *      relationships: {
+   *        company: {
+   *          links: {related: '/user/1/company'}
+   *        }
+   *      }
+   *    }
+   *
+   * @param links
+   * @param relationshipData
+   */
+  assignLinks(links, relationshipData) {
+    for (let [relationshipKey, link] of entries(links || {})) {
+      let data = relationshipData[relationshipKey];
+      data = Object.assign({links: {related: link}}, data);
+      relationshipData[relationshipKey] = data;
+    }
   }
-
 }
-
-export default JSONAPIFixtureConverter;

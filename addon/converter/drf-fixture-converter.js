@@ -4,7 +4,7 @@ import JSONFixtureConverter from './json-fixture-converter';
  Convert base fixture to the Ember Django Serializer expected payload.
 
  */
-export default class extends JSONFixtureConverter {
+export default class DrfFixtureConverter extends JSONFixtureConverter {
   /**
    * All lists will use "results" as payload key
    *

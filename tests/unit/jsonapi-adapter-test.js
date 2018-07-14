@@ -856,7 +856,7 @@ module(serializer, function(hooks) {
 
     test("with links for belongsTo relationship", async function(assert) {
       let companyLink = '/user/1/company',
-          buildJson   = build('user', {company: {links: companyLink}});
+          buildJson   = build('user', {links: {company: companyLink}});
 
       buildJson.unwrap();
 
@@ -881,7 +881,7 @@ module(serializer, function(hooks) {
 
     test("with links for hasMany relationship", function(assert) {
       let propertyLink = '/user/1/properties',
-          buildJson    = build('user', {properties: {links: propertyLink}});
+          buildJson    = build('user', {links: {properties: propertyLink}});
 
       buildJson.unwrap();
 

@@ -3,7 +3,7 @@ import RESTFixtureConverter from './rest-fixture-converter';
 /**
  Convert base fixture to the ActiveModel Serializer expected payload.
  */
-export default class extends RESTFixtureConverter {
+export default class AMSFixtureConverter extends RESTFixtureConverter {
   /**
    * In `serializeMode` use convert a relationship from "company" to "company_id"
    * which REST / JSON converters override to strip that _id

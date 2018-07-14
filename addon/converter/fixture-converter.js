@@ -1,4 +1,6 @@
 import { assert } from '@ember/debug';
+import { get } from '@ember/object';
+import { entries } from '../utils/helper-functions';
 import { typeOf } from '@ember/utils';
 import { getOwner } from '@ember/application';
 import { camelize } from '@ember/string';
@@ -26,7 +28,7 @@ import { camelize } from '@ember/string';
  serializeMode act like serialization is for a return to server if true
  @constructor
  */
-export default class {
+export default class FixtureConverter {
 
   constructor(store, {transformKeys = true, serializeMode = false} = {}) {
     this.transformKeys = transformKeys;
@@ -245,12 +247,7 @@ export default class {
   extractHasMany(fixture, relationship, parentModelName, relationships) {
     let hasManyRecords  = fixture[relationship.key],
         relationshipKey = this.transformRelationshipKey(relationship),
-        isEmbedded      = this.isEmbeddedRelationship(parentModelName, relationship.key),
-        isLinks         = hasManyRecords && hasManyRecords.links;
-
-    if (isLinks) {
-      return relationships[relationshipKey] = this.assignLinks(hasManyRecords);
-    }
+        isEmbedded      = this.isEmbeddedRelationship(parentModelName, relationship.key);
 
     if (hasManyRecords && hasManyRecords.isProxy) {
       return this.addListProxyData(hasManyRecords, relationship, relationships, isEmbedded);
@@ -300,8 +297,18 @@ export default class {
     return object;
   }
 
-  assignLinks(object) {
-    return object;
+  getValidLinks(modelName, fixture) {
+    const modelClass    = this.store.modelFor(modelName),
+          relationships = get(modelClass, 'relationshipsByName');
+
+    let links = {};
+    for (let [relationshipKey, link] of entries(fixture.links || [])) {
+      assert(`You defined a link for the [${relationshipKey}] relationship 
+        on model [${modelName}] but that relationships does not exist`,
+        relationships.get(relationshipKey));
+      links[relationshipKey] = link;
+    }
+    return links;
   }
 
   addData(embeddedFixture, relationship, isEmbedded) {

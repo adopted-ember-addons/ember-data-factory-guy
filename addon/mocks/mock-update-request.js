@@ -50,10 +50,8 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(AttributeMatcher(
   returns(returns) {
     this.validateReturnsOptions(returns);
 
-    if (!this.id) {
-      assert(`[ember-data-factory-guy] Can't use returns in
+    assert(`[ember-data-factory-guy] Can't use returns in
       mockUpdate when update only has modelName and no id`, this.id);
-    }
 
     this.returnArgs = returns.attrs;
     this.add = returns.add;

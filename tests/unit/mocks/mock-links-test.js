@@ -27,7 +27,7 @@ module('MockLinks', function(hooks) {
 
   test("getUrl and status for belongsTo links", function(assert) {
     let companyLink = '/users/1/company',
-        user        = make('user', {company: {links: companyLink}}),
+        user        = make('user', {links: {company: companyLink}}),
         mockCompany = mockLinks(user, 'company');
 
     assert.equal(mockCompany.getUrl(), companyLink);
@@ -36,7 +36,7 @@ module('MockLinks', function(hooks) {
 
   test("getUrl and status for hasMany links", function(assert) {
     let propertiesLink = '/users/1/properties',
-        user           = make('user', {properties: {links: propertiesLink}}),
+        user           = make('user', {links: {properties: propertiesLink}}),
         mockProperties = mockLinks(user, 'properties');
 
     assert.equal(mockProperties.getUrl(), propertiesLink);
@@ -45,7 +45,7 @@ module('MockLinks', function(hooks) {
 
   test("handles links url with query parameters", async function(assert) {
     let propertiesLink = '/users/1/properties?dudes=2',
-        user           = make('user', {properties: {links: propertiesLink}}),
+        user           = make('user', {links: {properties: propertiesLink}}),
         json           = buildList('property', 1),
         mockProperties = mockLinks(user, 'properties').returns({json});
 

@@ -1,6 +1,7 @@
 import { typeOf } from '@ember/utils';
 import { dasherize, underscore } from '@ember/string';
-import Converter from './fixture-converter';
+import { isEmptyObject } from '../utils/helper-functions';
+import FixtureConverter from './fixture-converter';
 
 /**
  Convert base fixture to a JSON format payload.
@@ -8,7 +9,7 @@ import Converter from './fixture-converter';
  @param store
  @constructor
  */
-export default class extends Converter {
+export default class JSONFixtureConverter extends FixtureConverter {
 
   constructor(store, options) {
     super(store, options);
@@ -63,6 +64,9 @@ export default class extends Converter {
 
     this.addPrimaryKey(modelName, data, fixture);
 
+    const links = this.getValidLinks(modelName, fixture);
+    this.assignLinks(data, links);
+
     return data;
   }
 
@@ -95,6 +99,30 @@ export default class extends Converter {
       return {type: dasherize(record.constructor.modelName), id: record.id};
     }
     return record.id;
+  }
+
+  /**
+   * JSON/REST links can be placed in the data exactly as they appear
+   * on the fixture definition
+   *
+   *   json = build('user', {links: {properties: '/user/1/properties'}});
+   *
+   *    {
+   *      user: {
+   *        id: 1,
+   *        name: 'User1',
+   *        style: "normal",
+   *        links: { properties: '/user/1/properties' }
+   *      }
+   *    }
+   *
+   * @param data
+   * @param links
+   */
+  assignLinks(data, links) {
+    if (!isEmptyObject(links)) {
+      data.links = links;
+    }
   }
 
   /**

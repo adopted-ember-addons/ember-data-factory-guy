@@ -57,10 +57,10 @@ FactoryGuy.define('user', {
       hats: FactoryGuy.hasMany('big-hat', 2, 'belonging_to_outfit')
     },
     companyLink: (f) => {
-      f.company = {links: `/users/${f.id}/company`}
+      f.links = Object.assign(f.links, {company: `/users/${f.id}/company`});
     },
     propertiesLink: (f) => {
-      f.properties = {links: `/users/${f.id}/properties`}
+      f.links = Object.assign({properties: `/users/${f.id}/properties`}, f.links);
     }
   }
 });

@@ -2,11 +2,7 @@ import Ember from 'ember';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
-  build,
-  buildList,
-  make,
-  mockCreate,
-  mockFindRecord
+  build, buildList, make, mockCreate, mockFindRecord
 } from 'ember-data-factory-guy';
 
 import SharedCommonBehavior from './shared-common-behaviour';
@@ -738,7 +734,7 @@ module(serializer, function(hooks) {
 
     test("with links for belongsTo relationship", async function(assert) {
       let companyLink = '/user/1/company',
-          buildJson   = build('user', {company: {links: companyLink}});
+          buildJson   = build('user', {links: {company: companyLink}});
 
       buildJson.unwrap();
 
@@ -747,7 +743,7 @@ module(serializer, function(hooks) {
           id: 1,
           name: 'User1',
           style: "normal",
-          company: {links: companyLink}
+          links: {company: companyLink}
         }
       };
 
@@ -756,7 +752,7 @@ module(serializer, function(hooks) {
 
     test("with links for hasMany relationship", function(assert) {
       let propertyLink = '/user/1/properties',
-          buildJson    = build('user', {properties: {links: propertyLink}});
+          buildJson    = build('user', {links: {properties: propertyLink}});
 
       buildJson.unwrap();
 
@@ -765,7 +761,7 @@ module(serializer, function(hooks) {
           id: 1,
           name: 'User1',
           style: "normal",
-          properties: {links: propertyLink}
+          links: {properties: propertyLink}
         }
       };
 
