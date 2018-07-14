@@ -5,6 +5,9 @@
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
+**NEW** starting with v3.2.1
+  - You can setup data AND links for your async relationship[Check it out](#special-tips-for-links) 
+                                                                                              
 **NEW** You can use factory guy in ember-twiddle
   - Using [Scenarios](https://ember-twiddle.com/421f16ecc55b5d35783c243b8d99f2be?openFiles=tests.unit.model.user-test.js%2C) 
      
@@ -14,7 +17,6 @@ Factories simplify the process of testing, making you more efficient and your te
   - get attributes for factory defined models with ```attributesFor```
 
 **NEW** starting with v2.13.24
-  - Links support for async relationships [Check it out](#tip-7-setting-up-links)
   - manualSetup streamlined to ```manualSetup(this)```
 
 **NEW and Improved** starting with v2.13.22
@@ -510,7 +512,8 @@ the reverse 'user' belongsTo association is being setup for you on the project
       }
     }
   });
-
+  
+  // setting links with traits 
   let company = make('company')
   let user = make('user', 'withCompanyLink', 'withPropertiesLink', {company});
   user.hasMany('properties').link(); // => "/users/1/properties"
@@ -518,7 +521,10 @@ the reverse 'user' belongsTo association is being setup for you on the project
   // the company async relationship has a company AND link to fetch it again 
   // when you reload that relationship 
   user.get('company.content') // => company
-  user.belongsTo('company').reload() // would use that link "/users/1/company" to reload company 
+  user.belongsTo('company').reload() // would use that link "/users/1/company" to reload company
+  
+  // you can also set traits with your build/buildList/make/makeList options 
+  user = make('user', {links: {properties: '/users/1/properties'}});   
 ```
   
 ### Extending Other Definitions
@@ -2085,26 +2091,6 @@ describe('Admin View', function() {
   let person = make('person', {name: "Daniel"});
   let json = person.serialize();
   assert.equal(json.name, 'Daniel-san');
-```
-
-#### Tip 6: Setting up links
-
--Setup up a links in factory is as easy as:
-    
-```js
-import FactoryGuy from 'ember-data-factory-guy';
-
-FactoryGuy.define("user", {
-  default: { // the () around the links objects is needed
-    company: (f) => ({links: `/users/${f.id}/company`})
-  },
-  traits: {
-    // luckily traits can use functions, so the settup is easy 
-    propertiesLink: (f) => {
-      f.properties = {links: `/users/${f.id}/properties`}
-    }
-  }
-});
 ```
 
 -Or, you can pass the links values when you make / build a model like:
