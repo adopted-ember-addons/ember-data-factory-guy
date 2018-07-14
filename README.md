@@ -383,6 +383,8 @@ Your trait function assigns the title as you described in the function
     - Can compose relationships to any level
   - When setting up manually do not mix `build` and `make` - you either `build` JSON in every levels of associations or `make` objects. `build` is taking serializer into account for every model which means that output from `build` might be different than expected input defined in factory in `make`.
 
+- Special tips for links 
+
 ##### Setup belongsTo associations in Factory Definitions
 
 - using traits are the best practice
@@ -393,8 +395,8 @@ Your trait function assigns the title as you described in the function
     traits: {
       withUser: { user: {} },
       withAdmin: { user: FactoryGuy.belongsTo('user', 'admin') },
-      withManagerLink(f) { 
-        f.manager = {links: `/projects/${f.id}/manager`} 
+      withManagerLink(f) { // f is the fixture being created
+        f.links = {manager: `/projects/${f.id}/manager`} 
       }
     }
   });
@@ -438,16 +440,16 @@ the reverse user hasMany 'projects' association is being setup for you on the us
         projects: FactoryGuy.hasMany('project', 2)
       },
       withPropertiesLink(f) { // f is the fixture being created 
-        f.properties = {links: `/projects/${f.id}/properties`} 
+        f.links = {properties: `/users/${f.id}/properties`} 
       }
     }
   });
 
-  let user = FactoryGuy.make('user', 'withProjects');
+  let user = make('user', 'withProjects');
   user.get('projects.length') // => 2
   
-  user == FactoryGuy.make('user', 'withPropertiesLink'); 
-  user.hasMany('properties').link(); // => "/projects/1/properties"
+  user = make('user', 'withPropertiesLink'); 
+  user.hasMany('properties').link(); // => "/users/1/properties"
 ```
 
 *You could also setup a custom named user definition:*
@@ -474,7 +476,7 @@ See `FactoryGuy.build`/`FactoryGuy.makeList` for more ideas
 
   // or
   let projects = makeList('project', 2);
-  let user = make('user', {projects: projects});
+  let user = make('user', {projects});
   user.get('projects.length') // => 2
 
 ```
@@ -487,6 +489,38 @@ the reverse 'user' belongsTo association is being setup for you on the project
   projects.get('firstObject.user')  // => user
 ```
 
+##### Special tips for links
+  - The links syntax changed as of ( v3.2.1 )
+    - What you see below is the new syntax
+  - You can setup data AND links for your async relationship 
+  - Need special care with multiple traits setting links
+  
+```javascript
+
+  FactoryGuy.define('user', {
+    traits: {
+      withCompanyLink(f): {
+        // since you can assign many different links with different traits,
+        // you should Object.assign so that you add to the links hash rather 
+        // than set it directly ( assuming you want to use this feature ) 
+        f.links = Object.assign({company: `/users/${f.id}/company`}, f.links);
+      },
+      withPropertiesLink(f) {  
+        f.links = Object.assign({properties: `/users/${f.id}/properties`}, f.links); 
+      }
+    }
+  });
+
+  let company = make('company')
+  let user = make('user', 'withCompanyLink', 'withPropertiesLink', {company});
+  user.hasMany('properties').link(); // => "/users/1/properties"
+  user.belongsTo('company').link(); // => "/users/1/company"
+  // the company async relationship has a company AND link to fetch it again 
+  // when you reload that relationship 
+  user.get('company.content') // => company
+  user.belongsTo('company').reload() // would use that link "/users/1/company" to reload company 
+```
+  
 ### Extending Other Definitions
   - Extending another definition will inherit these sections:
     - sequences
