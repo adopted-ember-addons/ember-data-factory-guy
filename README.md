@@ -2093,21 +2093,6 @@ describe('Admin View', function() {
   assert.equal(json.name, 'Daniel-san');
 ```
 
--Or, you can pass the links values when you make / build a model like:
-
-```js
-let user1 = make('user', {properties: {links: '/users/1/properties'}});
-let user2 = build('user', {properties: {links: '/users/2/properties'}});
-```
-
-- Then use mock and build / buildList to return a payload 
-
-```js
-  let user = make('user', 'propertiesLink');
-  let propertiesLink = user.hasMany('properties').link();
-  let noProperties   = buildList('property', 0);
-  propertiesMock = mock({url: propertiesLink}).returns(noProperties);
-``` 
 
 ### ChangeLog
   - [Release Notes](/releases)

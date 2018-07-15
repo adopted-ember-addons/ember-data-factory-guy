@@ -64,8 +64,8 @@ export default class JSONFixtureConverter extends FixtureConverter {
 
     this.addPrimaryKey(modelName, data, fixture);
 
-    const links = this.getValidLinks(modelName, fixture);
-    this.assignLinks(data, links);
+    this.verifyLinks(modelName, fixture.links);
+    this.assignLinks(data, fixture.links);
 
     return data;
   }

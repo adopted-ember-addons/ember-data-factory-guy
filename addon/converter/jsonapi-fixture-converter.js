@@ -97,8 +97,8 @@ export default class JSONAPIFixtureConverter extends FixtureConverter {
 
     let relationships = this.extractRelationships(modelName, fixture);
 
-    const links = this.getValidLinks(modelName, fixture);
-    this.assignLinks(links, relationships);
+    this.verifyLinks(modelName, fixture.links);
+    this.assignLinks(relationships, fixture.links);
 
     if (Object.getOwnPropertyNames(relationships).length > 0) {
       data.relationships = relationships;
@@ -150,10 +150,10 @@ export default class JSONAPIFixtureConverter extends FixtureConverter {
    *      }
    *    }
    *
-   * @param links
    * @param relationshipData
+   * @param links
    */
-  assignLinks(links, relationshipData) {
+  assignLinks(relationshipData, links) {
     for (let [relationshipKey, link] of entries(links || {})) {
       let data = relationshipData[relationshipKey];
       data = Object.assign({links: {related: link}}, data);

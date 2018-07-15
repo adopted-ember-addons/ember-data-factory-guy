@@ -219,12 +219,7 @@ export default class FixtureConverter {
   extractBelongsTo(fixture, relationship, parentModelName, relationships) {
     let belongsToRecord = fixture[relationship.key],
         isEmbedded      = this.isEmbeddedRelationship(parentModelName, relationship.key),
-        relationshipKey = isEmbedded ? relationship.key : this.transformRelationshipKey(relationship),
-        isLinks         = belongsToRecord && belongsToRecord.links;
-
-    if (isLinks) {
-      return relationships[relationshipKey] = this.assignLinks(belongsToRecord);
-    }
+        relationshipKey = isEmbedded ? relationship.key : this.transformRelationshipKey(relationship);
 
     let data = this.extractSingleRecord(belongsToRecord, relationship, isEmbedded);
     relationships[relationshipKey] = this.assignRelationship(data);
@@ -297,18 +292,22 @@ export default class FixtureConverter {
     return object;
   }
 
-  getValidLinks(modelName, fixture) {
+  /**
+   * Technically don't have to verify the links because hey would not even be assigned,
+   * but the user might want to know why
+   *
+   * @param modelName
+   * @param links
+   */
+  verifyLinks(modelName, links={}) {
     const modelClass    = this.store.modelFor(modelName),
           relationships = get(modelClass, 'relationshipsByName');
 
-    let links = {};
-    for (let [relationshipKey, link] of entries(fixture.links || [])) {
-      assert(`You defined a link for the [${relationshipKey}] relationship 
-        on model [${modelName}] but that relationships does not exist`,
+    for (let [relationshipKey, link] of entries(links)) {
+      assert(`You defined a link url ${link} for the [${relationshipKey}] relationship 
+        on model [${modelName}] but that relationship does not exist`,
         relationships.get(relationshipKey));
-      links[relationshipKey] = link;
     }
-    return links;
   }
 
   addData(embeddedFixture, relationship, isEmbedded) {
