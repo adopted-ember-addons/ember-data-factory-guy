@@ -2538,9 +2538,9 @@ ember-data-model-fragments@3.0.0:
     git-repo-info "^1.4.1"
     npm-git-info "^1.0.3"
 
-ember-data@3.2, ember-data@^2.17.0, ember-data@~3.2:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/ember-data/-/ember-data-3.2.0.tgz#f9e30a51cbd05f26e5e0df6b6a13adcd9db99acc"
+ember-data@3.3, ember-data@^2.17.0, ember-data@~3.3:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/ember-data/-/ember-data-3.3.0.tgz#138cc248f61164404f5aa6b8207a3dfae8eaea2a"
   dependencies:
     "@ember/ordered-set" "^1.0.0"
     amd-name-resolver "0.0.7"
@@ -2665,9 +2665,9 @@ ember-sinon@1.0.1:
     ember-cli-babel "^6.3.0"
     sinon "^3.2.1"
 
-ember-source@~3.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/ember-source/-/ember-source-3.2.2.tgz#f1b899beeb838b0866a66cd327d22e567abd8a79"
+ember-source@~3.3:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/ember-source/-/ember-source-3.3.0.tgz#84f7ad29378868503ca108c7512387b1fc63c05a"
   dependencies:
     broccoli-funnel "^2.0.1"
     broccoli-merge-trees "^2.0.0"
