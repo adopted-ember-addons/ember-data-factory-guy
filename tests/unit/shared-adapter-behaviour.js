@@ -4,19 +4,8 @@ import { module, test } from 'qunit';
 import { isEquivalent } from 'ember-data-factory-guy/utils/helper-functions';
 
 import FactoryGuy, {
-  build,
-  buildList,
-  make,
-  makeList,
-  makeNew,
-  mockCreate,
-  mockDelete,
-  mockFindAll,
-  mockFindRecord,
-  mockQuery,
-  mockQueryRecord,
-  mockReload,
-  mockUpdate
+  build, buildList, make, makeList, makeNew, mockCreate, mockDelete, mockFindAll, mockFindRecord,
+  mockQuery, mockQueryRecord, mockReload, mockUpdate
 } from 'ember-data-factory-guy';
 
 import $ from 'jquery';
@@ -614,19 +603,14 @@ SharedBehavior.mockFindAllSideloadingTests = function() {
       });
     });
 
-    //  test("handles include params", function(assert) {
-    //    run(()=> {
-    //      let done = assert.async();
-    //
+    // TODO: need to put included models into included section of json
+    //    test("handles include params", async function(assert) {
     //      let json = buildList('profile', 'with_company');
-    //      mockFindAll('profile').withParams({include: 'company'}).returns({ json });
+    //      mockFindAll('profile').withParams({include: 'company'}).returns({json});
     //
-    //      FactoryGuy.store.findAll('profile', {include: 'company'}).then(function(profiles) {
-    //        assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
-    //        done();
-    //      });
+    //      const profiles = FactoryGuy.store.findAll('profile', {include: 'company'});
+    //      assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
     //    });
-    //  });
   });
 };
 
@@ -1725,154 +1709,154 @@ SharedBehavior.mockUpdateTests = function() {
     assert.ok(profile2.get('description') === customDescription);
   });
 
-    test("match all attributes", async function(assert) {
-      run(async () => {
-        let date              = new Date(),
-            profile           = make('profile', {created_at: date, aBooleanField: false}),
-            customDescription = "special description";
+  test("match all attributes", async function(assert) {
+    run(async () => {
+      let date              = new Date(),
+          profile           = make('profile', {created_at: date, aBooleanField: false}),
+          customDescription = "special description";
 
-        mockUpdate('profile', profile.id).match({
-          description: customDescription, created_at: date, aBooleanField: true
-        });
-
-        profile.setProperties({description: customDescription, aBooleanField: true});
-
-        await profile.save();
-
-        assert.ok(profile instanceof Profile);
-        assert.ok(profile.id === '1');
-        assert.ok(profile.get('description') === customDescription);
-        assert.ok(profile.get('created_at').toString() === date.toString());
-        assert.ok(profile.get('aBooleanField') === true);
+      mockUpdate('profile', profile.id).match({
+        description: customDescription, created_at: date, aBooleanField: true
       });
+
+      profile.setProperties({description: customDescription, aBooleanField: true});
+
+      await profile.save();
+
+      assert.ok(profile instanceof Profile);
+      assert.ok(profile.id === '1');
+      assert.ok(profile.get('description') === customDescription);
+      assert.ok(profile.get('created_at').toString() === date.toString());
+      assert.ok(profile.get('aBooleanField') === true);
     });
+  });
 
-    test("match belongsTo association", async function(assert) {
-      run(async () => {
-        let company = make('company'),
-            profile = make('profile', {company: company});
+  test("match belongsTo association", async function(assert) {
+    run(async () => {
+      let company = make('company'),
+          profile = make('profile', {company: company});
 
-        mockUpdate('profile', profile.id).match({company: company});
+      mockUpdate('profile', profile.id).match({company: company});
 
-        await profile.save()
+      await profile.save()
 
-        assert.ok(profile.get('company') === company);
-      });
+      assert.ok(profile.get('company') === company);
     });
+  });
 
-    test("match belongsTo polymorphic association", async function(assert) {
-      run(async () => {
-        let group = make('big-group');
-        let profile = make('profile', {group: group});
-        mockUpdate('profile', profile.id).match({group: group});
+  test("match belongsTo polymorphic association", async function(assert) {
+    run(async () => {
+      let group = make('big-group');
+      let profile = make('profile', {group: group});
+      mockUpdate('profile', profile.id).match({group: group});
 
-        await profile.save();
-        assert.ok(profile.get('group') === group);
-      });
+      await profile.save();
+      assert.ok(profile.get('group') === group);
     });
+  });
 
-    test("match attributes and also return attributes", async function(assert) {
-      run(async () => {
-        let date              = new Date(2015, 1, 2, 3, 4, 5),
-            customDescription = "special description",
-            company           = make('company'),
-            group             = make('big-group');
+  test("match attributes and also return attributes", async function(assert) {
+    run(async () => {
+      let date              = new Date(2015, 1, 2, 3, 4, 5),
+          customDescription = "special description",
+          company           = make('company'),
+          group             = make('big-group');
 
-        let profile = make('profile', {description: customDescription, company: company, group: group});
+      let profile = make('profile', {description: customDescription, company: company, group: group});
 
-        mockUpdate('profile', profile.id)
-          .match({description: customDescription, company: company, group: group})
-          .returns({attrs: {created_at: date}});
+      mockUpdate('profile', profile.id)
+      .match({description: customDescription, company: company, group: group})
+      .returns({attrs: {created_at: date}});
 
-        await profile.save();
+      await profile.save();
 
-        assert.ok(profile.get('created_at').toString() === date.toString());
-        assert.ok(profile.get('group') === group);
-        assert.ok(profile.get('company') === company);
-        assert.ok(profile.get('description') === customDescription);
-      });
+      assert.ok(profile.get('created_at').toString() === date.toString());
+      assert.ok(profile.get('group') === group);
+      assert.ok(profile.get('company') === company);
+      assert.ok(profile.get('description') === customDescription);
     });
+  });
 
-    test("fails when match args not present", function(assert) {
-      run(() => {
-        let done = assert.async();
-        let profile = make('profile');
+  test("fails when match args not present", function(assert) {
+    run(() => {
+      let done = assert.async();
+      let profile = make('profile');
 
-        let mock = mockUpdate('profile', profile.id).match({description: 'correct description'});
+      let mock = mockUpdate('profile', profile.id).match({description: 'correct description'});
 
-        profile.set('description', 'wrong description');
-        profile.save()
-          .catch(() => {
-            assert.ok(true);
-            assert.equal(mock.timesCalled, 0);
-            done();
-          });
-      });
+      profile.set('description', 'wrong description');
+      profile.save()
+             .catch(() => {
+               assert.ok(true);
+               assert.equal(mock.timesCalled, 0);
+               done();
+             });
     });
+  });
 
-    test("succeeds then fails when match args not present with only modelType", function(assert) {
-      run(() => {
-        let done = assert.async();
-        let customDescription = "special description";
-        let profile = make('profile', {description: customDescription});
-        let profile2 = make('profile');
+  test("succeeds then fails when match args not present with only modelType", function(assert) {
+    run(() => {
+      let done = assert.async();
+      let customDescription = "special description";
+      let profile = make('profile', {description: customDescription});
+      let profile2 = make('profile');
 
-        let mock = mockUpdate('profile').match({description: customDescription});
+      let mock = mockUpdate('profile').match({description: customDescription});
 
-        profile.save()
-          .then(() => {
-            assert.ok(true);
-            assert.equal(mock.timesCalled, 1);
+      profile.save()
+             .then(() => {
+               assert.ok(true);
+               assert.equal(mock.timesCalled, 1);
 
-            profile2.save()
-              .catch(() => {
-                assert.ok(true);
-                assert.equal(mock.timesCalled, 1);
-                done();
-              });
-          });
-      });
+               profile2.save()
+                       .catch(() => {
+                         assert.ok(true);
+                         assert.equal(mock.timesCalled, 1);
+                         done();
+                       });
+             });
     });
+  });
 
-    test("match but still fail with fails method", function(assert) {
-      run(() => {
-        let done = assert.async();
-        let description = "special description";
-        let profile = make('profile', {description: description});
+  test("match but still fail with fails method", function(assert) {
+    run(() => {
+      let done = assert.async();
+      let description = "special description";
+      let profile = make('profile', {description: description});
 
-        let mock = mockUpdate('profile', profile.id).match({description: description}).fails();
+      let mock = mockUpdate('profile', profile.id).match({description: description}).fails();
 
-        profile.save()
-          .catch(() => {
-            assert.ok(true);
-            assert.equal(mock.timesCalled, 1);
-            done();
-          });
-      });
+      profile.save()
+             .catch(() => {
+               assert.ok(true);
+               assert.equal(mock.timesCalled, 1);
+               done();
+             });
     });
+  });
 
-    test("removes attributes based serializer attrs settings", async function(assert) {
-      run(async () => {
-        let serializer = FactoryGuy.store.serializerFor('profile');
-        serializer.attrs = {
-          created_at: {
-            serialize: false
-          }
-        };
+  test("removes attributes based serializer attrs settings", async function(assert) {
+    run(async () => {
+      let serializer = FactoryGuy.store.serializerFor('profile');
+      serializer.attrs = {
+        created_at: {
+          serialize: false
+        }
+      };
 
-        let date = new Date();
-        let profile = make('profile');
-        profile.set('created_at', date);
+      let date = new Date();
+      let profile = make('profile');
+      profile.set('created_at', date);
 
-        mockUpdate(profile)
-          .match({created_at: null}) // serializer removes date
-          .returns({attrs: {created_at: date}});
+      mockUpdate(profile)
+      .match({created_at: null}) // serializer removes date
+      .returns({attrs: {created_at: date}});
 
-        await profile.save();
+      await profile.save();
 
-        assert.ok(profile.get('created_at').toString() === date.toString());
-      });
+      assert.ok(profile.get('created_at').toString() === date.toString());
     });
+  });
 
 };
 
