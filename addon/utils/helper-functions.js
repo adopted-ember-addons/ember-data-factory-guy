@@ -4,6 +4,28 @@ import $ from 'jquery';
 import require from 'require';
 import { assign } from '@ember/polyfills';
 
+const plusRegex = new RegExp("\\+", "g");
+
+export function paramsFromRequestBody(body) {
+  let params = {};
+
+  if (typeof body === 'string') {
+    if (body.match(/=/)) {
+      body = decodeURIComponent(body).replace(plusRegex, ' ');
+
+      (body.split('&') || []).map(param => {
+        const [key, value] = param.split('=');
+        params[key] = value;
+      });
+    } else if (body.match(/:/)) {
+      params = JSON.parse(body);
+    }
+    return params;
+  }
+
+  return body;
+}
+
 /**
  *
  * @param obj

@@ -57,12 +57,12 @@ module('MockAny', function(hooks) {
           whatsUpDoc = {whats: 'up doc'};
 
     let theMock = mock({url, type}).withParams(whatsUp).returns(whatsUp),
-        json    = await Ember.$.ajax({type, url, data: JSON.stringify(whatsUp)});
+        json    = await Ember.$.ajax({type, url, data: whatsUp});
 
     assert.deepEqual(JSON.parse(json), whatsUp, 'returns json for url with params #1');
 
     theMock.withParams(whatsUpDoc).returns(whatsUpDoc);
-    json = await Ember.$.ajax({type, url, data: JSON.stringify(whatsUpDoc)});
+    json = await Ember.$.ajax({type, url, data: whatsUpDoc});
     assert.deepEqual(JSON.parse(json), whatsUpDoc, 'returns json for url matching params #2');
   });
 
@@ -73,12 +73,12 @@ module('MockAny', function(hooks) {
           whatsUpDoc = {whats: 'up doc'};
 
     let theMock = mock({url, type}).withParams(whatsUp).returns(whatsUp),
-        json    = await Ember.$.ajax({type, url, data: JSON.stringify(whatsUp)});
+        json    = await Ember.$.ajax({type, url, data: whatsUp});
 
     assert.deepEqual(JSON.parse(json), whatsUp, 'returns json for url with params #1');
 
     theMock.withParams(whatsUpDoc).returns(whatsUpDoc);
-    json = await Ember.$.ajax({type, url, data: JSON.stringify(whatsUpDoc)});
+    json = await Ember.$.ajax({type, url, data: whatsUpDoc});
     assert.deepEqual(JSON.parse(json), whatsUpDoc, 'returns json for url matching params #2');
   });
 
@@ -116,7 +116,7 @@ module('MockAny', function(hooks) {
   test("POST", async function(assert) {
     const type         = 'POST',
           url          = '/api/post-stuff',
-          data         = JSON.stringify({whats: 'up'}),
+          data         = {whats: 'up'},
           responseText = {dude: 'dude'};
 
     mock({url, type, data}).returns(responseText);
@@ -132,12 +132,12 @@ module('MockAny', function(hooks) {
           whatsUpDoc = {whats: 'up doc'};
 
     let theMock = mock({url, type}).withParams(whatsUp).returns(whatsUp),
-        json    = await Ember.$.ajax({type, url, data: JSON.stringify(whatsUp)});
+        json    = await Ember.$.ajax({type, url, data: whatsUp});
 
     assert.deepEqual(JSON.parse(json), whatsUp, 'returns json for url with params #1');
 
     theMock.withParams(whatsUpDoc).returns(whatsUpDoc);
-    json = await Ember.$.ajax({type, url, data: JSON.stringify(whatsUpDoc)});
+    json = await Ember.$.ajax({type, url, data: whatsUpDoc});
     assert.deepEqual(JSON.parse(json), whatsUpDoc, 'returns json for url matching params #2');
   });
 });

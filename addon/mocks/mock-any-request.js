@@ -1,5 +1,7 @@
 import MockRequest from './mock-request';
-import { isEmptyObject, isEquivalent, toParams } from "../utils/helper-functions";
+import {
+  isEmptyObject, isEquivalent, paramsFromRequestBody, toParams
+} from "../utils/helper-functions";
 
 export default class MockAnyRequest extends MockRequest {
 
@@ -37,8 +39,9 @@ export default class MockAnyRequest extends MockRequest {
         return isEquivalent(request.queryParams, toParams(this.queryParams));
       }
       if (/POST|PUT|PATCH/.test(this.type)) {
-        let requestBody = JSON.parse(request.requestBody);
-        return isEquivalent(requestBody, toParams(this.queryParams));
+        const requestBody   = request.requestBody,
+              requestParams = paramsFromRequestBody(requestBody);
+        return isEquivalent(requestParams, toParams(this.queryParams));
       }
     }
     return true;

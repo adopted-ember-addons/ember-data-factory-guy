@@ -1,12 +1,28 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import $ from 'jquery';
 
 import {
-  isEmptyObject, isEquivalent, isPartOf, parseUrl
+  isEmptyObject, isEquivalent, isPartOf, parseUrl, paramsFromRequestBody
 } from 'ember-data-factory-guy/utils/helper-functions';
 
 module('Unit | Helper Functions', function(hooks) {
   setupTest(hooks);
+
+  test('#paramsFromRequestBody', function(assert) {
+    const data = {a: '1', b:'l d r'};
+
+    let tests = [
+      [$.param(data)], // a=1&b=l+d+r 
+      [JSON.stringify(data)], // {"a":"1","b":"l d r"}
+      [data]
+    ];
+
+    for (let test of tests) {
+      let [object] = test;
+      assert.deepEqual(paramsFromRequestBody(object), data, ['with object', object]);
+    }
+  });
 
   test('#isEmptyObject', function(assert) {
     let tests = [
