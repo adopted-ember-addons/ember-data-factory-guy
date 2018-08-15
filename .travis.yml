@@ -1,10 +1,12 @@
 ---
 language: node_js
+sudo: false
+dist: trusty
 node_js:
   - "6"
 
-sudo: false
-dist: trusty
+addons:
+  chrome: stable
 
 cache:
   yarn: true
