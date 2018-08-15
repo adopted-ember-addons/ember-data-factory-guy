@@ -433,6 +433,7 @@ the reverse user hasMany 'projects' association is being setup for you on the us
 ##### Setup hasMany associations in the Factory Definition
 
  - using traits are the best practice
+ - Do not create `hasMany` records via the `default` section of the factory definition. Prefer traits to set up such associations. Creating them via the `default` section is known to cause some undefined behavior when using the `makeNew` API.
 
 ```javascript
 
