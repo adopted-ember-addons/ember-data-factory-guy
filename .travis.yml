@@ -3,13 +3,11 @@ language: node_js
 node_js:
   - "6"
 
-sudo: required
+sudo: false
 dist: trusty
 
 cache:
-  directories:
-    - $HOME/.npm
-    - $HOME/.cache # includes bowers cache
+  yarn: true
 
 env:
   - EMBER_TRY_SCENARIO=ember-ember-data-2.11
@@ -23,14 +21,8 @@ matrix:
     - env: EMBER_TRY_SCENARIO=ember-ember-data-beta
 
 before_install:
-  - npm config set spin false
-  - export CHROME_BIN=/usr/bin/google-chrome
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sudo apt-get update
-  - sudo apt-get install -y libappindicator1 fonts-liberation
-  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  - sudo dpkg -i google-chrome*.deb
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH=$HOME/.yarn/bin:$PATH
 
 install:
   - yarn install
