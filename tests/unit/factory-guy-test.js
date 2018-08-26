@@ -9,6 +9,7 @@ import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error'
 import sinon from 'sinon';
 import { inlineSetup } from '../helpers/utility-methods';
 import User from 'dummy/models/user';
+import Name from 'dummy/models/name';
 import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
 
 const A = Ember.A;
@@ -144,9 +145,10 @@ module('FactoryGuy', function(hooks) {
       assert.ok(user instanceof User);
     });
 
-    test("returns a json for model fragment", function(assert) {
-      let json = FactoryGuy.make('name');
-      assert.deepEqual(json, {firstName: 'Tyrion', lastName: 'Lannister'});
+    test("returns a fragment for model fragment", function(assert) {
+      let name = FactoryGuy.make('name');
+      assert.ok(name instanceof Name, 'The fragment is a Name fragment');
+      assert.equal(name.get('firstName'), 'Tyrion', 'The firstName is correct');
     });
   });
 
