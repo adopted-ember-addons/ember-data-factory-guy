@@ -379,7 +379,7 @@ class FactoryGuy {
         fixture     = this.buildRaw(assign(args, {buildType: 'make'}));
 
     if (this.isModelAFragment(modelName)) {
-      return this.store.createFragment(modelName, fixture);
+      return join(() => this.store.createFragment(modelName, fixture));
     }
 
     let data  = this.fixtureBuilder(modelName).convertForMake(modelName, fixture),
