@@ -24,36 +24,36 @@
   "dependencies": {
     "broccoli-funnel": "^1.0.1",
     "broccoli-merge-trees": "^1.1.1",
-    "ember-cli-babel": "^6.12",
+    "ember-cli-babel": "~7.0.0",
     "pretender": "~2.0.0"
   },
   "devDependencies": {
     "active-model-adapter": "2.2.0",
-    "broccoli-asset-rev": "^2.1.2",
+    "broccoli-asset-rev": "^2.7.0",
     "ember-cli": "~3.3",
     "ember-cli-dependency-checker": "^2.1.0",
     "ember-cli-deprecation-workflow": "^0.2.4",
     "ember-cli-eslint": "^4.2.3",
-    "ember-cli-htmlbars": "2.0.3",
-    "ember-cli-htmlbars-inline-precompile": "^1.0.2",
+    "ember-cli-htmlbars": "3.0.0",
+    "ember-cli-htmlbars-inline-precompile": "^1.0.3",
     "ember-cli-inject-live-reload": "^1.7.0",
     "ember-cli-qunit": "^4.3.2",
     "ember-cli-sri": "^2.1.1",
-    "ember-cli-uglify": "1.2.0",
-    "ember-data": "~3.3",
-    "ember-data-model-fragments": "3.0.0",
+    "ember-cli-uglify": "2.1.0",
+    "ember-data": "~3.4",
+    "ember-data-model-fragments": "3.3.0",
     "ember-disable-prototype-extensions": "1.1.3",
     "ember-django-adapter": "2.0.0",
-    "ember-inflector": "^3.0.0",
+    "ember-inflector": "~3.0.0",
     "ember-load-initializers": "^1.1.0",
-    "ember-resolver": "4.5.6",
-    "ember-sinon": "1.0.1",
-    "ember-source": "~3.3",
+    "ember-resolver": "5.0.1",
+    "ember-sinon": "2.2.0",
+    "ember-source": "~3.4",
     "loader.js": "4.7.0",
     "qunit-dom": "^0.7.1"
   },
   "resolutions": {
-    "ember-data": "3.3"
+    "ember-data": "3.4"
   },
   "keywords": [
     "ember-addon",

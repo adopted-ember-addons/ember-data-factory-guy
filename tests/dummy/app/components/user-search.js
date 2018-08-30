@@ -6,7 +6,7 @@ export default Ember.Component.extend({
 
     findUsers() {
       var name = this.$('input').val();
-      this.sendAction('onFind', name);
+      this.userSearch(name);
     }
 
   }
