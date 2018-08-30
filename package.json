@@ -22,8 +22,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "broccoli-funnel": "^1.0.1",
-    "broccoli-merge-trees": "^1.1.1",
+    "broccoli-funnel": "^2.0.1",
+    "broccoli-merge-trees": "^3.0.1",
     "ember-cli-babel": "~7.0.0",
     "pretender": "~2.0.0"
   },
