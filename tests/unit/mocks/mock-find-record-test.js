@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, { build, mockFindRecord } from 'ember-data-factory-guy';
@@ -27,7 +28,7 @@ module('MockFindRecord', function(hooks) {
     const consoleStub = sinon.spy(console, 'log'),
           mock        = mockFindRecord('profile');
 
-    await Ember.run(async () => FactoryGuy.store.findRecord('profile', 1));
+    await run(async () => FactoryGuy.store.findRecord('profile', 1));
 
     let response     = JSON.parse(mock.actualResponseJson()),
         expectedArgs = [
@@ -43,8 +44,8 @@ module('MockFindRecord', function(hooks) {
 
     const queryParams = {include: 'company'};
     mock.withParams(queryParams);
-    await Ember.run(async () => FactoryGuy.store.findRecord('profile', 1, queryParams));
-    expectedArgs[4] = `/profiles/1?${Ember.$.param(queryParams)}`;
+    await run(async () => FactoryGuy.store.findRecord('profile', 1, queryParams));
+    expectedArgs[4] = `/profiles/1?${$.param(queryParams)}`;
 
     assert.deepEqual(consoleStub.getCall(1).args, expectedArgs, 'with query params');
 
@@ -97,7 +98,7 @@ module('MockFindRecord', function(hooks) {
   module('#fails', function() {
 
     test("with errors in response", function(assert) {
-      Ember.run(() => {
+      run(() => {
         const done     = assert.async(),
               response = {errors: {description: ['bad']}},
               mock     = mockFindRecord('profile').fails({response});

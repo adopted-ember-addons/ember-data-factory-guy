@@ -1,7 +1,13 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import FactoryGuy, { make, buildList, mockFindAll, mockQuery } from 'ember-data-factory-guy';
+import FactoryGuy, {
+  make,
+  buildList,
+  mockFindAll,
+  mockQuery
+} from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
@@ -37,7 +43,7 @@ module('MockFindAll', function(hooks) {
     const consoleStub = sinon.spy(console, 'log'),
           mock        = mockFindAll('profile');
 
-    await Ember.run(async () => FactoryGuy.store.findAll('profile'));
+    await run(async () => FactoryGuy.store.findAll('profile'));
 
     let response     = JSON.parse(mock.actualResponseJson()),
         expectedArgs = [
@@ -53,8 +59,8 @@ module('MockFindAll', function(hooks) {
 
     const queryParams = {include: 'company'};
     mock.withParams(queryParams);
-    await Ember.run(async () => FactoryGuy.store.findAll('profile', queryParams));
-    expectedArgs[4] = `/profiles?${Ember.$.param(queryParams)}`;
+    await run(async () => FactoryGuy.store.findAll('profile', queryParams));
+    expectedArgs[4] = `/profiles?${$.param(queryParams)}`;
 
     assert.deepEqual(consoleStub.getCall(1).args, expectedArgs, 'with query params');
 

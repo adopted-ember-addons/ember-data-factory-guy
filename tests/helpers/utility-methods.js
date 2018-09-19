@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { typeOf } from '@ember/utils';
 import FactoryGuy, { manualSetup } from 'ember-data-factory-guy';
 import DS from 'ember-data';
 import DRFAdapter from 'ember-django-adapter/adapters/drf';
@@ -25,7 +25,7 @@ import { ActiveModelSerializer } from 'active-model-adapter';
 //  }
 //};
 
-// custom serializer options for the various models 
+// custom serializer options for the various models
 // which are applied to the currently testing  model's serializer ( JSONAPI, REST, ActiveModel, etc )
 const serializerOptions = {
   'entry-type': {
@@ -66,7 +66,7 @@ const serializerOptions = {
 //function setupCustomAdapter(container, adapterType, options) {
 //  let store = container.lookup('service:store');
 //  let modelAdapter = container.lookup('adapter:' + adapterType);
-//  if (Ember.typeOf(options) === 'array') {
+//  if (typeOf(options) === 'array') {
 //    modelAdapter.reopen.apply(modelAdapter, options);
 //  } else {
 //    modelAdapter.reopen(options);
@@ -78,7 +78,7 @@ const serializerOptions = {
 function setupCustomSerializer(container, serializerType, options) {
   let store = container.lookup('service:store');
   let modelSerializer = container.lookup('serializer:' + serializerType);
-  if (Ember.typeOf(options) === 'array') {
+  if (typeOf(options) === 'array') {
     modelSerializer.reopen.apply(modelSerializer, options);
   } else {
     modelSerializer.reopen(options);

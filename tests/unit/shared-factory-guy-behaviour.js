@@ -1,6 +1,11 @@
+import { run } from '@ember/runloop';
 import { test } from 'ember-qunit';
-import Ember from 'ember';
-import FactoryGuy, { buildList, make, makeList, makeNew } from 'ember-data-factory-guy';
+import FactoryGuy, {
+  buildList,
+  make,
+  makeList,
+  makeNew
+} from 'ember-data-factory-guy';
 
 import User from 'dummy/models/user';
 import BigHat from 'dummy/models/big-hat';
@@ -95,7 +100,7 @@ SharedBehavior.makeTests = function() {
 
 
   test("when hasMany ( asnyc ) associations assigned, belongTo parent is assigned", function(assert) {
-    Ember.run(function() {
+    run(function() {
       let done = assert.async();
 
       let user = make('user');
@@ -177,7 +182,7 @@ SharedBehavior.makeTests = function() {
 
 
   test("when hasMany ( async ) relationship is assigned, model relationship is synced on both sides", function(assert) {
-    Ember.run(function() {
+    run(function() {
       let done = assert.async();
 
       let property = make('property');
@@ -193,7 +198,7 @@ SharedBehavior.makeTests = function() {
 
 
   test("when belongsTo ( async ) parent is assigned, parent adds to hasMany records", function(assert) {
-    Ember.run(function() {
+    run(function() {
       let done = assert.async();
 
       let company = make('company');
@@ -309,14 +314,14 @@ SharedBehavior.makeTests = function() {
 
 
   test("using afterMake with transient attributes in definition", function(assert) {
-    Ember.run(function() {
+    run(function() {
       let property = FactoryGuy.make('property');
       assert.ok(property.get('name') === 'Silly property(FOR SALE)');
     });
   });
 
   test("using afterMake with transient attributes in options", function(assert) {
-    Ember.run(function() {
+    run(function() {
       let property = FactoryGuy.make('property', {for_sale: false});
       assert.ok(property.get('name') === 'Silly property');
     });

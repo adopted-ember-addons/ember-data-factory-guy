@@ -1,6 +1,11 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { buildList, makeList, mockFindAll, setupFactoryGuy } from 'ember-data-factory-guy';
+import {
+  buildList,
+  makeList,
+  mockFindAll,
+  setupFactoryGuy
+} from 'ember-data-factory-guy';
 import { visit } from '@ember/test-helpers';
 
 module('Acceptance | Users View', function(hooks) {

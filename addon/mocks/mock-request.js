@@ -1,7 +1,12 @@
 import { assert } from '@ember/debug';
 import { assign } from '@ember/polyfills';
 import $ from 'jquery';
-import { isEmptyObject, isEquivalent, isPartOf, toParams } from '../utils/helper-functions';
+import {
+  isEmptyObject,
+  isEquivalent,
+  isPartOf,
+  toParams
+} from '../utils/helper-functions';
 import FactoryGuy from '../factory-guy';
 import RequestManager from './request-manager';
 

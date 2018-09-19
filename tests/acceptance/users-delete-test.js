@@ -1,6 +1,11 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { makeList, mockDelete, mockFindAll, setupFactoryGuy } from 'ember-data-factory-guy';
+import {
+  makeList,
+  mockDelete,
+  mockFindAll,
+  setupFactoryGuy
+} from 'ember-data-factory-guy';
 import { visit, click } from '@ember/test-helpers';
 
 module('Acceptance | Users Delete', function(hooks) {

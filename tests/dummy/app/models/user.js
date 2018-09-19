@@ -1,7 +1,7 @@
-import Ember from 'ember';
+import { computed } from '@ember/object';
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
-import {hasMany, belongsTo} from 'ember-data/relationships';
+import { hasMany, belongsTo } from 'ember-data/relationships';
 
 export default Model.extend({
   name: attr('string'),
@@ -12,7 +12,7 @@ export default Model.extend({
   projects: hasMany('project', { async: false }),
   hats: hasMany('hat', { async: false, polymorphic: true }),
 
-  funnyName: Ember.computed("name", function() {
+  funnyName: computed("name", function() {
     return "funny " + this.get('name');
   })
 });

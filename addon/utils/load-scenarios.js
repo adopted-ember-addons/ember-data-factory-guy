@@ -1,5 +1,5 @@
 import { assert } from '@ember/debug';
-import {requireFiles} from './helper-functions';
+import { requireFiles } from './helper-functions';
 
 const scenarioFileRegExp = new RegExp('/scenarios/main$');
 /**

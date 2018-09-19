@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import { all } from 'rsvp';
+import { A } from '@ember/array';
 import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { isEquivalent } from 'ember-data-factory-guy/utils/helper-functions';
@@ -13,7 +14,6 @@ import $ from 'jquery';
 import Profile from 'dummy/models/profile';
 import SuperHero from 'dummy/models/super-hero';
 
-const A = Ember.A;
 let SharedBehavior = {};
 
 //////// mockFindRecord common /////////
@@ -755,7 +755,7 @@ SharedBehavior.mockQueryTests = function() {
 
     assert.equal(FactoryGuy.store.peekAll('user').get('content.length'), 2, 'start out with 2 instances');
 
-    let users = await Ember.run(async () => FactoryGuy.store.query('user', {name: 'Bob'}));
+    let users = await run(async () => FactoryGuy.store.query('user', {name: 'Bob'}));
     assert.equal(users.get('length'), 2);
     assert.equal(users.get('firstObject.name'), 'User1');
     assert.equal(users.get('firstObject.hats.length'), 2);
@@ -1138,7 +1138,7 @@ SharedBehavior.mockCreateTests = function() {
         return FactoryGuy.store.createRecord('profile', {description: 'whatever'});
       });
 
-      await Ember.RSVP.all(profiles.map(profile => profile.save()));
+      await all(profiles.map(profile => profile.save()));
 
       let ids = A(profiles).mapBy('id');
       let descriptions = A(profiles).mapBy('description');

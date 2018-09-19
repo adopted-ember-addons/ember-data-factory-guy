@@ -1,5 +1,11 @@
 import { module, test } from 'qunit';
-import { build, buildList, make, mockFindRecord, setupFactoryGuy } from 'ember-data-factory-guy';
+import {
+  build,
+  buildList,
+  make,
+  mockFindRecord,
+  setupFactoryGuy
+} from 'ember-data-factory-guy';
 import { setupApplicationTest } from "ember-qunit";
 import { visit } from '@ember/test-helpers';
 

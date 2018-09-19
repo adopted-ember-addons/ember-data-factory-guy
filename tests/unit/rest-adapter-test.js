@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
@@ -36,7 +36,7 @@ module(serializer, function(hooks) {
 
   module(`#mockFindRecord custom`, function() {
     test("when returns json (plain) is used", function(assert) {
-      Ember.run(() => {
+      run(() => {
         let done      = assert.async(),
             json      = {profile: {id: 1, description: 'the desc'}},
             mock      = mockFindRecord('profile').returns({json}),
@@ -54,7 +54,7 @@ module(serializer, function(hooks) {
   module(`#mockCreate custom`, function() {
 
     test("match belongsTo with custom payloadKeyFromModelName function", function(assert) {
-      Ember.run(() => {
+      run(() => {
         let done = assert.async();
 
         let entryType = make('entry-type');
@@ -69,7 +69,7 @@ module(serializer, function(hooks) {
     });
 
     test("match hasMany with custom payloadKeyFromModelName function", function(assert) {
-      Ember.run(() => {
+      run(() => {
         let done = assert.async();
 
         let entry = make('entry');

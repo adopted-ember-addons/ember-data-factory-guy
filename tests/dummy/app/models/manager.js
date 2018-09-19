@@ -1,6 +1,6 @@
 import Model from 'ember-data/model';
-import {hasMany, belongsTo} from 'ember-data/relationships';
-import {fragment} from 'ember-data-model-fragments/attributes';
+import { hasMany, belongsTo } from 'ember-data/relationships';
+import { fragment } from 'ember-data-model-fragments/attributes';
 
 export default Model.extend({
   name: fragment('name'),

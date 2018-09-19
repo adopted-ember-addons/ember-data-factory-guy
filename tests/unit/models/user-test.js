@@ -1,7 +1,11 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import FactoryGuy, { make, setupFactoryGuy, mockFindRecord } from 'ember-data-factory-guy';
+import FactoryGuy, {
+  make,
+  setupFactoryGuy,
+  mockFindRecord
+} from 'ember-data-factory-guy';
 
 const modelType = 'user';
 
@@ -20,7 +24,7 @@ module(`Unit | Model | ${modelType}`, function(hooks) {
   });
 
   test('sample async unit test with async/await', async function(assert) {
-    Ember.run(async () => {
+    run(async () => {
       let mock = mockFindRecord('user');
       let userId = mock.get('id');
       let user = await FactoryGuy.store.findRecord('user', userId);
@@ -30,7 +34,7 @@ module(`Unit | Model | ${modelType}`, function(hooks) {
 
   test('sample async unit test with assert.async()', function(assert) {
     let done = assert.async();
-    Ember.run(() => {
+    run(() => {
       let mock = mockFindRecord('user');
       let userId = mock.get('id');
       FactoryGuy.store.findRecord('user', userId).then((user) => {

@@ -1,6 +1,6 @@
+import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import Ember from 'ember';
 import FactoryGuy, {
   make, build, mockFindAll, mockQueryRecord, mockUpdate
 } from 'ember-data-factory-guy';
@@ -62,7 +62,7 @@ module('MockRequest', function(hooks) {
   module('#timeCalled', function() {
 
     test("can verify how many times a queryRecord call was mocked", async function(assert) {
-      return Ember.run(async () => {
+      return run(async () => {
         const mock = mockQueryRecord('company', {}).returns({json: build('company')});
 
         await FactoryGuy.store.queryRecord('company', {});
@@ -72,7 +72,7 @@ module('MockRequest', function(hooks) {
     });
 
     test("can verify how many times a findAll call was mocked", async function(assert) {
-      return Ember.run(async () => {
+      return run(async () => {
         const mock = mockFindAll('company');
 
         await FactoryGuy.store.findAll('company');
@@ -85,11 +85,11 @@ module('MockRequest', function(hooks) {
       const company = make('company'),
             mock    = mockUpdate(company);
 
-      Ember.run(() => company.set('name', 'ONE'));
-      await Ember.run(async () => company.save());
+      run(() => company.set('name', 'ONE'));
+      await run(async () => company.save());
 
-      Ember.run(() => company.set('name', 'TWO'));
-      await Ember.run(async () => company.save());
+      run(() => company.set('name', 'TWO'));
+      await run(async () => company.save());
 
       assert.equal(mock.timesCalled, 2);
     });
@@ -98,7 +98,7 @@ module('MockRequest', function(hooks) {
   module('#disable, #enable, and #destroy', function() {
 
     test("can enable, disable, and destroy mock", async function(assert) {
-      return Ember.run(async () => {
+      return run(async () => {
         let json1 = build('user'),
             json2 = build('user'),
             mock1 = mockQueryRecord('user', {id: 1}).returns({json: json1});

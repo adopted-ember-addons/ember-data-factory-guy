@@ -1,6 +1,11 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { buildList, make, makeList, mockLinks } from 'ember-data-factory-guy';
+import {
+  buildList,
+  make,
+  makeList,
+  mockLinks
+} from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 
 const serializerType = '-json-api';

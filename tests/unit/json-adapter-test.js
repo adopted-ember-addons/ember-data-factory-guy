@@ -1,7 +1,11 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import FactoryGuy, { build, buildList, mockFindRecord } from 'ember-data-factory-guy';
+import FactoryGuy, {
+  build,
+  buildList,
+  mockFindRecord
+} from 'ember-data-factory-guy';
 import SharedCommonBehavior from './shared-common-behaviour';
 import SharedAdapterBehaviour from './shared-adapter-behaviour';
 import { inlineSetup } from '../helpers/utility-methods';
@@ -27,7 +31,7 @@ module(serializer, function(hooks) {
   module('#mockFindRecord custom', function() {
 
     test("when returns json (plain) is used", function(assert) {
-      Ember.run(() => {
+      run(() => {
         let done      = assert.async(),
             json      = {id: 1, description: 'the desc'},
             mock      = mockFindRecord('profile').returns({json}),

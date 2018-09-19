@@ -1,7 +1,13 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import FactoryGuy, { build, make, makeList, mockQueryRecord } from 'ember-data-factory-guy';
+import FactoryGuy, {
+  build,
+  make,
+  makeList,
+  mockQueryRecord
+} from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
@@ -25,7 +31,7 @@ module('MockQueryRecord', function(hooks) {
           consoleStub = sinon.spy(console, 'log'),
           mock        = mockQueryRecord('profile').withParams(queryParams);
 
-    await Ember.run(async () => FactoryGuy.store.queryRecord('profile', queryParams));
+    await run(async () => FactoryGuy.store.queryRecord('profile', queryParams));
 
     let response     = JSON.parse(mock.actualResponseJson()),
         expectedArgs = [
@@ -33,7 +39,7 @@ module('MockQueryRecord', function(hooks) {
           "MockQueryRecord",
           "GET",
           "[200]",
-          `/profiles?${Ember.$.param(queryParams)}`,
+          `/profiles?${$.param(queryParams)}`,
           response
         ];
 
@@ -93,7 +99,7 @@ module('MockQueryRecord', function(hooks) {
   });
 
   test("using fails makes the request fail", function(assert) {
-    Ember.run(() => {
+    run(() => {
       let done = assert.async();
 
       mockQueryRecord('user').fails();
@@ -114,9 +120,9 @@ module('MockQueryRecord', function(hooks) {
     let {headers} = handler.getResponse();
     assert.deepEqual(headers, {'X-Testing': 'absolutely'});
 
-    Ember.$(document).ajaxComplete(function(event, xhr) {
+    $(document).ajaxComplete(function(event, xhr) {
       assert.equal(xhr.getResponseHeader('X-Testing'), 'absolutely');
-      Ember.$(document).off('ajaxComplete');
+      $(document).off('ajaxComplete');
       done();
     });
 

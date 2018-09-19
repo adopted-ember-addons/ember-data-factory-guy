@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, { make, mockUpdate } from 'ember-data-factory-guy';
@@ -38,7 +38,7 @@ module('MockUpdate', function(hooks) {
           profile     = make('profile'),
           mock        = mockUpdate(profile);
 
-    await Ember.run(async () => profile.save());
+    await run(async () => profile.save());
 
     let response     = JSON.parse(mock.getResponse().responseText),
         expectedArgs = [
