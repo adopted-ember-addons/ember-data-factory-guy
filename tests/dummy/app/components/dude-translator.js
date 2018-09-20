@@ -1,12 +1,13 @@
-import Ember from 'ember';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 
 /**
  * Dude Translator
  */
-export default Ember.Component.extend({
+export default Component.extend({
   classNames: ['translator'],
 
-  translation: Ember.computed('original', function() {
+  translation: computed('original', function() {
     return this.get('original') + ' dude';
   })
 

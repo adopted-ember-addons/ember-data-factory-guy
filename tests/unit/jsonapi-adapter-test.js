@@ -1,6 +1,7 @@
+import { underscore } from '@ember/string';
+import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import Ember from 'ember';
 import FactoryGuy, {
   build,
   buildList,
@@ -35,7 +36,7 @@ module(serializer, function(hooks) {
   module('#mockFindRecord custom', function() {
 
     test("when returns json (plain) is used", function(assert) {
-      Ember.run(() => {
+      run(() => {
         let done      = assert.async(),
             json      = {data: {id: 1, type: 'profile', attributes: {description: 'the desc'}}},
             mock      = mockFindRecord('profile').returns({json}),
@@ -53,7 +54,7 @@ module(serializer, function(hooks) {
   module('#mockCreate custom', function() {
 
     test("match belongsTo with custom payloadKeyFromModelName function", function(assert) {
-      Ember.run(() => {
+      run(() => {
         let done = assert.async();
 
         let entryType = make('entry-type');
@@ -68,7 +69,7 @@ module(serializer, function(hooks) {
     });
 
     test("match hasMany with custom payloadKeyFromModelName function", function(assert) {
-      Ember.run(() => {
+      run(() => {
         let done = assert.async();
 
         let entry = make('entry');
@@ -623,8 +624,8 @@ module(serializer, function(hooks) {
     test("using custom serialize keys function for transforming attributes and relationship keys", function(assert) {
       let serializer = FactoryGuy.store.serializerFor('profile');
 
-      serializer.keyForAttribute = Ember.String.underscore;
-      serializer.keyForRelationship = Ember.String.underscore;
+      serializer.keyForAttribute = underscore;
+      serializer.keyForRelationship = underscore;
 
       let json = build('profile', 'with_bat_man');
       json.unwrap();

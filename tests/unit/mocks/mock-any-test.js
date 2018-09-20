@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import $ from 'jquery';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { mock } from 'ember-data-factory-guy';
@@ -32,7 +32,7 @@ module('MockAny', function(hooks) {
           mockOpts     = Object.assign({responseText}, callOpts);
 
     mock(mockOpts);
-    let json = await Ember.$.ajax(callOpts);
+    let json = await $.ajax(callOpts);
     assert.deepEqual(JSON.parse(json), responseText);
   });
 
@@ -46,7 +46,7 @@ module('MockAny', function(hooks) {
           mockOpts     = Object.assign({responseText}, callOpts);
 
     mock(mockOpts);
-    let json = await Ember.$.ajax(callOpts);
+    let json = await $.ajax(callOpts);
     assert.deepEqual(JSON.parse(json), responseText);
   });
 
@@ -57,12 +57,12 @@ module('MockAny', function(hooks) {
           whatsUpDoc = {whats: 'up doc'};
 
     let theMock = mock({url, type}).withParams(whatsUp).returns(whatsUp),
-        json    = await Ember.$.ajax({type, url, data: whatsUp});
+        json    = await $.ajax({type, url, data: whatsUp});
 
     assert.deepEqual(JSON.parse(json), whatsUp, 'returns json for url with params #1');
 
     theMock.withParams(whatsUpDoc).returns(whatsUpDoc);
-    json = await Ember.$.ajax({type, url, data: whatsUpDoc});
+    json = await $.ajax({type, url, data: whatsUpDoc});
     assert.deepEqual(JSON.parse(json), whatsUpDoc, 'returns json for url matching params #2');
   });
 
@@ -73,12 +73,12 @@ module('MockAny', function(hooks) {
           whatsUpDoc = {whats: 'up doc'};
 
     let theMock = mock({url, type}).withParams(whatsUp).returns(whatsUp),
-        json    = await Ember.$.ajax({type, url, data: whatsUp});
+        json    = await $.ajax({type, url, data: whatsUp});
 
     assert.deepEqual(JSON.parse(json), whatsUp, 'returns json for url with params #1');
 
     theMock.withParams(whatsUpDoc).returns(whatsUpDoc);
-    json = await Ember.$.ajax({type, url, data: whatsUpDoc});
+    json = await $.ajax({type, url, data: whatsUpDoc});
     assert.deepEqual(JSON.parse(json), whatsUpDoc, 'returns json for url matching params #2');
   });
 
@@ -90,11 +90,11 @@ module('MockAny', function(hooks) {
 
     let theMock = mock({url}).returns(whatsUp);
 
-    let json = await Ember.$.ajax({type, url});
+    let json = await $.ajax({type, url});
     assert.deepEqual(JSON.parse(json), whatsUp, 'returns json that is set');
 
     theMock.returns(whatsUpDoc);
-    json = await Ember.$.ajax({type, url});
+    json = await $.ajax({type, url});
     assert.deepEqual(JSON.parse(json), whatsUpDoc, 'returns next json that is set');
   });
 
@@ -105,11 +105,11 @@ module('MockAny', function(hooks) {
           whatsUpDoc = {whats: 'up doc'};
 
     let theMock = mock({url}).withParams(whatsUp).returns(whatsUp);
-    let json = await Ember.$.ajax({type, url, data: whatsUp});
+    let json = await $.ajax({type, url, data: whatsUp});
     assert.deepEqual(JSON.parse(json), whatsUp, 'returns json for url with params #1');
 
     theMock.withParams(whatsUpDoc).returns(whatsUpDoc);
-    json = await Ember.$.ajax({type, url, data: whatsUpDoc});
+    json = await $.ajax({type, url, data: whatsUpDoc});
     assert.deepEqual(JSON.parse(json), whatsUpDoc, 'returns json for url matching params #2');
   });
 
@@ -120,7 +120,7 @@ module('MockAny', function(hooks) {
           responseText = {dude: 'dude'};
 
     mock({url, type, data}).returns(responseText);
-    const json = await Ember.$.ajax({type, url, data});
+    const json = await $.ajax({type, url, data});
 
     assert.deepEqual(JSON.parse(json), responseText, 'returns json for url with params #1');
   });
@@ -132,12 +132,12 @@ module('MockAny', function(hooks) {
           whatsUpDoc = {whats: 'up doc'};
 
     let theMock = mock({url, type}).withParams(whatsUp).returns(whatsUp),
-        json    = await Ember.$.ajax({type, url, data: whatsUp});
+        json    = await $.ajax({type, url, data: whatsUp});
 
     assert.deepEqual(JSON.parse(json), whatsUp, 'returns json for url with params #1');
 
     theMock.withParams(whatsUpDoc).returns(whatsUpDoc);
-    json = await Ember.$.ajax({type, url, data: whatsUpDoc});
+    json = await $.ajax({type, url, data: whatsUpDoc});
     assert.deepEqual(JSON.parse(json), whatsUpDoc, 'returns json for url matching params #2');
   });
 });

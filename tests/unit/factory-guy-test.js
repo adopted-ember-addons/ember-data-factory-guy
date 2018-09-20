@@ -1,7 +1,8 @@
+import { run } from '@ember/runloop';
+import { A } from '@ember/array';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import DS from 'ember-data';
-import Ember from 'ember';
 import FactoryGuy, {
   attributesFor, build, buildList, make, makeList, makeNew
 } from 'ember-data-factory-guy';
@@ -11,8 +12,6 @@ import { inlineSetup } from '../helpers/utility-methods';
 import User from 'dummy/models/user';
 import Name from 'dummy/models/name';
 import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
-
-const A = Ember.A;
 
 module('FactoryGuy', function(hooks) {
   setupTest(hooks);
@@ -56,7 +55,7 @@ module('FactoryGuy', function(hooks) {
   });
 
   test("#resetDefinitions resets the model definition", function(assert) {
-    Ember.run(function() {
+    run(function() {
       let project = make('project');
       make('user', {projects: [project]});
 
@@ -839,7 +838,7 @@ module('FactoryGuy', function(hooks) {
 
     test("removes id for model fragmentArray attribute", function(assert) {
       let json = FactoryGuy.buildRaw({name: 'employee', traits: ['with_department_employments']});
-      let ids = Ember.A(json.departmentEmployments.map((obj) => obj.id)).compact();
+      let ids = A(json.departmentEmployments.map((obj) => obj.id)).compact();
       assert.deepEqual(ids, []);
     });
   });

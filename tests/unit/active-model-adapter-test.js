@@ -1,7 +1,12 @@
+import { dasherize } from '@ember/string';
+import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import Ember from 'ember';
-import FactoryGuy, { build, buildList, mockCreate } from 'ember-data-factory-guy';
+import FactoryGuy, {
+  build,
+  buildList,
+  mockCreate
+} from 'ember-data-factory-guy';
 import SharedCommonBehavior from './shared-common-behaviour';
 import SharedAdapterBehaviour from './shared-adapter-behaviour';
 import { inlineSetup } from '../helpers/utility-methods';
@@ -34,11 +39,11 @@ module(serializer, function(hooks) {
 
       mockCreate('profile').returns({attrs: {camel_case_description: customDescription}});
 
-      let profile = Ember.run(() => FactoryGuy.store.createRecord('profile', {
+      let profile = run(() => FactoryGuy.store.createRecord('profile', {
         camel_case_description: 'description'
       }));
 
-      await Ember.run(async () => profile.save());
+      await run(async () => profile.save());
 
       assert.ok(profile.get('camelCaseDescription') === customDescription);
     });
@@ -236,9 +241,9 @@ module(serializer, function(hooks) {
       let serializer = FactoryGuy.store.serializerFor('application');
 
       let savedKeyForAttributeFn = serializer.keyForAttribute;
-      serializer.keyForAttribute = Ember.String.dasherize;
+      serializer.keyForAttribute = dasherize;
       let savedKeyForRelationshipFn = serializer.keyForRelationship;
-      serializer.keyForRelationship = Ember.String.dasherize;
+      serializer.keyForRelationship = dasherize;
 
       let buildJson = build('profile', 'with_bat_man');
       buildJson.unwrap();

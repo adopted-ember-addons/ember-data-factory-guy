@@ -1,7 +1,11 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Model from 'ember-data/model';
-import FactoryGuy, { build, makeNew, mockCreate } from 'ember-data-factory-guy';
+import FactoryGuy, {
+  build,
+  makeNew,
+  mockCreate
+} from 'ember-data-factory-guy';
 import { run } from '@ember/runloop';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';

@@ -1,5 +1,5 @@
 import FactoryGuy from 'ember-data-factory-guy';
-import {sound as mooSound} from '../helpers/moo';
+import { sound as mooSound } from '../helpers/moo';
 
 const defaultVolume = "Normal";
 

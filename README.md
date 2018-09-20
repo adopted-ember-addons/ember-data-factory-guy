@@ -6,11 +6,11 @@ Feel the thrill and enjoyment of testing when using Factories instead of Fixture
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
 **NEW** starting with v3.2.1
-  - You can setup data AND links for your async relationship[Check it out](#special-tips-for-links) 
-                                                                                              
+  - You can setup data AND links for your async relationship[Check it out](#special-tips-for-links)
+
 **NEW** You can use factory guy in ember-twiddle
-  - Using [Scenarios](https://ember-twiddle.com/421f16ecc55b5d35783c243b8d99f2be?openFiles=tests.unit.model.user-test.js%2C) 
-     
+  - Using [Scenarios](https://ember-twiddle.com/421f16ecc55b5d35783c243b8d99f2be?openFiles=tests.unit.model.user-test.js%2C)
+
 **NEW** If using new style of ember-qunit acceptance tests with ```setupApplicationTest``` check out demo here: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
 **NEW** starting with v2.13.27
@@ -33,7 +33,7 @@ Factories simplify the process of testing, making you more efficient and your te
 - You don't need to add any files to recreate the relationships in your models
 - Any custom methods like: serialize / serializeAttribute / keyForAttribute etc... in a serializer will be used automatically
 - If you set up custom methods like: buildURL / urlForFindRecord in an adapter, they will be used automatically
-- You have no config file with tons of spew, because you declare all the mocks and make everything declaratively in the test 
+- You have no config file with tons of spew, because you declare all the mocks and make everything declaratively in the test
 - You can push models and their complex relationships directly to the store
 
 ### Questions / Get in Touch
@@ -295,7 +295,7 @@ In other words, don't do this:
 - Can use one or more traits
  - Each trait overrides any values defined in traits before it in the argument list
 - traits can be functions ( this is mega powerful )
- 
+
 ```javascript
 
   FactoryGuy.define('user', {
@@ -331,7 +331,7 @@ attributes will override any trait attributes or default attributes
 
 ##### Using traits as functions
 
-```js     
+```js
 import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define("project", {
@@ -385,20 +385,20 @@ Your trait function assigns the title as you described in the function
     - Can compose relationships to any level
   - When setting up manually do not mix `build` and `make` - you either `build` JSON in every levels of associations or `make` objects. `build` is taking serializer into account for every model which means that output from `build` might be different than expected input defined in factory in `make`.
 
-- Special tips for links 
+- Special tips for links
 
 ##### Setup belongsTo associations in Factory Definitions
 
 - using traits are the best practice
-  
+
 ```javascript
   FactoryGuy.define('project', {
-    
+
     traits: {
       withUser: { user: {} },
       withAdmin: { user: FactoryGuy.belongsTo('user', 'admin') },
       withManagerLink(f) { // f is the fixture being created
-        f.links = {manager: `/projects/${f.id}/manager`} 
+        f.links = {manager: `/projects/${f.id}/manager`}
       }
     }
   });
@@ -408,7 +408,7 @@ Your trait function assigns the title as you described in the function
 
   user = make('user', 'withManagerLink');
   user.belongsTo('manager').link(); // => "/projects/1/manager"
-   
+
 ```
 
 
@@ -442,16 +442,16 @@ the reverse user hasMany 'projects' association is being setup for you on the us
       withProjects: {
         projects: FactoryGuy.hasMany('project', 2)
       },
-      withPropertiesLink(f) { // f is the fixture being created 
-        f.links = {properties: `/users/${f.id}/properties`} 
+      withPropertiesLink(f) { // f is the fixture being created
+        f.links = {properties: `/users/${f.id}/properties`}
       }
     }
   });
 
   let user = make('user', 'withProjects');
   user.get('projects.length') // => 2
-  
-  user = make('user', 'withPropertiesLink'); 
+
+  user = make('user', 'withPropertiesLink');
   user.hasMany('properties').link(); // => "/users/1/properties"
 ```
 
@@ -459,9 +459,9 @@ the reverse user hasMany 'projects' association is being setup for you on the us
 
 ```javascript
   FactoryGuy.define('user', {
-    
+
     userWithProjects: { projects: FactoryGuy.hasMany('project', 2) }
-  
+
   });
 
   let user = make('userWithProjects');
@@ -495,39 +495,39 @@ the reverse 'user' belongsTo association is being setup for you on the project
 ##### Special tips for links
   - The links syntax changed as of ( v3.2.1 )
     - What you see below is the new syntax
-  - You can setup data AND links for your async relationship 
+  - You can setup data AND links for your async relationship
   - Need special care with multiple traits setting links
-  
+
 ```javascript
 
   FactoryGuy.define('user', {
     traits: {
       withCompanyLink(f): {
         // since you can assign many different links with different traits,
-        // you should Object.assign so that you add to the links hash rather 
-        // than set it directly ( assuming you want to use this feature ) 
+        // you should Object.assign so that you add to the links hash rather
+        // than set it directly ( assuming you want to use this feature )
         f.links = Object.assign({company: `/users/${f.id}/company`}, f.links);
       },
-      withPropertiesLink(f) {  
-        f.links = Object.assign({properties: `/users/${f.id}/properties`}, f.links); 
+      withPropertiesLink(f) {
+        f.links = Object.assign({properties: `/users/${f.id}/properties`}, f.links);
       }
     }
   });
-  
-  // setting links with traits 
+
+  // setting links with traits
   let company = make('company')
   let user = make('user', 'withCompanyLink', 'withPropertiesLink', {company});
   user.hasMany('properties').link(); // => "/users/1/properties"
   user.belongsTo('company').link(); // => "/users/1/company"
-  // the company async relationship has a company AND link to fetch it again 
-  // when you reload that relationship 
+  // the company async relationship has a company AND link to fetch it again
+  // when you reload that relationship
   user.get('company.content') // => company
   user.belongsTo('company').reload() // would use that link "/users/1/company" to reload company
-  
-  // you can also set traits with your build/buildList/make/makeList options 
-  user = make('user', {links: {properties: '/users/1/properties'}});   
+
+  // you can also set traits with your build/buildList/make/makeList options
+  user = make('user', {links: {properties: '/users/1/properties'}});
 ```
-  
+
 ### Extending Other Definitions
   - Extending another definition will inherit these sections:
     - sequences
@@ -616,7 +616,7 @@ Assuming the factory-guy model definition defines `afterMake` function:
 You would use this to make models like:
 
 ```javascript
-  Ember.run(function () {
+  run(function () {
 
     let property = FactoryGuy.make('property');
     property.get('name'); // => 'Silly property(FOR SALE)')
@@ -626,6 +626,8 @@ You would use this to make models like:
   });
 
 ```
+
+Remember to import the `run` function with `import { run } from "@ember/runloop"`;
 
 ### Using Factories
  - [`FactoryGuy.attributesFor`](#factoryguyattributesfor)
@@ -649,20 +651,20 @@ You would use this to make models like:
  - Can compose relationships
     - By passing in other objects you've made with `build`/`buildList` or `make`/`makeList`
  - Can setup links for async relationships with `build`/`buildList` or `make`/`makeList`
- 
+
 ##### `FactoryGuy.attributesFor`
   - nice way to get attibutes for a factory without making a model or payload
   - same arguments as make/build
-  - no id is returned 
-  - no relationship info returned ( yet )  
-  
+  - no id is returned
+  - no relationship info returned ( yet )
+
 ```javascript
 
   import { attributesFor } from 'ember-data-factory-guy';
 
   // make a user with certain traits and options
   attributesFor('user', 'silly', {name: 'Fred'}); // => { name: 'Fred', style: 'silly'}
-  
+
 ```
 
 ##### `FactoryGuy.make`
@@ -710,7 +712,7 @@ You would use this to make models like:
 
   // make user with links to async hasMany properties
   let user = make('user', {properties: {links: '/users/1/properties'}});
-  
+
   // make user with links to async belongsTo company
   let user = make('user', {company: {links: '/users/1/company'}});
 
@@ -721,7 +723,7 @@ You would use this to make models like:
 
 ##### `FactoryGuy.makeNew`
   - Same api as `FactoryGuy.make`
-    - except that the model will be a newly created record with no id 
+    - except that the model will be a newly created record with no id
 
 ##### `FactoryGuy.makeList`
   - check out [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'bob' user and 'with_car' trait
@@ -806,10 +808,10 @@ Usage:
 
   // build user with links to async hasMany properties
   let user = build('user', {properties: {links: '/users/1/properties'}});
-  
+
   // build user with links to async belongsTo company
   let user = build('user', {company: {links: '/users/1/company'}});
-  
+
 ```
 - Example of what json payload from build looks like
  - Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters
@@ -1211,13 +1213,13 @@ test("Using FactoryGuy.cacheOnlyMode with except", async function() {
 - FactoryGuy needs to setup the factories before the test run.
   - By default, you only need to call `manualSetup(this)` in unit/component/acceptance tests
   - Or you can use the new setupFactoryGuy(hooks) method if your using the new qunit style tests
-  
+
     - Sample usage: (works the same in any type of test)
     ```js
     module('Acceptance | User View', function(hooks) {
       setupApplicationTest(hooks);
       setupFactoryGuy(hooks);
-    
+
       test("blah blah", async function(assert) {
          await visit('work');
          assert.ok('bah was spoken');
@@ -1673,7 +1675,7 @@ Usage:
           json, returning `true` if there is a match, `false` otherwise.
     - returns
       - attributes ( including relationships ) to include in response json
-  - Need to wrap tests using `mockCreate` with: `Ember.run(function() { 'your test' })`
+  - Need to import `run` from `@ember/runloop` and wrap tests using `mockCreate` with: `run(function() { 'your test' })`
 
 Realistically, you will have code in a view action or controller action that will
  create the record, and setup any associations.
@@ -1759,7 +1761,7 @@ Usage:
         json, returning `true` if there is a match, `false` otherwise.
     - returns
       - attributes ( including relationships ) to include in response json
-  - Need to wrap tests using `mockUpdate` with: `Ember.run(function() { 'your test' })`
+  - Need to import `run` from `@ember/runloop` and wrap tests using `mockUpdate` with: `run(function() { 'your test' })`
 
 Usage:
 
@@ -1857,7 +1859,7 @@ Usage:
 
 
 ##### `mockDelete`
-  - Need to wrap tests using `mockDelete` with: `Ember.run(function() { 'your test' })`
+  - Need to import `run` from `@ember/runloop` and wrap tests using `mockDelete` with: `run(function() { 'your test' })`
   - To handle deleting a model
     - Pass in a record ( or a typeName and id )
 

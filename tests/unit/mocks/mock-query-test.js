@@ -1,7 +1,12 @@
-import Ember from 'ember';
+import $ from 'jquery';
+import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import FactoryGuy, { make, buildList, mockQuery } from 'ember-data-factory-guy';
+import FactoryGuy, {
+  make,
+  buildList,
+  mockQuery
+} from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
@@ -24,7 +29,7 @@ module('MockQuery', function(hooks) {
           consoleStub = sinon.spy(console, 'log'),
           mock        = mockQuery('profile').withParams(queryParams);
 
-    await Ember.run(async () => FactoryGuy.store.query('profile', queryParams));
+    await run(async () => FactoryGuy.store.query('profile', queryParams));
 
     let response     = JSON.parse(mock.actualResponseJson()),
         expectedArgs = [
@@ -32,7 +37,7 @@ module('MockQuery', function(hooks) {
           "MockQuery",
           "GET",
           "[200]",
-          `/profiles?${Ember.$.param(queryParams)}`,
+          `/profiles?${$.param(queryParams)}`,
           response
         ];
 

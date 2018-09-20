@@ -1,10 +1,8 @@
+import { Promise } from 'rsvp';
 import { module } from 'qunit';
-import Ember from 'ember';
 import FactoryGuy from 'ember-data-factory-guy';
 import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
-
-const {RSVP: {Promise}} = Ember;
 
 export default function(name, options = {}) {
   module(name, {

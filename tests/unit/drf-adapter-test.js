@@ -1,7 +1,11 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import FactoryGuy, { build, buildList, mockQuery } from 'ember-data-factory-guy';
+import FactoryGuy, {
+  build,
+  buildList,
+  mockQuery
+} from 'ember-data-factory-guy';
 import SharedAdapterBehaviour from './shared-adapter-behaviour';
 import { inlineSetup } from '../helpers/utility-methods';
 import { isEquivalent } from 'ember-data-factory-guy/utils/helper-functions';
@@ -47,7 +51,7 @@ module(serializer, function(hooks) {
     // drf serializer takes the previous and next and extracts the page number
     // so this needed it's own test
     test("with proxy payload", function(assert) {
-      Ember.run(() => {
+      run(() => {
         let done = assert.async();
         let json = buildList('profile', 2).add({meta: {previous: 'http://dude?page=1', next: 'http://dude?page=3'}});
         mockQuery('profile', {}).returns({json});
