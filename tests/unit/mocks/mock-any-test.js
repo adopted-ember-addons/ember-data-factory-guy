@@ -140,4 +140,26 @@ module('MockAny', function(hooks) {
     json = await $.ajax({type, url, data: whatsUpDoc});
     assert.deepEqual(JSON.parse(json), whatsUpDoc, 'returns json for url matching params #2');
   });
+
+  test("mock#timesCalled works as expected", async function(assert) {
+    const type       = 'POST',
+          url        = '/api/post-stuff';
+
+    let theMock = mock({url, type});
+    assert.equal(theMock.timesCalled, 0, 'mock#timesCalled is initially 0');
+
+    await $.ajax({type, url});
+    assert.equal(theMock.timesCalled, 1, 'mock#timesCalled is called once');
+  });
+
+  test("Star segments work", async function(assert) {
+    const type       = 'POST',
+          url        = '/api/post/some-stuff';
+
+    let theMock = mock({url: '/api/*/some-stuff', type});
+    assert.equal(theMock.timesCalled, 0, 'mock#timesCalled is initially 0');
+
+    await $.ajax({type, url});
+    assert.equal(theMock.timesCalled, 1, 'mock#timesCalled is called once');
+  });
 });
