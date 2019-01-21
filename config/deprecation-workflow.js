@@ -4,6 +4,7 @@ window.deprecationWorkflow.config = {
     { handler: "silence", matchId: "ember-inflector.globals" },
     { handler: "silence", matchId: "ember-env.old-extend-prototypes" },
     { handler: "silence", matchId: "ember-runtime.deprecate-copy-copyable" },
-    { handler: "silence", matchId: "ember-map-deprecation" }
+    { handler: "silence", matchId: "array.new-array-wrapper" },
+    { handler: "silence", matchId: "object.new-constructor" }
   ]
 };

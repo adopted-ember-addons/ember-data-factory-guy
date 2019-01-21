@@ -1,9 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import $ from 'jquery';
-
 import {
-  isEmptyObject, isEquivalent, isPartOf, parseUrl, paramsFromRequestBody
+  isEmptyObject, param, isEquivalent, isPartOf, parseUrl, paramsFromRequestBody
 } from 'ember-data-factory-guy/utils/helper-functions';
 
 module('Unit | Helper Functions', function(hooks) {
@@ -13,7 +11,7 @@ module('Unit | Helper Functions', function(hooks) {
     const data = {a: '1', b:'l d r'};
 
     let tests = [
-      [$.param(data)], // a=1&b=l+d+r 
+      [param(data)], // a=1&b=l+d+r
       [JSON.stringify(data)], // {"a":"1","b":"l d r"}
       [data]
     ];

@@ -1,6 +1,5 @@
 /* global requirejs */
 import { typeOf } from '@ember/utils';
-import $ from 'jquery';
 import require from 'require';
 import { assign } from '@ember/polyfills';
 
@@ -31,7 +30,7 @@ export function paramsFromRequestBody(body) {
  * @param obj
  */
 export function toParams(obj) {
-  return parseParms(decodeURIComponent($.param(obj)));
+  return parseParms(decodeURIComponent(param(obj)));
 }
 
 /**
@@ -44,6 +43,21 @@ export function* entries(obj) {
   for (let key of Object.keys(obj)) {
     yield [key, obj[key]];
   }
+}
+
+export function param(obj, prefix) {
+  let str = [],
+      p;
+  for (p in obj) {
+    if (obj.hasOwnProperty(p)) {
+      var k = prefix ? prefix + "[" + p + "]" : p,
+          v = obj[p];
+      str.push((v !== null && typeof v === "object") ?
+        param(v, k) :
+        encodeURIComponent(k) + "=" + encodeURIComponent(v));
+    }
+  }
+  return str.join("&");
 }
 
 function parseParms(str) {

@@ -1,10 +1,10 @@
 import { assert } from '@ember/debug';
 import { assign } from '@ember/polyfills';
-import $ from 'jquery';
 import {
   isEmptyObject,
   isEquivalent,
   isPartOf,
+  param,
   toParams
 } from '../utils/helper-functions';
 import FactoryGuy from '../factory-guy';
@@ -108,7 +108,7 @@ export default class {
 
       let fullUrl = url;
       if (!isEmptyObject(this.queryParams)) {
-        fullUrl = [url, '?', $.param(this.queryParams)].join('');
+        fullUrl = [url, '?', param(this.queryParams)].join('');
       }
 
       const info = ['[factory-guy]', name, type, status, fullUrl, json];

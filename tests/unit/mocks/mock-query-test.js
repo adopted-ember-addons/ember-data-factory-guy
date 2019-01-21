@@ -1,7 +1,7 @@
-import $ from 'jquery';
-import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import { param } from 'ember-data-factory-guy/utils/helper-functions';
+import { run } from '@ember/runloop';
 import FactoryGuy, {
   make,
   buildList,
@@ -37,7 +37,7 @@ module('MockQuery', function(hooks) {
           "MockQuery",
           "GET",
           "[200]",
-          `/profiles?${$.param(queryParams)}`,
+          `/profiles?${param(queryParams)}`,
           response
         ];
 

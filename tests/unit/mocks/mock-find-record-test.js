@@ -1,7 +1,7 @@
-import $ from 'jquery';
-import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import { param } from 'ember-data-factory-guy/utils/helper-functions';
+import { run } from '@ember/runloop';
 import FactoryGuy, { build, mockFindRecord } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
@@ -45,7 +45,7 @@ module('MockFindRecord', function(hooks) {
     const queryParams = {include: 'company'};
     mock.withParams(queryParams);
     await run(async () => FactoryGuy.store.findRecord('profile', 1, queryParams));
-    expectedArgs[4] = `/profiles/1?${$.param(queryParams)}`;
+    expectedArgs[4] = `/profiles/1?${param(queryParams)}`;
 
     assert.deepEqual(consoleStub.getCall(1).args, expectedArgs, 'with query params');
 

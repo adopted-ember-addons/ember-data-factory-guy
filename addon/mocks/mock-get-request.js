@@ -131,34 +131,6 @@ class MockGetRequest extends MockStoreRequest {
     this.setupHandler();
   }
 
-//  withParams(queryParams) {
-//    this.queryParams = queryParams;
-//    return this;
-//  }
-//
-//  hasQueryParams() {
-//    return !isEmptyObject(this.queryParams);
-//  }
-//
-//  withSomeParams(someQueryParams) {
-//    this.someQueryParams = someQueryParams;
-//    return this;
-//  }
-//
-//  paramsMatch(request) {
-//    if (!isEmptyObject(this.someQueryParams)) {
-//      return isPartOf(request.queryParams, toParams(this.someQueryParams));
-//    }
-//    if (!isEmptyObject(this.queryParams)) {
-//      return isEquivalent(request.queryParams, toParams(this.queryParams));
-//    }
-//    return true;
-//  }
-//
-//  extraRequestMatches(request) {
-//    return this.paramsMatch(request);
-//  }
-
 }
 
 export default MockGetRequest;
