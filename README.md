@@ -1216,6 +1216,8 @@ test("Using FactoryGuy.cacheOnlyMode with except", async function() {
 
     - Sample usage: (works the same in any type of test)
     ```js
+    import { setupFactoryGuy } from "ember-data-factory-guy";
+    
     module('Acceptance | User View', function(hooks) {
       setupApplicationTest(hooks);
       setupFactoryGuy(hooks);
