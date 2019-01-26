@@ -3164,9 +3164,10 @@ ember-copy@1.0.0:
   dependencies:
     ember-cli-babel "^6.6.0"
 
-ember-data-model-fragments@lytics/ember-data-model-fragments#master:
-  version "3.3.0"
-  resolved "https://codeload.github.com/lytics/ember-data-model-fragments/tar.gz/c00e2b1a40b296e0c0c3c21ca0f463d12888cd27"
+ember-data-model-fragments@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/ember-data-model-fragments/-/ember-data-model-fragments-4.0.0.tgz#8570d8b6bef12e8a3518279af01478ef8818a44f"
+  integrity sha512-DcRRQAWrrfRQBW8+v6takQdS2hNJ9rKWU/uHjnPY6+Vg/y6TxyPU8mo0PF2z0DYAeXwoIQ05iYTJT0sqFPEo+w==
   dependencies:
     broccoli-file-creator "^2.1.1"
     broccoli-merge-trees "^3.0.0"
