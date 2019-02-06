@@ -29,6 +29,20 @@ export function paramsFromRequestBody(body) {
  *
  * @param obj
  */
+export function toGetParams(obj) {
+  let convertedParams = Object.assign({}, obj);
+  Object.keys(convertedParams).forEach(key => {
+    let value = convertedParams[key];
+    if (Array.isArray(value)) {
+      convertedParams[key] = value.map(v => String(v));
+    }
+    if (typeof value === 'number') {
+      convertedParams[key] = String(value);
+    }
+  });
+  return convertedParams;
+}
+
 export function toParams(obj) {
   return parseParms(decodeURIComponent(param(obj)));
 }

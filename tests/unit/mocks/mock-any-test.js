@@ -101,7 +101,7 @@ module('MockAny', function(hooks) {
   test("GET with url params", async function(assert) {
     const type       = 'GET',
           url        = '/api/get-stuff',
-          whatsUp    = {whats: 'up'},
+          whatsUp    = {whats: 'up', dudes: [1], dude: 1},
           whatsUpDoc = {whats: 'up doc'};
 
     let theMock = mock({url}).withParams(whatsUp).returns(whatsUp);

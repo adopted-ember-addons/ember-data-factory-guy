@@ -1,6 +1,6 @@
 import MockRequest from './mock-request';
 import {
-  isEmptyObject, isEquivalent, paramsFromRequestBody, toParams
+  isEmptyObject, isEquivalent, paramsFromRequestBody, toGetParams, toParams
 } from "../utils/helper-functions";
 
 export default class MockAnyRequest extends MockRequest {
@@ -36,7 +36,7 @@ export default class MockAnyRequest extends MockRequest {
   paramsMatch(request) {
     if (!isEmptyObject(this.queryParams)) {
       if (this.type === 'GET') {
-        return isEquivalent(request.queryParams, toParams(this.queryParams));
+        return isEquivalent(request.queryParams, toGetParams(this.queryParams));
       }
       if (/POST|PUT|PATCH/.test(this.type)) {
         const requestBody   = request.requestBody,
