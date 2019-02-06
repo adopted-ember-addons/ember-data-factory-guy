@@ -53,6 +53,7 @@ Visit the EmberJS Community [#e-factory-guy](https://embercommunity.slack.com/me
   - [Custom API formats](#custom-api-formats)
   - [Testing models, controllers, components](#testing-models-controllers-components)
   - [Acceptance Tests](#acceptance-tests)
+  - [Pretender](#pretender)
   - [Tips and Tricks](#tips-and-tricks)
   - [Changelog](#changelog)
 
@@ -1216,6 +1217,8 @@ test("Using FactoryGuy.cacheOnlyMode with except", async function() {
 
     - Sample usage: (works the same in any type of test)
     ```js
+    import { setupFactoryGuy } from "ember-data-factory-guy";
+    
     module('Acceptance | User View', function(hooks) {
       setupApplicationTest(hooks);
       setupFactoryGuy(hooks);
@@ -1937,6 +1940,16 @@ Usage:
     responseText: { token: "0123456789-ab" }
   });
 
+```
+
+### Pretender
+The addon uses [Pretender](https://github.com/pretenderjs/pretender) to mock the requests. It exposes the functions `getPretender` and `setPretender` to respectively get the Pretender server for the current test or set it. For instance,
+
+```javascript
+import { getPretender } from 'ember-data-factory-guy';
+
+// Passthrough 'data:' requests.
+getPretender().get('data:*', getPretender().passthrough);
 ```
 
 ### Tips and Tricks
