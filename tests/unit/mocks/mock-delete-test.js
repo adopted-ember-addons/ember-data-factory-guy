@@ -60,4 +60,22 @@ module('MockDelete', function(hooks) {
     assert.equal(mock1.getUrl(), '/deleteMyZombie/2');
     adapter.urlForDeleteRecord.restore();
   });
+
+  test("#makeFakeSnapshot", function(assert) {
+    let user = make('user');
+
+    let tests = [
+      [[user], user, 'has record when model in arguments'],
+      [['user', user.id], user, 'has record when modelName, id in arguments'],
+      [['user'], undefined, 'does not have record when only modelName in arguments']
+    ];
+
+    for (let test of tests) {
+      let [args, expectedRecord, message] = test;
+      let mock     = mockDelete(...args),
+          snapshot = mock.makeFakeSnapshot(),
+          {record} = snapshot;
+      assert.deepEqual(record, expectedRecord, message);
+    }
+  });
 });

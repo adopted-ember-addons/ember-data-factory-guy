@@ -371,20 +371,19 @@ export function mockUpdate(...args) {
  @param {String} id optional id of record to delete
  */
 export function mockDelete(...args) {
-  let modelName, id;
+  let model, modelName, id;
 
   if (args[0] instanceof Model) {
-    let record = args[0];
-    modelName = record.constructor.modelName;
-    id = record.id;
-  } else if (typeof args[0] === "string" && typeof parseInt(args[1]) === "number") {
-    modelName = args[0];
-    id = args[1];
+    model = args[0];
+    id = model.id;
+    modelName = model.constructor.modelName;
+  } else if (typeof args[0] === "string") {
+    [modelName, id] = args
   }
 
   assert(`[ember-data-factory-guy] mockDelete requires at least a model type name`, modelName);
 
-  return new MockDeleteRequest(modelName, id);
+  return new MockDeleteRequest(modelName, {id, model});
 }
 
 /**
