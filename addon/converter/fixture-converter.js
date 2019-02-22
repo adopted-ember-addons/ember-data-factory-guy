@@ -157,8 +157,8 @@ export default class FixtureConverter {
         transform = container.lookup('transform:' + type);
 
     assert(`[ember-data-factory-guy] could not find
-    the [ ${type} ] transform. If you are in a unit test, be sure 
-    to include it in the list of needs as [ transform:${type} ],  Or set your 
+    the [ ${type} ] transform. If you are in a unit test, be sure
+    to include it in the list of needs as [ transform:${type} ],  Or set your
     unit test to be [ integration: true ] and include everything.`,
       transform
     );
@@ -177,9 +177,9 @@ export default class FixtureConverter {
             transformValueFunction = this.getTransformValueFunction(meta.type);
 
         if (fixture.hasOwnProperty(attribute)) {
-          attributes[attributeKey] = transformValueFunction(fixture[attribute]);
+          attributes[attributeKey] = transformValueFunction(fixture[attribute], meta.options);
         } else if (fixture.hasOwnProperty(attributeKey)) {
-          attributes[attributeKey] = transformValueFunction(fixture[attributeKey]);
+          attributes[attributeKey] = transformValueFunction(fixture[attributeKey], meta.options);
         }
       }
     });
@@ -304,7 +304,7 @@ export default class FixtureConverter {
           relationships = get(modelClass, 'relationshipsByName');
 
     for (let [relationshipKey, link] of entries(links)) {
-      assert(`You defined a link url ${link} for the [${relationshipKey}] relationship 
+      assert(`You defined a link url ${link} for the [${relationshipKey}] relationship
         on model [${modelName}] but that relationship does not exist`,
         relationships.get(relationshipKey));
     }

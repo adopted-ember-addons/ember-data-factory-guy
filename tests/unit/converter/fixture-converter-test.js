@@ -23,4 +23,18 @@ module('FixtureConverter', function(hooks) {
 
     assert.deepEqual(buildJson, expectedJson);
   });
+
+  test("With a custom transform", function(assert) {
+    let buildJson = build('rod');
+    buildJson.unwrap();
+
+    let expectedJson = {
+      rod: {
+        id: 1,
+        element: 'C'
+      }
+    };
+
+    assert.deepEqual(buildJson, expectedJson);
+  });
 });
