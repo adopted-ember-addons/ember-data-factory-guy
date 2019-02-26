@@ -3,8 +3,20 @@ import FactoryGuy, { manualSetup } from 'ember-data-factory-guy';
 import DS from 'ember-data';
 import DRFAdapter from 'ember-django-adapter/adapters/drf';
 import DRFSerializer from 'ember-django-adapter/serializers/drf';
-import ActiveModelAdapter from 'active-model-adapter';
-import { ActiveModelSerializer } from 'active-model-adapter';
+import ActiveModelAdapter, { ActiveModelSerializer } from 'active-model-adapter';
+import { param } from 'ember-data-factory-guy/utils/helper-functions';
+import AdapterFetch from 'ember-fetch/mixins/adapter-fetch';
+
+export function fetchJSON({url, params, method = 'GET'} = {}) {
+  if (method === "GET") {
+    return fetch([url, param(params)].join('?'), {method}).then(r => r.json());
+  } else {
+    const body = JSON.stringify(params)
+    return fetch(url, {body, method}).then(r => {
+      return r._bodyText ? r.json() : null;
+    });
+  }
+}
 
 //// custom adapter options for the various models
 //// which are applied to the currently testing model's adapter ( JSONAPI, REST, ActiveModel, etc )
@@ -103,6 +115,7 @@ export function containerSetup(application, serializerType) {
 
     let adapterType = serializerType === '-json' ? '-rest' : serializerType;
     let adapter = application.lookup('adapter:' + adapterType);
+    adapter.constructor.prototype.reopen(AdapterFetch);
 
     serializerType = serializerType === '-json' ? '-default' : serializerType;
     let serializer = application.lookup('serializer:' + serializerType);

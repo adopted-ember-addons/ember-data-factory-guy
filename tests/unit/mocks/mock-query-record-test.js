@@ -1,14 +1,8 @@
 import { run } from '@ember/runloop';
-import $ from 'jquery';
 import { module, test } from 'qunit';
 import { param } from 'ember-data-factory-guy/utils/helper-functions';
 import { setupTest } from 'ember-qunit';
-import FactoryGuy, {
-  build,
-  make,
-  makeList,
-  mockQueryRecord
-} from 'ember-data-factory-guy';
+import FactoryGuy, { build, make, makeList, mockQueryRecord } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
@@ -17,7 +11,6 @@ const serializerType = '-json-api';
 module('MockQueryRecord', function(hooks) {
   setupTest(hooks);
   inlineSetup(hooks, serializerType);
-
 
   test("#get method to access payload", function(assert) {
     let json = build('user');
@@ -113,22 +106,21 @@ module('MockQueryRecord', function(hooks) {
     });
   });
 
-  test("using returns with headers adds the headers to the response", function(assert) {
-    let done = assert.async();
+  test("using returns with headers adds the headers to the response", async function(assert) {
     const queryParams = {name: 'MyCompany'};
     const handler = mockQueryRecord('company', queryParams);
     handler.returns({headers: {'X-Testing': 'absolutely'}});
     let {headers} = handler.getResponse();
     assert.deepEqual(headers, {'X-Testing': 'absolutely'});
 
-    $(document).ajaxComplete(function(event, xhr) {
-      assert.equal(xhr.getResponseHeader('X-Testing'), 'absolutely');
-      $(document).off('ajaxComplete');
-      done();
-    });
+    sinon.spy(window, 'fetch');
 
-    FactoryGuy.store.queryRecord('company', queryParams).catch(() => {
-    });
+    await FactoryGuy.store.queryRecord('company', queryParams);
+
+    const response = await window.fetch.getCall(0).returnValue;
+    assert.equal(response.headers.get('X-Testing'), 'absolutely');
+
+    window.fetch.restore();
   });
 
   test("using returns 'model' with array of DS.Models throws error", function(assert) {

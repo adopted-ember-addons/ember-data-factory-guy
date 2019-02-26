@@ -1,11 +1,5 @@
 import { module, test } from 'qunit';
-import {
-  buildList,
-  make,
-  makeList,
-  mockQuery,
-  setupFactoryGuy
-} from 'ember-data-factory-guy';
+import { buildList, make, makeList, mockQuery, setupFactoryGuy } from 'ember-data-factory-guy';
 import { setupApplicationTest } from "ember-qunit";
 import { click, fillIn, visit } from '@ember/test-helpers';
 
@@ -20,7 +14,6 @@ module('Acceptance | User Search', function(hooks) {
 
   test("mockQuery without params matches store.query with any parameters", async function(assert) {
     let dude = buildList('user', {name: 'Dude'});
-
     // no query parameters set in the mock so it will match
     // a query for {name: "Bif"} and return the dude
     mockQuery('user').returns({json: dude});

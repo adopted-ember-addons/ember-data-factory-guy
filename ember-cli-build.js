@@ -8,6 +8,9 @@ module.exports = function(defaults) {
     // Any other options
     'ember-cli-babel': {
       includePolyfill: true
+    },
+    'ember-fetch': {
+      preferNative: true
     }
   });
 

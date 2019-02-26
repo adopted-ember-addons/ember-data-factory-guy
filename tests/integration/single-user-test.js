@@ -13,7 +13,7 @@ module(`Integration | Component | single-user (manual setup)`, function(hooks) {
     this.setProperties({user, createProject: () => {}});
     await this.render(hbs`{{single-user user=user createProject=createProject}}`);
 
-    assert.ok(this.$('.name').text().match(user.get('name')));
-    assert.ok(this.$('.funny-name').text().match(user.get('funnyName')));
+    assert.dom('.name').containsText(user.get('name'));
+    assert.dom('.funny-name').containsText(user.get('funnyName'));
   });
 });

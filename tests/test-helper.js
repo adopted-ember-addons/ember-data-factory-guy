@@ -4,4 +4,4 @@ import { start } from 'ember-qunit';
 
 setApplication(Application.create({autoboot: false, rootElement: '#ember-testing'}));
 
-start({setupTestIsolationValidation: true});
+start();
