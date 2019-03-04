@@ -1633,6 +1633,42 @@ SharedBehavior.mockUpdateTests = function() {
     });
   });
 
+  test("match can take a function - it can accept FormData as requestBody", async function(assert) {
+    assert.expect(2);
+    run(async () => {
+      let customDescription = "special description",
+          profile           = make('profile'),
+          updateMock        = mockUpdate(profile),
+          adapter           = FactoryGuy.store.adapterFor('profile');
+
+      adapter.updateRecord = (store, type, snapshot) => {
+        let url = adapter.urlForUpdateRecord(snapshot.id, type.modelName, snapshot);
+        let httpMethod = FactoryGuy.updateHTTPMethod(type.modelName);
+        let fd = new FormData();
+        fd.append('description', snapshot.attr('description'));
+        adapter.ajax(url, httpMethod, {
+          data: fd,
+          processData: false,
+          contentType: false,
+        });
+      };
+
+      adapter.ajaxOptions = (url, type, options) => {
+        return Object.assign({}, options, { url, type });
+      };
+
+      updateMock.match(function(requestBody) {
+        assert.ok((requestBody instanceof FormData), 'matching function is called when request body is FormData');
+        return true;
+      });
+
+      profile.set('description', customDescription);
+      await profile.save();
+
+      assert.equal(updateMock.timesCalled, 1);
+    });
+  });
+
   test("match can take a function - if it returns true it registers a match", async function(assert) {
     assert.expect(2);
     run(async () => {

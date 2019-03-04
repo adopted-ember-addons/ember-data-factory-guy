@@ -1,4 +1,5 @@
 import { assert } from '@ember/debug';
+import { typeOf } from '@ember/utils';
 import FactoryGuy from '../factory-guy';
 import { isEmptyObject, isEquivalent } from '../utils/helper-functions';
 
@@ -88,8 +89,11 @@ const AttributeMatcher = (superclass) => class extends superclass {
 
   extraRequestMatches(request) {
     if (this.matchArgs) {
-      let requestBody = JSON.parse(request.requestBody);
-      if (typeof this.matchArgs === 'function') {
+      let requestBody = request.requestBody;
+      if (typeOf(requestBody) === 'string') {
+        requestBody = JSON.parse(requestBody);
+      }
+      if (typeOf(this.matchArgs) === 'function') {
         return this.matchArgs(requestBody);
       } else {
         return attributesMatch(requestBody, this.modelName, this.matchArgs);
