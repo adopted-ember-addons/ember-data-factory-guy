@@ -36,15 +36,15 @@ export default class MockAnyRequest extends MockRequest {
   paramsMatch(request) {
     if (!isEmptyObject(this.queryParams)) {
       if (this.type === 'GET') {
-        return isEquivalent(request.queryParams, toGetParams(this.queryParams));
+        return isEquivalent(toGetParams(request.queryParams), toGetParams(this.queryParams));
       }
       if (/POST|PUT|PATCH/.test(this.type)) {
         const requestBody   = request.requestBody,
               requestParams = paramsFromRequestBody(requestBody);
+
         return isEquivalent(requestParams, toParams(this.queryParams));
       }
     }
     return true;
   }
-
 }

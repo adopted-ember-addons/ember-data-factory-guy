@@ -34,7 +34,10 @@ export function toGetParams(obj) {
   Object.keys(convertedParams).forEach(key => {
     let value = convertedParams[key];
     if (typeOf(value) === 'array') {
-      convertedParams[key] = value.map(v => String(v));
+      value.forEach((v,i) => {
+        convertedParams[`${key}[${i}]`] = String(v)
+      });
+      delete convertedParams[key];
     }
     if (typeof value === 'number') {
       convertedParams[key] = String(value);
