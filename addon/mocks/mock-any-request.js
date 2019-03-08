@@ -1,6 +1,6 @@
 import MockRequest from './mock-request';
 import {
-  isEmptyObject, isEquivalent, paramsFromRequestBody, toGetParams, toParams
+  isEmptyObject, isEquivalent, isPartOf, paramsFromRequestBody, toGetParams, toParams
 } from "../utils/helper-functions";
 
 export default class MockAnyRequest extends MockRequest {
@@ -34,17 +34,28 @@ export default class MockAnyRequest extends MockRequest {
   }
 
   paramsMatch(request) {
-    if (!isEmptyObject(this.queryParams)) {
-      if (this.type === 'GET') {
-        return isEquivalent(request.queryParams, toGetParams(this.queryParams));
-      }
-      if (/POST|PUT|PATCH/.test(this.type)) {
-        const requestBody   = request.requestBody,
-              requestParams = paramsFromRequestBody(requestBody);
-        return isEquivalent(requestParams, toParams(this.queryParams));
-      }
+    if (!isEmptyObject(this.someQueryParams)) {
+      return this._tryMatchParams(request, this.someQueryParams, isPartOf);
     }
+
+    if (!isEmptyObject(this.queryParams)) {
+      return this._tryMatchParams(request, this.queryParams, isEquivalent);
+    }
+
     return true;
+  }
+
+  _tryMatchParams(request, handlerParams, comparisonFunction) {
+    if (this.type === 'GET') {
+      return comparisonFunction(request.queryParams, toGetParams(handlerParams));
+    }
+    if (/POST|PUT|PATCH/.test(this.type)) {
+      const requestBody = request.requestBody,
+        requestParams = paramsFromRequestBody(requestBody);
+      return comparisonFunction(requestParams, toParams(handlerParams));
+    }
+
+    return false;
   }
 
 }
