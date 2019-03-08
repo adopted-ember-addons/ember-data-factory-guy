@@ -162,4 +162,38 @@ module('MockAny', function(hooks) {
     await $.ajax({type, url});
     assert.equal(theMock.timesCalled, 1, 'mock#timesCalled is called once');
   });
+
+  test("#withParams", async function(assert) {
+    const type       = 'POST',
+          url        = '/api/post/some-stuff',
+          dataFoo = { foo: 'foo' },
+          dataBar = { bar: 'bar' };
+
+    let fooMock = mock({url: '/api/post/some-stuff', type}).withParams(dataFoo);
+    let barMock = mock({url: '/api/post/some-stuff', type}).withParams(dataBar);
+    assert.equal(fooMock.timesCalled, 0, 'fooMock#timesCalled is initially 0');
+    assert.equal(barMock.timesCalled, 0, 'barMock#timesCalled is initially 0');
+
+    await $.ajax({type, url, data: dataFoo});
+    await $.ajax({type, url, data: dataBar});
+    assert.equal(fooMock.timesCalled, 1, 'fooMock#timesCalled is called once');
+    assert.equal(barMock.timesCalled, 1, 'barMock#timesCalled is called once');
+  });
+
+  test("#withSomeParams", async function(assert) {
+    const type       = 'POST',
+          url        = '/api/post/some-stuff',
+          dataFoo = { foo: 'foo' },
+          dataBar = { bar: 'bar' };
+
+    let fooMock = mock({url: '/api/post/some-stuff', type}).withSomeParams(dataFoo);
+    let barMock = mock({url: '/api/post/some-stuff', type}).withSomeParams(dataBar);
+    assert.equal(fooMock.timesCalled, 0, 'fooMock#timesCalled is initially 0');
+    assert.equal(barMock.timesCalled, 0, 'barMock#timesCalled is initially 0');
+
+    await $.ajax({type, url, data: dataFoo});
+    await $.ajax({type, url, data: dataBar});
+    assert.equal(fooMock.timesCalled, 1, 'fooMock#timesCalled is called once');
+    assert.equal(barMock.timesCalled, 1, 'barMock#timesCalled is called once');
+  });
 });
