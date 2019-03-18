@@ -1,7 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { param } from 'ember-data-factory-guy/utils/helper-functions';
-import { run } from '@ember/runloop';
 import FactoryGuy, { build, mockFindRecord } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
@@ -28,7 +27,7 @@ module('MockFindRecord', function(hooks) {
     const consoleStub = sinon.spy(console, 'log'),
           mock        = mockFindRecord('profile');
 
-    await run(async () => FactoryGuy.store.findRecord('profile', 1));
+    await FactoryGuy.store.findRecord('profile', 1);
 
     let response     = JSON.parse(mock.actualResponseJson()),
         expectedArgs = [
@@ -44,7 +43,7 @@ module('MockFindRecord', function(hooks) {
 
     const queryParams = {include: 'company'};
     mock.withParams(queryParams);
-    await run(async () => FactoryGuy.store.findRecord('profile', 1, queryParams));
+    await FactoryGuy.store.findRecord('profile', 1, queryParams);
     expectedArgs[4] = `/profiles/1?${param(queryParams)}`;
 
     assert.deepEqual(consoleStub.getCall(1).args, expectedArgs, 'with query params');
@@ -97,19 +96,15 @@ module('MockFindRecord', function(hooks) {
 
   module('#fails', function() {
 
-    test("with errors in response", function(assert) {
-      run(() => {
-        const done     = assert.async(),
-              response = {errors: {description: ['bad']}},
-              mock     = mockFindRecord('profile').fails({response});
+    test("with errors in response", async function(assert) {
+      const response = {errors: {description: ['bad']}},
+            mock     = mockFindRecord('profile').fails({response});
 
-        FactoryGuy.store.findRecord('profile', 1)
-                  .catch(() => {
-                    assert.equal(mock.timesCalled, 1);
-                    assert.ok(true);
-                    done();
-                  });
-      });
+      await FactoryGuy.store.findRecord('profile', 1)
+                      .catch(() => {
+                        assert.equal(mock.timesCalled, 1);
+                        assert.ok(true);
+                      });
     });
   });
 });

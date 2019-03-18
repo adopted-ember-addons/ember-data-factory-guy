@@ -47,11 +47,12 @@ export default class MockAnyRequest extends MockRequest {
 
   _tryMatchParams(request, handlerParams, comparisonFunction) {
     if (this.type === 'GET') {
-      return comparisonFunction(request.queryParams, toGetParams(handlerParams));
+      return comparisonFunction(toGetParams(request.queryParams), toGetParams(handlerParams));
     }
+
     if (/POST|PUT|PATCH/.test(this.type)) {
-      const requestBody = request.requestBody,
-        requestParams = paramsFromRequestBody(requestBody);
+      const requestBody   = request.requestBody,
+            requestParams = paramsFromRequestBody(requestBody);
       return comparisonFunction(requestParams, toParams(handlerParams));
     }
 

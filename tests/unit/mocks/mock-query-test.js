@@ -1,7 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { param } from 'ember-data-factory-guy/utils/helper-functions';
-import { run } from '@ember/runloop';
 import FactoryGuy, {
   make,
   buildList,
@@ -29,7 +28,7 @@ module('MockQuery', function(hooks) {
           consoleStub = sinon.spy(console, 'log'),
           mock        = mockQuery('profile').withParams(queryParams);
 
-    await run(async () => FactoryGuy.store.query('profile', queryParams));
+    await FactoryGuy.store.query('profile', queryParams);
 
     let response     = JSON.parse(mock.actualResponseJson()),
         expectedArgs = [

@@ -1,11 +1,11 @@
-import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
-  make, build, mockFindAll, mockQueryRecord, mockUpdate
+  build, make, mockFindAll, mockQueryRecord, mockUpdate
 } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import MockRequest from 'ember-data-factory-guy/mocks/mock-store-request';
+import sinon from 'sinon';
 
 const serializerType = '-json-api';
 
@@ -62,67 +62,80 @@ module('MockRequest', function(hooks) {
   module('#timeCalled', function() {
 
     test("can verify how many times a queryRecord call was mocked", async function(assert) {
-      return run(async () => {
-        const mock = mockQueryRecord('company', {}).returns({json: build('company')});
+      const mock = mockQueryRecord('company', {}).returns({json: build('company')});
 
-        await FactoryGuy.store.queryRecord('company', {});
-        await FactoryGuy.store.queryRecord('company', {});
-        assert.equal(mock.timesCalled, 2);
-      });
+      await FactoryGuy.store.queryRecord('company', {});
+      await FactoryGuy.store.queryRecord('company', {});
+      assert.equal(mock.timesCalled, 2);
     });
 
     test("can verify how many times a findAll call was mocked", async function(assert) {
-      return run(async () => {
-        const mock = mockFindAll('company');
+      const mock = mockFindAll('company');
 
-        await FactoryGuy.store.findAll('company');
-        await FactoryGuy.store.findAll('company');
-        assert.equal(mock.timesCalled, 2);
-      });
+      await FactoryGuy.store.findAll('company');
+      await FactoryGuy.store.findAll('company');
+      assert.equal(mock.timesCalled, 2);
     });
 
     test("can verify how many times an update call was mocked", async function(assert) {
       const company = make('company'),
             mock    = mockUpdate(company);
 
-      run(() => company.set('name', 'ONE'));
-      await run(async () => company.save());
+      company.set('name', 'ONE');
+      await company.save();
 
-      run(() => company.set('name', 'TWO'));
-      await run(async () => company.save());
+      company.set('name', 'TWO');
+      await company.save();
 
       assert.equal(mock.timesCalled, 2);
     });
   });
 
+  test("using returns with headers adds the headers to the response", async function(assert) {
+    const queryParams = {name: 'MyCompany'};
+    const handler = mockQueryRecord('company', queryParams);
+
+    handler.returns({headers: {'X-Testing': 'absolutely'}});
+
+    let {headers} = handler.getResponse();
+    assert.deepEqual(headers, {'X-Testing': 'absolutely'});
+
+    sinon.spy(window, 'fetch');
+
+    await FactoryGuy.store.queryRecord('company', queryParams);
+
+    const response = await window.fetch.getCall(0).returnValue;
+    assert.equal(response.headers.get('X-Testing'), 'absolutely');
+
+    window.fetch.restore();
+  });
+
   module('#disable, #enable, and #destroy', function() {
 
     test("can enable, disable, and destroy mock", async function(assert) {
-      return run(async () => {
-        let json1 = build('user'),
-            json2 = build('user'),
-            mock1 = mockQueryRecord('user', {id: 1}).returns({json: json1});
+      let json1 = build('user'),
+          json2 = build('user'),
+          mock1 = mockQueryRecord('user', {id: 1}).returns({json: json1});
 
-        mockQueryRecord('user', {}).returns({json: json2});
+      mockQueryRecord('user', {}).returns({json: json2});
 
-        assert.notOk(mock1.isDestroyed, "isDestroyed is false initially");
+      assert.notOk(mock1.isDestroyed, "isDestroyed is false initially");
 
-        let data = await FactoryGuy.store.queryRecord('user', {id: 1});
-        assert.equal(data.get('id'), json1.get('id'), "the first mock works initially");
+      let data = await FactoryGuy.store.queryRecord('user', {id: 1});
+      assert.equal(data.get('id'), json1.get('id'), "the first mock works initially");
 
-        mock1.disable();
-        data = await FactoryGuy.store.queryRecord('user', {id: 1});
-        assert.equal(data.get('id'), json2.get('id'), "the first mock doesn't work once it's disabled");
+      mock1.disable();
+      data = await FactoryGuy.store.queryRecord('user', {id: 1});
+      assert.equal(data.get('id'), json2.get('id'), "the first mock doesn't work once it's disabled");
 
-        mock1.enable();
-        data = await FactoryGuy.store.queryRecord('user', {id: 1});
-        assert.equal(data.get('id'), json1.get('id'), "the first mock works again after enabling");
+      mock1.enable();
+      data = await FactoryGuy.store.queryRecord('user', {id: 1});
+      assert.equal(data.get('id'), json1.get('id'), "the first mock works again after enabling");
 
-        mock1.destroy();
-        assert.ok(mock1.isDestroyed, "isDestroyed is set to true once the mock is destroyed");
-        data = await FactoryGuy.store.queryRecord('user', {id: 1});
-        assert.equal(data.get('id'), json2.get('id'), "the destroyed first mock doesn't work");
-      });
+      mock1.destroy();
+      assert.ok(mock1.isDestroyed, "isDestroyed is set to true once the mock is destroyed");
+      data = await FactoryGuy.store.queryRecord('user', {id: 1});
+      assert.equal(data.get('id'), json2.get('id'), "the destroyed first mock doesn't work");
     });
   });
 });

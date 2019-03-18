@@ -1,14 +1,7 @@
-import { run } from '@ember/runloop';
-import $ from 'jquery';
 import { module, test } from 'qunit';
 import { param } from 'ember-data-factory-guy/utils/helper-functions';
 import { setupTest } from 'ember-qunit';
-import FactoryGuy, {
-  build,
-  make,
-  makeList,
-  mockQueryRecord
-} from 'ember-data-factory-guy';
+import FactoryGuy, { build, make, makeList, mockQueryRecord } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
@@ -32,7 +25,7 @@ module('MockQueryRecord', function(hooks) {
           consoleStub = sinon.spy(console, 'log'),
           mock        = mockQueryRecord('profile').withParams(queryParams);
 
-    await run(async () => FactoryGuy.store.queryRecord('profile', queryParams));
+    await FactoryGuy.store.queryRecord('profile', queryParams);
 
     let response     = JSON.parse(mock.actualResponseJson()),
         expectedArgs = [
@@ -99,36 +92,11 @@ module('MockQueryRecord', function(hooks) {
     assert.deepEqual(mock.mockId, {type: 'GET', url: '/users', num: 0});
   });
 
-  test("using fails makes the request fail", function(assert) {
-    run(() => {
-      let done = assert.async();
+  test("using fails makes the request fail", async function(assert) {
+    mockQueryRecord('user').fails();
+    await FactoryGuy.store.queryRecord('user', {})
+                    .catch(() => { assert.ok(true); });
 
-      mockQueryRecord('user').fails();
-      FactoryGuy.store.queryRecord('user', {})
-                .catch(() => {
-                  assert.ok(true);
-                  done();
-                });
-
-    });
-  });
-
-  test("using returns with headers adds the headers to the response", function(assert) {
-    let done = assert.async();
-    const queryParams = {name: 'MyCompany'};
-    const handler = mockQueryRecord('company', queryParams);
-    handler.returns({headers: {'X-Testing': 'absolutely'}});
-    let {headers} = handler.getResponse();
-    assert.deepEqual(headers, {'X-Testing': 'absolutely'});
-
-    $(document).ajaxComplete(function(event, xhr) {
-      assert.equal(xhr.getResponseHeader('X-Testing'), 'absolutely');
-      $(document).off('ajaxComplete');
-      done();
-    });
-
-    FactoryGuy.store.queryRecord('company', queryParams).catch(() => {
-    });
   });
 
   test("using returns 'model' with array of DS.Models throws error", function(assert) {

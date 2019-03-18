@@ -5,8 +5,7 @@ export default Component.extend({
 
   actions: {
     
-    addProject: function (user) {
-      let title = this.$('input.project-title').val();
+    addProject: function (user, title) {
       this.get('createProject')(user, title);
     }
   }
