@@ -5,6 +5,11 @@
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
+**NEW** starting with v3.8
+  - jquery is no longer required and fetch adapter is used with ember-data
+  - you can still use jquery if you want to  
+  - if you are addon author using factory guy set up your application adapter like [this](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/adapters/application.js)
+  
 **NEW** starting with v3.2.1
   - You can setup data AND links for your async relationship[Check it out](#special-tips-for-links)
 
