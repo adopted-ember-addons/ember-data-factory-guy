@@ -25,7 +25,7 @@ Factories simplify the process of testing, making you more efficient and your te
   - manualSetup streamlined to ```manualSetup(this)```
 
 **NEW and Improved** starting with v2.13.22
-  - Traits can be functions [Check it out] (#tip-6-using-traits-as-functions)
+  - Traits can be functions [Check it out](#tip-6-using-traits-as-functions)
 
 **Older but still fun things**
 - Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
