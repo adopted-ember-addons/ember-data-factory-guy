@@ -11,7 +11,7 @@ Factories simplify the process of testing, making you more efficient and your te
   - if you are addon author using factory guy set up your application adapter like [this](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/adapters/application.js)
   
 **NEW** starting with v3.2.1
-  - You can setup data AND links for your async relationship[Check it out](#special-tips-for-links)
+  - You can setup data AND links for your async relationship [Check it out](#special-tips-for-links)
 
 **NEW** You can use factory guy in ember-twiddle
   - Using [Scenarios](https://ember-twiddle.com/421f16ecc55b5d35783c243b8d99f2be?openFiles=tests.unit.model.user-test.js%2C)
@@ -25,7 +25,7 @@ Factories simplify the process of testing, making you more efficient and your te
   - manualSetup streamlined to ```manualSetup(this)```
 
 **NEW and Improved** starting with v2.13.22
-  - Traits can be functions [Check it out](#tip-6-using-traits-as-functions)
+  - Traits can be functions [Check it out] (#tip-6-using-traits-as-functions)
 
 **Older but still fun things**
 - Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
