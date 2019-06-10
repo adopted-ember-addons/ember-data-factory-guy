@@ -180,6 +180,10 @@ module('MockAny', function(hooks) {
 
     assert.equal(fooMock.timesCalled, 1, 'fooMock#timesCalled is called once');
     assert.equal(barMock.timesCalled, 1, 'barMock#timesCalled is called once');
+
+    mock({url: '/api/post/some-stuff', type: method}).withParams({ rightParams: true });
+    await fetchJSON({url, params: { wrongParams: true }, method});
+
   });
 
   test("#withSomeParams", async function(assert) {

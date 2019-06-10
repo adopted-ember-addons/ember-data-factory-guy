@@ -132,6 +132,12 @@ module('MockFindAll', function(hooks) {
     assert.equal(mockQ.timesCalled, 1, 'mockQuery is used');
   });
 
+  test("#withParams", async function(assert) {
+    let mockFQ = mockFindAll('user', 2).withParams({rightParams: true});
+
+    await FactoryGuy.store.query('user', { rightParams: false });
+  });
+
   module('#getUrl', function() {
 
     test("uses urlForFindAll if it is set on the adapter", function(assert) {
