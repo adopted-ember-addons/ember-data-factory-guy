@@ -111,4 +111,19 @@ module('MockQuery', function(hooks) {
     assert.equal(mock1.getUrl(), '/dudes');
     adapter.urlForQuery.restore();
   });
+
+  test("#withParams supports arrays in query params", async function(assert) {
+    const queryParams = {include: ['company1', 'company2']},
+          mock        = mockQuery('profile').withParams(queryParams);
+
+    await FactoryGuy.store.query('profile', queryParams);
+    assert.equal(mock.timesCalled, 1);
+  });
+
+  test("#withSomeParams supports arrays in query params", async function(assert) {
+    const mock = mockQuery('profile').withSomeParams({include: ['company1', 'company2']});
+
+    await FactoryGuy.store.query('profile', {include: ['company1', 'company2'], exclude: ['company3']});
+    assert.equal(mock.timesCalled, 1);
+  });
 });
