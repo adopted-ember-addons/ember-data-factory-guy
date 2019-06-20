@@ -13,6 +13,7 @@ FactoryGuy.define('dog', {
   },
 
   traits: {
-    cowDog: { sound: mooSound }
+    cowDog: { sound: mooSound },
+    withOwner: { owner: FactoryGuy.belongsTo('employee') }
   }
 });

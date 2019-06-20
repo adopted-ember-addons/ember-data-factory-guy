@@ -57,7 +57,10 @@ const serializerOptions = {
     }
   },
   dog: {
-    primaryKey: 'dogNumber'
+    primaryKey: 'dogNumber',
+    attrs: {
+      owner: { key: 'humanId' }
+    }
   },
   cat: {
     primaryKey: 'catId',
