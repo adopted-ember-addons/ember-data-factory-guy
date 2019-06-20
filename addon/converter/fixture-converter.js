@@ -99,8 +99,8 @@ export default class FixtureConverter {
   }
 
   transformRelationshipKey(relationship) {
-    let {parentType} = relationship,
-        type         = parentType && parentType.modelName || relationship.type,
+    let {parentModelName, parentType} = relationship,
+        type         = parentModelName || parentType && parentType.modelName || relationship.type,
         transformFn  = this.getTransformKeyFunction(type, 'Relationship');
     return transformFn(relationship.key, relationship.kind);
   }

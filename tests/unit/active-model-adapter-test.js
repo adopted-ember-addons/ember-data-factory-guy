@@ -60,7 +60,7 @@ module(serializer, function(hooks) {
         comic_book: {
           id: 1,
           name: 'Comic Times #1',
-          included_villain_ids: [
+          included_villains: [
             {id: 1, type: 'Villain', name: 'BadGuy#1'},
             {id: 2, type: 'Villain', name: 'BadGuy#2'},
           ]
