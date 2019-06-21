@@ -202,10 +202,10 @@ module('MockAny', function(hooks) {
   });
 
   function testWithParamsForMethod(method) {
-    test(`#withParams works with arrays for ${method} requests`, async function(assert) {
+    test(`#withParams works with complex parameters for ${method} requests`, async function(assert) {
       const url     = '/api/post/some-stuff',
-            dataFoo = {foo: 'foo', labels: ['a', 'b', 'c']},
-            dataBar = {bar: 'bar', labels: [1, 2, 3]};
+            dataFoo = {foo: 'foo', array: ['a', { b: 123 }, 'c'], obj: { a: 321 } },
+            dataBar = {bar: 'bar', array: [1, { x: 2 }, 3], obj: { x: 321 } };
 
       let fooMock = mock({url, type: method}).withParams(dataFoo);
       let barMock = mock({url, type: method}).withParams(dataBar);
@@ -213,8 +213,10 @@ module('MockAny', function(hooks) {
       assert.equal(barMock.timesCalled, 0, 'barMock#timesCalled is initially 0');
 
       await fetchJSON({url, params: dataFoo, method});
-      await fetchJSON({url, params: dataBar, method});
+      assert.equal(fooMock.timesCalled, 1, 'fooMock#timesCalled is called once');
+      assert.equal(barMock.timesCalled, 0, 'barMock#timesCalled is called once');
 
+      await fetchJSON({url, params: dataBar, method});
       assert.equal(fooMock.timesCalled, 1, 'fooMock#timesCalled is called once');
       assert.equal(barMock.timesCalled, 1, 'barMock#timesCalled is called once');
     });
