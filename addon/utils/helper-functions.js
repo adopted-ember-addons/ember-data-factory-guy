@@ -25,38 +25,6 @@ export function paramsFromRequestBody(body) {
   return body;
 }
 
-/**
- *
- * @param obj
- */
-export function toGetParams(obj) {
-  let convertedParams = Object.assign({}, obj);
-  Object.keys(convertedParams).forEach(key => {
-    let value = convertedParams[key];
-    if (typeOf(value) === 'array') {
-      value.forEach((v,i) => {
-        convertedParams[`${key}[${i}]`] = String(v)
-      });
-      delete convertedParams[key];
-    }
-    if (typeof value === 'number') {
-      convertedParams[key] = String(value);
-    }
-    if (typeof value === 'boolean') {
-      convertedParams[key] = String(value);
-    }
-    if (typeOf(value) === 'object') {
-      Object.keys(value).forEach((vKey) => {
-        let pKey = `${key}[${vKey}]`,
-            vValue = value[vKey];
-        convertedParams[pKey] = String(vValue);
-      });
-      delete convertedParams[key];
-    }
-  });
-  return convertedParams;
-}
-
 export function toParams(obj) {
   return parseParms(decodeURIComponent(param(obj)));
 }
