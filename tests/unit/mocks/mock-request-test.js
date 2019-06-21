@@ -13,6 +13,18 @@ module('MockRequest', function(hooks) {
   setupTest(hooks);
   inlineSetup(hooks, serializerType);
 
+  module('#withParams', function() {
+    test('works with arrays', async function(assert) {
+      const mockWithoutArray = mockQueryRecord('company', { foo: 123 }).returns({json: build('company')});
+      const mockWithArray = mockQueryRecord('company', { array: [1, 2, 3] }).returns({json: build('company')});
+      assert.equal(mockWithoutArray.timesCalled, 0);
+      assert.equal(mockWithArray.timesCalled, 0);
+      await FactoryGuy.store.queryRecord('company', { array: [1, 2, 3] });
+      assert.equal(mockWithoutArray.timesCalled, 0);
+      assert.equal(mockWithArray.timesCalled, 1);
+    });
+  });
+
   module('#fails', function() {
     test("status must be 3XX, 4XX or 5XX", function(assert) {
       const mock = new MockRequest('user');
