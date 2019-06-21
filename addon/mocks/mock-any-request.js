@@ -53,7 +53,7 @@ export default class MockAnyRequest extends MockRequest {
     if (/POST|PUT|PATCH/.test(this.type)) {
       const requestBody   = request.requestBody,
             requestParams = paramsFromRequestBody(requestBody);
-      return comparisonFunction(requestParams, toParams(handlerParams));
+      return comparisonFunction(toParams(requestParams), toParams(handlerParams));
     }
 
     return false;

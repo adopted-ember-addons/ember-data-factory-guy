@@ -9,14 +9,13 @@ import { ActiveModelSerializer } from 'active-model-adapter';
 import AdapterFetch from 'ember-fetch/mixins/adapter-fetch';
 
 export function fetchJSON({url, params, method = 'GET'} = {}) {
-  if (method === "GET") {
-    return fetch([url, param(params)].join('?'), {method}).then(r => r.json());
+  let body = '';
+  if (method === 'GET') {
+    url = [url, param(params)].join('?');
   } else {
-    const body = JSON.stringify(params)
-    return fetch(url, {body, method}).then(r => {
-      return r._bodyText ? r.json() : null;
-    });
+    body = JSON.stringify(params);
   }
+  return fetch(url, {body, method}).then(r => r._bodyText ? r.json() : null);
 }
 
 //// custom adapter options for the various models
