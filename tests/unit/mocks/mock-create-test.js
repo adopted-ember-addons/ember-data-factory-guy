@@ -3,6 +3,7 @@ import { setupTest } from 'ember-qunit';
 import Model from 'ember-data/model';
 import FactoryGuy, {
   build,
+  make,
   makeNew,
   mockCreate
 } from 'ember-data-factory-guy';
@@ -75,8 +76,8 @@ module('MockCreate', function(hooks) {
   });
 
   test("record with date", async function(assert) {
-    let review = build('review', { id: 1, rating: 3, date: new Date(), description: "very good" });
-    mockCreate('review').returns({attrs: review.get() });
+    let review = make('review', { id: 123, rating: 3, date: new Date(), description: "very good" });
+    mockCreate(review);
     run(async () => {
       let model1 = FactoryGuy.store.createRecord('review', {});
       await model1.save();
