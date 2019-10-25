@@ -74,6 +74,19 @@ module('MockCreate', function(hooks) {
     });
   });
 
+  test("record with date", async function(assert) {
+    let review = build('review', { id: 1, rating: 3, date: new Date(), description: "very good" });
+    mockCreate('review').returns({attrs: review.get() });
+    run(async () => {
+      let model1 = FactoryGuy.store.createRecord('review', {});
+      await model1.save();
+      assert.equal(model1.id, "1");
+      assert.equal(model1.rating, 3);
+      assert.equal(model1.description, "very good");
+      assert.ok(model1.date);
+    });
+  });
+
   test("#getUrl uses customized adapter#urlForCreateRecord", function(assert) {
     let mock1 = mockCreate('user');
     assert.equal(mock1.getUrl(), '/users');
