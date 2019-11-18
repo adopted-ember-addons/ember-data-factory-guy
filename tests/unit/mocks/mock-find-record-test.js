@@ -85,10 +85,12 @@ module('MockFindRecord', function(hooks) {
           adapter        = FactoryGuy.store.adapterFor('user'),
           findRecordStub = sinon.stub(adapter, 'urlForFindRecord');
 
+      const user = FactoryGuy.store.peekRecord('user', 1);
+
       mock.getUrl();
 
       assert.ok(findRecordStub.calledOnce);
-      assert.ok(findRecordStub.calledWith(1, 'user', {adapterOptions: options, record: undefined}), 'adapterOptions passed to urlForFindRecord');
+      assert.ok(findRecordStub.calledWith(1, 'user', {adapterOptions: options, record: user}), 'adapterOptions passed to urlForFindRecord');
 
       adapter.urlForFindRecord.restore();
     });

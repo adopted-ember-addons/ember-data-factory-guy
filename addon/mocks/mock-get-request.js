@@ -130,7 +130,6 @@ class MockGetRequest extends MockStoreRequest {
     this.responseJson = json;
     this.setupHandler();
   }
-
 }
 
 export default MockGetRequest;
