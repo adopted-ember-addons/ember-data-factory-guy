@@ -1,4 +1,3 @@
-import FactoryGuy from '../factory-guy';
 import MockStoreRequest from './mock-store-request';
 import MaybeIdUrlMatch from './maybe-id-url-match';
 
