@@ -45,7 +45,12 @@ export default class extends MockRequest {
    * @returns {{adapterOptions: (*|Object), record: (*|DS.Model)}}
    */
   makeFakeSnapshot() {
-    return {adapterOptions: this.adapterOptions, record: this.model};
-  }
+    let record = this.model;
 
+    if (!record && this.get('id')) {
+      record = FactoryGuy.store.peekRecord(this.modelName, this.get('id'));
+    }
+
+    return {adapterOptions: this.adapterOptions, record};
+  }
 }
