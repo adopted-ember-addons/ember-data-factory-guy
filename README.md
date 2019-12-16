@@ -1948,7 +1948,7 @@ Usage:
 ```
 
 ### Pretender
-The addon uses [Pretender](https://github.com/pretenderjs/pretender) to mock the requests. It exposes the functions `getPretender` and `setPretender` to respectively get the Pretender server for the current test or set it. For instance,
+The addon uses [Pretender](https://github.com/pretenderjs/pretender) to mock the requests. It exposes the functions `getPretender` and `setPretender` to respectively get the Pretender server for the current test or set it. For instance, you can use pretender's [passthrough](https://github.com/pretenderjs/pretender#pass-through) feature to ignore data URLs:
 
 ```javascript
 import { getPretender } from 'ember-data-factory-guy';
