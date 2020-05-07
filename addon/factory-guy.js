@@ -525,7 +525,11 @@ class FactoryGuy {
    */
   buildURL(modelName, id = null, snapshot, requestType, queryParams) {
     const adapter = this.store.adapterFor(modelName);
-    return adapter.buildURL(modelName, id, snapshot, requestType, queryParams);
+    const clonedQueryParams = assign({}, queryParams);
+    // some adapters can modify the query params so use a copy
+    // so as not to modify the internal stored params
+    // which are important later
+    return adapter.buildURL(modelName, id, snapshot, requestType, clonedQueryParams);
   }
 
   /**
