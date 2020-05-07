@@ -107,18 +107,43 @@ module('MockQueryRecord', function(hooks) {
   });
 
   test("#getUrl uses urlForQueryRecord if it is set on the adapter", async function(assert) {
-    assert.expect(3);
-
     let queryParams = {zip: 'it'},
         adapter     = FactoryGuy.store.adapterFor('user'),
         user        = make('user');
 
+    let urlForQueryRecordCalled = 0;    
     adapter.urlForQueryRecord = (query) => {
-      assert.ok(query === queryParams, 'query params are passed in');
+      urlForQueryRecordCalled++;
+      assert.equal(query.zip, 'it', 'query params are passed in');
       return '/users';
     };
 
-    mockQueryRecord('user', queryParams).returns({model: user});
+    let mock = mockQueryRecord('user', queryParams).returns({model: user});
+    assert.equal(mock.getUrl(), '/users');
+    assert.equal(urlForQueryRecordCalled, 3); // not sure why it should be called three times?
+
+    await FactoryGuy.store.queryRecord('user', queryParams);
+  });
+
+  test("#getUrl does not care if urlForQueryRecord modifies queryParams", async function(assert) {
+    let queryParams = {current: true},
+        adapter     = FactoryGuy.store.adapterFor('user'),
+        user        = make('user');
+
+    adapter.urlForQueryRecord = (query) => {
+      assert.ok(query.current, 'query params are passed in without modification');
+      if (query.current) {
+        // modify the query params like a rogue adapter
+        delete query.current;
+        return '/users/current';
+      }
+      else {
+        return '/users'
+      }
+    };
+
+    let mock = mockQueryRecord('user', queryParams).returns({model: user});
+    assert.equal(mock.getUrl(), '/users/current');
 
     await FactoryGuy.store.queryRecord('user', queryParams);
   });
