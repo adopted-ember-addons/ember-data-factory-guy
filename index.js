@@ -7,7 +7,7 @@ var Funnel = require('broccoli-funnel');
 
 module.exports = {
   name: 'ember-data-factory-guy',
-  isDevelopingAddon: function() { return true; },
+  isDevelopingAddon: function() { return false; },
   // borrowed from ember-cli-pretender
   _findPretenderPaths: function() {
     if (!this._pretenderPath) {
