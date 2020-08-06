@@ -2114,6 +2114,9 @@ describe('Admin View', function() {
   assert.equal(json.name, 'Daniel-san');
 ```
 
+### Releasing new versions
+1. ?
+2. ?
 
 ### ChangeLog
   - [Release Notes](/releases)
