@@ -9,9 +9,9 @@
   "author": "Daniel Sudol <dansudol@yahoo.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/danielspaniel/ember-data-factory-guy"
+    "url": "https://github.com/adopted-ember-addons/ember-data-factory-guy"
   },
-  "homepage": "https://github.com/danielspaniel/ember-data-factory-guy",
+  "homepage": "https://github.com/adopted-ember-addons/ember-data-factory-guy",
   "scripts": {
     "start": "ember server",
     "build": "ember build",

@@ -8,7 +8,7 @@ Factories simplify the process of testing, making you more efficient and your te
 **NEW** starting with v3.8
   - jquery is no longer required and fetch adapter is used with ember-data
   - you can still use jquery if you want to  
-  - if you are addon author using factory guy set up your application adapter like [this](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/adapters/application.js)
+  - if you are addon author using factory guy set up your application adapter like [this](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/dummy/app/adapters/application.js)
   
 **NEW** starting with v3.2.1
   - You can setup data AND links for your async relationship [Check it out](#special-tips-for-links)
@@ -16,7 +16,7 @@ Factories simplify the process of testing, making you more efficient and your te
 **NEW** You can use factory guy in ember-twiddle
   - Using [Scenarios](https://ember-twiddle.com/421f16ecc55b5d35783c243b8d99f2be?openFiles=tests.unit.model.user-test.js%2C)
 
-**NEW** If using new style of ember-qunit acceptance tests with ```setupApplicationTest``` check out demo here: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
+**NEW** If using new style of ember-qunit acceptance tests with ```setupApplicationTest``` check out demo here: [user-view-test.js:](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
 **NEW** starting with v2.13.27
   - get attributes for factory defined models with ```attributesFor```
@@ -120,7 +120,7 @@ In the following examples, assume the models look like this:
 
 #### Standard models
 
-- Sample full blown factory: [`user.js`](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js)
+- Sample full blown factory: [`user.js`](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js)
 
 - Brief sample of a factory definition:
 ```javascript
@@ -543,7 +543,7 @@ the reverse 'user' belongsTo association is being setup for you on the project
     will take precedence over an inherited one. So you can override some
     attributes in the default section ( for example ), and inherit the rest
 
-There is a sample Factory using inheritance here: [`big-group.js`](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/big-group.js)
+There is a sample Factory using inheritance here: [`big-group.js`](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/big-group.js)
 
 
 ### Transient Attributes
@@ -732,7 +732,7 @@ Remember to import the `run` function with `import { run } from "@ember/runloop"
     - except that the model will be a newly created record with no id
 
 ##### `FactoryGuy.makeList`
-  - check out [(user factory):](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'bob' user and 'with_car' trait
+  - check out [(user factory):](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'bob' user and 'with_car' trait
 
 Usage:
 
@@ -936,7 +936,7 @@ Usage:
     - `get(index)` gives you the info for a hasMany relationship at that index
     - `get(relationships)` gives you just the id or type ( if polymorphic )
       - better to compose the build relationships by hand if you need more info
-  - check out [user factory:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'boblike' and 'adminlike' user traits
+  - check out [user factory:](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'boblike' and 'adminlike' user traits
 
 ```javascript
   let json = build('user');
@@ -1132,8 +1132,8 @@ let employee = build('employee', { phoneNumbers }).get();
 ```
 
 For a more detailed example of setting up fragments have a look at:
-  - model test [employee test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/employee-test.js).
-  - acceptance test [employee-view-test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/employee-view-test.js).
+  - model test [employee test](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/unit/models/employee-test.js).
+  - acceptance test [employee-view-test](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/employee-view-test.js).
 
 ### Creating Factories in Addons
 If you are making an addon with factories and you want the factories available to Ember apps using your addon, place the factories in `test-support/factories` instead of `tests/factories`. They should be available both within your addon and in Ember apps that use your addon.
@@ -1234,11 +1234,11 @@ test("Using FactoryGuy.cacheOnlyMode with except", async function() {
       });
     });
     ```
-- Sample model test: [profile-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
+- Sample model test: [profile-test.js](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
   - Use `moduleForModel` ( ember-qunit ), or `describeModel` ( ember-mocha ) test helper
   - manually set up FactoryGuy
 
-- Sample component test: [single-user-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/components/single-user-test.js)
+- Sample component test: [single-user-test.js](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/components/single-user-test.js)
   - Using `moduleForComponent` ( ember-qunit ), or `describeComponent` ( ember-mocha ) helper
   - manually sets up FactoryGuy
 
@@ -1268,7 +1268,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", async function() {
 
 ### Acceptance Tests
 
-- For using new style of ember-qunit with ```setupApplicationTest``` check out demo here: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
+- For using new style of ember-qunit with ```setupApplicationTest``` check out demo here: [user-view-test.js:](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
 ##### Using mock methods
 
@@ -1364,7 +1364,7 @@ The `isDestroyed` property is set to `true` when the mock is destroyed.
   - Takes modifier method `returns()` for controlling the response payload
     - returns( model / json / id )
   - Takes modifier method `adapterOptions()` for setting adapterOptions ( get passed to urlForFindRecord )
-  - Sample acceptance tests using `mockFindRecord`: [user-view-test.js:](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
+  - Sample acceptance tests using `mockFindRecord`: [user-view-test.js:](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
 Usage:
 ```javascript
@@ -1444,7 +1444,7 @@ Usage:
     - returns( models / json / ids )
   - Takes modifier method `adapterOptions()` for setting adapterOptions ( get passed to urlForFindAll )
     - used just as in mockFindRecord ( see example there )
-  - Sample acceptance tests using `mockFindAll`: [users-view-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
+  - Sample acceptance tests using `mockFindAll`: [users-view-test.js](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
 
 Usage:
 
@@ -1530,7 +1530,7 @@ Usage:
    - Takes modifier methods for matching the query params
     - `withParams( object )`
     - `withSomeParams( object )`
-  - Sample acceptance tests using `mockQuery`: [user-search-test.js](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/acceptance/user-search-test.js)
+  - Sample acceptance tests using `mockQuery`: [user-search-test.js](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/user-search-test.js)
 
 Usage:
 
@@ -2074,10 +2074,10 @@ describe('Admin View', function() {
 #### Tip 4: Testing mocks ( async testing ) in unit tests
 
  - Two ways to handle asyncronous test
-   - async / await ( most elegant ) [Sample test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L44)
+   - async / await ( most elegant ) [Sample test](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L44)
       - need to declare polyfill for ember-cli-babel options
-       in [ember-cli-build](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/ember-cli-build.js#L7)
-   - using `assert.async()` (qunit) / `done` (mocha) [Sample test](https://github.com/danielspaniel/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L53)
+       in [ember-cli-build](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/ember-cli-build.js#L7)
+   - using `assert.async()` (qunit) / `done` (mocha) [Sample test](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L53)
 
 #### Tip 5: Testing model's custom `serialize()` method
   - The fact that you can match on attributes in `mockUpdate` and `mockCreate` means
@@ -2114,6 +2114,10 @@ describe('Admin View', function() {
   assert.equal(json.name, 'Daniel-san');
 ```
 
+### Releasing new versions
+1. npm version (patch|minor|major)
+2. npm publish
+3. git push --tags
 
 ### ChangeLog
   - [Release Notes](/releases)
