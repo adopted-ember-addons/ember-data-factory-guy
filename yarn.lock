@@ -4373,10 +4373,9 @@ extglob@^2.0.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-fake-xml-http-request@^2.1.1:
-  version "2.1.1"
-  resolved "https://artifactory.bettermg.com/artifactory/api/npm/npm/fake-xml-http-request/-/fake-xml-http-request-2.1.1.tgz#279fdac235840d7a4dff77d98ec44bce9fc690a6"
-  integrity sha1-J5/awjWEDXpN/3fZjsRLzp/GkKY=
+fake-xml-http-request@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/fake-xml-http-request/-/fake-xml-http-request-2.0.0.tgz#41a92f0ca539477700cb1dafd2df251d55dac8ff"
 
 fast-deep-equal@^1.0.0:
   version "1.1.0"
@@ -6900,13 +6899,13 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-pretender@^3.4.3:
-  version "3.4.3"
-  resolved "https://artifactory.bettermg.com/artifactory/api/npm/npm/pretender/-/pretender-3.4.3.tgz#a3b4160516007075d29127262f3a0063d19896e9"
-  integrity sha1-o7QWBRYAcHXSkScmLzoAY9GYluk=
+pretender@~3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/pretender/-/pretender-3.0.1.tgz#817ac43faa3330aa17646968a115f232de10b2ca"
   dependencies:
-    fake-xml-http-request "^2.1.1"
+    fake-xml-http-request "^2.0.0"
     route-recognizer "^0.3.3"
+    whatwg-fetch "^3.0.0"
 
 pretty-ms@^3.1.0:
   version "3.2.0"
