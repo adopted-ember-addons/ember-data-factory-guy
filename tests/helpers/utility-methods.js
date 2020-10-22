@@ -116,8 +116,7 @@ export function containerSetup(application, serializerType) {
 
     let store = application.lookup('service:store');
 
-    let adapterType = serializerType === '-json' ? '-rest' : serializerType;
-    let adapter = application.lookup('adapter:' + adapterType);
+    let adapter = store.adapterFor('application');
     adapter = adapter.reopen(AdapterFetch);
 
     serializerType = serializerType === '-json' ? '-default' : serializerType;
