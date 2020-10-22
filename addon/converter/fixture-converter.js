@@ -176,6 +176,14 @@ export default class FixtureConverter {
         let attributeKey           = transformKeyFunction(attribute),
             transformValueFunction = this.getTransformValueFunction(meta.type);
 
+        let attributeValueInFixture = fixture[attributeKey];
+        if (attributeValueInFixture && attributeValueInFixture._isFragment) {
+          fixture[attributeKey] = this.store.normalize(attributeValueInFixture.constructor.modelName, attributeValueInFixture.serialize()).data.attributes;
+        }
+        if (attributeValueInFixture && attributeValueInFixture._isFragmentArray) {
+          fixture[attributeKey] = attributeValueInFixture.serialize().map(item => this.store.normalize(attributeValueInFixture.type, item).data.attributes);
+        }
+
         if (fixture.hasOwnProperty(attribute)) {
           attributes[attributeKey] = transformValueFunction(fixture[attribute], meta.options);
         } else if (fixture.hasOwnProperty(attributeKey)) {

@@ -312,6 +312,21 @@ SharedBehavior.makeTests = function() {
     assert.ok(lastHat.get('outfit.hats.firstObject') === lastHat);
   });
 
+  test("handles fragment relationships", function(assert) {
+    let name = make('name', {});
+    
+    let employee = make('employee', {name});
+    assert.equal(employee.name.firstName, name.firstName, 'fragment name.firstName');
+    assert.equal(employee.name.lastName, name.lastName, 'fragment name.lastName');
+  });
+
+  test("handles fragmentArray relationships", function(assert) {
+    let departmentEmployments = make('employee', 'with_department_employments').departmentEmployments;
+    
+    let employee = make('employee', { departmentEmployments });
+    assert.equal(employee.departmentEmployments.firstObject.department.name, departmentEmployments.firstObject.department.name, 'fragment array  - first department name');
+    assert.equal(employee.departmentEmployments.lastObject.department.name, departmentEmployments.lastObject.department.name, 'fragment array  - last department name');
+  });
 
   test("using afterMake with transient attributes in definition", function(assert) {
     run(function() {
