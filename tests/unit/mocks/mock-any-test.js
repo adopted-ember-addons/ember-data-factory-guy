@@ -22,6 +22,12 @@ module('MockAny', function(hooks) {
     assert.equal(mockAny.status, '200');
   });
 
+  test("status option", function(assert) {
+    let mockAny = mock({url: '/meep-meep', status: 422});
+
+    assert.equal(mockAny.status, 422);
+  });
+
   test("GET", async function(assert) {
     const method       = 'GET',
           url          = '/api/get-stuff',
