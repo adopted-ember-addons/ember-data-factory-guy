@@ -28,10 +28,10 @@ export function mockTeardown() {
     {id: 'ember-data-factory-guy.mock-teardown', until: '2.14.0'});
 }
 
-export function mock({type = 'GET', url, responseText} = {}) {
+export function mock({type = 'GET', url, responseText, status} = {}) {
   assert("[ember-data-factory-guy] mock requires at least a url", url);
 
-  return new MockAnyRequest({type, url, responseText});
+  return new MockAnyRequest({type, url, responseText, status});
 }
 
 export function mockLinks(model, relationshipKey) {
