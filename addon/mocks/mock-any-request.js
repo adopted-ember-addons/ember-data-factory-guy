@@ -8,6 +8,7 @@ export default class MockAnyRequest extends MockRequest {
   constructor({type = 'GET', url, responseText, status = 200}) {
     super();
     this.responseJson = responseText;
+    if (this.isErrorStatus(status)) this.errorResponse = responseText;
     this.url = url;
     this.type = type;
     this.status = status;

@@ -22,10 +22,24 @@ module('MockAny', function(hooks) {
     assert.equal(mockAny.status, '200');
   });
 
-  test("status option", function(assert) {
-    let mockAny = mock({url: '/meep-meep', status: 422});
+  test("status option", async function(assert) {
+    let status = 422
+    let url = '/api/v2/sessions';
+    let method = 'POST';
+    let responseText = { errors: {login: "invalid login or password"} }
+    let mockAny = mock(
+      {
+        type: method,
+        url: url,
+        responseText: responseText,
+        status: status
+      }
+    );
 
-    assert.equal(mockAny.status, 422);
+    assert.equal(mockAny.status, status);
+    const json = await fetchJSON({url, method});
+
+    assert.deepEqual(json, responseText);
   });
 
   test("GET", async function(assert) {
