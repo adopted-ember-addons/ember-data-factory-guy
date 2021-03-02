@@ -1918,7 +1918,7 @@ Usage:
   Well, you have read about all the other `mock*` methods, but what if you have
   endpoints that do not use Ember Data? Well, `mock` is for you.
 
-  - mock({type, url, responseText, status)
+  - mock({type, url, responseText, status})
     - type: The HTTP verb (`GET`, `POST`, etc.) Defaults to `GET`
     - url: The endpoint URL you are trying to mock
     - responseText: This can be whatever you want to return, even a JavaScript object
