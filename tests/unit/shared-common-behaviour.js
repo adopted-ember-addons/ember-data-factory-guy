@@ -4,49 +4,48 @@ import SharedAdapterBehaviour from './shared-adapter-behaviour';
 
 let SharedBehavior = {};
 
-SharedBehavior.all = function() {
-
-  module('FactoryGuy#makeNew', function() {
+SharedBehavior.all = function () {
+  module('FactoryGuy#makeNew', function () {
     SharedFactoryGuyBehaviour.makeNewTests();
   });
 
-  module('FactoryGuy#make', function() {
+  module('FactoryGuy#make', function () {
     SharedFactoryGuyBehaviour.makeTests();
   });
 
-  module('FactoryGuy#makeList', function() {
+  module('FactoryGuy#makeList', function () {
     SharedFactoryGuyBehaviour.makeListTests();
   });
 
-  module('#mockFindRecord', function() {
+  module('#mockFindRecord', function () {
     SharedAdapterBehaviour.mockFindRecordCommonTests();
   });
 
-  module('#mockReload', function() {
+  module('#mockReload', function () {
     SharedAdapterBehaviour.mockReloadTests();
   });
 
-  module('#mockFindAll', function() {
+  module('#mockFindAll', function () {
     SharedAdapterBehaviour.mockFindAllCommonTests();
   });
 
-  module('#mockQuery', function() {
+  module('#mockQuery', function () {
     SharedAdapterBehaviour.mockQueryTests();
   });
 
-  module('#mockQueryRecord', function() {
+  module('#mockQueryRecord', function () {
     SharedAdapterBehaviour.mockQueryRecordTests();
   });
 
-  module('#mockCreate', function() {
+  module('#mockCreate', function () {
     SharedAdapterBehaviour.mockCreateTests();
   });
 
-  module('#mockUpdate', function() {
+  module('#mockUpdate', function () {
     SharedAdapterBehaviour.mockUpdateTests();
   });
 
-  module('#mockDelete', function() {
+  module('#mockDelete', function () {
     SharedAdapterBehaviour.mockDeleteTests();
   });
 };

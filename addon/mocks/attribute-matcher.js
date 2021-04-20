@@ -20,7 +20,7 @@ import { isEmptyObject, isEquivalent } from '../utils/helper-functions';
  @param requestData
  @returns {boolean} true is no attributes to match or they all match
  */
-const attributesMatch = function(requestData, modelName, matchParams) {
+const attributesMatch = function (requestData, modelName, matchParams) {
   if (isEmptyObject(matchParams)) {
     return true;
   }
@@ -32,7 +32,7 @@ const attributesMatch = function(requestData, modelName, matchParams) {
     return builder.transformKey(modelName, key);
   });
   // build the match args into a JSONPayload class
-  let buildOpts = {serializeMode: true, transformKeys: true};
+  let buildOpts = { serializeMode: true, transformKeys: true };
   let expectedData = builder.convertForBuild(modelName, matchParams, buildOpts);
 
   // wrap request data in a JSONPayload class
@@ -62,46 +62,49 @@ const attributesMatch = function(requestData, modelName, matchParams) {
  @param superclass
  @constructor
  */
-const AttributeMatcher = (superclass) => class extends superclass {
+const AttributeMatcher = (superclass) =>
+  class extends superclass {
+    match(matches) {
+      this.matchArgs = matches;
+      return this;
+    }
 
-  match(matches) {
-    this.matchArgs = matches;
-    return this;
-  }
-
-  /**
+    /**
    Update and Create mocks can accept 2 return keys 'attrs' and 'add'
 
    @param options
    @returns {Array}
    */
-  validateReturnsOptions(options) {
-    const responseKeys     = Object.keys(options),
-          validReturnsKeys = ['attrs', 'add'],
-          invalidKeys      = responseKeys.filter(key => !validReturnsKeys.includes(key));
+    validateReturnsOptions(options) {
+      const responseKeys = Object.keys(options),
+        validReturnsKeys = ['attrs', 'add'],
+        invalidKeys = responseKeys.filter(
+          (key) => !validReturnsKeys.includes(key)
+        );
 
-    assert(`[ember-data-factory-guy] You passed invalid keys for 'returns' function.
+      assert(
+        `[ember-data-factory-guy] You passed invalid keys for 'returns' function.
       Valid keys are ${validReturnsKeys}. You used these invalid keys: ${invalidKeys}`,
-      invalidKeys.length === 0);
+        invalidKeys.length === 0
+      );
 
-    return responseKeys;
-  }
-
-  extraRequestMatches(request) {
-    if (this.matchArgs) {
-      let requestBody = request.requestBody;
-      if (typeOf(requestBody) === 'string') {
-        requestBody = JSON.parse(requestBody);
-      }
-      if (typeOf(this.matchArgs) === 'function') {
-        return this.matchArgs(requestBody);
-      } else {
-        return attributesMatch(requestBody, this.modelName, this.matchArgs);
-      }
+      return responseKeys;
     }
-    return true;
-  }
 
-};
+    extraRequestMatches(request) {
+      if (this.matchArgs) {
+        let requestBody = request.requestBody;
+        if (typeOf(requestBody) === 'string') {
+          requestBody = JSON.parse(requestBody);
+        }
+        if (typeOf(this.matchArgs) === 'function') {
+          return this.matchArgs(requestBody);
+        } else {
+          return attributesMatch(requestBody, this.modelName, this.matchArgs);
+        }
+      }
+      return true;
+    }
+  };
 
 export default AttributeMatcher;

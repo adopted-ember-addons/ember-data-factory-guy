@@ -7,7 +7,6 @@ import RESTPayload from '../payload/rest-payload';
 
  */
 export default class RESTFixtureBuilder extends FixtureBuilder {
-
   constructor(store) {
     super(store, RESTFixtureConverter, RESTPayload);
   }

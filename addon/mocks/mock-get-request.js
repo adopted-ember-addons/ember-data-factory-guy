@@ -1,18 +1,21 @@
+/* Disabling the `ember/no-get` lint rule as `MockStoreRequest` and `MockGetRequest` contains a `this.get` method */
+/* eslint-disable ember/no-get */
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
-import { isArray } from '@ember/array'
-import { assign } from '@ember/polyfills'
+import { isArray } from '@ember/array';
+import { assign } from '@ember/polyfills';
 import FactoryGuy from '../factory-guy';
-import Model from 'ember-data/model';
+import Model from '@ember-data/model';
 import MockStoreRequest from './mock-store-request';
 
 class MockGetRequest extends MockStoreRequest {
-
-  constructor(modelName, requestType, {defaultResponse, queryParams}={}) {
+  constructor(modelName, requestType, { defaultResponse, queryParams } = {}) {
     super(modelName, requestType);
     this.queryParams = queryParams;
     if (defaultResponse !== undefined) {
-      this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, defaultResponse));
+      this.setResponseJson(
+        this.fixtureBuilder.convertForBuild(modelName, defaultResponse)
+      );
     }
     this.validReturnsKeys = [];
   }
@@ -47,14 +50,19 @@ class MockGetRequest extends MockStoreRequest {
   validateReturnsOptions(options) {
     const responseKeys = Object.keys(options);
 
-    assert(`[ember-data-factory-guy] You can pass one key to 'returns',
-                you passed these keys: ${responseKeys}`, responseKeys.length === 1);
+    assert(
+      `[ember-data-factory-guy] You can pass one key to 'returns',
+                you passed these keys: ${responseKeys}`,
+      responseKeys.length === 1
+    );
 
     const [responseKey] = responseKeys;
 
-    assert(`[ember-data-factory-guy] You passed an invalid keys for 'returns' function.
+    assert(
+      `[ember-data-factory-guy] You passed an invalid keys for 'returns' function.
       Valid keys are ${this.validReturnsKeys}. You used this invalid key: ${responseKey}`,
-      this.validReturnsKeys.includes(responseKey));
+      this.validReturnsKeys.includes(responseKey)
+    );
 
     return responseKey;
   }
@@ -66,40 +74,53 @@ class MockGetRequest extends MockStoreRequest {
   }
 
   setReturns(responseKey, options) {
-    let json, model, models, modelName = this.modelName;
+    let json,
+      model,
+      models,
+      modelName = this.modelName;
 
     switch (responseKey) {
       case 'id':
         // if you want to return existing model with an id, set up the json
         // as if it might be found, but check later during request match to
         // see if it really exists
-        json = {id: options.id};
+        json = { id: options.id };
         this.idSearch = true;
-        this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, json));
+        this.setResponseJson(
+          this.fixtureBuilder.convertForBuild(modelName, json)
+        );
         break;
 
       case 'model':
         model = options.model;
 
-        assert(`[ember-data-factory-guy] argument ( model ) must be a Model instance - found type:'
-          ${typeOf(model)}`, (model instanceof Model));
+        assert(
+          `[ember-data-factory-guy] argument ( model ) must be a Model instance - found type:'
+          ${typeOf(model)}`,
+          model instanceof Model
+        );
 
-        json = {id: model.id};
-        this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, json));
+        json = { id: model.id };
+        this.setResponseJson(
+          this.fixtureBuilder.convertForBuild(modelName, json)
+        );
         break;
 
       case 'ids': {
         const store = FactoryGuy.store;
         models = options.ids.map((id) => store.peekRecord(modelName, id));
-        this.returns({models});
+        this.returns({ models });
         break;
       }
       case 'models': {
         models = options.models;
-        assert(`[ember-data-factory-guy] argument ( models ) must be an array - found type:'
-          ${typeOf(models)}`, isArray(models));
+        assert(
+          `[ember-data-factory-guy] argument ( models ) must be an array - found type:'
+          ${typeOf(models)}`,
+          isArray(models)
+        );
 
-        json = models.map(model => ({id: model.id}));
+        json = models.map((model) => ({ id: model.id }));
 
         json = this.fixtureBuilder.convertForBuild(modelName, json);
         this.setResponseJson(json);
@@ -114,8 +135,8 @@ class MockGetRequest extends MockStoreRequest {
         this.setResponseJson(json);
         break;
       case 'attrs': {
-        let currentId   = this.responseJson.get('id'),
-            modelParams = assign({id: currentId}, options.attrs);
+        let currentId = this.responseJson.get('id'),
+          modelParams = assign({ id: currentId }, options.attrs);
         json = this.fixtureBuilder.convertForBuild(modelName, modelParams);
         this.setResponseJson(json);
         break;

@@ -1,13 +1,11 @@
-import DS from 'ember-data';
+import JSONAPISerializer from '@ember-data/serializer/json-api';
 
-export default DS.JSONAPISerializer.extend({
-
+export default JSONAPISerializer.extend({
   transformFor: function (attributeType) {
     if (attributeType === 'just-a-string') {
       return this.container.lookup('transform:string');
-    }
-    else {
+    } else {
       return this._super.apply(this, arguments);
     }
-  }
+  },
 });

@@ -1,5 +1,7 @@
+import JSONSerializer from '@ember-data/serializer/json';
+import RESTSerializer from '@ember-data/serializer/rest';
+import JSONAPISerializer from '@ember-data/serializer/json-api';
 import require from 'require';
-import DS from 'ember-data';
 import JSONAPIFixtureBuilder from './jsonapi-fixture-builder';
 import RESTFixtureBuilder from './rest-fixture-builder';
 import JSONFixtureBuilder from './json-fixture-builder';
@@ -22,7 +24,6 @@ try {
 }
 
 export default class {
-
   constructor(store) {
     this.store = store;
   }
@@ -54,7 +55,7 @@ export default class {
   }
 
   usingJSONAPISerializer(serializer) {
-    return serializer instanceof DS.JSONAPISerializer;
+    return serializer instanceof JSONAPISerializer;
   }
 
   usingDRFSerializer(serializer) {
@@ -66,10 +67,10 @@ export default class {
   }
 
   usingRESTSerializer(serializer) {
-    return serializer instanceof DS.RESTSerializer;
+    return serializer instanceof RESTSerializer;
   }
 
   usingJSONSerializer(serializer) {
-    return serializer instanceof DS.JSONSerializer;
+    return serializer instanceof JSONSerializer;
   }
 }

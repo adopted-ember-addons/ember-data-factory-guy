@@ -1,21 +1,21 @@
 import FactoryGuy from 'ember-data-factory-guy';
 
-FactoryGuy.define("company", {
+FactoryGuy.define('company', {
   default: {
     type: 'Company',
-    name: 'Silly corp'
+    name: 'Silly corp',
   },
 
   marvel: {
-    name: 'Marvel Comics'
+    name: 'Marvel Comics',
   },
 
   traits: {
     with_profile: {
-      profile: {}
+      profile: {},
     },
     with_projects: {
-      projects: FactoryGuy.hasMany('project', 2)
-    }
-  }
+      projects: FactoryGuy.hasMany('project', 2),
+    },
+  },
 });

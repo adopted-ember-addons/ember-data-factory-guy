@@ -16,12 +16,11 @@ import {
   mockQueryRecord,
   mockReload,
   mockUpdate,
-  Scenario
+  Scenario,
 } from 'ember-data-factory-guy';
 
-module('scenario', function() {
-
-  test("proxies all build/make methods", function(assert) {
+module('scenario', function () {
+  test('proxies all build/make methods', function (assert) {
     let scenario = new Scenario();
     assert.equal(scenario.make, make);
     assert.equal(scenario.makeNew, makeNew);
@@ -30,7 +29,7 @@ module('scenario', function() {
     assert.equal(scenario.buildList, buildList);
   });
 
-  test("proxies all mock request methods", function(assert) {
+  test('proxies all mock request methods', function (assert) {
     let scenario = new Scenario();
     assert.equal(scenario.mockFindRecord, mockFindRecord);
     assert.equal(scenario.mockFindAll, mockFindAll);

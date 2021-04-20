@@ -1,8 +1,9 @@
+/* Disabling the following lint rules as `MockStoreRequest` and `MockGetRequest` contains a `this.get` method */
+/* eslint-disable ember/no-get, ember/classic-decorator-no-classic-methods */
 import FactoryGuy from '../factory-guy';
 import MockRequest from './mock-request';
 
 export default class extends MockRequest {
-
   constructor(modelName, requestType) {
     super();
     this.modelName = modelName;
@@ -51,6 +52,6 @@ export default class extends MockRequest {
       record = FactoryGuy.store.peekRecord(this.modelName, this.get('id'));
     }
 
-    return {adapterOptions: this.adapterOptions, record};
+    return { adapterOptions: this.adapterOptions, record };
   }
 }

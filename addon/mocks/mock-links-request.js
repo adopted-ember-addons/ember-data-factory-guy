@@ -1,14 +1,13 @@
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
-import { isArray } from '@ember/array'
+import { isArray } from '@ember/array';
 import { get } from '@ember/object';
 import MockRequest from './mock-request';
-import FactoryGuy from "../factory-guy";
-import Model from 'ember-data/model';
+import FactoryGuy from '../factory-guy';
+import Model from '@ember-data/model';
 import { parseUrl } from '../utils/helper-functions';
 
 export default class MockLinksRequest extends MockRequest {
-
   constructor(model, relationshipKey) {
     super();
     this.model = model;
@@ -23,9 +22,9 @@ export default class MockLinksRequest extends MockRequest {
   }
 
   getRelationship() {
-    let modelClass    = this.model.constructor,
-        relationships = get(modelClass, 'relationshipsByName'),
-        relationship  = relationships.get(this.relationshipKey);
+    let modelClass = this.model.constructor,
+      relationships = modelClass.relationshipsByName,
+      relationship = relationships.get(this.relationshipKey);
 
     assert(
       `[ember-data-factory-guy] mockLinks can not find that relationship 
@@ -38,7 +37,7 @@ export default class MockLinksRequest extends MockRequest {
 
   setValidReturnsKeys() {
     const isBelongsTo = this.relationship.kind === 'belongsTo',
-          validKeys   = isBelongsTo ? ['model', 'json'] : ['models', 'json'];
+      validKeys = isBelongsTo ? ['model', 'json'] : ['models', 'json'];
     this.validReturnsKeys = validKeys;
   }
 
@@ -64,14 +63,19 @@ export default class MockLinksRequest extends MockRequest {
   validateReturnsOptions(options) {
     const responseKeys = Object.keys(options);
 
-    assert(`[ember-data-factory-guy] You can pass one key to 'returns',
-                you passed these keys: ${responseKeys}`, responseKeys.length === 1);
+    assert(
+      `[ember-data-factory-guy] You can pass one key to 'returns',
+                you passed these keys: ${responseKeys}`,
+      responseKeys.length === 1
+    );
 
     const [responseKey] = responseKeys;
 
-    assert(`[ember-data-factory-guy] You passed an invalid keys for 'returns' function.
+    assert(
+      `[ember-data-factory-guy] You passed an invalid keys for 'returns' function.
       Valid keys are ${this.validReturnsKeys}. You used this invalid key: ${responseKey}`,
-      this.validReturnsKeys.includes(responseKey));
+      this.validReturnsKeys.includes(responseKey)
+    );
 
     return responseKey;
   }
@@ -83,43 +87,56 @@ export default class MockLinksRequest extends MockRequest {
   }
 
   setReturns(responseKey, options) {
-    let json, model, models, modelName = this.relationship.type;
+    let json,
+      model,
+      models,
+      modelName = this.relationship.type;
 
     switch (responseKey) {
       case 'id': {
         // if you want to return existing model with an id, set up the json
         // as if it might be found, but check later during request match to
         // see if it really exists
-        json = {id: options.id};
+        json = { id: options.id };
         this.idSearch = true;
-        this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, json));
+        this.setResponseJson(
+          this.fixtureBuilder.convertForBuild(modelName, json)
+        );
         break;
       }
 
       case 'model':
         model = options.model;
 
-        assert(`[ember-data-factory-guy] argument ( model ) must be a Model instance - found type:'
-          ${typeOf(model)}`, (model instanceof Model));
+        assert(
+          `[ember-data-factory-guy] argument ( model ) must be a Model instance - found type:'
+          ${typeOf(model)}`,
+          model instanceof Model
+        );
 
-        json = {id: model.id};
-        this.setResponseJson(this.fixtureBuilder.convertForBuild(modelName, json));
+        json = { id: model.id };
+        this.setResponseJson(
+          this.fixtureBuilder.convertForBuild(modelName, json)
+        );
         break;
 
       case 'ids': {
         const store = FactoryGuy.store;
         models = options.ids.map((id) => store.peekRecord(modelName, id));
-        this.returns({models});
+        this.returns({ models });
         break;
       }
 
       case 'models': {
         models = options.models;
 
-        assert(`[ember-data-factory-guy] argument ( models ) must be an array - found type:'
-          ${typeOf(models)}`, isArray(models));
+        assert(
+          `[ember-data-factory-guy] argument ( models ) must be an array - found type:'
+          ${typeOf(models)}`,
+          isArray(models)
+        );
 
-        json = models.map(model => ({id: model.id}));
+        json = models.map((model) => ({ id: model.id }));
         json = this.fixtureBuilder.convertForBuild(modelName, json);
         this.setResponseJson(json);
         break;
@@ -144,5 +161,4 @@ export default class MockLinksRequest extends MockRequest {
     this.responseJson = json;
     this.setupHandler();
   }
-
 }

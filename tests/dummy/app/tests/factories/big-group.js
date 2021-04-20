@@ -3,11 +3,13 @@ import FactoryGuy from 'ember-data-factory-guy';
 // when this factory goes to find it's definition and it's not available
 import './group';
 
-FactoryGuy.define("big-group", {
+FactoryGuy.define('big-group', {
   extends: 'group',
   sequences: {
     // this 'name' sequence will override the parent's 'name' sequence
-    name: function(num) {return 'Big Group' + num;}
+    name: function (num) {
+      return 'Big Group' + num;
+    },
   },
   /*
     By defining only the 'type' attribute, this will inherit only the 'name' attribute
@@ -20,6 +22,6 @@ FactoryGuy.define("big-group", {
 
   */
   default: {
-    type: "BigGroup"
-  }
+    type: 'BigGroup',
+  },
 });

@@ -14,9 +14,13 @@ export default class DrfFixtureConverter extends JSONFixtureConverter {
    */
   createPayload(_, fixture) {
     if (this.listType) {
-      return { results: fixture, next: null, previous: null, count: fixture.length };
+      return {
+        results: fixture,
+        next: null,
+        previous: null,
+        count: fixture.length,
+      };
     }
     return fixture;
   }
-
 }

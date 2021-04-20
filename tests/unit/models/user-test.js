@@ -4,26 +4,26 @@ import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
   make,
   setupFactoryGuy,
-  mockFindRecord
+  mockFindRecord,
 } from 'ember-data-factory-guy';
 
 const modelType = 'user';
 
-module(`Unit | Model | ${modelType}`, function(hooks) {
+module(`Unit | Model | ${modelType}`, function (hooks) {
   setupTest(hooks);
   setupFactoryGuy(hooks);
 
-  test('has funny name', function(assert) {
-    let user = make('user', {name: 'Dude'});
+  test('has funny name', function (assert) {
+    let user = make('user', { name: 'Dude' });
     assert.equal(user.get('funnyName'), 'funny Dude');
   });
 
-  test('has projects', function(assert) {
+  test('has projects', function (assert) {
     let user = make('user', 'with_projects');
     assert.equal(user.get('projects.length'), 2);
   });
 
-  test('sample async unit test with async/await', async function(assert) {
+  test('sample async unit test with async/await', async function (assert) {
     run(async () => {
       let mock = mockFindRecord('user');
       let userId = mock.get('id');
@@ -32,7 +32,7 @@ module(`Unit | Model | ${modelType}`, function(hooks) {
     });
   });
 
-  test('sample async unit test with assert.async()', function(assert) {
+  test('sample async unit test with assert.async()', function (assert) {
     let done = assert.async();
     run(() => {
       let mock = mockFindRecord('user');

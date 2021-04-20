@@ -1,6 +1,4 @@
-import Model from 'ember-data/model';
-import attr from 'ember-data/attr';
-import { hasMany, belongsTo } from 'ember-data/relationships';
+import Model, { attr, hasMany, belongsTo } from '@ember-data/model';
 
 export default Model.extend({
   name: attr('string'),

@@ -4,14 +4,24 @@ import FactoryGuy, {
   makeList,
   build,
   buildList,
-  attributesFor
+  attributesFor,
 } from './factory-guy';
 
 import {
-  mockSetup, mockTeardown,
-  mockFind, mockFindRecord, mockFindAll, mockReload, mockQuery,
-  mockQueryRecord, mockCreate, mockUpdate, mockDelete, mock, mockLinks,
-  getPretender
+  mockSetup,
+  mockTeardown,
+  mockFind,
+  mockFindRecord,
+  mockFindAll,
+  mockReload,
+  mockQuery,
+  mockQueryRecord,
+  mockCreate,
+  mockUpdate,
+  mockDelete,
+  mock,
+  mockLinks,
+  getPretender,
 } from './mocks/exposed-request-functions';
 
 import manualSetup from './utils/manual-setup';
@@ -26,17 +36,36 @@ export default FactoryGuy;
 
 export { JSONFixtureBuilder, RESTFixtureBuilder, JSONAPIFixtureBuilder };
 
-export { make, makeNew, makeList, build, buildList, attributesFor, manualSetup, Scenario };
+export {
+  make,
+  makeNew,
+  makeList,
+  build,
+  buildList,
+  attributesFor,
+  manualSetup,
+  Scenario,
+};
 
 export {
-  mockSetup, mockTeardown,
-  mockFind, mockFindRecord, mockFindAll, mockReload, mockQuery,
-  mockQueryRecord, mockCreate, mockUpdate, mockDelete, mock, mockLinks,
-  getPretender
+  mockSetup,
+  mockTeardown,
+  mockFind,
+  mockFindRecord,
+  mockFindAll,
+  mockReload,
+  mockQuery,
+  mockQueryRecord,
+  mockCreate,
+  mockUpdate,
+  mockDelete,
+  mock,
+  mockLinks,
+  getPretender,
 };
 
 export function setupFactoryGuy(hooks) {
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     manualSetup(this);
   });
 }

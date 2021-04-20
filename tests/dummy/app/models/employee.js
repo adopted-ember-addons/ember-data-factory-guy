@@ -1,6 +1,9 @@
-import Model from 'ember-data/model';
-import attr from 'ember-data/attr';
-import { array, fragment, fragmentArray } from 'ember-data-model-fragments/attributes';
+import Model, { attr } from '@ember-data/model';
+import {
+  array,
+  fragment,
+  fragmentArray,
+} from 'ember-data-model-fragments/attributes';
 
 export default Model.extend({
   designation: fragment('name'),
@@ -9,5 +12,5 @@ export default Model.extend({
   gender: attr('string'),
   birthDate: attr('date'),
   position: attr(),
-  departmentEmployments: fragmentArray('department-employment')
+  departmentEmployments: fragmentArray('department-employment'),
 });

@@ -10,14 +10,13 @@ import JSONFixtureConverter from './json-fixture-converter';
  @constructor
  */
 export default class RESTFixtureConverter extends JSONFixtureConverter {
-
   constructor(store, options) {
     super(store, options);
     this.included = {};
   }
 
   emptyResponse(modelName, options = {}) {
-    return {[modelName]: options.useValue || null};
+    return { [modelName]: options.useValue || null };
   }
 
   /**
@@ -28,7 +27,7 @@ export default class RESTFixtureConverter extends JSONFixtureConverter {
    * @returns {*}
    */
   createPayload(modelName, fixture) {
-    return {[this.getPayloadKey(modelName)]: fixture};
+    return { [this.getPayloadKey(modelName)]: fixture };
   }
 
   /**
@@ -39,12 +38,12 @@ export default class RESTFixtureConverter extends JSONFixtureConverter {
    */
   getPayloadKey(modelName) {
     let serializer = this.store.serializerFor(modelName),
-        payloadKey = modelName;
+      payloadKey = modelName;
     // model fragment serializer does not have payloadKeyFromModelName method
     if (serializer.payloadKeyFromModelName) {
       payloadKey = serializer.payloadKeyFromModelName(modelName);
     }
-    return (this.listType) ? pluralize(payloadKey) : payloadKey;
+    return this.listType ? pluralize(payloadKey) : payloadKey;
   }
 
   /**
@@ -77,7 +76,7 @@ export default class RESTFixtureConverter extends JSONFixtureConverter {
     }
 
     let modelRelationships = this.included[relationshipKey],
-        found              = A(modelRelationships).find(existing => existing.id === data.id);
+      found = A(modelRelationships).find((existing) => existing.id === data.id);
 
     if (!found) {
       modelRelationships.push(data);
@@ -98,5 +97,4 @@ export default class RESTFixtureConverter extends JSONFixtureConverter {
       });
     });
   }
-
 }

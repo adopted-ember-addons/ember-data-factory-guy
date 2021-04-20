@@ -7,8 +7,7 @@ import Component from '@ember/component';
 export default Component.extend({
   classNames: ['translator'],
 
-  translation: computed('original', function() {
-    return this.get('original') + ' dude';
-  })
-
+  translation: computed('original', function () {
+    return this.original + ' dude';
+  }),
 });

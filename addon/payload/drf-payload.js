@@ -3,7 +3,6 @@ import { assign } from '@ember/polyfills';
 import JSONPayload from './json-payload';
 
 export default class extends JSONPayload {
-
   // only add the meta data if there is query ( results key is present )
   addMeta(data) {
     if (this.json.results) {
@@ -26,5 +25,4 @@ export default class extends JSONPayload {
       return attrs[attrs.length - 1];
     }
   }
-
 }

@@ -1,14 +1,12 @@
-import { isEmpty } from '@ember/utils';
-import { typeOf } from '@ember/utils';
+import { isEmpty, typeOf } from '@ember/utils';
 import { assign } from '@ember/polyfills';
 import BasePayload from './base-payload';
 
 export default class extends BasePayload {
-
   constructor(modelName, json, converter) {
     super(modelName, json, converter);
     this.data = json.data;
-    this.addProxyMethods(["includes"]);
+    this.addProxyMethods(['includes']);
   }
 
   getModelPayload() {
@@ -31,8 +29,8 @@ export default class extends BasePayload {
       this.converter.included = this.json.included;
       // add the main moreJson model payload
       let data = more.getModelPayload();
-      if (typeOf(data) === "array") {
-        data.forEach(dati=> this.converter.addToIncluded(dati));
+      if (typeOf(data) === 'array') {
+        data.forEach((dati) => this.converter.addToIncluded(dati));
       } else {
         this.converter.addToIncluded(data);
       }
@@ -44,7 +42,7 @@ export default class extends BasePayload {
 
   createAttrs(data) {
     let relationships = {};
-    Object.keys(data.relationships||[]).forEach((key)=> {
+    Object.keys(data.relationships || []).forEach((key) => {
       relationships[key] = data.relationships[key].data;
     });
     let attrs = assign({}, data.attributes, relationships);
@@ -67,7 +65,7 @@ export default class extends BasePayload {
   }
 
   getListKeys(key) {
-    let attrs = this.data.map((data)=> this.createAttrs(data));
+    let attrs = this.data.map((data) => this.createAttrs(data));
     if (isEmpty(key)) {
       return attrs;
     }

@@ -2,17 +2,17 @@ import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define('manager', {
   default: {
-    name: FactoryGuy.belongsTo('name')
+    name: FactoryGuy.belongsTo('name'),
   },
   traits: {
     default_name_setup: {
-      name: {}
+      name: {},
     },
     withSalary: {
-      salary: FactoryGuy.belongsTo('salary')
+      salary: FactoryGuy.belongsTo('salary'),
     },
     withReviews: {
-      reviews: FactoryGuy.hasMany('review', 2)
-    }
-  }
+      reviews: FactoryGuy.hasMany('review', 2),
+    },
+  },
 });

@@ -1,9 +1,9 @@
 import FactoryGuy from 'ember-data-factory-guy';
 
-FactoryGuy.define("group", {
+FactoryGuy.define('group', {
   default: {
-    type: "Group",
-    name: (f)=>`Group-${f.id}`
+    type: 'Group',
+    name: (f) => `Group-${f.id}`,
   },
   traits: {
     primary: {
@@ -11,7 +11,7 @@ FactoryGuy.define("group", {
     },
     parent: {
       name: 'Parent Group',
-      group: null
-    }
-  }
+      group: null,
+    },
+  },
 });

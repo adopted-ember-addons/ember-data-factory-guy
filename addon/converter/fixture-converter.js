@@ -29,8 +29,7 @@ import { camelize } from '@ember/string';
  @constructor
  */
 export default class FixtureConverter {
-
-  constructor(store, {transformKeys = true, serializeMode = false} = {}) {
+  constructor(store, { transformKeys = true, serializeMode = false } = {}) {
     this.transformKeys = transformKeys;
     this.serializeMode = serializeMode;
     this.store = store;
@@ -86,8 +85,8 @@ export default class FixtureConverter {
    * @param fixture
    */
   addPrimaryKey(modelName, data, fixture) {
-    let primaryKey      = this.store.serializerFor(modelName).get('primaryKey'),
-        primaryKeyValue = fixture[primaryKey] || fixture.id;
+    let primaryKey = this.store.serializerFor(modelName).get('primaryKey'),
+      primaryKeyValue = fixture[primaryKey] || fixture.id;
     // model fragments will have no primaryKey and don't want them to have id
     if (primaryKeyValue) {
       // need to set the id for all as a baseline
@@ -99,23 +98,28 @@ export default class FixtureConverter {
   }
 
   transformRelationshipKey(relationship) {
-    let {parentModelName, parentType} = relationship,
-        type         = parentModelName || parentType && parentType.modelName || relationship.type,
-        transformFn  = this.getTransformKeyFunction(type, 'Relationship');
+    let { parentModelName, parentType } = relationship,
+      type =
+        parentModelName ||
+        (parentType && parentType.modelName) ||
+        relationship.type,
+      transformFn = this.getTransformKeyFunction(type, 'Relationship');
     return transformFn(relationship.key, relationship.kind);
   }
 
   getRelationshipType(relationship, fixture) {
     let isPolymorphic = relationship.options.polymorphic;
-    return isPolymorphic ? this.polymorphicTypeTransformFn(fixture.type) : relationship.type;
+    return isPolymorphic
+      ? this.polymorphicTypeTransformFn(fixture.type)
+      : relationship.type;
   }
 
   attributeIncluded(attribute, modelName) {
     if (!this.serializeMode) {
       return true;
     }
-    let serializer  = this.store.serializerFor(modelName),
-        attrOptions = this.attrsOption(serializer, attribute);
+    let serializer = this.store.serializerFor(modelName),
+      attrOptions = this.attrsOption(serializer, attribute);
     if (attrOptions && attrOptions.serialize === false) {
       return false;
     }
@@ -128,22 +132,24 @@ export default class FixtureConverter {
     }
 
     let serializer = this.store.serializerFor(modelName),
-        keyFn      = serializer['keyFor' + type] || this.defaultKeyTransformFn;
+      keyFn = serializer['keyFor' + type] || this.defaultKeyTransformFn;
 
-    return ((attribute, method) => {
+    return (attribute, method) => {
       // if there is an attrs override in serializer, return that first
       let attrOptions = this.attrsOption(serializer, attribute),
-          attrName;
+        attrName;
       if (attrOptions) {
         if (attrOptions.key) {
           attrName = attrOptions.key;
         }
-        if (typeOf(attrOptions) === "string") {
+        if (typeOf(attrOptions) === 'string') {
           attrName = attrOptions;
         }
       }
-      return attrName || keyFn.apply(serializer, [attribute, method, 'serialize']);
-    });
+      return (
+        attrName || keyFn.apply(serializer, [attribute, method, 'serialize'])
+      );
+    };
   }
 
   getTransformValueFunction(type) {
@@ -154,9 +160,10 @@ export default class FixtureConverter {
       return this.defaultValueTransformFn;
     }
     let container = getOwner(this.store),
-        transform = container.lookup('transform:' + type);
+      transform = container.lookup('transform:' + type);
 
-    assert(`[ember-data-factory-guy] could not find
+    assert(
+      `[ember-data-factory-guy] could not find
     the [ ${type} ] transform. If you are in a unit test, be sure
     to include it in the list of needs as [ transform:${type} ],  Or set your
     unit test to be [ integration: true ] and include everything.`,
@@ -168,18 +175,27 @@ export default class FixtureConverter {
   }
 
   extractAttributes(modelName, fixture) {
-    let attributes           = {},
-        transformKeyFunction = this.getTransformKeyFunction(modelName, 'Attribute');
+    let attributes = {},
+      transformKeyFunction = this.getTransformKeyFunction(
+        modelName,
+        'Attribute'
+      );
 
     this.store.modelFor(modelName).eachAttribute((attribute, meta) => {
       if (this.attributeIncluded(attribute, modelName)) {
-        let attributeKey           = transformKeyFunction(attribute),
-            transformValueFunction = this.getTransformValueFunction(meta.type);
+        let attributeKey = transformKeyFunction(attribute),
+          transformValueFunction = this.getTransformValueFunction(meta.type);
 
         if (fixture.hasOwnProperty(attribute)) {
-          attributes[attributeKey] = transformValueFunction(fixture[attribute], meta.options);
+          attributes[attributeKey] = transformValueFunction(
+            fixture[attribute],
+            meta.options
+          );
         } else if (fixture.hasOwnProperty(attributeKey)) {
-          attributes[attributeKey] = transformValueFunction(fixture[attributeKey], meta.options);
+          attributes[attributeKey] = transformValueFunction(
+            fixture[attributeKey],
+            meta.options
+          );
         }
       }
     });
@@ -199,7 +215,12 @@ export default class FixtureConverter {
     this.store.modelFor(modelName).eachRelationship((key, relationship) => {
       if (fixture.hasOwnProperty(key)) {
         if (relationship.kind === 'belongsTo') {
-          this.extractBelongsTo(fixture, relationship, modelName, relationships);
+          this.extractBelongsTo(
+            fixture,
+            relationship,
+            modelName,
+            relationships
+          );
         } else if (relationship.kind === 'hasMany') {
           this.extractHasMany(fixture, relationship, modelName, relationships);
         }
@@ -218,10 +239,19 @@ export default class FixtureConverter {
    */
   extractBelongsTo(fixture, relationship, parentModelName, relationships) {
     let belongsToRecord = fixture[relationship.key],
-        isEmbedded      = this.isEmbeddedRelationship(parentModelName, relationship.key),
-        relationshipKey = isEmbedded ? relationship.key : this.transformRelationshipKey(relationship);
+      isEmbedded = this.isEmbeddedRelationship(
+        parentModelName,
+        relationship.key
+      ),
+      relationshipKey = isEmbedded
+        ? relationship.key
+        : this.transformRelationshipKey(relationship);
 
-    let data = this.extractSingleRecord(belongsToRecord, relationship, isEmbedded);
+    let data = this.extractSingleRecord(
+      belongsToRecord,
+      relationship,
+      isEmbedded
+    );
     relationships[relationshipKey] = this.assignRelationship(data);
   }
 
@@ -229,23 +259,34 @@ export default class FixtureConverter {
   // checks config for attrs option to embedded (always)
   isEmbeddedRelationship(modelName, attr) {
     let serializer = this.store.serializerFor(modelName),
-        option     = this.attrsOption(serializer, attr);
-    return option && (option.embedded === 'always' || option.deserialize === 'records');
+      option = this.attrsOption(serializer, attr);
+    return (
+      option &&
+      (option.embedded === 'always' || option.deserialize === 'records')
+    );
   }
 
   attrsOption(serializer, attr) {
-    let attrs  = serializer.get('attrs'),
-        option = attrs && (attrs[camelize(attr)] || attrs[attr]);
+    let attrs = serializer.get('attrs'),
+      option = attrs && (attrs[camelize(attr)] || attrs[attr]);
     return option;
   }
 
   extractHasMany(fixture, relationship, parentModelName, relationships) {
-    let hasManyRecords  = fixture[relationship.key],
-        relationshipKey = this.transformRelationshipKey(relationship),
-        isEmbedded      = this.isEmbeddedRelationship(parentModelName, relationship.key);
+    let hasManyRecords = fixture[relationship.key],
+      relationshipKey = this.transformRelationshipKey(relationship),
+      isEmbedded = this.isEmbeddedRelationship(
+        parentModelName,
+        relationship.key
+      );
 
     if (hasManyRecords && hasManyRecords.isProxy) {
-      return this.addListProxyData(hasManyRecords, relationship, relationships, isEmbedded);
+      return this.addListProxyData(
+        hasManyRecords,
+        relationship,
+        relationships,
+        isEmbedded
+      );
     }
 
     if (typeOf(hasManyRecords) !== 'array') {
@@ -262,7 +303,6 @@ export default class FixtureConverter {
   extractSingleRecord(record, relationship, isEmbedded) {
     let data;
     switch (typeOf(record)) {
-
       case 'object':
         if (record.isProxy) {
           data = this.addProxyData(record, relationship, isEmbedded);
@@ -279,9 +319,10 @@ export default class FixtureConverter {
       case 'string':
         assert(
           `Polymorphic relationships cannot be specified by id you
-          need to supply an object with id and type`, !relationship.options.polymorphic
+          need to supply an object with id and type`,
+          !relationship.options.polymorphic
         );
-        record = {id: record, type: relationship.type};
+        record = { id: record, type: relationship.type };
         data = this.normalizeAssociation(record, relationship);
     }
 
@@ -299,21 +340,26 @@ export default class FixtureConverter {
    * @param modelName
    * @param links
    */
-  verifyLinks(modelName, links={}) {
-    const modelClass    = this.store.modelFor(modelName),
-          relationships = get(modelClass, 'relationshipsByName');
+  verifyLinks(modelName, links = {}) {
+    const modelClass = this.store.modelFor(modelName),
+      relationships = modelClass.relationshipsByName;
 
     for (let [relationshipKey, link] of entries(links)) {
-      assert(`You defined a link url ${link} for the [${relationshipKey}] relationship
+      assert(
+        `You defined a link url ${link} for the [${relationshipKey}] relationship
         on model [${modelName}] but that relationship does not exist`,
-        relationships.get(relationshipKey));
+        relationships.get(relationshipKey)
+      );
     }
   }
 
   addData(embeddedFixture, relationship, isEmbedded) {
-    let relationshipType = this.getRelationshipType(relationship, embeddedFixture),
-        // find possibly more embedded fixtures
-        data             = this.convertSingle(relationshipType, embeddedFixture);
+    let relationshipType = this.getRelationshipType(
+        relationship,
+        embeddedFixture
+      ),
+      // find possibly more embedded fixtures
+      data = this.convertSingle(relationshipType, embeddedFixture);
     if (isEmbedded) {
       return data;
     }
@@ -323,8 +369,8 @@ export default class FixtureConverter {
 
   // proxy data is data that was build with FactoryGuy.build method
   addProxyData(jsonProxy, relationship, isEmbedded) {
-    let data             = jsonProxy.getModelPayload(),
-        relationshipType = this.getRelationshipType(relationship, data);
+    let data = jsonProxy.getModelPayload(),
+      relationshipType = this.getRelationshipType(relationship, data);
     if (isEmbedded) {
       this.addToIncludedFromProxy(jsonProxy);
       return data;
@@ -351,5 +397,4 @@ export default class FixtureConverter {
 
     relationships[relationshipKey] = this.assignRelationship(records);
   }
-
 }

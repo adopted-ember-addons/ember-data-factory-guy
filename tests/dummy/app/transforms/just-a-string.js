@@ -1,10 +1,10 @@
-import DS from 'ember-data';
+import Transform from '@ember-data/serializer/transform';
 
-export default DS.Transform.extend({
-  serialize: function(/*value*/) {
+export default Transform.extend({
+  serialize: function (/*value*/) {
     return 'failed';
   },
-  deserialize: function(/*value*/) {
+  deserialize: function (/*value*/) {
     return 'failed';
-  }
+  },
 });

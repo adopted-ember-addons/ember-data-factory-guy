@@ -4,7 +4,6 @@ import { assign } from '@ember/polyfills';
 import { A } from '@ember/array';
 
 export default class {
-
   /**
    Proxy class for getting access to a json payload.
    Allows you to:
@@ -20,7 +19,7 @@ export default class {
     this.json = json;
     this.converter = converter;
     this.listType = converter.listType || false;
-    this.proxyMethods = w("getModelPayload isProxy get add unwrap");
+    this.proxyMethods = w('getModelPayload isProxy get add unwrap');
     this.wrap(this.proxyMethods);
   }
 
@@ -47,18 +46,18 @@ export default class {
   add(more) {
     this.converter.included = this.json;
     A(Object.getOwnPropertyNames(more))
-    .reject(key => A(this.proxyMethods).includes(key))
-    .forEach(key => {
-      if (typeOf(more[key]) === "array") {
-        more[key].forEach(data => this.converter.addToIncluded(data, key));
-      } else {
-        if (key === "meta") {
-          this.addMeta(more[key]);
+      .reject((key) => A(this.proxyMethods).includes(key))
+      .forEach((key) => {
+        if (typeOf(more[key]) === 'array') {
+          more[key].forEach((data) => this.converter.addToIncluded(data, key));
         } else {
-          this.converter.addToIncluded(more[key], key);
+          if (key === 'meta') {
+            this.addMeta(more[key]);
+          } else {
+            this.converter.addToIncluded(more[key], key);
+          }
         }
-      }
-    });
+      });
     return this.json;
   }
 
@@ -74,8 +73,7 @@ export default class {
   }
 
   // marker function for saying "I am a proxy"
-  isProxy() {
-  }
+  isProxy() {}
 
   // get the top level model's payload ( without the includes or meta data )
   getModelPayload() {
@@ -90,12 +88,12 @@ export default class {
 
   // add proxy methods to json object
   wrap(methods) {
-    methods.forEach(method => this.json[method] = this[method].bind(this));
+    methods.forEach((method) => (this.json[method] = this[method].bind(this)));
   }
 
   // remove proxy methods from json object
   unwrap() {
-    this.proxyMethods.forEach(method => delete this.json[method]);
+    this.proxyMethods.forEach((method) => delete this.json[method]);
   }
 
   /**
@@ -114,5 +112,4 @@ export default class {
     }
     return this.getObjectKeys(key);
   }
-
 }

@@ -15,7 +15,6 @@ import { typeOf } from '@ember/utils';
  @constructor
  */
 class ModelDefinition {
-
   constructor(model, config) {
     this.modelName = model;
     this.modelId = 1;
@@ -31,7 +30,7 @@ class ModelDefinition {
    */
   getRelationship(field) {
     let modelClass = FactoryGuy.store.modelFor(this.modelName);
-    let relationship = get(modelClass, 'relationshipsByName').get(field);
+    let relationship = modelClass.relationshipsByName.get(field);
     return relationship || null;
   }
 
@@ -43,7 +42,7 @@ class ModelDefinition {
    */
   modelFragmentInfo(attribute) {
     let modelClass = FactoryGuy.store.modelFor(this.modelName);
-    return get(modelClass, 'attributes').get(attribute);
+    return modelClass.attributes.get(attribute);
   }
 
   /**
@@ -122,8 +121,7 @@ class ModelDefinition {
    @param {String} traitArgs array of traits
    @returns {Object} json
    */
-  build(name, opts={}, traitNames = [], buildType = 'build') {
-
+  build(name, opts = {}, traitNames = [], buildType = 'build') {
     let modelAttributes = this.namedModels[name] || {};
 
     // merge default, modelAttributes, traits and opts to get the rough fixture
@@ -141,7 +139,7 @@ class ModelDefinition {
       fixture._notPolymorphic = true;
     }
 
-    traitNames.forEach(traitName => {
+    traitNames.forEach((traitName) => {
       let trait = this.traits[traitName];
       assert(
         `[ember-data-factory-guy] You're trying to use a trait [${traitName}] 
@@ -195,7 +193,11 @@ class ModelDefinition {
       if (isEmptyObject(payload)) {
         // make a payload, but make sure it's the correct fragment type
         let actualType = this.fragmentType(attribute);
-        payload = FactoryGuy.buildRaw({name: actualType, opts: {}, buildType});
+        payload = FactoryGuy.buildRaw({
+          name: actualType,
+          opts: {},
+          buildType,
+        });
       }
       // use the payload you have been given
       fixture[attribute] = payload;
@@ -203,7 +205,11 @@ class ModelDefinition {
     if (relationship) {
       let payload = fixture[attribute];
       if (!payload.isProxy && !payload.links) {
-        fixture[attribute] = FactoryGuy.buildRaw({name: relationship.type, opts: payload, buildType});
+        fixture[attribute] = FactoryGuy.buildRaw({
+          name: relationship.type,
+          opts: payload,
+          buildType,
+        });
       }
     }
   }
@@ -218,7 +224,9 @@ class ModelDefinition {
    @returns array of fixtures
    */
   buildList(name, number, traits, opts, buildType) {
-    return Array(number).fill().map(() => this.build(name, opts, traits, buildType));
+    return Array(number)
+      .fill()
+      .map(() => this.build(name, opts, traits, buildType));
   }
 
   // Set the modelId back to 1, and reset the sequences
@@ -287,7 +295,9 @@ class ModelDefinition {
       `[ember-data-factory-guy] You are trying to extend [${this.modelName}] with [ ${extending} ].
       But FactoryGuy can't find that definition [ ${extending} ]
       you are trying to extend. Make sure it was created/imported before
-      you define [ ${this.modelName} ]`, definition);
+      you define [ ${this.modelName} ]`,
+      definition
+    );
     this.merge(config, definition);
   }
 
@@ -327,7 +337,8 @@ class ModelDefinition {
       if (typeOf(sequenceFn) !== 'function') {
         throw new Error(
           `Problem with [${sequenceName}] sequence definition.
-          Sequences must be functions`);
+          Sequences must be functions`
+        );
       }
       this.sequences[sequenceName] = new Sequence(sequenceFn);
     }

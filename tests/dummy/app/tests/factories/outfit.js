@@ -1,10 +1,10 @@
 import FactoryGuy from 'ember-data-factory-guy';
 
-FactoryGuy.define("outfit", {
+FactoryGuy.define('outfit', {
   sequences: {
-    name: (num) => `Outfit-${num}`
+    name: (num) => `Outfit-${num}`,
   },
   default: {
-    name: FactoryGuy.generate('name')
-  }
+    name: FactoryGuy.generate('name'),
+  },
 });

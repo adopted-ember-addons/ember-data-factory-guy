@@ -5,5 +5,5 @@ FactoryGuy.define('billing-address', {
   extends: 'nested-fragment/address',
   default: {
     billingAddressProperty: FactoryGuy.generate((num) => num),
-  }
+  },
 });
