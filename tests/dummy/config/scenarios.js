@@ -1,3 +1,3 @@
-import  Main from '../scenarios/main';
+import Main from '../scenarios/main';
 
 new Main();

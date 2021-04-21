@@ -1,6 +1,5 @@
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
-import { get } from '@ember/object';
 import JSONAPIFixtureConverter from '../converter/jsonapi-fixture-converter';
 
 export default class {

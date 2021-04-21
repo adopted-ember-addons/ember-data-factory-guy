@@ -1,7 +1,6 @@
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 import { isArray } from '@ember/array';
-import { get } from '@ember/object';
 import MockRequest from './mock-request';
 import FactoryGuy from '../factory-guy';
 import Model from '@ember-data/model';

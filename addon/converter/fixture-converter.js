@@ -1,5 +1,4 @@
 import { assert } from '@ember/debug';
-import { get } from '@ember/object';
 import { entries } from '../utils/helper-functions';
 import { typeOf } from '@ember/utils';
 import { getOwner } from '@ember/application';
@@ -186,12 +185,14 @@ export default class FixtureConverter {
         let attributeKey = transformKeyFunction(attribute),
           transformValueFunction = this.getTransformValueFunction(meta.type);
 
-        if (fixture.hasOwnProperty(attribute)) {
+        if (Object.prototype.hasOwnProperty.call(fixture, attribute)) {
           attributes[attributeKey] = transformValueFunction(
             fixture[attribute],
             meta.options
           );
-        } else if (fixture.hasOwnProperty(attributeKey)) {
+        } else if (
+          Object.prototype.hasOwnProperty.call(fixture, attributeKey)
+        ) {
           attributes[attributeKey] = transformValueFunction(
             fixture[attributeKey],
             meta.options
@@ -213,7 +214,7 @@ export default class FixtureConverter {
     let relationships = {};
 
     this.store.modelFor(modelName).eachRelationship((key, relationship) => {
-      if (fixture.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(fixture, key)) {
         if (relationship.kind === 'belongsTo') {
           this.extractBelongsTo(
             fixture,

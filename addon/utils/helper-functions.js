@@ -45,7 +45,7 @@ export function param(obj, prefix) {
   let str = [],
     p;
   for (p in obj) {
-    if (obj.hasOwnProperty(p)) {
+    if (Object.prototype.hasOwnProperty.call(obj, p)) {
       var k = prefix ? prefix + '[' + p + ']' : p,
         v = obj[p];
       str.push(
@@ -119,7 +119,7 @@ export function mergeDeep(target, ...sources) {
 
   if (isObject(target) && isObject(source)) {
     for (const key in source) {
-      if (source.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
         if (isObject(source[key])) {
           if (!target[key]) {
             assign(target, { [key]: {} });

@@ -44,6 +44,7 @@ module.exports = {
         'addon-test-support/**',
         'app/**',
         'tests/dummy/app/**',
+        'tests/dummy/config/scenarios.js',
       ],
       parserOptions: {
         sourceType: 'script',

@@ -62,7 +62,10 @@ export default class {
   }
 
   fails(opts = {}) {
-    let convertErrors = opts.hasOwnProperty('convertErrors')
+    let convertErrors = Object.prototype.hasOwnProperty.call(
+        opts,
+        'convertErrors'
+      )
         ? opts.convertErrors
         : true,
       status = opts.status || 500,

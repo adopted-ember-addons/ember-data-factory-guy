@@ -1,5 +1,8 @@
-window.deprecationWorkflow = window.deprecationWorkflow || {};
-window.deprecationWorkflow.config = {
+'use strict';
+/* global self */
+
+self.deprecationWorkflow = self.deprecationWorkflow || {};
+self.deprecationWorkflow.config = {
   workflow: [
     { handler: 'silence', matchId: 'ember-inflector.globals' },
     { handler: 'silence', matchId: 'ember-env.old-extend-prototypes' },
