@@ -7,7 +7,7 @@ on:
   pull_request:
 
 env:
-  NODE_VERSION: '8.x'
+  NODE_VERSION: '12.x'
 
 jobs:
   lint:
