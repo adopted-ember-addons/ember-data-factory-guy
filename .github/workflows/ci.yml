@@ -143,7 +143,7 @@ jobs:
     - name: Test
       env:
         EMBER_TRY_SCENARIO: ${{ matrix.ember-try-scenario }}
-      run: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO
+      run: yarn ember try:one $EMBER_TRY_SCENARIO
 
     - name: Test
       run: yarn test:ember --launch ${{ matrix.browser }}
