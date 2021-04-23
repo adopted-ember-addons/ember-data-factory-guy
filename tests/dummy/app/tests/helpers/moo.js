@@ -1,1 +1,1 @@
-export const sound = "mooooooooo";
+export const sound = 'mooooooooo';

@@ -23,6 +23,4 @@ export default class DRFFixtureBuilder extends JSONFixtureBuilder {
       return super.convertResponseErrors(errors, status);
     }
   }
-
 }
-

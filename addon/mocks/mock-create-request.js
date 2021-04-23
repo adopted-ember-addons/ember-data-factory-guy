@@ -4,9 +4,10 @@ import MockStoreRequest from './mock-store-request';
 import AttributeMatcher from './attribute-matcher';
 import { assign } from '@ember/polyfills';
 
-export default class MockCreateRequest extends AttributeMatcher(MockStoreRequest) {
-
-  constructor(modelName, {model} = {}) {
+export default class MockCreateRequest extends AttributeMatcher(
+  MockStoreRequest
+) {
+  constructor(modelName, { model } = {}) {
     super(modelName, 'createRecord');
     this.model = model;
     this.returnArgs = {};
@@ -15,7 +16,7 @@ export default class MockCreateRequest extends AttributeMatcher(MockStoreRequest
   }
 
   getType() {
-    return "POST";
+    return 'POST';
   }
 
   /**
@@ -50,9 +51,11 @@ export default class MockCreateRequest extends AttributeMatcher(MockStoreRequest
    */
   getResponse() {
     let args = assign({}, this.matchArgs, this.returnArgs),
-        json = assign({}, args, {id: this.modelId()});
-    this.responseJson = this.fixtureBuilder.convertForBuild(this.modelName, json);
+      json = assign({}, args, { id: this.modelId() });
+    this.responseJson = this.fixtureBuilder.convertForBuild(
+      this.modelName,
+      json
+    );
     return super.getResponse();
   }
-
 }

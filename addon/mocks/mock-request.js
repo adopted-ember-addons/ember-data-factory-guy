@@ -5,13 +5,12 @@ import {
   isEquivalent,
   isPartOf,
   param,
-  toParams
+  toParams,
 } from '../utils/helper-functions';
 import FactoryGuy from '../factory-guy';
 import RequestManager from './request-manager';
 
 export default class {
-
   constructor() {
     this.status = 200;
     this.responseHeaders = {};
@@ -35,21 +34,18 @@ export default class {
 
   /**
    */
-  get() {
-  }
+  get() {}
 
   /**
    * @returns {String}
    */
-  getUrl() {
-  }
+  getUrl() {}
 
   getType() {
     return 'GET';
   }
 
-  returns(/*options = {}*/) {
-  }
+  returns(/*options = {}*/) {}
 
   addResponseHeaders(headers) {
     assign(this.responseHeaders, headers);
@@ -66,17 +62,28 @@ export default class {
   }
 
   fails(opts = {}) {
-    let convertErrors = opts.hasOwnProperty('convertErrors') ? opts.convertErrors : true,
-        status        = opts.status || 500,
-        response      = opts.response || null;
-    assert(`[ember-data-factory-guy] 'fails' method status code must be 3XX, 4XX or 5XX,
-        you are using: ${status}`, this.isErrorStatus(status));
+    let convertErrors = Object.prototype.hasOwnProperty.call(
+        opts,
+        'convertErrors'
+      )
+        ? opts.convertErrors
+        : true,
+      status = opts.status || 500,
+      response = opts.response || null;
+    assert(
+      `[ember-data-factory-guy] 'fails' method status code must be 3XX, 4XX or 5XX,
+        you are using: ${status}`,
+      this.isErrorStatus(status)
+    );
 
     this.status = status;
     this.errorResponse = response;
 
     if (response && convertErrors) {
-      let errors = this.fixtureBuilder.convertResponseErrors(response, this.status);
+      let errors = this.fixtureBuilder.convertResponseErrors(
+        response,
+        this.status
+      );
       this.errorResponse = errors;
     }
 
@@ -86,7 +93,9 @@ export default class {
   // for a fails response, the response you might have set ( like a payload ) will
   // be discarded in favour of the error response that was built for you in fails method
   actualResponseJson() {
-    let responseText = this.isErrorStatus(this.status) ? this.errorResponse : this.responseJson;
+    let responseText = this.isErrorStatus(this.status)
+      ? this.errorResponse
+      : this.responseJson;
     return JSON.stringify(responseText);
   }
 
@@ -94,17 +103,17 @@ export default class {
     return {
       responseText: this.actualResponseJson(),
       headers: this.responseHeaders,
-      status: this.status
+      status: this.status,
     };
   }
 
   logInfo() {
     if (FactoryGuy.logLevel > 0) {
-      const json   = JSON.parse(this.getResponse().responseText),
-            name   = this.constructor.name.replace('Request', ''),
-            type   = this.getType(),
-            status = `[${this.status}]`,
-            url    = this.getUrl();
+      const json = JSON.parse(this.getResponse().responseText),
+        name = this.constructor.name.replace('Request', ''),
+        type = this.getType(),
+        status = `[${this.status}]`,
+        url = this.getUrl();
 
       let fullUrl = url;
       if (!isEmptyObject(this.queryParams)) {
@@ -133,10 +142,16 @@ export default class {
 
   paramsMatch(request) {
     if (!isEmptyObject(this.someQueryParams)) {
-      return isPartOf(toParams(request.queryParams), toParams(this.someQueryParams));
+      return isPartOf(
+        toParams(request.queryParams),
+        toParams(this.someQueryParams)
+      );
     }
     if (!isEmptyObject(this.queryParams)) {
-      return isEquivalent(toParams(request.queryParams), toParams(this.queryParams));
+      return isEquivalent(
+        toParams(request.queryParams),
+        toParams(this.queryParams)
+      );
     }
     return true;
   }

@@ -35,6 +35,4 @@ export default class ActiveModelFixtureBuilder extends RESTFixtureBuilder {
   normalize(modelName, payload) {
     return { [modelName]: payload };
   }
-
 }
-

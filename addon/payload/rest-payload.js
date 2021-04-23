@@ -3,16 +3,17 @@ import { A } from '@ember/array';
 import BasePayload from './base-payload';
 
 export default class extends BasePayload {
-
   constructor(modelName, json, converter) {
     super(modelName, json, converter);
     this.payloadKey = converter.getPayloadKey(modelName);
-    this.addProxyMethods(['includeKeys','getInclude']);
+    this.addProxyMethods(['includeKeys', 'getInclude']);
   }
 
   includeKeys() {
-    let keys = A(Object.keys(this.json)).reject(key => this.payloadKey === key);
-    return A(keys).reject(key=> A(this.proxyMethods).includes(key)) || [];
+    let keys = A(Object.keys(this.json)).reject(
+      (key) => this.payloadKey === key
+    );
+    return A(keys).reject((key) => A(this.proxyMethods).includes(key)) || [];
   }
 
   getInclude(modelType) {

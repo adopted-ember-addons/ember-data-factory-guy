@@ -20,11 +20,14 @@ yarn-error.log
 
 stats/
 /.sass-cache
+/.eslintcache
 /connect.lock
 /coverage/*
 /libpeerconnection.log
 npm-debug.log
 testem.log
+.vscode
+jsconfig.json
 
 /factory_guy_presentation
 /factory_guy_presents

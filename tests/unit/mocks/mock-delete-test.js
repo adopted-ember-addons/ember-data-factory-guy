@@ -7,50 +7,52 @@ import sinon from 'sinon';
 
 const serializerType = '-json-api';
 
-module('MockDelete', function(hooks) {
+module('MockDelete', function (hooks) {
   setupTest(hooks);
   inlineSetup(hooks, serializerType);
 
-  test("mockId", function(assert) {
+  test('mockId', function (assert) {
     let user = make('user'),
-        mock = mockDelete(user);
+      mock = mockDelete(user);
 
-    assert.deepEqual(mock.mockId, {type: 'DELETE', url: `/users/${user.id}`, num: 0});
+    assert.deepEqual(mock.mockId, {
+      type: 'DELETE',
+      url: `/users/${user.id}`,
+      num: 0,
+    });
   });
 
-  test("with incorrect parameters", function(assert) {
-
-    assert.throws(function() {
+  test('with incorrect parameters', function (assert) {
+    assert.throws(function () {
       mockDelete();
-    }, "missing modelName");
-
+    }, 'missing modelName');
   });
 
-  test("logging response", async function(assert) {
-    FactoryGuy.settings({logLevel: 1});
+  test('logging response', async function (assert) {
+    FactoryGuy.settings({ logLevel: 1 });
 
     let profile = make('profile');
     const consoleStub = sinon.spy(console, 'log'),
-          mock        = mockDelete(profile);
+      mock = mockDelete(profile);
 
     await run(async () => profile.destroyRecord());
 
-    let response     = JSON.parse(mock.actualResponseJson()),
-        expectedArgs = [
-          "[factory-guy]",
-          "MockDelete",
-          "DELETE",
-          "[200]",
-          `/profiles/1`,
-          response
-        ];
+    let response = JSON.parse(mock.actualResponseJson()),
+      expectedArgs = [
+        '[factory-guy]',
+        'MockDelete',
+        'DELETE',
+        '[200]',
+        `/profiles/1`,
+        response,
+      ];
 
     assert.deepEqual(consoleStub.getCall(0).args, expectedArgs);
 
     console.log.restore();
   });
 
-  test("#getUrl uses urlForDeleteRecord if it is set on the adapter", function(assert) {
+  test('#getUrl uses urlForDeleteRecord if it is set on the adapter', function (assert) {
     let mock1 = mockDelete('user', '2');
     assert.equal(mock1.getUrl(), '/users/2');
 
@@ -61,20 +63,24 @@ module('MockDelete', function(hooks) {
     adapter.urlForDeleteRecord.restore();
   });
 
-  test("#makeFakeSnapshot", function(assert) {
+  test('#makeFakeSnapshot', function (assert) {
     let user = make('user');
 
     let tests = [
       [[user], user, 'has record when model in arguments'],
       [['user', user.id], user, 'has record when modelName, id in arguments'],
-      [['user'], undefined, 'does not have record when only modelName in arguments']
+      [
+        ['user'],
+        undefined,
+        'does not have record when only modelName in arguments',
+      ],
     ];
 
     for (let test of tests) {
       let [args, expectedRecord, message] = test;
-      let mock     = mockDelete(...args),
-          snapshot = mock.makeFakeSnapshot(),
-          {record} = snapshot;
+      let mock = mockDelete(...args),
+        snapshot = mock.makeFakeSnapshot(),
+        { record } = snapshot;
       assert.deepEqual(record, expectedRecord, message);
     }
   });

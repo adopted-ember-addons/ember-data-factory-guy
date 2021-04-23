@@ -25,7 +25,6 @@
  *  belongs to [GET /users]
  */
 export default class RequestWrapper {
-
   constructor() {
     this.index = 0;
     this.handlers = [];
@@ -43,8 +42,10 @@ export default class RequestWrapper {
    */
   generateRequestHandler() {
     let requestHandler = this.handleRequest.bind(this),
-        methods        = ['getHandlers', 'addHandler', 'removeHandler'];
-    methods.forEach(method => requestHandler[method] = this[method].bind(this));
+      methods = ['getHandlers', 'addHandler', 'removeHandler'];
+    methods.forEach(
+      (method) => (requestHandler[method] = this[method].bind(this))
+    );
     return requestHandler;
   }
 
@@ -53,7 +54,9 @@ export default class RequestWrapper {
    *
    */
   getHandlers() {
-    return this.handlers.sort((a, b) => b.hasQueryParams() - a.hasQueryParams());
+    return this.handlers.sort(
+      (a, b) => b.hasQueryParams() - a.hasQueryParams()
+    );
   }
 
   addHandler(handler) {
@@ -62,7 +65,7 @@ export default class RequestWrapper {
   }
 
   removeHandler(handler) {
-    this.handlers = this.handlers.filter(h => h.mockId !== handler.mockId);
+    this.handlers = this.handlers.filter((h) => h.mockId !== handler.mockId);
   }
 
   /**
@@ -91,10 +94,12 @@ export default class RequestWrapper {
    * @returns {[null,null,null]}
    */
   handleRequest(request) {
-    let handler = this.getHandlers(request).find(handler => handler.matches(request));
+    let handler = this.getHandlers(request).find((handler) =>
+      handler.matches(request)
+    );
     if (handler) {
-      let {status, headers, responseText} = handler.getResponse();
-      return [status, headers, responseText]
+      let { status, headers, responseText } = handler.getResponse();
+      return [status, headers, responseText];
     }
   }
 }

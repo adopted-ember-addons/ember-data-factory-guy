@@ -2,66 +2,70 @@ import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define('user', {
   sequences: {
-    name: (num) => `User${num}`
+    name: (num) => `User${num}`,
   },
   // default values for 'user' attributes
   default: {
     style: 'normal',
-    name: FactoryGuy.generate('name')
+    name: FactoryGuy.generate('name'),
   },
   // named 'user' type with custom attributes
   admin: {
     name: 'Admin',
-    style: 'super'
+    style: 'super',
   },
   // 'bob' user with it's custom attributes
   bob: {
     name: 'Bob',
-    style: 'boblike'
+    style: 'boblike',
   },
   // can accomplish this with traits ( see 'with_projects' trait below )
   user_with_projects: {
-    projects: FactoryGuy.hasMany('project', 2)
+    projects: FactoryGuy.hasMany('project', 2),
   },
   traits: {
     silly: {
-      style: 'silly'
+      style: 'silly',
     },
     whacky: {
-      style: 'whacky'
+      style: 'whacky',
     },
     boblike: {
       name: 'Bob',
-      style: 'boblike'
+      style: 'boblike',
     },
     adminlike: {
       name: 'Admin',
-      style: 'super'
+      style: 'super',
     },
     with_company: {
-      company: {}
+      company: {},
     },
     with_projects: {
-      projects: FactoryGuy.hasMany('project', 2)
+      projects: FactoryGuy.hasMany('project', 2),
     },
     with_projects_splat: {
-      projects: FactoryGuy.hasMany('project', 'big', 'small', {title: "Cool Project"})
+      projects: FactoryGuy.hasMany('project', 'big', 'small', {
+        title: 'Cool Project',
+      }),
     },
     with_hats: {
-      hats: FactoryGuy.hasMany('big-hat', 2)
+      hats: FactoryGuy.hasMany('big-hat', 2),
     },
     with_hats_belonging_to_user: {
-      hats: FactoryGuy.hasMany('big-hat', 2, 'belonging_to_user')
+      hats: FactoryGuy.hasMany('big-hat', 2, 'belonging_to_user'),
     },
     with_hats_belonging_to_outfit: {
-      hats: FactoryGuy.hasMany('big-hat', 2, 'belonging_to_outfit')
+      hats: FactoryGuy.hasMany('big-hat', 2, 'belonging_to_outfit'),
     },
     companyLink: (f) => {
-      f.links = Object.assign(f.links, {company: `/users/${f.id}/company`});
+      f.links = Object.assign(f.links, { company: `/users/${f.id}/company` });
     },
     propertiesLink: (f) => {
-      f.links = Object.assign({properties: `/users/${f.id}/properties`}, f.links);
-    }
-  }
+      f.links = Object.assign(
+        { properties: `/users/${f.id}/properties` },
+        f.links
+      );
+    },
+  },
 });
-

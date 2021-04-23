@@ -7,7 +7,7 @@ on:
   pull_request:
 
 env:
-  NODE_VERSION: '8.x'
+  NODE_VERSION: '14.x'
 
 jobs:
   lint:
@@ -85,9 +85,104 @@ jobs:
           ${{ runner.os }}-${{ matrix.node-version }}-
 
     - name: Install Dependencies
-      run: yarn install --frozen-lockfile --ignore-engines
+      run: yarn install --frozen-lockfile
       if: |
         steps.cache-dependencies.outputs.cache-hit != 'true'
 
+  try-scenarios:
+    name: Tests - ${{ matrix.ember-try-scenario }}
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.allow-failure }}
+    needs: test
+
+    strategy:
+      fail-fast: true
+      matrix:
+        ember-try-scenario: [
+          ember-lts-3.16,
+          ember-lts-3.20,
+          ember-release,
+          ember-beta,
+          ember-default-with-jquery,
+          ember-classic
+        ]
+        allow-failure: [false]
+        include:
+          - ember-try-scenario: ember-canary
+            allow-failure: true
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+
+    - uses: actions/setup-node@v2-beta
+      with:
+        node-version: '${{ env.NODE_VERSION }}'
+
+    - name: Get package manager's global cache path
+      id: global-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+
+    - name: Cache package manager's global cache and node_modules
+      id: cache-dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ${{ steps.global-cache-dir-path.outputs.dir }}
+          node_modules
+        key: ${{ runner.os }}-${{ matrix.node-version }}-${{
+          hashFiles('**/yarn.lock'
+          ) }}
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.node-version }}-
+    - name: Install Dependencies
+      run: yarn install --frozen-lockfile
+      if: |
+        steps.cache-dependencies.outputs.cache-hit != 'true'
     - name: Test
-      run: yarn test --launch ${{ matrix.browser }}
+      env:
+        EMBER_TRY_SCENARIO: ${{ matrix.ember-try-scenario }}
+      run: yarn ember try:one $EMBER_TRY_SCENARIO
+
+    - name: Test
+      run: yarn test:ember --launch ${{ matrix.browser }}
+
+  floating-dependencies:
+    name: Floating Dependencies
+    runs-on: ${{ matrix.os }}
+    needs: lint
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        browser: [chrome]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+
+    - uses: actions/setup-node@v2-beta
+      with:
+        node-version: '${{ env.NODE_VERSION }}'
+
+    - name: Get package manager's global cache path
+      id: global-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+
+    - name: Cache package manager's global cache and node_modules
+      id: cache-dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ${{ steps.global-cache-dir-path.outputs.dir }}
+          node_modules
+        key: ${{ runner.os }}-${{ matrix.node-version }}-floating-deps
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.node-version }}-
+    - name: Install Dependencies
+      run: yarn install --no-lockfile --non-interactive
+
+    - name: Test
+      run: yarn test:ember --launch ${{ matrix.browser }}

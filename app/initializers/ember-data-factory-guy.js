@@ -4,13 +4,14 @@ export default {
   name: 'ember-data-factory-guy',
   after: 'ember-data',
 
-  initialize: function(application) {
+  initialize: function (application) {
     if (arguments.length > 1) {
       application = arguments[1];
     }
     let container = application.__container__;
-    if (container) {  // in fastboot container is null
+    if (container) {
+      // in fastboot container is null
       manualSetup(container);
     }
-  }
+  },
 };

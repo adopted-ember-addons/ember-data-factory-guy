@@ -1,19 +1,20 @@
-import DS from 'ember-data';
+import RESTSerializer, {
+  EmbeddedRecordsMixin,
+} from '@ember-data/serializer/rest';
 
-export default DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
+export default RESTSerializer.extend(EmbeddedRecordsMixin, {
   attrs: {
     salary: {
       serialize: true,
-      deserialize: 'records'
+      deserialize: 'records',
     },
     reviews: {
       serialize: true,
-      deserialize: 'records'
-    }
+      deserialize: 'records',
+    },
   },
 
   keyForAttribute() {
     return this._super(...arguments);
-  }
-  
+  },
 });

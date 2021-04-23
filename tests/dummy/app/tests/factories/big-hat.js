@@ -4,6 +4,6 @@ import './hat';
 FactoryGuy.define('big-hat', {
   extends: 'hat',
   default: {
-    type: 'BigHat'
-  }
+    type: 'BigHat',
+  },
 });

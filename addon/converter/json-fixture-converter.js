@@ -10,7 +10,6 @@ import FixtureConverter from './fixture-converter';
  @constructor
  */
 export default class JSONFixtureConverter extends FixtureConverter {
-
   constructor(store, options) {
     super(store, options);
     this.defaultKeyTransformFn = underscore;
@@ -22,8 +21,7 @@ export default class JSONFixtureConverter extends FixtureConverter {
    *
    * @param moreJson
    */
-  add(/*moreJson*/) {
-  }
+  add(/*moreJson*/) {}
 
   /**
    * There is no payload key for JSON Serializer
@@ -41,8 +39,7 @@ export default class JSONFixtureConverter extends FixtureConverter {
    *
    * @param payload
    */
-  addIncludedArray(/*payload*/) {
-  }
+  addIncludedArray(/*payload*/) {}
 
   /**
    Convert single record
@@ -51,9 +48,9 @@ export default class JSONFixtureConverter extends FixtureConverter {
    @param {Object} fixture
    */
   convertSingle(modelName, fixture) {
-    let data          = {},
-        attributes    = this.extractAttributes(modelName, fixture),
-        relationships = this.extractRelationships(modelName, fixture);
+    let data = {},
+      attributes = this.extractAttributes(modelName, fixture),
+      relationships = this.extractRelationships(modelName, fixture);
 
     Object.keys(attributes).forEach((key) => {
       data[key] = attributes[key];
@@ -89,14 +86,14 @@ export default class JSONFixtureConverter extends FixtureConverter {
     }
     if (typeOf(record) === 'object') {
       if (relationship.options.polymorphic) {
-        return {type: dasherize(record.type), id: record.id};
+        return { type: dasherize(record.type), id: record.id };
       } else {
         return record.id;
       }
     }
     // it's a model instance
     if (relationship.options.polymorphic) {
-      return {type: dasherize(record.constructor.modelName), id: record.id};
+      return { type: dasherize(record.constructor.modelName), id: record.id };
     }
     return record.id;
   }
@@ -132,15 +129,12 @@ export default class JSONFixtureConverter extends FixtureConverter {
    @param {Object} data
    @param {Object} includeObject
    */
-  addToIncluded(/*data, modelKey*/) {
-  }
+  addToIncluded(/*data, modelKey*/) {}
 
   /**
    The JSONSerializer does not support sideloading records
 
    @param proxy json payload proxy
    */
-  addToIncludedFromProxy(/*proxy*/) {
-  }
-
+  addToIncludedFromProxy(/*proxy*/) {}
 }

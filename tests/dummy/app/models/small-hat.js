@@ -1,6 +1,6 @@
 import Hat from './hat';
-import { hasMany } from 'ember-data/relationships';
+import { hasMany } from '@ember-data/model';
 
 export default Hat.extend({
-  materials: hasMany('material', {polymorphic: true})
+  materials: hasMany('material', { polymorphic: true }),
 });
