@@ -97,6 +97,7 @@ module('MockQueryRecord', function (hooks) {
   });
 
   test('using fails makes the request fail', async function (assert) {
+    assert.expect(1);
     mockQueryRecord('user').fails();
     await FactoryGuy.store.queryRecord('user', {}).catch(() => {
       assert.ok(true);
@@ -111,6 +112,7 @@ module('MockQueryRecord', function (hooks) {
   });
 
   test('#getUrl uses urlForQueryRecord if it is set on the adapter', async function (assert) {
+    assert.expect(6);
     let queryParams = { zip: 'it' },
       adapter = FactoryGuy.store.adapterFor('user'),
       user = make('user');
@@ -130,6 +132,7 @@ module('MockQueryRecord', function (hooks) {
   });
 
   test('#getUrl does not care if urlForQueryRecord modifies queryParams', async function (assert) {
+    assert.expect(5);
     let queryParams = { current: true },
       adapter = FactoryGuy.store.adapterFor('user'),
       user = make('user');

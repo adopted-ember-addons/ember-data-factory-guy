@@ -57,6 +57,7 @@ module(serializer, function (hooks) {
     // drf serializer takes the previous and next and extracts the page number
     // so this needed it's own test
     test('with proxy payload', function (assert) {
+      assert.expect(1);
       run(() => {
         let done = assert.async();
         let json = buildList('profile', 2).add({

@@ -24,15 +24,15 @@ module(`Unit | Model | ${modelType}`, function (hooks) {
   });
 
   test('sample async unit test with async/await', async function (assert) {
-    run(async () => {
-      let mock = mockFindRecord('user');
-      let userId = mock.get('id');
-      let user = await FactoryGuy.store.findRecord('user', userId);
-      assert.equal(user.get('name'), mock.get('name'));
-    });
+    assert.expect(1);
+    let mock = mockFindRecord('user');
+    let userId = mock.get('id');
+    let user = await FactoryGuy.store.findRecord('user', userId);
+    assert.equal(user.get('name'), mock.get('name'));
   });
 
   test('sample async unit test with assert.async()', function (assert) {
+    assert.expect(1);
     let done = assert.async();
     run(() => {
       let mock = mockFindRecord('user');

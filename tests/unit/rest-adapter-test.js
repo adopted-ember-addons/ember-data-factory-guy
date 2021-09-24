@@ -40,6 +40,7 @@ module(serializer, function (hooks) {
 
   module(`#mockFindRecord custom`, function () {
     test('when returns json (plain) is used', function (assert) {
+      assert.expect(2);
       run(() => {
         let done = assert.async(),
           json = { profile: { id: 1, description: 'the desc' } },
@@ -59,6 +60,7 @@ module(serializer, function (hooks) {
 
   module(`#mockCreate custom`, function () {
     test('match belongsTo with custom payloadKeyFromModelName function', function (assert) {
+      assert.expect(1);
       run(() => {
         let done = assert.async();
 
@@ -76,6 +78,7 @@ module(serializer, function (hooks) {
     });
 
     test('match hasMany with custom payloadKeyFromModelName function', function (assert) {
+      assert.expect(1);
       run(() => {
         let done = assert.async();
 

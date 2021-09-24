@@ -1,7 +1,7 @@
 import Store from '@ember-data/store';
 import { run } from '@ember/runloop';
 import { A } from '@ember/array';
-import { module, test } from 'qunit';
+import { module, test, skip } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
   attributesFor,
@@ -56,10 +56,11 @@ module('FactoryGuy', function (hooks) {
 
   test('exposes buildList method which is shortcut for FactoryGuy.buildList', function (assert) {
     let userList = buildList('user', 2);
-    assert.ok(userList.data.length === 2);
+    assert.strictEqual(userList.data.length, 2);
   });
 
   test('#resetDefinitions resets the model definition', function (assert) {
+    assert.expect(33);
     run(function () {
       let project = make('project');
       make('user', { projects: [project] });
@@ -164,13 +165,16 @@ module('FactoryGuy', function (hooks) {
   module('FactoryGuy#hasMany', function (hooks) {
     inlineSetup(hooks, '-rest');
 
-    //test("with model and buildType 'make'", function(assert) {
-    //  let hasMany    = FactoryGuy.hasMany('employee', 1),
-    //      json       = hasMany({}, 'make'),
-    //      [employee] = json;
-    //
-    //  assert.deepEqual(employee.name, {firstName: 'Tyrion', lastName: 'Lannister'});
-    //});
+    skip("with model and buildType 'make'", function (assert) {
+      let hasMany = FactoryGuy.hasMany('employee', 1),
+        json = hasMany({}, 'make'),
+        [employee] = json;
+
+      assert.deepEqual(employee.name, {
+        firstName: 'Tyrion',
+        lastName: 'Lannister',
+      });
+    });
 
     test("with model with model fragment and buildType 'make'", function (assert) {
       let hasMany = FactoryGuy.hasMany('employee', 1),
@@ -268,6 +272,7 @@ module('FactoryGuy', function (hooks) {
     });
 
     test('causes an assertion error when a trait is not found', function (assert) {
+      assert.expect(1);
       try {
         build('user', 'non_existent_trait');
       } catch (error) {
@@ -336,10 +341,10 @@ module('FactoryGuy', function (hooks) {
         'with_bat_man'
       );
       assert.equal(profiles.get().length, 3);
-      assert.ok(profiles.get(0).description === 'goofy');
-      assert.ok(profiles.get(1).company === 1);
-      assert.ok(profiles.get(1).description === 'Noodles');
-      assert.ok(profiles.get(2).superHero === 1);
+      assert.strictEqual(profiles.get(0).description, 'goofy');
+      assert.strictEqual(profiles.get(0).description, 'goofy');
+      assert.strictEqual(profiles.get(1).description, 'Noodles');
+      assert.strictEqual(profiles.get(2).superHero, 1);
     });
 
     test('with a number and extra options', function (assert) {
@@ -468,10 +473,16 @@ module('FactoryGuy', function (hooks) {
         'with_bat_man'
       );
       assert.equal(profiles.length, 3);
-      assert.ok(A(profiles).objectAt(0).get('description') === 'goofy');
-      assert.ok(A(profiles).objectAt(1).get('company.name') === 'Silly corp');
-      assert.ok(A(profiles).objectAt(1).get('description') === 'Noodles');
-      assert.ok(A(profiles).objectAt(2).get('superHero.name') === 'BatMan');
+      assert.strictEqual(A(profiles).objectAt(0).get('description'), 'goofy');
+      assert.strictEqual(
+        A(profiles).objectAt(1).get('company.name'),
+        'Silly corp'
+      );
+      assert.strictEqual(A(profiles).objectAt(1).get('description'), 'Noodles');
+      assert.strictEqual(
+        A(profiles).objectAt(2).get('superHero.name'),
+        'BatMan'
+      );
       assert.equal(
         FactoryGuy.store.peekAll('profile').get('content').length,
         3
