@@ -13,6 +13,7 @@ module('Unit | Helper Functions', function (hooks) {
   setupTest(hooks);
 
   test('#paramsFromRequestBody', function (assert) {
+    assert.expect(3);
     const data = { a: '1', b: 'l d r' };
 
     let tests = [
@@ -31,6 +32,7 @@ module('Unit | Helper Functions', function (hooks) {
   });
 
   test('#isEmptyObject', function (assert) {
+    assert.expect(5);
     let tests = [
       [null, true, 'null'],
       [undefined, true, 'undefined'],
@@ -52,12 +54,12 @@ module('Unit | Helper Functions', function (hooks) {
   test('#isEquivalent with numbers', function (assert) {
     assert.ok(isEquivalent(1, 1), 'Equivalent numbers should return true');
 
-    assert.ok(
-      !isEquivalent(1, 2),
+    assert.notOk(
+      isEquivalent(1, 2),
       'Non-equivalent numbers should return false'
     );
-    assert.ok(
-      !isEquivalent(1, '1'),
+    assert.notOk(
+      isEquivalent(1, '1'),
       'Non-equivalent values should return false'
     );
   });
@@ -68,8 +70,8 @@ module('Unit | Helper Functions', function (hooks) {
       'Equivalent strings should return true'
     );
 
-    assert.ok(
-      !isEquivalent(zoey.name, 'Tomster'),
+    assert.notOk(
+      isEquivalent(zoey.name, 'Tomster'),
       'Non-equivalent strings should return false'
     );
   });
@@ -78,9 +80,9 @@ module('Unit | Helper Functions', function (hooks) {
     assert.ok(isEquivalent(true, true), 'true === true');
     assert.ok(isEquivalent(false, false), 'false === false');
 
-    assert.ok(!isEquivalent(true, false), 'true !== false');
-    assert.ok(!isEquivalent(true, 1), 'true !== 1');
-    assert.ok(!isEquivalent(true, 'true'), 'true !== 1');
+    assert.notOk(isEquivalent(true, false), 'true !== false');
+    assert.notOk(isEquivalent(true, 1), 'true !== 1');
+    assert.notOk(isEquivalent(true, 'true'), 'true !== 1');
   });
 
   test('#isEquivalent with arrays', function (assert) {
@@ -89,12 +91,12 @@ module('Unit | Helper Functions', function (hooks) {
       'arrays with equivalent contents in the same order return true'
     );
 
-    assert.ok(
-      !isEquivalent(tomster.friends, zoey.friends),
+    assert.notOk(
+      isEquivalent(tomster.friends, zoey.friends),
       'arrays with non-equivalent contents return false'
     );
-    assert.ok(
-      !isEquivalent(tomster.friends, ['Zoey', 'Tom', 'Yahuda']),
+    assert.notOk(
+      isEquivalent(tomster.friends, ['Zoey', 'Tom', 'Yahuda']),
       'arrays with equivalent contents but in a different order return false'
     );
 
@@ -103,8 +105,8 @@ module('Unit | Helper Functions', function (hooks) {
       'matches equivalence on deeply nested arrays'
     );
 
-    assert.ok(
-      !isEquivalent([1, ['a', [true]]], [1, ['b', [true]]]),
+    assert.notOk(
+      isEquivalent([1, ['a', [true]]], [1, ['b', [true]]]),
       'filters equivalence on deeply nested arrays'
     );
   });
@@ -118,13 +120,13 @@ module('Unit | Helper Functions', function (hooks) {
       'returns true if object key-value pairs are equivalent'
     );
 
-    assert.ok(
-      !isEquivalent(tomster, zoey),
+    assert.notOk(
+      isEquivalent(tomster, zoey),
       'returns false if object key-value pairs are not equivalent'
     );
 
-    assert.ok(
-      !isEquivalent(tomster, {
+    assert.notOk(
+      isEquivalent(tomster, {
         name: 'Tomster',
         friends: ['Zoey', 'Daniel', 'Tom'],
       }),
@@ -154,8 +156,8 @@ module('Unit | Helper Functions', function (hooks) {
       'returns true if object key-value pairs are equivalent'
     );
 
-    assert.ok(
-      !isEquivalent(nestedZoey, nestedTomster),
+    assert.notOk(
+      isEquivalent(nestedZoey, nestedTomster),
       'returns false if object key-value pairs are not equivalent'
     );
   });
@@ -183,6 +185,7 @@ module('Unit | Helper Functions', function (hooks) {
   });
 
   test('parseUrl', function (assert) {
+    assert.expect(8);
     let tests = [
       ['', ['', {}]],
       [null, ['', {}]],

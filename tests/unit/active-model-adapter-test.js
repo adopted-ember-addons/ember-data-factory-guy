@@ -49,7 +49,10 @@ module(serializer, function (hooks) {
 
       await run(async () => profile.save());
 
-      assert.ok(profile.get('camelCaseDescription') === customDescription);
+      assert.strictEqual(
+        profile.get('camelCaseDescription'),
+        customDescription
+      );
     });
   });
 

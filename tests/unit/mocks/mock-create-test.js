@@ -49,6 +49,7 @@ module('MockCreate', function (hooks) {
   });
 
   test('#singleUse', async function (assert) {
+    assert.expect(2);
     let user1 = build('user');
     let user2 = build('user');
 
@@ -57,17 +58,13 @@ module('MockCreate', function (hooks) {
       .singleUse();
     mockCreate('user').returns({ attrs: { id: user2.get('id') } });
 
-    run(async () => {
-      let model1 = FactoryGuy.store.createRecord('user', user1.get());
-      await model1.save();
-      assert.equal(model1.id, user1.get('id'));
-    });
+    let model1 = FactoryGuy.store.createRecord('user', user1.get());
+    await model1.save();
+    assert.equal(model1.id, user1.get('id'));
 
-    run(async () => {
-      let model2 = FactoryGuy.store.createRecord('user', user2.get());
-      await model2.save();
-      assert.equal(model2.id, user2.get('id'));
-    });
+    let model2 = FactoryGuy.store.createRecord('user', user2.get());
+    await model2.save();
+    assert.equal(model2.id, user2.get('id'));
   });
 
   test('#getUrl uses customized adapter#urlForCreateRecord', function (assert) {
@@ -82,6 +79,7 @@ module('MockCreate', function (hooks) {
   });
 
   test('snapshot has record and adapterOptions in adapter#urlForCreateRecord', async function (assert) {
+    assert.expect(2);
     mockCreate('user');
 
     let adapter = FactoryGuy.store.adapterFor('user'),
@@ -103,6 +101,7 @@ module('MockCreate', function (hooks) {
   });
 
   test('#makeFakeSnapshot', function (assert) {
+    assert.expect(2);
     let user = makeNew('user');
 
     let tests = [
