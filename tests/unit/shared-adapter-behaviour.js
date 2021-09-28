@@ -74,12 +74,15 @@ SharedBehavior.mockFindRecordCommonTests = function () {
   });
 
   test('returns id fails with 404 if record for id and model type not found in store', async function (assert) {
+    assert.expect(1);
     let profileId = 1;
     mockFindRecord('profile').returns({ id: profileId });
 
-    await FactoryGuy.store.findRecord('profile', profileId).catch((reason) => {
+    try {
+      await FactoryGuy.store.findRecord('profile', profileId);
+    } catch (reason) {
       assert.equal(reason.errors[0].status, '404');
-    });
+    }
   });
 
   //    test("returns model succeeds", async function(assert) {
