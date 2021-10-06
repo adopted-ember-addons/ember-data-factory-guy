@@ -3,6 +3,8 @@ import { entries } from '../utils/helper-functions';
 import { typeOf } from '@ember/utils';
 import { getOwner } from '@ember/application';
 import { camelize } from '@ember/string';
+import Fragment from 'ember-data-model-fragments/fragment';
+import FragmentArray from 'ember-data-model-fragments/array/fragment';
 
 /**
  Base class for converting the base fixture that factory guy creates to
@@ -185,6 +187,18 @@ export default class FixtureConverter {
         let attributeKey = transformKeyFunction(attribute),
           transformValueFunction = this.getTransformValueFunction(meta.type);
 
+        let attributeValueInFixture = fixture[attributeKey];
+
+        // If passed Fragments or FragmentArrays we must transform them to their serialized form before we can push them into the Store
+        if (
+          attributeValueInFixture instanceof Fragment ||
+          attributeValueInFixture instanceof FragmentArray
+        ) {
+          fixture[attributeKey] = this.normalizeModelFragments(
+            attributeValueInFixture
+          );
+        }
+
         if (Object.prototype.hasOwnProperty.call(fixture, attribute)) {
           attributes[attributeKey] = transformValueFunction(
             fixture[attribute],
@@ -201,6 +215,24 @@ export default class FixtureConverter {
       }
     });
     return attributes;
+  }
+
+  normalizeModelFragments(attributeValueInFixture) {
+    if (attributeValueInFixture instanceof Fragment) {
+      return this.store.normalize(
+        attributeValueInFixture.constructor.modelName,
+        attributeValueInFixture.serialize()
+      ).data.attributes;
+    }
+    if (attributeValueInFixture instanceof FragmentArray) {
+      return attributeValueInFixture
+        .serialize()
+        .map(
+          (item) =>
+            this.store.normalize(attributeValueInFixture.type, item).data
+              .attributes
+        );
+    }
   }
 
   /**
