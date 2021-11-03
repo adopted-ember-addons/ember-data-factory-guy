@@ -140,6 +140,10 @@ export default class {
     return this;
   }
 
+  hasSomeParams() {
+    return !isEmptyObject(this.someQueryParams);
+  }
+
   paramsMatch(request) {
     if (!isEmptyObject(this.someQueryParams)) {
       return isPartOf(
@@ -177,6 +181,10 @@ export default class {
     }
 
     return true;
+  }
+
+  hasMatch() {
+    return this.matchArgs != null;
   }
 
   // mockId holds the url for this mock request

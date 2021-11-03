@@ -13,7 +13,6 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(
     this.id = id;
     this.model = model;
     this.returnArgs = {};
-    this.matchArgs = {};
     this.setupHandler();
   }
 
