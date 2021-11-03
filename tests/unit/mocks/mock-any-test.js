@@ -188,6 +188,17 @@ module('MockAny', function (hooks) {
     );
   });
 
+  test('match the request body', async function (assert) {
+    const method = 'POST',
+      url = '/api/post-stuff',
+      whatsUp = { whats: 'up' };
+
+    const theMock = mock({ url, type: method }).match(whatsUp);
+
+    await fetchJSON({ url, params: whatsUp, method });
+    assert.equal(theMock.timesCalled, 1, 'the mock was called');
+  });
+
   test('match a function', async function (assert) {
     assert.expect(1);
     const method = 'POST',
