@@ -196,7 +196,10 @@ module('MockAny', function (hooks) {
     const theMock = mock({ url, type: method }).match(whatsUp);
 
     await fetchJSON({ url, params: whatsUp, method });
-    assert.equal(theMock.timesCalled, 1, 'the mock was called');
+    assert.equal(theMock.timesCalled, 1, 'exact match');
+
+    await fetchJSON({ url, params: { whats: 'up', foo: 'bar' }, method });
+    assert.equal(theMock.timesCalled, 2, 'partial match');
   });
 
   test('match a function', async function (assert) {

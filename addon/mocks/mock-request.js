@@ -161,7 +161,7 @@ export default class {
     if (isEmptyObject(matchParams)) {
       return true;
     }
-    return isEquivalent(toParams(requestBody), toParams(matchParams));
+    return isPartOf(toParams(requestBody), toParams(matchParams));
   }
 
   extraRequestMatches(request) {
