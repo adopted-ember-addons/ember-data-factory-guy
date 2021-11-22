@@ -2114,11 +2114,6 @@ describe('Admin View', function() {
   assert.equal(json.name, 'Daniel-san');
 ```
 
-### Releasing new versions
-1. npm version (patch|minor|major)
-2. npm publish
-3. git push --tags
-
 ### ChangeLog
   - [Release Notes](/releases)
 
