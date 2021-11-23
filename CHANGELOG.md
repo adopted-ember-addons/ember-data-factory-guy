@@ -1,12 +1,106 @@
 # Change Log
 
-## [Unreleased](https://github.com/adopted-ember-addons/ember-data-factory-guy/tree/HEAD)
+## v3.9.9 (2021-03-02)
 
-[Full Changelog](https://github.com/adopted-ember-addons/ember-data-factory-guy/compare/v2.12.2...HEAD)
+#### :bug: Bug Fix
+* [#435](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/435) Fix issue setting mock status not working. ([@arenoir](https://github.com/arenoir))
 
-**Closed issues:**
+#### :house: Internal
+* [#433](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/433) Migrate CI to use Github Actions ([@patocallaghan](https://github.com/patocallaghan))
 
-- SyntaxError: ember-data-factory-guy/scenario.js: Unexpected token \(6:21\) [\#278](https://github.com/adopted-ember-addons/ember-data-factory-guy/issues/278)
+#### Committers: 2
+- Aaron Renoir ([@arenoir](https://github.com/arenoir))
+- Pat O'Callaghan ([@patocallaghan](https://github.com/patocallaghan))
+
+
+## v3.9.8 (2020-10-04)
+
+#### :house: Internal
+* [#429](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/429) Bump pretender to 3.4.3 ([@jcardali](https://github.com/jcardali))
+* [#425](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/425) Change ownership to adopted-ember-addons ([@patocallaghan](https://github.com/patocallaghan))
+
+#### Committers: 2
+- Joe Cardali ([@jcardali](https://github.com/jcardali))
+- Pat O'Callaghan ([@patocallaghan](https://github.com/patocallaghan))
+
+
+## v3.9.7 (2020-05-28)
+
+#### :bug: Bug Fix
+* [#420](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/420) Set `isDevelopingAddOn = false` ([@f1sherman](https://github.com/f1sherman))
+
+#### Committers: 1
+- Brian John ([@f1sherman](https://github.com/f1sherman))
+
+
+## v3.9.6 (2020-05-07)
+
+#### :bug: Bug Fix
+* [#416](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/416) fix error when adapter modifies queryParams ([@BryanCrotaz](https://github.com/BryanCrotaz))
+
+#### :memo: Documentation
+* [#411](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/411) Highlight ability to use pretender's passthrough feature ([@Subtletree](https://github.com/Subtletree))
+
+#### Committers: 2
+- Bryan ([@BryanCrotaz](https://github.com/BryanCrotaz))
+- Ryan Scott ([@Subtletree](https://github.com/Subtletree))
+
+
+## v3.9.5 (2019-11-18)
+
+#### :bug: Bug Fix
+* [#410](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/410) Fix snapshot record for Get requests ([@cinkonaap](https://github.com/cinkonaap))
+
+#### Committers: 1
+- Marcin Horoszko ([@cinkonaap](https://github.com/cinkonaap))
+
+
+## v3.9.4 (2019-06-24)
+
+#### :bug: Bug Fix
+* [#397](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/397) Fix withSomeParams for GET requests ([@misterbyrne](https://github.com/misterbyrne))
+
+#### Committers: 1
+- Adam Byrne ([@misterbyrne](https://github.com/misterbyrne))
+
+
+## v3.9.3 (2019-06-21)
+
+#### :bug: Bug Fix
+* [#395](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/395) Fix .withParams for array parameters ([@misterbyrne](https://github.com/misterbyrne))
+* [#394](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/394) Fix relationship key transformation ([@misterbyrne](https://github.com/misterbyrne))
+
+#### Committers: 1
+- Adam Byrne ([@misterbyrne](https://github.com/misterbyrne))
+
+
+## v3.9.2 (2019-06-18)
+
+#### :bug: Bug Fix
+* [#392](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/392) Matching arrays in query params - Closes [#391](https://github.com/adopted-ember-addons/ember-data-factory-guy/issues/391) ([@ryedeer](https://github.com/ryedeer))
+
+#### Committers: 1
+- Oleg Bisyarin ([@ryedeer](https://github.com/ryedeer))
+
+
+## v3.9.1 (2019-06-04)
+
+#### :bug: Bug Fix
+* [#388](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/388) Update pretender version ([@herzzanu](https://github.com/herzzanu))
+
+#### Committers: 2
+- Claire ([@cdersky](https://github.com/cdersky))
+- Sabin Hertanu ([@herzzanu](https://github.com/herzzanu))
+
+
+## v3.1.1 (2018-04-29)
+
+#### :rocket: Enhancement
+* [#338](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/338) getPretender and setPretender functions as public exports ([@ryedeer](https://github.com/ryedeer))
+
+#### Committers: 2
+- Oleg Bisyarin ([@ryedeer](https://github.com/ryedeer))
+- Ryan Scott ([@Subtletree](https://github.com/Subtletree))
 
 ## [v2.12.2](https://github.com/adopted-ember-addons/ember-data-factory-guy/tree/v2.12.2) (2017-03-23)
 [Full Changelog](https://github.com/adopted-ember-addons/ember-data-factory-guy/compare/v2.12.1...v2.12.2)
