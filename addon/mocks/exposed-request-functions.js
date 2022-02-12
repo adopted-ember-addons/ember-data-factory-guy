@@ -1,5 +1,5 @@
 import { typeOf } from '@ember/utils';
-import { deprecate } from '@ember/application/deprecations';
+import { deprecate } from '@ember/debug';
 import { assert } from '@ember/debug';
 import Model from '@ember-data/model';
 import FactoryGuy from '../factory-guy';
