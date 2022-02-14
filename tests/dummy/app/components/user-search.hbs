@@ -1,0 +1,3 @@
+<div>Search For User:</div>
+<label>Username: <Input class="user-name" @type="textbox" @value={{@userName}} /></label>
+<button class="find-user" type="button" {{on "click" (fn @userSearch @userName)}}>Go</button>
