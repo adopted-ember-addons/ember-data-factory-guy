@@ -11,7 +11,6 @@ self.deprecationWorkflow.config = {
     },
     { handler: 'silence', matchId: 'ember-source.deprecation-without-for' },
     { handler: 'silence', matchId: 'ember-source.deprecation-without-since' },
-    { handler: 'silence', matchId: 'routing.transition-methods' },
     { handler: 'silence', matchId: 'this-property-fallback' },
   ],
 };
