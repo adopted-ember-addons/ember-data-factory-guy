@@ -10,5 +10,5 @@ Projects:
  {{/each}}
 </ul>
 
-<label>Project title{{input class="project-title" type="textbox" value=this.projectTitle}}</label>
+<label>Project titl<Input class="project-title" @type="textbox" @value={{this.projectTitle}} /></label>
 <button class="add-project" type="button" {{action 'addProject' user projectTitle}}>Add Project</button>
