@@ -1,0 +1,36 @@
+<div class="employee">
+  <h3>Employee</h3>
+  <p class="name">Name: {{@employee.name.firstName}} {{@employee.name.lastName}}</p>
+
+  <p class="titles">Titles:
+  {{#each @employee.titles as |title|}}
+    {{title}}<br>
+  {{/each}}
+  </p>
+
+  <p class="gender">Gender: {{@employee.gender}}</p>
+
+  <p class="birthdate">DOB: {{@employee.birthDate}}</p>
+
+  <div class="department-employments">
+  {{#each @employee.departmentEmployments as |employment|}}
+    <div class="department-employment">
+      <p class="department">department: {{employment.department.name}}</p>
+      <p class="start-date">startDate: {{employment.startDate}}</p>
+      <p class="end-date">endDate: {{employment.endDate}}</p>
+
+      <div class="addresses">
+        {{#each employment.department.addresses as |address|}}
+          <p class="address">
+            <span class="street">{{address.street}}</span>
+            <span class="city">{{address.city}}</span>
+            <span class="region">{{address.region}}</span>
+            <span class="country">{{address.country}}</span>
+          </p>
+          <hr>
+        {{/each}}
+      </div>
+    </div>
+  {{/each}}
+  </div>
+</div>

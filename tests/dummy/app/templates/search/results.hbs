@@ -1,12 +1,12 @@
-{{#each model as |user|}}
+{{#each this.model as |user|}}
   {{single-user user=user}}
 {{/each}}
-{{#if model.errors}}
-  <div>Errors {{model.message}}</div>
+{{#if this.model.errors}}
+  <div>Errors {{this.model.message}}</div>
 {{/if}}
-{{#if nextPage}}
+{{#if this.nextPage}}
   <span class="meta">Next Page</span>
 {{/if}}
-{{#if previousPage}}
+{{#if this.previousPage}}
   <span class="meta">Previous Page</span>
 {{/if}}
