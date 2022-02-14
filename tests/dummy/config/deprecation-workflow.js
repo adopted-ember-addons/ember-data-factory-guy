@@ -9,10 +9,6 @@ self.deprecationWorkflow.config = {
       handler: 'silence',
       matchId: 'deprecated-run-loop-and-computed-dot-access',
     },
-    {
-      handler: 'silence',
-      matchId: 'ember.built-in-components.legacy-arguments',
-    },
     { handler: 'silence', matchId: 'ember-source.deprecation-without-for' },
     { handler: 'silence', matchId: 'ember-source.deprecation-without-since' },
     { handler: 'silence', matchId: 'implicit-injections' },
