@@ -7,7 +7,6 @@ let proxyFx = [
   'makeList',
   'build',
   'buildList',
-  'mockFind',
   'mockFindRecord',
   'mockFindAll',
   'mockReload',

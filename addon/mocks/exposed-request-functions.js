@@ -1,5 +1,4 @@
 import { typeOf } from '@ember/utils';
-import { deprecate } from '@ember/debug';
 import { assert } from '@ember/debug';
 import Model from '@ember-data/model';
 import FactoryGuy from '../factory-guy';
@@ -14,23 +13,6 @@ import MockDeleteRequest from './mock-delete-request';
 import MockAnyRequest from './mock-any-request';
 import MockLinksRequest from './mock-links-request';
 import RequestManager from './request-manager';
-
-export function mockSetup({ responseTime, logLevel = 0 } = {}) {
-  deprecate(
-    `[ember-data-factory-guy] mockSetup is no longer needed. If you want to set logLevel or responseTime, use FactoryGuy.settings instead. If you don't need to set anything, it is safe to remove mockSetup`,
-    false,
-    { id: 'ember-data-factory-guy.mock-setup', until: '2.14.0' }
-  );
-  FactoryGuy.settings({ logLevel, responseTime });
-}
-
-export function mockTeardown() {
-  deprecate(
-    `[ember-data-factory-guy] mockTeardown is no longer needed. Mock teardown is now done automatically after every test.`,
-    false,
-    { id: 'ember-data-factory-guy.mock-teardown', until: '2.14.0' }
-  );
-}
 
 export function mock({ type = 'GET', url, responseText, status } = {}) {
   assert('[ember-data-factory-guy] mock requires at least a url', url);
@@ -101,15 +83,6 @@ export function mockFindRecord(...args) {
   modelName = args[0];
   let json = FactoryGuy.build.apply(FactoryGuy, arguments);
   return new MockFindRecordRequest(modelName).returns({ json });
-}
-
-export function mockFind() {
-  deprecate(
-    '`mockFind` - has been deprecated. Use `mockFindRecord` method instead`',
-    false,
-    { id: 'ember-data-factory-guy.mock-find', until: '2.8.0' }
-  );
-  return mockFindRecord.apply(this, arguments);
 }
 
 /**

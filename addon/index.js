@@ -8,9 +8,6 @@ import FactoryGuy, {
 } from './factory-guy';
 
 import {
-  mockSetup,
-  mockTeardown,
-  mockFind,
   mockFindRecord,
   mockFindAll,
   mockReload,
@@ -48,9 +45,6 @@ export {
 };
 
 export {
-  mockSetup,
-  mockTeardown,
-  mockFind,
   mockFindRecord,
   mockFindAll,
   mockReload,

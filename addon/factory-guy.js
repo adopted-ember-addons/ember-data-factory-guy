@@ -514,8 +514,6 @@ class FactoryGuy {
    Hook into store willDestroy to cleanup variables in Factory Guy and
    reset definitions/mock ajax setup.
 
-   This eliminates the need to call mockTeardown manually in tests
-
    @param store
    */
   afterDestroyStore(store) {
