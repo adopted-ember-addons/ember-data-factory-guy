@@ -13,7 +13,9 @@ try {
   Fragment = MF && MF.default;
   FragmentArray = MFA && MFA.default;
 } catch (e) {
-  // do nothing
+  // create empty constructors
+  Fragment = function Fragment() {};
+  FragmentArray = function FragmentArray() {};
 }
 
 /**
