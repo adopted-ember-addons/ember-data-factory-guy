@@ -198,7 +198,7 @@ export function parseUrl(url) {
 }
 
 // always exclude jshint or jscs files
-export const excludeRegex = new RegExp('[^\\s]+(\\.(jscs|jshint))$', 'i');
+export const excludeRegex = /\.(jscs|jshint)$/i;
 
 /**
  * Find files that have been seen by some tree in the application
@@ -210,7 +210,10 @@ export const excludeRegex = new RegExp('[^\\s]+(\\.(jscs|jshint))$', 'i');
 export function requireFiles(filePattern) {
   let filesSeen = Object.keys(requirejs._eak_seen);
 
-  return filesSeen.filter((moduleName) => {
-    return !excludeRegex.test(moduleName) && filePattern.test(moduleName);
-  }).map((moduleName) => require(moduleName, null, null, true));
+  return filesSeen
+    .filter(
+      (moduleName) =>
+        filePattern.test(moduleName) && !excludeRegex.test(moduleName)
+    )
+    .map((moduleName) => require(moduleName, null, null, true));
 }
