@@ -3,8 +3,20 @@ import { entries } from '../utils/helper-functions';
 import { typeOf } from '@ember/utils';
 import { getOwner } from '@ember/application';
 import { camelize } from '@ember/string';
-import Fragment from 'ember-data-model-fragments/fragment';
-import FragmentArray from 'ember-data-model-fragments/array/fragment';
+import require from 'require';
+
+let Fragment;
+let FragmentArray;
+try {
+  let MF = require('ember-data-model-fragments/fragment');
+  let MFA = require('ember-data-model-fragments/array/fragment');
+  Fragment = MF && MF.default;
+  FragmentArray = MFA && MFA.default;
+} catch (e) {
+  // create empty constructors
+  Fragment = function Fragment() {};
+  FragmentArray = function FragmentArray() {};
+}
 
 /**
  Base class for converting the base fixture that factory guy creates to
