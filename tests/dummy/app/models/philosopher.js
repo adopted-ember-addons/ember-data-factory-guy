@@ -1,3 +1,3 @@
 import Person from './person';
 
-export default Person.extend();
+export default class extends Person {}

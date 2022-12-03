@@ -1,8 +1,8 @@
 import Model, { hasMany, belongsTo } from '@ember-data/model';
 import { fragment } from 'ember-data-model-fragments/attributes';
 
-export default Model.extend({
-  name: fragment('name'),
-  salary: belongsTo('salary'),
-  reviews: hasMany('review'),
-});
+export default class extends Model {
+  @fragment('name') name;
+  @belongsTo('salary') salary;
+  @hasMany('review') reviews;
+}

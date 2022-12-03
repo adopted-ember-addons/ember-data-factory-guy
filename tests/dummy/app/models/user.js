@@ -1,20 +1,20 @@
-import { computed } from '@ember/object';
 import Model, { attr, hasMany, belongsTo } from '@ember-data/model';
 
-export default Model.extend({
-  name: attr('string'),
-  style: attr(), // purposely leave this blank just for making sure these attr types work
-  info: attr('object'),
-  company: belongsTo('company', {
+export default class extends Model {
+  @attr('string') name;
+  @attr() style; // purposely leave this blank just for making sure these attr types work
+  @attr('object') info;
+  @belongsTo('company', {
     async: true,
     inverse: 'users',
     polymorphic: true,
-  }),
-  properties: hasMany('property', { async: true, inverse: 'owners' }),
-  projects: hasMany('project', { async: false }),
-  hats: hasMany('hat', { async: false, polymorphic: true }),
+  })
+  company;
+  @hasMany('property', { async: true, inverse: 'owners' }) properties;
+  @hasMany('project', { async: false }) projects;
+  @hasMany('hat', { async: false, polymorphic: true }) hats;
 
-  funnyName: computed('name', function () {
+  get funnyName() {
     return 'funny ' + this.name;
-  }),
-});
+  }
+}
