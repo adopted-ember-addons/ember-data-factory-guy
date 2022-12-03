@@ -1,5 +1,5 @@
 import Model, { attr } from '@ember-data/model';
 
-export default Model.extend({
-  name: attr('string'),
-});
+export default class extends Model {
+  @attr('string') name;
+}

@@ -5,12 +5,12 @@ import {
   fragmentArray,
 } from 'ember-data-model-fragments/attributes';
 
-export default Model.extend({
-  designation: fragment('name'),
-  name: fragment('name'),
-  titles: array('string'),
-  gender: attr('string'),
-  birthDate: attr('date'),
-  position: attr(),
-  departmentEmployments: fragmentArray('department-employment'),
-});
+export default class extends Model {
+  @fragment('name') designation;
+  @fragment('name') name;
+  @array('string') titles;
+  @attr('string') gender;
+  @attr('date') birthDate;
+  @attr() position;
+  @fragmentArray('department-employment') departmentEmployments;
+}
