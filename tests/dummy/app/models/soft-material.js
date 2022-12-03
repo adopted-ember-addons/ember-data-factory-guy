@@ -1,6 +1,6 @@
 import Material from './material';
 import { belongsTo } from '@ember-data/model';
 
-export default Material.extend({
-  hat: belongsTo('big-hat', { async: false }),
-});
+export default class extends Material {
+  @belongsTo('big-hat', { async: false }) hat;
+}
