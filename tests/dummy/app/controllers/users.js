@@ -1,9 +1,9 @@
 import Controller from '@ember/controller';
+import { action } from '@ember/object';
 
-export default Controller.extend({
-  actions: {
-    deleteUser(user) {
-      return user.destroyRecord();
-    },
-  },
-});
+export default class extends Controller {
+  @action
+  deleteUser(user) {
+    return user.destroyRecord();
+  }
+}

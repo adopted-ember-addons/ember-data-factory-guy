@@ -1,6 +1,6 @@
 import Group from './group';
 import { attr } from '@ember-data/model';
 
-export default Group.extend({
-  type: attr('string', { defaultValue: 'BigGroup' }),
-});
+export default class extends Group {
+  @attr('string', { defaultValue: 'BigGroup' }) type;
+}
