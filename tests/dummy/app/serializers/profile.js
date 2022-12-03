@@ -1,11 +1,11 @@
 import JSONAPISerializer from '@ember-data/serializer/json-api';
 
-export default JSONAPISerializer.extend({
-  transformFor: function (attributeType) {
+export default class extends JSONAPISerializer {
+  transformFor(attributeType, ...args) {
     if (attributeType === 'just-a-string') {
       return this.container.lookup('transform:string');
     } else {
-      return this._super.apply(this, arguments);
+      return super.transformFor(attributeType, ...args);
     }
-  },
-});
+  }
+}

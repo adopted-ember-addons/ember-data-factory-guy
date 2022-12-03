@@ -2,8 +2,8 @@ import RESTSerializer, {
   EmbeddedRecordsMixin,
 } from '@ember-data/serializer/rest';
 
-export default RESTSerializer.extend(EmbeddedRecordsMixin, {
-  attrs: {
+export default class extends RESTSerializer.extend(EmbeddedRecordsMixin) {
+  attrs = {
     salary: {
       serialize: true,
       deserialize: 'records',
@@ -12,9 +12,9 @@ export default RESTSerializer.extend(EmbeddedRecordsMixin, {
       serialize: true,
       deserialize: 'records',
     },
-  },
+  };
 
   keyForAttribute() {
-    return this._super(...arguments);
-  },
-});
+    return super.keyForAttribute(...arguments);
+  }
+}
