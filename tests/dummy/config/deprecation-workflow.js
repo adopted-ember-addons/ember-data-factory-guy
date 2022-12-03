@@ -4,7 +4,6 @@
 self.deprecationWorkflow = self.deprecationWorkflow || {};
 self.deprecationWorkflow.config = {
   workflow: [
-    { handler: 'silence', matchId: 'deprecate-fetch-ember-data-support' },
     {
       handler: 'silence',
       matchId: 'deprecated-run-loop-and-computed-dot-access',
