@@ -1,6 +1,6 @@
 import Model, { attr } from '@ember-data/model';
 
-export default Model.extend({
-  rating: attr('number'),
-  date: attr('date'),
-});
+export default class extends Model {
+  @attr('number') rating;
+  @attr('date') date;
+}

@@ -1,11 +1,11 @@
 import Transform from '@ember-data/serializer/transform';
 import { isEmpty, typeOf } from '@ember/utils';
 
-export default Transform.extend({
-  serialize: function (value) {
+export default class extends Transform {
+  serialize(value) {
     return value ? JSON.stringify(value) : '{}';
-  },
-  deserialize: function (value) {
+  }
+  deserialize(value) {
     if (isEmpty(value)) {
       return {};
     }
@@ -15,5 +15,5 @@ export default Transform.extend({
     if (typeOf(value) === 'string') {
       return JSON.parse(value);
     }
-  },
-});
+  }
+}

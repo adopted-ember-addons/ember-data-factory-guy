@@ -68,10 +68,10 @@ class FactoryGuy {
   /**
    ```javascript
 
-   Person = DS.Model.extend({
-     type: DS.attr('string'),
-     name: DS.attr('string')
-   })
+   class Person extends Model {
+     @attr('string') type
+     @attr('string') name
+   }
 
    FactoryGuy.define('person', {
      sequences: {

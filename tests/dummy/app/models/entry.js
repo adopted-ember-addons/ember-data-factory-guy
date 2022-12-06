@@ -1,6 +1,6 @@
 import Model, { attr, belongsTo } from '@ember-data/model';
 
-export default Model.extend({
-  name: attr('string'),
-  entryType: belongsTo('entry-type'),
-});
+export default class extends Model {
+  @attr('string') name;
+  @belongsTo('entry-type') entryType;
+}

@@ -88,26 +88,26 @@ In the following examples, assume the models look like this:
 
 ```javascript
   // standard models
-  User = DS.Model.extend({
-    name:     DS.attr('string'),
-    style:    DS.attr('string'),
-    projects: DS.hasMany('project'),
-    hats:     DS.hasMany('hat', {polymorphic: true})
-  });
+  class User extends Model {
+    @attr('string')     name
+    @attr('string')     style
+    @hasMany('project') projects
+    @hasMany('hat', {polymorphic: true})  hats
+  }
 
-  Project = DS.Model.extend({
-    title:  DS.attr('string'),
-    user:   DS.belongsTo('user')
-  });
+  class Project extends Model {
+    @attr('string')     title
+    @belongsTo('user')  user
+  }
 
   // polymorphic models
-  Hat = DS.Model.extend({
-    type: DS.attr('string'),
-    user: DS.belongsTo('user')
-  });
+  class Hat extends Model {
+    @attr('string')     type
+    @belongsTo('user')  user
+  }
 
-  BigHat = Hat.extend();
-  SmallHat = Hat.extend();
+  class BigHat extends Hat {};
+  class SmallHat extends Hat {};
 ```
 
 ### Defining Factories
@@ -561,10 +561,10 @@ Let's say you have a model and a factory like this:
   import Model from 'ember-data/model';
   import attr from 'ember-data/attr';
 
-  export default Model.extend({
-    dogNumber: attr('string'),
-    sound: attr('string')
-  });
+  export default class Dog extends Model{
+    @attr('string') dogNumber
+    @attr('string') sound
+  }
 
   // tests/factories/dog.js
   import FactoryGuy from 'ember-data-factory-guy';
@@ -1071,23 +1071,23 @@ For example, say we have the following `Employee` model which makes use of the `
 
 ```javascript
 // Employee model
-export default Model.extend({
-  name: fragment('name'),
-  phoneNumbers: fragmentArray('phone-number')
-})
+export default class Employee extends Model {
+  @fragment('name') name
+  @fragmentArray('phone-number') phoneNumbers
+}
 
 // Name fragment
-export default Fragment.extend({
-  titles: array('string'),
-  firstName: attr('string'),
-  lastName: attr('string')
-});
+export default class Name extends Fragment {
+  @array('string')  titles
+  @attr('string')   firstName
+  @attr('string')    lastName
+}
 
 // Phone Number fragment
-export default Fragment.extend({
-  number: attr('string')
-  type: attr('string')
-});
+export default class PhoneNumber extends Fragment {
+  @attr('string') number
+  @attr('string') type
+}
 ```
 
 A factory for this model and its fragments would look like so:
@@ -2086,10 +2086,10 @@ describe('Admin View', function() {
 ```javascript
 
   // app/serializers/person.js
-  export default DS.RESTSerializer.extend({
+  export default class PersonSerializer extends RESTSerializer {
 
     // let's say you're modifying all names to be Japanese honorific style
-    serialize: function(snapshot, options) {
+    serialize(snapshot, options) {
       var json = this._super(snapshot, options);
 
       let honorificName = [snapshot.record.get('name'), 'san'].join('-');
@@ -2097,7 +2097,7 @@ describe('Admin View', function() {
 
       return json;
     }
-  });
+  }
 
   // somewhere in your tests
   let person = make('person', {name: "Daniel"});

@@ -1,7 +1,7 @@
 import Model, { attr, hasMany, belongsTo } from '@ember-data/model';
 
-export default Model.extend({
-  name: attr('string'),
-  company: belongsTo('company', { async: true }),
-  owners: hasMany('user', { async: true, inverse: 'properties' }),
-});
+export default class extends Model {
+  @attr('string') name;
+  @belongsTo('company', { async: true }) company;
+  @hasMany('user', { async: true, inverse: 'properties' }) owners;
+}
