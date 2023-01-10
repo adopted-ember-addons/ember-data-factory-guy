@@ -3,7 +3,7 @@
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 import { isArray } from '@ember/array';
-import { assign } from '@ember/polyfills';
+import { assign } from '../utils/polyfills';
 import FactoryGuy from '../factory-guy';
 import Model from '@ember-data/model';
 import MockStoreRequest from './mock-store-request';

@@ -1,5 +1,5 @@
 import { isEmpty } from '@ember/utils';
-import { assign } from '@ember/polyfills';
+import { assign } from '../utils/polyfills';
 import JSONPayload from './json-payload';
 
 export default class extends JSONPayload {

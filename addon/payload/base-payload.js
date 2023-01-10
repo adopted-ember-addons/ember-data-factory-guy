@@ -1,6 +1,6 @@
 import { w } from '@ember/string';
 import { typeOf } from '@ember/utils';
-import { assign } from '@ember/polyfills';
+import { assign } from '../utils/polyfills';
 import { A } from '@ember/array';
 
 export default class {

@@ -3,7 +3,7 @@ import Sequence from './sequence';
 import MissingSequenceError from './missing-sequence-error';
 import { isEmptyObject, mergeDeep } from './utils/helper-functions';
 import { assert } from '@ember/debug';
-import { assign } from '@ember/polyfills';
+import { assign } from './utils/polyfills';
 import { typeOf } from '@ember/utils';
 
 /**

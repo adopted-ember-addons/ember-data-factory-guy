@@ -1,5 +1,5 @@
 import { isEmpty, typeOf } from '@ember/utils';
-import { assign } from '@ember/polyfills';
+import { assign } from '../utils/polyfills';
 import BasePayload from './base-payload';
 
 export default class extends BasePayload {

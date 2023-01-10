@@ -1,7 +1,7 @@
 /* global requirejs */
 import { typeOf } from '@ember/utils';
 import require from 'require';
-import { assign } from '@ember/polyfills';
+import { assign } from './polyfills';
 
 const plusRegex = new RegExp('\\+', 'g');
 

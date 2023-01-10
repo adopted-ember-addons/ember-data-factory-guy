@@ -1,5 +1,5 @@
 import { assert } from '@ember/debug';
-import { assign } from '@ember/polyfills';
+import { assign } from '../utils/polyfills';
 import {
   isEmptyObject,
   isEquivalent,

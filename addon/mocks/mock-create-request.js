@@ -2,7 +2,7 @@ import { isPresent } from '@ember/utils';
 import FactoryGuy from '../factory-guy';
 import MockStoreRequest from './mock-store-request';
 import AttributeMatcher from './attribute-matcher';
-import { assign } from '@ember/polyfills';
+import { assign } from '../utils/polyfills';
 
 export default class MockCreateRequest extends AttributeMatcher(
   MockStoreRequest

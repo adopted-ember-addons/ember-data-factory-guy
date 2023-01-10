@@ -1,7 +1,7 @@
 import Store from '@ember-data/store';
 import { assert } from '@ember/debug';
 import { isPresent, typeOf } from '@ember/utils';
-import { assign } from '@ember/polyfills';
+import { assign } from './utils/polyfills';
 import { join } from '@ember/runloop';
 import { A } from '@ember/array';
 import require from 'require';
