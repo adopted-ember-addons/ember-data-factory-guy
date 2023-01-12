@@ -1,7 +1,6 @@
 import Store from '@ember-data/store';
 import { assert } from '@ember/debug';
 import { isPresent, typeOf } from '@ember/utils';
-import { assign } from '@ember/polyfills';
 import { join } from '@ember/runloop';
 import { A } from '@ember/array';
 import require from 'require';
@@ -191,7 +190,7 @@ class FactoryGuy {
       if (this.isModelAFragment(modelName) && buildType === 'build') {
         return this.build(...originalArgs).get();
       }
-      return this.buildRaw(assign(args, { buildType }));
+      return this.buildRaw(Object.assign(args, { buildType }));
     };
   }
 
@@ -231,7 +230,7 @@ class FactoryGuy {
       if (this.isModelAFragment(modelName) && buildType === 'build') {
         return this.buildList(...originalArgs).get();
       }
-      return this.buildRawList(assign(args, { buildType }));
+      return this.buildRawList(Object.assign(args, { buildType }));
     };
   }
 
@@ -258,7 +257,7 @@ class FactoryGuy {
   build(...originalArgs) {
     let args = FactoryGuy.extractArguments(...originalArgs),
       modelName = FactoryGuy.lookupModelForFixtureName(args.name, true),
-      fixture = this.buildRaw(assign(args, { buildType: 'build' }));
+      fixture = this.buildRaw(Object.assign(args, { buildType: 'build' }));
 
     return this.fixtureBuilder(modelName).convertForBuild(modelName, fixture);
   }
@@ -303,7 +302,7 @@ class FactoryGuy {
 
     args = FactoryGuy.extractListArguments(...args);
 
-    let list = this.buildRawList(assign(args, { buildType: 'build' })),
+    let list = this.buildRawList(Object.assign(args, { buildType: 'build' })),
       modelName = FactoryGuy.lookupModelForFixtureName(args.name);
 
     return this.fixtureBuilder(modelName).convertForBuild(modelName, list);
@@ -356,7 +355,7 @@ class FactoryGuy {
     let args = FactoryGuy.extractArguments(...originalArgs),
       definition = FactoryGuy.lookupDefinitionForFixtureName(args.name, true),
       { modelName } = definition,
-      fixture = this.buildRaw(assign(args, { buildType: 'make' }));
+      fixture = this.buildRaw(Object.assign(args, { buildType: 'make' }));
 
     if (this.isModelAFragment(modelName)) {
       return fixture;
@@ -385,7 +384,7 @@ class FactoryGuy {
     let args = FactoryGuy.extractArguments(...originalArgs),
       definition = FactoryGuy.lookupDefinitionForFixtureName(args.name, true),
       { modelName } = definition,
-      fixture = this.buildRaw(assign(args, { buildType: 'make' }));
+      fixture = this.buildRaw(Object.assign(args, { buildType: 'make' }));
 
     if (this.isModelAFragment(modelName)) {
       return join(() => this.store.createFragment(modelName, fixture));
@@ -416,7 +415,7 @@ class FactoryGuy {
 
     let args = FactoryGuy.extractArguments(...originalArgs),
       modelName = FactoryGuy.lookupModelForFixtureName(args.name, true),
-      fixture = this.buildRaw(assign(args, { buildType: 'make' }));
+      fixture = this.buildRaw(Object.assign(args, { buildType: 'make' }));
 
     delete fixture.id;
 
@@ -538,7 +537,7 @@ class FactoryGuy {
    */
   buildURL(modelName, id = null, snapshot, requestType, queryParams) {
     const adapter = this.store.adapterFor(modelName);
-    const clonedQueryParams = assign({}, queryParams);
+    const clonedQueryParams = Object.assign({}, queryParams);
     // some adapters can modify the query params so use a copy
     // so as not to modify the internal stored params
     // which are important later
@@ -620,7 +619,7 @@ class FactoryGuy {
         '[ember-data-factory-guy] build/make needs a factory name to build'
       );
     }
-    return assign({ name }, FactoryGuy.extractArgumentsShort(...args));
+    return Object.assign({ name }, FactoryGuy.extractArgumentsShort(...args));
   }
 
   static extractArgumentsShort(...args) {

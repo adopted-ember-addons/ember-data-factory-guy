@@ -3,7 +3,6 @@ import Sequence from './sequence';
 import MissingSequenceError from './missing-sequence-error';
 import { isEmptyObject, mergeDeep } from './utils/helper-functions';
 import { assert } from '@ember/debug';
-import { assign } from '@ember/polyfills';
 import { typeOf } from '@ember/utils';
 
 /**
@@ -18,7 +17,7 @@ class ModelDefinition {
     this.modelName = model;
     this.modelId = 1;
     this.originalConfig = mergeDeep({}, config);
-    this.parseConfig(assign({}, config));
+    this.parseConfig(Object.assign({}, config));
   }
 
   /**
@@ -124,7 +123,7 @@ class ModelDefinition {
     let modelAttributes = this.namedModels[name] || {};
 
     // merge default, modelAttributes, traits and opts to get the rough fixture
-    let fixture = assign({}, this.default, modelAttributes);
+    let fixture = Object.assign({}, this.default, modelAttributes);
 
     // set the id, unless it was already set in opts
     if (!fixture.id && !opts.id) {
@@ -148,10 +147,10 @@ class ModelDefinition {
       if (typeOf(trait) === 'function') {
         trait(fixture);
       }
-      assign(fixture, trait);
+      Object.assign(fixture, trait);
     });
 
-    assign(fixture, opts);
+    Object.assign(fixture, opts);
 
     try {
       // deal with attributes that are functions or objects
@@ -243,7 +242,7 @@ class ModelDefinition {
   applyAfterMake(model, opts) {
     if (this.afterMake) {
       // passed in options override transient setting
-      let options = assign({}, this.transient, opts);
+      let options = Object.assign({}, this.transient, opts);
       this.afterMake(model, options);
     }
   }

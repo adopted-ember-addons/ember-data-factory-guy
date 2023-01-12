@@ -1,5 +1,4 @@
 import { assert } from '@ember/debug';
-import { assign } from '@ember/polyfills';
 import {
   isEmptyObject,
   isEquivalent,
@@ -48,7 +47,7 @@ export default class {
   returns(/*options = {}*/) {}
 
   addResponseHeaders(headers) {
-    assign(this.responseHeaders, headers);
+    Object.assign(this.responseHeaders, headers);
   }
 
   succeeds(opts = {}) {

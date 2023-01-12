@@ -1,6 +1,5 @@
 import { w } from '@ember/string';
 import { typeOf } from '@ember/utils';
-import { assign } from '@ember/polyfills';
 import { A } from '@ember/array';
 
 export default class {
@@ -69,7 +68,7 @@ export default class {
    */
   addMeta(data) {
     this.json.meta = this.json.meta || {};
-    assign(this.json.meta, data);
+    Object.assign(this.json.meta, data);
   }
 
   // marker function for saying "I am a proxy"

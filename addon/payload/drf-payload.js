@@ -1,12 +1,11 @@
 import { isEmpty } from '@ember/utils';
-import { assign } from '@ember/polyfills';
 import JSONPayload from './json-payload';
 
 export default class extends JSONPayload {
   // only add the meta data if there is query ( results key is present )
   addMeta(data) {
     if (this.json.results) {
-      assign(this.json, data);
+      Object.assign(this.json, data);
     }
   }
 
