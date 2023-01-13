@@ -1,7 +1,6 @@
 /* global requirejs */
 import { typeOf } from '@ember/utils';
 import require from 'require';
-import { assign } from '@ember/polyfills';
 
 const plusRegex = new RegExp('\\+', 'g');
 
@@ -122,11 +121,11 @@ export function mergeDeep(target, ...sources) {
       if (Object.prototype.hasOwnProperty.call(source, key)) {
         if (isObject(source[key])) {
           if (!target[key]) {
-            assign(target, { [key]: {} });
+            Object.assign(target, { [key]: {} });
           }
           mergeDeep(target[key], source[key]);
         } else {
-          assign(target, { [key]: source[key] });
+          Object.assign(target, { [key]: source[key] });
         }
       }
     }

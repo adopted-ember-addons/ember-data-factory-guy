@@ -2,7 +2,6 @@ import { isPresent } from '@ember/utils';
 import FactoryGuy from '../factory-guy';
 import MockStoreRequest from './mock-store-request';
 import AttributeMatcher from './attribute-matcher';
-import { assign } from '@ember/polyfills';
 
 export default class MockCreateRequest extends AttributeMatcher(
   MockStoreRequest
@@ -50,8 +49,8 @@ export default class MockCreateRequest extends AttributeMatcher(
    Need to clone the responseJson and add id at the very last minute
    */
   getResponse() {
-    let args = assign({}, this.matchArgs, this.returnArgs),
-      json = assign({}, args, { id: this.modelId() });
+    let args = Object.assign({}, this.matchArgs, this.returnArgs),
+      json = Object.assign({}, args, { id: this.modelId() });
     this.responseJson = this.fixtureBuilder.convertForBuild(
       this.modelName,
       json

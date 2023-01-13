@@ -1,5 +1,4 @@
 import { assert } from '@ember/debug';
-import { assign } from '@ember/polyfills';
 import FactoryGuy from '../factory-guy';
 import MockStoreRequest from './mock-store-request';
 import AttributeMatcher from './attribute-matcher';
@@ -57,8 +56,8 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(
   getResponse() {
     this.responseJson = null;
     if (Object.keys(this.returnArgs).length) {
-      let args = assign({}, this.matchArgs, this.returnArgs),
-        json = assign({}, args, { id: this.id });
+      let args = Object.assign({}, this.matchArgs, this.returnArgs),
+        json = Object.assign({}, args, { id: this.id });
       this.responseJson = this.fixtureBuilder.convertForBuild(
         this.modelName,
         json

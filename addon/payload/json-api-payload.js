@@ -1,5 +1,4 @@
 import { isEmpty, typeOf } from '@ember/utils';
-import { assign } from '@ember/polyfills';
 import BasePayload from './base-payload';
 
 export default class extends BasePayload {
@@ -45,7 +44,7 @@ export default class extends BasePayload {
     Object.keys(data.relationships || []).forEach((key) => {
       relationships[key] = data.relationships[key].data;
     });
-    let attrs = assign({}, data.attributes, relationships);
+    let attrs = Object.assign({}, data.attributes, relationships);
     attrs.id = data.id;
     return attrs;
   }
