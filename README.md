@@ -16,7 +16,13 @@ Factories simplify the process of testing, making you more efficient and your te
 
 ## Getting Started
 
-Check out the [Quick Start](quick-start.md) documentation to get started.
+- [Overview](docs/overview.md)
+- [Quick Start](docs/quick-start.md)
+- [Setup](docs/setup.md)
+- [Defining factories](docs/defining-factories.md)
+- [Using factories](docs/using-factories.md)
+- [Mocking the store](docs/using-mock-methods.md)
+- [Advanced](docs/advanced.md)
 
 ## Questions / Get in Touch
 
