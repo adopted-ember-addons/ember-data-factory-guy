@@ -85,6 +85,22 @@
     "release-it": "^14.2.1",
     "release-it-lerna-changelog": "^3.1.0"
   },
+  "peerDependencies": {
+    "ember-data-model-fragments": "*",
+    "ember-django-adapter": "*",
+    "active-model-adapter": "*"
+  },
+  "peerDependenciesMeta": {
+    "ember-data-model-fragments": {
+      "optional": true
+    },
+    "ember-django-adapter": {
+      "optional": true
+    },
+    "active-model-adapter": {
+      "optional": true
+    }
+  },
   "resolutions": {
     "ember-data": "3.24.2"
   },
