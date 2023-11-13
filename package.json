@@ -29,6 +29,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@embroider/macros": "^1.13.3",
     "broccoli-funnel": "^3.0.4",
     "broccoli-merge-trees": "^4.2.0",
     "ember-auto-import": "^1.11.3",
