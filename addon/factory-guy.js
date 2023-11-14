@@ -3,19 +3,20 @@ import { assert } from '@ember/debug';
 import { isPresent, typeOf } from '@ember/utils';
 import { join } from '@ember/runloop';
 import { A } from '@ember/array';
-import require from 'require';
 import ModelDefinition from './model-definition';
 import FixtureBuilderFactory from './builder/fixture-builder-factory';
 import RequestManager from './mocks/request-manager';
+import {
+  macroCondition,
+  dependencySatisfies,
+  importSync,
+} from '@embroider/macros';
 
 let modelDefinitions = {};
 
 let Fragment;
-try {
-  let MF = require('ember-data-model-fragments');
-  Fragment = MF && MF.default.Fragment;
-} catch (e) {
-  // do nothing
+if (macroCondition(dependencySatisfies('ember-data-model-fragments', '*'))) {
+  Fragment = importSync('ember-data-model-fragments').default.Fragment;
 }
 
 class FactoryGuy {

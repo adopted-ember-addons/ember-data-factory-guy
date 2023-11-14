@@ -1,26 +1,27 @@
 import JSONSerializer from '@ember-data/serializer/json';
 import RESTSerializer from '@ember-data/serializer/rest';
 import JSONAPISerializer from '@ember-data/serializer/json-api';
-import require from 'require';
 import JSONAPIFixtureBuilder from './jsonapi-fixture-builder';
 import RESTFixtureBuilder from './rest-fixture-builder';
 import JSONFixtureBuilder from './json-fixture-builder';
 import DRFFixtureBuilder from './drf-fixture-builder';
 import ActiveModelFixtureBuilder from './active-model-fixture-builder';
+import {
+  macroCondition,
+  dependencySatisfies,
+  importSync,
+} from '@embroider/macros';
 
-let ActiveModelSerializer, DjangoSerializer;
-try {
-  let activeModel = require('active-model-adapter');
-  ActiveModelSerializer = activeModel.ActiveModelSerializer;
-} catch (e) {
-  // do nothing
+let ActiveModelSerializer;
+if (macroCondition(dependencySatisfies('active-model-adapter', '*'))) {
+  ActiveModelSerializer = importSync(
+    'active-model-adapter'
+  ).ActiveModelSerializer;
 }
 
-try {
-  let drf = require('ember-django-adapter/serializers/drf');
-  DjangoSerializer = drf && drf.default;
-} catch (e) {
-  // do nothing
+let DjangoSerializer;
+if (macroCondition(dependencySatisfies('ember-django-adapter', '*'))) {
+  DjangoSerializer = importSync('ember-django-adapter/serializers/drf').default;
 }
 
 export default class {
