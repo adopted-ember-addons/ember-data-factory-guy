@@ -4,33 +4,10 @@
 ## v4.0.0-alpha.2 (2023-11-14)
 
 #### :boom: Breaking Change
-* [#481](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/481) [BREAKING] Replace polyfill assign with Object.assign ([@drouhard](https://github.com/drouhard))
-* [#463](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/463) [BREAKING] Remove deprecated helpers ([@patocallaghan](https://github.com/patocallaghan))
-* [#449](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/449) [BREAKING] Fixes incompatibility with Ember Data Model Fragments 5.0.0-beta+ and Ember Data 3.13+ ([@patocallaghan](https://github.com/patocallaghan))
-
-#### :bug: Bug Fix
-* [#468](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/468) fix: remove hard dependency on model-fragments ([@luxzeitlos](https://github.com/luxzeitlos))
-
-#### :house: Internal
-* [#476](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/476) chore: update active-model-adapter to 3.0.1 ([@Techn1x](https://github.com/Techn1x))
-* [#474](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/474) refactor: octane dummy app files ([@Techn1x](https://github.com/Techn1x))
-* [#470](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/470) Make requireFiles do less work for larger applications ([@misterbyrne](https://github.com/misterbyrne))
-* [#454](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/454) Add release-it to repo and generate initial CHANGELOG.md ([@patocallaghan](https://github.com/patocallaghan))
-* [#462](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/462) Fix `this-property-fallback` deprecations ([@patocallaghan](https://github.com/patocallaghan))
-* [#461](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/461) Fix a bunch of deprecations ([@patocallaghan](https://github.com/patocallaghan))
-* [#459](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/459) Allow ember-release and ember-beta to fail ([@patocallaghan](https://github.com/patocallaghan))
-* [#458](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/458) Change import of deprecate from @ember/application/deprecations to @ember/debug ([@colinfkennedy](https://github.com/colinfkennedy))
-* [#448](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/448) Upgrade to Ember 3.28 ([@patocallaghan](https://github.com/patocallaghan))
-* [#443](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/443) Upgrade to Ember 3.24 ([@patocallaghan](https://github.com/patocallaghan))
+* [#481](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/486) [BREAKING] Replace require with importSync to play nice with Embroider ([@achambers](https://github.com/achambers))
 
 #### Committers: 7
 - Aaron Chambers ([@achambers](https://github.com/achambers))
-- Adam Byrne ([@misterbyrne](https://github.com/misterbyrne))
-- Brad Overton ([@Techn1x](https://github.com/Techn1x))
-- Colin Kennedy ([@colinfkennedy](https://github.com/colinfkennedy))
-- Lukas Kohler ([@luxzeitlos](https://github.com/luxzeitlos))
-- Matt Drouhard ([@drouhard](https://github.com/drouhard))
-- Pat O'Callaghan ([@patocallaghan](https://github.com/patocallaghan))
 
 ## v4.0.0-alpha.1 (2023-02-27)
 ## Breaking
