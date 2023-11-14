@@ -3,19 +3,19 @@ import { entries } from '../utils/helper-functions';
 import { typeOf } from '@ember/utils';
 import { getOwner } from '@ember/application';
 import { camelize } from '@ember/string';
-import require from 'require';
+import {
+  macroCondition,
+  dependencySatisfies,
+  importSync,
+} from '@embroider/macros';
 
 let Fragment;
 let FragmentArray;
-try {
-  let MF = require('ember-data-model-fragments/fragment');
-  let MFA = require('ember-data-model-fragments/array/fragment');
-  Fragment = MF && MF.default;
-  FragmentArray = MFA && MFA.default;
-} catch (e) {
-  // create empty constructors
-  Fragment = function Fragment() {};
-  FragmentArray = function FragmentArray() {};
+if (macroCondition(dependencySatisfies('ember-data-model-fragments', '*'))) {
+  Fragment = importSync('ember-data-model-fragments/fragment').default;
+  FragmentArray = importSync(
+    'ember-data-model-fragments/array/fragment'
+  ).default;
 }
 
 /**
@@ -203,8 +203,8 @@ export default class FixtureConverter {
 
         // If passed Fragments or FragmentArrays we must transform them to their serialized form before we can push them into the Store
         if (
-          attributeValueInFixture instanceof Fragment ||
-          attributeValueInFixture instanceof FragmentArray
+          (Fragment && attributeValueInFixture instanceof Fragment) ||
+          (FragmentArray && attributeValueInFixture instanceof FragmentArray)
         ) {
           fixture[attributeKey] = this.normalizeModelFragments(
             attributeValueInFixture
@@ -230,13 +230,13 @@ export default class FixtureConverter {
   }
 
   normalizeModelFragments(attributeValueInFixture) {
-    if (attributeValueInFixture instanceof Fragment) {
+    if (Fragment && attributeValueInFixture instanceof Fragment) {
       return this.store.normalize(
         attributeValueInFixture.constructor.modelName,
         attributeValueInFixture.serialize()
       ).data.attributes;
     }
-    if (attributeValueInFixture instanceof FragmentArray) {
+    if (FragmentArray && attributeValueInFixture instanceof FragmentArray) {
       return attributeValueInFixture
         .serialize()
         .map(
