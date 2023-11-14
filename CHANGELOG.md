@@ -3,8 +3,8 @@
 
 ## v4.0.0-alpha.2 (2023-11-14)
 
-#### :boom: Breaking Change
-* [#481](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/486) [BREAKING] Replace require with importSync to play nice with Embroider ([@achambers](https://github.com/achambers))
+#### :house: Internal
+* [#481](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/486) Replace require with importSync to play nice with Embroider ([@achambers](https://github.com/achambers))
 
 #### Committers: 7
 - Aaron Chambers ([@achambers](https://github.com/achambers))
