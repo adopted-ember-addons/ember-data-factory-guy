@@ -1,5 +1,27 @@
 # Change Log
 
+## v4.0.0-alpha.1 (2023-02-27)
+## Breaking
+* Fixes incompatibility with Ember Data Model Fragments 5.0.0-beta+ and Ember Data 3.13+ https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/449 @patocallaghan 
+* Remove deprecated helpers https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/463 @patocallaghan 
+* Replace polyfill assign with Object.assign https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/481 @drouhard 
+
+## Internal
+* Upgrade to Ember 3.24 https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/443 @patocallaghan 
+* Upgrade to Ember 3.28 https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/448 @patocallaghan 
+* Fix a bunch of deprecations https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/461 @patocallaghan 
+* Fix `this-property-fallback` deprecations https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/462 @patocallaghan 
+* Add release-it to repo and generate initial CHANGELOG.md https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/454 @patocallaghan 
+* refactor: octane dummy app files https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/474 @Techn1x 
+* chore: update active-model-adapter to 3.0.1 https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/476 @Techn1x
+
+## v3.9.11 (2022-10-21)
+* [fix: remove hard dependency on model-fragments](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/468) - @luxferresum & @GabrielCousin 
+* [fix: Make requireFiles do less work for larger applications](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/470) - @misterbyrne
+
+## v3.9.10 (2022-10-17)
+* Change import of deprecate from @ember/application/deprecations to @ember/debug #458. @colinfkennedy 
+
 ## v3.9.9 (2021-03-02)
 
 #### :bug: Bug Fix
