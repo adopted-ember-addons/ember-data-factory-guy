@@ -89,6 +89,8 @@ jobs:
       if: |
         steps.cache-dependencies.outputs.cache-hit != 'true'
 
+    - run: yarn test:ember
+
   try-scenarios:
     name: Tests - ${{ matrix.ember-try-scenario }}
     runs-on: ubuntu-latest
