@@ -16,22 +16,8 @@ Factories simplify the process of testing, making you more efficient and your te
 
 ## Getting Started
 
-- [Overview](docs/overview.md)
-- [Quick Start](docs/quick-start.md)
-- [Setup](docs/setup.md)
-- [Defining factories](docs/defining-factories.md)
-- [Using factories](docs/using-factories.md)
-- [Mocking the store](docs/using-mock-methods.md)
-- [Advanced](docs/advanced.md)
+Check out the [Quick Start](quick-start.md) documentation to get started.
 
 ## Questions / Get in Touch
 
 Visit the EmberJS Community on [Discord](https://discord.com/channels/480462759797063690/483601670685720591).
-
-## Contributing
-
-see [`CONTRIBUTING.md`](CONTRIBUTING.md)
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
