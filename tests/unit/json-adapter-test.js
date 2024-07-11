@@ -237,10 +237,6 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         id: 1,
-        name: {
-          firstName: 'Tyrion',
-          lastName: 'Lannister',
-        },
         reviews: [
           {
             id: 1,

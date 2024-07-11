@@ -33,41 +33,6 @@ class ModelDefinition {
   }
 
   /**
-   Get model fragment info ( if it exists )
-
-   @param attribute
-   @returns {Object} or null if no fragment info
-   */
-  modelFragmentInfo(attribute) {
-    let modelClass = FactoryGuy.store.modelFor(this.modelName);
-    return modelClass.attributes.get(attribute);
-  }
-
-  /**
-   Is this attribute a model fragment type
-
-   @param {String} attribute  attribute you want to check
-   @returns {Boolean} true if it's a model fragment
-   */
-  isModelFragmentAttribute(attribute) {
-    let info = this.modelFragmentInfo(attribute);
-    return !!(info && info.type && info.type.match('mf-fragment'));
-  }
-
-  /**
-   Get actual model fragment type, in case the attribute name is different
-   than the fragment type
-
-   @param {String} attribute attribute name for which you want fragment type
-   @returns {String} fragment type
-   */
-  fragmentType(attribute) {
-    let info = this.modelFragmentInfo(attribute);
-    let match = info.type.match('mf-fragment\\$(.*)');
-    return match[1];
-  }
-
-  /**
    @param {String} name model name like 'user' or named type like 'admin'
    @returns {Boolean} true if name is this definitions model or this definition
    contains a named model with that name
@@ -140,7 +105,7 @@ class ModelDefinition {
     traitNames.forEach((traitName) => {
       let trait = this.traits[traitName];
       assert(
-        `[ember-data-factory-guy] You're trying to use a trait [${traitName}] 
+        `[ember-data-factory-guy] You're trying to use a trait [${traitName}]
         for model ${this.modelName} but that trait can't be found.`,
         trait
       );
@@ -169,9 +134,6 @@ class ModelDefinition {
       throw e;
     }
 
-    if (FactoryGuy.isModelAFragment(this.modelName)) {
-      delete fixture.id;
-    }
     delete fixture._generatedId;
     return fixture;
   }
@@ -186,20 +148,6 @@ class ModelDefinition {
     // for the association and replace the attribute with that json
     let relationship = this.getRelationship(attribute);
 
-    if (this.isModelFragmentAttribute(attribute)) {
-      let payload = fixture[attribute];
-      if (isEmptyObject(payload)) {
-        // make a payload, but make sure it's the correct fragment type
-        let actualType = this.fragmentType(attribute);
-        payload = FactoryGuy.buildRaw({
-          name: actualType,
-          opts: {},
-          buildType,
-        });
-      }
-      // use the payload you have been given
-      fixture[attribute] = payload;
-    }
     if (relationship) {
       let payload = fixture[attribute];
       if (!payload.isProxy && !payload.links) {

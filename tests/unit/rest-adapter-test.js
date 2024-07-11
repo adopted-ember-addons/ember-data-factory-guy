@@ -137,47 +137,6 @@ module(serializer, function (hooks) {
       let user = buildList('user', 2, 'with_company');
       assert.deepEqual(user.get(1).company, { id: 2, type: 'company' });
     });
-
-    // model fragments
-    test('with model fragment returns array of all attributes with no key', function (assert) {
-      let addresses = buildList('billing-address', 2);
-      assert.deepEqual(addresses.get(), [
-        {
-          street: '1 Sky Cell',
-          city: 'Eyre',
-          region: 'Vale of Arryn',
-          country: 'Westeros',
-          billingAddressProperty: 1,
-        },
-        {
-          street: '2 Sky Cell',
-          city: 'Eyre',
-          region: 'Vale of Arryn',
-          country: 'Westeros',
-          billingAddressProperty: 2,
-        },
-      ]);
-    });
-
-    // model fragments
-    test('with model fragment returns an attribute with a key', function (assert) {
-      let addresses = buildList('billing-address', 2);
-      assert.deepEqual(addresses.get(0), {
-        street: '1 Sky Cell',
-        city: 'Eyre',
-        region: 'Vale of Arryn',
-        country: 'Westeros',
-        billingAddressProperty: 1,
-      });
-      assert.deepEqual(addresses.get(1), {
-        street: '2 Sky Cell',
-        city: 'Eyre',
-        region: 'Vale of Arryn',
-        country: 'Westeros',
-        billingAddressProperty: 2,
-      });
-      assert.equal(addresses.get(1).street, '2 Sky Cell');
-    });
   });
 
   module(`FactoryGuy#build custom`, function () {
@@ -574,14 +533,9 @@ module(serializer, function (hooks) {
       let expectedJson = {
         manager: {
           id: 1,
-          name: {
-            first_name: 'Tyrion',
-            last_name: 'Lannister',
-          },
           salary: {
             id: 1,
             income: 90000,
-            benefits: ['health', 'company car', 'dental'],
           },
         },
       };
@@ -597,14 +551,9 @@ module(serializer, function (hooks) {
       let expectedJson = {
         manager: {
           id: 1,
-          name: {
-            first_name: 'Tyrion',
-            last_name: 'Lannister',
-          },
           salary: {
             id: 1,
             income: 90000,
-            benefits: ['health', 'company car', 'dental'],
           },
         },
       };
@@ -619,10 +568,6 @@ module(serializer, function (hooks) {
       let expectedJson = {
         manager: {
           id: 1,
-          name: {
-            first_name: 'Tyrion',
-            last_name: 'Lannister',
-          },
           reviews: [
             {
               id: 1,
@@ -649,10 +594,6 @@ module(serializer, function (hooks) {
       let expectedJson = {
         manager: {
           id: 1,
-          name: {
-            first_name: 'Tyrion',
-            last_name: 'Lannister',
-          },
           reviews: [
             {
               id: 1,

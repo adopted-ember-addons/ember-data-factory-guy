@@ -3,20 +3,6 @@ import { entries } from '../utils/helper-functions';
 import { typeOf } from '@ember/utils';
 import { getOwner } from '@ember/application';
 import { camelize } from '@ember/string';
-import {
-  macroCondition,
-  dependencySatisfies,
-  importSync,
-} from '@embroider/macros';
-
-let Fragment;
-let FragmentArray;
-if (macroCondition(dependencySatisfies('ember-data-model-fragments', '*'))) {
-  Fragment = importSync('ember-data-model-fragments/fragment').default;
-  FragmentArray = importSync(
-    'ember-data-model-fragments/array/fragment'
-  ).default;
-}
 
 /**
  Base class for converting the base fixture that factory guy creates to
@@ -100,7 +86,6 @@ export default class FixtureConverter {
   addPrimaryKey(modelName, data, fixture) {
     let primaryKey = this.store.serializerFor(modelName).get('primaryKey'),
       primaryKeyValue = fixture[primaryKey] || fixture.id;
-    // model fragments will have no primaryKey and don't want them to have id
     if (primaryKeyValue) {
       // need to set the id for all as a baseline
       data.id = primaryKeyValue;
@@ -199,18 +184,6 @@ export default class FixtureConverter {
         let attributeKey = transformKeyFunction(attribute),
           transformValueFunction = this.getTransformValueFunction(meta.type);
 
-        let attributeValueInFixture = fixture[attributeKey];
-
-        // If passed Fragments or FragmentArrays we must transform them to their serialized form before we can push them into the Store
-        if (
-          (Fragment && attributeValueInFixture instanceof Fragment) ||
-          (FragmentArray && attributeValueInFixture instanceof FragmentArray)
-        ) {
-          fixture[attributeKey] = this.normalizeModelFragments(
-            attributeValueInFixture
-          );
-        }
-
         if (Object.prototype.hasOwnProperty.call(fixture, attribute)) {
           attributes[attributeKey] = transformValueFunction(
             fixture[attribute],
@@ -227,24 +200,6 @@ export default class FixtureConverter {
       }
     });
     return attributes;
-  }
-
-  normalizeModelFragments(attributeValueInFixture) {
-    if (Fragment && attributeValueInFixture instanceof Fragment) {
-      return this.store.normalize(
-        attributeValueInFixture.constructor.modelName,
-        attributeValueInFixture.serialize()
-      ).data.attributes;
-    }
-    if (FragmentArray && attributeValueInFixture instanceof FragmentArray) {
-      return attributeValueInFixture
-        .serialize()
-        .map(
-          (item) =>
-            this.store.normalize(attributeValueInFixture.type, item).data
-              .attributes
-        );
-    }
   }
 
   /**

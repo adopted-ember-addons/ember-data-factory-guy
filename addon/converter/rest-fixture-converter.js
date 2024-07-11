@@ -39,7 +39,6 @@ export default class RESTFixtureConverter extends JSONFixtureConverter {
   getPayloadKey(modelName) {
     let serializer = this.store.serializerFor(modelName),
       payloadKey = modelName;
-    // model fragment serializer does not have payloadKeyFromModelName method
     if (serializer.payloadKeyFromModelName) {
       payloadKey = serializer.payloadKeyFromModelName(modelName);
     }

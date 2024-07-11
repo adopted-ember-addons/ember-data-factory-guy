@@ -1342,23 +1342,6 @@ SharedBehavior.mockUpdateTests = function () {
     assert.ok(profile.get('description') === 'new desc');
   });
 
-  test('with model that has model fragment as the updated field', async function (assert) {
-    let employee = make('employee');
-
-    mockUpdate(employee);
-
-    assert.ok(!employee.get('hasDirtyAttributes'));
-    run(() => employee.set('name.firstName', 'Jamie'));
-
-    assert.ok(employee.get('name.firstName') === 'Jamie');
-    assert.ok(employee.get('name.lastName') === 'Lannister');
-
-    assert.ok(employee.get('hasDirtyAttributes'));
-
-    await employee.save();
-    assert.ok(!employee.get('hasDirtyAttributes'));
-  });
-
   test('with modelType and id that fails', async function (assert) {
     let profile = make('profile');
 
