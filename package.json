@@ -46,7 +46,6 @@
     "@glimmer/component": "^1.0.4",
     "@glimmer/tracking": "^1.0.4",
     "@glint/core": "^1.4.0",
-    "active-model-adapter": "^3.0.1",
     "babel-eslint": "^10.1.0",
     "broccoli-asset-rev": "^3.0.0",
     "ember-auto-import": "^1.11.2",
@@ -84,14 +83,6 @@
     "qunit-dom": "^1.6.0",
     "release-it": "^14.2.1",
     "release-it-lerna-changelog": "^3.1.0"
-  },
-  "peerDependencies": {
-    "active-model-adapter": "*"
-  },
-  "peerDependenciesMeta": {
-    "active-model-adapter": {
-      "optional": true
-    }
   },
   "resolutions": {
     "ember-data": "3.24.2"

@@ -2,8 +2,7 @@ import FixtureBuilder from './fixture-builder';
 import RESTFixtureConverter from '../converter/rest-fixture-converter';
 import RESTPayload from '../payload/rest-payload';
 /**
- Fixture Builder for REST based Serializer, like ActiveModelSerializer or
- RESTSerializer
+ Fixture Builder for REST based Serializer, like RESTSerializer
 
  */
 export default class RESTFixtureBuilder extends FixtureBuilder {

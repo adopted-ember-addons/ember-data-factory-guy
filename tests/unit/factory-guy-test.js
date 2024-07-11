@@ -1,7 +1,7 @@
 import Store from '@ember-data/store';
 import { run } from '@ember/runloop';
 import { A } from '@ember/array';
-import { module, test, skip } from 'qunit';
+import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
   attributesFor,

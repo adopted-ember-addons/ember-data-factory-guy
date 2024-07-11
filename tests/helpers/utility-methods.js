@@ -2,9 +2,6 @@ import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
 import { typeOf } from '@ember/utils';
 import FactoryGuy, { manualSetup } from 'ember-data-factory-guy';
 import RESTAdapter from '@ember-data/adapter/rest';
-import ActiveModelAdapter, {
-  ActiveModelSerializer,
-} from 'active-model-adapter';
 import { param } from 'ember-data-factory-guy/utils/helper-functions';
 import { getContext } from '@ember/test-helpers';
 // TODO: Remove the need for this mixin
@@ -24,7 +21,7 @@ export function fetchJSON({ url, params, method = 'GET' } = {}) {
 }
 
 //// custom adapter options for the various models
-//// which are applied to the currently testing model's adapter ( JSONAPI, REST, ActiveModel, etc )
+//// which are applied to the currently testing model's adapter ( JSONAPI, REST, etc )
 //const adapterOptions = {
 //  employee: {
 //    buildURL(modelName, id, snapshot, requestType, query)  {
@@ -43,7 +40,7 @@ export function fetchJSON({ url, params, method = 'GET' } = {}) {
 //};
 
 // custom serializer options for the various models
-// which are applied to the currently testing  model's serializer ( JSONAPI, REST, ActiveModel, etc )
+// which are applied to the currently testing  model's serializer ( JSONAPI, REST, etc )
 const serializerOptions = {
   'entry-type': {
     attrs: {
@@ -109,17 +106,10 @@ function setupCustomSerializer(container, serializerType, options) {
   return modelSerializer;
 }
 
-// serializerType like -rest or -active-model, -json-api, -json
+// serializerType like -rest or -json-api, -json
 export function containerSetup(application, serializerType) {
   // brute force setting the adapter/serializer on the store.
   if (serializerType) {
-    application.register('adapter:-active-model', ActiveModelAdapter, {
-      singleton: false,
-    });
-    application.register('serializer:-active-model', ActiveModelSerializer, {
-      singleton: false,
-    });
-
     let store = application.lookup('service:store');
 
     let adapterType = serializerType === '-json' ? '-rest' : serializerType;

@@ -4,11 +4,9 @@ import RESTSerializer from '@ember-data/serializer/rest';
 import FixtureBuilderFactory from 'ember-data-factory-guy/builder/fixture-builder-factory';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { ActiveModelSerializer } from 'active-model-adapter';
 import JSONAPIFixtureBuilder from 'ember-data-factory-guy/builder/jsonapi-fixture-builder';
 import RESTFixtureBuilder from 'ember-data-factory-guy/builder/rest-fixture-builder';
 import JSONFixtureBuilder from 'ember-data-factory-guy/builder/json-fixture-builder';
-import ActiveModelFixtureBuilder from 'ember-data-factory-guy/builder/active-model-fixture-builder';
 import { inlineSetup } from '../helpers/utility-methods';
 
 let factory, store;
@@ -22,12 +20,11 @@ module('FixtureBuilderFactory', function (hooks) {
   });
 
   test('returns the correct fixtureBuilder for serializer type of modelName', function (assert) {
-    assert.expect(5);
+    assert.expect(4);
     let tests = [
       // serializer type   expected FixtureBuilder
       [RESTSerializer, RESTFixtureBuilder],
       [JSONSerializer, JSONFixtureBuilder],
-      [ActiveModelSerializer, ActiveModelFixtureBuilder],
       [JSONAPISerializer, JSONAPIFixtureBuilder],
       [null, JSONAPIFixtureBuilder],
     ];

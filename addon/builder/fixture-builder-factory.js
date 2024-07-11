@@ -4,19 +4,6 @@ import JSONAPISerializer from '@ember-data/serializer/json-api';
 import JSONAPIFixtureBuilder from './jsonapi-fixture-builder';
 import RESTFixtureBuilder from './rest-fixture-builder';
 import JSONFixtureBuilder from './json-fixture-builder';
-import ActiveModelFixtureBuilder from './active-model-fixture-builder';
-import {
-  macroCondition,
-  dependencySatisfies,
-  importSync,
-} from '@embroider/macros';
-
-let ActiveModelSerializer;
-if (macroCondition(dependencySatisfies('active-model-adapter', '*'))) {
-  ActiveModelSerializer = importSync(
-    'active-model-adapter'
-  ).ActiveModelSerializer;
-}
 
 export default class {
   constructor(store) {
@@ -34,9 +21,6 @@ export default class {
     if (this.usingJSONAPISerializer(serializer)) {
       return new JSONAPIFixtureBuilder(this.store);
     }
-    if (this.usingActiveModelSerializer(serializer)) {
-      return new ActiveModelFixtureBuilder(this.store);
-    }
     if (this.usingRESTSerializer(serializer)) {
       return new RESTFixtureBuilder(this.store);
     }
@@ -48,10 +32,6 @@ export default class {
 
   usingJSONAPISerializer(serializer) {
     return serializer instanceof JSONAPISerializer;
-  }
-
-  usingActiveModelSerializer(serializer) {
-    return ActiveModelSerializer && serializer instanceof ActiveModelSerializer;
   }
 
   usingRESTSerializer(serializer) {

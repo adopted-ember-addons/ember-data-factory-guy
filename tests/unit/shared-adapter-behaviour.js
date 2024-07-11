@@ -1022,7 +1022,7 @@ SharedBehavior.mockCreateTests = function () {
       assert.ok(true, 'matching function is called');
       const description =
         requestBody.description || // RESTAdapter, JSONSerializer
-        (requestBody.profile && requestBody.profile.description) || // RESTSerializer, ActiveModelSerializer
+        (requestBody.profile && requestBody.profile.description) || // RESTSerializer,
         (requestBody.data && requestBody.data.attributes.description); // JSONAPISerializer
       return description === 'match me!';
     });
