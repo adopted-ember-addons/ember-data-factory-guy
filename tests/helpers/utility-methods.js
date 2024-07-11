@@ -1,8 +1,6 @@
 import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
 import { typeOf } from '@ember/utils';
 import FactoryGuy, { manualSetup } from 'ember-data-factory-guy';
-import DRFAdapter from 'ember-django-adapter/adapters/drf';
-import DRFSerializer from 'ember-django-adapter/serializers/drf';
 import RESTAdapter from '@ember-data/adapter/rest';
 import ActiveModelAdapter, {
   ActiveModelSerializer,
@@ -115,11 +113,6 @@ function setupCustomSerializer(container, serializerType, options) {
 export function containerSetup(application, serializerType) {
   // brute force setting the adapter/serializer on the store.
   if (serializerType) {
-    application.register('adapter:-drf', DRFAdapter, { singleton: false });
-    application.register('serializer:-drf', DRFSerializer, {
-      singleton: false,
-    });
-
     application.register('adapter:-active-model', ActiveModelAdapter, {
       singleton: false,
     });
