@@ -35,8 +35,7 @@
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
     "pretender": "^3.4.3",
-    "resolve": "^1.20.0",
-    "whatwg-fetch": "^3.6.2"
+    "resolve": "^1.20.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.3",
