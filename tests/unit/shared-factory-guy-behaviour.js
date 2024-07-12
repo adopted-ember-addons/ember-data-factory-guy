@@ -119,8 +119,8 @@ SharedBehavior.makeTests = function () {
     let user = make('user', { hats: [bh, sh] });
 
     assert.equal(user.get('hats.length'), 2);
-    assert.ok(user.get('hats.firstObject') instanceof BigHat);
-    assert.ok(user.get('hats.lastObject') instanceof SmallHat);
+    assert.ok(user.hats[0] instanceof BigHat);
+    assert.ok(user.hats.at(-1) instanceof SmallHat);
     // sets the belongTo user association
     assert.ok(bh.get('user') === user);
     assert.ok(sh.get('user') === user);
@@ -159,8 +159,8 @@ SharedBehavior.makeTests = function () {
     let project2 = make('project', { user: user });
 
     assert.equal(user.get('projects.length'), 2);
-    assert.ok(user.get('projects.firstObject') === project1);
-    assert.ok(user.get('projects.lastObject') === project2);
+    assert.ok(user.get('projects')[0] === project1);
+    assert.ok(user.get('projects').at(-1) === project2);
   });
 
   test('when belongTo parent is assigned, parent adds to polymorphic hasMany records', function (assert) {
@@ -169,32 +169,32 @@ SharedBehavior.makeTests = function () {
     make('small-hat', { user: user });
 
     assert.equal(user.get('hats.length'), 2);
-    assert.ok(user.get('hats.firstObject') instanceof BigHat);
-    assert.ok(user.get('hats.lastObject') instanceof SmallHat);
+    assert.ok(user.get('hats')[0] instanceof BigHat);
+    assert.ok(user.get('hats').at(-1) instanceof SmallHat);
   });
 
-  test('when hasMany ( async ) relationship is assigned, model relationship is synced on both sides', function (assert) {
-    run(function () {
-      let property = make('property');
-      let user1 = make('user', { properties: [property] });
-      let user2 = make('user', { properties: [property] });
+  test('when hasMany ( async ) relationship is assigned, model relationship is synced on both sides', async function (assert) {
+    let property = make('property');
+    let user1 = make('user', { properties: [property] });
+    let user2 = make('user', { properties: [property] });
 
-      assert.equal(property.get('owners.length'), 2);
-      assert.ok(property.get('owners.firstObject') === user1);
-      assert.ok(property.get('owners.lastObject') === user2);
-    });
+    const owners = await property.get('owners');
+
+    assert.equal(property.get('owners.length'), 2);
+    assert.ok(owners[0] === user1);
+    assert.ok(owners.at(-1) === user2);
   });
 
-  test('when belongsTo ( async ) parent is assigned, parent adds to hasMany records', function (assert) {
-    run(function () {
-      let company = make('company');
-      let user1 = make('user', { company: company });
-      let user2 = make('user', { company: company });
+  test('when belongsTo ( async ) parent is assigned, parent adds to hasMany records', async function (assert) {
+    let company = make('company');
+    let user1 = make('user', { company: company });
+    let user2 = make('user', { company: company });
 
-      assert.equal(company.get('users.length'), 2);
-      assert.ok(company.get('users.firstObject') === user1);
-      assert.ok(company.get('users.lastObject') === user2);
-    });
+    const users = await company.get('users');
+
+    assert.equal(company.get('users.length'), 2);
+    assert.ok(users[0] === user1);
+    assert.ok(users.at(-1) === user2);
   });
 
   test('when belongTo parent is assigned, parent adds to hasMany record using inverse', function (assert) {
@@ -202,14 +202,14 @@ SharedBehavior.makeTests = function () {
     let project2 = make('project', { parent: project });
 
     assert.equal(project.get('children.length'), 1);
-    assert.ok(project.get('children.firstObject') === project2);
+    assert.ok(project.get('children')[0] === project2);
   });
 
   test('when belongTo parent is assigned, parent adds to hasMany record using actual hasMany name', function (assert) {
     let bh = make('big-hat');
     let silk = make('silk', { hat: bh });
 
-    assert.ok(bh.get('materials.firstObject') === silk);
+    assert.ok(bh.get('materials')[0] === silk);
   });
 
   test('when belongTo parent is assigned, parent adds to belongsTo record', function (assert) {
@@ -251,14 +251,14 @@ SharedBehavior.makeTests = function () {
   test('hasMany associations defined as attributes in fixture', function (assert) {
     let user = make('user_with_projects');
     assert.equal(user.get('projects.length'), 2);
-    assert.ok(user.get('projects.firstObject.user') === user);
+    assert.ok(user.projects[0].user === user);
     assert.ok(user.get('projects.lastObject.user') === user);
   });
 
   test('hasMany associations defined with traits', function (assert) {
     let user = make('user', 'with_projects');
     assert.equal(user.get('projects.length'), 2);
-    assert.ok(user.get('projects.firstObject.user') === user);
+    assert.ok(user.projects[0].user === user);
     assert.ok(user.get('projects.lastObject.user') === user);
   });
 
@@ -275,19 +275,19 @@ SharedBehavior.makeTests = function () {
     let project = make('project', 'with_user_having_hats_belonging_to_outfit');
     let user = project.get('user');
     let hats = user.get('hats');
-    let firstHat = hats.get('firstObject');
-    let lastHat = hats.get('lastObject');
+    let firstHat = hats[0];
+    let lastHat = hats.at(-1);
 
-    assert.ok(user.get('projects.firstObject') === project);
+    assert.ok(user.get('projects')[0] === project);
     assert.ok(firstHat.get('user') === user);
     assert.ok(firstHat.get('outfit.id') === '1');
     assert.ok(firstHat.get('outfit.hats.length') === 1);
-    assert.ok(firstHat.get('outfit.hats.firstObject') === firstHat);
+    assert.ok(firstHat.get('outfit.hats')[0] === firstHat);
 
     assert.ok(lastHat.get('user') === user);
     assert.ok(lastHat.get('outfit.id') === '2');
     assert.ok(lastHat.get('outfit.hats.length') === 1);
-    assert.ok(lastHat.get('outfit.hats.firstObject') === lastHat);
+    assert.ok(lastHat.get('outfit.hats')[0] === lastHat);
   });
 
   test('using afterMake with transient attributes in definition', function (assert) {
@@ -318,7 +318,7 @@ SharedBehavior.makeTests = function () {
     let project = make('project', { title: 'The Project', user: 1 });
     assert.equal(project.get('user'), user);
     assert.equal(user.get('projects').objectAt(0), project);
-    assert.equal(user.get('projects.firstObject.title'), 'The Project');
+    assert.equal(user.projects[0].title, 'The Project');
   });
 
   test("hasMany associations assigned with id's throws error if relationship is polymorphic", function (assert) {

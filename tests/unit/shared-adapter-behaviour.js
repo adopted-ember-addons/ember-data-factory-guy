@@ -219,7 +219,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
       let user = await FactoryGuy.store.findRecord('user', userId);
 
       assert.equal(user.get('hats.length'), 2);
-      assert.equal(user.get('hats.firstObject.type'), 'BigHat');
+      assert.equal(user.hats[0].type, 'BigHat');
     });
 
     test('using returns with json', async function (assert) {
@@ -242,7 +242,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
       mockFindRecord('user').returns({ json });
 
       const user = await FactoryGuy.store.findRecord('user', json.get('id'));
-      assert.ok(user.get('hats.firstObject.id') === hat1.get('id') + '');
+      assert.ok(user.hats[0].id === hat1.get('id') + '');
       assert.ok(user.get('hats.lastObject.id') === hat2.get('id') + '');
     });
 
@@ -373,10 +373,10 @@ SharedBehavior.mockFindAllCommonTests = function () {
 
     let profiles = await FactoryGuy.store.findAll('profile');
     assert.ok(
-      profiles.get('firstObject.camelCaseDescription') === 'textGoesHere'
+      profiles[0].camelCaseDescription === 'textGoesHere'
     );
     assert.ok(
-      profiles.get('firstObject.snake_case_description') === 'text_goes_here'
+      profiles[0].snake_case_description === 'text_goes_here'
     );
   });
 
@@ -392,7 +392,7 @@ SharedBehavior.mockFindAllCommonTests = function () {
 
     const profiles = await FactoryGuy.store.findAll('profile');
     assert.ok(profiles.get('length') === 2);
-    assert.ok(profiles.get('firstObject.description') === 'dude');
+    assert.ok(profiles[0].description === 'dude');
   });
 
   test('with traits', async function (assert) {
@@ -400,7 +400,7 @@ SharedBehavior.mockFindAllCommonTests = function () {
 
     const profiles = await FactoryGuy.store.findAll('profile');
     assert.ok(profiles.get('length') === 2);
-    assert.ok(profiles.get('firstObject.description') === 'goofy');
+    assert.ok(profiles[0].description === 'goofy');
   });
 
   test('with traits and extra options', async function (assert) {
@@ -408,7 +408,7 @@ SharedBehavior.mockFindAllCommonTests = function () {
 
     const profiles = await FactoryGuy.store.findAll('profile');
     assert.ok(profiles.get('length') === 2);
-    assert.ok(profiles.get('firstObject.description') === 'dude');
+    assert.ok(profiles[0].description === 'dude');
   });
 };
 
@@ -420,7 +420,7 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
 
       const profiles = await FactoryGuy.store.findAll('profile');
       assert.ok(profiles.get('length') === 2);
-      assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
+      assert.ok(profiles[0].company.name === 'Silly corp');
       assert.ok(profiles.get('lastObject.superHero.name') === 'BatMan');
     });
 
@@ -464,7 +464,7 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
       mockFindAll('profile').returns({ json });
 
       const profiles = await FactoryGuy.store.findAll('profile');
-      assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
+      assert.ok(profiles[0].company.name === 'Silly corp');
       assert.ok(profiles.get('lastObject.superHero.name') === 'BatMan');
     });
 
@@ -474,7 +474,7 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
 
       const profiles = await FactoryGuy.store.findAll('profile');
       await settled();
-      assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
+      assert.ok(profiles[0].company.name === 'Silly corp');
       assert.ok(profiles.get('lastObject.superHero.name') === 'BatMan');
       assert.equal(
         FactoryGuy.store.peekAll('profile').length,
@@ -482,15 +482,6 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
         'does not make new profiles'
       );
     });
-
-    // TODO: need to put included models into included section of json
-    //    test("handles include params", async function(assert) {
-    //      let json = buildList('profile', 'with_company');
-    //      mockFindAll('profile').withParams({include: 'company'}).returns({json});
-    //
-    //      const profiles = FactoryGuy.store.findAll('profile', {include: 'company'});
-    //      assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
-    //    });
   });
 };
 
@@ -517,11 +508,11 @@ SharedBehavior.mockFindAllEmbeddedTests = function () {
         comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + ''
       );
       assert.ok(
-        comics.get('firstObject.characters').mapBy('name') + '' ===
+        comics[0].characters.map(({ name }) => name) + '' ===
           ['BadGuy#1', 'BadGuy#2'] + ''
       );
       assert.ok(
-        comics.get('lastObject.characters').mapBy('name') + '' ===
+        comics.at(-1).characters.map(({ name }) => name) + '' ===
           ['BadGuy#3', 'BadGuy#4'] + ''
       );
     });
@@ -582,7 +573,7 @@ SharedBehavior.mockQueryTests = function () {
 
     const users = await FactoryGuy.store.query('user', { name: 'Bob' });
     assert.equal(users.get('length'), 1);
-    assert.equal(users.get('firstObject'), bob);
+    assert.equal(users[0], bob);
     assert.equal(
       FactoryGuy.store.peekAll('user').length,
       1,
@@ -602,9 +593,9 @@ SharedBehavior.mockQueryTests = function () {
 
     let users = await FactoryGuy.store.query('user', { name: 'Bob' });
     assert.equal(users.get('length'), 2);
-    assert.equal(users.get('firstObject.name'), 'User1');
-    assert.equal(users.get('firstObject.hats.length'), 2);
-    assert.equal(users.get('lastObject.name'), 'User2');
+    assert.equal(users[0].name, 'User1');
+    assert.equal(users[0].hats.length, 2);
+    assert.equal(users.at(-1).name, 'User2');
     assert.equal(
       FactoryGuy.store.peekAll('user').length,
       2,
@@ -626,8 +617,8 @@ SharedBehavior.mockQueryTests = function () {
       name: 'Dude Company',
     });
     assert.equal(companies.get('length'), 2);
-    assert.ok(companies.get('firstObject.profile') instanceof Profile);
-    assert.equal(companies.get('firstObject.projects.length'), 2);
+    assert.ok(companies[0].profile instanceof Profile);
+    assert.equal(companies[0].projects.length, 2);
     assert.ok(companies.get('lastObject.profile') instanceof Profile);
     assert.equal(companies.get('lastObject.projects.length'), 2);
     assert.equal(
@@ -654,7 +645,7 @@ SharedBehavior.mockQueryTests = function () {
 
     const users = await FactoryGuy.store.query('user', { name: 'Bob' });
     assert.equal(users.get('length'), 1);
-    assert.equal(users.get('firstObject'), bob);
+    assert.equal(users[0], bob);
     // does not create a new model
     assert.equal(FactoryGuy.store.peekAll('user').length, 1);
   });
