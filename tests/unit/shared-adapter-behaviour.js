@@ -286,7 +286,7 @@ SharedBehavior.mockFindRecordEmbeddedTests = function () {
       );
       assert.ok(comic.get('name') === 'Comic Times #1');
       assert.ok(
-        comic.get('characters').mapBy('name') + '' ===
+        comic.get('characters').map(({ name }) => name) + '' ===
           ['BadGuy#1', 'BadGuy#2'] + ''
       );
     });
@@ -491,12 +491,13 @@ SharedBehavior.mockFindAllEmbeddedTests = function () {
 
       const comics = await FactoryGuy.store.findAll('comic-book');
       assert.ok(
-        comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + ''
+        comics.map(({ name }) => name) + '' === ['Comic Times #1', 'Comic Times #2'] + ''
       );
-      assert.ok(
-        comics.mapBy('company.name') + '' ===
-          ['Marvel Comics', 'Marvel Comics'] + ''
-      );
+
+      for (let comic of comics) {
+        const company = await comic.get('company');
+        assert.ok(company.name === 'Marvel Comics');
+      }
     });
 
     test('hasMany', async function (assert) {
@@ -504,7 +505,7 @@ SharedBehavior.mockFindAllEmbeddedTests = function () {
 
       const comics = await FactoryGuy.store.findAll('comic-book');
       assert.ok(
-        comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + ''
+        comics.map(({ name }) => name) + '' === ['Comic Times #1', 'Comic Times #2'] + ''
       );
       assert.ok(
         comics[0].characters.map(({ name }) => name) + '' ===
@@ -779,7 +780,7 @@ SharedBehavior.mockQueryMetaTests = function () {
       mockQuery('profile', { page: 3 }).returns({ json: json2 });
 
       let profiles = await FactoryGuy.store.query('profile', { page: 2 });
-      assert.deepEqual(profiles.mapBy('id'), ['1', '2']);
+      assert.deepEqual(profiles.map(({ id }) => id), ['1', '2']);
       assert.ok(
         isEquivalent(profiles.get('meta'), {
           previous: '/profiles?page=1',
@@ -788,7 +789,7 @@ SharedBehavior.mockQueryMetaTests = function () {
       );
 
       let profiles2 = await FactoryGuy.store.query('profile', { page: 3 });
-      assert.deepEqual(profiles2.mapBy('id'), ['3', '4']);
+      assert.deepEqual(profiles2.map(({ id }) => id), ['3', '4']);
       assert.ok(
         isEquivalent(profiles2.get('meta'), {
           previous: '/profiles?page=2',
@@ -1236,8 +1237,8 @@ SharedBehavior.mockCreateReturnsAssociations = function () {
 
       await hero.save();
 
-      assert.deepEqual(hero.get('outfits').mapBy('id'), ['1', '2']);
-      assert.deepEqual(hero.get('outfits').mapBy('name'), [
+      assert.deepEqual(hero.get('outfits').map(({ id }) => id), ['1', '2']);
+      assert.deepEqual(hero.get('outfits').map(({ name }) => name), [
         'Outfit-1',
         'Outfit-2',
       ]);
@@ -1707,8 +1708,8 @@ SharedBehavior.mockUpdateReturnsAssociations = function () {
       await hero.save();
 
       assert.equal(hero.get('name'), newValue);
-      assert.deepEqual(hero.get('outfits').mapBy('id'), ['1', '2']);
-      assert.deepEqual(hero.get('outfits').mapBy('name'), [
+      assert.deepEqual(hero.get('outfits').map(({ id }) => id), ['1', '2']);
+      assert.deepEqual(hero.get('outfits').map(({ name }) => name), [
         'Outfit-1',
         'Outfit-2',
       ]);

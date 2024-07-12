@@ -61,7 +61,7 @@ module('MockLinks', function (hooks) {
     mockLinks(user, 'properties').returns({ json: properties });
     let userProperties = await user.get('properties');
     assert.deepEqual(
-      userProperties.mapBy('id'),
+      userProperties.map(({ id }) => id),
       properties.get().map((f) => String(f.id))
     );
   });
