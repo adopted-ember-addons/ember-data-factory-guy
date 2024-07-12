@@ -124,14 +124,15 @@ module('MockFindRecord', function (hooks) {
 
   module('#fails', function () {
     test('with errors in response', async function (assert) {
-      assert.expect(2);
+      assert.expect(1);
       const response = { errors: { description: ['bad'] } },
         mock = mockFindRecord('profile').fails({ response });
 
-      await FactoryGuy.store.findRecord('profile', 1).catch(() => {
+      try {
+        await FactoryGuy.store.findRecord('profile', 1);
+      } catch {
         assert.equal(mock.timesCalled, 1);
-        assert.ok(true);
-      });
+      }
     });
   });
 });

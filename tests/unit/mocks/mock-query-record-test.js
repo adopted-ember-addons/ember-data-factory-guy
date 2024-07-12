@@ -99,9 +99,11 @@ module('MockQueryRecord', function (hooks) {
   test('using fails makes the request fail', async function (assert) {
     assert.expect(1);
     mockQueryRecord('user').fails();
-    await FactoryGuy.store.queryRecord('user', {}).catch(() => {
+    try {
+      await FactoryGuy.store.queryRecord('user', {});
+    } catch {
       assert.ok(true);
-    });
+    }
   });
 
   test("using returns 'model' with array of DS.Models throws error", function (assert) {

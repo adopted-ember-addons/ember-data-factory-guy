@@ -76,9 +76,11 @@ SharedBehavior.mockFindRecordCommonTests = function () {
     let profileId = 1;
     mockFindRecord('profile').returns({ id: profileId });
 
-    await FactoryGuy.store.findRecord('profile', profileId).catch((reason) => {
+    try {
+      await FactoryGuy.store.findRecord('profile', profileId);
+    } catch (reason) {
       assert.equal(reason.errors[0].status, '404');
-    });
+    }
   });
 
   test('returns model that has attribute named type, but is not polymorphic', async function (assert) {
@@ -159,32 +161,36 @@ SharedBehavior.mockFindRecordCommonTests = function () {
 
   test('failure with fails method when passing modelName as parameter', async function (assert) {
     let mock = mockFindRecord('profile').fails();
-    await FactoryGuy.store.findRecord('profile', mock.get('id')).catch(() => {
+    try {
+      await FactoryGuy.store.findRecord('profile', mock.get('id'));
+    } catch {
       assert.equal(mock.timesCalled, 1);
-    });
+    }
   });
 
   test('failure with fails method when passing modeName as parameter and returning instance', async function (assert) {
     let model = make('profile');
     let mock = mockFindRecord('profile').returns({ model }).fails();
 
-    await FactoryGuy.store
-      .findRecord('profile', model.id, { reload: true })
-      .catch(() => {
-        assert.equal(mock.timesCalled, 1);
-        assert.equal(mock.status, 500);
-      });
+    try {
+      await FactoryGuy.store.findRecord('profile', model.id, { reload: true });
+    } catch {
+      assert.equal(mock.timesCalled, 1);
+      assert.equal(mock.status, 500);
+    }
   });
 
   test('failure with fails method when passing model instance as parameter and no returns is used', async function (assert) {
     let profile = make('profile');
     let mock = mockFindRecord(profile).fails();
-    await FactoryGuy.store
-      .findRecord('profile', profile.id, { reload: true })
-      .catch(() => {
-        assert.equal(mock.timesCalled, 1, 'mock called once');
-        assert.equal(mock.status, 500, 'stats 500');
+    try {
+      await FactoryGuy.store.findRecord('profile', profile.id, {
+        reload: true,
       });
+    } catch {
+      assert.equal(mock.timesCalled, 1, 'mock called once');
+      assert.equal(mock.status, 500, 'stats 500');
+    }
   });
 };
 
@@ -342,10 +348,11 @@ SharedBehavior.mockReloadTests = function () {
   test('failure with fails method', async function (assert) {
     let mock = mockReload('profile', 1).fails();
 
-    await FactoryGuy.store.findRecord('profile', 1).catch(() => {
+    try {
+      await FactoryGuy.store.findRecord('profile', 1);
+    } catch {
       assert.equal(mock.timesCalled, 1);
-      assert.ok(true);
-    });
+    }
   });
 };
 
@@ -532,10 +539,11 @@ SharedBehavior.mockQueryTests = function () {
     let errors = { errors: { name: ['wrong'] } };
 
     let mock = mockQuery('user').fails({ status: 422, response: errors });
-    await FactoryGuy.store.query('user', {}).catch(() => {
+    try {
+      await FactoryGuy.store.query('user', {});
+    } catch {
       assert.equal(mock.timesCalled, 1);
-      assert.ok(true);
-    });
+    }
   });
 
   test('using nested search params', async function (assert) {
@@ -777,7 +785,7 @@ SharedBehavior.mockQueryRecordTests = function () {
   test('when returning no result', async function (assert) {
     mockQueryRecord('user');
 
-    FactoryGuy.store.queryRecord('user', {});
+    await FactoryGuy.store.queryRecord('user', {});
 
     assert.ok(true);
   });
@@ -1120,13 +1128,11 @@ SharedBehavior.mockCreateTests = function () {
   test('failure with fails method', async function (assert) {
     let mock = mockCreate('profile').fails();
 
-    await FactoryGuy.store
-      .createRecord('profile')
-      .save()
-      .catch(() => {
-        assert.ok(true);
-        assert.equal(mock.timesCalled, 1);
-      });
+    try {
+      await FactoryGuy.store.createRecord('profile').save();
+    } catch {
+      assert.equal(mock.timesCalled, 1);
+    }
   });
 
   test('fails when match args not present in createRecord attributes', async function (assert) {
@@ -1134,14 +1140,13 @@ SharedBehavior.mockCreateTests = function () {
       description: 'correct description',
     });
 
-    await FactoryGuy.store
-      .createRecord('profile', { description: 'wrong description' })
-      .save()
-      .catch(() => {
-        assert.ok(true);
-        // our mock was NOT called
-        assert.equal(mock.timesCalled, 0);
-      });
+    try {
+      await FactoryGuy.store
+        .createRecord('profile', { description: 'wrong description' })
+        .save();
+    } catch {
+      assert.equal(mock.timesCalled, 0);
+    }
   });
 
   test('match but still fail with fails method', async function (assert) {
@@ -1151,13 +1156,13 @@ SharedBehavior.mockCreateTests = function () {
       .match({ description: description })
       .fails();
 
-    await FactoryGuy.store
-      .createRecord('profile', { description: description })
-      .save()
-      .catch(() => {
-        assert.ok(true);
-        assert.equal(mock.timesCalled, 1);
-      });
+    try {
+      await FactoryGuy.store
+        .createRecord('profile', { description: description })
+        .save();
+    } catch {
+      assert.equal(mock.timesCalled, 1);
+    }
   });
 };
 
@@ -1168,12 +1173,13 @@ SharedBehavior.mockCreateFailsWithErrorResponse = function () {
       let mock = mockCreate('profile').fails({ status: 422, response: errors });
 
       let profile = FactoryGuy.store.createRecord('profile');
-      await profile.save().catch(() => {
+      try {
+        await profile.save();
+      } catch {
         let errorMessages = profile.get('errors.messages');
         assert.deepEqual(errorMessages, ['bad dog', 'bad dude']);
         assert.equal(mock.timesCalled, 1);
-        assert.ok(true);
-      });
+      }
     });
   });
 };
@@ -1325,10 +1331,12 @@ SharedBehavior.mockUpdateTests = function () {
     mockUpdate('profile', profile.id).fails({ status: 500 });
 
     profile.set('description', 'new desc');
-    await profile.save().catch(function (reason) {
+    try {
+      await profile.save();
+    } catch (reason) {
       let error = reason.errors[0];
       assert.equal(error.status, '500');
-    });
+    }
   });
 
   test('with model that fails with custom status', async function (assert) {
@@ -1337,10 +1345,12 @@ SharedBehavior.mockUpdateTests = function () {
     mockUpdate(profile).fails({ status: 401 });
 
     profile.set('description', 'new desc');
-    await profile.save().catch(function (reason) {
+    try {
+      await profile.save();
+    } catch (reason) {
       let error = reason.errors[0];
       assert.equal(error.status, '401');
-    });
+    }
   });
 
   test('with model that fails and then succeeds', async function (assert) {
@@ -1349,9 +1359,12 @@ SharedBehavior.mockUpdateTests = function () {
     let updateMock = mockUpdate(profile).fails();
 
     profile.set('description', 'new desc');
-    await profile
-      .save()
-      .catch(() => assert.ok(true, 'update failed the first time'));
+    try {
+      await profile.save();
+    } catch {
+      assert.ok(true, 'update failed the first time');
+    }
+
     updateMock.succeeds();
     assert.ok(!profile.get('valid'), 'Profile is invalid.');
 
@@ -1548,10 +1561,11 @@ SharedBehavior.mockUpdateTests = function () {
     });
 
     profile.set('description', 'wrong description');
-    profile.save().catch(() => {
-      assert.ok(true);
+    try {
+      await profile.save();
+    } catch {
       assert.equal(mock.timesCalled, 0);
-    });
+    }
   });
 
   test('succeeds then fails when match args not present with only modelType', async function (assert) {
@@ -1562,13 +1576,13 @@ SharedBehavior.mockUpdateTests = function () {
     let mock = mockUpdate('profile').match({ description: customDescription });
 
     await profile.save();
-    assert.ok(true);
     assert.equal(mock.timesCalled, 1);
 
-    await profile2.save().catch(() => {
-      assert.ok(true);
+    try {
+      await profile2.save();
+    } catch {
       assert.equal(mock.timesCalled, 1);
-    });
+    }
   });
 
   test('match but still fail with fails method', async function (assert) {
@@ -1579,10 +1593,11 @@ SharedBehavior.mockUpdateTests = function () {
       .match({ description: description })
       .fails();
 
-    await profile.save().catch(() => {
-      assert.ok(true);
+    try {
+      await profile.save();
+    } catch {
       assert.equal(mock.timesCalled, 1);
-    });
+    }
   });
 
   test('removes attributes based serializer attrs settings', async function (assert) {
@@ -1619,14 +1634,16 @@ SharedBehavior.mockUpdateWithErrorMessages = function () {
       });
 
       profile.set('description', 'new desc');
-      await profile.save().catch(function (reason) {
+      try {
+        await profile.save();
+      } catch (reason) {
         let errors = reason.errors;
         assert.equal(
           errors.description,
           'invalid data',
           'custom description shows up in errors'
         );
-      });
+      }
     });
   });
 };
@@ -1746,24 +1763,26 @@ SharedBehavior.mockDeleteTests = function () {
     let profile = profiles[0];
     let mock = mockDelete('profile').fails({ status: 500 });
 
-    await profile.destroyRecord().catch(function (reason) {
+    try {
+      await profile.destroyRecord();
+    } catch (reason) {
       let error = reason.errors[0];
       assert.equal(error.status, '500');
       assert.equal(mock.timesCalled, 1);
-      assert.ok(true);
-    });
+    }
   });
 
   test('with modelType and id that fails', async function (assert) {
     let profile = make('profile');
     let mock = mockDelete('profile', profile.id).fails({ status: 500 });
 
-    await profile.destroyRecord().catch(function (reason) {
+    try {
+      await profile.destroyRecord();
+    } catch (reason) {
       let error = reason.errors[0];
       assert.equal(error.status, '500');
       assert.equal(mock.timesCalled, 1);
-      assert.ok(true);
-    });
+    }
   });
 
   test('with model that fails with custom status', async function (assert) {
@@ -1771,10 +1790,12 @@ SharedBehavior.mockDeleteTests = function () {
 
     mockDelete(profile).fails({ status: 401 });
 
-    await profile.destroyRecord().catch(function (reason) {
+    try {
+      await profile.destroyRecord();
+    } catch (reason) {
       let error = reason.errors[0];
       assert.equal(error.status, '401');
-    });
+    }
   });
 
   test('with modelType that fails and then succeeds', async function (assert) {
@@ -1782,9 +1803,11 @@ SharedBehavior.mockDeleteTests = function () {
     let profile = profiles[0];
     let deleteMock = mockDelete('profile').fails();
 
-    await profile
-      .destroyRecord()
-      .catch(() => assert.ok(true, 'delete failed the first time'));
+    try {
+      await profile.destroyRecord();
+    } catch {
+      assert.ok(true, 'delete failed the first time');
+    }
     deleteMock.succeeds();
 
     await profile.destroyRecord();
@@ -1796,9 +1819,11 @@ SharedBehavior.mockDeleteTests = function () {
 
     let deleteMock = mockDelete('profile', profile.id).fails();
 
-    await profile
-      .destroyRecord()
-      .catch(() => assert.ok(true, 'delete failed the first time'));
+    try {
+      await profile.destroyRecord();
+    } catch {
+      assert.ok(true, 'delete failed the first time');
+    }
     deleteMock.succeeds();
 
     await profile.destroyRecord();
@@ -1810,9 +1835,11 @@ SharedBehavior.mockDeleteTests = function () {
 
     let deleteMock = mockDelete(profile).fails();
 
-    await profile
-      .destroyRecord()
-      .catch(() => assert.ok(true, 'delete failed the first time'));
+    try {
+      await profile.destroyRecord();
+    } catch {
+      assert.ok(true, 'delete failed the first time');
+    }
     deleteMock.succeeds();
 
     await profile.destroyRecord();
