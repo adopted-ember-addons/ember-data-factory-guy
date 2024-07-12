@@ -2,7 +2,7 @@ import Model, { attr, hasMany, belongsTo } from '@ember-data/model';
 
 export default class extends Model {
   @attr('string') name;
-  @belongsTo('company') company;
+  @belongsTo('company', { async: true, inverse: null }) company;
   @hasMany('person', {
     polymorphic: true,
     async: true,
