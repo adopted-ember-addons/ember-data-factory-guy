@@ -252,14 +252,14 @@ SharedBehavior.makeTests = function () {
     let user = make('user_with_projects');
     assert.equal(user.get('projects.length'), 2);
     assert.ok(user.projects[0].user === user);
-    assert.ok(user.get('projects.lastObject.user') === user);
+    assert.ok(user.projects.at(-1).user === user);
   });
 
   test('hasMany associations defined with traits', function (assert) {
     let user = make('user', 'with_projects');
     assert.equal(user.get('projects.length'), 2);
     assert.ok(user.projects[0].user === user);
-    assert.ok(user.get('projects.lastObject.user') === user);
+    assert.ok(user.projects.at(-1).user === user);
   });
 
   test('belongsTo associations defined with traits', function (assert) {
@@ -310,7 +310,7 @@ SharedBehavior.makeTests = function () {
     let user = make('user', { projects: [1, 2] });
     assert.equal(project2.get('user'), user);
     assert.equal(user.get('projects').objectAt(0), project1);
-    assert.equal(user.get('projects.lastObject.title'), 'Project Two');
+    assert.equal(user.projects.at(-1).title, 'Project Two');
   });
 
   test('belongsTo association assigned by id', function (assert) {
