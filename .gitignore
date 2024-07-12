@@ -1,33 +1,32 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-
-.DS_Store
-.editorconfig
+# See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/dist
-/dist2
-/tmp
-
+/dist/
+/tmp/
 
 # dependencies
-/node_modules
-/bower_components
+/bower_components/
+/node_modules/
 
 # misc
-.ruby-gemset
-.ruby-version
-yarn-error.log
-
-stats/
+/.env*
+/.pnp*
 /.sass-cache
 /.eslintcache
 /connect.lock
-/coverage/*
+/coverage/
 /libpeerconnection.log
-npm-debug.log
-testem.log
-.vscode
-jsconfig.json
+/npm-debug.log*
+/testem.log
+/yarn-error.log
 
-/factory_guy_presentation
-/factory_guy_presents
+# ember-try
+/.node_modules.ember-try/
+/bower.json.ember-try
+/npm-shrinkwrap.json.ember-try
+/package.json.ember-try
+/package-lock.json.ember-try
+/yarn.lock.ember-try
+
+# broccoli-debug
+/DEBUG/

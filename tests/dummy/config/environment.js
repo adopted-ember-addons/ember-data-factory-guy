@@ -1,19 +1,16 @@
 'use strict';
 
 module.exports = function (environment) {
-  let ENV = {
+  const ENV = {
     modulePrefix: 'dummy',
-    environment: environment,
+    environment,
     rootURL: '/',
-    locationType: 'auto',
+    locationType: 'history',
     EmberENV: {
+      EXTEND_PROTOTYPES: false,
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
         // e.g. EMBER_NATIVE_DECORATOR_SUPPORT: true
-      },
-      EXTEND_PROTOTYPES: {
-        // Prevent Ember Data from overriding Date.parse.
-        Date: false,
       },
     },
 
@@ -24,8 +21,6 @@ module.exports = function (environment) {
   };
 
   if (environment === 'development') {
-    // ENV.factoryGuy = {enabled: true, useScenarios: true};
-    // ENV.factoryGuy = {enabled: false};
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
@@ -46,7 +41,7 @@ module.exports = function (environment) {
   }
 
   if (environment === 'production') {
-    //    ENV.factoryGuy = {useScenarios: true};
+    // here you can enable a production-specific feature
   }
 
   return ENV;
