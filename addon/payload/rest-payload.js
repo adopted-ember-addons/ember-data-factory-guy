@@ -1,5 +1,4 @@
 import { isEmpty } from '@ember/utils';
-import { A } from '@ember/array';
 import BasePayload from './base-payload';
 
 export default class extends BasePayload {
@@ -10,10 +9,8 @@ export default class extends BasePayload {
   }
 
   includeKeys() {
-    let keys = A(Object.keys(this.json)).reject(
-      (key) => this.payloadKey === key
-    );
-    return A(keys).reject((key) => A(this.proxyMethods).includes(key)) || [];
+    let keys = Object.keys(this.json).filter((key) => this.payloadKey !== key);
+    return keys.filter((key) => !this.proxyMethods.includes(key)) || [];
   }
 
   getInclude(modelType) {

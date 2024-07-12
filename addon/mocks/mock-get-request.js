@@ -2,7 +2,6 @@
 /* eslint-disable ember/no-get */
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
-import { isArray } from '@ember/array';
 import FactoryGuy from '../factory-guy';
 import Model from '@ember-data/model';
 import MockStoreRequest from './mock-store-request';
@@ -116,7 +115,7 @@ class MockGetRequest extends MockStoreRequest {
         assert(
           `[ember-data-factory-guy] argument ( models ) must be an array - found type:'
           ${typeOf(models)}`,
-          isArray(models)
+          Array.isArray(models)
         );
 
         json = models.map((model) => ({ id: model.id }));

@@ -1,6 +1,5 @@
 import { isEmpty, typeOf } from '@ember/utils';
 import { dasherize } from '@ember/string';
-import { A } from '@ember/array';
 import FixtureConverter from './fixture-converter';
 import { entries } from '../utils/helper-functions';
 
@@ -115,7 +114,7 @@ export default class JSONAPIFixtureConverter extends FixtureConverter {
    Add the model to included array unless it's already there.
    */
   addToIncluded(data) {
-    let found = A(this.included).find((model) => {
+    let found = this.included.find((model) => {
       return model.id === data.id && model.type === data.type;
     });
     if (!found) {

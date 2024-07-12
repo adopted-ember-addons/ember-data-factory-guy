@@ -2,7 +2,6 @@ import Store from '@ember-data/store';
 import { assert } from '@ember/debug';
 import { isPresent, typeOf } from '@ember/utils';
 import { join } from '@ember/runloop';
-import { A } from '@ember/array';
 import ModelDefinition from './model-definition';
 import FixtureBuilderFactory from './builder/fixture-builder-factory';
 import RequestManager from './mocks/request-manager';
@@ -525,7 +524,7 @@ class FactoryGuy {
       let adapter = findAdapter(name);
       let shouldCache = () => {
         if (isPresent(except)) {
-          return A(except).includes(name);
+          return except.includes(name);
         }
         return false;
       };
@@ -590,7 +589,7 @@ class FactoryGuy {
       opts = args.pop();
     }
     // whatever is left are traits
-    let traits = A(args).compact();
+    let traits = args.filter((item) => item != null);
     return { opts, traits };
   }
 

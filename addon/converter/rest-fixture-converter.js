@@ -1,5 +1,4 @@
 import { dasherize } from '@ember/string';
-import { A } from '@ember/array';
 import { pluralize } from 'ember-inflector';
 import JSONFixtureConverter from './json-fixture-converter';
 
@@ -75,7 +74,7 @@ export default class RESTFixtureConverter extends JSONFixtureConverter {
     }
 
     let modelRelationships = this.included[relationshipKey],
-      found = A(modelRelationships).find((existing) => existing.id === data.id);
+      found = modelRelationships.find((existing) => existing.id === data.id);
 
     if (!found) {
       modelRelationships.push(data);

@@ -1,6 +1,5 @@
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
-import { isArray } from '@ember/array';
 import MockRequest from './mock-request';
 import FactoryGuy from '../factory-guy';
 import Model from '@ember-data/model';
@@ -26,7 +25,7 @@ export default class MockLinksRequest extends MockRequest {
       relationship = relationships.get(this.relationshipKey);
 
     assert(
-      `[ember-data-factory-guy] mockLinks can not find that relationship 
+      `[ember-data-factory-guy] mockLinks can not find that relationship
         [${this.relationshipKey}] on model of type ${modelClass.modelName}`,
       relationship
     );
@@ -132,7 +131,7 @@ export default class MockLinksRequest extends MockRequest {
         assert(
           `[ember-data-factory-guy] argument ( models ) must be an array - found type:'
           ${typeOf(models)}`,
-          isArray(models)
+          Array.isArray(models)
         );
 
         json = models.map((model) => ({ id: model.id }));

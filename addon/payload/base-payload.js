@@ -1,6 +1,5 @@
 import { w } from '@ember/string';
 import { typeOf } from '@ember/utils';
-import { A } from '@ember/array';
 
 export default class {
   /**
@@ -44,8 +43,8 @@ export default class {
    */
   add(more) {
     this.converter.included = this.json;
-    A(Object.getOwnPropertyNames(more))
-      .reject((key) => A(this.proxyMethods).includes(key))
+    Object.getOwnPropertyNames(more)
+      .filter((key) => !this.proxyMethods.includes(key))
       .forEach((key) => {
         if (typeOf(more[key]) === 'array') {
           more[key].forEach((data) => this.converter.addToIncluded(data, key));
