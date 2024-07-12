@@ -1,4 +1,3 @@
-import { A } from '@ember/array';
 import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { isEquivalent } from 'ember-data-factory-guy/utils/helper-functions';
@@ -258,7 +257,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
       assert.equal(profile.get('company.name'), 'Silly corp');
       assert.equal(profile.get('superHero.name'), 'BatMan');
       assert.equal(
-        FactoryGuy.store.peekAll('profile').get('content').length,
+        FactoryGuy.store.peekAll('profile').length,
         1,
         'does not make another profile'
       );
@@ -431,11 +430,16 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
       const users = await FactoryGuy.store.findAll('user');
       assert.ok(users.get('length') === 2);
       assert.ok(
-        A(users.get('lastObject.hats')).mapBy('type') + '' ===
+        users.get('lastObject.hats').map((hat) => hat.type) + '' ===
           ['BigHat', 'BigHat'] + ''
       );
       assert.ok(
-        A(users.get('lastObject.hats')).mapBy('id') + '' === [3, 4] + ''
+        users
+          .at(-1)
+          .get('hats')
+          .map((hat) => hat.id) +
+          '' ===
+          [3, 4] + ''
       );
     });
 
@@ -447,12 +451,12 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
 
       const profiles = await FactoryGuy.store.findAll('profile');
       assert.ok(profiles.get('length') === 3);
-      assert.ok(A(profiles).objectAt(0).get('description') === 'goofy');
-      assert.ok(A(profiles).objectAt(0).get('aBooleanField') === false);
-      assert.ok(A(profiles).objectAt(1).get('description') === 'foo');
-      assert.ok(A(profiles).objectAt(1).get('aBooleanField') === false);
-      assert.ok(A(profiles).objectAt(2).get('description') === 'goofy');
-      assert.ok(A(profiles).objectAt(2).get('aBooleanField') === true);
+      assert.ok(profiles[0].get('description') === 'goofy');
+      assert.ok(profiles[0].get('aBooleanField') === false);
+      assert.ok(profiles[1].get('description') === 'foo');
+      assert.ok(profiles[1].get('aBooleanField') === false);
+      assert.ok(profiles[2].get('description') === 'goofy');
+      assert.ok(profiles[2].get('aBooleanField') === true);
     });
 
     test('using returns with json', async function (assert) {
@@ -473,7 +477,7 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
       assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
       assert.ok(profiles.get('lastObject.superHero.name') === 'BatMan');
       assert.equal(
-        FactoryGuy.store.peekAll('profile').get('content').length,
+        FactoryGuy.store.peekAll('profile').length,
         2,
         'does not make new profiles'
       );
@@ -559,7 +563,10 @@ SharedBehavior.mockQueryTests = function () {
     const companies = await FactoryGuy.store.query('company', {
       name: { like: 'Dude*' },
     });
-    assert.deepEqual(A(companies).mapBy('id'), A(models).mapBy('id'));
+    assert.deepEqual(
+      companies.map((company) => company.id),
+      models.map((model) => model.id)
+    );
   });
 
   test('using returns with empty array', async function (assert) {
@@ -577,7 +584,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.equal(users.get('length'), 1);
     assert.equal(users.get('firstObject'), bob);
     assert.equal(
-      FactoryGuy.store.peekAll('user').get('content').length,
+      FactoryGuy.store.peekAll('user').length,
       1,
       'does not make another user'
     );
@@ -588,7 +595,7 @@ SharedBehavior.mockQueryTests = function () {
     mockQuery('user', { name: 'Bob' }).returns({ models });
 
     assert.equal(
-      FactoryGuy.store.peekAll('user').get('content.length'),
+      FactoryGuy.store.peekAll('user').length,
       2,
       'start out with 2 instances'
     );
@@ -599,7 +606,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.equal(users.get('firstObject.hats.length'), 2);
     assert.equal(users.get('lastObject.name'), 'User2');
     assert.equal(
-      FactoryGuy.store.peekAll('user').get('content.length'),
+      FactoryGuy.store.peekAll('user').length,
       2,
       'no new instances created'
     );
@@ -610,7 +617,7 @@ SharedBehavior.mockQueryTests = function () {
     mockQuery('company', { name: 'Dude Company' }).returns({ models });
 
     assert.equal(
-      FactoryGuy.store.peekAll('company').get('content.length'),
+      FactoryGuy.store.peekAll('company').length,
       2,
       'start out with 2 instances'
     );
@@ -624,7 +631,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.ok(companies.get('lastObject.profile') instanceof Profile);
     assert.equal(companies.get('lastObject.projects.length'), 2);
     assert.equal(
-      FactoryGuy.store.peekAll('company').get('content.length'),
+      FactoryGuy.store.peekAll('company').length,
       2,
       'no new instances created'
     );
@@ -637,7 +644,7 @@ SharedBehavior.mockQueryTests = function () {
     const users = await FactoryGuy.store.query('user', { name: 'Bob' });
     assert.equal(users.get('length'), 1);
     // makes the user after getting query response
-    assert.equal(FactoryGuy.store.peekAll('user').get('content').length, 1);
+    assert.equal(FactoryGuy.store.peekAll('user').length, 1);
   });
 
   test('using returns with model ids returns those models and does not create new ones', async function (assert) {
@@ -649,7 +656,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.equal(users.get('length'), 1);
     assert.equal(users.get('firstObject'), bob);
     // does not create a new model
-    assert.equal(FactoryGuy.store.peekAll('user').get('content').length, 1);
+    assert.equal(FactoryGuy.store.peekAll('user').length, 1);
   });
 
   // test created for issue #143
@@ -678,10 +685,16 @@ SharedBehavior.mockQueryTests = function () {
     mockQuery('company', { type: 'Small' }).returns({ models: companies2 });
 
     let companies = await FactoryGuy.store.query('company', { name: 'Dude' });
-    assert.equal(A(companies).mapBy('id') + '', A(companies1).mapBy('id') + '');
+    assert.equal(
+      companies.map((company) => company.id) + '',
+      companies1.map((company) => company.id) + ''
+    );
 
     companies = await FactoryGuy.store.query('company', { type: 'Small' });
-    assert.equal(A(companies).mapBy('id') + '', A(companies2).mapBy('id') + '');
+    assert.equal(
+      companies.map((company) => company.id) + '',
+      companies2.map((company) => company.id) + ''
+    );
   });
 
   test('using returns with same json and different query params returns same results', async function (assert) {
@@ -693,8 +706,8 @@ SharedBehavior.mockQueryTests = function () {
       name: 'Dude',
     });
     assert.equal(
-      A(companies).mapBy('id') + '',
-      A(returnedCompanies).mapBy('id') + ''
+      companies.map((company) => company.id) + '',
+      returnedCompanies.map((company) => company.id) + ''
     );
 
     mockQuery('company', { type: 'Small', name: 'Dude' }).returns({
@@ -706,8 +719,8 @@ SharedBehavior.mockQueryTests = function () {
       name: 'Dude',
     });
     assert.equal(
-      A(companies).mapBy('id') + '',
-      A(returnedCompanies).mapBy('id') + ''
+      companies.map((company) => company.id) + '',
+      returnedCompanies.map((company) => company.id) + ''
     );
   });
 
@@ -719,11 +732,17 @@ SharedBehavior.mockQueryTests = function () {
       models: companies1,
     });
     let companies = await FactoryGuy.store.query('company', { name: 'Dude' });
-    assert.equal(A(companies).mapBy('id') + '', A(companies1).mapBy('id') + '');
+    assert.equal(
+      companies.map((company) => company.id) + '',
+      companies1.map((company) => company.id) + ''
+    );
 
     queryHandler.withParams({ type: 'Small' }).returns({ models: companies2 });
     companies = await FactoryGuy.store.query('company', { type: 'Small' });
-    assert.equal(A(companies).mapBy('id') + '', A(companies2).mapBy('id') + '');
+    assert.equal(
+      companies.map((company) => company.id) + '',
+      companies2.map((company) => company.id) + ''
+    );
   });
 
   test('mock query with withSomeParams captures the query even if it contains additional params', async function (assert) {
@@ -739,13 +758,19 @@ SharedBehavior.mockQueryTests = function () {
       name: 'Dude',
       page: 1,
     });
-    assert.equal(A(companies).mapBy('id') + '', A(companies1).mapBy('id') + '');
+    assert.equal(
+      companies.map((company) => company.id) + '',
+      companies1.map((company) => company.id) + ''
+    );
     assert.equal(matchQueryHandler.timesCalled, 1);
     companies = await FactoryGuy.store.query('company', {
       name: 'Other',
       page: 1,
     });
-    assert.equal(A(companies).mapBy('id') + '', A(companies2).mapBy('id') + '');
+    assert.equal(
+      companies.map(({ id }) => id) + '',
+      companies2.map(({ id }) => id) + ''
+    );
     assert.equal(allQueryHandler.timesCalled, 1);
   });
 };
@@ -811,7 +836,7 @@ SharedBehavior.mockQueryRecordTests = function () {
     assert.equal(user.id, bob.get('id'));
     assert.equal(user.get('name'), bob.get('name'));
     // makes the user after getting query response
-    assert.equal(FactoryGuy.store.peekAll('user').get('content').length, 1);
+    assert.equal(FactoryGuy.store.peekAll('user').length, 1);
   });
 
   test('using returns with model instance returns that model, and does not create new one', async function (assert) {
@@ -821,7 +846,7 @@ SharedBehavior.mockQueryRecordTests = function () {
     let user = await FactoryGuy.store.queryRecord('user', { name: 'Bob' });
     assert.equal(user, bob, 'returns the same user');
     assert.equal(
-      FactoryGuy.store.peekAll('user').get('content').length,
+      FactoryGuy.store.peekAll('user').length,
       1,
       'does not create a new model'
     );
@@ -834,7 +859,7 @@ SharedBehavior.mockQueryRecordTests = function () {
     let user = await FactoryGuy.store.queryRecord('user', { name: 'Bob' });
     assert.equal(user, bob, 'returns the same user');
     assert.equal(
-      FactoryGuy.store.peekAll('user').get('content').length,
+      FactoryGuy.store.peekAll('user').length,
       1,
       'does not create a new model'
     );
@@ -884,7 +909,7 @@ SharedBehavior.mockCreateTests = function () {
 
     mockCreate('profile').match({ description: customDescription });
 
-    assert.ok(FactoryGuy.store.peekAll('profile').get('content.length') === 0);
+    assert.ok(FactoryGuy.store.peekAll('profile').length === 0);
 
     let profile = FactoryGuy.store.createRecord('profile', {
       description: customDescription,
@@ -892,7 +917,7 @@ SharedBehavior.mockCreateTests = function () {
     await profile.save();
 
     assert.ok(
-      FactoryGuy.store.peekAll('profile').get('content.length') === 1,
+      FactoryGuy.store.peekAll('profile').length === 1,
       'No extra records created'
     );
     assert.ok(profile instanceof Profile, 'Creates the correct type of record');
@@ -923,9 +948,7 @@ SharedBehavior.mockCreateTests = function () {
 
     mockCreate('super-hero').match({ name: customName });
 
-    assert.ok(
-      FactoryGuy.store.peekAll('super-hero').get('content.length') === 0
-    );
+    assert.ok(FactoryGuy.store.peekAll('super-hero').length === 0);
 
     let hero = FactoryGuy.store.createRecord('super-hero', {
       name: customName,
@@ -933,7 +956,7 @@ SharedBehavior.mockCreateTests = function () {
     await hero.save();
 
     assert.ok(
-      FactoryGuy.store.peekAll('super-hero').get('content.length') === 1,
+      FactoryGuy.store.peekAll('super-hero').length === 1,
       'No extra records created'
     );
     assert.ok(hero instanceof SuperHero, 'Creates the correct type of record');
@@ -967,8 +990,8 @@ SharedBehavior.mockCreateTests = function () {
 
     await Promise.all(profiles.map((profile) => profile.save()));
 
-    let ids = A(profiles).mapBy('id');
-    let descriptions = A(profiles).mapBy('description');
+    let ids = profiles.map(({ id }) => id);
+    let descriptions = profiles.map(({ description }) => description);
 
     assert.deepEqual(ids, ['1', '2', '3']);
     assert.deepEqual(descriptions, ['whatever', 'whatever', 'whatever']);
@@ -1733,10 +1756,10 @@ SharedBehavior.mockDeleteTests = function () {
     let profile = profiles[0];
     mockDelete('profile');
 
-    assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 2);
+    assert.equal(FactoryGuy.store.peekAll('profile').length, 2);
 
     await profile.destroyRecord();
-    assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 1);
+    assert.equal(FactoryGuy.store.peekAll('profile').length, 1);
   });
 
   test('with modelType and id', async function (assert) {
@@ -1744,7 +1767,7 @@ SharedBehavior.mockDeleteTests = function () {
     mockDelete('profile', profile.id);
 
     await profile.destroyRecord();
-    assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
+    assert.equal(FactoryGuy.store.peekAll('profile').length, 0);
   });
 
   test('with model', async function (assert) {
@@ -1752,7 +1775,7 @@ SharedBehavior.mockDeleteTests = function () {
     mockDelete(profile);
 
     await profile.destroyRecord();
-    assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
+    assert.equal(FactoryGuy.store.peekAll('profile').length, 0);
   });
 
   test('with model and query param', async function (assert) {
@@ -1760,7 +1783,7 @@ SharedBehavior.mockDeleteTests = function () {
     mockDelete(employee);
 
     await employee.destroyRecord();
-    assert.equal(FactoryGuy.store.peekAll('employee').get('content.length'), 0);
+    assert.equal(FactoryGuy.store.peekAll('employee').length, 0);
   });
 
   test('with modelType that fails', async function (assert) {
@@ -1816,7 +1839,7 @@ SharedBehavior.mockDeleteTests = function () {
     deleteMock.succeeds();
 
     await profile.destroyRecord();
-    assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 1);
+    assert.equal(FactoryGuy.store.peekAll('profile').length, 1);
   });
 
   test('with modelType and id that fails and then succeeds', async function (assert) {
@@ -1832,7 +1855,7 @@ SharedBehavior.mockDeleteTests = function () {
     deleteMock.succeeds();
 
     await profile.destroyRecord();
-    assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
+    assert.equal(FactoryGuy.store.peekAll('profile').length, 0);
   });
 
   test('with model that fails and then succeeds', async function (assert) {
@@ -1848,7 +1871,7 @@ SharedBehavior.mockDeleteTests = function () {
     deleteMock.succeeds();
 
     await profile.destroyRecord();
-    assert.equal(FactoryGuy.store.peekAll('profile').get('content.length'), 0);
+    assert.equal(FactoryGuy.store.peekAll('profile').length, 0);
   });
 };
 

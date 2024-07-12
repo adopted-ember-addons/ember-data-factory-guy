@@ -25,8 +25,8 @@ SharedBehavior.makeNewTests = function () {
     let projects = makeList('project', 1),
       user = makeNew('user', { projects });
     assert.deepEqual(
-      user.get('projects').toArray(),
-      projects.toArray(),
+      user.get('projects'),
+      projects,
       'hasMany projects'
     );
   });
@@ -359,13 +359,14 @@ SharedBehavior.makeTests = function () {
     assert.equal(user.hasMany('properties').link(), propertyLink);
   });
 
-  test('with data and links for hasMany relationship', function (assert) {
+  test('with data and links for hasMany relationship', async function (assert) {
     const properties = makeList('property', 2),
       propertyLink = '/user/1/properties',
       user = make('user', { properties, links: { properties: propertyLink } });
 
     assert.equal(user.hasMany('properties').link(), propertyLink, 'has link');
-    assert.deepEqual(user.properties.toArray(), properties, 'has models');
+    const userProperties = await user.properties;
+    assert.deepEqual(userProperties, properties, 'has models');
   });
 };
 
@@ -375,7 +376,7 @@ SharedBehavior.makeListTests = function () {
     assert.equal(users.length, 2);
     assert.ok(users[0] instanceof User);
     assert.ok(users[1] instanceof User);
-    assert.equal(FactoryGuy.store.peekAll('user').get('content').length, 2);
+    assert.equal(FactoryGuy.store.peekAll('user').length, 2);
   });
 
   test('handles trait arguments', function (assert) {

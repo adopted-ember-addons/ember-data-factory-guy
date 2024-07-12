@@ -1,6 +1,5 @@
 import Store from '@ember-data/store';
 import { run } from '@ember/runloop';
-import { A } from '@ember/array';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
@@ -45,7 +44,7 @@ module('FactoryGuy', function (hooks) {
     assert.equal(users.length, 2);
     assert.ok(users[0] instanceof User);
     assert.ok(users[1] instanceof User);
-    assert.equal(FactoryGuy.store.peekAll('user').get('content').length, 2);
+    assert.equal(FactoryGuy.store.peekAll('user').length, 2);
   });
 
   test('exposes build method which is shortcut for FactoryGuy.build', function (assert) {
@@ -429,20 +428,11 @@ module('FactoryGuy', function (hooks) {
         'with_bat_man'
       );
       assert.equal(profiles.length, 3);
-      assert.strictEqual(A(profiles).objectAt(0).get('description'), 'goofy');
-      assert.strictEqual(
-        A(profiles).objectAt(1).get('company.name'),
-        'Silly corp'
-      );
-      assert.strictEqual(A(profiles).objectAt(1).get('description'), 'Noodles');
-      assert.strictEqual(
-        A(profiles).objectAt(2).get('superHero.name'),
-        'BatMan'
-      );
-      assert.equal(
-        FactoryGuy.store.peekAll('profile').get('content').length,
-        3
-      );
+      assert.strictEqual(profiles[0].get('description'), 'goofy');
+      assert.strictEqual(profiles[1].get('company.name'), 'Silly corp');
+      assert.strictEqual(profiles[1].get('description'), 'Noodles');
+      assert.strictEqual(profiles[2].get('superHero.name'), 'BatMan');
+      assert.equal(FactoryGuy.store.peekAll('profile').length, 3);
     });
   });
 
