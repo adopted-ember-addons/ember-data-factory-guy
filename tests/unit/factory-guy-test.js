@@ -1,5 +1,4 @@
 import Store from '@ember-data/store';
-import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
@@ -59,27 +58,25 @@ module('FactoryGuy', function (hooks) {
 
   test('#resetDefinitions resets the model definition', function (assert) {
     assert.expect(31);
-    run(function () {
-      let project = make('project');
-      make('user', { projects: [project] });
+    let project = make('project');
+    make('user', { projects: [project] });
 
-      let model,
-        definition,
-        definitions = FactoryGuy.getModelDefinitions();
+    let model,
+      definition,
+      definitions = FactoryGuy.getModelDefinitions();
 
-      for (model in definitions) {
-        definition = definitions[model];
-        sinon.spy(definition, 'reset');
-      }
+    for (model in definitions) {
+      definition = definitions[model];
+      sinon.spy(definition, 'reset');
+    }
 
-      FactoryGuy.resetDefinitions();
+    FactoryGuy.resetDefinitions();
 
-      for (model in definitions) {
-        definition = definitions[model];
-        assert.ok(definition.reset.calledOnce);
-        definition.reset.restore();
-      }
-    });
+    for (model in definitions) {
+      definition = definitions[model];
+      assert.ok(definition.reset.calledOnce);
+      definition.reset.restore();
+    }
   });
 
   module('FactoryGuy#attributesFor', function () {

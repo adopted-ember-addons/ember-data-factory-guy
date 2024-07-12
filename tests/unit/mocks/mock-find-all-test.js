@@ -1,6 +1,5 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { run } from '@ember/runloop';
 import { param } from 'ember-data-factory-guy/utils/helper-functions';
 import FactoryGuy, {
   make,
@@ -44,7 +43,7 @@ module('MockFindAll', function (hooks) {
     const consoleStub = sinon.spy(console, 'log'),
       mock = mockFindAll('profile');
 
-    await run(async () => FactoryGuy.store.findAll('profile'));
+    await FactoryGuy.store.findAll('profile');
 
     let response = JSON.parse(mock.actualResponseJson()),
       expectedArgs = [
@@ -64,7 +63,7 @@ module('MockFindAll', function (hooks) {
 
     const queryParams = { include: 'company' };
     mock.withParams(queryParams);
-    await run(async () => FactoryGuy.store.findAll('profile', queryParams));
+    await FactoryGuy.store.findAll('profile', queryParams);
     expectedArgs[4] = `/profiles?${param(queryParams)}`;
 
     assert.deepEqual(

@@ -1,4 +1,3 @@
-import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
@@ -33,11 +32,9 @@ module(`Unit | Model | ${modelType}`, function (hooks) {
 
   test('sample async unit test with assert.async()', async function (assert) {
     assert.expect(1);
-    await run(async () => {
-      let mock = mockFindRecord('user');
-      let userId = mock.get('id');
-      const user = await FactoryGuy.store.findRecord('user', userId);
-      assert.equal(user.get('name'), mock.get('name'));
-    });
+    let mock = mockFindRecord('user');
+    let userId = mock.get('id');
+    const user = await FactoryGuy.store.findRecord('user', userId);
+    assert.equal(user.get('name'), mock.get('name'));
   });
 });

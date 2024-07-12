@@ -1,4 +1,3 @@
-import { run } from '@ember/runloop';
 import { test } from 'qunit';
 import FactoryGuy, {
   buildList,
@@ -104,13 +103,11 @@ SharedBehavior.makeTests = function () {
   });
 
   test('when hasMany ( asnyc ) associations assigned, belongTo parent is assigned', async function (assert) {
-    await run(async function () {
-      let user = make('user');
-      let company = make('company', { users: [user] });
+    let user = make('user');
+    let company = make('company', { users: [user] });
 
-      const c = await user.get('company');
-      assert.ok(c === company);
-    });
+    const c = await user.get('company');
+    assert.ok(c === company);
   });
 
   test('when hasMany ( polymorphic ) associations are assigned, belongTo parent is assigned', function (assert) {
@@ -291,17 +288,13 @@ SharedBehavior.makeTests = function () {
   });
 
   test('using afterMake with transient attributes in definition', function (assert) {
-    run(function () {
-      let property = FactoryGuy.make('property');
-      assert.ok(property.get('name') === 'Silly property(FOR SALE)');
-    });
+    let property = FactoryGuy.make('property');
+    assert.ok(property.get('name') === 'Silly property(FOR SALE)');
   });
 
   test('using afterMake with transient attributes in options', function (assert) {
-    run(function () {
-      let property = FactoryGuy.make('property', { for_sale: false });
-      assert.ok(property.get('name') === 'Silly property');
-    });
+    let property = FactoryGuy.make('property', { for_sale: false });
+    assert.ok(property.get('name') === 'Silly property');
   });
 
   test('hasMany associations assigned with ids', function (assert) {
@@ -309,7 +302,7 @@ SharedBehavior.makeTests = function () {
     let project2 = make('project', { id: 2, title: 'Project Two' });
     let user = make('user', { projects: [1, 2] });
     assert.equal(project2.get('user'), user);
-    assert.equal(user.get('projects').objectAt(0), project1);
+    assert.equal(user.projects[0], project1);
     assert.equal(user.projects.at(-1).title, 'Project Two');
   });
 
@@ -317,7 +310,7 @@ SharedBehavior.makeTests = function () {
     let user = make('user', { id: 1 });
     let project = make('project', { title: 'The Project', user: 1 });
     assert.equal(project.get('user'), user);
-    assert.equal(user.get('projects').objectAt(0), project);
+    assert.equal(user.projects[0], project);
     assert.equal(user.projects[0].title, 'The Project');
   });
 

@@ -1,4 +1,3 @@
-import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { isEquivalent } from 'ember-data-factory-guy/utils/helper-functions';
 
@@ -1114,7 +1113,7 @@ SharedBehavior.mockCreateTests = function () {
 
     mockCreate('profile').returns({ attrs: { id: id } });
 
-    let profile = run(() => FactoryGuy.store.createRecord('profile'));
+    let profile = FactoryGuy.store.createRecord('profile');
     await profile.save();
 
     assert.equal(profile.get('id'), id);

@@ -1,4 +1,3 @@
-import { run } from '@ember/runloop';
 import { module, test, skip } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
@@ -31,16 +30,14 @@ module(serializer, function (hooks) {
   module('#mockFindRecord custom', function () {
     test('when returns json (plain) is used', async function (assert) {
       assert.expect(2);
-      await run(async () => {
-        const json = { id: 1, description: 'the desc' };
-        const mock = mockFindRecord('profile').returns({ json });
-        const profileId = mock.get('id');
+      const json = { id: 1, description: 'the desc' };
+      const mock = mockFindRecord('profile').returns({ json });
+      const profileId = mock.get('id');
 
-        const profile = await FactoryGuy.store.findRecord('profile', profileId);
+      const profile = await FactoryGuy.store.findRecord('profile', profileId);
 
-        assert.equal(profile.get('id'), profileId);
-        assert.equal(profile.get('description'), json.get('description'));
-      });
+      assert.equal(profile.get('id'), profileId);
+      assert.equal(profile.get('description'), json.get('description'));
     });
   });
 
