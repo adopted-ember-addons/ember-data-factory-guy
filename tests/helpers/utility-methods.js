@@ -81,18 +81,6 @@ const serializerOptions = {
   ],
 };
 
-//function setupCustomAdapter(container, adapterType, options) {
-//  let store = container.lookup('service:store');
-//  let modelAdapter = container.lookup('adapter:' + adapterType);
-//  if (typeOf(options) === 'array') {
-//    modelAdapter.reopen.apply(modelAdapter, options);
-//  } else {
-//    modelAdapter.reopen(options);
-//  }
-//  modelAdapter.store = store;
-//  return modelAdapter;
-//}
-
 function setupCustomSerializer(container, serializerType, options) {
   let store = container.lookup('service:store');
   let modelSerializer = container.lookup('serializer:' + serializerType);

@@ -81,28 +81,6 @@ SharedBehavior.mockFindRecordCommonTests = function () {
     });
   });
 
-  //    test("returns model succeeds", async function(assert) {
-  //        let cat = make('cat', { type: 'Cutest' });
-  //        let mock = mockFindRecord(cat);//.returns({ model: cat });
-  //
-  //        FactoryGuy.store.findRecord('cat', mock.get('id'), { reload: true }).then(function(catA) {
-  //          assert.equal(catA.get('type'), 'Cutest');
-  //        });
-  //      });
-
-  //  test("with model that has attribute named type, is not polymorphic, and returns model", function(assert) {
-  //    run(() => {
-  //      let done = assert.async();
-  //      let cat = make('cat', { type: 'Cutest' });
-  //      let mock = mockFindRecord(cat);//.returns({ model: cat });
-  //      console.log(mock.index, cat.get('id'));
-  //      FactoryGuy.store.findRecord('cat', mock.get('id'), { reload: true }).then(function(catA) {
-  //        assert.equal(catA.get('type'), 'Cutest');
-  //        done();
-  //      });
-  //    });
-  //  });
-
   test('returns model that has attribute named type, but is not polymorphic', async function (assert) {
     let cat = make('cat', { type: 'Cutest' });
     let mock = mockFindRecord('cat').returns({ model: cat });

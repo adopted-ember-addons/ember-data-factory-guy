@@ -29,21 +29,17 @@ module(serializer, function (hooks) {
   SharedAdapterBehaviour.mockCreateFailsWithErrorResponse();
 
   module('#mockFindRecord custom', function () {
-    test('when returns json (plain) is used', function (assert) {
+    test('when returns json (plain) is used', async function (assert) {
       assert.expect(2);
-      run(() => {
-        let done = assert.async(),
-          json = { id: 1, description: 'the desc' },
-          mock = mockFindRecord('profile').returns({ json }),
-          profileId = mock.get('id');
+      await run(async () => {
+        const json = { id: 1, description: 'the desc' };
+        const mock = mockFindRecord('profile').returns({ json });
+        const profileId = mock.get('id');
 
-        FactoryGuy.store
-          .findRecord('profile', profileId)
-          .then(function (profile) {
-            assert.equal(profile.get('id'), profileId);
-            assert.equal(profile.get('description'), json.get('description'));
-            done();
-          });
+        const profile = await FactoryGuy.store.findRecord('profile', profileId);
+
+        assert.equal(profile.get('id'), profileId);
+        assert.equal(profile.get('description'), json.get('description'));
       });
     });
   });

@@ -103,17 +103,13 @@ SharedBehavior.makeTests = function () {
     assert.ok(project.get('user') === user);
   });
 
-  test('when hasMany ( asnyc ) associations assigned, belongTo parent is assigned', function (assert) {
-    run(function () {
-      let done = assert.async();
-
+  test('when hasMany ( asnyc ) associations assigned, belongTo parent is assigned', async function (assert) {
+    await run(async function () {
       let user = make('user');
       let company = make('company', { users: [user] });
 
-      user.get('company').then(function (c) {
-        assert.ok(c === company);
-        done();
-      });
+      const c = await user.get('company');
+      assert.ok(c === company);
     });
   });
 
@@ -179,8 +175,6 @@ SharedBehavior.makeTests = function () {
 
   test('when hasMany ( async ) relationship is assigned, model relationship is synced on both sides', function (assert) {
     run(function () {
-      let done = assert.async();
-
       let property = make('property');
       let user1 = make('user', { properties: [property] });
       let user2 = make('user', { properties: [property] });
@@ -188,14 +182,11 @@ SharedBehavior.makeTests = function () {
       assert.equal(property.get('owners.length'), 2);
       assert.ok(property.get('owners.firstObject') === user1);
       assert.ok(property.get('owners.lastObject') === user2);
-      done();
     });
   });
 
   test('when belongsTo ( async ) parent is assigned, parent adds to hasMany records', function (assert) {
     run(function () {
-      let done = assert.async();
-
       let company = make('company');
       let user1 = make('user', { company: company });
       let user2 = make('user', { company: company });
@@ -203,7 +194,6 @@ SharedBehavior.makeTests = function () {
       assert.equal(company.get('users.length'), 2);
       assert.ok(company.get('users.firstObject') === user1);
       assert.ok(company.get('users.lastObject') === user2);
-      done();
     });
   });
 

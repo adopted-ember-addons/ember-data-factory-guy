@@ -31,16 +31,13 @@ module(`Unit | Model | ${modelType}`, function (hooks) {
     assert.equal(user.get('name'), mock.get('name'));
   });
 
-  test('sample async unit test with assert.async()', function (assert) {
+  test('sample async unit test with assert.async()', async function (assert) {
     assert.expect(1);
-    let done = assert.async();
-    run(() => {
+    await run(async () => {
       let mock = mockFindRecord('user');
       let userId = mock.get('id');
-      FactoryGuy.store.findRecord('user', userId).then((user) => {
-        assert.equal(user.get('name'), mock.get('name'));
-        done();
-      });
+      const user = await FactoryGuy.store.findRecord('user', userId);
+      assert.equal(user.get('name'), mock.get('name'));
     });
   });
 });
