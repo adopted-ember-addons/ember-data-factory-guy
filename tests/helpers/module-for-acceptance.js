@@ -1,4 +1,3 @@
-import { Promise } from 'rsvp';
 import { module } from 'qunit';
 import FactoryGuy from 'ember-data-factory-guy';
 import startApp from '../helpers/start-app';

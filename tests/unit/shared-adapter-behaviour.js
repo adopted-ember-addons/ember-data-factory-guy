@@ -1,4 +1,3 @@
-import { all } from 'rsvp';
 import { A } from '@ember/array';
 import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
@@ -975,7 +974,7 @@ SharedBehavior.mockCreateTests = function () {
       });
     });
 
-    await all(profiles.map((profile) => profile.save()));
+    await Promise.all(profiles.map((profile) => profile.save()));
 
     let ids = A(profiles).mapBy('id');
     let descriptions = A(profiles).mapBy('description');
