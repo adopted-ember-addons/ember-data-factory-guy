@@ -5,5 +5,5 @@ export default class extends Model {
   @attr('string') name;
   @belongsTo('profile', { async: false }) profile;
   @hasMany('user', { async: true, inverse: 'company' }) users;
-  @hasMany('project', { async: true }) projects;
+  @hasMany('project', { async: true, inverse: null }) projects;
 }
