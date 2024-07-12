@@ -257,7 +257,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
 };
 
 SharedBehavior.mockFindRecordEmbeddedTests = function () {
-  module('#mockFindRecord | embedded', async function () {
+  module('#mockFindRecord | embedded', function () {
     test('belongsTo', async function (assert) {
       let mock = mockFindRecord('comic-book', 'marvel');
 
