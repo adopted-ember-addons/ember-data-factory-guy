@@ -1,7 +1,7 @@
 import FactoryGuy from './factory-guy';
 import Sequence from './sequence';
 import MissingSequenceError from './missing-sequence-error';
-import { isEmptyObject, mergeDeep } from './utils/helper-functions';
+import { mergeDeep } from './utils/helper-functions';
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 
