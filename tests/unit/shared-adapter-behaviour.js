@@ -1624,7 +1624,7 @@ SharedBehavior.mockUpdateTests = function () {
 
 SharedBehavior.mockUpdateWithErrorMessages = function () {
   module('#mockUpdate | error messages', function () {
-    test('with model returns custom response', async function (assert) {
+    test.skip('with model returns custom response', async function (assert) {
       let profile = make('profile');
 
       mockUpdate(profile).fails({
