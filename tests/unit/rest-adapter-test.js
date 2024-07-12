@@ -73,7 +73,10 @@ module(serializer, function (hooks) {
         .createRecord('entry-type', { entries: [entry] })
         .save();
       let entries = entryType.get('entries');
-      assert.deepEqual(entries.map(({ id }) => id), [entry.id]);
+      assert.deepEqual(
+        entries.map(({ id }) => id),
+        [entry.id]
+      );
     });
   });
   module(`FactoryGuy#build get`, function () {

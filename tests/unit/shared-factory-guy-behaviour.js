@@ -23,11 +23,7 @@ SharedBehavior.makeNewTests = function () {
   test('handles hasMany relationships', function (assert) {
     let projects = makeList('project', 1),
       user = makeNew('user', { projects });
-    assert.deepEqual(
-      user.get('projects'),
-      projects,
-      'hasMany projects'
-    );
+    assert.deepEqual(user.get('projects'), projects, 'hasMany projects');
   });
 };
 
