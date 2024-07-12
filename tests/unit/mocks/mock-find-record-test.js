@@ -4,6 +4,7 @@ import { param } from 'ember-data-factory-guy/utils/helper-functions';
 import FactoryGuy, { build, mockFindRecord } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
+import { settled } from '@ember/test-helpers';
 
 const serializerType = '-json-api';
 
@@ -48,6 +49,7 @@ module('MockFindRecord', function (hooks) {
     const queryParams = { include: 'company' };
     mock.withParams(queryParams);
     await FactoryGuy.store.findRecord('profile', 1, queryParams);
+    await settled();
     expectedArgs[4] = `/profiles/1?${param(queryParams)}`;
 
     assert.deepEqual(

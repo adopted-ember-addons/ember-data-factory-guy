@@ -11,6 +11,7 @@ import FactoryGuy, {
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
+import { settled } from '@ember/test-helpers';
 
 const serializerType = '-json-api';
 
@@ -80,6 +81,7 @@ module('MockFindAll', function (hooks) {
     let cat = make('cat', { type: 'Cuddly' });
     mockFindAll('cat').returns({ models: [cat] });
     await FactoryGuy.store.findAll('cat');
+    await settled();
     assert.equal(cat.get('type'), 'Cuddly');
   });
 
@@ -87,6 +89,7 @@ module('MockFindAll', function (hooks) {
     let hat = make('big-hat');
     mockFindAll('big-hat').returns({ models: [hat] });
     await FactoryGuy.store.findAll('big-hat');
+    await settled();
     assert.equal(hat.get('type'), 'BigHat'); // default type value
   });
 

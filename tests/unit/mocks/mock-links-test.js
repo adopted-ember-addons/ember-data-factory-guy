@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { buildList, make, makeList, mockLinks } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
+import { settled } from '@ember/test-helpers';
 
 const serializerType = '-json-api';
 
@@ -49,6 +50,7 @@ module('MockLinks', function (hooks) {
     assert.deepEqual(mockProperties.queryParams, { dudes: '2' });
 
     await user.properties.toArray();
+    await settled();
     assert.equal(mockProperties.timesCalled, 1);
   });
 

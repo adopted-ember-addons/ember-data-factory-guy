@@ -21,6 +21,7 @@ import FactoryGuy, {
 
 import Profile from 'dummy/models/profile';
 import SuperHero from 'dummy/models/super-hero';
+import { settled } from '@ember/test-helpers';
 
 let SharedBehavior = {};
 
@@ -57,6 +58,7 @@ SharedBehavior.mockFindRecordCommonTests = function () {
     mockFindRecord('profile').returns({ id: newProfile.id });
 
     let foundRecord = await store.findRecord('profile', newProfile.id);
+    await settled();
 
     assert.deepEqual(foundRecord, newProfile);
   });
@@ -68,6 +70,8 @@ SharedBehavior.mockFindRecordCommonTests = function () {
     mockFindRecord('profile').returns({ id: existingProfile.get('id') });
 
     let profile = await store.findRecord('profile', existingProfile.get('id'));
+
+    await settled();
 
     assert.equal(profile.get('id'), existingProfile.get('id'));
   });
@@ -465,6 +469,7 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
       mockFindAll('profile').returns({ models });
 
       const profiles = await FactoryGuy.store.findAll('profile');
+      await settled();
       assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
       assert.ok(profiles.get('lastObject.superHero.name') === 'BatMan');
       assert.equal(
