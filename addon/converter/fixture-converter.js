@@ -354,12 +354,12 @@ export default class FixtureConverter {
   }
 
   addData(embeddedFixture, relationship, isEmbedded) {
-    let relationshipType = this.getRelationshipType(
-        relationship,
-        embeddedFixture
-      ),
-      // find possibly more embedded fixtures
-      data = this.convertSingle(relationshipType, embeddedFixture);
+    const relationshipType = this.getRelationshipType(
+      relationship,
+      embeddedFixture
+    );
+    // find possibly more embedded fixtures
+    const data = this.convertSingle(relationshipType, embeddedFixture);
     if (isEmbedded) {
       return data;
     }
