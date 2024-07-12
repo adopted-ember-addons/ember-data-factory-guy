@@ -2,7 +2,7 @@ import { isEmpty } from '@ember/utils';
 import BasePayload from './base-payload';
 
 export default class extends BasePayload {
-  /** 
+  /**
    Can't add to included array for JSON payloads since they have
    no includes or sideloaded relationships
 
@@ -31,12 +31,6 @@ export default class extends BasePayload {
     }
     if (typeof key === 'number') {
       return attrs[key];
-    }
-    if (key === 'firstObject') {
-      return attrs[0];
-    }
-    if (key === 'lastObject') {
-      return attrs[attrs.length - 1];
     }
   }
 }

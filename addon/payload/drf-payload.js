@@ -17,11 +17,5 @@ export default class extends JSONPayload {
     if (typeof key === 'number') {
       return attrs[key];
     }
-    if (key === 'firstObject') {
-      return attrs[0];
-    }
-    if (key === 'lastObject') {
-      return attrs[attrs.length - 1];
-    }
   }
 }
