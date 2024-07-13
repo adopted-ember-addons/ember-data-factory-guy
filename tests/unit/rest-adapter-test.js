@@ -42,12 +42,12 @@ module(serializer, function (hooks) {
       assert.expect(2);
       const json = { profile: { id: 1, description: 'the desc' } };
       const mock = mockFindRecord('profile').returns({ json });
-      const profileId = mock.get('id');
+      const profileId = String(mock.get('id'));
 
       const profile = await FactoryGuy.store.findRecord('profile', profileId);
 
-      assert.equal(profile.get('id'), profileId);
-      assert.equal(profile.get('description'), json.get('description'));
+      assert.strictEqual(profile.get('id'), profileId);
+      assert.strictEqual(profile.get('description'), json.get('description'));
     });
   });
 
@@ -61,7 +61,7 @@ module(serializer, function (hooks) {
         .createRecord('entry', { entryType: entryType })
         .save();
 
-      assert.equal(entry.get('entryType.id'), entryType.id);
+      assert.strictEqual(entry.get('entryType.id'), entryType.id);
     });
 
     test('match hasMany with custom payloadKeyFromModelName function', async function (assert) {
@@ -83,14 +83,14 @@ module(serializer, function (hooks) {
     test('returns all attributes with no key', function (assert) {
       let user = build('user');
       assert.deepEqual(user.get(), { id: 1, name: 'User1', style: 'normal' });
-      assert.equal(user.get().id, 1);
-      assert.equal(user.get().name, 'User1');
+      assert.strictEqual(user.get().id, 1);
+      assert.strictEqual(user.get().name, 'User1');
     });
 
     test('returns an attribute for a key', function (assert) {
       let user = build('user');
-      assert.equal(user.get('id'), 1);
-      assert.equal(user.get('name'), 'User1');
+      assert.strictEqual(user.get('id'), 1);
+      assert.strictEqual(user.get('name'), 'User1');
     });
 
     test('returns a relationship with a key', function (assert) {
@@ -111,9 +111,9 @@ module(serializer, function (hooks) {
     test('returns an attribute with a key', function (assert) {
       let users = buildList('user', 2);
       assert.deepEqual(users.get(0), { id: 1, name: 'User1', style: 'normal' });
-      assert.equal(users.get(0).id, 1);
+      assert.strictEqual(users.get(0).id, 1);
       assert.deepEqual(users.get(1), { id: 2, name: 'User2', style: 'normal' });
-      assert.equal(users.get(1).name, 'User2');
+      assert.strictEqual(users.get(1).name, 'User2');
     });
 
     test('returns a relationship with an index and key', function (assert) {
@@ -656,27 +656,31 @@ module(serializer, function (hooks) {
         },
       };
       let profile = build('profile', 'with_created_at', { created_at: date });
-      assert.equal(profile.get('created_at'), date.toJSON());
+      assert.strictEqual(profile.get('created_at'), date.toJSON());
     });
 
     // the override for primaryKey is in the helpers/utilityMethods.js
     test('with model that has primaryKey defined in serializer ( FactoryGuy sets primaryKey value )', function (assert) {
       let cat = build('cat');
 
-      assert.equal(cat.get('id'), 1);
+      assert.strictEqual(cat.get('id'), 1);
     });
 
     test('with model that has primaryKey defined in serializer ( user sets primaryKey value )', function (assert) {
       let cat = build('cat', { catId: 'meow1' });
 
-      assert.equal(cat.get('id'), 'meow1');
+      assert.strictEqual(cat.get('id'), 'meow1');
     });
 
     test('with model that has primaryKey defined in serializer and is attribute ( value set in fixture )', function (assert) {
       let dog = build('dog');
 
-      assert.equal(dog.get('id'), 'Dog1', 'primary key comes from dogNumber');
-      assert.equal(
+      assert.strictEqual(
+        dog.get('id'),
+        'Dog1',
+        'primary key comes from dogNumber'
+      );
+      assert.strictEqual(
         dog.get('dogNumber'),
         'Dog1',
         'attribute has the primary key value as well'

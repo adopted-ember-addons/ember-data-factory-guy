@@ -81,7 +81,7 @@ module('MockFindAll', function (hooks) {
     mockFindAll('cat').returns({ models: [cat] });
     await FactoryGuy.store.findAll('cat');
     await settled();
-    assert.equal(cat.get('type'), 'Cuddly');
+    assert.strictEqual(cat.get('type'), 'Cuddly');
   });
 
   test('returns({models}) for polymorphic type does does not alter type attribute', async function (assert) {
@@ -89,7 +89,7 @@ module('MockFindAll', function (hooks) {
     mockFindAll('big-hat').returns({ models: [hat] });
     await FactoryGuy.store.findAll('big-hat');
     await settled();
-    assert.equal(hat.get('type'), 'BigHat'); // default type value
+    assert.strictEqual(hat.get('type'), 'BigHat'); // default type value
   });
 
   test('#get method to access payload', function (assert) {
@@ -121,20 +121,20 @@ module('MockFindAll', function (hooks) {
 
     await FactoryGuy.store.query('user', {});
 
-    assert.equal(
+    assert.strictEqual(
       mockF.timesCalled,
       1,
       'mockFindAll used since no query params exist'
     );
-    assert.equal(mockQ.timesCalled, 0, 'mockQuery not used');
+    assert.strictEqual(mockQ.timesCalled, 0, 'mockQuery not used');
 
     await FactoryGuy.store.query('user', { name: 'Sleepy' });
-    assert.equal(
+    assert.strictEqual(
       mockF.timesCalled,
       1,
       'mockFindAll not used since query params exist'
     );
-    assert.equal(mockQ.timesCalled, 1, 'now mockQuery is used');
+    assert.strictEqual(mockQ.timesCalled, 1, 'now mockQuery is used');
   });
 
   test('mockFindAll with query params', async function (assert) {
@@ -143,19 +143,27 @@ module('MockFindAll', function (hooks) {
     let mockQ = mockQuery('user', { name: 'Sleepy' });
 
     await FactoryGuy.store.query('user', {});
-    assert.equal(mockF.timesCalled, 1, 'mockFindAll with no query params used');
+    assert.strictEqual(
+      mockF.timesCalled,
+      1,
+      'mockFindAll with no query params used'
+    );
 
     await FactoryGuy.store.query('user', { food: 'shrimp' });
-    assert.equal(mockFQ.timesCalled, 1, 'mockFindAll with query params used');
+    assert.strictEqual(
+      mockFQ.timesCalled,
+      1,
+      'mockFindAll with query params used'
+    );
 
     await FactoryGuy.store.query('user', { name: 'Sleepy' });
-    assert.equal(mockQ.timesCalled, 1, 'mockQuery is used');
+    assert.strictEqual(mockQ.timesCalled, 1, 'mockQuery is used');
   });
 
   module('#getUrl', function () {
     test('uses urlForFindAll if it is set on the adapter', function (assert) {
       let mock = mockFindAll('user');
-      assert.equal(
+      assert.strictEqual(
         mock.getUrl(),
         '/users',
         'default ember-data findRecord url'
@@ -166,7 +174,7 @@ module('MockFindAll', function (hooks) {
         .stub(adapter, 'urlForFindAll')
         .returns('/zombies');
 
-      assert.equal(
+      assert.strictEqual(
         mock.getUrl(),
         '/zombies',
         'factory guy uses urlForFindRecord from adapter'

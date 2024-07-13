@@ -122,13 +122,13 @@ module('MockQueryRecord', function (hooks) {
     let urlForQueryRecordCalled = 0;
     adapter.urlForQueryRecord = (query) => {
       urlForQueryRecordCalled++;
-      assert.equal(query.zip, 'it', 'query params are passed in');
+      assert.strictEqual(query.zip, 'it', 'query params are passed in');
       return '/users';
     };
 
     let mock = mockQueryRecord('user', queryParams).returns({ model: user });
-    assert.equal(mock.getUrl(), '/users');
-    assert.equal(urlForQueryRecordCalled, 3); // not sure why it should be called three times?
+    assert.strictEqual(mock.getUrl(), '/users');
+    assert.strictEqual(urlForQueryRecordCalled, 3); // not sure why it should be called three times?
 
     await FactoryGuy.store.queryRecord('user', queryParams);
   });
@@ -154,7 +154,7 @@ module('MockQueryRecord', function (hooks) {
     };
 
     let mock = mockQueryRecord('user', queryParams).returns({ model: user });
-    assert.equal(mock.getUrl(), '/users/current');
+    assert.strictEqual(mock.getUrl(), '/users/current');
 
     await FactoryGuy.store.queryRecord('user', queryParams);
   });

@@ -89,18 +89,18 @@ module('MockUpdate', function (hooks) {
       let mock = mockUpdate(...args),
         url = mock.getUrl();
 
-      assert.equal(url, expectedUrl, message);
+      assert.strictEqual(url, expectedUrl, message);
     }
   });
 
   test('#getUrl uses urlForUpdateRecord if it is set on the adapter', function (assert) {
     let mock1 = mockUpdate('user', '1');
-    assert.equal(mock1.getUrl(), '/users/1');
+    assert.strictEqual(mock1.getUrl(), '/users/1');
 
     let adapter = FactoryGuy.store.adapterFor('user');
     sinon.stub(adapter, 'urlForUpdateRecord').returns('/dudes/1');
 
-    assert.equal(mock1.getUrl(), '/dudes/1');
+    assert.strictEqual(mock1.getUrl(), '/dudes/1');
     adapter.urlForUpdateRecord.restore();
   });
 });

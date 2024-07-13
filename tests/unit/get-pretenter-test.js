@@ -15,13 +15,13 @@ module('Unit | getPretender', function (hooks) {
       pretender instanceof Pretender,
       'getPretender returns an instance of Pretender'
     );
-    assert.equal(
+    assert.strictEqual(
       pretender.handlers.length,
       0,
       'the handlers array is initially empty'
     );
     mock({ url: '/api/whatever' });
-    assert.equal(
+    assert.strictEqual(
       pretender.handlers.length,
       1,
       'the created mock is added to the handlers'

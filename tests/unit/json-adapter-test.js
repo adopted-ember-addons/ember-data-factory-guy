@@ -32,12 +32,12 @@ module(serializer, function (hooks) {
       assert.expect(2);
       const json = { id: 1, description: 'the desc' };
       const mock = mockFindRecord('profile').returns({ json });
-      const profileId = mock.get('id');
+      const profileId = String(mock.get('id'));
 
       const profile = await FactoryGuy.store.findRecord('profile', profileId);
 
-      assert.equal(profile.get('id'), profileId);
-      assert.equal(profile.get('description'), json.get('description'));
+      assert.strictEqual(profile.get('id'), profileId);
+      assert.strictEqual(profile.get('description'), json.get('description'));
     });
   });
 
@@ -45,14 +45,14 @@ module(serializer, function (hooks) {
     test('returns all attributes with no key', function (assert) {
       let user = build('user');
       assert.deepEqual(user.get(), { id: 1, name: 'User1', style: 'normal' });
-      assert.equal(user.get().id, 1);
-      assert.equal(user.get().name, 'User1');
+      assert.strictEqual(user.get().id, 1);
+      assert.strictEqual(user.get().name, 'User1');
     });
 
     test('returns an attribute with a key', function (assert) {
       let user = build('user');
-      assert.equal(user.get('id'), 1);
-      assert.equal(user.get('name'), 'User1');
+      assert.strictEqual(user.get('id'), 1);
+      assert.strictEqual(user.get('name'), 'User1');
     });
   });
 
@@ -68,9 +68,9 @@ module(serializer, function (hooks) {
     test('returns an attribute with a key', function (assert) {
       let users = buildList('user', 2);
       assert.deepEqual(users.get(0), { id: 1, name: 'User1', style: 'normal' });
-      assert.equal(users.get(0).id, 1);
+      assert.strictEqual(users.get(0).id, 1);
       assert.deepEqual(users.get(1), { id: 2, name: 'User2', style: 'normal' });
-      assert.equal(users.get(1).name, 'User2');
+      assert.strictEqual(users.get(1).name, 'User2');
     });
   });
 
@@ -278,8 +278,8 @@ module(serializer, function (hooks) {
     // the override for primaryKey is in the helpers/utilityMethods.js
     test('serializer primaryKey override', function (assert) {
       let json = build('cat');
-      assert.equal(json.get('catId'), 1);
-      assert.equal(json.get('id'), 1);
+      assert.strictEqual(json.get('catId'), 1);
+      assert.strictEqual(json.get('id'), 1);
     });
 
     test('serializes attributes with custom type', function (assert) {

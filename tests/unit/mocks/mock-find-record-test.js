@@ -19,7 +19,7 @@ module('MockFindRecord', function (hooks) {
 
   test('#get method to access payload', function (assert) {
     let mock = mockFindRecord('user');
-    assert.equal(mock.get('name'), 'User1');
+    assert.strictEqual(mock.get('name'), 'User1');
   });
 
   test('logging response', async function (assert) {
@@ -65,18 +65,18 @@ module('MockFindRecord', function (hooks) {
     test('with proxy', function (assert) {
       const json = build('user');
       const mock = mockFindRecord('user').returns({ json });
-      assert.equal(mock.getUrl(), '/users/1');
+      assert.strictEqual(mock.getUrl(), '/users/1');
     });
 
     test('with json', function (assert) {
       const json = { data: { id: 1, name: 'Dan' } };
       const mock = mockFindRecord('user').returns({ json });
-      assert.equal(mock.getUrl(), '/users/1');
+      assert.strictEqual(mock.getUrl(), '/users/1');
     });
 
     test('uses urlForFindRecord if it is set on the adapter', function (assert) {
       let mock = mockFindRecord('user');
-      assert.equal(
+      assert.strictEqual(
         mock.getUrl(),
         '/users/1',
         'default ember-data findRecord url'
@@ -87,7 +87,7 @@ module('MockFindRecord', function (hooks) {
         .stub(adapter, 'urlForFindRecord')
         .returns('/dude/1');
 
-      assert.equal(
+      assert.strictEqual(
         mock.getUrl(),
         '/dude/1',
         'factory guy uses urlForFindRecord from adapter'
@@ -133,7 +133,7 @@ module('MockFindRecord', function (hooks) {
       try {
         await FactoryGuy.store.findRecord('profile', 1);
       } catch {
-        assert.equal(mock.timesCalled, 1);
+        assert.strictEqual(mock.timesCalled, 1);
       }
     });
   });

@@ -43,7 +43,7 @@ module('Unit | Helper Functions', function (hooks) {
 
     for (let test of tests) {
       let [object, expected, message] = test;
-      assert.equal(isEmptyObject(object), expected, message);
+      assert.strictEqual(isEmptyObject(object), expected, message);
     }
   });
 
@@ -198,7 +198,7 @@ module('Unit | Helper Functions', function (hooks) {
       const [expectedUrl, expectedParams] = expected,
         [actualUrl, actualParams] = parseUrl(url);
 
-      assert.equal(
+      assert.strictEqual(
         actualUrl,
         expectedUrl,
         `${actualUrl} expect url => ${expectedUrl}`
