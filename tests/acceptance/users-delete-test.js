@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-settled-after-test-helper */
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import {
@@ -6,7 +7,7 @@ import {
   mockFindAll,
   setupFactoryGuy,
 } from 'ember-data-factory-guy';
-import { visit, click } from '@ember/test-helpers';
+import { click, settled, visit } from '@ember/test-helpers';
 
 module('Acceptance | Users Delete', function (hooks) {
   setupApplicationTest(hooks);
@@ -20,10 +21,12 @@ module('Acceptance | Users Delete', function (hooks) {
     assert.dom('li.user').exists({ count: 2 });
 
     await click('li.user:nth-child(1) button');
+    await settled();
 
     assert.dom('li.user').exists({ count: 1 });
 
     await click('li.user:nth-child(1) button');
+    await settled();
 
     assert.dom('li.user').doesNotExist();
   });
@@ -38,6 +41,7 @@ module('Acceptance | Users Delete', function (hooks) {
     assert.dom('li.user').exists({ count: 2 });
 
     await click('li.user:nth-child(1) button');
+    await settled();
 
     assert.dom('li.user').exists({ count: 1 });
   });
@@ -49,6 +53,7 @@ module('Acceptance | Users Delete', function (hooks) {
 
     assert.dom('li.user').exists({ count: 2 });
     await click('li.user:nth-child(1) button');
+    await settled();
 
     assert.dom('li.user').exists({ count: 1 });
   });

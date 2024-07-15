@@ -1,5 +1,4 @@
 import FactoryGuy from 'ember-data-factory-guy';
-
 import {
   setupApplicationTest as upstreamSetupApplicationTest,
   setupRenderingTest as upstreamSetupRenderingTest,

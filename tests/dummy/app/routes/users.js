@@ -7,4 +7,8 @@ export default class extends Route {
   model() {
     return this.store.findAll('user');
   }
+
+  setupController(controller, users) {
+    controller.users = users;
+  }
 }
