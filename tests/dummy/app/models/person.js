@@ -6,5 +6,5 @@ export default class extends Model {
   @attr('string') style;
   @attr('string') category;
   @belongsTo('company', { async: false, inverse: null }) company;
-  @hasMany('outfit', { async: false, inverse: 'person' }) outfits;
+  @hasMany('outfit', { async: false, inverse: 'person', as: 'person' }) outfits;
 }
