@@ -101,7 +101,7 @@ export default class {
       { errors } = object;
 
     assert(
-      `[ember-data-factory-guy] Your error response must have an errors key. 
+      `[ember-data-factory-guy] Your error response must have an errors key.
       The errors hash format is: {errors: {name: ["name too short"]}}`,
       errors,
     );

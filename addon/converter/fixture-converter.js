@@ -258,6 +258,18 @@ export default class FixtureConverter {
   // Borrowed from ember data
   // checks config for attrs option to embedded (always)
   isEmbeddedRelationship(modelName, attr) {
+    if (this.store.schema) {
+      const relationshipsDefinition =
+        this.store.schema.relationshipsDefinitionFor({ type: modelName });
+      const relationship =
+        relationshipsDefinition[camelize(attr)] ??
+        relationshipsDefinition[attr];
+
+      if (relationship?.options.embedded) {
+        return true;
+      }
+    }
+
     let serializer = this.store.serializerFor(modelName),
       option = this.attrsOption(serializer, attr);
     return (

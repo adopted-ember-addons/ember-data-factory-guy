@@ -1,4 +1,3 @@
-import Store from '@ember-data/store';
 import { assert } from '@ember/debug';
 import { isPresent, typeOf } from '@ember/utils';
 import { join } from '@ember/runloop';
@@ -24,10 +23,6 @@ class FactoryGuy {
   }
 
   setStore(aStore) {
-    assert(
-      `[ember-data-factory-guy] FactoryGuy#setStore needs a valid store instance. You passed in [${aStore}]`,
-      aStore instanceof Store,
-    );
     this.store = aStore;
     this.fixtureBuilderFactory = new FixtureBuilderFactory(this.store);
     this.afterDestroyStore(aStore);
