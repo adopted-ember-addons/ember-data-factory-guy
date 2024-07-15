@@ -36,8 +36,8 @@ module(serializer, function (hooks) {
 
       const profile = await FactoryGuy.store.findRecord('profile', profileId);
 
-      assert.strictEqual(profile.get('id'), profileId);
-      assert.strictEqual(profile.get('description'), json.get('description'));
+      assert.strictEqual(profile.id, profileId);
+      assert.strictEqual(profile.description, json.get('description'));
     });
   });
 
@@ -51,8 +51,8 @@ module(serializer, function (hooks) {
 
     test('returns an attribute with a key', function (assert) {
       let user = build('user');
-      assert.strictEqual(user.get('id'), 1);
-      assert.strictEqual(user.get('name'), 'User1');
+      assert.strictEqual(user.id, 1);
+      assert.strictEqual(user.name, 'User1');
     });
   });
 
@@ -278,8 +278,8 @@ module(serializer, function (hooks) {
     // the override for primaryKey is in the helpers/utilityMethods.js
     test('serializer primaryKey override', function (assert) {
       let json = build('cat');
-      assert.strictEqual(json.get('catId'), 1);
-      assert.strictEqual(json.get('id'), 1);
+      assert.strictEqual(json.catId, 1);
+      assert.strictEqual(json.id, 1);
     });
 
     test('serializes attributes with custom type', function (assert) {

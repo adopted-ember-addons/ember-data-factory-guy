@@ -129,7 +129,7 @@ module('MockRequest', function (hooks) {
 
       let data = await FactoryGuy.store.queryRecord('user', { id: 1 });
       assert.strictEqual(
-        data.get('id'),
+        data.id,
         String(json1.get('id')),
         'the first mock works initially'
       );
@@ -137,7 +137,7 @@ module('MockRequest', function (hooks) {
       mock1.disable();
       data = await FactoryGuy.store.queryRecord('user', { id: 1 });
       assert.strictEqual(
-        data.get('id'),
+        data.id,
         String(json2.get('id')),
         "the first mock doesn't work once it's disabled"
       );
@@ -145,7 +145,7 @@ module('MockRequest', function (hooks) {
       mock1.enable();
       data = await FactoryGuy.store.queryRecord('user', { id: 1 });
       assert.strictEqual(
-        data.get('id'),
+        data.id,
         String(json1.get('id')),
         'the first mock works again after enabling'
       );
@@ -157,7 +157,7 @@ module('MockRequest', function (hooks) {
       );
       data = await FactoryGuy.store.queryRecord('user', { id: 1 });
       assert.strictEqual(
-        data.get('id'),
+        data.id,
         String(json2.get('id')),
         "the destroyed first mock doesn't work"
       );
@@ -192,7 +192,7 @@ module('MockRequest', function (hooks) {
       const model = FactoryGuy.make('user');
       const mock = new MockStoreRequest('user', 'findRecord');
       mock.returns({ model });
-      mock.id = model.id;
+      mock.id = model.get('id');
 
       const snapshot = mock.makeFakeSnapshot();
 

@@ -14,7 +14,7 @@ FactoryGuy.define('property', {
   },
   afterMake: function (model, attributes) {
     if (attributes.for_sale) {
-      model.set('name', model.get('name') + '(FOR SALE)');
+      model.set('name', model.name + '(FOR SALE)');
     }
   },
 });

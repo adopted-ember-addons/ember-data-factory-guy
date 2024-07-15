@@ -36,8 +36,8 @@ module('Acceptance | Users View', function (hooks) {
 
     await visit('/users');
 
-    assert.dom('li.user:nth-child(1)').containsText(bo.get('name'));
-    assert.dom('li.user:nth-child(2)').containsText(bif.get('name'));
+    assert.dom('li.user:nth-child(1)').containsText(bo.name);
+    assert.dom('li.user:nth-child(2)').containsText(bif.name);
   });
 
   test('reuse mockFindAll to show return different users', async function (assert) {
@@ -52,7 +52,7 @@ module('Acceptance | Users View', function (hooks) {
     await visit('/users');
 
     assert.dom('.user').exists({ count: 2 });
-    assert.dom('.user:nth-child(1)').containsText(bo.get('name'));
-    assert.dom('.user:nth-child(2)').containsText(bif.get('name'));
+    assert.dom('.user:nth-child(1)').containsText(bo.name);
+    assert.dom('.user:nth-child(2)').containsText(bif.name);
   });
 });

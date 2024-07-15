@@ -65,8 +65,8 @@ module(serializer, function (hooks) {
 
       const profile = await FactoryGuy.store.findRecord('profile', profileId);
 
-      assert.strictEqual(profile.get('id'), profileId);
-      assert.strictEqual(profile.get('description'), json.get('description'));
+      assert.strictEqual(profile.id, profileId);
+      assert.strictEqual(profile.description, json.get('description'));
     });
   });
 
@@ -80,7 +80,9 @@ module(serializer, function (hooks) {
         .createRecord('entry', { entryType: entryType })
         .save();
 
-      assert.strictEqual(entry.get('entryType.id'), entryType.id);
+      const entryTypeReference = await entry.get('entryType');
+
+      assert.strictEqual(entryTypeReference?.id, entryType.id);
     });
 
     test('match hasMany with custom payloadKeyFromModelName function', async function (assert) {
@@ -92,7 +94,7 @@ module(serializer, function (hooks) {
         .createRecord('entry-type', { entries: [entry] })
         .save();
 
-      let entries = entryType.get('entries');
+      let entries = entryType.entries;
       assert.deepEqual(
         entries.map(({ id }) => id),
         [entry.id]
@@ -833,11 +835,7 @@ module(serializer, function (hooks) {
     test('with model that has primaryKey defined in serializer and is attribute ( value set in fixture )', function (assert) {
       let dog = build('dog');
 
-      assert.strictEqual(
-        dog.get('id'),
-        'Dog1',
-        'primary key comes from dogNumber'
-      );
+      assert.strictEqual(dog.get('id'), 'Dog1', 'primary key comes from dogNumber');
       assert.strictEqual(
         dog.get('dog-number'),
         'Dog1',

@@ -18,8 +18,8 @@ module(
         hbs`<SingleUser @user={{this.user}} @createProject={{this.createProject}} />`
       );
 
-      assert.dom('.name').containsText(user.get('name'));
-      assert.dom('.funny-name').containsText(user.get('funnyName'));
+      assert.dom('.name').containsText(user.name);
+      assert.dom('.funny-name').containsText(user.funnyName);
     });
   }
 );

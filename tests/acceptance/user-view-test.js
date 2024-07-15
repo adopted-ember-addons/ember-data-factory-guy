@@ -27,13 +27,13 @@ module('Acceptance | User View', function (hooks) {
 
     await visit('/user/' + mock.get('id'));
 
-    assert.dom('.name').containsText(user.get('name'));
+    assert.dom('.name').containsText(user.name);
     // the power of making a model instead of json is that you can access
     // computed properties on the model to use in your tests
-    assert.dom('.funny-name').containsText(user.get('funnyName'));
+    assert.dom('.funny-name').containsText(user.funnyName);
 
-    assert.dom('li.project:first-child').containsText(project1.get('title'));
-    assert.dom('li.project:last-child').containsText(project2.get('title'));
+    assert.dom('li.project:first-child').containsText(project1.title);
+    assert.dom('li.project:last-child').containsText(project2.title);
   });
 
   test('Show user with projects by build(ing) json and using returns with json', async function (assert) {

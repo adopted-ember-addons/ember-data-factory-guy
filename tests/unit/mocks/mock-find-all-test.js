@@ -81,7 +81,7 @@ module('MockFindAll', function (hooks) {
     mockFindAll('cat').returns({ models: [cat] });
     await FactoryGuy.store.findAll('cat');
     await settled();
-    assert.strictEqual(cat.get('type'), 'Cuddly');
+    assert.strictEqual(cat.type, 'Cuddly');
   });
 
   test('returns({models}) for polymorphic type does does not alter type attribute', async function (assert) {
@@ -89,7 +89,7 @@ module('MockFindAll', function (hooks) {
     mockFindAll('big-hat').returns({ models: [hat] });
     await FactoryGuy.store.findAll('big-hat');
     await settled();
-    assert.strictEqual(hat.get('type'), 'BigHat'); // default type value
+    assert.strictEqual(hat.type, 'BigHat'); // default type value
   });
 
   test('#get method to access payload', function (assert) {

@@ -14,27 +14,27 @@ module(`Unit | Model | ${modelType}`, function (hooks) {
 
   test('has funny name', function (assert) {
     let user = make('user', { name: 'Dude' });
-    assert.strictEqual(user.get('funnyName'), 'funny Dude');
+    assert.strictEqual(user.funnyName, 'funny Dude');
   });
 
   test('has projects', function (assert) {
     let user = make('user', 'with_projects');
-    assert.strictEqual(user.get('projects.length'), 2);
+    assert.strictEqual(user.projects?.length, 2);
   });
 
   test('sample async unit test with async/await', async function (assert) {
     assert.expect(1);
     let mock = mockFindRecord('user');
-    let userId = mock.get('id');
+    let userId = String(mock.get('id'));
     let user = await FactoryGuy.store.findRecord('user', userId);
-    assert.strictEqual(user.get('name'), mock.get('name'));
+    assert.strictEqual(user.name, mock.get('name'));
   });
 
   test('sample async unit test with assert.async()', async function (assert) {
     assert.expect(1);
     let mock = mockFindRecord('user');
-    let userId = mock.get('id');
+    let userId = String(mock.get('id'));
     const user = await FactoryGuy.store.findRecord('user', userId);
-    assert.strictEqual(user.get('name'), mock.get('name'));
+    assert.strictEqual(user.name, mock.get('name'));
   });
 });

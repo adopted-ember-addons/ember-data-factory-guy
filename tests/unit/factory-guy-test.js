@@ -211,11 +211,7 @@ module('FactoryGuy', function (hooks) {
 
     test('can use non model attributes to help setup attributes', function (assert) {
       let dog1 = build('dog');
-      assert.strictEqual(
-        dog1.get('sound'),
-        'Normal Woof',
-        'no extra attribute'
-      );
+      assert.strictEqual(dog1.get('sound'), 'Normal Woof', 'no extra attribute');
 
       let volume = 'Soft';
       let dog2 = build('dog', { volume });
@@ -330,10 +326,10 @@ module('FactoryGuy', function (hooks) {
     test('creates record but does not save to store', function (assert) {
       let user = makeNew('user', 'silly', { name: 'Bozo' });
       assert.ok(user instanceof User, 'creates record');
-      assert.strictEqual(user.get('style'), 'silly', 'uses trait attributes');
-      assert.strictEqual(user.get('name'), 'Bozo', 'uses optional attributes');
+      assert.strictEqual(user.style, 'silly', 'uses trait attributes');
+      assert.strictEqual(user.name, 'Bozo', 'uses optional attributes');
       assert.strictEqual(user.id, null, 'no id');
-      assert.ok(user.get('isNew'), 'is in isNew state');
+      assert.ok(user.isNew, 'is in isNew state');
     });
 
     test('handles camelCase and snake case attributes', function (assert) {
@@ -342,12 +338,12 @@ module('FactoryGuy', function (hooks) {
         snake_case_description: 'snakeMan',
       });
       assert.strictEqual(
-        profile.get('camelCaseDescription'),
+        profile.camelCaseDescription,
         'camelMan',
         'camel case'
       );
       assert.strictEqual(
-        profile.get('snake_case_description'),
+        profile.snake_case_description,
         'snakeMan',
         'snake case'
       );
@@ -429,10 +425,10 @@ module('FactoryGuy', function (hooks) {
         'with_bat_man'
       );
       assert.strictEqual(profiles.length, 3);
-      assert.strictEqual(profiles[0].get('description'), 'goofy');
-      assert.strictEqual(profiles[1].get('company.name'), 'Silly corp');
-      assert.strictEqual(profiles[1].get('description'), 'Noodles');
-      assert.strictEqual(profiles[2].get('superHero.name'), 'BatMan');
+      assert.strictEqual(profiles[0].description, 'goofy');
+      assert.strictEqual(profiles[1].company?.name, 'Silly corp');
+      assert.strictEqual(profiles[1].description, 'Noodles');
+      assert.strictEqual(profiles[2].superHero?.name, 'BatMan');
       assert.strictEqual(FactoryGuy.store.peekAll('profile').length, 3);
     });
   });

@@ -31,7 +31,7 @@ SharedBehavior.mockFindRecordCommonTests = function () {
 
     const profile = await FactoryGuy.store.findRecord('profile', profileId);
     assert.strictEqual(profile.id, String(profileId));
-    assert.strictEqual(profile.get('description'), 'Text goes here');
+    assert.strictEqual(profile.description, 'Text goes here');
   });
 
   test('when returns json is used', async function (assert) {
@@ -40,8 +40,8 @@ SharedBehavior.mockFindRecordCommonTests = function () {
       profileId = mockFindProfile.get('id');
 
     let profile = await FactoryGuy.store.findRecord('profile', profileId);
-    assert.strictEqual(profile.get('id'), String(profileId));
-    assert.strictEqual(profile.get('description'), json.get('description'));
+    assert.strictEqual(profile.id, String(profileId));
+    assert.strictEqual(profile.description, json.get('description'));
   });
 
   test('returns id succeeds and returns model when id for model type found in store after createRecord', async function (assert) {
@@ -65,13 +65,13 @@ SharedBehavior.mockFindRecordCommonTests = function () {
     let existingProfile = make('profile'),
       { store } = FactoryGuy;
 
-    mockFindRecord('profile').returns({ id: existingProfile.get('id') });
+    mockFindRecord('profile').returns({ id: existingProfile.id });
 
-    let profile = await store.findRecord('profile', existingProfile.get('id'));
+    let profile = await store.findRecord('profile', existingProfile.id);
 
     await settled();
 
-    assert.strictEqual(profile.get('id'), existingProfile.get('id'));
+    assert.strictEqual(profile.id, existingProfile.id);
   });
 
   test('returns id fails with 404 if record for id and model type not found in store', async function (assert) {
@@ -92,7 +92,7 @@ SharedBehavior.mockFindRecordCommonTests = function () {
     let catA = await FactoryGuy.store.findRecord('cat', mock.get('id'), {
       reload: true,
     });
-    assert.strictEqual(catA.get('type'), 'Cutest');
+    assert.strictEqual(catA.type, 'Cutest');
   });
 
   test('when using model as the param of modelName to find record', async function (assert) {
@@ -113,16 +113,16 @@ SharedBehavior.mockFindRecordCommonTests = function () {
     assert.strictEqual(mock.get('catFriend'), 'Friend 1');
 
     const cat = await FactoryGuy.store.findRecord('cat', mock.get('id'));
-    assert.strictEqual(cat.get('name'), 'Cat 1');
-    assert.strictEqual(cat.get('friend'), 'Friend 1');
+    assert.strictEqual(cat.name, 'Cat 1');
+    assert.strictEqual(cat.friend, 'Friend 1');
   });
 
   test('with model that has primaryKey defined in serializer attrs and is attribute of model', async function (assert) {
     let mock = mockFindRecord('dog');
 
     const dog = await FactoryGuy.store.findRecord('dog', mock.get('id'));
-    assert.strictEqual(dog.get('id'), 'Dog1');
-    assert.strictEqual(dog.get('dogNumber'), 'Dog1');
+    assert.strictEqual(dog.id, 'Dog1');
+    assert.strictEqual(dog.dogNumber, 'Dog1');
   });
 
   test('with fixture options', async function (assert) {
@@ -130,7 +130,7 @@ SharedBehavior.mockFindRecordCommonTests = function () {
     let profileId = mock.get('id');
 
     const profile = await FactoryGuy.store.findRecord('profile', profileId);
-    assert.ok(profile.get('description') === 'dude');
+    assert.ok(profile.description === 'dude');
   });
 
   test('handles differently cased attributes', async function (assert) {
@@ -139,8 +139,8 @@ SharedBehavior.mockFindRecordCommonTests = function () {
 
     const profile = await FactoryGuy.store.findRecord('profile', profileId);
 
-    assert.ok(profile.get('camelCaseDescription') === 'textGoesHere');
-    assert.ok(profile.get('snake_case_description') === 'text_goes_here');
+    assert.ok(profile.camelCaseDescription === 'textGoesHere');
+    assert.ok(profile.snake_case_description === 'text_goes_here');
   });
 
   test('with traits', async function (assert) {
@@ -148,7 +148,7 @@ SharedBehavior.mockFindRecordCommonTests = function () {
     let profileId = mock.get('id');
 
     const profile = await FactoryGuy.store.findRecord('profile', profileId);
-    assert.ok(profile.get('description') === 'goofy');
+    assert.ok(profile.description === 'goofy');
   });
 
   test('with traits and extra options', async function (assert) {
@@ -158,7 +158,7 @@ SharedBehavior.mockFindRecordCommonTests = function () {
     let profileId = mock.get('id');
 
     const profile = await FactoryGuy.store.findRecord('profile', profileId);
-    assert.ok(profile.get('description') === 'dude');
+    assert.ok(profile.description === 'dude');
   });
 
   test('failure with fails method when passing modelName as parameter', async function (assert) {
@@ -204,20 +204,20 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
         'with_company',
         'with_bat_man'
       );
-      let profileId = mockFindProfile.get('id');
+      let profileId = String(mockFindProfile.get('id'));
 
       const profile = await FactoryGuy.store.findRecord('profile', profileId);
-      assert.ok(profile.get('company.name') === 'Silly corp');
-      assert.ok(profile.get('superHero.name') === 'BatMan');
+      assert.ok(profile.company?.name === 'Silly corp');
+      assert.ok(profile.superHero?.name === 'BatMan');
     });
 
     test('hasMany association', async function (assert) {
       let mockFindUser = mockFindRecord('user', 'with_hats');
-      let userId = mockFindUser.get('id');
+      let userId = String(mockFindUser.get('id'));
 
       let user = await FactoryGuy.store.findRecord('user', userId);
 
-      assert.strictEqual(user.get('hats.length'), 2);
+      assert.strictEqual(user.hats?.length, 2);
       assert.strictEqual(user.hats[0].type, 'BigHat');
     });
 
@@ -225,12 +225,12 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
       let json = build('profile', 'with_company', 'with_bat_man');
 
       mockFindRecord('profile').returns({ json });
-      let profileId = json.get('id');
+      let profileId = String(json.get('id'));
 
       const profile = await FactoryGuy.store.findRecord('profile', profileId);
 
-      assert.strictEqual(profile.get('company.name'), 'Silly corp');
-      assert.strictEqual(profile.get('superHero.name'), 'BatMan');
+      assert.strictEqual(profile.company?.name, 'Silly corp');
+      assert.strictEqual(profile.superHero?.name, 'BatMan');
     });
 
     test('using returns with json with composed hasMany association', async function (assert) {
@@ -248,13 +248,13 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
     test('using returns with model', async function (assert) {
       let model = make('profile', 'with_company', 'with_bat_man');
       let mockFindProfile = mockFindRecord('profile').returns({ model });
-      let profileId = mockFindProfile.get('id');
+      let profileId = String(mockFindProfile.get('id'));
 
       const profile = await FactoryGuy.store.findRecord('profile', profileId, {
         reload: true,
       });
-      assert.strictEqual(profile.get('company.name'), 'Silly corp');
-      assert.strictEqual(profile.get('superHero.name'), 'BatMan');
+      assert.strictEqual(profile.company?.name, 'Silly corp');
+      assert.strictEqual(profile.superHero?.name, 'BatMan');
       assert.strictEqual(
         FactoryGuy.store.peekAll('profile').length,
         1,
@@ -269,24 +269,20 @@ SharedBehavior.mockFindRecordEmbeddedTests = function () {
     test('belongsTo', async function (assert) {
       let mock = mockFindRecord('comic-book', 'marvel');
 
-      const comic = await FactoryGuy.store.findRecord(
-        'comic-book',
-        mock.get('id')
-      );
-      assert.ok(comic.get('name') === 'Comic Times #1');
-      assert.ok(comic.get('company.name') === 'Marvel Comics');
+      const comic = await FactoryGuy.store.findRecord('comic-book', mock.get('id'));
+      const comicCompany = await comic.get('company');
+
+      assert.ok(comic.name === 'Comic Times #1');
+      assert.ok(comicCompany?.name === 'Marvel Comics');
     });
 
     test('hasMany', async function (assert) {
       let mock = mockFindRecord('comic-book', 'with_bad_guys');
 
-      const comic = await FactoryGuy.store.findRecord(
-        'comic-book',
-        mock.get('id')
-      );
-      assert.ok(comic.get('name') === 'Comic Times #1');
+      const comic = await FactoryGuy.store.findRecord('comic-book', mock.get('id'));
+      assert.ok(comic.name === 'Comic Times #1');
       assert.ok(
-        comic.get('characters').map(({ name }) => name) + '' ===
+        comic.characters.map(({ name }) => name) + '' ===
           ['BadGuy#1', 'BadGuy#2'] + ''
       );
     });
@@ -302,7 +298,7 @@ SharedBehavior.mockReloadTests = function () {
 
     const reloaded = await profile.reload();
     assert.ok(reloaded.id === profile.id);
-    assert.ok(reloaded.get('description') === profile.get('description'));
+    assert.ok(reloaded.description === profile.description);
   });
 
   test('can change the attributes using returns method with attrs', async function (assert) {
@@ -315,9 +311,9 @@ SharedBehavior.mockReloadTests = function () {
 
     const reloaded = await profile.reload();
     assert.ok(reloaded.id === profile.id, 'does not change id');
-    assert.ok(reloaded.get('description') === 'moo', 'attribute changed');
+    assert.ok(reloaded.description === 'moo', 'attribute changed');
     assert.ok(
-      reloaded.get('camelCaseDescription') === 'noodles',
+      reloaded.camelCaseDescription === 'noodles',
       'other attributes are same'
     );
   });
@@ -329,7 +325,7 @@ SharedBehavior.mockReloadTests = function () {
     });
 
     let newProfile = build('profile', {
-      id: profile.get('id'),
+      id: profile.id,
       description: 'potatoes',
       camelCaseDescription: 'poodles',
     });
@@ -337,12 +333,9 @@ SharedBehavior.mockReloadTests = function () {
 
     const reloaded = await profile.reload();
     assert.ok(reloaded.id === profile.id, 'does not change id');
+    assert.ok(reloaded.description === 'potatoes', 'description changed');
     assert.ok(
-      reloaded.get('description') === 'potatoes',
-      'description changed'
-    );
-    assert.ok(
-      reloaded.get('camelCaseDescription') === 'poodles',
+      reloaded.camelCaseDescription === 'poodles',
       'camelCaseDescription changes'
     );
   });
@@ -364,7 +357,7 @@ SharedBehavior.mockFindAllCommonTests = function () {
     mockFindAll('user', 2);
 
     let users = await FactoryGuy.store.findAll('user');
-    assert.ok(users.get('length') === 2);
+    assert.ok(users.length === 2);
   });
 
   test('handles differently cased attributes', async function (assert) {
@@ -379,14 +372,14 @@ SharedBehavior.mockFindAllCommonTests = function () {
     mockFindAll('user', 0);
 
     const profiles = await FactoryGuy.store.findAll('user');
-    assert.ok(profiles.get('length') === 0);
+    assert.ok(profiles.length === 0);
   });
 
   test('with fixture options', async function (assert) {
     mockFindAll('profile', 2, { description: 'dude' });
 
     const profiles = await FactoryGuy.store.findAll('profile');
-    assert.ok(profiles.get('length') === 2);
+    assert.ok(profiles.length === 2);
     assert.ok(profiles[0].description === 'dude');
   });
 
@@ -394,7 +387,7 @@ SharedBehavior.mockFindAllCommonTests = function () {
     mockFindAll('profile', 2, 'goofy_description');
 
     const profiles = await FactoryGuy.store.findAll('profile');
-    assert.ok(profiles.get('length') === 2);
+    assert.ok(profiles.length === 2);
     assert.ok(profiles[0].description === 'goofy');
   });
 
@@ -402,7 +395,7 @@ SharedBehavior.mockFindAllCommonTests = function () {
     mockFindAll('profile', 2, 'goofy_description', { description: 'dude' });
 
     const profiles = await FactoryGuy.store.findAll('profile');
-    assert.ok(profiles.get('length') === 2);
+    assert.ok(profiles.length === 2);
     assert.ok(profiles[0].description === 'dude');
   });
 };
@@ -414,7 +407,7 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
       mockFindAll('profile', 2, 'with_company', 'with_bat_man');
 
       const profiles = await FactoryGuy.store.findAll('profile');
-      assert.ok(profiles.get('length') === 2);
+      assert.ok(profiles.length === 2);
       assert.ok(profiles[0].company.name === 'Silly corp');
       assert.ok(profiles.at(-1).superHero.name === 'BatMan');
     });
@@ -423,19 +416,12 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
       mockFindAll('user', 2, 'with_hats');
 
       const users = await FactoryGuy.store.findAll('user');
-      assert.ok(users.get('length') === 2);
+      assert.ok(users.length === 2);
       assert.ok(
         users.at(-1).hats.map((hat) => hat.type) + '' ===
           ['BigHat', 'BigHat'] + ''
       );
-      assert.ok(
-        users
-          .at(-1)
-          .get('hats')
-          .map((hat) => hat.id) +
-          '' ===
-          [3, 4] + ''
-      );
+      assert.ok(users.at(-1).hats.map((hat) => hat.id) + '' === [3, 4] + '');
     });
 
     test('with diverse models', async function (assert) {
@@ -445,13 +431,13 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
       ]);
 
       const profiles = await FactoryGuy.store.findAll('profile');
-      assert.ok(profiles.get('length') === 3);
-      assert.ok(profiles[0].get('description') === 'goofy');
-      assert.ok(profiles[0].get('aBooleanField') === false);
-      assert.ok(profiles[1].get('description') === 'foo');
-      assert.ok(profiles[1].get('aBooleanField') === false);
-      assert.ok(profiles[2].get('description') === 'goofy');
-      assert.ok(profiles[2].get('aBooleanField') === true);
+      assert.ok(profiles.length === 3);
+      assert.ok(profiles[0].description === 'goofy');
+      assert.ok(profiles[0].aBooleanField === false);
+      assert.ok(profiles[1].description === 'foo');
+      assert.ok(profiles[1].aBooleanField === false);
+      assert.ok(profiles[2].description === 'goofy');
+      assert.ok(profiles[2].aBooleanField === true);
     });
 
     test('using returns with json', async function (assert) {
@@ -492,7 +478,7 @@ SharedBehavior.mockFindAllEmbeddedTests = function () {
       );
 
       for (let comic of comics) {
-        const company = await comic.get('company');
+        const company = await comic.company;
         assert.ok(company.name === 'Marvel Comics');
       }
     });
@@ -524,7 +510,7 @@ SharedBehavior.mockQueryTests = function () {
     mockQuery('user', { name: 'Bob' });
 
     const users = await FactoryGuy.store.query('user', { name: 'Bob' });
-    assert.strictEqual(users.get('length'), 0, 'nothing returned');
+    assert.strictEqual(users.length, 0, 'nothing returned');
   });
 
   test('with no parameters matches query with any parameters', async function (assert) {
@@ -561,7 +547,7 @@ SharedBehavior.mockQueryTests = function () {
   test('using returns with empty array', async function (assert) {
     mockQuery('user', { name: 'Bob' }).returns({ models: [] });
     const users = await FactoryGuy.store.query('user', { name: 'Bob' });
-    assert.strictEqual(users.get('length'), 0, 'nothing returned');
+    assert.strictEqual(users.length, 0, 'nothing returned');
   });
 
   test('using returns with model instances returns your models, and does not create new ones', async function (assert) {
@@ -570,7 +556,7 @@ SharedBehavior.mockQueryTests = function () {
     mockQuery('user', { name: 'Bob' }).returns({ models: [bob] });
 
     const users = await FactoryGuy.store.query('user', { name: 'Bob' });
-    assert.strictEqual(users.get('length'), 1);
+    assert.strictEqual(users.length, 1);
     assert.strictEqual(users[0], bob);
     assert.strictEqual(
       FactoryGuy.store.peekAll('user').length,
@@ -590,7 +576,7 @@ SharedBehavior.mockQueryTests = function () {
     );
 
     let users = await FactoryGuy.store.query('user', { name: 'Bob' });
-    assert.strictEqual(users.get('length'), 2);
+    assert.strictEqual(users.length, 2);
     assert.strictEqual(users[0].name, 'User1');
     assert.strictEqual(users[0].hats.length, 2);
     assert.strictEqual(users.at(-1).name, 'User2');
@@ -614,7 +600,7 @@ SharedBehavior.mockQueryTests = function () {
     const companies = await FactoryGuy.store.query('company', {
       name: 'Dude Company',
     });
-    assert.strictEqual(companies.get('length'), 2);
+    assert.strictEqual(companies.length, 2);
     assert.ok(companies[0].profile instanceof Profile);
     assert.strictEqual(companies[0].projects.length, 2);
     assert.ok(companies.at(-1).profile instanceof Profile);
@@ -642,7 +628,7 @@ SharedBehavior.mockQueryTests = function () {
     mockQuery('user', { name: 'Bob' }).returns({ ids });
 
     const users = await FactoryGuy.store.query('user', { name: 'Bob' });
-    assert.strictEqual(users.get('length'), 1);
+    assert.strictEqual(users.length, 1);
     assert.strictEqual(users[0], bob);
     // does not create a new model
     assert.strictEqual(FactoryGuy.store.peekAll('user').length, 1);
@@ -655,7 +641,7 @@ SharedBehavior.mockQueryTests = function () {
     let bobQueryHander = mockQuery('user', { name: 'Bob' });
 
     let users = await store.query('user', { name: 'Bob' });
-    assert.strictEqual(users.get('length'), 0);
+    assert.strictEqual(users.length, 0);
 
     mockCreate('user', { name: 'Bob' });
     const user = await store.createRecord('user', { name: 'Bob' }).save();
@@ -663,7 +649,7 @@ SharedBehavior.mockQueryTests = function () {
     bobQueryHander.returns({ models: [user] });
 
     users = await store.query('user', { name: 'Bob' });
-    assert.strictEqual(users.get('length'), 1);
+    assert.strictEqual(users.length, 1);
   });
 
   test('reusing mock query using returns with different models and different params returns different results', async function (assert) {
@@ -783,7 +769,7 @@ SharedBehavior.mockQueryMetaTests = function () {
         ['1', '2']
       );
       assert.ok(
-        isEquivalent(profiles.get('meta'), {
+        isEquivalent(profiles.meta, {
           previous: '/profiles?page=1',
           next: '/profiles?page=3',
         })
@@ -795,7 +781,7 @@ SharedBehavior.mockQueryMetaTests = function () {
         ['3', '4']
       );
       assert.ok(
-        isEquivalent(profiles2.get('meta'), {
+        isEquivalent(profiles2.meta, {
           previous: '/profiles?page=2',
           next: '/profiles?page=4',
         })
@@ -829,7 +815,7 @@ SharedBehavior.mockQueryRecordTests = function () {
 
     let user = await FactoryGuy.store.queryRecord('user', { name: 'Bob' });
     assert.strictEqual(user.id, String(bob.get('id')));
-    assert.strictEqual(user.get('name'), bob.get('name'));
+    assert.strictEqual(user.name, bob.get('name'));
     // makes the user after getting query response
     assert.strictEqual(FactoryGuy.store.peekAll('user').length, 1);
   });
@@ -870,10 +856,10 @@ SharedBehavior.mockQueryRecordTests = function () {
     let company = await FactoryGuy.store.queryRecord('company', {
       name: 'Dude',
     });
-    assert.strictEqual(company.get('id'), String(company1.get('id')));
+    assert.strictEqual(company.id, String(company1.get('id')));
 
     company = await FactoryGuy.store.queryRecord('company', { type: 'Small' });
-    assert.strictEqual(company.get('id'), String(company2.get('id')));
+    assert.strictEqual(company.id, String(company2.get('id')));
   });
 
   test('reusing mock using returns with different json and withParams with different params returns different results', async function (assert) {
@@ -887,12 +873,12 @@ SharedBehavior.mockQueryRecordTests = function () {
       name: 'Dude',
     });
 
-    assert.strictEqual(company.get('id'), String(company1.get('id')));
+    assert.strictEqual(company.id, String(company1.get('id')));
 
     mockQuery.withParams({ type: 'Small' }).returns({ json: company2 });
     company = await FactoryGuy.store.queryRecord('company', { type: 'Small' });
 
-    assert.strictEqual(company.get('id'), String(company2.get('id')));
+    assert.strictEqual(company.id, String(company2.get('id')));
   });
 };
 
@@ -917,7 +903,7 @@ SharedBehavior.mockCreateTests = function () {
     );
     assert.ok(profile instanceof Profile, 'Creates the correct type of record');
     assert.ok(
-      profile.get('description') === customDescription,
+      profile.description === customDescription,
       'Passes along the match attributes'
     );
   });
@@ -930,9 +916,12 @@ SharedBehavior.mockCreateTests = function () {
     mockCreate(profile).match({ camelCaseDescription, description });
     await profile.save();
 
-    assert.ok(!profile.get('isNew'), 'Profile is saved');
+    assert.ok(!profile.isNew, 'Profile is saved');
     assert.deepEqual(
-      profile.getProperties(['description', 'camelCaseDescription']),
+      {
+        description: profile.description,
+        camelCaseDescription: profile.camelCaseDescription,
+      },
       { camelCaseDescription, description },
       'correct model attributes present'
     );
@@ -955,10 +944,7 @@ SharedBehavior.mockCreateTests = function () {
       'No extra records created'
     );
     assert.ok(hero instanceof SuperHero, 'Creates the correct type of record');
-    assert.ok(
-      hero.get('name') === customName,
-      'Passes along the match attributes'
-    );
+    assert.ok(hero.name === customName, 'Passes along the match attributes');
   });
 
   test('with no specific match', async function (assert) {
@@ -971,7 +957,7 @@ SharedBehavior.mockCreateTests = function () {
     await profile.save();
 
     assert.ok(profile.id === '1');
-    assert.ok(profile.get('description') === 'whatever');
+    assert.ok(profile.description === 'whatever');
   });
 
   test('with no specific match creates many in a loop', async function (assert) {
@@ -1056,7 +1042,7 @@ SharedBehavior.mockCreateTests = function () {
 
     assert.ok(profile instanceof Profile);
     assert.ok(profile.id === '1');
-    assert.ok(profile.get('description') === customDescription);
+    assert.ok(profile.description === customDescription);
   });
 
   test('match all attributes', async function (assert) {
@@ -1076,8 +1062,8 @@ SharedBehavior.mockCreateTests = function () {
 
     assert.ok(profile instanceof Profile);
     assert.ok(profile.id === '1');
-    assert.ok(profile.get('description') === customDescription);
-    assert.ok(profile.get('created_at').toString() === date.toString());
+    assert.ok(profile.description === customDescription);
+    assert.ok(profile.created_at.toString() === date.toString());
   });
 
   test('match belongsTo association', async function (assert) {
@@ -1088,7 +1074,7 @@ SharedBehavior.mockCreateTests = function () {
 
     await profile.save();
 
-    assert.ok(profile.get('company') === company);
+    assert.ok(profile.company === company);
   });
 
   test('match belongsTo polymorphic association', async function (assert) {
@@ -1099,7 +1085,7 @@ SharedBehavior.mockCreateTests = function () {
 
     await profile.save();
 
-    assert.ok(profile.get('group') === group);
+    assert.ok(profile.group === group);
   });
 
   test('using returns attrs with attributes', async function (assert) {
@@ -1110,7 +1096,7 @@ SharedBehavior.mockCreateTests = function () {
 
     await profile.save();
 
-    assert.ok(profile.get('created_at').toString() === date.toString());
+    assert.ok(profile.created_at.toString() === date.toString());
   });
 
   test('using returns method with user-supplied model id', async function (assert) {
@@ -1121,8 +1107,8 @@ SharedBehavior.mockCreateTests = function () {
     let profile = FactoryGuy.store.createRecord('profile');
     await profile.save();
 
-    assert.strictEqual(profile.get('id'), id);
-    assert.strictEqual(profile.get('foo'), undefined);
+    assert.strictEqual(profile.id, id);
+    assert.strictEqual(profile.foo, undefined);
   });
 
   test('match attributes and also return attributes', async function (assert) {
@@ -1142,10 +1128,10 @@ SharedBehavior.mockCreateTests = function () {
     });
     await profile.save();
 
-    assert.ok(profile.get('created_at').toString() === date.toString());
-    assert.ok(profile.get('group') === group);
-    assert.ok(profile.get('company') === company);
-    assert.ok(profile.get('description') === customDescription);
+    assert.ok(profile.created_at.toString() === date.toString());
+    assert.ok(profile.group === group);
+    assert.ok(profile.company === company);
+    assert.ok(profile.description === customDescription);
   });
 
   test('failure with fails method', async function (assert) {
@@ -1199,7 +1185,7 @@ SharedBehavior.mockCreateFailsWithErrorResponse = function () {
       try {
         await profile.save();
       } catch {
-        let errorMessages = profile.get('errors.messages');
+        let errorMessages = profile.errors?.messages;
         assert.deepEqual(errorMessages, ['bad dog', 'bad dude']);
         assert.strictEqual(mock.timesCalled, 1);
       }
@@ -1217,11 +1203,8 @@ SharedBehavior.mockCreateReturnsAssociations = function () {
 
       await profile.save();
 
-      assert.strictEqual(
-        profile.get('company.id'),
-        company.get('id').toString()
-      );
-      assert.strictEqual(profile.get('company.name'), company.get('name'));
+      assert.strictEqual(profile.company?.id, company.get('id').toString());
+      assert.strictEqual(profile.company?.name, company.get('name'));
     });
 
     test('belongsTo ( polymorphic )', async function (assert) {
@@ -1232,8 +1215,8 @@ SharedBehavior.mockCreateReturnsAssociations = function () {
 
       await outfit.save();
 
-      assert.strictEqual(outfit.get('person.id'), person.get('id').toString());
-      assert.strictEqual(outfit.get('person.name'), person.get('name'));
+      assert.strictEqual(outfit.person?.id, person.get('id').toString());
+      assert.strictEqual(outfit.person?.name, person.get('name'));
     });
 
     test('hasMany', async function (assert) {
@@ -1245,11 +1228,11 @@ SharedBehavior.mockCreateReturnsAssociations = function () {
       await hero.save();
 
       assert.deepEqual(
-        hero.get('outfits').map(({ id }) => id),
+        hero.outfits.map(({ id }) => id),
         ['1', '2']
       );
       assert.deepEqual(
-        hero.get('outfits').map(({ name }) => name),
+        hero.outfits.map(({ name }) => name),
         ['Outfit-1', 'Outfit-2']
       );
     });
@@ -1260,20 +1243,15 @@ SharedBehavior.mockCreateReturnsEmbeddedAssociations = function () {
   module('#mockCreate | returns embedded association', function () {
     test('belongsTo', async function (assert) {
       let company = build('company'),
-        comitBook = FactoryGuy.store.createRecord('comic-book');
+        comicBook = FactoryGuy.store.createRecord('comic-book');
 
       mockCreate('comic-book').returns({ attrs: { company } });
 
-      await comitBook.save();
+      await comicBook.save();
 
-      assert.strictEqual(
-        comitBook.get('company.id'),
-        company.get('id').toString()
-      );
-      assert.strictEqual(
-        comitBook.get('company.name'),
-        company.get('name').toString()
-      );
+      const comicCompany = await comicBook.get('company');
+      assert.strictEqual(comicCompany?.id, company.get('id').toString());
+      assert.strictEqual(comicCompany?.name, company.get('name').toString());
     });
   });
 };
@@ -1288,7 +1266,7 @@ SharedBehavior.mockUpdateTests = function () {
     profile.set('description', 'new desc');
     await profile.save();
 
-    assert.ok(profile.get('description') === 'new desc');
+    assert.ok(profile.description === 'new desc');
   });
 
   test('with modelType and id using returns to return an attribute', async function (assert) {
@@ -1300,8 +1278,8 @@ SharedBehavior.mockUpdateTests = function () {
     profile.set('description', 'new desc');
     await profile.save();
 
-    assert.ok(profile.get('description') === 'new desc');
-    assert.ok(profile.get('created_at').toString() === date.toString());
+    assert.ok(profile.description === 'new desc');
+    assert.ok(profile.created_at.toString() === date.toString());
   });
 
   test('with only modelType', async function (assert) {
@@ -1311,7 +1289,7 @@ SharedBehavior.mockUpdateTests = function () {
     profile.set('description', 'new desc');
     await profile.save();
 
-    assert.strictEqual(profile.get('description'), 'new desc');
+    assert.strictEqual(profile.description, 'new desc');
   });
 
   test('with model', async function (assert) {
@@ -1321,7 +1299,7 @@ SharedBehavior.mockUpdateTests = function () {
     profile.set('description', 'new desc');
     await profile.save();
 
-    assert.strictEqual(profile.get('description'), 'new desc');
+    assert.strictEqual(profile.description, 'new desc');
   });
 
   test('with model and query param', async function (assert) {
@@ -1331,7 +1309,7 @@ SharedBehavior.mockUpdateTests = function () {
     employee.set('gender', 'new gender');
     await employee.save();
 
-    assert.strictEqual(employee.get('gender'), 'new gender');
+    assert.strictEqual(employee.gender, 'new gender');
   });
 
   test('with model using returns to return an attribute', async function (assert) {
@@ -1342,8 +1320,8 @@ SharedBehavior.mockUpdateTests = function () {
     profile.set('description', 'new desc');
     await profile.save();
 
-    assert.ok(profile.get('description') === 'new desc');
-    assert.ok(profile.get('created_at').toString() === date.toString());
+    assert.ok(profile.description === 'new desc');
+    assert.ok(profile.created_at.toString() === date.toString());
   });
 
   test('with model that has polymorphic belongsTo', async function (assert) {
@@ -1354,7 +1332,7 @@ SharedBehavior.mockUpdateTests = function () {
     profile.set('description', 'new desc');
     await profile.save();
 
-    assert.ok(profile.get('description') === 'new desc');
+    assert.ok(profile.description === 'new desc');
   });
 
   test('with modelType and id that fails', async function (assert) {
@@ -1398,14 +1376,11 @@ SharedBehavior.mockUpdateTests = function () {
     }
 
     updateMock.succeeds();
-    assert.ok(!profile.get('valid'), 'Profile is invalid.');
+    assert.ok(!profile.valid, 'Profile is invalid.');
 
     await profile.save();
-    assert.ok(!profile.get('saving'), 'Saved model');
-    assert.ok(
-      profile.get('description') === 'new desc',
-      'Description was updated.'
-    );
+    assert.ok(!profile.saving, 'Saved model');
+    assert.ok(profile.description === 'new desc', 'Description was updated.');
   });
 
   test('match can take a function - it can accept FormData as requestBody', async function (assert) {
@@ -1493,7 +1468,7 @@ SharedBehavior.mockUpdateTests = function () {
 
     assert.ok(profile instanceof Profile);
     assert.ok(profile.id === '1');
-    assert.ok(profile.get('description') === customDescription);
+    assert.ok(profile.description === customDescription);
   });
 
   test('match some attributes with only modelType', async function (assert) {
@@ -1507,13 +1482,13 @@ SharedBehavior.mockUpdateTests = function () {
 
     assert.ok(profile instanceof Profile);
     assert.ok(profile.id === '1');
-    assert.ok(profile.get('description') === customDescription);
+    assert.ok(profile.description === customDescription);
 
     await profile2.save();
 
     assert.ok(profile2 instanceof Profile);
     assert.ok(profile2.id === '2');
-    assert.ok(profile2.get('description') === customDescription);
+    assert.ok(profile2.description === customDescription);
   });
 
   test('match all attributes', async function (assert) {
@@ -1536,9 +1511,9 @@ SharedBehavior.mockUpdateTests = function () {
 
     assert.ok(profile instanceof Profile);
     assert.ok(profile.id === '1');
-    assert.ok(profile.get('description') === customDescription);
-    assert.ok(profile.get('created_at').toString() === date.toString());
-    assert.ok(profile.get('aBooleanField') === true);
+    assert.ok(profile.description === customDescription);
+    assert.ok(profile.created_at.toString() === date.toString());
+    assert.ok(profile.aBooleanField === true);
   });
 
   test('match belongsTo association', async function (assert) {
@@ -1549,7 +1524,7 @@ SharedBehavior.mockUpdateTests = function () {
 
     await profile.save();
 
-    assert.ok(profile.get('company') === company);
+    assert.ok(profile.company === company);
   });
 
   test('match belongsTo polymorphic association', async function (assert) {
@@ -1558,7 +1533,7 @@ SharedBehavior.mockUpdateTests = function () {
     mockUpdate('profile', profile.id).match({ group: group });
 
     await profile.save();
-    assert.ok(profile.get('group') === group);
+    assert.ok(profile.group === group);
   });
 
   test('match attributes and also return attributes', async function (assert) {
@@ -1579,10 +1554,10 @@ SharedBehavior.mockUpdateTests = function () {
 
     await profile.save();
 
-    assert.ok(profile.get('created_at').toString() === date.toString());
-    assert.ok(profile.get('group') === group);
-    assert.ok(profile.get('company') === company);
-    assert.ok(profile.get('description') === customDescription);
+    assert.ok(profile.created_at.toString() === date.toString());
+    assert.ok(profile.group === group);
+    assert.ok(profile.company === company);
+    assert.ok(profile.description === customDescription);
   });
 
   test('fails when match args not present', async function (assert) {
@@ -1650,7 +1625,7 @@ SharedBehavior.mockUpdateTests = function () {
 
     await profile.save();
 
-    assert.ok(profile.get('created_at').toString() === date.toString());
+    assert.ok(profile.created_at.toString() === date.toString());
   });
 };
 
@@ -1691,11 +1666,8 @@ SharedBehavior.mockUpdateReturnsAssociations = function () {
 
       await profile.save();
 
-      assert.strictEqual(
-        profile.get('company.id'),
-        company.get('id').toString()
-      );
-      assert.strictEqual(profile.get('company.name'), company.get('name'));
+      assert.strictEqual(profile.company?.id, company.get('id').toString());
+      assert.strictEqual(profile.company?.name, company.get('name'));
     });
 
     test('belongsTo ( polymorphic )', async function (assert) {
@@ -1708,9 +1680,9 @@ SharedBehavior.mockUpdateReturnsAssociations = function () {
 
       await outfit.save();
 
-      assert.strictEqual(outfit.get('name'), newValue);
-      assert.strictEqual(outfit.get('person.id'), person.get('id').toString());
-      assert.strictEqual(outfit.get('person.name'), person.get('name'));
+      assert.strictEqual(outfit.name, newValue);
+      assert.strictEqual(outfit.person?.id, person.get('id').toString());
+      assert.strictEqual(outfit.person?.name, person.get('name'));
     });
 
     test('hasMany', async function (assert) {
@@ -1723,13 +1695,13 @@ SharedBehavior.mockUpdateReturnsAssociations = function () {
 
       await hero.save();
 
-      assert.strictEqual(hero.get('name'), newValue);
+      assert.strictEqual(hero.name, newValue);
       assert.deepEqual(
-        hero.get('outfits').map(({ id }) => id),
+        hero.outfits.map(({ id }) => id),
         ['1', '2']
       );
       assert.deepEqual(
-        hero.get('outfits').map(({ name }) => name),
+        hero.outfits.map(({ name }) => name),
         ['Outfit-1', 'Outfit-2']
       );
     });
@@ -1748,15 +1720,11 @@ SharedBehavior.mockUpdateReturnsEmbeddedAssociations = function () {
 
       await comicBook.save();
 
-      assert.strictEqual(comicBook.get('name'), newValue);
-      assert.strictEqual(
-        comicBook.get('company.id'),
-        company.get('id').toString()
-      );
-      assert.strictEqual(
-        comicBook.get('company.name'),
-        company.get('name').toString()
-      );
+      const comicCompany = await comicBook.get('company');
+
+      assert.strictEqual(comicBook.name, newValue);
+      assert.strictEqual(comicCompany?.id, company.get('id').toString());
+      assert.strictEqual(comicCompany?.name, company.get('name').toString());
     });
   });
 };

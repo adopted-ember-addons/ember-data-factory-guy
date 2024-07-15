@@ -84,7 +84,7 @@ export default class FixtureConverter {
    * @param fixture
    */
   addPrimaryKey(modelName, data, fixture) {
-    let primaryKey = this.store.serializerFor(modelName).get('primaryKey'),
+    let primaryKey = this.store.serializerFor(modelName).primaryKey,
       primaryKeyValue = fixture[primaryKey] || fixture.id;
     if (primaryKeyValue) {
       // need to set the id for all as a baseline
@@ -267,7 +267,7 @@ export default class FixtureConverter {
   }
 
   attrsOption(serializer, attr) {
-    let attrs = serializer.get('attrs'),
+    let attrs = serializer.attrs,
       option = attrs && (attrs[camelize(attr)] || attrs[attr]);
     return option;
   }
