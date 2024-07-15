@@ -93,23 +93,21 @@ function setupCustomSerializer(container, serializerType, options) {
   return modelSerializer;
 }
 
-// serializerType like rest or json-api, json
-export function containerSetup(application, serializerType) {
+// serializerType like rest or json-api
+export function containerSetup(application, type) {
   // brute force setting the adapter/serializer on the store.
-  if (serializerType) {
+  if (type) {
     let store = application.lookup('service:store');
 
-    let adapterType = serializerType === 'json' ? 'rest' : serializerType;
     let adapter;
-    if (serializerType === 'json' || serializerType === 'rest') {
+    if (type === 'rest') {
       application.register(`adapter:rest`, RESTAdapter, {
         singleton: false,
       });
     }
-    adapter = application.lookup('adapter:' + adapterType);
+    adapter = application.lookup(`adapter:${type}`);
 
-    serializerType = serializerType === 'json' ? 'application' : serializerType;
-    let serializer = application.lookup('serializer:' + serializerType);
+    let serializer = application.lookup('serializer:' + type);
 
     store.adapterFor = () => adapter;
 
@@ -128,7 +126,7 @@ export function containerSetup(application, serializerType) {
       }
       if (modelName.match(/(entry|entry-type|comic-book|^cat$|^dog$)/)) {
         let options = serializerOptions[modelName];
-        return setupCustomSerializer(application, serializerType, options);
+        return setupCustomSerializer(application, type, options);
       }
       return serializer;
     };
