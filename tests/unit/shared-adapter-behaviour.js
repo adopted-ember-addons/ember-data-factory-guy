@@ -286,9 +286,12 @@ SharedBehavior.mockFindRecordEmbeddedTests = function () {
         'comic-book',
         mock.get('id'),
       );
+
+      const characters = await comic.get('characters');
+
       assert.ok(comic.name === 'Comic Times #1');
       assert.ok(
-        comic.characters.map(({ name }) => name) + '' ===
+        characters.map(({ name }) => name) + '' ===
           ['BadGuy#1', 'BadGuy#2'] + '',
       );
     });
@@ -493,16 +496,19 @@ SharedBehavior.mockFindAllEmbeddedTests = function () {
       mockFindAll('comic-book', 2, 'with_bad_guys');
 
       const comics = await FactoryGuy.store.findAll('comic-book');
+      const firstCharacters = await comics[0].get('characters');
+      const lastCharacters = await comics.at(-1).get('characters');
+
       assert.ok(
         comics.map(({ name }) => name) + '' ===
           ['Comic Times #1', 'Comic Times #2'] + '',
       );
       assert.ok(
-        comics[0].characters.map(({ name }) => name) + '' ===
+        firstCharacters.map(({ name }) => name) + '' ===
           ['BadGuy#1', 'BadGuy#2'] + '',
       );
       assert.ok(
-        comics.at(-1).characters.map(({ name }) => name) + '' ===
+        lastCharacters.map(({ name }) => name) + '' ===
           ['BadGuy#3', 'BadGuy#4'] + '',
       );
     });

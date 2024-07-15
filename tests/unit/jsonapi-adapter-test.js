@@ -91,7 +91,7 @@ module(serializer, function (hooks) {
         .createRecord('entry-type', { entries: [entry] })
         .save();
 
-      let entries = entryType.entries;
+      let entries = await entryType.get('entries');
       assert.deepEqual(
         entries.map(({ id }) => id),
         [entry.id],
