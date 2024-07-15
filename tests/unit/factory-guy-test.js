@@ -211,7 +211,11 @@ module('FactoryGuy', function (hooks) {
 
     test('can use non model attributes to help setup attributes', function (assert) {
       let dog1 = build('dog');
-      assert.strictEqual(dog1.get('sound'), 'Normal Woof', 'no extra attribute');
+      assert.strictEqual(
+        dog1.get('sound'),
+        'Normal Woof',
+        'no extra attribute'
+      );
 
       let volume = 'Soft';
       let dog2 = build('dog', { volume });

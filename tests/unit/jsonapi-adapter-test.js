@@ -835,7 +835,11 @@ module(serializer, function (hooks) {
     test('with model that has primaryKey defined in serializer and is attribute ( value set in fixture )', function (assert) {
       let dog = build('dog');
 
-      assert.strictEqual(dog.get('id'), 'Dog1', 'primary key comes from dogNumber');
+      assert.strictEqual(
+        dog.get('id'),
+        'Dog1',
+        'primary key comes from dogNumber'
+      );
       assert.strictEqual(
         dog.get('dog-number'),
         'Dog1',

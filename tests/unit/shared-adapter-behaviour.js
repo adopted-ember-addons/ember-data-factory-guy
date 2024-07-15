@@ -269,7 +269,10 @@ SharedBehavior.mockFindRecordEmbeddedTests = function () {
     test('belongsTo', async function (assert) {
       let mock = mockFindRecord('comic-book', 'marvel');
 
-      const comic = await FactoryGuy.store.findRecord('comic-book', mock.get('id'));
+      const comic = await FactoryGuy.store.findRecord(
+        'comic-book',
+        mock.get('id')
+      );
       const comicCompany = await comic.get('company');
 
       assert.ok(comic.name === 'Comic Times #1');
@@ -279,7 +282,10 @@ SharedBehavior.mockFindRecordEmbeddedTests = function () {
     test('hasMany', async function (assert) {
       let mock = mockFindRecord('comic-book', 'with_bad_guys');
 
-      const comic = await FactoryGuy.store.findRecord('comic-book', mock.get('id'));
+      const comic = await FactoryGuy.store.findRecord(
+        'comic-book',
+        mock.get('id')
+      );
       assert.ok(comic.name === 'Comic Times #1');
       assert.ok(
         comic.characters.map(({ name }) => name) + '' ===
