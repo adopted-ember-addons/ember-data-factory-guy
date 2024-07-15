@@ -1,9 +1,7 @@
-import JSONSerializer from '@ember-data/serializer/json';
 import RESTSerializer from '@ember-data/serializer/rest';
 import JSONAPISerializer from '@ember-data/serializer/json-api';
 import JSONAPIFixtureBuilder from './jsonapi-fixture-builder';
 import RESTFixtureBuilder from './rest-fixture-builder';
-import JSONFixtureBuilder from './json-fixture-builder';
 
 export default class {
   constructor(store) {
@@ -24,9 +22,6 @@ export default class {
     if (this.usingRESTSerializer(serializer)) {
       return new RESTFixtureBuilder(this.store);
     }
-    if (this.usingJSONSerializer(serializer)) {
-      return new JSONFixtureBuilder(this.store);
-    }
     return new JSONAPIFixtureBuilder(this.store);
   }
 
@@ -36,9 +31,5 @@ export default class {
 
   usingRESTSerializer(serializer) {
     return serializer instanceof RESTSerializer;
-  }
-
-  usingJSONSerializer(serializer) {
-    return serializer instanceof JSONSerializer;
   }
 }
