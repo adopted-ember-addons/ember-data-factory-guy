@@ -110,9 +110,17 @@ module(serializer, function (hooks) {
 
     test('returns an attribute with a key', function (assert) {
       let users = buildList('user', 2);
-      assert.deepEqual(users.get(0), { id: '1', name: 'User1', style: 'normal' });
+      assert.deepEqual(users.get(0), {
+        id: '1',
+        name: 'User1',
+        style: 'normal',
+      });
       assert.strictEqual(users.get(0).id, '1');
-      assert.deepEqual(users.get(1), { id: '2', name: 'User2', style: 'normal' });
+      assert.deepEqual(users.get(1), {
+        id: '2',
+        name: 'User2',
+        style: 'normal',
+      });
       assert.strictEqual(users.get(1).name, 'User2');
     });
 
