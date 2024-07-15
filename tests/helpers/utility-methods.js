@@ -93,22 +93,22 @@ function setupCustomSerializer(container, serializerType, options) {
   return modelSerializer;
 }
 
-// serializerType like -rest or -json-api, -json
+// serializerType like rest or json-api, json
 export function containerSetup(application, serializerType) {
   // brute force setting the adapter/serializer on the store.
   if (serializerType) {
     let store = application.lookup('service:store');
 
-    let adapterType = serializerType === '-json' ? '-rest' : serializerType;
+    let adapterType = serializerType === 'json' ? 'rest' : serializerType;
     let adapter;
-    if (serializerType === '-json' || serializerType === '-rest') {
-      application.register(`adapter:-rest`, RESTAdapter, {
+    if (serializerType === 'json' || serializerType === 'rest') {
+      application.register(`adapter:rest`, RESTAdapter, {
         singleton: false,
       });
     }
     adapter = application.lookup('adapter:' + adapterType);
 
-    serializerType = serializerType === '-json' ? '-default' : serializerType;
+    serializerType = serializerType === 'json' ? 'application' : serializerType;
     let serializer = application.lookup('serializer:' + serializerType);
 
     store.adapterFor = () => adapter;

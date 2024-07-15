@@ -13,9 +13,14 @@ import { typeOf } from '@ember/utils';
  @constructor
  */
 class ModelDefinition {
+  modelIdCounter = 1;
+
+  get modelId() {
+    return String(this.modelIdCounter);
+  }
+
   constructor(model, config) {
     this.modelName = model;
-    this.modelId = 1;
     this.originalConfig = mergeDeep({}, config);
     this.parseConfig(Object.assign({}, config));
   }
@@ -43,12 +48,16 @@ class ModelDefinition {
 
   // Increment id
   nextId() {
-    return this.modelId++;
+    const nextId = this.modelId;
+    this.modelIdCounter++;
+    return nextId;
   }
 
   // Decrement id
   backId() {
-    return this.modelId--;
+    const nextId = this.modelId;
+    this.modelIdCounter--;
+    return nextId;
   }
 
   /**
@@ -177,7 +186,7 @@ class ModelDefinition {
 
   // Set the modelId back to 1, and reset the sequences
   reset() {
-    this.modelId = 1;
+    this.modelIdCounter = 1;
     for (let name in this.sequences) {
       this.sequences[name].reset();
     }

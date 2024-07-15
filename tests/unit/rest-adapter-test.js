@@ -13,7 +13,7 @@ import SharedAdapterBehavior from './shared-adapter-behaviour';
 import { inlineSetup } from '../helpers/utility-methods';
 
 let serializer = 'DS.RESTSerializer';
-let serializerType = '-rest';
+let serializerType = 'rest';
 
 module(serializer, function (hooks) {
   setupTest(hooks);
@@ -39,7 +39,7 @@ module(serializer, function (hooks) {
 
   module(`#mockFindRecord custom`, function () {
     test('when returns json (plain) is used', async function (assert) {
-      const json = { profile: { id: 1, description: 'the desc' } };
+      const json = { profile: { id: '1', description: 'the desc' } };
       const mock = mockFindRecord('profile').returns({ json });
       const profileId = String(mock.get('id'));
 
@@ -82,20 +82,20 @@ module(serializer, function (hooks) {
   module(`FactoryGuy#build get`, function () {
     test('returns all attributes with no key', function (assert) {
       let user = build('user');
-      assert.deepEqual(user.get(), { id: 1, name: 'User1', style: 'normal' });
-      assert.strictEqual(user.get().id, 1);
+      assert.deepEqual(user.get(), { id: '1', name: 'User1', style: 'normal' });
+      assert.strictEqual(user.get().id, '1');
       assert.strictEqual(user.get().name, 'User1');
     });
 
     test('returns an attribute for a key', function (assert) {
       let user = build('user');
-      assert.strictEqual(user.get('id'), 1);
+      assert.strictEqual(user.get('id'), '1');
       assert.strictEqual(user.get('name'), 'User1');
     });
 
     test('returns a relationship with a key', function (assert) {
       let user = build('user', 'with_company');
-      assert.deepEqual(user.get('company'), { id: 1, type: 'company' });
+      assert.deepEqual(user.get('company'), { id: '1', type: 'company' });
     });
   });
 
@@ -103,22 +103,22 @@ module(serializer, function (hooks) {
     test('returns array of all attributes with no key', function (assert) {
       let users = buildList('user', 2);
       assert.deepEqual(users.get(), [
-        { id: 1, name: 'User1', style: 'normal' },
-        { id: 2, name: 'User2', style: 'normal' },
+        { id: '1', name: 'User1', style: 'normal' },
+        { id: '2', name: 'User2', style: 'normal' },
       ]);
     });
 
     test('returns an attribute with a key', function (assert) {
       let users = buildList('user', 2);
-      assert.deepEqual(users.get(0), { id: 1, name: 'User1', style: 'normal' });
-      assert.strictEqual(users.get(0).id, 1);
-      assert.deepEqual(users.get(1), { id: 2, name: 'User2', style: 'normal' });
+      assert.deepEqual(users.get(0), { id: '1', name: 'User1', style: 'normal' });
+      assert.strictEqual(users.get(0).id, '1');
+      assert.deepEqual(users.get(1), { id: '2', name: 'User2', style: 'normal' });
       assert.strictEqual(users.get(1).name, 'User2');
     });
 
     test('returns a relationship with an index and key', function (assert) {
       let user = buildList('user', 2, 'with_company');
-      assert.deepEqual(user.get(1).company, { id: 2, type: 'company' });
+      assert.deepEqual(user.get(1).company, { id: '2', type: 'company' });
     });
   });
 
@@ -130,7 +130,7 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         user: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
           info: '{"first":1}',
@@ -152,7 +152,7 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         dude: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
         },
@@ -169,12 +169,12 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         user: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
-          company: { id: 1, type: 'company' },
+          company: { id: '1', type: 'company' },
         },
-        companies: [{ id: 1, type: 'Company', name: 'Silly corp' }],
+        companies: [{ id: '1', type: 'Company', name: 'Silly corp' }],
       };
 
       assert.deepEqual(buildJson, expectedJson);
@@ -186,16 +186,16 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         profile: {
-          id: 1,
+          id: '1',
           description: 'Text goes here',
           camelCaseDescription: 'textGoesHere',
           snake_case_description: 'text_goes_here',
           aBooleanField: false,
-          superHero: 1,
+          superHero: '1',
         },
         'super-heros': [
           {
-            id: 1,
+            id: '1',
             name: 'BatMan',
             type: 'SuperHero',
           },
@@ -212,16 +212,16 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         profile: {
-          id: 1,
+          id: '1',
           description: 'Text goes here',
           camelCaseDescription: 'textGoesHere',
           snake_case_description: 'text_goes_here',
           aBooleanField: false,
-          superHero: 1,
+          superHero: '1',
         },
         'super-heros': [
           {
-            id: 1,
+            id: '1',
             name: 'BatMan',
             type: 'SuperHero',
           },
@@ -239,21 +239,21 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         project: {
-          id: 1,
+          id: '1',
           title: 'Project1',
-          user: 1,
+          user: '1',
         },
         users: [
           {
-            id: 1,
+            id: '1',
             name: 'User1',
-            company: { id: 1, type: 'company' },
+            company: { id: '1', type: 'company' },
             style: 'normal',
           },
         ],
         companies: [
           {
-            id: 1,
+            id: '1',
             type: 'Company',
             name: 'Silly corp',
           },
@@ -271,29 +271,29 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         project: {
-          id: 1,
+          id: '1',
           title: 'Project1',
-          user: 1,
+          user: '1',
         },
         users: [
           {
-            id: 1,
+            id: '1',
             name: 'User1',
             hats: [
-              { id: 1, type: 'big-hat' },
-              { id: 2, type: 'big-hat' },
+              { id: '1', type: 'big-hat' },
+              { id: '2', type: 'big-hat' },
             ],
             style: 'normal',
           },
         ],
         'big-hats': [
           {
-            id: 1,
+            id: '1',
             type: 'BigHat',
             shape: 'square',
           },
           {
-            id: 2,
+            id: '2',
             type: 'BigHat',
             shape: 'square',
           },
@@ -316,32 +316,32 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         property: {
-          id: 1,
+          id: '1',
           name: 'Silly property',
-          owners: [1, 2],
+          owners: ['1', '2'],
         },
         users: [
           {
-            id: 1,
+            id: '1',
             name: 'User1',
-            company: { id: 1, type: 'company' },
+            company: { id: '1', type: 'company' },
             style: 'normal',
           },
           {
-            id: 2,
+            id: '2',
             name: 'User2',
-            company: { id: 2, type: 'company' },
+            company: { id: '2', type: 'company' },
             style: 'normal',
           },
         ],
         companies: [
           {
-            id: 1,
+            id: '1',
             type: 'Company',
             name: 'A Corp',
           },
           {
-            id: 2,
+            id: '2',
             type: 'Company',
             name: 'B Corp',
           },
@@ -357,17 +357,17 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         user: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
           hats: [
-            { type: 'big-hat', id: 1 },
-            { type: 'big-hat', id: 2 },
+            { type: 'big-hat', id: '1' },
+            { type: 'big-hat', id: '2' },
           ],
         },
         'big-hats': [
-          { id: 1, type: 'BigHat' },
-          { id: 2, type: 'BigHat' },
+          { id: '1', type: 'BigHat' },
+          { id: '2', type: 'BigHat' },
         ],
       };
 
@@ -381,17 +381,17 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         user: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
           hats: [
-            { type: 'big-hat', id: 1 },
-            { type: 'big-hat', id: 2 },
+            { type: 'big-hat', id: '1' },
+            { type: 'big-hat', id: '2' },
           ],
         },
         'big-hats': [
-          { id: 1, type: 'BigHat' },
-          { id: 2, type: 'BigHat' },
+          { id: '1', type: 'BigHat' },
+          { id: '2', type: 'BigHat' },
         ],
       };
 
@@ -406,17 +406,17 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         user: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
           hats: [
-            { type: 'big-hat', id: 1 },
-            { type: 'big-hat', id: 2 },
+            { type: 'big-hat', id: '1' },
+            { type: 'big-hat', id: '2' },
           ],
         },
         'big-hats': [
-          { id: 1, type: 'BigHat' },
-          { id: 2, type: 'BigHat' },
+          { id: '1', type: 'BigHat' },
+          { id: '2', type: 'BigHat' },
         ],
       };
 
@@ -429,9 +429,9 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         comicBook: {
-          id: 1,
+          id: '1',
           name: 'Comic Times #1',
-          company: { id: 1, type: 'Company', name: 'Marvel Comics' },
+          company: { id: '1', type: 'Company', name: 'Marvel Comics' },
         },
       };
 
@@ -445,9 +445,9 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         comicBook: {
-          id: 1,
+          id: '1',
           name: 'Comic Times #1',
-          company: { id: 1, type: 'Company', name: 'Marvel Comics' },
+          company: { id: '1', type: 'Company', name: 'Marvel Comics' },
         },
       };
 
@@ -460,11 +460,11 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         comicBook: {
-          id: 1,
+          id: '1',
           name: 'Comic Times #1',
           includedVillains: [
-            { id: 1, type: 'Villain', name: 'BadGuy#1' },
-            { id: 2, type: 'Villain', name: 'BadGuy#2' },
+            { id: '1', type: 'Villain', name: 'BadGuy#1' },
+            { id: '2', type: 'Villain', name: 'BadGuy#2' },
           ],
         },
       };
@@ -478,11 +478,11 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         comicBook: {
-          id: 1,
+          id: '1',
           name: 'Comic Times #1',
           characters: [
-            { id: 1, type: 'Villain', name: 'BadGuy#1' },
-            { id: 2, type: 'Villain', name: 'BadGuy#2' },
+            { id: '1', type: 'Villain', name: 'BadGuy#1' },
+            { id: '2', type: 'Villain', name: 'BadGuy#2' },
           ],
         },
       };
@@ -497,11 +497,11 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         comicBook: {
-          id: 1,
+          id: '1',
           name: 'Comic Times #1',
           characters: [
-            { id: 1, type: 'Villain', name: 'BadGuy#1' },
-            { id: 2, type: 'Villain', name: 'BadGuy#2' },
+            { id: '1', type: 'Villain', name: 'BadGuy#1' },
+            { id: '2', type: 'Villain', name: 'BadGuy#2' },
           ],
         },
       };
@@ -515,9 +515,9 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         manager: {
-          id: 1,
+          id: '1',
           salary: {
-            id: 1,
+            id: '1',
             income: 90000,
           },
         },
@@ -533,9 +533,9 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         manager: {
-          id: 1,
+          id: '1',
           salary: {
-            id: 1,
+            id: '1',
             income: 90000,
           },
         },
@@ -550,15 +550,15 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         manager: {
-          id: 1,
+          id: '1',
           reviews: [
             {
-              id: 1,
+              id: '1',
               rating: 1,
               date: '2015-05-01T00:00:00.000Z',
             },
             {
-              id: 2,
+              id: '2',
               rating: 2,
               date: '2015-05-01T00:00:00.000Z',
             },
@@ -576,15 +576,15 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         manager: {
-          id: 1,
+          id: '1',
           reviews: [
             {
-              id: 1,
+              id: '1',
               rating: 1,
               date: '2015-05-01T00:00:00.000Z',
             },
             {
-              id: 2,
+              id: '2',
               rating: 2,
               date: '2015-05-01T00:00:00.000Z',
             },
@@ -602,13 +602,13 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         user: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
         },
         'super-heros': [
           {
-            id: 1,
+            id: '1',
             name: 'BatMan',
             type: 'SuperHero',
           },
@@ -625,18 +625,18 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         user: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
         },
         'super-heros': [
           {
-            id: 1,
+            id: '1',
             name: 'BatMan',
             type: 'SuperHero',
           },
           {
-            id: 2,
+            id: '2',
             name: 'BatMan',
             type: 'SuperHero',
           },
@@ -663,7 +663,7 @@ module(serializer, function (hooks) {
     test('with model that has primaryKey defined in serializer ( FactoryGuy sets primaryKey value )', function (assert) {
       let cat = build('cat');
 
-      assert.strictEqual(cat.get('id'), 1);
+      assert.strictEqual(cat.get('id'), '1');
     });
 
     test('with model that has primaryKey defined in serializer ( user sets primaryKey value )', function (assert) {
@@ -695,7 +695,7 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         user: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
           links: { company: companyLink },
@@ -713,7 +713,7 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         user: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
           links: { properties: propertyLink },
@@ -732,30 +732,30 @@ module(serializer, function (hooks) {
       let expectedJson = {
         profiles: [
           {
-            id: 1,
+            id: '1',
             description: 'Text goes here',
             camelCaseDescription: 'textGoesHere',
             snake_case_description: 'text_goes_here',
             aBooleanField: false,
-            superHero: 1,
+            superHero: '1',
           },
           {
-            id: 2,
+            id: '2',
             description: 'Text goes here',
             camelCaseDescription: 'textGoesHere',
             snake_case_description: 'text_goes_here',
             aBooleanField: false,
-            superHero: 2,
+            superHero: '2',
           },
         ],
         'super-heros': [
           {
-            id: 1,
+            id: '1',
             name: 'BatMan',
             type: 'SuperHero',
           },
           {
-            id: 2,
+            id: '2',
             name: 'BatMan',
             type: 'SuperHero',
           },
@@ -772,29 +772,29 @@ module(serializer, function (hooks) {
       let expectedJson = {
         users: [
           {
-            id: 1,
+            id: '1',
             name: 'User1',
             style: 'normal',
             hats: [
-              { type: 'big-hat', id: 1 },
-              { type: 'big-hat', id: 2 },
+              { type: 'big-hat', id: '1' },
+              { type: 'big-hat', id: '2' },
             ],
           },
           {
-            id: 2,
+            id: '2',
             name: 'User2',
             style: 'normal',
             hats: [
-              { type: 'big-hat', id: 3 },
-              { type: 'big-hat', id: 4 },
+              { type: 'big-hat', id: '3' },
+              { type: 'big-hat', id: '4' },
             ],
           },
         ],
         'big-hats': [
-          { id: 1, type: 'BigHat' },
-          { id: 2, type: 'BigHat' },
-          { id: 3, type: 'BigHat' },
-          { id: 4, type: 'BigHat' },
+          { id: '1', type: 'BigHat' },
+          { id: '2', type: 'BigHat' },
+          { id: '3', type: 'BigHat' },
+          { id: '4', type: 'BigHat' },
         ],
       };
 
@@ -811,16 +811,16 @@ module(serializer, function (hooks) {
         groups: [
           {
             group: {
-              id: 1,
+              id: '1',
               type: 'group',
             },
-            id: 2,
+            id: '2',
             name: 'Group-2',
             type: 'Group',
           },
           {
             group: undefined,
-            id: 1,
+            id: '1',
             name: 'Parent Group',
             type: 'Group',
           },

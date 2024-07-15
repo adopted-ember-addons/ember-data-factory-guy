@@ -4,7 +4,7 @@ import { mockFindAll, mockQuery } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
 
-const serializerType = '-json-api';
+const serializerType = 'json-api';
 
 module('RequestWrapper', function (hooks) {
   setupTest(hooks);

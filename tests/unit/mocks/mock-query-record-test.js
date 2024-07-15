@@ -10,7 +10,7 @@ import FactoryGuy, {
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
-const serializerType = '-json-api';
+const serializerType = 'json-api';
 
 module('MockQueryRecord', function (hooks) {
   setupTest(hooks);

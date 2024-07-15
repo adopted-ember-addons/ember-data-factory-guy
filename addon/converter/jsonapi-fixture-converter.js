@@ -140,7 +140,7 @@ export default class JSONAPIFixtureConverter extends FixtureConverter {
    *
    *  {
    *    data: {
-   *      id: 1,
+   *      id: '1',
    *      type: 'user',
    *      attributes: {
    *        name: 'User1',

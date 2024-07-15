@@ -12,7 +12,7 @@ import sinon from 'sinon';
 import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
 import { settled } from '@ember/test-helpers';
 
-const serializerType = '-json-api';
+const serializerType = 'json-api';
 
 module('MockFindAll', function (hooks) {
   setupTest(hooks);
@@ -94,7 +94,7 @@ module('MockFindAll', function (hooks) {
 
   test('#get method to access payload', function (assert) {
     let mock = mockFindAll('user', 2);
-    assert.deepEqual(mock.get(0), { id: 1, name: 'User1', style: 'normal' });
+    assert.deepEqual(mock.get(0), { id: '1', name: 'User1', style: 'normal' });
   });
 
   test('RequestManager creates wrapper with one mockFindAll mock', function (assert) {

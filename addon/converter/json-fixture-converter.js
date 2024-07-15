@@ -106,7 +106,7 @@ export default class JSONFixtureConverter extends FixtureConverter {
    *
    *    {
    *      user: {
-   *        id: 1,
+   *        id: '1',
    *        name: 'User1',
    *        style: "normal",
    *        links: { properties: '/user/1/properties' }

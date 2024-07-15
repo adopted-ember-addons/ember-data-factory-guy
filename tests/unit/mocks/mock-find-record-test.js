@@ -6,7 +6,7 @@ import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 import { settled } from '@ember/test-helpers';
 
-const serializerType = '-json-api';
+const serializerType = 'json-api';
 
 module('MockFindRecord', function (hooks) {
   setupTest(hooks);
@@ -69,7 +69,7 @@ module('MockFindRecord', function (hooks) {
     });
 
     test('with json', function (assert) {
-      const json = { data: { id: 1, name: 'Dan' } };
+      const json = { data: { id: '1', name: 'Dan' } };
       const mock = mockFindRecord('user').returns({ json });
       assert.strictEqual(mock.getUrl(), '/users/1');
     });
@@ -94,7 +94,7 @@ module('MockFindRecord', function (hooks) {
       );
       assert.ok(findRecordStub.calledOnce);
       assert.ok(
-        findRecordStub.calledWith(1, 'user'),
+        findRecordStub.calledWith('1', 'user'),
         'correct parameters passed to urlForFindRecord',
       );
 
@@ -113,7 +113,7 @@ module('MockFindRecord', function (hooks) {
 
       assert.ok(findRecordStub.calledOnce);
       assert.ok(
-        findRecordStub.calledWith(1, 'user', {
+        findRecordStub.calledWith('1', 'user', {
           adapterOptions: options,
           record: user,
         }),

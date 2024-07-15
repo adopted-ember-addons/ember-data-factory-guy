@@ -4,7 +4,7 @@ import { buildList, make, makeList, mockLinks } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import { settled } from '@ember/test-helpers';
 
-const serializerType = '-json-api';
+const serializerType = 'json-api';
 
 module('MockLinks', function (hooks) {
   setupTest(hooks);

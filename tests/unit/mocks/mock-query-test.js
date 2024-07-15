@@ -5,7 +5,7 @@ import FactoryGuy, { make, buildList, mockQuery } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
-const serializerType = '-json-api';
+const serializerType = 'json-api';
 
 module('MockQuery', function (hooks) {
   setupTest(hooks);

@@ -5,7 +5,7 @@ import { inlineSetup } from '../../helpers/utility-methods';
 
 module('FixtureConverter', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, '-rest');
+  inlineSetup(hooks, 'rest');
 
   test('#getTransformKeyFunction with custom serializer keyForAttribute function', function (assert) {
     let buildJson = build('manager');
@@ -13,7 +13,7 @@ module('FixtureConverter', function (hooks) {
 
     let expectedJson = {
       manager: {
-        id: 1,
+        id: '1',
       },
     };
 
@@ -26,7 +26,7 @@ module('FixtureConverter', function (hooks) {
 
     let expectedJson = {
       rod: {
-        id: 1,
+        id: '1',
         element: 'C',
       },
     };

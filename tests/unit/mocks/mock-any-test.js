@@ -3,7 +3,7 @@ import { setupTest } from 'ember-qunit';
 import { mock } from 'ember-data-factory-guy';
 import { fetchJSON, inlineSetup } from '../../helpers/utility-methods';
 
-const serializerType = '-json-api';
+const serializerType = 'json-api';
 
 module('MockAny', function (hooks) {
   setupTest(hooks);

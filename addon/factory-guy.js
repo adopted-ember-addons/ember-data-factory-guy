@@ -477,9 +477,9 @@ class FactoryGuy {
    */
   afterDestroyStore(store) {
     const self = this;
-    const originalWillDestroy = store.willDestroy.bind(store);
-    store.willDestroy = function () {
-      originalWillDestroy();
+    const originalDestroy = store.destroy.bind(store);
+    store.destroy = function () {
+      originalDestroy();
       self.store = null;
       self.fixtureBuilderFactory = null;
       self.reset();

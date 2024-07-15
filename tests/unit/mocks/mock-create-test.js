@@ -5,7 +5,7 @@ import FactoryGuy, { build, makeNew, mockCreate } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
-const serializerType = '-json-api';
+const serializerType = 'json-api';
 
 module('MockCreate', function (hooks) {
   setupTest(hooks);
@@ -28,7 +28,7 @@ module('MockCreate', function (hooks) {
 
     const consoleStub = sinon.spy(console, 'log'),
       profile = makeNew('profile'),
-      mock = mockCreate(profile).returns({ attrs: { id: 2 } });
+      mock = mockCreate(profile).returns({ attrs: { id: '2' } });
 
     await profile.save();
 

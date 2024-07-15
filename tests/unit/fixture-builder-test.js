@@ -12,7 +12,7 @@ import { inlineSetup } from '../helpers/utility-methods';
 let factory, store;
 module('FixtureBuilderFactory', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, '-json-api');
+  inlineSetup(hooks, 'json-api');
 
   hooks.beforeEach(function () {
     store = this.owner.lookup('service:store');

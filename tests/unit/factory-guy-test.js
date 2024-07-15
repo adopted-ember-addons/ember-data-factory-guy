@@ -17,7 +17,7 @@ import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
 
 module('FactoryGuy', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, '-json-api');
+  inlineSetup(hooks, 'json-api');
 
   test('has store set in initializer', function (assert) {
     assert.ok(FactoryGuy.store instanceof Store);
@@ -114,7 +114,7 @@ module('FactoryGuy', function (hooks) {
   });
 
   module('FactoryGuy#make', function (hooks) {
-    inlineSetup(hooks, '-rest');
+    inlineSetup(hooks, 'rest');
     test('throws exception if there is NO store setup', function (assert) {
       FactoryGuy.store = null;
       assert.throws(
@@ -151,7 +151,7 @@ module('FactoryGuy', function (hooks) {
   });
 
   module('FactoryGuy#buildURL', function (hooks) {
-    inlineSetup(hooks, '-rest');
+    inlineSetup(hooks, 'rest');
 
     test('without namespace', function (assert) {
       assert.strictEqual(
@@ -176,7 +176,7 @@ module('FactoryGuy', function (hooks) {
   });
 
   module('FactoryGuy#build', function (hooks) {
-    inlineSetup(hooks, '-rest');
+    inlineSetup(hooks, 'rest');
 
     test('throws exception if model name is not found', function (assert) {
       assert.throws(
@@ -240,17 +240,17 @@ module('FactoryGuy', function (hooks) {
 
     test('handles hash attribute with hash value as default value', function (assert) {
       let dog = build('dog');
-      assert.deepEqual(dog.get('tag'), { num: 1 });
+      assert.deepEqual(dog.get('tag'), { num: '1' });
     });
 
     test('handles hash attribute with hash value in options', function (assert) {
-      let dog = build('dog', { tag: { num: 10 } });
-      assert.deepEqual(dog.get('tag'), { num: 10 });
+      let dog = build('dog', { tag: { num: '10' } });
+      assert.deepEqual(dog.get('tag'), { num: '10' });
     });
   });
 
   module('FactoryGuy#buildList', function (hooks) {
-    inlineSetup(hooks, '-rest');
+    inlineSetup(hooks, 'rest');
 
     test('throws exception if arguments are missing the model name', function (assert) {
       assert.throws(
@@ -298,7 +298,7 @@ module('FactoryGuy', function (hooks) {
       assert.strictEqual(profiles.get(0).description, 'goofy');
       assert.strictEqual(profiles.get(0).description, 'goofy');
       assert.strictEqual(profiles.get(1).description, 'Noodles');
-      assert.strictEqual(profiles.get(2).superHero, 1);
+      assert.strictEqual(profiles.get(2).superHero, '1');
     });
 
     test('with a number and extra options', function (assert) {
@@ -647,11 +647,11 @@ module('FactoryGuy', function (hooks) {
       });
 
       let json = FactoryGuy.buildRaw({ name: 'person' });
-      let expected = { id: 1, name: 'person #1', type: 'normal' };
+      let expected = { id: '1', name: 'person #1', type: 'normal' };
       assert.deepEqual(json, expected, 'in default attributes');
 
       json = FactoryGuy.buildRaw({ name: 'dude' });
-      expected = { id: 2, name: 'person #2', type: 'person type #1' };
+      expected = { id: '2', name: 'person #2', type: 'person type #1' };
       assert.deepEqual(json, expected, 'in named attributes');
 
       assert.throws(
@@ -663,11 +663,11 @@ module('FactoryGuy', function (hooks) {
       );
 
       json = FactoryGuy.buildRaw({ name: 'dude_inline' });
-      expected = { id: 3, name: 'person #3', type: 'Dude #1' };
+      expected = { id: '3', name: 'person #3', type: 'Dude #1' };
       assert.deepEqual(json, expected, 'as inline sequence function #1');
 
       json = FactoryGuy.buildRaw({ name: 'dude_inline' });
-      expected = { id: 4, name: 'person #4', type: 'Dude #2' };
+      expected = { id: '4', name: 'person #4', type: 'Dude #2' };
       assert.deepEqual(json, expected, 'as inline sequence function #2');
     });
 
@@ -689,15 +689,15 @@ module('FactoryGuy', function (hooks) {
       });
 
       let json = FactoryGuy.buildRaw({ name: 'index_name' });
-      let expected = { id: 1, name: 'Person 1', type: 'normal' };
+      let expected = { id: '1', name: 'Person 1', type: 'normal' };
       assert.deepEqual(json, expected, 'id is available');
 
       json = FactoryGuy.buildRaw({ name: 'funny_person' });
-      expected = { id: 2, name: 'Bob', type: 'funny Bob' };
+      expected = { id: '2', name: 'Bob', type: 'funny Bob' };
       assert.deepEqual(json, expected, 'works when attribute exists');
 
       json = FactoryGuy.buildRaw({ name: 'missing_person' });
-      expected = { id: 3, name: 'Bob', type: 'level undefined' };
+      expected = { id: '3', name: 'Bob', type: 'level undefined' };
       assert.deepEqual(
         json,
         expected,
@@ -708,9 +708,9 @@ module('FactoryGuy', function (hooks) {
     test('Using default belongsTo associations in attribute definition', function (assert) {
       let json = FactoryGuy.buildRaw({ name: 'project_with_user' });
       let expected = {
-        id: 1,
+        id: '1',
         title: 'Project1',
-        user: { id: 1, name: 'User1', style: 'normal' },
+        user: { id: '1', name: 'User1', style: 'normal' },
       };
       assert.deepEqual(json, expected);
     });
@@ -718,9 +718,9 @@ module('FactoryGuy', function (hooks) {
     test('creates association with optional attributes', function (assert) {
       let json = FactoryGuy.buildRaw({ name: 'project_with_dude' });
       let expected = {
-        id: 1,
+        id: '1',
         title: 'Project1',
-        user: { id: 1, name: 'Dude', style: 'normal' },
+        user: { id: '1', name: 'Dude', style: 'normal' },
       };
       assert.deepEqual(json, expected);
     });
@@ -728,9 +728,9 @@ module('FactoryGuy', function (hooks) {
     test('creates association using named attribute', function (assert) {
       let json = FactoryGuy.buildRaw({ name: 'project_with_admin' });
       let expected = {
-        id: 1,
+        id: '1',
         title: 'Project1',
-        user: { id: 1, name: 'Admin', style: 'super' },
+        user: { id: '1', name: 'Admin', style: 'super' },
       };
       assert.deepEqual(json, expected);
     });
@@ -738,9 +738,9 @@ module('FactoryGuy', function (hooks) {
     test('belongsTo association name differs from model name', function (assert) {
       let json = FactoryGuy.buildRaw({ name: 'project_with_parent' });
       let expected = {
-        id: 1,
+        id: '1',
         title: 'Project1',
-        parent: { id: 2, title: 'Project2' },
+        parent: { id: '2', title: 'Project2' },
       };
       assert.deepEqual(json, expected);
     });
@@ -748,12 +748,12 @@ module('FactoryGuy', function (hooks) {
     test('Using hasMany associations in attribute definition', function (assert) {
       let json = FactoryGuy.buildRaw({ name: 'user_with_projects' });
       let expected = {
-        id: 1,
+        id: '1',
         name: 'User1',
         style: 'normal',
         projects: [
-          { id: 1, title: 'Project1' },
-          { id: 2, title: 'Project2' },
+          { id: '1', title: 'Project1' },
+          { id: '2', title: 'Project2' },
         ],
       };
       assert.deepEqual(json, expected);
@@ -761,13 +761,13 @@ module('FactoryGuy', function (hooks) {
 
     test('with traits defining model attributes', function (assert) {
       let json = FactoryGuy.buildRaw({ name: 'project', traits: ['big'] });
-      let expected = { id: 1, title: 'Big Project' };
+      let expected = { id: '1', title: 'Big Project' };
       assert.deepEqual(json, expected);
     });
 
     test('with traits that are functions', function (assert) {
       let json = FactoryGuy.buildRaw({ name: 'project', traits: ['medium'] });
-      let expected = { id: 1, title: 'Medium Project 1' };
+      let expected = { id: '1', title: 'Medium Project 1' };
       assert.deepEqual(json, expected);
     });
 
@@ -777,9 +777,9 @@ module('FactoryGuy', function (hooks) {
         traits: ['with_user'],
       });
       let expected = {
-        id: 1,
+        id: '1',
         title: 'Project1',
-        user: { id: 1, name: 'User1', style: 'normal' },
+        user: { id: '1', name: 'User1', style: 'normal' },
       };
       assert.deepEqual(json, expected);
     });
@@ -790,9 +790,9 @@ module('FactoryGuy', function (hooks) {
         traits: ['big', 'with_user'],
       });
       let expected = {
-        id: 1,
+        id: '1',
         title: 'Big Project',
-        user: { id: 1, name: 'User1', style: 'normal' },
+        user: { id: '1', name: 'User1', style: 'normal' },
       };
       assert.deepEqual(json, expected);
     });
@@ -804,9 +804,9 @@ module('FactoryGuy', function (hooks) {
         opts: { title: 'Crazy Project' },
       });
       let expected = {
-        id: 1,
+        id: '1',
         title: 'Crazy Project',
-        user: { id: 1, name: 'User1', style: 'normal' },
+        user: { id: '1', name: 'User1', style: 'normal' },
       };
       assert.deepEqual(json, expected);
     });
@@ -817,9 +817,9 @@ module('FactoryGuy', function (hooks) {
         traits: ['big', 'with_dude'],
       });
       let expected = {
-        id: 1,
+        id: '1',
         title: 'Big Project',
-        user: { id: 1, name: 'Dude', style: 'normal' },
+        user: { id: '1', name: 'Dude', style: 'normal' },
       };
       assert.deepEqual(json, expected);
     });
@@ -830,9 +830,9 @@ module('FactoryGuy', function (hooks) {
         traits: ['with_admin'],
       });
       let expected = {
-        id: 1,
+        id: '1',
         title: 'Project1',
-        user: { id: 1, name: 'Admin', style: 'super' },
+        user: { id: '1', name: 'Admin', style: 'super' },
       };
       assert.deepEqual(json, expected);
     });
@@ -842,7 +842,7 @@ module('FactoryGuy', function (hooks) {
         name: 'project',
         traits: ['with_title_sequence'],
       });
-      let expected = { id: 1, title: 'Project1' };
+      let expected = { id: '1', title: 'Project1' };
       assert.deepEqual(json, expected);
     });
 
@@ -852,12 +852,12 @@ module('FactoryGuy', function (hooks) {
         traits: ['with_projects'],
       });
       let expected = {
-        id: 1,
+        id: '1',
         name: 'User1',
         style: 'normal',
         projects: [
-          { id: 1, title: 'Project1' },
-          { id: 2, title: 'Project2' },
+          { id: '1', title: 'Project1' },
+          { id: '2', title: 'Project2' },
         ],
       };
       assert.deepEqual(json, expected);
@@ -869,13 +869,13 @@ module('FactoryGuy', function (hooks) {
         traits: ['with_projects_splat'],
       });
       let expected = {
-        id: 1,
+        id: '1',
         name: 'User1',
         style: 'normal',
         projects: [
-          { id: 1, title: 'Big Project' },
-          { id: 2, title: 'Small Project' },
-          { id: 3, title: 'Cool Project' },
+          { id: '1', title: 'Big Project' },
+          { id: '2', title: 'Small Project' },
+          { id: '3', title: 'Cool Project' },
         ],
       };
       assert.deepEqual(json, expected);
@@ -883,19 +883,19 @@ module('FactoryGuy', function (hooks) {
 
     test('creates default json for model', function (assert) {
       let json = FactoryGuy.buildRaw({ name: 'user' });
-      let expected = { id: 1, name: 'User1', style: 'normal' };
+      let expected = { id: '1', name: 'User1', style: 'normal' };
       assert.deepEqual(json, expected);
     });
 
     test('can override default model attributes', function (assert) {
       let json = FactoryGuy.buildRaw({ name: 'user', opts: { name: 'bob' } });
-      let expected = { id: 1, name: 'bob', style: 'normal' };
+      let expected = { id: '1', name: 'bob', style: 'normal' };
       assert.deepEqual(json, expected);
     });
 
     test('with named model definition with custom attributes', function (assert) {
       let json = FactoryGuy.buildRaw({ name: 'admin' });
-      let expected = { id: 1, name: 'Admin', style: 'super' };
+      let expected = { id: '1', name: 'Admin', style: 'super' };
       assert.deepEqual(json, expected);
     });
 
@@ -904,13 +904,13 @@ module('FactoryGuy', function (hooks) {
         name: 'admin',
         opts: { name: 'AdminGuy' },
       });
-      let expected = { id: 1, name: 'AdminGuy', style: 'super' };
+      let expected = { id: '1', name: 'AdminGuy', style: 'super' };
       assert.deepEqual(json, expected);
     });
 
     test('ignores transient attributes', function (assert) {
       let json = FactoryGuy.buildRaw({ name: 'property' });
-      let expected = { id: 1, name: 'Silly property' };
+      let expected = { id: '1', name: 'Silly property' };
       assert.deepEqual(json, expected);
     });
   });
@@ -923,8 +923,8 @@ module('FactoryGuy', function (hooks) {
         opts: [],
       });
       let expected = [
-        { id: 1, name: 'User1', style: 'normal' },
-        { id: 2, name: 'User2', style: 'normal' },
+        { id: '1', name: 'User1', style: 'normal' },
+        { id: '2', name: 'User2', style: 'normal' },
       ];
       assert.deepEqual(userList, expected);
     });
@@ -936,8 +936,8 @@ module('FactoryGuy', function (hooks) {
         opts: [{ name: 'Crazy' }],
       });
       let expected = [
-        { id: 1, name: 'Crazy', style: 'normal' },
-        { id: 2, name: 'Crazy', style: 'normal' },
+        { id: '1', name: 'Crazy', style: 'normal' },
+        { id: '2', name: 'Crazy', style: 'normal' },
       ];
       assert.deepEqual(userList, expected);
     });
@@ -949,8 +949,8 @@ module('FactoryGuy', function (hooks) {
         opts: ['big'],
       });
       let expected = [
-        { id: 1, title: 'Big Project' },
-        { id: 2, title: 'Big Project' },
+        { id: '1', title: 'Big Project' },
+        { id: '2', title: 'Big Project' },
       ];
       assert.deepEqual(projectList, expected);
     });
@@ -962,8 +962,8 @@ module('FactoryGuy', function (hooks) {
         opts: ['big', { title: 'Really Big' }],
       });
       let expected = [
-        { id: 1, title: 'Really Big' },
-        { id: 2, title: 'Really Big' },
+        { id: '1', title: 'Really Big' },
+        { id: '2', title: 'Really Big' },
       ];
       assert.deepEqual(projectList, expected);
     });
@@ -989,12 +989,12 @@ module('FactoryGuy', function (hooks) {
         ],
       });
       let expected = [
-        { id: 1, title: 'Big Project' },
-        { id: 2, title: 'Really Big' },
+        { id: '1', title: 'Big Project' },
+        { id: '2', title: 'Really Big' },
         {
-          id: 3,
+          id: '3',
           title: 'I have a dude',
-          user: { id: 1, name: 'Dude', style: 'normal' },
+          user: { id: '1', name: 'Dude', style: 'normal' },
         },
       ];
       assert.deepEqual(projectList, expected);
@@ -1009,7 +1009,7 @@ module('FactoryGuy', function (hooks) {
   });
 
   module('FactoryGuy and REST', function (hooks) {
-    inlineSetup(hooks, '-rest');
+    inlineSetup(hooks, 'rest');
     test('#updateHTTPMethod with REST Serializer', function (assert) {
       const method = FactoryGuy.updateHTTPMethod('application');
       assert.strictEqual(method, 'PUT');
