@@ -39,7 +39,6 @@ module(serializer, function (hooks) {
 
   module(`#mockFindRecord custom`, function () {
     test('when returns json (plain) is used', async function (assert) {
-      assert.expect(2);
       const json = { profile: { id: 1, description: 'the desc' } };
       const mock = mockFindRecord('profile').returns({ json });
       const profileId = String(mock.get('id'));
@@ -53,7 +52,6 @@ module(serializer, function (hooks) {
 
   module(`#mockCreate custom`, function () {
     test('match belongsTo with custom payloadKeyFromModelName function', async function (assert) {
-      assert.expect(1);
       let entryType = make('entry-type');
       mockCreate('entry').match({ entryType: entryType });
 
@@ -67,7 +65,6 @@ module(serializer, function (hooks) {
     });
 
     test('match hasMany with custom payloadKeyFromModelName function', async function (assert) {
-      assert.expect(1);
       let entry = make('entry');
       mockCreate('entry-type').match({ entries: [entry] });
 

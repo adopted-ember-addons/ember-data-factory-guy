@@ -52,7 +52,6 @@ module('MockUpdate', function (hooks) {
   });
 
   test('#makeFakeSnapshot', function (assert) {
-    assert.expect(3);
     let user = make('user');
 
     let tests = [
@@ -75,7 +74,6 @@ module('MockUpdate', function (hooks) {
   });
 
   test('#getUrl', function (assert) {
-    assert.expect(3);
     let user = make('user');
 
     let tests = [

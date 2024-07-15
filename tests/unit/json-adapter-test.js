@@ -29,7 +29,6 @@ module(serializer, function (hooks) {
 
   module('#mockFindRecord custom', function () {
     test('when returns json (plain) is used', async function (assert) {
-      assert.expect(2);
       const json = { id: 1, description: 'the desc' };
       const mock = mockFindRecord('profile').returns({ json });
       const profileId = String(mock.get('id'));

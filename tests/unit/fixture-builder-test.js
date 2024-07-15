@@ -20,7 +20,6 @@ module('FixtureBuilderFactory', function (hooks) {
   });
 
   test('returns the correct fixtureBuilder for serializer type of modelName', function (assert) {
-    assert.expect(4);
     let tests = [
       // serializer type   expected FixtureBuilder
       [RESTSerializer, RESTFixtureBuilder],

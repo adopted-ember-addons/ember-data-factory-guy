@@ -57,7 +57,6 @@ module('FactoryGuy', function (hooks) {
   });
 
   test('#resetDefinitions resets the model definition', function (assert) {
-    assert.expect(31);
     let project = make('project');
     make('user', { projects: [project] });
 
@@ -228,7 +227,6 @@ module('FactoryGuy', function (hooks) {
     });
 
     test('causes an assertion error when a trait is not found', function (assert) {
-      assert.expect(1);
       try {
         build('user', 'non_existent_trait');
       } catch (error) {

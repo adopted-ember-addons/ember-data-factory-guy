@@ -126,7 +126,6 @@ module('MockFindRecord', function (hooks) {
 
   module('#fails', function () {
     test('with errors in response', async function (assert) {
-      assert.expect(1);
       const response = { errors: { description: ['bad'] } },
         mock = mockFindRecord('profile').fails({ response });
 

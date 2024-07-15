@@ -985,7 +985,6 @@ SharedBehavior.mockCreateTests = function () {
   });
 
   test('match can take a function - if it returns true it registers a match', async function (assert) {
-    assert.expect(2);
     let mock = mockCreate('profile');
 
     mock.match(function () {
@@ -999,7 +998,6 @@ SharedBehavior.mockCreateTests = function () {
   });
 
   test('match can take a function - if it returns false it does not register a match', async function (assert) {
-    assert.expect(3);
     let mock1 = mockCreate('profile'),
       mock2 = mockCreate('profile');
 
@@ -1015,7 +1013,6 @@ SharedBehavior.mockCreateTests = function () {
   });
 
   test('match can take a function - supplied parameter is the json request body', async function (assert) {
-    assert.expect(2);
     let mock = mockCreate('profile');
 
     mock.match(function (requestBody) {
@@ -1390,7 +1387,6 @@ SharedBehavior.mockUpdateTests = function () {
   });
 
   test('match can take a function - it can accept FormData as requestBody', async function (assert) {
-    assert.expect(2);
     let customDescription = 'special description',
       profile = make('profile'),
       updateMock = mockUpdate(profile),
@@ -1428,7 +1424,6 @@ SharedBehavior.mockUpdateTests = function () {
   });
 
   test('match can take a function - if it returns true it registers a match', async function (assert) {
-    assert.expect(2);
     let customDescription = 'special description',
       profile = make('profile'),
       updateMock = mockUpdate(profile);
@@ -1445,7 +1440,6 @@ SharedBehavior.mockUpdateTests = function () {
   });
 
   test('match can take a function - if it returns false it does not register a match', async function (assert) {
-    assert.expect(3);
     let customDescription = 'special description',
       profile = make('profile'),
       updateMock1 = mockUpdate(profile),

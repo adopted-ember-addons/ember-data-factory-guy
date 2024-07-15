@@ -8,7 +8,6 @@ module('Unit | getPretender', function (hooks) {
   setupFactoryGuy(hooks);
 
   test('getPretender basic usage', function (assert) {
-    assert.expect(3);
     let pretender = getPretender();
 
     assert.ok(

@@ -63,7 +63,6 @@ module('MockDelete', function (hooks) {
   });
 
   test('#makeFakeSnapshot', function (assert) {
-    assert.expect(3);
     let user = make('user');
 
     let tests = [

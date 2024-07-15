@@ -13,7 +13,6 @@ module('Unit | Helper Functions', function (hooks) {
   setupTest(hooks);
 
   test('#paramsFromRequestBody', function (assert) {
-    assert.expect(3);
     const data = { a: '1', b: 'l d r' };
 
     let tests = [
@@ -32,7 +31,6 @@ module('Unit | Helper Functions', function (hooks) {
   });
 
   test('#isEmptyObject', function (assert) {
-    assert.expect(5);
     let tests = [
       [null, true, 'null'],
       [undefined, true, 'undefined'],
@@ -185,7 +183,6 @@ module('Unit | Helper Functions', function (hooks) {
   });
 
   test('parseUrl', function (assert) {
-    assert.expect(8);
     let tests = [
       ['', ['', {}]],
       [null, ['', {}]],

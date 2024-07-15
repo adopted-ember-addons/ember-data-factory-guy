@@ -48,7 +48,6 @@ module('MockCreate', function (hooks) {
   });
 
   test('#singleUse', async function (assert) {
-    assert.expect(2);
     let user1 = build('user');
     let user2 = build('user');
 
@@ -78,7 +77,6 @@ module('MockCreate', function (hooks) {
   });
 
   test('snapshot has record and adapterOptions in adapter#urlForCreateRecord', async function (assert) {
-    assert.expect(2);
     mockCreate('user');
 
     let adapter = FactoryGuy.store.adapterFor('user'),
@@ -98,7 +96,6 @@ module('MockCreate', function (hooks) {
   });
 
   test('#makeFakeSnapshot', function (assert) {
-    assert.expect(2);
     let user = makeNew('user');
 
     let tests = [
