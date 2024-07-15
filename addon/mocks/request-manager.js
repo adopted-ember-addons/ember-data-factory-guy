@@ -65,7 +65,7 @@ export default class {
         pretender,
         url,
         wrapper,
-        delay
+        delay,
       );
       wrappers[key] = wrapper;
     }

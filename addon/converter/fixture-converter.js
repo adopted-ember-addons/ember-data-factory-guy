@@ -165,7 +165,7 @@ export default class FixtureConverter {
     the [ ${type} ] transform. If you are in a unit test, be sure
     to include it in the list of needs as [ transform:${type} ],  Or set your
     unit test to be [ integration: true ] and include everything.`,
-      transform
+      transform,
     );
 
     let transformer = container.lookup('transform:' + type);
@@ -176,7 +176,7 @@ export default class FixtureConverter {
     let attributes = {},
       transformKeyFunction = this.getTransformKeyFunction(
         modelName,
-        'Attribute'
+        'Attribute',
       );
 
     this.store.modelFor(modelName).eachAttribute((attribute, meta) => {
@@ -187,14 +187,14 @@ export default class FixtureConverter {
         if (Object.prototype.hasOwnProperty.call(fixture, attribute)) {
           attributes[attributeKey] = transformValueFunction(
             fixture[attribute],
-            meta.options
+            meta.options,
           );
         } else if (
           Object.prototype.hasOwnProperty.call(fixture, attributeKey)
         ) {
           attributes[attributeKey] = transformValueFunction(
             fixture[attributeKey],
-            meta.options
+            meta.options,
           );
         }
       }
@@ -219,7 +219,7 @@ export default class FixtureConverter {
             fixture,
             relationship,
             modelName,
-            relationships
+            relationships,
           );
         } else if (relationship.kind === 'hasMany') {
           this.extractHasMany(fixture, relationship, modelName, relationships);
@@ -241,7 +241,7 @@ export default class FixtureConverter {
     let belongsToRecord = fixture[relationship.key],
       isEmbedded = this.isEmbeddedRelationship(
         parentModelName,
-        relationship.key
+        relationship.key,
       ),
       relationshipKey = isEmbedded
         ? relationship.key
@@ -250,7 +250,7 @@ export default class FixtureConverter {
     let data = this.extractSingleRecord(
       belongsToRecord,
       relationship,
-      isEmbedded
+      isEmbedded,
     );
     relationships[relationshipKey] = this.assignRelationship(data);
   }
@@ -277,7 +277,7 @@ export default class FixtureConverter {
       relationshipKey = this.transformRelationshipKey(relationship),
       isEmbedded = this.isEmbeddedRelationship(
         parentModelName,
-        relationship.key
+        relationship.key,
       );
 
     if (hasManyRecords && hasManyRecords.isProxy) {
@@ -285,7 +285,7 @@ export default class FixtureConverter {
         hasManyRecords,
         relationship,
         relationships,
-        isEmbedded
+        isEmbedded,
       );
     }
 
@@ -320,7 +320,7 @@ export default class FixtureConverter {
         assert(
           `Polymorphic relationships cannot be specified by id you
           need to supply an object with id and type`,
-          !relationship.options.polymorphic
+          !relationship.options.polymorphic,
         );
         record = { id: record, type: relationship.type };
         data = this.normalizeAssociation(record, relationship);
@@ -348,7 +348,7 @@ export default class FixtureConverter {
       assert(
         `You defined a link url ${link} for the [${relationshipKey}] relationship
         on model [${modelName}] but that relationship does not exist`,
-        relationships.get(relationshipKey)
+        relationships.get(relationshipKey),
       );
     }
   }
@@ -356,7 +356,7 @@ export default class FixtureConverter {
   addData(embeddedFixture, relationship, isEmbedded) {
     const relationshipType = this.getRelationshipType(
       relationship,
-      embeddedFixture
+      embeddedFixture,
     );
     // find possibly more embedded fixtures
     const data = this.convertSingle(relationshipType, embeddedFixture);

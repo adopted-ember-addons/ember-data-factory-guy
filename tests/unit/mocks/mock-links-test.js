@@ -62,7 +62,7 @@ module('MockLinks', function (hooks) {
     let userProperties = await user.properties;
     assert.deepEqual(
       userProperties.map(({ id }) => id),
-      properties.get().map((f) => String(f.id))
+      properties.get().map((f) => String(f.id)),
     );
   });
 

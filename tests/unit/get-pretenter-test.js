@@ -13,18 +13,18 @@ module('Unit | getPretender', function (hooks) {
 
     assert.ok(
       pretender instanceof Pretender,
-      'getPretender returns an instance of Pretender'
+      'getPretender returns an instance of Pretender',
     );
     assert.strictEqual(
       pretender.handlers.length,
       0,
-      'the handlers array is initially empty'
+      'the handlers array is initially empty',
     );
     mock({ url: '/api/whatever' });
     assert.strictEqual(
       pretender.handlers.length,
       1,
-      'the created mock is added to the handlers'
+      'the created mock is added to the handlers',
     );
   });
 });

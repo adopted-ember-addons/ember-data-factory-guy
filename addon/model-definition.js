@@ -70,7 +70,7 @@ class ModelDefinition {
     let sequence = this.sequences[name];
     if (!sequence) {
       throw new MissingSequenceError(
-        `[ember-data-factory-guy] Can't find that sequence named [${name}] in '${this.modelName}' definition`
+        `[ember-data-factory-guy] Can't find that sequence named [${name}] in '${this.modelName}' definition`,
       );
     }
     return sequence.next();
@@ -107,7 +107,7 @@ class ModelDefinition {
       assert(
         `[ember-data-factory-guy] You're trying to use a trait [${traitName}]
         for model ${this.modelName} but that trait can't be found.`,
-        trait
+        trait,
       );
       if (typeOf(trait) === 'function') {
         trait(fixture);
@@ -242,7 +242,7 @@ class ModelDefinition {
       But FactoryGuy can't find that definition [ ${extending} ]
       you are trying to extend. Make sure it was created/imported before
       you define [ ${this.modelName} ]`,
-      definition
+      definition,
     );
     this.merge(config, definition);
   }
@@ -283,7 +283,7 @@ class ModelDefinition {
       if (typeOf(sequenceFn) !== 'function') {
         throw new Error(
           `Problem with [${sequenceName}] sequence definition.
-          Sequences must be functions`
+          Sequences must be functions`,
         );
       }
       this.sequences[sequenceName] = new Sequence(sequenceFn);

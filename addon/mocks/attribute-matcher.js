@@ -79,13 +79,13 @@ const AttributeMatcher = (superclass) =>
       const responseKeys = Object.keys(options),
         validReturnsKeys = ['attrs', 'add'],
         invalidKeys = responseKeys.filter(
-          (key) => !validReturnsKeys.includes(key)
+          (key) => !validReturnsKeys.includes(key),
         );
 
       assert(
         `[ember-data-factory-guy] You passed invalid keys for 'returns' function.
       Valid keys are ${validReturnsKeys}. You used these invalid keys: ${invalidKeys}`,
-        invalidKeys.length === 0
+        invalidKeys.length === 0,
       );
 
       return responseKeys;

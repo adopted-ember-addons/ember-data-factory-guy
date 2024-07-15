@@ -27,7 +27,7 @@ export default class MockLinksRequest extends MockRequest {
     assert(
       `[ember-data-factory-guy] mockLinks can not find that relationship
         [${this.relationshipKey}] on model of type ${modelClass.modelName}`,
-      relationship
+      relationship,
     );
 
     return relationship;
@@ -64,7 +64,7 @@ export default class MockLinksRequest extends MockRequest {
     assert(
       `[ember-data-factory-guy] You can pass one key to 'returns',
                 you passed these keys: ${responseKeys}`,
-      responseKeys.length === 1
+      responseKeys.length === 1,
     );
 
     const [responseKey] = responseKeys;
@@ -72,7 +72,7 @@ export default class MockLinksRequest extends MockRequest {
     assert(
       `[ember-data-factory-guy] You passed an invalid keys for 'returns' function.
       Valid keys are ${this.validReturnsKeys}. You used this invalid key: ${responseKey}`,
-      this.validReturnsKeys.includes(responseKey)
+      this.validReturnsKeys.includes(responseKey),
     );
 
     return responseKey;
@@ -98,7 +98,7 @@ export default class MockLinksRequest extends MockRequest {
         json = { id: options.id };
         this.idSearch = true;
         this.setResponseJson(
-          this.fixtureBuilder.convertForBuild(modelName, json)
+          this.fixtureBuilder.convertForBuild(modelName, json),
         );
         break;
       }
@@ -109,12 +109,12 @@ export default class MockLinksRequest extends MockRequest {
         assert(
           `[ember-data-factory-guy] argument ( model ) must be a Model instance - found type:'
           ${typeOf(model)}`,
-          model instanceof Model
+          model instanceof Model,
         );
 
         json = { id: model.id };
         this.setResponseJson(
-          this.fixtureBuilder.convertForBuild(modelName, json)
+          this.fixtureBuilder.convertForBuild(modelName, json),
         );
         break;
 
@@ -131,7 +131,7 @@ export default class MockLinksRequest extends MockRequest {
         assert(
           `[ember-data-factory-guy] argument ( models ) must be an array - found type:'
           ${typeOf(models)}`,
-          Array.isArray(models)
+          Array.isArray(models),
         );
 
         json = models.map((model) => ({ id: model.id }));

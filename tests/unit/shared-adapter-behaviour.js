@@ -202,7 +202,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
       let mockFindProfile = mockFindRecord(
         'profile',
         'with_company',
-        'with_bat_man'
+        'with_bat_man',
       );
       let profileId = String(mockFindProfile.get('id'));
 
@@ -258,7 +258,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
       assert.strictEqual(
         FactoryGuy.store.peekAll('profile').length,
         1,
-        'does not make another profile'
+        'does not make another profile',
       );
     });
   });
@@ -271,7 +271,7 @@ SharedBehavior.mockFindRecordEmbeddedTests = function () {
 
       const comic = await FactoryGuy.store.findRecord(
         'comic-book',
-        mock.get('id')
+        mock.get('id'),
       );
       const comicCompany = await comic.get('company');
 
@@ -284,12 +284,12 @@ SharedBehavior.mockFindRecordEmbeddedTests = function () {
 
       const comic = await FactoryGuy.store.findRecord(
         'comic-book',
-        mock.get('id')
+        mock.get('id'),
       );
       assert.ok(comic.name === 'Comic Times #1');
       assert.ok(
         comic.characters.map(({ name }) => name) + '' ===
-          ['BadGuy#1', 'BadGuy#2'] + ''
+          ['BadGuy#1', 'BadGuy#2'] + '',
       );
     });
   });
@@ -320,7 +320,7 @@ SharedBehavior.mockReloadTests = function () {
     assert.ok(reloaded.description === 'moo', 'attribute changed');
     assert.ok(
       reloaded.camelCaseDescription === 'noodles',
-      'other attributes are same'
+      'other attributes are same',
     );
   });
 
@@ -342,7 +342,7 @@ SharedBehavior.mockReloadTests = function () {
     assert.ok(reloaded.description === 'potatoes', 'description changed');
     assert.ok(
       reloaded.camelCaseDescription === 'poodles',
-      'camelCaseDescription changes'
+      'camelCaseDescription changes',
     );
   });
 
@@ -425,7 +425,7 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
       assert.ok(users.length === 2);
       assert.ok(
         users.at(-1).hats.map((hat) => hat.type) + '' ===
-          ['BigHat', 'BigHat'] + ''
+          ['BigHat', 'BigHat'] + '',
       );
       assert.ok(users.at(-1).hats.map((hat) => hat.id) + '' === [3, 4] + '');
     });
@@ -466,7 +466,7 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
       assert.strictEqual(
         FactoryGuy.store.peekAll('profile').length,
         2,
-        'does not make new profiles'
+        'does not make new profiles',
       );
     });
   });
@@ -480,7 +480,7 @@ SharedBehavior.mockFindAllEmbeddedTests = function () {
       const comics = await FactoryGuy.store.findAll('comic-book');
       assert.ok(
         comics.map(({ name }) => name) + '' ===
-          ['Comic Times #1', 'Comic Times #2'] + ''
+          ['Comic Times #1', 'Comic Times #2'] + '',
       );
 
       for (let comic of comics) {
@@ -495,15 +495,15 @@ SharedBehavior.mockFindAllEmbeddedTests = function () {
       const comics = await FactoryGuy.store.findAll('comic-book');
       assert.ok(
         comics.map(({ name }) => name) + '' ===
-          ['Comic Times #1', 'Comic Times #2'] + ''
+          ['Comic Times #1', 'Comic Times #2'] + '',
       );
       assert.ok(
         comics[0].characters.map(({ name }) => name) + '' ===
-          ['BadGuy#1', 'BadGuy#2'] + ''
+          ['BadGuy#1', 'BadGuy#2'] + '',
       );
       assert.ok(
         comics.at(-1).characters.map(({ name }) => name) + '' ===
-          ['BadGuy#3', 'BadGuy#4'] + ''
+          ['BadGuy#3', 'BadGuy#4'] + '',
       );
     });
   });
@@ -546,7 +546,7 @@ SharedBehavior.mockQueryTests = function () {
     });
     assert.deepEqual(
       companies.map((company) => company.id),
-      models.map((model) => model.id)
+      models.map((model) => model.id),
     );
   });
 
@@ -567,7 +567,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.strictEqual(
       FactoryGuy.store.peekAll('user').length,
       1,
-      'does not make another user'
+      'does not make another user',
     );
   });
 
@@ -578,7 +578,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.strictEqual(
       FactoryGuy.store.peekAll('user').length,
       2,
-      'start out with 2 instances'
+      'start out with 2 instances',
     );
 
     let users = await FactoryGuy.store.query('user', { name: 'Bob' });
@@ -589,7 +589,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.strictEqual(
       FactoryGuy.store.peekAll('user').length,
       2,
-      'no new instances created'
+      'no new instances created',
     );
   });
 
@@ -600,7 +600,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.strictEqual(
       FactoryGuy.store.peekAll('company').length,
       2,
-      'start out with 2 instances'
+      'start out with 2 instances',
     );
 
     const companies = await FactoryGuy.store.query('company', {
@@ -614,7 +614,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.strictEqual(
       FactoryGuy.store.peekAll('company').length,
       2,
-      'no new instances created'
+      'no new instances created',
     );
   });
 
@@ -668,13 +668,13 @@ SharedBehavior.mockQueryTests = function () {
     let companies = await FactoryGuy.store.query('company', { name: 'Dude' });
     assert.strictEqual(
       companies.map((company) => company.id) + '',
-      companies1.map((company) => company.id) + ''
+      companies1.map((company) => company.id) + '',
     );
 
     companies = await FactoryGuy.store.query('company', { type: 'Small' });
     assert.strictEqual(
       companies.map((company) => company.id) + '',
-      companies2.map((company) => company.id) + ''
+      companies2.map((company) => company.id) + '',
     );
   });
 
@@ -688,7 +688,7 @@ SharedBehavior.mockQueryTests = function () {
     });
     assert.strictEqual(
       companies.map((company) => company.id) + '',
-      returnedCompanies.map((company) => company.id) + ''
+      returnedCompanies.map((company) => company.id) + '',
     );
 
     mockQuery('company', { type: 'Small', name: 'Dude' }).returns({
@@ -701,7 +701,7 @@ SharedBehavior.mockQueryTests = function () {
     });
     assert.strictEqual(
       companies.map((company) => company.id) + '',
-      returnedCompanies.map((company) => company.id) + ''
+      returnedCompanies.map((company) => company.id) + '',
     );
   });
 
@@ -715,14 +715,14 @@ SharedBehavior.mockQueryTests = function () {
     let companies = await FactoryGuy.store.query('company', { name: 'Dude' });
     assert.strictEqual(
       companies.map((company) => company.id) + '',
-      companies1.map((company) => company.id) + ''
+      companies1.map((company) => company.id) + '',
     );
 
     queryHandler.withParams({ type: 'Small' }).returns({ models: companies2 });
     companies = await FactoryGuy.store.query('company', { type: 'Small' });
     assert.strictEqual(
       companies.map((company) => company.id) + '',
-      companies2.map((company) => company.id) + ''
+      companies2.map((company) => company.id) + '',
     );
   });
 
@@ -741,7 +741,7 @@ SharedBehavior.mockQueryTests = function () {
     });
     assert.strictEqual(
       companies.map((company) => company.id) + '',
-      companies1.map((company) => company.id) + ''
+      companies1.map((company) => company.id) + '',
     );
     assert.strictEqual(matchQueryHandler.timesCalled, 1);
     companies = await FactoryGuy.store.query('company', {
@@ -750,7 +750,7 @@ SharedBehavior.mockQueryTests = function () {
     });
     assert.strictEqual(
       companies.map(({ id }) => id) + '',
-      companies2.map(({ id }) => id) + ''
+      companies2.map(({ id }) => id) + '',
     );
     assert.strictEqual(allQueryHandler.timesCalled, 1);
   });
@@ -772,25 +772,25 @@ SharedBehavior.mockQueryMetaTests = function () {
       let profiles = await FactoryGuy.store.query('profile', { page: 2 });
       assert.deepEqual(
         profiles.map(({ id }) => id),
-        ['1', '2']
+        ['1', '2'],
       );
       assert.ok(
         isEquivalent(profiles.meta, {
           previous: '/profiles?page=1',
           next: '/profiles?page=3',
-        })
+        }),
       );
 
       let profiles2 = await FactoryGuy.store.query('profile', { page: 3 });
       assert.deepEqual(
         profiles2.map(({ id }) => id),
-        ['3', '4']
+        ['3', '4'],
       );
       assert.ok(
         isEquivalent(profiles2.meta, {
           previous: '/profiles?page=2',
           next: '/profiles?page=4',
-        })
+        }),
       );
     });
   });
@@ -835,7 +835,7 @@ SharedBehavior.mockQueryRecordTests = function () {
     assert.strictEqual(
       FactoryGuy.store.peekAll('user').length,
       1,
-      'does not create a new model'
+      'does not create a new model',
     );
   });
 
@@ -848,7 +848,7 @@ SharedBehavior.mockQueryRecordTests = function () {
     assert.strictEqual(
       FactoryGuy.store.peekAll('user').length,
       1,
-      'does not create a new model'
+      'does not create a new model',
     );
   });
 
@@ -905,12 +905,12 @@ SharedBehavior.mockCreateTests = function () {
 
     assert.ok(
       FactoryGuy.store.peekAll('profile').length === 1,
-      'No extra records created'
+      'No extra records created',
     );
     assert.ok(profile instanceof Profile, 'Creates the correct type of record');
     assert.ok(
       profile.description === customDescription,
-      'Passes along the match attributes'
+      'Passes along the match attributes',
     );
   });
 
@@ -929,7 +929,7 @@ SharedBehavior.mockCreateTests = function () {
         camelCaseDescription: profile.camelCaseDescription,
       },
       { camelCaseDescription, description },
-      'correct model attributes present'
+      'correct model attributes present',
     );
   });
 
@@ -947,7 +947,7 @@ SharedBehavior.mockCreateTests = function () {
 
     assert.ok(
       FactoryGuy.store.peekAll('super-hero').length === 1,
-      'No extra records created'
+      'No extra records created',
     );
     assert.ok(hero instanceof SuperHero, 'Creates the correct type of record');
     assert.ok(hero.name === customName, 'Passes along the match attributes');
@@ -1235,11 +1235,11 @@ SharedBehavior.mockCreateReturnsAssociations = function () {
 
       assert.deepEqual(
         hero.outfits.map(({ id }) => id),
-        ['1', '2']
+        ['1', '2'],
       );
       assert.deepEqual(
         hero.outfits.map(({ name }) => name),
-        ['Outfit-1', 'Outfit-2']
+        ['Outfit-1', 'Outfit-2'],
       );
     });
   });
@@ -1400,7 +1400,7 @@ SharedBehavior.mockUpdateTests = function () {
       let url = adapter.urlForUpdateRecord(
         snapshot.id,
         type.modelName,
-        snapshot
+        snapshot,
       );
       let httpMethod = FactoryGuy.updateHTTPMethod(type.modelName);
 
@@ -1416,7 +1416,7 @@ SharedBehavior.mockUpdateTests = function () {
     updateMock.match(function (requestBody) {
       assert.ok(
         requestBody instanceof FormData,
-        'matching function is called when request body is FormData'
+        'matching function is called when request body is FormData',
       );
       return true;
     });
@@ -1654,7 +1654,7 @@ SharedBehavior.mockUpdateWithErrorMessages = function () {
         assert.strictEqual(
           errors.description,
           'invalid data',
-          'custom description shows up in errors'
+          'custom description shows up in errors',
         );
       }
     });
@@ -1704,11 +1704,11 @@ SharedBehavior.mockUpdateReturnsAssociations = function () {
       assert.strictEqual(hero.name, newValue);
       assert.deepEqual(
         hero.outfits.map(({ id }) => id),
-        ['1', '2']
+        ['1', '2'],
       );
       assert.deepEqual(
         hero.outfits.map(({ name }) => name),
-        ['Outfit-1', 'Outfit-2']
+        ['Outfit-1', 'Outfit-2'],
       );
     });
   });

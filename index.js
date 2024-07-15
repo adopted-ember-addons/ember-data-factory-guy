@@ -41,7 +41,7 @@ module.exports = {
       {
         files: [routeRecognizerFilename, routeRecognizerFilename + '.map'],
         destDir: '/route-recognizer',
-      }
+      },
     );
 
     var fakeRequestTree = new Funnel(path.dirname(this._fakeRequestPath), {
@@ -90,10 +90,10 @@ module.exports = {
       this._findPretenderPaths();
 
       app.import(
-        'vendor/fake-xml-http-request/' + path.basename(this._fakeRequestPath)
+        'vendor/fake-xml-http-request/' + path.basename(this._fakeRequestPath),
       );
       app.import(
-        'vendor/route-recognizer/' + path.basename(this._routeRecognizerPath)
+        'vendor/route-recognizer/' + path.basename(this._routeRecognizerPath),
       );
       app.import('vendor/pretender/' + path.basename(this._pretenderPath));
 

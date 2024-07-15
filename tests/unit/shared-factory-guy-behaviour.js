@@ -73,7 +73,7 @@ SharedBehavior.makeTests = function () {
     assert.strictEqual(
       dog.dogNumber,
       'Dog1',
-      'attribute has the primary key value as well'
+      'attribute has the primary key value as well',
     );
   });
 
@@ -340,7 +340,7 @@ SharedBehavior.makeTests = function () {
     assert.strictEqual(
       user.belongsTo('company').link(),
       companyLink,
-      'has link'
+      'has link',
     );
     assert.deepEqual(user.company?.content, company, 'has model');
   });
@@ -360,7 +360,7 @@ SharedBehavior.makeTests = function () {
     assert.strictEqual(
       user.hasMany('properties').link(),
       propertyLink,
-      'has link'
+      'has link',
     );
     const userProperties = await user.properties;
     assert.deepEqual(userProperties, properties, 'has models');

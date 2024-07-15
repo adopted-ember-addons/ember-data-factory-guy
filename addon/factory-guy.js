@@ -26,7 +26,7 @@ class FactoryGuy {
   setStore(aStore) {
     assert(
       `[ember-data-factory-guy] FactoryGuy#setStore needs a valid store instance. You passed in [${aStore}]`,
-      aStore instanceof Store
+      aStore instanceof Store,
     );
     this.store = aStore;
     this.fixtureBuilderFactory = new FixtureBuilderFactory(this.store);
@@ -296,7 +296,7 @@ class FactoryGuy {
         number,
         parts.traits,
         parts.opts,
-        buildType
+        buildType,
       );
     }
 
@@ -328,7 +328,7 @@ class FactoryGuy {
 
     let data = this.fixtureBuilder(modelName).convertForMake(
       modelName,
-      fixture
+      fixture,
     );
 
     return data.data.attributes;
@@ -352,7 +352,7 @@ class FactoryGuy {
 
     let data = this.fixtureBuilder(modelName).convertForMake(
         modelName,
-        fixture
+        fixture,
       ),
       model = join(() => this.store.push(data));
 
@@ -430,7 +430,7 @@ class FactoryGuy {
     assert(
       `[ember-data-factory-guy] ${method} needs at least a name
       ( of model or named factory definition )`,
-      args.length > 0
+      args.length > 0,
     );
   }
 
@@ -439,7 +439,7 @@ class FactoryGuy {
       `[ember-data-factory-guy] FactoryGuy does not have the application's store.
        Use manualSetup(this) in model/component test
        before using make/makeList`,
-      this.store
+      this.store,
     );
   }
 
@@ -506,7 +506,7 @@ class FactoryGuy {
       id,
       snapshot,
       requestType,
-      clonedQueryParams
+      clonedQueryParams,
     );
   }
 
@@ -576,7 +576,7 @@ class FactoryGuy {
     let name = args.shift();
     if (!name) {
       throw new Error(
-        '[ember-data-factory-guy] build/make needs a factory name to build'
+        '[ember-data-factory-guy] build/make needs a factory name to build',
       );
     }
     return Object.assign({ name }, FactoryGuy.extractArgumentsShort(...args));
@@ -611,7 +611,7 @@ class FactoryGuy {
 
     assert(
       `[ember-data-factory-guy] Can't find that factory named [ ${name} ]`,
-      !definition && assertItExists
+      !definition && assertItExists,
     );
   }
 

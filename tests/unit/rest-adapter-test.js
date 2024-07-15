@@ -77,7 +77,7 @@ module(serializer, function (hooks) {
       let entries = entryType.entries;
       assert.deepEqual(
         entries.map(({ id }) => id),
-        [entry.id]
+        [entry.id],
       );
     });
   });
@@ -311,7 +311,7 @@ module(serializer, function (hooks) {
       let owners = buildList(
         'user',
         { company: company1 },
-        { company: company2 }
+        { company: company2 },
       );
       let buildJson = build('property', { owners });
       buildJson.unwrap();
@@ -680,12 +680,12 @@ module(serializer, function (hooks) {
       assert.strictEqual(
         dog.get('id'),
         'Dog1',
-        'primary key comes from dogNumber'
+        'primary key comes from dogNumber',
       );
       assert.strictEqual(
         dog.get('dogNumber'),
         'Dog1',
-        'attribute has the primary key value as well'
+        'attribute has the primary key value as well',
       );
     });
 

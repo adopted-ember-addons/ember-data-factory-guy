@@ -23,7 +23,7 @@ export default function (owner) {
       If you have factoryGuy set to true in config/environment.js file,
       then you should setup a file app/scenarios/main.js to control what data will
       be like in the application.`,
-      Scenario
+      Scenario,
     );
     new Scenario['default']().run();
   }

@@ -44,7 +44,7 @@ export default class RequestWrapper {
     let requestHandler = this.handleRequest.bind(this),
       methods = ['getHandlers', 'addHandler', 'removeHandler'];
     methods.forEach(
-      (method) => (requestHandler[method] = this[method].bind(this))
+      (method) => (requestHandler[method] = this[method].bind(this)),
     );
     return requestHandler;
   }
@@ -55,7 +55,7 @@ export default class RequestWrapper {
    */
   getHandlers() {
     return this.handlers.sort(
-      (a, b) => b.hasQueryParams() - a.hasQueryParams()
+      (a, b) => b.hasQueryParams() - a.hasQueryParams(),
     );
   }
 
@@ -95,7 +95,7 @@ export default class RequestWrapper {
    */
   handleRequest(request) {
     let handler = this.getHandlers(request).find((handler) =>
-      handler.matches(request)
+      handler.matches(request),
     );
     if (handler) {
       let { status, headers, responseText } = handler.getResponse();

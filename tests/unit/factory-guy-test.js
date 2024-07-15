@@ -126,7 +126,7 @@ module('FactoryGuy', function (hooks) {
           return !!err
             .toString()
             .match(/Use manualSetup\(this\) in model\/component test/);
-        }
+        },
       );
     });
 
@@ -139,9 +139,9 @@ module('FactoryGuy', function (hooks) {
           return !!err
             .toString()
             .match(
-              /\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/
+              /\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/,
             );
-        }
+        },
       );
     });
 
@@ -158,7 +158,7 @@ module('FactoryGuy', function (hooks) {
       assert.strictEqual(
         FactoryGuy.buildURL('project'),
         '/projects',
-        'has no namespace by default'
+        'has no namespace by default',
       );
     });
 
@@ -171,7 +171,7 @@ module('FactoryGuy', function (hooks) {
 
       assert.strictEqual(
         FactoryGuy.buildURL('project'),
-        'https://dude.com/api/v1/projects'
+        'https://dude.com/api/v1/projects',
       );
     });
   });
@@ -188,9 +188,9 @@ module('FactoryGuy', function (hooks) {
           return !!err
             .toString()
             .match(
-              /\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/
+              /\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/,
             );
-        }
+        },
       );
     });
 
@@ -214,7 +214,7 @@ module('FactoryGuy', function (hooks) {
       assert.strictEqual(
         dog1.get('sound'),
         'Normal Woof',
-        'no extra attribute'
+        'no extra attribute',
       );
 
       let volume = 'Soft';
@@ -223,7 +223,7 @@ module('FactoryGuy', function (hooks) {
       assert.strictEqual(
         dog2.get('sound'),
         `${volume} Woof`,
-        'uses your extra attribute'
+        'uses your extra attribute',
       );
     });
 
@@ -234,8 +234,8 @@ module('FactoryGuy', function (hooks) {
       } catch (error) {
         assert.ok(
           error.message.match(
-            /\[ember-data-factory-guy\] You're trying to use a trait \[non_existent_trait\]/
-          )
+            /\[ember-data-factory-guy\] You're trying to use a trait \[non_existent_trait\]/,
+          ),
         );
       }
     });
@@ -263,9 +263,9 @@ module('FactoryGuy', function (hooks) {
           return !!err
             .toString()
             .match(
-              /\[ember-data-factory-guy\] buildList needs at least a name/
+              /\[ember-data-factory-guy\] buildList needs at least a name/,
             );
-        }
+        },
       );
     });
 
@@ -278,9 +278,9 @@ module('FactoryGuy', function (hooks) {
           return !!err
             .toString()
             .match(
-              /\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/
+              /\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/,
             );
-        }
+        },
       );
     });
 
@@ -294,7 +294,7 @@ module('FactoryGuy', function (hooks) {
         'profile',
         'goofy_description',
         ['with_company', { description: 'Noodles' }],
-        'with_bat_man'
+        'with_bat_man',
       );
       assert.strictEqual(profiles.get().length, 3);
       assert.strictEqual(profiles.get(0).description, 'goofy');
@@ -321,9 +321,9 @@ module('FactoryGuy', function (hooks) {
           return !!err
             .toString()
             .match(
-              /\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/
+              /\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/,
             );
-        }
+        },
       );
     });
 
@@ -344,12 +344,12 @@ module('FactoryGuy', function (hooks) {
       assert.strictEqual(
         profile.camelCaseDescription,
         'camelMan',
-        'camel case'
+        'camel case',
       );
       assert.strictEqual(
         profile.snake_case_description,
         'snakeMan',
-        'snake case'
+        'snake case',
       );
     });
   });
@@ -365,7 +365,7 @@ module('FactoryGuy', function (hooks) {
           return !!err
             .toString()
             .match(/Use manualSetup\(this\) in model\/component test/);
-        }
+        },
       );
     });
 
@@ -378,7 +378,7 @@ module('FactoryGuy', function (hooks) {
           return !!err
             .toString()
             .match(/\[ember-data-factory-guy\] makeList needs at least a name/);
-        }
+        },
       );
     });
 
@@ -391,9 +391,9 @@ module('FactoryGuy', function (hooks) {
           return !!err
             .toString()
             .match(
-              /\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/
+              /\[ember-data-factory-guy\] Can't find that factory named \[ BigBobModel \]/,
             );
-        }
+        },
       );
     });
 
@@ -426,7 +426,7 @@ module('FactoryGuy', function (hooks) {
         'profile',
         'goofy_description',
         ['with_company', { description: 'Noodles' }],
-        'with_bat_man'
+        'with_bat_man',
       );
       assert.strictEqual(profiles.length, 3);
       assert.strictEqual(profiles[0].description, 'goofy');
@@ -484,36 +484,36 @@ module('FactoryGuy', function (hooks) {
       assert.strictEqual(
         json.get('name'),
         'person #1',
-        'inherits parent default attribute functions and sequences'
+        'inherits parent default attribute functions and sequences',
       );
       assert.strictEqual(
         json.get('style'),
         'thinker',
-        'local attributes override parent attributes'
+        'local attributes override parent attributes',
       );
 
       json = FactoryGuy.build('stoner');
       assert.strictEqual(
         json.get('name'),
         'stoner #1',
-        'uses local sequence and parent default attribute function with one level of inheritance '
+        'uses local sequence and parent default attribute function with one level of inheritance ',
       );
       assert.strictEqual(
         json.get('style'),
         'chill',
-        'uses local default attribute with one level of inheritance'
+        'uses local default attribute with one level of inheritance',
       );
 
       json = FactoryGuy.build('cool-stoner');
       assert.strictEqual(
         json.get('name'),
         'cool stoner #1',
-        'uses local sequence and parent default attribute function with two levels of inheritance'
+        'uses local sequence and parent default attribute function with two levels of inheritance',
       );
       assert.strictEqual(
         json.get('style'),
         'chill',
-        'uses inherited default attribute with two levels of inheritance'
+        'uses inherited default attribute with two levels of inheritance',
       );
     });
 
@@ -555,12 +555,12 @@ module('FactoryGuy', function (hooks) {
       assert.strictEqual(
         json.attributes.style,
         'Super Lazy',
-        'inherits parent traits'
+        'inherits parent traits',
       );
       assert.strictEqual(
         json.attributes.name,
         'Stoned Guy',
-        'local traits are available'
+        'local traits are available',
       );
     });
 
@@ -661,7 +661,7 @@ module('FactoryGuy', function (hooks) {
           FactoryGuy.buildRaw({ name: 'bro' });
         },
         MissingSequenceError,
-        'throws error when sequence name not found'
+        'throws error when sequence name not found',
       );
 
       json = FactoryGuy.buildRaw({ name: 'dude_inline' });
@@ -703,7 +703,7 @@ module('FactoryGuy', function (hooks) {
       assert.deepEqual(
         json,
         expected,
-        'still works when attribute does not exists'
+        'still works when attribute does not exists',
       );
     });
 

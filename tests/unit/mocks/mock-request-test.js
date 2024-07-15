@@ -60,7 +60,7 @@ module('MockRequest', function (hooks) {
       let errors = { phrase: 'poorly worded' };
 
       assert.throws(() =>
-        mock.fails({ response: errors, convertErrors: true })
+        mock.fails({ response: errors, convertErrors: true }),
       );
     });
   });
@@ -131,7 +131,7 @@ module('MockRequest', function (hooks) {
       assert.strictEqual(
         data.id,
         String(json1.get('id')),
-        'the first mock works initially'
+        'the first mock works initially',
       );
 
       mock1.disable();
@@ -139,7 +139,7 @@ module('MockRequest', function (hooks) {
       assert.strictEqual(
         data.id,
         String(json2.get('id')),
-        "the first mock doesn't work once it's disabled"
+        "the first mock doesn't work once it's disabled",
       );
 
       mock1.enable();
@@ -147,19 +147,19 @@ module('MockRequest', function (hooks) {
       assert.strictEqual(
         data.id,
         String(json1.get('id')),
-        'the first mock works again after enabling'
+        'the first mock works again after enabling',
       );
 
       mock1.destroy();
       assert.ok(
         mock1.isDestroyed,
-        'isDestroyed is set to true once the mock is destroyed'
+        'isDestroyed is set to true once the mock is destroyed',
       );
       data = await FactoryGuy.store.queryRecord('user', { id: 1 });
       assert.strictEqual(
         data.id,
         String(json2.get('id')),
-        "the destroyed first mock doesn't work"
+        "the destroyed first mock doesn't work",
       );
     });
   });

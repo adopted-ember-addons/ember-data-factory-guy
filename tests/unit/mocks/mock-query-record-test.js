@@ -142,7 +142,7 @@ module('MockQueryRecord', function (hooks) {
     adapter.urlForQueryRecord = (query) => {
       assert.ok(
         query.current,
-        'query params are passed in without modification'
+        'query params are passed in without modification',
       );
       if (query.current) {
         // modify the query params like a rogue adapter

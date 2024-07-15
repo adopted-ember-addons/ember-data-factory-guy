@@ -50,7 +50,7 @@ export function param(obj, prefix) {
       str.push(
         v !== null && typeof v === 'object'
           ? param(v, k)
-          : encodeURIComponent(k) + '=' + encodeURIComponent(v)
+          : encodeURIComponent(k) + '=' + encodeURIComponent(v),
       );
     }
   }
@@ -220,7 +220,7 @@ export function requireFiles(filePattern) {
   return filesSeen
     .filter(
       (moduleName) =>
-        filePattern.test(moduleName) && !excludeRegex.test(moduleName)
+        filePattern.test(moduleName) && !excludeRegex.test(moduleName),
     )
     .map((moduleName) => require(moduleName, null, null, true));
 }
