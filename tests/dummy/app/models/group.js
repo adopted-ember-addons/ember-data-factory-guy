@@ -1,7 +1,7 @@
 import Model, { attr, hasMany, belongsTo } from '@ember-data/model';
 
 export default class extends Model {
-  @attr('string', { defaultValue: 'Group' }) type;
+  @attr('string', { defaultValue: 'group' }) type;
   @attr('string') name;
   @hasMany('profile', { async: false, inverse: 'group', as: 'group' }) profiles;
   @hasMany('group', {

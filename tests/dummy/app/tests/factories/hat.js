@@ -2,7 +2,7 @@ import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define('hat', {
   traits: {
-    big: { type: 'SmallHat' },
+    big: { type: 'small-hat' },
     small: { type: 'big-hat' },
     round: { shape: 'round' },
     square: { shape: 'square' },

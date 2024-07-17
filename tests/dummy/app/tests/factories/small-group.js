@@ -9,6 +9,6 @@ FactoryGuy.define('small-group', {
     },
   },
   default: {
-    type: 'SmallGroup',
+    type: 'small-group',
   },
 });

@@ -16,12 +16,12 @@ FactoryGuy.define('big-group', {
     from the parent's default section which looks like this:
 
     default: {
-      type: "Group",
+      type: "group",
       name: FactoryGuy.generate('name')
     }
 
   */
   default: {
-    type: 'BigGroup',
+    type: 'big-group',
   },
 });

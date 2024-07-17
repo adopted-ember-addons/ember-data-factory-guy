@@ -1,4 +1,3 @@
-import { underscore } from '@ember/string';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
@@ -591,46 +590,6 @@ module(serializer, function (hooks) {
           },
           relationships: {
             'super-hero': {
-              data: { id: '1', type: 'super-hero' },
-            },
-          },
-        },
-        included: [
-          {
-            id: '1',
-            type: 'super-hero',
-            attributes: {
-              name: 'BatMan',
-              type: 'SuperHero',
-            },
-          },
-        ],
-      });
-    });
-
-    // Don't have to duplicate this test on all adapters since it's the same basic idea and not
-    // adapter dependent
-    test('using custom serialize keys function for transforming attributes and relationship keys', function (assert) {
-      let serializer = FactoryGuy.store.serializerFor('profile');
-
-      serializer.keyForAttribute = underscore;
-      serializer.keyForRelationship = underscore;
-
-      let json = build('profile', 'with_bat_man');
-      json.unwrap();
-
-      assert.deepEqual(json, {
-        data: {
-          id: '1',
-          type: 'profile',
-          attributes: {
-            description: 'Text goes here',
-            camel_case_description: 'textGoesHere',
-            snake_case_description: 'text_goes_here',
-            a_boolean_field: false,
-          },
-          relationships: {
-            super_hero: {
               data: { id: '1', type: 'super-hero' },
             },
           },

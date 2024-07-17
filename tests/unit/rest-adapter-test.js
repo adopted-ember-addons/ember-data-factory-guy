@@ -824,13 +824,13 @@ module(serializer, function (hooks) {
             },
             id: '2',
             name: 'Group-2',
-            type: 'Group',
+            type: 'group',
           },
           {
             group: undefined,
             id: '1',
             name: 'Parent Group',
-            type: 'Group',
+            type: 'group',
           },
         ],
       };

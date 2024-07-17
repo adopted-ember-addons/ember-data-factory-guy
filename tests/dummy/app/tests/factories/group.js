@@ -2,7 +2,7 @@ import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define('group', {
   default: {
-    type: 'Group',
+    type: 'group',
     name: (f) => `Group-${f.id}`,
   },
   traits: {

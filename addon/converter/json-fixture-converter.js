@@ -1,5 +1,5 @@
 import { typeOf } from '@ember/utils';
-import { dasherize, underscore } from '@ember/string';
+import { dasherize } from '@ember/string';
 import { isEmptyObject } from '../utils/helper-functions';
 import FixtureConverter from './fixture-converter';
 
@@ -12,8 +12,8 @@ import FixtureConverter from './fixture-converter';
 export default class JSONFixtureConverter extends FixtureConverter {
   constructor(store, options) {
     super(store, options);
-    this.defaultKeyTransformFn = underscore;
-    this.polymorphicTypeTransformFn = underscore;
+    this.defaultKeyTransformFn = dasherize;
+    this.polymorphicTypeTransformFn = dasherize;
   }
 
   /**
