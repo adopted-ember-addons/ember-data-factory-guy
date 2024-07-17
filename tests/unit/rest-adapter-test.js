@@ -471,8 +471,8 @@ module(serializer, function (hooks) {
           id: '1',
           name: 'Comic Times #1',
           includedVillains: [
-            { id: '1', type: 'Villain', name: 'BadGuy#1' },
-            { id: '2', type: 'Villain', name: 'BadGuy#2' },
+            { id: '1', type: 'villain', name: 'BadGuy#1' },
+            { id: '2', type: 'villain', name: 'BadGuy#2' },
           ],
         },
       };
@@ -489,8 +489,8 @@ module(serializer, function (hooks) {
           id: '1',
           name: 'Comic Times #1',
           characters: [
-            { id: '1', type: 'Villain', name: 'BadGuy#1' },
-            { id: '2', type: 'Villain', name: 'BadGuy#2' },
+            { id: '1', type: 'villain', name: 'BadGuy#1' },
+            { id: '2', type: 'villain', name: 'BadGuy#2' },
           ],
         },
       };
@@ -508,8 +508,8 @@ module(serializer, function (hooks) {
           id: '1',
           name: 'Comic Times #1',
           characters: [
-            { id: '1', type: 'Villain', name: 'BadGuy#1' },
-            { id: '2', type: 'Villain', name: 'BadGuy#2' },
+            { id: '1', type: 'villain', name: 'BadGuy#1' },
+            { id: '2', type: 'villain', name: 'BadGuy#2' },
           ],
         },
       };
