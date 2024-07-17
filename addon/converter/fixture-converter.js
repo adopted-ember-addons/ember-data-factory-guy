@@ -3,6 +3,7 @@ import { entries } from '../utils/helper-functions';
 import { typeOf } from '@ember/utils';
 import { getOwner } from '@ember/application';
 import { camelize } from '@ember/string';
+import { macroCondition, dependencySatisfies } from '@embroider/macros';
 
 /**
  Base class for converting the base fixture that factory guy creates to
@@ -259,13 +260,20 @@ export default class FixtureConverter {
   // checks config for attrs option to embedded (always)
   isEmbeddedRelationship(modelName, attr) {
     if (this.store.schema) {
-      const relationshipsDefinition =
-        this.store.schema.relationshipsDefinitionFor({ type: modelName });
-      const relationship =
-        relationshipsDefinition[camelize(attr)] ??
-        relationshipsDefinition[attr];
+      let relationshipsDefinition;
+      if (macroCondition(dependencySatisfies('ember-data', '>=5.3.0'))) {
+        relationshipsDefinition = this.store.schema.fields({ type: modelName });
+      } else {
+        relationshipsDefinition = this.store.schema.relationshipsDefinitionFor({
+          type: modelName,
+        });
+      }
 
-      if (relationship?.options.embedded) {
+      const relationship =
+        relationshipsDefinition[attr] ??
+        relationshipsDefinition[camelize(attr)];
+
+      if (relationship?.options?.embedded) {
         return true;
       }
     }

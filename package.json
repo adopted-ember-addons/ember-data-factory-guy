@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.24.7",
+    "@embroider/macros": "^1.16.5",
     "broccoli-funnel": "^3.0.4",
     "broccoli-merge-trees": "^4.2.0",
     "ember-auto-import": "^2.7.4",
