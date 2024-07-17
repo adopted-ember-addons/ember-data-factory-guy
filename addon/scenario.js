@@ -1,5 +1,5 @@
-import FactoryGuy from 'ember-data-factory-guy';
-import * as fgMethods from 'ember-data-factory-guy';
+import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
+import * as fgMethods from '@eflexsystems/ember-data-factory-guy';
 
 let proxyFx = [
   'make',

@@ -1,15 +1,15 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { param } from 'ember-data-factory-guy/utils/helper-functions';
+import { param } from '@eflexsystems/ember-data-factory-guy/utils/helper-functions';
 import FactoryGuy, {
   make,
   buildList,
   mockFindAll,
   mockQuery,
-} from 'ember-data-factory-guy';
+} from '@eflexsystems/ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
-import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
+import RequestManager from '@eflexsystems/ember-data-factory-guy/mocks/request-manager';
 import { settled } from '@ember/test-helpers';
 
 const serializerType = 'json-api';

@@ -6,7 +6,7 @@ import FactoryGuy, {
   make,
   mockCreate,
   mockFindRecord,
-} from 'ember-data-factory-guy';
+} from '@eflexsystems/ember-data-factory-guy';
 import SharedCommonBehavior from './shared-common-behaviour';
 import SharedAdapterBehaviour from './shared-adapter-behaviour';
 import { inlineSetup } from '../helpers/utility-methods';

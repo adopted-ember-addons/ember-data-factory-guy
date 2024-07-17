@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { build } from 'ember-data-factory-guy';
+import { build } from '@eflexsystems/ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 
 module('FixtureConverter', function (hooks) {

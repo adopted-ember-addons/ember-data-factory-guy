@@ -5,7 +5,7 @@ import {
   makeList,
   mockQuery,
   setupFactoryGuy,
-} from 'ember-data-factory-guy';
+} from '@eflexsystems/ember-data-factory-guy';
 import { setupApplicationTest } from 'ember-qunit';
 import { click, fillIn, visit } from '@ember/test-helpers';
 

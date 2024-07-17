@@ -1,4 +1,4 @@
-import manualSetup from 'ember-data-factory-guy/utils/manual-setup';
+import manualSetup from '@eflexsystems/ember-data-factory-guy/utils/manual-setup';
 
 export default {
   name: 'ember-data-factory-guy',

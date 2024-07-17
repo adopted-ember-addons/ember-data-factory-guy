@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { isEquivalent } from 'ember-data-factory-guy/utils/helper-functions';
+import { isEquivalent } from '@eflexsystems/ember-data-factory-guy/utils/helper-functions';
 
 import FactoryGuy, {
   build,
@@ -15,7 +15,7 @@ import FactoryGuy, {
   mockQueryRecord,
   mockReload,
   mockUpdate,
-} from 'ember-data-factory-guy';
+} from '@eflexsystems/ember-data-factory-guy';
 
 import Profile from 'dummy/models/profile';
 import SuperHero from 'dummy/models/super-hero';

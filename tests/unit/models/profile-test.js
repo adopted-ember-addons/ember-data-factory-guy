@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { setupFactoryGuy, make } from 'ember-data-factory-guy';
+import { setupFactoryGuy, make } from '@eflexsystems/ember-data-factory-guy';
 
 const modelType = 'profile';
 

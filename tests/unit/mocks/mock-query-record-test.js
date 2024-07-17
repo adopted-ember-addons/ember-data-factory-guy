@@ -1,12 +1,12 @@
 import { module, test } from 'qunit';
-import { param } from 'ember-data-factory-guy/utils/helper-functions';
+import { param } from '@eflexsystems/ember-data-factory-guy/utils/helper-functions';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
   build,
   make,
   makeList,
   mockQueryRecord,
-} from 'ember-data-factory-guy';
+} from '@eflexsystems/ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 

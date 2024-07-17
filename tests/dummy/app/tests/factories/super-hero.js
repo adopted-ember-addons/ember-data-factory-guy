@@ -1,4 +1,4 @@
-import FactoryGuy from 'ember-data-factory-guy';
+import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 
 FactoryGuy.define('super-hero', {
   default: {

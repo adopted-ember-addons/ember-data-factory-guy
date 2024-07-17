@@ -4,7 +4,7 @@ import FactoryGuy, {
   makeList,
   mockFindAll,
   setupFactoryGuy,
-} from 'ember-data-factory-guy';
+} from '@eflexsystems/ember-data-factory-guy';
 import { visit } from '@ember/test-helpers';
 
 module('Acceptance | Profiles View', function (hooks) {

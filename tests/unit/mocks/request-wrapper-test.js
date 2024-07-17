@@ -1,8 +1,8 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { mockFindAll, mockQuery } from 'ember-data-factory-guy';
+import { mockFindAll, mockQuery } from '@eflexsystems/ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
-import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
+import RequestManager from '@eflexsystems/ember-data-factory-guy/mocks/request-manager';
 
 const serializerType = 'json-api';
 

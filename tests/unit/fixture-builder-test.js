@@ -1,10 +1,10 @@
 import JSONAPISerializer from '@ember-data/serializer/json-api';
 import RESTSerializer from '@ember-data/serializer/rest';
-import FixtureBuilderFactory from 'ember-data-factory-guy/builder/fixture-builder-factory';
+import FixtureBuilderFactory from '@eflexsystems/ember-data-factory-guy/builder/fixture-builder-factory';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import JSONAPIFixtureBuilder from 'ember-data-factory-guy/builder/jsonapi-fixture-builder';
-import RESTFixtureBuilder from 'ember-data-factory-guy/builder/rest-fixture-builder';
+import JSONAPIFixtureBuilder from '@eflexsystems/ember-data-factory-guy/builder/jsonapi-fixture-builder';
+import RESTFixtureBuilder from '@eflexsystems/ember-data-factory-guy/builder/rest-fixture-builder';
 import { inlineSetup } from '../helpers/utility-methods';
 
 let factory, store;

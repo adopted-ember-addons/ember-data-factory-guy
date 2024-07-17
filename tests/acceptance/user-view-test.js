@@ -7,7 +7,7 @@ import {
   setupFactoryGuy,
   mockFindRecord,
   mockCreate,
-} from 'ember-data-factory-guy';
+} from '@eflexsystems/ember-data-factory-guy';
 import { setupApplicationTest } from 'ember-qunit';
 import { visit, fillIn, click } from '@ember/test-helpers';
 

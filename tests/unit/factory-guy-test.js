@@ -8,12 +8,12 @@ import FactoryGuy, {
   make,
   makeList,
   makeNew,
-} from 'ember-data-factory-guy';
-import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
+} from '@eflexsystems/ember-data-factory-guy';
+import MissingSequenceError from '@eflexsystems/ember-data-factory-guy/missing-sequence-error';
 import sinon from 'sinon';
 import { inlineSetup } from '../helpers/utility-methods';
 import User from 'dummy/models/user';
-import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
+import RequestManager from '@eflexsystems/ember-data-factory-guy/mocks/request-manager';
 
 module('FactoryGuy', function (hooks) {
   setupTest(hooks);

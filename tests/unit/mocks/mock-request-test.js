@@ -6,9 +6,9 @@ import FactoryGuy, {
   mockFindAll,
   mockQueryRecord,
   mockUpdate,
-} from 'ember-data-factory-guy';
+} from '@eflexsystems/ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
-import MockStoreRequest from 'ember-data-factory-guy/mocks/mock-store-request';
+import MockStoreRequest from '@eflexsystems/ember-data-factory-guy/mocks/mock-store-request';
 import sinon from 'sinon';
 
 const serializerType = 'json-api';

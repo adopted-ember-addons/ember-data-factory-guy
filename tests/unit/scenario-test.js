@@ -17,7 +17,7 @@ import {
   mockReload,
   mockUpdate,
   Scenario,
-} from 'ember-data-factory-guy';
+} from '@eflexsystems/ember-data-factory-guy';
 
 module('scenario', function () {
   test('proxies all build/make methods', function (assert) {

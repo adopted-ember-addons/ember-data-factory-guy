@@ -6,7 +6,7 @@ import {
   mockDelete,
   mockFindAll,
   setupFactoryGuy,
-} from 'ember-data-factory-guy';
+} from '@eflexsystems/ember-data-factory-guy';
 import { click, settled, visit } from '@ember/test-helpers';
 
 module('Acceptance | Users Delete', function (hooks) {

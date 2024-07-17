@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { mock } from 'ember-data-factory-guy';
+import { mock } from '@eflexsystems/ember-data-factory-guy';
 import { fetchJSON, inlineSetup } from '../../helpers/utility-methods';
 
 const serializerType = 'json-api';

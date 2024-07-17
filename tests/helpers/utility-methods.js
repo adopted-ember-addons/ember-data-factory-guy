@@ -1,8 +1,8 @@
 import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
 import { typeOf } from '@ember/utils';
-import FactoryGuy, { manualSetup } from 'ember-data-factory-guy';
+import FactoryGuy, { manualSetup } from '@eflexsystems/ember-data-factory-guy';
 import RESTAdapter from '@ember-data/adapter/rest';
-import { param } from 'ember-data-factory-guy/utils/helper-functions';
+import { param } from '@eflexsystems/ember-data-factory-guy/utils/helper-functions';
 import { getContext } from '@ember/test-helpers';
 // TODO: Remove the need for this mixin
 // eslint-disable-next-line ember/no-mixins

@@ -4,7 +4,7 @@ import FactoryGuy, {
   make,
   setupFactoryGuy,
   mockFindRecord,
-} from 'ember-data-factory-guy';
+} from '@eflexsystems/ember-data-factory-guy';
 
 const modelType = 'user';
 

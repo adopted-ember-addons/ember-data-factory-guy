@@ -4,7 +4,7 @@ import FactoryGuy, {
   make,
   makeList,
   makeNew,
-} from 'ember-data-factory-guy';
+} from '@eflexsystems/ember-data-factory-guy';
 
 import User from 'dummy/models/user';
 import BigHat from 'dummy/models/big-hat';

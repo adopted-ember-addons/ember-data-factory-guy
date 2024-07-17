@@ -1,4 +1,4 @@
-import FactoryGuy from 'ember-data-factory-guy';
+import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 // Make sure 'group' factory is loaded or else error is thrown
 // when this factory goes to find it's definition and it's not available
 import './group';
