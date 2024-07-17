@@ -89,7 +89,7 @@ module('MockFindAll', function (hooks) {
     mockFindAll('big-hat').returns({ models: [hat] });
     await FactoryGuy.store.findAll('big-hat');
     await settled();
-    assert.strictEqual(hat.type, 'BigHat'); // default type value
+    assert.strictEqual(hat.type, 'big-hat'); // default type value
   });
 
   test('#get method to access payload', function (assert) {

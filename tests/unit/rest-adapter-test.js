@@ -297,12 +297,12 @@ module(serializer, function (hooks) {
         'big-hats': [
           {
             id: '1',
-            type: 'BigHat',
+            type: 'big-hat',
             shape: 'square',
           },
           {
             id: '2',
-            type: 'BigHat',
+            type: 'big-hat',
             shape: 'square',
           },
         ],
@@ -374,8 +374,8 @@ module(serializer, function (hooks) {
           ],
         },
         'big-hats': [
-          { id: '1', type: 'BigHat' },
-          { id: '2', type: 'BigHat' },
+          { id: '1', type: 'big-hat' },
+          { id: '2', type: 'big-hat' },
         ],
       };
 
@@ -398,8 +398,8 @@ module(serializer, function (hooks) {
           ],
         },
         'big-hats': [
-          { id: '1', type: 'BigHat' },
-          { id: '2', type: 'BigHat' },
+          { id: '1', type: 'big-hat' },
+          { id: '2', type: 'big-hat' },
         ],
       };
 
@@ -423,8 +423,8 @@ module(serializer, function (hooks) {
           ],
         },
         'big-hats': [
-          { id: '1', type: 'BigHat' },
-          { id: '2', type: 'BigHat' },
+          { id: '1', type: 'big-hat' },
+          { id: '2', type: 'big-hat' },
         ],
       };
 
@@ -799,10 +799,10 @@ module(serializer, function (hooks) {
           },
         ],
         'big-hats': [
-          { id: '1', type: 'BigHat' },
-          { id: '2', type: 'BigHat' },
-          { id: '3', type: 'BigHat' },
-          { id: '4', type: 'BigHat' },
+          { id: '1', type: 'big-hat' },
+          { id: '2', type: 'big-hat' },
+          { id: '3', type: 'big-hat' },
+          { id: '4', type: 'big-hat' },
         ],
       };
 
