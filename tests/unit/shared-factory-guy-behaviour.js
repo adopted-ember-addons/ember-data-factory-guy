@@ -296,7 +296,7 @@ SharedBehavior.makeTests = function () {
   test('hasMany associations assigned with ids', function (assert) {
     let project1 = make('project', { id: '1', title: 'Project One' });
     let project2 = make('project', { id: '2', title: 'Project Two' });
-    let user = make('user', { projects: [1, 2] });
+    let user = make('user', { projects: ['1', '2'] });
     assert.strictEqual(project2.user, user);
     assert.strictEqual(user.projects[0], project1);
     assert.strictEqual(user.projects.at(-1).title, 'Project Two');
@@ -304,7 +304,7 @@ SharedBehavior.makeTests = function () {
 
   test('belongsTo association assigned by id', function (assert) {
     let user = make('user', { id: '1' });
-    let project = make('project', { title: 'The Project', user: 1 });
+    let project = make('project', { title: 'The Project', user: '1' });
     assert.strictEqual(project.user, user);
     assert.strictEqual(user.projects[0], project);
     assert.strictEqual(user.projects[0].title, 'The Project');
@@ -314,14 +314,14 @@ SharedBehavior.makeTests = function () {
     make('small-hat', { id: '1' });
     make('big-hat', { id: '2' });
     assert.throws(function () {
-      make('user', { hats: [1, 2] });
+      make('user', { hats: ['1', '2'] });
     });
   });
 
   test('belongsTo association by id throws error if relationship is polymorphic', function (assert) {
     make('hat', { id: '1' });
     assert.throws(function () {
-      make('hat', { hat: 1 });
+      make('hat', { hat: '1' });
     });
   });
 
