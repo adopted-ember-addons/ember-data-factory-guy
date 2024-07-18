@@ -1,6 +1,5 @@
 import { assert } from '@ember/debug';
 import { isPresent, typeOf } from '@ember/utils';
-import { join } from '@ember/runloop';
 import ModelDefinition from './model-definition';
 import FixtureBuilderFactory from './builder/fixture-builder-factory';
 import RequestManager from './mocks/request-manager';
@@ -349,7 +348,7 @@ class FactoryGuy {
         modelName,
         fixture,
       ),
-      model = join(() => this.store.push(data));
+      model = this.store.push(data);
 
     if (definition.hasAfterMake()) {
       definition.applyAfterMake(model, args.opts);
@@ -374,7 +373,7 @@ class FactoryGuy {
 
     delete fixture.id;
 
-    return join(() => this.store.createRecord(modelName, fixture));
+    return this.store.createRecord(modelName, fixture);
   }
 
   /**
