@@ -381,6 +381,9 @@ export default class FixtureConverter {
     // find possibly more embedded fixtures
     const data = this.convertSingle(relationshipType, embeddedFixture);
     if (isEmbedded) {
+      if (relationship.options.polymorphic) {
+        data.type = camelize(relationshipType);
+      }
       return data;
     }
     this.addToIncluded(data, relationshipType);
