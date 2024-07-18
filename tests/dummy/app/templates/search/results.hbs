@@ -1,5 +1,5 @@
 {{#each this.model as |user|}}
-  <SingleUser @user={{user}} />
+  <SingleUser @user={{user}} @onSetProjectTitle={{this.noop}} />
 {{/each}}
 {{#if this.model.errors}}
   <div>Errors {{this.model.message}}</div>

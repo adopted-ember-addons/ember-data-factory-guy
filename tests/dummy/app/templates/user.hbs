@@ -1,5 +1,5 @@
 {{#if this.model}}
-  <SingleUser @user={{this.model}} @createProject={{this.createProject}} @projectTitle={{this.projectTitle}} />
+  <SingleUser @user={{this.model}} @createProject={{this.createProject}} @projectTitle={{this.projectTitle}} @onSetProjectTitle={{this.onSetProjectTitle}} />
 {{else}}
   <div class="error">User not found</div>
 {{/if}}

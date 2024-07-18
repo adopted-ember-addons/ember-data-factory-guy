@@ -11,7 +11,7 @@
   {{/each}}
   </ul>
 
-  <label>Project title<Input class="project-title" @type="textbox" @value={{@projectTitle}} /></label>
+  <label>Project title<input class="project-title" type="text" value={{@projectTitle}} {{on 'input' @onSetProjectTitle}} /></label>
   {{#if @createProject}}
     <button class="add-project" type="button" {{on "click" (fn @createProject @user @projectTitle)}}>Add Project</button>
   {{/if}}

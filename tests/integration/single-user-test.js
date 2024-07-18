@@ -13,9 +13,13 @@ module(
     test('shows user information', async function (assert) {
       let user = make('user', { name: 'Rob' });
 
-      this.setProperties({ user, createProject: () => {} });
+      this.setProperties({
+        user,
+        createProject: () => {},
+        onSetProjectTitle: () => {},
+      });
       await render(
-        hbs`<SingleUser @user={{this.user}} @createProject={{this.createProject}} />`,
+        hbs`<SingleUser @user={{this.user}} @createProject={{this.createProject}} @onSetProjectTitle={{this.onSetProjectTitle}} />`,
       );
 
       assert.dom('.name').containsText(user.name);

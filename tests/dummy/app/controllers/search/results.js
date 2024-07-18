@@ -1,4 +1,5 @@
 import Controller from '@ember/controller';
+import { action } from '@ember/object';
 
 export default class extends Controller {
   get previousPage() {
@@ -8,4 +9,7 @@ export default class extends Controller {
   get nextPage() {
     return this.model.meta?.next;
   }
+
+  @action
+  noop() {}
 }
