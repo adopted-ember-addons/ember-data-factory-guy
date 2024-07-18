@@ -1,6 +1,10 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { mock, setupFactoryGuy, getPretender } from '@eflexsystems/ember-data-factory-guy';
+import {
+  mock,
+  setupFactoryGuy,
+  getPretender,
+} from '@eflexsystems/ember-data-factory-guy';
 import Pretender from 'pretender';
 
 module('Unit | getPretender', function (hooks) {

@@ -1,6 +1,9 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import FactoryGuy, { make, mockDelete } from '@eflexsystems/ember-data-factory-guy';
+import FactoryGuy, {
+  make,
+  mockDelete,
+} from '@eflexsystems/ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
