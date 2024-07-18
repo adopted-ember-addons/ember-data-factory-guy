@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.24.7",
+    "@ember/string": "^3.0.1",
     "@embroider/macros": "^1.16.5",
     "broccoli-funnel": "^3.0.4",
     "broccoli-merge-trees": "^4.2.0",
@@ -49,7 +50,6 @@
     "@babel/eslint-parser": "^7.24.7",
     "@babel/plugin-proposal-decorators": "^7.24.7",
     "@ember/optional-features": "^2.1.0",
-    "@ember/string": "^3.0.1",
     "@ember/test-helpers": "^3.3.0",
     "@embroider/test-setup": "^3.0.3",
     "@glimmer/component": "^1.1.2",
