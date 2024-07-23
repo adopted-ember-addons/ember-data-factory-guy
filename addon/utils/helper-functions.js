@@ -215,7 +215,7 @@ export const excludeRegex = /\.(jscs|jshint)$/i;
  * @returns {Array}
  */
 export function requireFiles(filePattern) {
-  let filesSeen = Object.keys(requirejs._eak_seen);
+  let filesSeen = Object.keys(requirejs.entries);
 
   return filesSeen
     .filter(
