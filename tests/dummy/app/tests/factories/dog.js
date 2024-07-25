@@ -3,7 +3,7 @@ import { sound as mooSound } from '../helpers/moo';
 
 const defaultVolume = 'Normal';
 
-FactoryGuy.define('dog', {
+export default FactoryGuy.define('dog', {
   default: {
     dogNumber: (f) => `Dog${f.id}`,
     sound: (f) => `${f.volume || defaultVolume} Woof`,

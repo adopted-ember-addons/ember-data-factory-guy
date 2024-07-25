@@ -1,6 +1,6 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 
-FactoryGuy.define('name', {
+export default FactoryGuy.define('name', {
   default: {
     firstName: 'Tyrion',
     lastName: 'Lannister',

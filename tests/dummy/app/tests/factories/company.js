@@ -1,6 +1,6 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 
-FactoryGuy.define('company', {
+export default FactoryGuy.define('company', {
   default: {
     type: 'Company',
     name: 'Silly corp',

@@ -6,10 +6,11 @@ import FactoryGuy, {
   setupFactoryGuy,
 } from '@eflexsystems/ember-data-factory-guy';
 import { visit } from '@ember/test-helpers';
+import * as factories from 'dummy/tests/factories';
 
 module('Acceptance | Profiles View', function (hooks) {
   setupApplicationTest(hooks);
-  setupFactoryGuy(hooks);
+  setupFactoryGuy(hooks, factories);
 
   test('Handles differently cased attributes', async function (assert) {
     let description = 'mylittlepony',

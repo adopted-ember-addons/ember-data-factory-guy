@@ -1,6 +1,6 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 
-FactoryGuy.define('outfit', {
+export default FactoryGuy.define('outfit', {
   sequences: {
     name: (num) => `Outfit-${num}`,
   },

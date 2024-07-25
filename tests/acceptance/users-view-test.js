@@ -7,10 +7,11 @@ import {
   setupFactoryGuy,
 } from '@eflexsystems/ember-data-factory-guy';
 import { visit } from '@ember/test-helpers';
+import * as factories from 'dummy/tests/factories';
 
 module('Acceptance | Users View', function (hooks) {
   setupApplicationTest(hooks);
-  setupFactoryGuy(hooks);
+  setupFactoryGuy(hooks, factories);
 
   test('Show users by using mockFindAll to create default users', async function (assert) {
     mockFindAll('user', 3);

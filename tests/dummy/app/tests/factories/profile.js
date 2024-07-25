@@ -1,6 +1,6 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 
-FactoryGuy.define('profile', {
+export default FactoryGuy.define('profile', {
   default: {
     description: 'Text goes here',
     camelCaseDescription: 'textGoesHere',

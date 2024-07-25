@@ -1,6 +1,6 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 
-FactoryGuy.define('manager', {
+export default FactoryGuy.define('manager', {
   default: {
     name: FactoryGuy.belongsTo('name'),
   },

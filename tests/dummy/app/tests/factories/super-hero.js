@@ -1,6 +1,6 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 
-FactoryGuy.define('super-hero', {
+export default FactoryGuy.define('super-hero', {
   default: {
     name: 'GoodGuy',
     type: 'SuperHero',

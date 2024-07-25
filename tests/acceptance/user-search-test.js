@@ -8,10 +8,11 @@ import {
 } from '@eflexsystems/ember-data-factory-guy';
 import { setupApplicationTest } from 'ember-qunit';
 import { click, fillIn, visit } from '@ember/test-helpers';
+import * as factories from 'dummy/tests/factories';
 
 module('Acceptance | User Search', function (hooks) {
   setupApplicationTest(hooks);
-  setupFactoryGuy(hooks);
+  setupFactoryGuy(hooks, factories);
 
   var search = async function (name) {
     await fillIn('input.user-name', name);

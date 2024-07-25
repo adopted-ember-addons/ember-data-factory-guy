@@ -3,7 +3,7 @@ import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 // when this factory goes to find it's definition and it's not available
 import './group';
 
-FactoryGuy.define('big-group', {
+export default FactoryGuy.define('big-group', {
   extends: 'group',
   sequences: {
     // this 'name' sequence will override the parent's 'name' sequence

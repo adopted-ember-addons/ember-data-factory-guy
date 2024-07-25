@@ -1,6 +1,6 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 
-FactoryGuy.define('cat', {
+export default FactoryGuy.define('cat', {
   polymorphic: false,
   default: {
     // usually, an attribute named 'type' is for polymorphic models, but the definition

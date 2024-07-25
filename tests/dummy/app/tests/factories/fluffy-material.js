@@ -1,6 +1,6 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 
-FactoryGuy.define('fluffy-material', {
+export default FactoryGuy.define('fluffy-material', {
   default: {
     name: 'fluffy material',
   },

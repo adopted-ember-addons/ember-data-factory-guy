@@ -5,12 +5,13 @@ import FactoryGuy, {
   setupFactoryGuy,
   mockFindRecord,
 } from '@eflexsystems/ember-data-factory-guy';
+import * as factories from 'dummy/tests/factories';
 
 const modelType = 'user';
 
 module(`Unit | Model | ${modelType}`, function (hooks) {
   setupTest(hooks);
-  setupFactoryGuy(hooks);
+  setupFactoryGuy(hooks, factories);
 
   test('has funny name', function (assert) {
     let user = make('user', { name: 'Dude' });

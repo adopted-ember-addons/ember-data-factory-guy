@@ -1,6 +1,6 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 
-FactoryGuy.define('employee', {
+export default FactoryGuy.define('employee', {
   default: {
     name: FactoryGuy.belongsTo('name'),
     titles: ['Mr.', 'Dr.'],

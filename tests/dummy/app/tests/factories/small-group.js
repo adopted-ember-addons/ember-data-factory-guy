@@ -1,7 +1,7 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 import './group';
 
-FactoryGuy.define('small-group', {
+export default FactoryGuy.define('small-group', {
   extends: 'group',
   sequences: {
     name: function (num) {

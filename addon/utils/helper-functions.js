@@ -1,6 +1,4 @@
-/* global requirejs */
 import { typeOf } from '@ember/utils';
-import require from 'require';
 
 const plusRegex = new RegExp('\\+', 'g');
 
@@ -190,25 +188,4 @@ export function parseUrl(url) {
     {};
 
   return [urlPart, params];
-}
-
-// always exclude jshint or jscs files
-export const excludeRegex = /\.(jscs|jshint)$/i;
-
-/**
- * Find files that have been seen by some tree in the application
- * and require them. Always exclude jshint and jscs files
- *
- * @param filePattern
- * @returns {Array}
- */
-export function requireFiles(filePattern) {
-  let filesSeen = Object.keys(requirejs.entries);
-
-  return filesSeen
-    .filter(
-      (moduleName) =>
-        filePattern.test(moduleName) && !excludeRegex.test(moduleName),
-    )
-    .map((moduleName) => require(moduleName, null, null, true));
 }

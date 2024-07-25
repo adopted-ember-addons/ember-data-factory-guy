@@ -1,6 +1,6 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 
-FactoryGuy.define('property', {
+export default FactoryGuy.define('property', {
   default: {
     name: 'Silly property',
   },

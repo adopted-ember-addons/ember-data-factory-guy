@@ -1,6 +1,6 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 
-FactoryGuy.define('comic-book', {
+export default FactoryGuy.define('comic-book', {
   default: {
     name: (f) => `Comic Times #${f.id}`,
   },

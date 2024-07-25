@@ -74,7 +74,9 @@ class FactoryGuy {
    @param {Object} config your model definition
    */
   define(model, config) {
-    globalThis.modelDefinitions[model] = new ModelDefinition(model, config);
+    const def = new ModelDefinition(model, config);
+    globalThis.modelDefinitions[model] = def;
+    return def;
   }
 
   /*

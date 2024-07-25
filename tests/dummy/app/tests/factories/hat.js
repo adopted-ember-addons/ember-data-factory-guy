@@ -1,6 +1,6 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 
-FactoryGuy.define('hat', {
+export default FactoryGuy.define('hat', {
   traits: {
     big: { type: 'small-hat' },
     small: { type: 'big-hat' },
