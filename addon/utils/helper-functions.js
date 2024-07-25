@@ -28,18 +28,6 @@ export function toParams(obj) {
   return parseParms(decodeURIComponent(param(obj)));
 }
 
-/**
- * Iterator for object key, values
- *
- * @public
- * @param obj
- */
-export function* entries(obj) {
-  for (let key of Object.keys(obj)) {
-    yield [key, obj[key]];
-  }
-}
-
 export function param(obj, prefix) {
   let str = [],
     p;
