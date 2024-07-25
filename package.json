@@ -42,6 +42,7 @@
     "ember-auto-import": "^2.7.4",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
+    "ember-inflector": "^5.0.0",
     "pretender": "^3.4.3",
     "resolve": "^1.20.0"
   },
@@ -67,7 +68,6 @@
     "ember-cli-terser": "^4.0.2",
     "ember-data": "~5.3.8",
     "ember-fetch": "^8.1.1",
-    "ember-inflector": "^4.0.3",
     "ember-load-initializers": "^2.1.2",
     "ember-qunit": "^8.1.0",
     "ember-resolver": "^12.0.1",
