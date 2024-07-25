@@ -437,7 +437,7 @@ module('FactoryGuy', function (hooks) {
 
   module('FactoryGuy#define', function () {
     test('default values and sequences are inherited', function (assert) {
-      FactoryGuy.define('person', {
+      const Person = FactoryGuy.define('person', {
         sequences: {
           personName: (i) => `person #${i}`,
         },
@@ -448,14 +448,14 @@ module('FactoryGuy', function (hooks) {
       });
 
       FactoryGuy.define('philosopher', {
-        extends: 'person',
+        extends: Person,
         default: {
           style: 'thinker',
         },
       });
 
-      FactoryGuy.define('stoner', {
-        extends: 'person',
+      const Stoner = FactoryGuy.define('stoner', {
+        extends: Person,
         sequences: {
           personName: (i) => `stoner #${i}`,
         },
@@ -465,7 +465,7 @@ module('FactoryGuy', function (hooks) {
       });
 
       FactoryGuy.define('cool-stoner', {
-        extends: 'stoner',
+        extends: Stoner,
         sequences: {
           personName: (i) => `cool stoner #${i}`,
         },
@@ -534,14 +534,14 @@ module('FactoryGuy', function (hooks) {
     });
 
     test('traits are inherited', function (assert) {
-      FactoryGuy.define('person', {
+      const Person = FactoryGuy.define('person', {
         traits: {
           lazy_style: { style: 'Super Lazy' },
         },
       });
 
       FactoryGuy.define('stoner', {
-        extends: 'person',
+        extends: Person,
         traits: {
           real_name: { name: 'Stoned Guy' },
         },
@@ -563,7 +563,7 @@ module('FactoryGuy', function (hooks) {
     });
 
     test('named types are not inherited', function (assert) {
-      FactoryGuy.define('person', {
+      const Person = FactoryGuy.define('person', {
         sequences: {
           personType: function (num) {
             return 'person type #' + num;
@@ -575,7 +575,7 @@ module('FactoryGuy', function (hooks) {
       });
 
       FactoryGuy.define('stoner', {
-        extends: 'person',
+        extends: Person,
         bif: {
           name: 'Bif',
         },

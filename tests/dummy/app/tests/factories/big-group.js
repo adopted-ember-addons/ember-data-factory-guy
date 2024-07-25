@@ -1,10 +1,10 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
 // Make sure 'group' factory is loaded or else error is thrown
 // when this factory goes to find it's definition and it's not available
-import './group';
+import Group from './group';
 
 export default FactoryGuy.define('big-group', {
-  extends: 'group',
+  extends: Group,
   sequences: {
     // this 'name' sequence will override the parent's 'name' sequence
     name: function (num) {

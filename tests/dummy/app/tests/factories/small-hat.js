@@ -1,8 +1,8 @@
 import FactoryGuy from '@eflexsystems/ember-data-factory-guy';
-import './hat';
+import Hat from './hat';
 
 export default FactoryGuy.define('small-hat', {
-  extends: 'hat',
+  extends: Hat,
   default: {
     type: 'small-hat',
   },

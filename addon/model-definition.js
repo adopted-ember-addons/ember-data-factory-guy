@@ -244,15 +244,7 @@ class ModelDefinition {
   }
 
   mergeConfig(config) {
-    let extending = config.extends;
-    let definition = FactoryGuy.findModelDefinition(extending);
-    assert(
-      `[ember-data-factory-guy] You are trying to extend [${this.modelName}] with [ ${extending} ].
-      But FactoryGuy can't find that definition [ ${extending} ]
-      you are trying to extend. Make sure it was created/imported before
-      you define [ ${this.modelName} ]`,
-      definition,
-    );
+    let definition = config.extends;
     this.merge(config, definition);
   }
 
