@@ -4,7 +4,7 @@ import ModelDefinition from './model-definition';
 import FixtureBuilderFactory from './builder/fixture-builder-factory';
 import RequestManager from './mocks/request-manager';
 
-let modelDefinitions = {};
+globalThis.modelDefinitions = {};
 
 class FactoryGuy {
   /**
@@ -74,7 +74,7 @@ class FactoryGuy {
    @param {Object} config your model definition
    */
   define(model, config) {
-    modelDefinitions[model] = new ModelDefinition(model, config);
+    globalThis.modelDefinitions[model] = new ModelDefinition(model, config);
   }
 
   /*
@@ -82,11 +82,11 @@ class FactoryGuy {
    @returns {ModelDefinition} if there is one matching that name
    */
   findModelDefinition(model) {
-    return modelDefinitions[model];
+    return globalThis.modelDefinitions[model];
   }
 
   getModelDefinitions() {
-    return modelDefinitions;
+    return globalThis.modelDefinitions;
   }
 
   /**
@@ -457,8 +457,8 @@ class FactoryGuy {
    Reset the id sequence for the models back to zero.
    */
   resetDefinitions() {
-    for (let model in modelDefinitions) {
-      let definition = modelDefinitions[model];
+    for (let model in globalThis.modelDefinitions) {
+      let definition = globalThis.modelDefinitions[model];
       definition.reset();
     }
   }
@@ -596,8 +596,8 @@ class FactoryGuy {
    */
   static lookupDefinitionForFixtureName(name, assertItExists = false) {
     let definition;
-    for (let model in modelDefinitions) {
-      definition = modelDefinitions[model];
+    for (let model in globalThis.modelDefinitions) {
+      definition = globalThis.modelDefinitions[model];
       if (definition.matchesName(name)) {
         return definition;
       }
