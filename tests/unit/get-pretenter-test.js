@@ -6,11 +6,10 @@ import {
   getPretender,
 } from '@eflexsystems/ember-data-factory-guy';
 import Pretender from 'pretender';
-import * as factories from 'dummy/tests/factories';
 
 module('Unit | getPretender', function (hooks) {
   setupTest(hooks);
-  setupFactoryGuy(hooks, factories);
+  setupFactoryGuy(hooks);
 
   test('getPretender basic usage', function (assert) {
     let pretender = getPretender();

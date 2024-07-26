@@ -10,13 +10,12 @@ import {
 } from '@eflexsystems/ember-data-factory-guy';
 import { setupApplicationTest } from 'ember-qunit';
 import { visit, fillIn, click } from '@ember/test-helpers';
-import * as factories from 'dummy/tests/factories';
 
 // NOTE
 // New ember-qunit and qunit-dom style of testing
 module('Acceptance | User View', function (hooks) {
   setupApplicationTest(hooks);
-  setupFactoryGuy(hooks, factories);
+  setupFactoryGuy(hooks);
 
   test('Show user by make(ing) a model and using returns with that model', async function (assert) {
     // if you need to test computed properties on projects or users this is best bet

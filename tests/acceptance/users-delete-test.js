@@ -8,11 +8,10 @@ import {
   setupFactoryGuy,
 } from '@eflexsystems/ember-data-factory-guy';
 import { click, settled, visit } from '@ember/test-helpers';
-import * as factories from 'dummy/tests/factories';
 
 module('Acceptance | Users Delete', function (hooks) {
   setupApplicationTest(hooks);
-  setupFactoryGuy(hooks, factories);
+  setupFactoryGuy(hooks);
 
   test('Deleting any user with modelName', async function (assert) {
     mockFindAll('user', 2);
