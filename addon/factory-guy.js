@@ -4,7 +4,7 @@ import ModelDefinition from './model-definition';
 import FixtureBuilderFactory from './builder/fixture-builder-factory';
 import RequestManager from './mocks/request-manager';
 
-globalThis.modelDefinitions = {};
+globalThis.modelDefinitions ??= {};
 
 class FactoryGuy {
   /**
