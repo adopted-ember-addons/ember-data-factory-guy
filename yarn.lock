@@ -8134,7 +8134,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ember-auto-import@npm:^1.11.2":
+"ember-auto-import@npm:^1.11.3":
   version: 1.12.2
   resolution: "ember-auto-import@npm:1.12.2"
   dependencies:
@@ -8705,7 +8705,7 @@ __metadata:
     broccoli-asset-rev: "npm:^3.0.0"
     broccoli-funnel: "npm:^3.0.4"
     broccoli-merge-trees: "npm:^4.2.0"
-    ember-auto-import: "npm:^1.11.2"
+    ember-auto-import: "npm:^1.11.3"
     ember-cli: "npm:~3.28.0"
     ember-cli-babel: "npm:^7.26.6"
     ember-cli-dependency-checker: "npm:^3.2.0"
