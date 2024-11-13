@@ -36,7 +36,7 @@
     "@embroider/macros": "^1.13.3",
     "broccoli-funnel": "^3.0.4",
     "broccoli-merge-trees": "^4.2.0",
-    "ember-auto-import": "^1.11.3",
+    "ember-auto-import": "^2.10.0",
     "ember-cli-babel": "^7.26.6",
     "ember-cli-htmlbars": "^5.7.1",
     "fake-xml-http-request": "^2.1.2",
@@ -54,7 +54,6 @@
     "active-model-adapter": "^3.0.1",
     "babel-eslint": "^10.1.0",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-auto-import": "^1.11.2",
     "ember-cli": "~3.28.0",
     "ember-cli-dependency-checker": "^3.2.0",
     "ember-cli-deprecation-workflow": "^1.0.1",
@@ -89,7 +88,8 @@
     "prettier": "^2.3.2",
     "qunit": "^2.16.0",
     "qunit-dom": "^1.6.0",
-    "release-plan": "^0.10.0"
+    "release-plan": "^0.10.0",
+    "webpack": "^5.96.1"
   },
   "peerDependencies": {
     "active-model-adapter": "*",
