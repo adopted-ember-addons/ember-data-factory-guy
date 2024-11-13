@@ -35,8 +35,10 @@
     "ember-auto-import": "^1.11.3",
     "ember-cli-babel": "^7.26.6",
     "ember-cli-htmlbars": "^5.7.1",
+    "fake-xml-http-request": "^2.1.2",
     "pretender": "^3.4.3",
     "resolve": "^1.20.0",
+    "route-recognizer": "^0.3.4",
     "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
@@ -71,7 +73,7 @@
     "ember-source-channel-url": "^3.0.0",
     "ember-template-lint": "^3.6.0",
     "ember-test-selectors": "^6.0.0",
-    "ember-try": "^1.4.0",
+    "ember-try": "^3.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-ember": "^10.5.4",
@@ -87,9 +89,9 @@
     "release-it-lerna-changelog": "^3.1.0"
   },
   "peerDependencies": {
+    "active-model-adapter": "*",
     "ember-data-model-fragments": "*",
-    "ember-django-adapter": "*",
-    "active-model-adapter": "*"
+    "ember-django-adapter": "*"
   },
   "peerDependenciesMeta": {
     "ember-data-model-fragments": {
@@ -132,5 +134,6 @@
       "release": true,
       "tokenRef": "GITHUB_AUTH"
     }
-  }
+  },
+  "packageManager": "pnpm@7.33.7+sha512.7afe2410642b39c698df46da4ce5c7231a5cce360698d69f8cf8f42257d40b3e43f231053b07b8de849fd4ffbf4a71ff57b835137777a352388f3d3da747200e"
 }
