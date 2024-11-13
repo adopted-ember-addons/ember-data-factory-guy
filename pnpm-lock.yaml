@@ -3,6 +3,11 @@ lockfileVersion: 5.4
 overrides:
   ember-data: 3.24.2
 
+patchedDependencies:
+  release-plan@0.10.0:
+    hash: w2tbxlb4xjhktuo4zcvzsiaele
+    path: patches/release-plan@0.10.0.patch
+
 specifiers:
   '@ember/optional-features': ^2.0.0
   '@ember/test-helpers': ^2.4.2
@@ -54,7 +59,7 @@ specifiers:
   prettier: ^2.3.2
   qunit: ^2.16.0
   qunit-dom: ^1.6.0
-  release-plan: ^0.9.0
+  release-plan: ^0.10.0
   resolve: ^1.20.0
   route-recognizer: ^0.3.4
   whatwg-fetch: ^3.6.2
@@ -115,7 +120,7 @@ devDependencies:
   prettier: 2.8.8
   qunit: 2.22.0
   qunit-dom: 1.6.0
-  release-plan: 0.9.2
+  release-plan: 0.10.0_w2tbxlb4xjhktuo4zcvzsiaele
 
 packages:
 
@@ -10866,8 +10871,8 @@ packages:
     dependencies:
       jsesc: 3.0.2
 
-  /release-plan/0.9.2:
-    resolution: {integrity: sha512-KSK81V5vPNeKgRcfQftG1DL/ZAX7V+NNp/Y/LNIbYrCUs6AmgLioThz71O2AcDTCwndyEanq1VjuF4oJmpAJXg==}
+  /release-plan/0.10.0_w2tbxlb4xjhktuo4zcvzsiaele:
+    resolution: {integrity: sha512-q5aZ/ED/VB2udzIFVaj9Kfsj/wLZluw7kZV7eiYp5zHX/LJrofFl7bOX7u6nQV14O9UjHDYcdQEE/NRXVK68ZA==}
     hasBin: true
     dependencies:
       '@manypkg/get-packages': 2.2.2
@@ -10889,6 +10894,7 @@ packages:
       - encoding
       - supports-color
     dev: true
+    patched: true
 
   /remote-git-tags/3.0.0:
     resolution: {integrity: sha512-C9hAO4eoEsX+OXA4rla66pXZQ+TLQ8T9dttgQj18yuKlPMTVkIkdYXvlMC55IuUsIkV6DpmQYi10JKFLaU+l7w==}
