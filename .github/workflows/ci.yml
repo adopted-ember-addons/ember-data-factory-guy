@@ -88,9 +88,18 @@ jobs:
     - name: Install Dependencies
       run: pnpm install --frozen-lockfile
     - name: Test
+      id: test
       env:
         EMBER_TRY_SCENARIO: ${{ matrix.ember-try-scenario }}
       run: pnpm ember try:one $EMBER_TRY_SCENARIO
+      continue-on-error: ${{ matrix.allow-failure }}
+    - uses: mainmatter/continue-on-error-comment@v1
+      if: ${{ matrix.allow-failure }}
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        outcome: ${{ steps.test.outcome }}
+        test-id: ${{ matrix.ember-try-scenario }}
+
 
   floating-dependencies:
     name: Floating Dependencies
