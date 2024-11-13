@@ -1,5 +1,25 @@
 # Changelog
 
+## Release (2024-11-13)
+
+ember-data-factory-guy 4.0.0-alpha.3 (major)
+
+#### :boom: Breaking Change
+* `ember-data-factory-guy`
+  * [#498](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/498) update ember-auto-import to v2 ([@mansona](https://github.com/mansona))
+
+#### :bug: Bug Fix
+* `ember-data-factory-guy`
+  * [#494](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/494) swap to pnpm and fix undeclared dependencies ([@mansona](https://github.com/mansona))
+
+#### :house: Internal
+* `ember-data-factory-guy`
+  * [#497](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/497) have release-plan do a prerelease from main ([@mansona](https://github.com/mansona))
+  * [#495](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/495) start using release-plan ([@mansona](https://github.com/mansona))
+
+#### Committers: 1
+- Chris Manson ([@mansona](https://github.com/mansona))
+
 ## v4.0.0-alpha.2 (2023-11-14)
 
 #### :house: Internal

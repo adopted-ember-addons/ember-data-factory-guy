@@ -1,0 +1,25 @@
+{
+  "solution": {
+    "ember-data-factory-guy": {
+      "impact": "major",
+      "oldVersion": "4.0.0-alpha.2",
+      "newVersion": "4.0.0-alpha.3",
+      "constraints": [
+        {
+          "impact": "major",
+          "reason": "Appears in changelog section :boom: Breaking Change"
+        },
+        {
+          "impact": "patch",
+          "reason": "Appears in changelog section :bug: Bug Fix"
+        },
+        {
+          "impact": "patch",
+          "reason": "Appears in changelog section :house: Internal"
+        }
+      ],
+      "pkgJSONPath": "./package.json"
+    }
+  },
+  "description": "## Release (2024-11-13)\n\nember-data-factory-guy 4.0.0-alpha.3 (major)\n\n#### :boom: Breaking Change\n* `ember-data-factory-guy`\n  * [#498](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/498) update ember-auto-import to v2 ([@mansona](https://github.com/mansona))\n\n#### :bug: Bug Fix\n* `ember-data-factory-guy`\n  * [#494](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/494) swap to pnpm and fix undeclared dependencies ([@mansona](https://github.com/mansona))\n\n#### :house: Internal\n* `ember-data-factory-guy`\n  * [#497](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/497) have release-plan do a prerelease from main ([@mansona](https://github.com/mansona))\n  * [#495](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/495) start using release-plan ([@mansona](https://github.com/mansona))\n\n#### Committers: 1\n- Chris Manson ([@mansona](https://github.com/mansona))\n"
+}
