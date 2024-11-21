@@ -53,10 +53,10 @@ module('MockCreate', function (hooks) {
     let user1 = build('user');
     let user2 = build('user');
 
+    mockCreate('user').returns({ attrs: { id: user2.get('id') } });
     mockCreate('user')
       .returns({ attrs: { id: user1.get('id') } })
       .singleUse();
-    mockCreate('user').returns({ attrs: { id: user2.get('id') } });
 
     let model1 = FactoryGuy.store.createRecord('user', user1.get());
     await model1.save();
