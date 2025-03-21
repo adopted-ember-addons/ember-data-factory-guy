@@ -1,5 +1,16 @@
 # Changelog
 
+## Release (2025-03-21)
+
+ember-data-factory-guy 4.0.0-alpha.4 (patch)
+
+#### :bug: Bug Fix
+* `ember-data-factory-guy`
+  * [#499](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/499) Swap relationship.key for relationship.name to fix support w/ ember-data 4.13+ ([@nickschot](https://github.com/nickschot))
+
+#### Committers: 1
+- Nick Schot ([@nickschot](https://github.com/nickschot))
+
 ## Release (2024-11-13)
 
 ember-data-factory-guy 4.0.0-alpha.3 (major)
