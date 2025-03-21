@@ -117,7 +117,7 @@ export default class FixtureConverter {
         (parentType && parentType.modelName) ||
         relationship.type,
       transformFn = this.getTransformKeyFunction(type, 'Relationship');
-    return transformFn(relationship.key, relationship.kind);
+    return transformFn(relationship.name, relationship.kind);
   }
 
   getRelationshipType(relationship, fixture) {
@@ -283,13 +283,13 @@ export default class FixtureConverter {
    @param relationships
    */
   extractBelongsTo(fixture, relationship, parentModelName, relationships) {
-    let belongsToRecord = fixture[relationship.key],
+    let belongsToRecord = fixture[relationship.name],
       isEmbedded = this.isEmbeddedRelationship(
         parentModelName,
-        relationship.key
+        relationship.name
       ),
       relationshipKey = isEmbedded
-        ? relationship.key
+        ? relationship.name
         : this.transformRelationshipKey(relationship);
 
     let data = this.extractSingleRecord(
@@ -318,11 +318,11 @@ export default class FixtureConverter {
   }
 
   extractHasMany(fixture, relationship, parentModelName, relationships) {
-    let hasManyRecords = fixture[relationship.key],
+    let hasManyRecords = fixture[relationship.name],
       relationshipKey = this.transformRelationshipKey(relationship),
       isEmbedded = this.isEmbeddedRelationship(
         parentModelName,
-        relationship.key
+        relationship.name
       );
 
     if (hasManyRecords && hasManyRecords.isProxy) {
