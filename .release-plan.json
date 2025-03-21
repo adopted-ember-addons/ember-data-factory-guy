@@ -1,17 +1,17 @@
 {
   "solution": {
     "ember-data-factory-guy": {
-      "impact": "patch",
-      "oldVersion": "4.0.0-alpha.3",
-      "newVersion": "4.0.0-alpha.4",
+      "impact": "minor",
+      "oldVersion": "4.0.0-alpha.4",
+      "newVersion": "4.0.0",
       "constraints": [
         {
-          "impact": "patch",
-          "reason": "Appears in changelog section :bug: Bug Fix"
+          "impact": "minor",
+          "reason": "Appears in changelog section :rocket: Enhancement"
         }
       ],
       "pkgJSONPath": "./package.json"
     }
   },
-  "description": "## Release (2025-03-21)\n\nember-data-factory-guy 4.0.0-alpha.4 (patch)\n\n#### :bug: Bug Fix\n* `ember-data-factory-guy`\n  * [#499](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/499) Swap relationship.key for relationship.name to fix support w/ ember-data 4.13+ ([@nickschot](https://github.com/nickschot))\n\n#### Committers: 1\n- Nick Schot ([@nickschot](https://github.com/nickschot))\n"
+  "description": "## Release (2025-03-21)\n\nember-data-factory-guy 4.0.0 (minor)\n\n#### :rocket: Enhancement\n* `ember-data-factory-guy`\n  * [#501](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/501) stop publishing pre-releases ([@mansona](https://github.com/mansona))\n\n#### Committers: 1\n- Chris Manson ([@mansona](https://github.com/mansona))\n"
 }
