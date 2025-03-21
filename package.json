@@ -120,13 +120,6 @@
   "ember-addon": {
     "configPath": "tests/dummy/config"
   },
-  "release-plan": {
-    "semverIncrementAs": {
-      "major": "prerelease",
-      "minor": "prerelease",
-      "patch": "prerelease"
-    }
-  },
   "pnpm": {
     "patchedDependencies": {
       "release-plan@0.10.0": "patches/release-plan@0.10.0.patch"
