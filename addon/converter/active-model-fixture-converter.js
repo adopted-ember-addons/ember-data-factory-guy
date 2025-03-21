@@ -17,7 +17,7 @@ export default class AMSFixtureConverter extends RESTFixtureConverter {
         relationship.type,
         'Relationship'
       );
-      return transformFn(relationship.key, relationship.kind);
+      return transformFn(relationship.name, relationship.kind);
     } else {
       return super.transformRelationshipKey(relationship);
     }
