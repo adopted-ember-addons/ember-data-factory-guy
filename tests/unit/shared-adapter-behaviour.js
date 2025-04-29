@@ -1654,7 +1654,12 @@ SharedBehavior.mockUpdateWithErrorMessages = function () {
 
       mockUpdate(profile).fails({
         status: 400,
-        response: { errors: { description: ['invalid data'] } },
+        /* ember-data 3.28 -> 4.x rest adapter normalizeErrorResponse only passes on string response value as 'detail'
+         * ember-data 5.0 fixes this, but we cannot use it yet https://github.com/emberjs/data/pull/8621
+         * Just use a primitive value in the meantime.
+         */
+        // response: { errors: { description: ['invalid data'] } },
+        response: 'invalid data',
         convertErrors: false,
       });
 
@@ -1662,7 +1667,8 @@ SharedBehavior.mockUpdateWithErrorMessages = function () {
       await profile.save().catch(function (reason) {
         let errors = reason.errors;
         assert.equal(
-          errors.description,
+          errors[0].detail,
+          // errors.description,
           'invalid data',
           'custom description shows up in errors'
         );
