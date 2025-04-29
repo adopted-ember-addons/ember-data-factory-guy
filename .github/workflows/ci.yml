@@ -72,7 +72,7 @@ jobs:
         allow-failure: [false]
         include:
           - ember-try-scenario: ember-release
-            allow-failure: true
+            allow-failure: false
           - ember-try-scenario: ember-beta
             allow-failure: true
           - ember-try-scenario: ember-canary
