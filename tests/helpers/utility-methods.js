@@ -9,9 +9,6 @@ import ActiveModelAdapter, {
 } from 'active-model-adapter';
 import { param } from 'ember-data-factory-guy/utils/helper-functions';
 import { getContext } from '@ember/test-helpers';
-// TODO: Remove the need for this mixin
-// eslint-disable-next-line ember/no-mixins
-import AdapterFetch from 'ember-fetch/mixins/adapter-fetch';
 
 export function fetchJSON({ url, params, method = 'GET' } = {}) {
   let body = '';
@@ -137,7 +134,7 @@ export function containerSetup(application, serializerType) {
       });
     }
     adapter = application.lookup('adapter:' + adapterType);
-    adapter = adapter.reopen(AdapterFetch);
+    adapter = adapter.reopen();
 
     serializerType = serializerType === '-json' ? '-default' : serializerType;
     let serializer = application.lookup('serializer:' + serializerType);
