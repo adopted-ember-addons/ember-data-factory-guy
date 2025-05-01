@@ -67,6 +67,8 @@ jobs:
           ember-lts-4.12,
           ember-default-with-jquery,
           ember-classic,
+          embroider-safe,
+          embroider-optimized,
         ]
         allow-failure: [false]
         include:
