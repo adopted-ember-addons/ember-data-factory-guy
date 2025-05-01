@@ -21,8 +21,6 @@ import {
   getPretender,
 } from './mocks/exposed-request-functions';
 
-import manualSetup from './utils/manual-setup';
-
 import JSONAPIFixtureBuilder from './builder/jsonapi-fixture-builder';
 import RESTFixtureBuilder from './builder/rest-fixture-builder';
 import JSONFixtureBuilder from './builder/json-fixture-builder';
@@ -33,16 +31,7 @@ export default FactoryGuy;
 
 export { JSONFixtureBuilder, RESTFixtureBuilder, JSONAPIFixtureBuilder };
 
-export {
-  make,
-  makeNew,
-  makeList,
-  build,
-  buildList,
-  attributesFor,
-  manualSetup,
-  Scenario,
-};
+export { make, makeNew, makeList, build, buildList, attributesFor, Scenario };
 
 export {
   mockFindRecord,
@@ -58,8 +47,17 @@ export {
   getPretender,
 };
 
+/**
+ * Setup and teardown code, intended to be called with qunit hooks so that it can run code before & after each test.
+ */
 export function setupFactoryGuy(hooks) {
   hooks.beforeEach(function () {
-    manualSetup(this);
+    const owner =
+      this.owner || (this.container && this.container.owner) || this;
+    FactoryGuy.setStore(owner.lookup('service:store'));
+  });
+
+  hooks.afterEach(function () {
+    FactoryGuy.reset();
   });
 }
