@@ -1,3 +1,4 @@
+import { getContext } from '@ember/test-helpers';
 import FactoryGuy, {
   make,
   makeNew,
@@ -52,8 +53,7 @@ export {
  */
 export function setupFactoryGuy(hooks) {
   hooks.beforeEach(function () {
-    const owner =
-      this.owner || (this.container && this.container.owner) || this;
+    const { owner } = getContext();
     FactoryGuy.setStore(owner.lookup('service:store'));
   });
 
