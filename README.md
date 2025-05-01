@@ -29,7 +29,6 @@ Factories simplify the process of testing, making you more efficient and your te
 
 **Older but still fun things**
 - Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
-- Support for **[ember-django-adapter](https://github.com/dustinfarris/ember-django-adapter)** usage is fried in since v2.6.1
 - Support for adding [meta data](#using-add-method) to payloads for use with **ember-infinity** ie. => pagination
 - Support for adding headers to payloads
 
@@ -54,7 +53,6 @@ Visit the EmberJS Community [#e-factory-guy](https://embercommunity.slack.com/me
   - [Using in Development, Production or other environments](#using-in-other-environments)
   - [Ember Data Model Fragments](#ember-data-model-fragments)
   - [Creating Factories in Addons](#creating-factories-in-addons)
-  - [Ember Django Adapter](#ember-django-adapter)
   - [Custom API formats](#custom-api-formats)
   - [Testing models, controllers, components](#testing-models-controllers-components)
   - [Acceptance Tests](#acceptance-tests)
@@ -649,7 +647,6 @@ Remember to import the `run` function with `import { run } from "@ember/runloop"
      - [RESTAdapter](http://emberjs.com/api/data/classes/DS.RESTAdapter.html)  (*assume this adapter being used in most of the following examples*)
      - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
      - [JSONAPIAdapter](http://jsonapi.org/format/)
-     - [DrfAdapter (Ember Django Adapter)](https://github.com/dustinfarris/ember-django-adapter)
  - [`FactoryGuy.buildList`](#factoryguybuildlist)
    - Builds json with a list of zero or more items in accordance with the adapter's specifications
  - Can override default attributes by passing in an object of options
@@ -1137,20 +1134,6 @@ For a more detailed example of setting up fragments have a look at:
 
 ### Creating Factories in Addons
 If you are making an addon with factories and you want the factories available to Ember apps using your addon, place the factories in `test-support/factories` instead of `tests/factories`. They should be available both within your addon and in Ember apps that use your addon.
-
-### Ember Django Adapter
-  - available since 2.6.1
-  - everything is setup automatically
-  - sideloading is not supported in `DRFSerializer` so all relationships should either
-    - be set as embedded with `DS.EmbeddedRecordsMixin` if you want to use `build`/`buildList`
-    - or use `make`/`makeList` and in your mocks, and return models instead of json:
-```javascript
-  let projects = makeList('projects', 2); // put projects in the store
-  let user = make('user', { projects });  // attach them to user
-  mockFindRecord('user').returns({model: user}); // now the mock will return a user that has projects
-```
-  - using `fails()` with errors hash is not working reliably
-    - so you can always just `mockWhatever(args).fails()`
 
 ### Custom API formats
 
