@@ -88,6 +88,7 @@
     "webpack": "^5.96.1"
   },
   "peerDependencies": {
+    "@ember/string": ">= 3.0.0",
     "active-model-adapter": "*",
     "ember-data-model-fragments": "*"
   },
