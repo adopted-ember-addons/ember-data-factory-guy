@@ -7,7 +7,7 @@ patchedDependencies:
 
 specifiers:
   '@ember/optional-features': ^2.0.0
-  '@ember/string': ^4.0.1
+  '@ember/string': ^3.1.1
   '@ember/test-helpers': ^2.4.2
   '@ember/test-waiters': ^4.1.0
   '@embroider/macros': ^1.13.3
@@ -77,7 +77,7 @@ dependencies:
 
 devDependencies:
   '@ember/optional-features': 2.2.0
-  '@ember/string': 4.0.1
+  '@ember/string': 3.1.1
   '@ember/test-helpers': 2.9.4_ember-source@3.28.12
   '@ember/test-waiters': 4.1.0
   '@embroider/test-setup': 4.0.0
@@ -1530,8 +1530,13 @@ packages:
       - supports-color
     dev: true
 
-  /@ember/string/4.0.1:
-    resolution: {integrity: sha512-VWeng8BSWrIsdPfffOQt/bKwNKJL7+37gPFh/6iZZ9bke+S83kKqkS30poo4bTGfRcMnvAE0ie7txom+iDu81Q==}
+  /@ember/string/3.1.1:
+    resolution: {integrity: sha512-UbXJ+k3QOrYN4SRPHgXCqYIJ+yWWUg1+vr0H4DhdQPTy8LJfyqwZ2tc5uqpSSnEXE+/1KopHBE5J8GDagAg5cg==}
+    engines: {node: 12.* || 14.* || >= 16}
+    dependencies:
+      ember-cli-babel: 7.26.11
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@ember/test-helpers/2.9.4_ember-source@3.28.12:
