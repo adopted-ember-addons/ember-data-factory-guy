@@ -46,7 +46,7 @@
     "@ember/optional-features": "^2.0.0",
     "@ember/test-helpers": "^2.4.2",
     "@ember/test-waiters": "^4.1.0",
-    "@embroider/test-setup": "^0.43.5",
+    "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^1.0.4",
     "@glimmer/tracking": "^1.0.4",
     "active-model-adapter": "^3.0.1",

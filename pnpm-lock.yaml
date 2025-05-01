@@ -10,7 +10,7 @@ specifiers:
   '@ember/test-helpers': ^2.4.2
   '@ember/test-waiters': ^4.1.0
   '@embroider/macros': ^1.13.3
-  '@embroider/test-setup': ^0.43.5
+  '@embroider/test-setup': ^4.0.0
   '@glimmer/component': ^1.0.4
   '@glimmer/tracking': ^1.0.4
   active-model-adapter: ^3.0.1
@@ -78,7 +78,7 @@ devDependencies:
   '@ember/optional-features': 2.2.0
   '@ember/test-helpers': 2.9.4_ember-source@3.28.12
   '@ember/test-waiters': 4.1.0
-  '@embroider/test-setup': 0.43.5
+  '@embroider/test-setup': 4.0.0
   '@glimmer/component': 1.1.2
   '@glimmer/tracking': 1.1.2
   active-model-adapter: 3.0.1_ember-source@3.28.12
@@ -1658,9 +1658,20 @@ packages:
       - supports-color
     dev: true
 
-  /@embroider/test-setup/0.43.5:
-    resolution: {integrity: sha512-ke+5B0VR2343ZrOqV9Ok2LyA4m2q2ApM1Oy1RC8+3+OI5lDVg8UgZG9n/G2e77KPMFxnK3eVpXcPdLcdOxW6+w==}
+  /@embroider/test-setup/4.0.0:
+    resolution: {integrity: sha512-1S3Ebk0CEh3XDqD93AWSwQZBCk+oGv03gtkaGgdgyXGIR7jrVyDgEnEuslN/hJ0cuU8TqhiXrzHMw7bJwIGhWw==}
     engines: {node: 12.* || 14.* || >= 16}
+    peerDependencies:
+      '@embroider/compat': ^3.4.8
+      '@embroider/core': ^3.4.8
+      '@embroider/webpack': ^4.0.0
+    peerDependenciesMeta:
+      '@embroider/compat':
+        optional: true
+      '@embroider/core':
+        optional: true
+      '@embroider/webpack':
+        optional: true
     dependencies:
       lodash: 4.17.21
       resolve: 1.22.8
