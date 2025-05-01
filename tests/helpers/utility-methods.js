@@ -1,6 +1,6 @@
 import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
 import { typeOf } from '@ember/utils';
-import FactoryGuy, { manualSetup } from 'ember-data-factory-guy';
+import FactoryGuy, { setupFactoryGuy } from 'ember-data-factory-guy';
 import RESTAdapter from '@ember-data/adapter/rest';
 import ActiveModelAdapter, {
   ActiveModelSerializer,
@@ -161,8 +161,8 @@ export function containerSetup(application, serializerType) {
 }
 
 export function inlineSetup(hooks, serializerType) {
+  setupFactoryGuy(hooks);
   hooks.beforeEach(function () {
-    manualSetup(getContext());
     containerSetup(getContext().owner, serializerType);
     FactoryGuy.settings({ responseTime: 0, logLevel: 0 });
   });

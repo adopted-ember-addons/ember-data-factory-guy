@@ -478,7 +478,7 @@ class FactoryGuy {
   ensureStore() {
     assert(
       `[ember-data-factory-guy] FactoryGuy does not have the application's store.
-       Use manualSetup(this) in model/component test
+       Use setupFactoryGuy(this) in model/component test
        before using make/makeList`,
       this.store
     );

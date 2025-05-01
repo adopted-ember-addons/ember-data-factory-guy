@@ -130,7 +130,7 @@ module('FactoryGuy', function (hooks) {
         function (err) {
           return !!err
             .toString()
-            .match(/Use manualSetup\(this\) in model\/component test/);
+            .match(/Use setupFactoryGuy\(this\) in model\/component test/);
         }
       );
     });
@@ -408,7 +408,7 @@ module('FactoryGuy', function (hooks) {
         function (err) {
           return !!err
             .toString()
-            .match(/Use manualSetup\(this\) in model\/component test/);
+            .match(/Use setupFactoryGuy\(this\) in model\/component test/);
         }
       );
     });
