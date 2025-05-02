@@ -94,6 +94,7 @@ jobs:
       env:
         EMBER_TRY_SCENARIO: ${{ matrix.ember-try-scenario }}
       run: pnpm ember try:one $EMBER_TRY_SCENARIO
+      working-directory: test-app
       continue-on-error: ${{ matrix.allow-failure }}
     - uses: mainmatter/continue-on-error-comment@v1
       if: ${{ matrix.allow-failure }}
@@ -120,3 +121,4 @@ jobs:
 
     - name: Test
       run: pnpm run test:ember --launch chrome
+      working-directory: test-app
