@@ -5,32 +5,9 @@
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
-**NEW** starting with v3.8
-  - jquery is no longer required and fetch adapter is used with ember-data
-  - you can still use jquery if you want to  
-  - if you are addon author using factory guy set up your application adapter like [this](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/dummy/app/adapters/application.js)
-  
-**NEW** starting with v3.2.1
-  - You can setup data AND links for your async relationship [Check it out](#special-tips-for-links)
-
-**NEW** You can use factory guy in ember-twiddle
-  - Using [Scenarios](https://ember-twiddle.com/421f16ecc55b5d35783c243b8d99f2be?openFiles=tests.unit.model.user-test.js%2C)
-
-**NEW** If using new style of ember-qunit acceptance tests with ```setupApplicationTest``` check out demo here: [user-view-test.js:](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
-
-**NEW** starting with v2.13.27
-  - get attributes for factory defined models with ```attributesFor```
-
-**NEW** starting with v2.13.24
-  - manualSetup streamlined to ```manualSetup(this)```
-
-**NEW and Improved** starting with v2.13.22
-  - Traits can be functions [Check it out](#tip-6-using-traits-as-functions)
-
-**Older but still fun things**
+**Supports**
 - Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
-- Support for **[ember-django-adapter](https://github.com/dustinfarris/ember-django-adapter)** usage is fried in since v2.6.1
-- Support for adding [meta data](#using-add-method) to payloads for use with **ember-infinity** ie. => pagination
+- Support for adding [meta data](#using-add-method) to payloads (eg for use with **ember-infinity** ie. => pagination)
 - Support for adding headers to payloads
 
 **Why is FactoryGuy so awesome**
@@ -47,14 +24,12 @@ Visit the EmberJS Community [#e-factory-guy](https://embercommunity.slack.com/me
 ### Contents
   - [How It Works](#how-it-works)
   - [Installation](#installation)
-  - [Upgrading](#upgrading)
   - [Setup](#setup)
   - [Defining Factories](#defining-factories)
   - [Using Factories](#using-factories)
   - [Using in Development, Production or other environments](#using-in-other-environments)
   - [Ember Data Model Fragments](#ember-data-model-fragments)
   - [Creating Factories in Addons](#creating-factories-in-addons)
-  - [Ember Django Adapter](#ember-django-adapter)
   - [Custom API formats](#custom-api-formats)
   - [Testing models, controllers, components](#testing-models-controllers-components)
   - [Acceptance Tests](#acceptance-tests)
@@ -71,16 +46,7 @@ Visit the EmberJS Community [#e-factory-guy](https://embercommunity.slack.com/me
 
 ### Installation
 
- - ```ember install ember-data-factory-guy``` ( ember-data-1.13.5+ )
- - ```ember install ember-data-factory-guy@1.13.2``` ( ember-data-1.13.0 + )
- - ```ember install ember-data-factory-guy@1.1.2``` ( ember-data-1.0.0-beta.19.1 )
- - ```ember install ember-data-factory-guy@1.0.10``` ( ember-data-1.0.0-beta.16.1 )
-
-### Upgrading
-
- -  remove ember-data-factory-guy from `package.json`
- - ```npm prune```
- - ```ember install ember-data-factory-guy```  ( for the latest release )
+ - ```ember install ember-data-factory-guy```
 
 ### Setup
 
@@ -622,18 +588,13 @@ Assuming the factory-guy model definition defines `afterMake` function:
 You would use this to make models like:
 
 ```javascript
-  run(function () {
+  let property = FactoryGuy.make('property');
+  property.get('name'); // => 'Silly property(FOR SALE)')
 
-    let property = FactoryGuy.make('property');
-    property.get('name'); // => 'Silly property(FOR SALE)')
-
-    let property = FactoryGuy.make('property', {for_sale: false});
-    property.get('name'); // => 'Silly property')
-  });
+  let property = FactoryGuy.make('property', {for_sale: false});
+  property.get('name'); // => 'Silly property')
 
 ```
-
-Remember to import the `run` function with `import { run } from "@ember/runloop"`;
 
 ### Using Factories
  - [`FactoryGuy.attributesFor`](#factoryguyattributesfor)
@@ -649,7 +610,6 @@ Remember to import the `run` function with `import { run } from "@ember/runloop"
      - [RESTAdapter](http://emberjs.com/api/data/classes/DS.RESTAdapter.html)  (*assume this adapter being used in most of the following examples*)
      - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
      - [JSONAPIAdapter](http://jsonapi.org/format/)
-     - [DrfAdapter (Ember Django Adapter)](https://github.com/dustinfarris/ember-django-adapter)
  - [`FactoryGuy.buildList`](#factoryguybuildlist)
    - Builds json with a list of zero or more items in accordance with the adapter's specifications
  - Can override default attributes by passing in an object of options
@@ -1138,20 +1098,6 @@ For a more detailed example of setting up fragments have a look at:
 ### Creating Factories in Addons
 If you are making an addon with factories and you want the factories available to Ember apps using your addon, place the factories in `test-support/factories` instead of `tests/factories`. They should be available both within your addon and in Ember apps that use your addon.
 
-### Ember Django Adapter
-  - available since 2.6.1
-  - everything is setup automatically
-  - sideloading is not supported in `DRFSerializer` so all relationships should either
-    - be set as embedded with `DS.EmbeddedRecordsMixin` if you want to use `build`/`buildList`
-    - or use `make`/`makeList` and in your mocks, and return models instead of json:
-```javascript
-  let projects = makeList('projects', 2); // put projects in the store
-  let user = make('user', { projects });  // attach them to user
-  mockFindRecord('user').returns({model: user}); // now the mock will return a user that has projects
-```
-  - using `fails()` with errors hash is not working reliably
-    - so you can always just `mockWhatever(args).fails()`
-
 ### Custom API formats
 
 FactoryGuy handles JSON-API / RESTSerializer / JSONSerializer out of the box.
@@ -1266,10 +1212,6 @@ test("Using FactoryGuy.cacheOnlyMode with except", async function() {
   });
   ```
 
-### Acceptance Tests
-
-- For using new style of ember-qunit with ```setupApplicationTest``` check out demo here: [user-view-test.js:](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
-
 ##### Using mock methods
 
 - Uses pretender
@@ -1324,8 +1266,7 @@ the disabled mock using `enable()`.
 The `isDestroyed` property is set to `true` when the mock is destroyed.
 
 
-##### setup
-  - As of v2.13.15 mockSetup and mockTeardown are no longer needed
+##### Settings
   - Use FactoryGuy.settings to set:
     - logLevel ( 0 - off , 1 - on ) for seeing the FactoryGuy responses
     - responseTime ( in millis )  for simulating slower responses
@@ -2071,15 +2012,7 @@ describe('Admin View', function() {
 });
 ```
 
-#### Tip 4: Testing mocks ( async testing ) in unit tests
-
- - Two ways to handle asyncronous test
-   - async / await ( most elegant ) [Sample test](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L44)
-      - need to declare polyfill for ember-cli-babel options
-       in [ember-cli-build](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/ember-cli-build.js#L7)
-   - using `assert.async()` (qunit) / `done` (mocha) [Sample test](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/unit/models/user-test.js#L53)
-
-#### Tip 5: Testing model's custom `serialize()` method
+#### Tip 4: Testing model's custom `serialize()` method
   - The fact that you can match on attributes in `mockUpdate` and `mockCreate` means
    that you can test a custom `serialize()` method in a model serializer
 

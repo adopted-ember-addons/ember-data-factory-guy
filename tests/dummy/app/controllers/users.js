@@ -1,9 +1,10 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
+import { waitForPromise } from '@ember/test-waiters';
 
 export default class extends Controller {
   @action
   deleteUser(user) {
-    return user.destroyRecord();
+    waitForPromise(user.destroyRecord());
   }
 }

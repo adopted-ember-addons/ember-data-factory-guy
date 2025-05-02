@@ -1,17 +1,12 @@
 import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
 import { typeOf } from '@ember/utils';
 import FactoryGuy, { manualSetup } from 'ember-data-factory-guy';
-import DRFAdapter from 'ember-django-adapter/adapters/drf';
-import DRFSerializer from 'ember-django-adapter/serializers/drf';
 import RESTAdapter from '@ember-data/adapter/rest';
 import ActiveModelAdapter, {
   ActiveModelSerializer,
 } from 'active-model-adapter';
 import { param } from 'ember-data-factory-guy/utils/helper-functions';
 import { getContext } from '@ember/test-helpers';
-// TODO: Remove the need for this mixin
-// eslint-disable-next-line ember/no-mixins
-import AdapterFetch from 'ember-fetch/mixins/adapter-fetch';
 
 export function fetchJSON({ url, params, method = 'GET' } = {}) {
   let body = '';
@@ -115,11 +110,6 @@ function setupCustomSerializer(container, serializerType, options) {
 export function containerSetup(application, serializerType) {
   // brute force setting the adapter/serializer on the store.
   if (serializerType) {
-    application.register('adapter:-drf', DRFAdapter, { singleton: false });
-    application.register('serializer:-drf', DRFSerializer, {
-      singleton: false,
-    });
-
     application.register('adapter:-active-model', ActiveModelAdapter, {
       singleton: false,
     });
@@ -137,7 +127,7 @@ export function containerSetup(application, serializerType) {
       });
     }
     adapter = application.lookup('adapter:' + adapterType);
-    adapter = adapter.reopen(AdapterFetch);
+    adapter = adapter.reopen();
 
     serializerType = serializerType === '-json' ? '-default' : serializerType;
     let serializer = application.lookup('serializer:' + serializerType);
