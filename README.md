@@ -946,36 +946,12 @@ Usage:
 
 ```
 
-### Using in Other Environments
+### Scenarios
 
-- You can set up scenarios for your app that use all your factories from tests updating `config/environment.js`.
+- You can define shared/common functionality by creating scenarios.
 
-- NOTE: Do not use settings in the `test` environment. Factories are enabled
-  by default for the `test` environment and setting the flag tells factory-guy to load the app/scenarios
-  files which are not needed for using factory-guy in testing. This will result in errors being generated if
-  the app/scenarios files do not exist.
-
-  ```javascript
-    // file: config/environment.js
-    // in development you don't have to set enabled to true since that is default
-    if (environment === 'development') {
-      ENV.factoryGuy = { useScenarios: true };
-      ENV.locationType = 'auto';
-      ENV.rootURL = '/';
-    }
-
-    // or
-
-    if (environment === 'production') {
-      ENV.factoryGuy = {enabled: true, useScenarios: true};
-      ENV.locationType = 'auto';
-      ENV.rootURL = '/';
-    }
-
-    ```
-- Place your scenarios in the `app/scenarios` directory
-  - Start by creating at least a `scenarios/main.js` file since this is the starting point
-  - Your scenario classes should inherit from `Scenario` class
+- Create a scenario file
+  - Ensure it extends from `Scenario` class.
   - A scenario class should declare a run method where you do things like:
     - include other scenarios
       - you can compose scenarios like a symphony of notes
@@ -1017,6 +993,24 @@ Usage:
     }
   ```
 
+- Run the scenario
+  - Import the scenario and call the `run()` function where you want to.
+
+  ```js
+  // tests/acceptance/my-user-test.js
+  import ScenarioMain from '../scenarios/main';
+
+  module('My User', function(hooks) {
+    hooks.beforeEach(function() {
+      scenario = new ScenarioMain();
+      scenario.run();
+    });
+
+    test('it does the thing', function() {
+      ...
+    });
+  });
+  ```
 
 ### Ember Data Model Fragments
 As of 2.5.2 you can create factories which contain [ember-data-model-fragments](https://github.com/lytics/ember-data-model-fragments). Setting up your fragments is easy and follows the same process as setting up regular factories. The mapping between fragment types and their associations are like so:
@@ -1162,9 +1156,30 @@ test("Using FactoryGuy.cacheOnlyMode with except", async function() {
 
 ### Testing models, controllers, components
 
-- FactoryGuy needs to setup the factories before the test run.
-  - By default, you only need to call `manualSetup(this)` in unit/component/acceptance tests
-  - Or you can use the new setupFactoryGuy(hooks) method if your using the new qunit style tests
+- FactoryGuy needs the factories defined before the tests run. This can be done by importing the factories, which register themselves with FactoryGuy.
+
+A clean way to do this is to create a file that imports them all
+```js
+// tests/factories/factories.js
+
+import 'my-app/tests/factories/address';
+import 'my-app/tests/factories/big-group';
+import 'my-app/tests/factories/big-hat';
+import 'my-app/tests/factories/billing-address';
+...
+```
+
+And import that file in your test-helper code, before any tests run.
+
+```js
+// tests/test-helper.js
+
+import 'my-app/tests/factories';
+...
+/* existing test-helper.js setup code */
+```
+
+- FactoryGuy also needs to run some setup/teardown code before/after each test, use the setupFactoryGuy(hooks) method in your qunit tests to do this.
 
     - Sample usage: (works the same in any type of test)
     ```js

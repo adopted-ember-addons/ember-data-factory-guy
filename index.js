@@ -1,6 +1,5 @@
 /* eslint-env node */
 'use strict';
-var fs = require('fs');
 var path = require('path');
 var MergeTrees = require('broccoli-merge-trees');
 var Funnel = require('broccoli-funnel');
@@ -62,25 +61,6 @@ module.exports = {
     });
   },
 
-  treeForApp: function (appTree) {
-    var trees = [appTree];
-
-    if (this.includeFactoryGuyFiles) {
-      try {
-        if (fs.statSync('tests/factories').isDirectory()) {
-          var factoriesTree = new Funnel('tests/factories', {
-            destDir: 'tests/factories',
-          });
-          trees.push(factoriesTree);
-        }
-      } catch (err) {
-        // do nothing;
-      }
-    }
-
-    return MergeTrees(trees);
-  },
-
   included: function (app) {
     this._super.included.apply(this, arguments);
 
@@ -109,13 +89,9 @@ module.exports = {
 
   setupFactoryGuyInclude: function (app) {
     let defaultEnabled = /test|development/.test(app.env),
-      defaultSettings = { enabled: defaultEnabled, useScenarios: false },
+      defaultSettings = { enabled: defaultEnabled },
       userSettings = app.project.config(app.env).factoryGuy || {},
       settings = Object.assign(defaultSettings, userSettings);
-
-    if (settings.useScenarios) {
-      settings.enabled = true;
-    }
 
     this.includeFactoryGuyFiles = settings.enabled;
 
