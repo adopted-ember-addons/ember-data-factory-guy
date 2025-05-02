@@ -83,7 +83,8 @@
   "peerDependencies": {
     "@ember/string": ">= 3.0.0",
     "active-model-adapter": "*",
-    "ember-data-model-fragments": "*"
+    "ember-data-model-fragments": "*",
+    "ember-inflector": ">= 4.0.1"
   },
   "peerDependenciesMeta": {
     "active-model-adapter": {

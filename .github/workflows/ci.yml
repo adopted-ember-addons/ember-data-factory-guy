@@ -74,10 +74,6 @@ jobs:
         include:
           - ember-try-scenario: ember-release
             allow-failure: true
-          - ember-try-scenario: ember-beta
-            allow-failure: true
-          - ember-try-scenario: ember-canary
-            allow-failure: true
 
     steps:
     - uses: actions/checkout@v4
