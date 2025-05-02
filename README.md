@@ -86,7 +86,7 @@ In the following examples, assume the models look like this:
 
 #### Standard models
 
-- Sample full blown factory: [`user.js`](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js)
+- Sample full blown factory: [`user.js`](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/test-app/tests/factories/user.js)
 
 - Brief sample of a factory definition:
 ```javascript
@@ -509,7 +509,7 @@ the reverse 'user' belongsTo association is being setup for you on the project
     will take precedence over an inherited one. So you can override some
     attributes in the default section ( for example ), and inherit the rest
 
-There is a sample Factory using inheritance here: [`big-group.js`](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/big-group.js)
+There is a sample Factory using inheritance here: [`big-group.js`](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/test-app/tests/factories/big-group.js)
 
 
 ### Transient Attributes
@@ -692,7 +692,7 @@ You would use this to make models like:
     - except that the model will be a newly created record with no id
 
 ##### `FactoryGuy.makeList`
-  - check out [(user factory):](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'bob' user and 'with_car' trait
+  - check out [(user factory):](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/test-app/tests/factories/user.js) to see 'bob' user and 'with_car' trait
 
 Usage:
 
@@ -896,7 +896,7 @@ Usage:
     - `get(index)` gives you the info for a hasMany relationship at that index
     - `get(relationships)` gives you just the id or type ( if polymorphic )
       - better to compose the build relationships by hand if you need more info
-  - check out [user factory:](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/dummy/app/tests/factories/user.js) to see 'boblike' and 'adminlike' user traits
+  - check out [user factory:](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/test-app/tests/factories/user.js) to see 'boblike' and 'adminlike' user traits
 
 ```javascript
   let json = build('user');
