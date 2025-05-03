@@ -55,12 +55,15 @@ export default class RequestWrapper {
    */
   getHandlers() {
     return this.handlers.sort(
-      (a, b) => b.hasQueryParams() - a.hasQueryParams()
+      (a, b) =>
+        b.hasMatch() - a.hasMatch() ||
+        b.hasQueryParams() - a.hasQueryParams() ||
+        b.hasSomeParams() - a.hasSomeParams()
     );
   }
 
   addHandler(handler) {
-    this.handlers.push(handler);
+    this.handlers.unshift(handler);
     return this.index++;
   }
 

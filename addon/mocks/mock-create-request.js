@@ -10,7 +10,6 @@ export default class MockCreateRequest extends AttributeMatcher(
     super(modelName, 'createRecord');
     this.model = model;
     this.returnArgs = {};
-    this.matchArgs = {};
     this.setupHandler();
   }
 

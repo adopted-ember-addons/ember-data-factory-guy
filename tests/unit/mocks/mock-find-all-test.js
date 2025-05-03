@@ -108,8 +108,8 @@ module('MockFindAll', function (hooks) {
     let wrapper = RequestManager.findWrapper({ type: 'GET', url: '/users' });
     let ids = wrapper.getHandlers().map((h) => h.mockId);
     assert.deepEqual(ids, [
-      { type: 'GET', url: '/users', num: 0 },
       { type: 'GET', url: '/users', num: 1 },
+      { type: 'GET', url: '/users', num: 0 },
     ]);
   });
 
