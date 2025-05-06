@@ -10,6 +10,8 @@ importers:
       '@babel/core': ^7.27.1
       '@babel/plugin-proposal-decorators': ^7.27.1
       '@babel/plugin-transform-class-properties': ^7.27.1
+      '@ember-data/model': ^3.28.13
+      '@ember-data/serializer': ^3.28.13
       '@ember/string': ^3.1.1
       '@ember/test-helpers': 2.4.2
       '@embroider/addon-dev': ^8.0.1
@@ -31,6 +33,8 @@ importers:
       '@babel/core': 7.27.1
       '@babel/plugin-proposal-decorators': 7.27.1_@babel+core@7.27.1
       '@babel/plugin-transform-class-properties': 7.27.1_@babel+core@7.27.1
+      '@ember-data/model': 3.28.13_@babel+core@7.27.1
+      '@ember-data/serializer': 3.28.13_@babel+core@7.27.1
       '@ember/string': 3.1.1
       '@ember/test-helpers': 2.4.2_@babel+core@7.27.1
       '@embroider/addon-dev': 8.0.1_rollup@4.40.1
