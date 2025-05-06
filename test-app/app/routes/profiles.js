@@ -6,7 +6,6 @@ export default class extends Route {
   @service store;
 
   model() {
-    // reload: true to ensure we have a promise to wait on before rendering page
-    return waitForPromise(this.store.findAll('profile', { reload: true }));
+    return waitForPromise(this.store.findAll('profile'));
   }
 }
