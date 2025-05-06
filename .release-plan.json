@@ -10,7 +10,7 @@
           "reason": "Appears in changelog section :rocket: Enhancement"
         }
       ],
-      "pkgJSONPath": "./package.json"
+      "pkgJSONPath": "./addon/package.json"
     }
   },
   "description": "## Release (2025-03-21)\n\nember-data-factory-guy 4.0.0 (minor)\n\n#### :rocket: Enhancement\n* `ember-data-factory-guy`\n  * [#501](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/501) stop publishing pre-releases ([@mansona](https://github.com/mansona))\n\n#### Committers: 1\n- Chris Manson ([@mansona](https://github.com/mansona))\n"
