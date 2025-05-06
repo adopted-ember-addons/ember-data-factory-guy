@@ -1,5 +1,33 @@
 # Changelog
 
+## Release (2025-05-06)
+
+* ember-data-factory-guy 5.0.0 (major)
+
+See [Upgrade Guide](https://github.com/adopted-ember-addons/ember-data-factory-guy?tab=readme-ov-file#upgrading)
+
+#### :boom: Breaking Change
+* `ember-data-factory-guy`
+  * [#510](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/510) refactor: convert to v2 addon, drop node <= 16 ([@Techn1x](https://github.com/Techn1x))
+  * [#505](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/505) refactor: avoid require() usage, manually import factories and scenarios ([@Techn1x](https://github.com/Techn1x))
+  * [#503](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/503) chore: drop AdapterFetch, ember-fetch, ember-django-adapter ([@Techn1x](https://github.com/Techn1x))
+* Other
+  * [#509](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/509) chore: ember-inflector added to peerDeps ([@Techn1x](https://github.com/Techn1x))
+  * [#504](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/504) chore: add `@ember/string` peerDependency ([@Techn1x](https://github.com/Techn1x))
+
+#### :memo: Documentation
+* [#515](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/515) docs: add upgrade docs for v5 ([@Techn1x](https://github.com/Techn1x))
+
+#### :house: Internal
+* [#516](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/516) chore: fix root devDeps for release-plan ([@Techn1x](https://github.com/Techn1x))
+* [#514](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/514) chore: missing repository key from root package.json for release-plan ([@Techn1x](https://github.com/Techn1x))
+* [#513](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/513) chore: fix release-plan.json after addon v2 ([@Techn1x](https://github.com/Techn1x))
+* [#508](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/508) chore: drop unneeded devdeps, fix some dep issues ([@Techn1x](https://github.com/Techn1x))
+* [#507](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/507) test: tests working with ember 4.12 and ember-data 3.28 + embroider try scenarios ([@Techn1x](https://github.com/Techn1x))
+
+#### Committers: 1
+- Brad Overton ([@Techn1x](https://github.com/Techn1x))
+
 ## Release (2025-03-21)
 
 ember-data-factory-guy 4.0.0 (minor)

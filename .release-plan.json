@@ -1,17 +1,18 @@
 {
   "solution": {
     "ember-data-factory-guy": {
-      "impact": "minor",
-      "oldVersion": "4.0.0-alpha.4",
-      "newVersion": "4.0.0",
+      "impact": "major",
+      "oldVersion": "4.0.0",
+      "newVersion": "5.0.0",
+      "tagName": "latest",
       "constraints": [
         {
-          "impact": "minor",
-          "reason": "Appears in changelog section :rocket: Enhancement"
+          "impact": "major",
+          "reason": "Appears in changelog section :boom: Breaking Change"
         }
       ],
       "pkgJSONPath": "./addon/package.json"
     }
   },
-  "description": "## Release (2025-03-21)\n\nember-data-factory-guy 4.0.0 (minor)\n\n#### :rocket: Enhancement\n* `ember-data-factory-guy`\n  * [#501](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/501) stop publishing pre-releases ([@mansona](https://github.com/mansona))\n\n#### Committers: 1\n- Chris Manson ([@mansona](https://github.com/mansona))\n"
+  "description": "## Release (2025-05-06)\n\n* ember-data-factory-guy 5.0.0 (major)\n\nSee [Upgrade Guide](https://github.com/adopted-ember-addons/ember-data-factory-guy?tab=readme-ov-file#upgrading)\n\n#### :boom: Breaking Change\n* `ember-data-factory-guy`\n  * [#510](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/510) refactor: convert to v2 addon, drop node <= 16 ([@Techn1x](https://github.com/Techn1x))\n  * [#505](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/505) refactor: avoid require() usage, manually import factories and scenarios ([@Techn1x](https://github.com/Techn1x))\n  * [#503](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/503) chore: drop AdapterFetch, ember-fetch, ember-django-adapter ([@Techn1x](https://github.com/Techn1x))\n* Other\n  * [#509](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/509) chore: ember-inflector added to peerDeps ([@Techn1x](https://github.com/Techn1x))\n  * [#504](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/504) chore: add `@ember/string` peerDependency ([@Techn1x](https://github.com/Techn1x))\n\n#### :memo: Documentation\n* [#515](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/515) docs: add upgrade docs for v5 ([@Techn1x](https://github.com/Techn1x))\n\n#### :house: Internal\n* [#516](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/516) chore: fix root devDeps for release-plan ([@Techn1x](https://github.com/Techn1x))\n* [#514](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/514) chore: missing repository key from root package.json for release-plan ([@Techn1x](https://github.com/Techn1x))\n* [#513](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/513) chore: fix release-plan.json after addon v2 ([@Techn1x](https://github.com/Techn1x))\n* [#508](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/508) chore: drop unneeded devdeps, fix some dep issues ([@Techn1x](https://github.com/Techn1x))\n* [#507](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/507) test: tests working with ember 4.12 and ember-data 3.28 + embroider try scenarios ([@Techn1x](https://github.com/Techn1x))\n\n#### Committers: 1\n- Brad Overton ([@Techn1x](https://github.com/Techn1x))\n"
 }
