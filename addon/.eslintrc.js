@@ -19,17 +19,12 @@ module.exports = {
   env: {
     browser: true,
   },
-  rules: {
-    'ember/no-actions-hash': 'off',
-    'ember/no-classic-classes': 'off',
-  },
   overrides: [
     // node files
     {
       files: [
         './.eslintrc.js',
         './.prettierrc.js',
-        './.template-lintrc.js',
         './addon-main.js',
         './blueprints/*/index.js',
         './config/**/*.js',
