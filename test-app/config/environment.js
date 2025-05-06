@@ -21,8 +21,6 @@ module.exports = function (environment) {
   };
 
   if (environment === 'development') {
-    // ENV.factoryGuy = {enabled: true};
-    // ENV.factoryGuy = {enabled: false};
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
@@ -43,7 +41,7 @@ module.exports = function (environment) {
   }
 
   if (environment === 'production') {
-    //    ENV.factoryGuy = {enabled: false};
+    //
   }
 
   return ENV;
