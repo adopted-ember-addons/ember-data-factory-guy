@@ -1,5 +1,6 @@
 {
   "private": true,
+  "repository": "https://github.com/adopted-ember-addons/ember-data-factory-guy",
   "workspaces": [
     "addon",
     "test-app"
