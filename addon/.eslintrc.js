@@ -30,7 +30,7 @@ module.exports = {
         './.eslintrc.js',
         './.prettierrc.js',
         './.template-lintrc.js',
-        './index.js',
+        './addon-main.js',
         './blueprints/*/index.js',
         './config/**/*.js',
       ],

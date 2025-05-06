@@ -21,23 +21,39 @@
     "test": "tests"
   },
   "scripts": {
+    "build": "rollup --config",
+    "prepublishOnly": "rollup --config",
+    "start": "rollup --config --watch",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
     "lint:js": "eslint ."
   },
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*",
+    "./addon-main.js": "./addon-main.js"
+  },
+  "files": [
+    "addon-main.js",
+    "dist"
+  ],
   "dependencies": {
-    "@embroider/macros": "^1.13.3",
-    "ember-cli-babel": "^7.26.6",
-    "ember-cli-htmlbars": "^5.7.1",
+    "@embroider/addon-shim": "^1.10.0",
     "pretender": "^3.4.3"
   },
   "devDependencies": {
+    "@babel/core": "^7.27.1",
+    "@babel/plugin-proposal-decorators": "^7.27.1",
+    "@babel/plugin-transform-class-properties": "^7.27.1",
+    "@embroider/addon-dev": "^8.0.1",
+    "@rollup/plugin-babel": "^6.0.4",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-ember": "^10.5.4",
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-prettier": "^3.4.1",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.3.2"
+    "prettier": "^2.3.2",
+    "rollup": "^4.40.1"
   },
   "peerDependencies": {
     "@ember/string": ">= 3.0.0",
@@ -61,5 +77,10 @@
   },
   "ember": {
     "edition": "octane"
+  },
+  "ember-addon": {
+    "main": "addon-main.js",
+    "type": "addon",
+    "version": 2
   }
 }
