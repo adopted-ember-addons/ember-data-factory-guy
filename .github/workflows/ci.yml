@@ -54,6 +54,9 @@ jobs:
         cache: pnpm
     - name: Install Dependencies
       run: pnpm install --frozen-lockfile
+    - name: Build
+      run: pnpm build
+      working-directory: addon
     - name: Test
       run: pnpm test:ember --launch chrome
       working-directory: test-app
@@ -89,6 +92,9 @@ jobs:
         cache: pnpm
     - name: Install Dependencies
       run: pnpm install --frozen-lockfile
+    - name: Build
+      run: pnpm build
+      working-directory: addon
     - name: Test
       id: test
       env:
@@ -118,7 +124,9 @@ jobs:
         cache: pnpm
     - name: Install Dependencies
       run: pnpm install --no-lockfile
-
+    - name: Build
+      run: pnpm build
+      working-directory: addon
     - name: Test
       run: pnpm run test:ember --launch chrome
       working-directory: test-app
