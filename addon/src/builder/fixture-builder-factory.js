@@ -5,15 +5,17 @@ import JSONAPIFixtureBuilder from './jsonapi-fixture-builder';
 import RESTFixtureBuilder from './rest-fixture-builder';
 import JSONFixtureBuilder from './json-fixture-builder';
 import ActiveModelFixtureBuilder from './active-model-fixture-builder';
-import { importSync } from '@embroider/macros';
+import {
+  importSync,
+  macroCondition,
+  dependencySatisfies,
+} from '@embroider/macros';
 
 let ActiveModelSerializer;
-try {
+if (macroCondition(dependencySatisfies('active-model-adapter', '*'))) {
   ActiveModelSerializer = importSync(
     'active-model-adapter'
   ).ActiveModelSerializer;
-} catch (e) {
-  // no worries, go on without it - it's optional
 }
 
 export default class {
