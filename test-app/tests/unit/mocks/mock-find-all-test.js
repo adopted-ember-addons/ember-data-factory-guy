@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
-import RequestManager, { param } from 'ember-data-factory-guy/-private';
+import { RequestManager, param } from 'ember-data-factory-guy/-private';
 import FactoryGuy, {
   make,
   buildList,
