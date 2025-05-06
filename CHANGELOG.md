@@ -4,6 +4,8 @@
 
 * ember-data-factory-guy 5.0.0 (major)
 
+See [Upgrade Guide](https://github.com/adopted-ember-addons/ember-data-factory-guy?tab=readme-ov-file#upgrading)
+
 #### :boom: Breaking Change
 * `ember-data-factory-guy`
   * [#510](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/510) refactor: convert to v2 addon, drop node <= 16 ([@Techn1x](https://github.com/Techn1x))
