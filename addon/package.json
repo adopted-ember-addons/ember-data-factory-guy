@@ -1,0 +1,99 @@
+{
+  "name": "ember-data-factory-guy",
+  "version": "4.0.0",
+  "description": "Factories for testing Ember applications using EmberData",
+  "keywords": [
+    "ember-addon",
+    "testing",
+    "factories",
+    "ember-data"
+  ],
+  "homepage": "https://github.com/adopted-ember-addons/ember-data-factory-guy",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adopted-ember-addons/ember-data-factory-guy"
+  },
+  "license": "MIT",
+  "author": "Daniel Sudol <dansudol@yahoo.com>",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "rollup --config",
+    "prepublishOnly": "rollup --config",
+    "start": "rollup --config --watch",
+    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
+    "lint:js": "eslint ."
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./-private": "./dist/-private.js",
+    "./*": "./dist/*",
+    "./addon-main.js": "./addon-main.js"
+  },
+  "files": [
+    "addon-main.js",
+    "dist"
+  ],
+  "dependencies": {
+    "@embroider/addon-shim": "^1.10.0",
+    "pretender": "^3.4.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.27.1",
+    "@babel/plugin-proposal-decorators": "^7.27.1",
+    "@babel/plugin-transform-class-properties": "^7.27.1",
+    "@ember-data/model": "^3.28.13",
+    "@ember-data/serializer": "^3.28.13",
+    "@ember-data/store": "^3.28.13",
+    "@ember/string": "^3.1.1",
+    "@ember/test-helpers": "2.4.2",
+    "@embroider/addon-dev": "^8.0.1",
+    "@rollup/plugin-babel": "^6.0.4",
+    "active-model-adapter": "^3.0.1",
+    "ember-data-model-fragments": "^5.0.0-beta.2",
+    "ember-inflector": "4.0.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-ember": "^10.5.4",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-prettier": "^3.4.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.3.2",
+    "rollup": "^4.40.1"
+  },
+  "peerDependencies": {
+    "@ember-data/model": ">= 3.28",
+    "@ember-data/serializer": ">= 3.28",
+    "@ember-data/store": ">= 3.28",
+    "@ember/string": ">= 3.0.0",
+    "@ember/test-helpers": ">= 2.4.2",
+    "active-model-adapter": "*",
+    "ember-data-model-fragments": "*",
+    "ember-inflector": ">= 4.0.1"
+  },
+  "peerDependenciesMeta": {
+    "active-model-adapter": {
+      "optional": true
+    },
+    "ember-data-model-fragments": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": "18.* || 20.* || >= 22"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "ember": {
+    "edition": "octane"
+  },
+  "ember-addon": {
+    "main": "addon-main.js",
+    "type": "addon",
+    "version": 2
+  }
+}

@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: '14.x'
+  NODE_VERSION: '18.x'
 
 jobs:
   lint:
@@ -27,8 +27,12 @@ jobs:
         cache: pnpm
     - name: Install Dependencies
       run: pnpm i --frozen-lockfile
-    - name: Lint
-      run: pnpm run lint
+    - name: Lint Addon
+      run: pnpm lint
+      working-directory: addon
+    - name: Lint Test app
+      run: pnpm lint
+      working-directory: test-app
 
 
   test:
@@ -50,8 +54,12 @@ jobs:
         cache: pnpm
     - name: Install Dependencies
       run: pnpm install --frozen-lockfile
+    - name: Build
+      run: pnpm build
+      working-directory: addon
     - name: Test
       run: pnpm test:ember --launch chrome
+      working-directory: test-app
 
   try-scenarios:
     name: Tests - ${{ matrix.ember-try-scenario }}
@@ -84,11 +92,15 @@ jobs:
         cache: pnpm
     - name: Install Dependencies
       run: pnpm install --frozen-lockfile
+    - name: Build
+      run: pnpm build
+      working-directory: addon
     - name: Test
       id: test
       env:
         EMBER_TRY_SCENARIO: ${{ matrix.ember-try-scenario }}
       run: pnpm ember try:one $EMBER_TRY_SCENARIO
+      working-directory: test-app
       continue-on-error: ${{ matrix.allow-failure }}
     - uses: mainmatter/continue-on-error-comment@v1
       if: ${{ matrix.allow-failure }}
@@ -112,6 +124,9 @@ jobs:
         cache: pnpm
     - name: Install Dependencies
       run: pnpm install --no-lockfile
-
+    - name: Build
+      run: pnpm build
+      working-directory: addon
     - name: Test
       run: pnpm run test:ember --launch chrome
+      working-directory: test-app
