@@ -18,6 +18,9 @@ importers:
       '@embroider/addon-dev': ^8.0.1
       '@embroider/addon-shim': ^1.10.0
       '@rollup/plugin-babel': ^6.0.4
+      active-model-adapter: ^3.0.1
+      ember-data-model-fragments: ^5.0.0-beta.2
+      ember-inflector: 4.0.1
       eslint: ^7.32.0
       eslint-config-prettier: ^8.3.0
       eslint-plugin-ember: ^10.5.4
@@ -41,6 +44,9 @@ importers:
       '@ember/test-helpers': 2.4.2_@babel+core@7.27.1
       '@embroider/addon-dev': 8.0.1_rollup@4.40.1
       '@rollup/plugin-babel': 6.0.4_6u23hfo3a2rgv2irzifbp4dnze
+      active-model-adapter: 3.0.1
+      ember-data-model-fragments: 5.0.0_@babel+core@7.27.1
+      ember-inflector: 4.0.1
       eslint: 7.32.0
       eslint-config-prettier: 8.10.0_eslint@7.32.0
       eslint-plugin-ember: 10.6.1_eslint@7.32.0
@@ -103,14 +109,14 @@ importers:
       '@embroider/test-setup': 4.0.0
       '@glimmer/component': 1.1.2_@babel+core@7.27.1
       '@glimmer/tracking': 1.1.2
-      active-model-adapter: 3.0.1_ember-source@3.28.12
+      active-model-adapter: 3.0.1
       babel-eslint: 10.1.0_eslint@7.32.0
       ember-auto-import: 2.10.0_webpack@5.99.7
       ember-cli: 3.28.6
       ember-cli-babel: 7.26.11
       ember-cli-htmlbars: 5.7.2
       ember-cli-inject-live-reload: 2.1.0
-      ember-data: 3.28.13_igpq52csescquzu4ebahyzf4t4
+      ember-data: 3.28.13_@babel+core@7.27.1
       ember-data-factory-guy: link:../addon
       ember-data-model-fragments: 5.0.0_@babel+core@7.27.1
       ember-inflector: 6.0.0_@babel+core@7.27.1
@@ -2763,16 +2769,15 @@ packages:
     hasBin: true
     dev: true
 
-  /active-model-adapter/3.0.1_ember-source@3.28.12:
+  /active-model-adapter/3.0.1:
     resolution: {integrity: sha512-4FV4LoEG1VnmWeTotSwRVh91XGPk01SFPT+YDuZBFyv/Xrjc7sV5f0p2M8I/hdysoN9ajhkZw8CP6sS1Sn4Z5w==}
     engines: {node: 12.* || >= 14}
     dependencies:
       ember-cli-babel: 7.26.11
       ember-cli-htmlbars: 5.7.2
       ember-cli-typescript: 4.2.1
-      ember-inflector: 4.0.3_ember-source@3.28.12
+      ember-inflector: 4.0.1
     transitivePeerDependencies:
-      - ember-source
       - supports-color
     dev: true
 
@@ -5912,7 +5917,7 @@ packages:
       - supports-color
     dev: true
 
-  /ember-data/3.28.13_igpq52csescquzu4ebahyzf4t4:
+  /ember-data/3.28.13_@babel+core@7.27.1:
     resolution: {integrity: sha512-j1YjPl2JNHxQwQW6Bgfis44XSr4WCtdwMXr/SPpLsF1oVeTWIn3kwefcDnbuCI8Spmt1B9ab3ZLKzf2KkGN/7g==}
     engines: {node: 12.* || >= 14.*}
     dependencies:
@@ -5929,10 +5934,9 @@ packages:
       broccoli-merge-trees: 4.2.0
       ember-cli-babel: 7.26.11
       ember-cli-typescript: 4.2.1
-      ember-inflector: 4.0.3_ember-source@3.28.12
+      ember-inflector: 4.0.1
     transitivePeerDependencies:
       - '@babel/core'
-      - ember-source
       - supports-color
     dev: true
 
@@ -5948,14 +5952,11 @@ packages:
       - supports-color
     dev: true
 
-  /ember-inflector/4.0.3_ember-source@3.28.12:
-    resolution: {integrity: sha512-E+NnmzybMRWn1JyEfDxY7arjOTJLIcGjcXnUxizgjD4TlvO1s3O65blZt+Xq2C2AFSPeqHLC6PXd6XHYM8BxdQ==}
-    engines: {node: 14.* || 16.* || >= 18}
-    peerDependencies:
-      ember-source: ^3.16.0 || ^4.0.0 || ^5.0.0
+  /ember-inflector/4.0.1:
+    resolution: {integrity: sha512-D14nH2wVMp13ciOONcHMXwdL/IoMBSDXsGObF2rsQX7F8vGjwp+jnSNzZuGjjIvlBFQydOJ+R2n86J2e8HRTQA==}
+    engines: {node: 10.* || 12.* || >= 14}
     dependencies:
       ember-cli-babel: 7.26.11
-      ember-source: 3.28.12_@babel+core@7.27.1
     transitivePeerDependencies:
       - supports-color
     dev: true

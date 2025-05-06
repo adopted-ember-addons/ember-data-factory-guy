@@ -6,15 +6,17 @@ import { A } from '@ember/array';
 import ModelDefinition from './model-definition';
 import FixtureBuilderFactory from './builder/fixture-builder-factory';
 import RequestManager from './mocks/request-manager';
-import { importSync } from '@embroider/macros';
+import {
+  importSync,
+  macroCondition,
+  dependencySatisfies,
+} from '@embroider/macros';
 
 let modelDefinitions = {};
 
 let Fragment;
-try {
+if (macroCondition(dependencySatisfies('ember-data-model-fragments', '*'))) {
   Fragment = importSync('ember-data-model-fragments').default.Fragment;
-} catch (e) {
-  // no worries, go on without it - it's optional
 }
 
 class FactoryGuy {

@@ -3,17 +3,19 @@ import { entries } from '../utils/helper-functions';
 import { typeOf } from '@ember/utils';
 import { getOwner } from '@ember/application';
 import { camelize } from '@ember/string';
-import { importSync } from '@embroider/macros';
+import {
+  importSync,
+  macroCondition,
+  dependencySatisfies,
+} from '@embroider/macros';
 
 let Fragment;
 let FragmentArray;
-try {
+if (macroCondition(dependencySatisfies('ember-data-model-fragments', '*'))) {
   Fragment = importSync('ember-data-model-fragments/fragment').default;
   FragmentArray = importSync(
     'ember-data-model-fragments/array/fragment'
   ).default;
-} catch (e) {
-  // no worries, go on without it - it's optional
 }
 
 /**
