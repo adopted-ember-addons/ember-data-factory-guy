@@ -1,27 +1,42 @@
-import FactoryGuy from './factory-guy';
-import * as fgMethods from './factory-guy';
-
-let proxyFx = [
-  'make',
-  'makeNew',
-  'makeList',
-  'build',
-  'buildList',
-  'mockFindRecord',
-  'mockFindAll',
-  'mockReload',
-  'mockQuery',
-  'mockQueryRecord',
-  'mockUpdate',
-  'mockCreate',
-  'mockDelete',
-  'mock',
-  'attributesFor',
-];
+import FactoryGuy, {
+  make,
+  makeNew,
+  makeList,
+  build,
+  buildList,
+  attributesFor,
+} from './factory-guy';
+import {
+  mockFindRecord,
+  mockFindAll,
+  mockReload,
+  mockQuery,
+  mockQueryRecord,
+  mockCreate,
+  mockUpdate,
+  mockDelete,
+  mock,
+} from './mocks/exposed-request-functions';
 
 export default class {
   constructor() {
-    proxyFx.forEach((fx) => (this[fx] = fgMethods[fx]));
+    this.make = make;
+    this.makeNew = makeNew;
+    this.makeList = makeList;
+    this.build = build;
+    this.buildList = buildList;
+    this.attributesFor = attributesFor;
+
+    this.mockFindRecord = mockFindRecord;
+    this.mockFindAll = mockFindAll;
+    this.mockReload = mockReload;
+    this.mockQuery = mockQuery;
+    this.mockQueryRecord = mockQueryRecord;
+    this.mockUpdate = mockUpdate;
+    this.mockCreate = mockCreate;
+    this.mockDelete = mockDelete;
+    this.mock = mock;
+
     this.store = FactoryGuy.store;
   }
 
