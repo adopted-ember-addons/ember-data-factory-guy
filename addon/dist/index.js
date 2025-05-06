@@ -1,12 +1,10 @@
 import { getContext } from '@ember/test-helpers';
-import { i as isEmptyObject, f as factoryGuy, a as isEquivalent, M as MockStoreRequest, e as MockRequest, b as isPartOf, d as paramsFromRequestBody, t as toParams, c as parseUrl, R as RequestManager } from './mock-store-request-DgU0Uibs.js';
-export { A as ActiveModelFixtureBuilder, o as JSONAPIFixtureBuilder, J as JSONFixtureBuilder, q as MissingSequenceError, n as RESTFixtureBuilder, l as attributesFor, j as build, k as buildList, m as make, h as makeList, g as makeNew } from './mock-store-request-DgU0Uibs.js';
+import { i as isEmptyObject, f as factoryGuy, a as isEquivalent, M as MockStoreRequest, e as MockRequest, b as isPartOf, d as paramsFromRequestBody, t as toParams, c as parseUrl, R as RequestManager, m as make, g as makeNew, h as makeList, j as build, k as buildList, l as attributesFor } from './mock-store-request-DgU0Uibs.js';
+export { A as ActiveModelFixtureBuilder, o as JSONAPIFixtureBuilder, J as JSONFixtureBuilder, q as MissingSequenceError, n as RESTFixtureBuilder } from './mock-store-request-DgU0Uibs.js';
 import { typeOf, isPresent } from '@ember/utils';
 import { assert } from '@ember/debug';
 import Model from '@ember-data/model';
 import { isArray } from '@ember/array';
-import * as FactoryGuy from 'ember-data-factory-guy';
-import FactoryGuy__default from 'ember-data-factory-guy';
 
 /**
  This is tricky, but the main idea here is:
@@ -418,7 +416,7 @@ class MockFindRecordRequest extends MockGetRequest {
    */
   extraRequestMatches(settings) {
     if (this.idSearch) {
-      let model = FactoryGuy__default.store.peekRecord(this.modelName, this.get('id'));
+      let model = factoryGuy.store.peekRecord(this.modelName, this.get('id'));
       if (!model) {
         // the match still succeeds but the response is failure
         this.fails({
@@ -999,14 +997,27 @@ function getPretender() {
   return RequestManager.getPretender();
 }
 
-let proxyFx = ['make', 'makeNew', 'makeList', 'build', 'buildList', 'mockFindRecord', 'mockFindAll', 'mockReload', 'mockQuery', 'mockQueryRecord', 'mockUpdate', 'mockCreate', 'mockDelete', 'mock', 'attributesFor'];
 class scenario {
   constructor() {
-    proxyFx.forEach(fx => this[fx] = FactoryGuy[fx]);
-    this.store = FactoryGuy__default.store;
+    this.make = make;
+    this.makeNew = makeNew;
+    this.makeList = makeList;
+    this.build = build;
+    this.buildList = buildList;
+    this.attributesFor = attributesFor;
+    this.mockFindRecord = mockFindRecord;
+    this.mockFindAll = mockFindAll;
+    this.mockReload = mockReload;
+    this.mockQuery = mockQuery;
+    this.mockQueryRecord = mockQueryRecord;
+    this.mockUpdate = mockUpdate;
+    this.mockCreate = mockCreate;
+    this.mockDelete = mockDelete;
+    this.mock = mock;
+    this.store = factoryGuy.store;
   }
   static settings(opts = {}) {
-    FactoryGuy__default.settings(opts);
+    factoryGuy.settings(opts);
   }
   run() {}
   include(scenarios) {
@@ -1029,5 +1040,5 @@ function setupFactoryGuy(hooks) {
   });
 }
 
-export { scenario as Scenario, factoryGuy as default, getPretender, mock, mockCreate, mockDelete, mockFindAll, mockFindRecord, mockLinks, mockQuery, mockQueryRecord, mockReload, mockUpdate, setupFactoryGuy };
+export { scenario as Scenario, attributesFor, build, buildList, factoryGuy as default, getPretender, make, makeList, makeNew, mock, mockCreate, mockDelete, mockFindAll, mockFindRecord, mockLinks, mockQuery, mockQueryRecord, mockReload, mockUpdate, setupFactoryGuy };
 //# sourceMappingURL=index.js.map
