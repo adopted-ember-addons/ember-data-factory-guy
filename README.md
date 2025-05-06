@@ -2094,6 +2094,7 @@ Scenario
 import MainScenario from 'my-app/tests/scenarios/main';
 MainScenario.run();
 ```
+- If you didn't specify `useScenarios` config or have no idea what the main scenario is, you don't need to do anything.
 
 `ENV.factoryGuy = {...};` config/environment object no longer does anything, you can remove it if you specified it. This includes both `enabled` and `useScenarios` options.
 
