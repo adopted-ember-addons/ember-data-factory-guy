@@ -25,14 +25,14 @@ import {
 import JSONAPIFixtureBuilder from './builder/jsonapi-fixture-builder';
 import RESTFixtureBuilder from './builder/rest-fixture-builder';
 import JSONFixtureBuilder from './builder/json-fixture-builder';
+import ActiveModelFixtureBuilder from './builder/active-model-fixture-builder';
 
 import Scenario from './scenario';
+import MissingSequenceError from './missing-sequence-error';
 
 export default FactoryGuy;
 
-export { JSONFixtureBuilder, RESTFixtureBuilder, JSONAPIFixtureBuilder };
-
-export { make, makeNew, makeList, build, buildList, attributesFor, Scenario };
+export { make, makeNew, makeList, build, buildList, attributesFor };
 
 export {
   mockFindRecord,
@@ -47,6 +47,15 @@ export {
   mockLinks,
   getPretender,
 };
+
+export {
+  JSONFixtureBuilder,
+  RESTFixtureBuilder,
+  JSONAPIFixtureBuilder,
+  ActiveModelFixtureBuilder,
+};
+
+export { Scenario, MissingSequenceError };
 
 /**
  * Setup and teardown code, intended to be called with qunit hooks so that it can run code before & after each test.

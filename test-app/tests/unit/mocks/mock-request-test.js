@@ -8,7 +8,7 @@ import FactoryGuy, {
   mockUpdate,
 } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
-import MockStoreRequest from 'ember-data-factory-guy/mocks/mock-store-request';
+import { MockStoreRequest } from 'ember-data-factory-guy/-private';
 import sinon from 'sinon';
 
 const serializerType = '-json-api';

@@ -2,7 +2,7 @@ import { all } from 'rsvp';
 import { A } from '@ember/array';
 import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
-import { isEquivalent } from 'ember-data-factory-guy/utils/helper-functions';
+import { isEquivalent } from 'ember-data-factory-guy/-private';
 
 import FactoryGuy, {
   build,

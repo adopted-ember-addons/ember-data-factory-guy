@@ -11,12 +11,12 @@ import FactoryGuy, {
   makeList,
   makeNew,
 } from 'ember-data-factory-guy';
-import MissingSequenceError from 'ember-data-factory-guy/missing-sequence-error';
+import { MissingSequenceError } from 'ember-data-factory-guy';
 import sinon from 'sinon';
 import { inlineSetup } from '../helpers/utility-methods';
 import User from 'test-app/models/user';
 import Name from 'test-app/models/name';
-import RequestManager from 'ember-data-factory-guy/mocks/request-manager';
+import RequestManager from 'ember-data-factory-guy/-private';
 
 module('FactoryGuy', function (hooks) {
   setupTest(hooks);

@@ -7,7 +7,7 @@ import {
   isPartOf,
   parseUrl,
   paramsFromRequestBody,
-} from 'ember-data-factory-guy/utils/helper-functions';
+} from 'ember-data-factory-guy/-private';
 
 module('Unit | Helper Functions', function (hooks) {
   setupTest(hooks);

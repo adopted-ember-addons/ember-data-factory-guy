@@ -1,14 +1,16 @@
 import JSONAPISerializer from '@ember-data/serializer/json-api';
 import JSONSerializer from '@ember-data/serializer/json';
 import RESTSerializer from '@ember-data/serializer/rest';
-import FixtureBuilderFactory from 'ember-data-factory-guy/builder/fixture-builder-factory';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { ActiveModelSerializer } from 'active-model-adapter';
-import JSONAPIFixtureBuilder from 'ember-data-factory-guy/builder/jsonapi-fixture-builder';
-import RESTFixtureBuilder from 'ember-data-factory-guy/builder/rest-fixture-builder';
-import JSONFixtureBuilder from 'ember-data-factory-guy/builder/json-fixture-builder';
-import ActiveModelFixtureBuilder from 'ember-data-factory-guy/builder/active-model-fixture-builder';
+import {
+  JSONAPIFixtureBuilder,
+  RESTFixtureBuilder,
+  JSONFixtureBuilder,
+  ActiveModelFixtureBuilder,
+} from 'ember-data-factory-guy';
+import { FixtureBuilderFactory } from 'ember-data-factory-guy/-private';
 import { inlineSetup } from '../helpers/utility-methods';
 
 let factory, store;

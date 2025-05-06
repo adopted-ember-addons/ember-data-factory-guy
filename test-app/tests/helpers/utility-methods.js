@@ -5,7 +5,7 @@ import RESTAdapter from '@ember-data/adapter/rest';
 import ActiveModelAdapter, {
   ActiveModelSerializer,
 } from 'active-model-adapter';
-import { param } from 'ember-data-factory-guy/utils/helper-functions';
+import { param } from 'ember-data-factory-guy/-private';
 import { getContext } from '@ember/test-helpers';
 
 export function fetchJSON({ url, params, method = 'GET' } = {}) {

@@ -29,6 +29,7 @@
   },
   "exports": {
     ".": "./dist/index.js",
+    "./-private": "./dist/-private.js",
     "./*": "./dist/*",
     "./addon-main.js": "./addon-main.js"
   },

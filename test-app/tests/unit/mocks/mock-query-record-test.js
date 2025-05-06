@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { param } from 'ember-data-factory-guy/utils/helper-functions';
+import { param } from 'ember-data-factory-guy/-private';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
   build,
