@@ -48,7 +48,7 @@ export function param(obj, prefix) {
       str.push(
         v !== null && typeof v === 'object'
           ? param(v, k)
-          : encodeURIComponent(k) + '=' + encodeURIComponent(v)
+          : encodeURIComponent(k) + '=' + encodeURIComponent(v),
       );
     }
   }

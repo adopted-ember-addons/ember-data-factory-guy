@@ -23,7 +23,7 @@ module('Acceptance | Employee View ( model-fragments )', function (hooks) {
     assert
       .dom('.name')
       .containsText(
-        `${employee.get('name.firstName')} ${employee.get('name.lastName')}`
+        `${employee.get('name.firstName')} ${employee.get('name.lastName')}`,
       );
     assert
       .dom('.department-employment')
@@ -40,7 +40,7 @@ module('Acceptance | Employee View ( model-fragments )', function (hooks) {
     assert
       .dom('.name')
       .containsText(
-        `${employee.get('name.firstName')} ${employee.get('name.lastName')}`
+        `${employee.get('name.firstName')} ${employee.get('name.lastName')}`,
       );
   });
 
@@ -53,7 +53,7 @@ module('Acceptance | Employee View ( model-fragments )', function (hooks) {
     assert
       .dom('.name')
       .containsText(
-        `${employee.get('name.firstName')} ${employee.get('name.lastName')}`
+        `${employee.get('name.firstName')} ${employee.get('name.lastName')}`,
       );
     assert
       .dom('.department-employment')
@@ -69,7 +69,7 @@ module('Acceptance | Employee View ( model-fragments )', function (hooks) {
     assert
       .dom('.name')
       .containsText(
-        `${employee.get('name').first_name} ${employee.get('name').last_name}`
+        `${employee.get('name').first_name} ${employee.get('name').last_name}`,
       );
     assert
       .dom('.department-employment')
@@ -86,7 +86,7 @@ module('Acceptance | Employee View ( model-fragments )', function (hooks) {
     assert
       .dom('.name')
       .containsText(
-        `${employee.get('name').first_name} ${employee.get('name').last_name}`
+        `${employee.get('name').first_name} ${employee.get('name').last_name}`,
       );
     assert
       .dom('.department-employment')

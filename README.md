@@ -827,7 +827,7 @@ let users = buildList('user', 'boblike', 'adminlike');
 let users = buildList(
   'user',
   ['boblike', { style: 'stoner' }],
-  ['adminlike', { style: 'square' }]
+  ['adminlike', { style: 'square' }],
 );
 ```
 
@@ -1217,7 +1217,7 @@ import 'my-app/tests/factories';
       beforeEach: function () {
         manualSetup(this);
       },
-    }
+    },
   );
 
   test('shows user information', function () {

@@ -7,7 +7,7 @@ export default class extends Route {
 
   model(params) {
     return waitForPromise(
-      this.store.findRecord('employee', params.employee_id).catch(() => null)
+      this.store.findRecord('employee', params.employee_id).catch(() => null),
     );
   }
 }

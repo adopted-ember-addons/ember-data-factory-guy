@@ -4,7 +4,7 @@ import MockStoreRequest from './mock-store-request';
 import AttributeMatcher from './attribute-matcher';
 
 export default class MockCreateRequest extends AttributeMatcher(
-  MockStoreRequest
+  MockStoreRequest,
 ) {
   constructor(modelName, { model } = {}) {
     super(modelName, 'createRecord');
@@ -53,7 +53,7 @@ export default class MockCreateRequest extends AttributeMatcher(
       json = Object.assign({}, args, { id: this.modelId() });
     this.responseJson = this.fixtureBuilder.convertForBuild(
       this.modelName,
-      json
+      json,
     );
     return super.getResponse();
   }

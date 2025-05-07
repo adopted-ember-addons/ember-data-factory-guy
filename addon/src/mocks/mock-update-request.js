@@ -5,7 +5,7 @@ import AttributeMatcher from './attribute-matcher';
 import MaybeIdUrlMatch from './maybe-id-url-match';
 
 export default class MockUpdateRequest extends MaybeIdUrlMatch(
-  AttributeMatcher(MockStoreRequest)
+  AttributeMatcher(MockStoreRequest),
 ) {
   constructor(modelName, { id, model } = {}) {
     super(modelName, 'updateRecord');
@@ -37,7 +37,7 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(
     assert(
       `[ember-data-factory-guy] Can't use returns in
       mockUpdate when update only has modelName and no id`,
-      this.id
+      this.id,
     );
 
     this.returnArgs = returns.attrs;
@@ -60,7 +60,7 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(
         json = Object.assign({}, args, { id: this.id });
       this.responseJson = this.fixtureBuilder.convertForBuild(
         this.modelName,
-        json
+        json,
       );
     }
     return super.getResponse();

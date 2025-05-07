@@ -57,7 +57,7 @@ module('MockFindAll', function (hooks) {
     assert.deepEqual(
       consoleStub.getCall(0).args,
       expectedArgs,
-      'without query params'
+      'without query params',
     );
 
     const queryParams = { include: 'company' };
@@ -68,7 +68,7 @@ module('MockFindAll', function (hooks) {
     assert.deepEqual(
       consoleStub.getCall(1).args,
       expectedArgs,
-      'with query params'
+      'with query params',
     );
 
     console.log.restore();
@@ -121,7 +121,7 @@ module('MockFindAll', function (hooks) {
     assert.equal(
       mockF.timesCalled,
       1,
-      'mockFindAll used since no query params exist'
+      'mockFindAll used since no query params exist',
     );
     assert.equal(mockQ.timesCalled, 0, 'mockQuery not used');
 
@@ -129,7 +129,7 @@ module('MockFindAll', function (hooks) {
     assert.equal(
       mockF.timesCalled,
       1,
-      'mockFindAll not used since query params exist'
+      'mockFindAll not used since query params exist',
     );
     assert.equal(mockQ.timesCalled, 1, 'now mockQuery is used');
   });
@@ -155,7 +155,7 @@ module('MockFindAll', function (hooks) {
       assert.equal(
         mock.getUrl(),
         '/users',
-        'default ember-data findRecord url'
+        'default ember-data findRecord url',
       );
 
       let adapter = FactoryGuy.store.adapterFor('user');
@@ -166,12 +166,12 @@ module('MockFindAll', function (hooks) {
       assert.equal(
         mock.getUrl(),
         '/zombies',
-        'factory guy uses urlForFindRecord from adapter'
+        'factory guy uses urlForFindRecord from adapter',
       );
       assert.ok(findAllStub.calledOnce);
       assert.ok(
         findAllStub.calledWith('user'),
-        'correct parameters passed to urlForFindAll'
+        'correct parameters passed to urlForFindAll',
       );
 
       adapter.urlForFindAll.restore();
@@ -191,7 +191,7 @@ module('MockFindAll', function (hooks) {
           adapterOptions: options,
           record: undefined,
         }),
-        'adapterOptions passed to urlForFindAll'
+        'adapterOptions passed to urlForFindAll',
       );
 
       adapter.urlForFindAll.restore();

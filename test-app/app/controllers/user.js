@@ -10,7 +10,7 @@ export default class UserController extends Controller {
 
   createProject = (user, title) => {
     return waitForPromise(
-      this.store.createRecord('project', { title: title, user: user }).save()
+      this.store.createRecord('project', { title: title, user: user }).save(),
     );
   };
 

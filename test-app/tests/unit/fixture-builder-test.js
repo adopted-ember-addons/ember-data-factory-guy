@@ -44,7 +44,7 @@ module('FixtureBuilderFactory', function (hooks) {
       let fixtureBuilder = factory.fixtureBuilder(modelName);
       assert.ok(
         fixtureBuilder instanceof expectedFixtureBuilder,
-        `${serializerType} returns ${expectedFixtureBuilder.name}`
+        `${serializerType} returns ${expectedFixtureBuilder.name}`,
       );
     }
   });

@@ -27,7 +27,7 @@ SharedBehavior.makeNewTests = function () {
     assert.deepEqual(
       user.get('projects').toArray(),
       projects.toArray(),
-      'hasMany projects'
+      'hasMany projects',
     );
   });
 };
@@ -78,7 +78,7 @@ SharedBehavior.makeTests = function () {
     assert.equal(
       dog.get('dogNumber'),
       'Dog1',
-      'attribute has the primary key value as well'
+      'attribute has the primary key value as well',
     );
   });
 
@@ -307,31 +307,31 @@ SharedBehavior.makeTests = function () {
     assert.equal(
       employee.name.firstName,
       name.firstName,
-      'fragment name.firstName'
+      'fragment name.firstName',
     );
     assert.equal(
       employee.name.lastName,
       name.lastName,
-      'fragment name.lastName'
+      'fragment name.lastName',
     );
   });
 
   test('handles fragmentArray relationships', function (assert) {
     let departmentEmployments = make(
       'employee',
-      'with_department_employments'
+      'with_department_employments',
     ).departmentEmployments;
 
     let employee = make('employee', { departmentEmployments });
     assert.equal(
       employee.departmentEmployments.firstObject.department.name,
       departmentEmployments.firstObject.department.name,
-      'fragment array  - first department name'
+      'fragment array  - first department name',
     );
     assert.equal(
       employee.departmentEmployments.lastObject.department.name,
       departmentEmployments.lastObject.department.name,
-      'fragment array  - last department name'
+      'fragment array  - last department name',
     );
   });
 

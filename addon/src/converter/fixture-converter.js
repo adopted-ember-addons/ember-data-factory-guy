@@ -14,7 +14,7 @@ let FragmentArray;
 if (macroCondition(dependencySatisfies('ember-data-model-fragments', '*'))) {
   Fragment = importSync('ember-data-model-fragments/fragment').default;
   FragmentArray = importSync(
-    'ember-data-model-fragments/array/fragment'
+    'ember-data-model-fragments/array/fragment',
   ).default;
 }
 
@@ -180,7 +180,7 @@ export default class FixtureConverter {
     the [ ${type} ] transform. If you are in a unit test, be sure
     to include it in the list of needs as [ transform:${type} ],  Or set your
     unit test to be [ integration: true ] and include everything.`,
-      transform
+      transform,
     );
 
     let transformer = container.lookup('transform:' + type);
@@ -191,7 +191,7 @@ export default class FixtureConverter {
     let attributes = {},
       transformKeyFunction = this.getTransformKeyFunction(
         modelName,
-        'Attribute'
+        'Attribute',
       );
 
     this.store.modelFor(modelName).eachAttribute((attribute, meta) => {
@@ -207,21 +207,21 @@ export default class FixtureConverter {
           (FragmentArray && attributeValueInFixture instanceof FragmentArray)
         ) {
           fixture[attributeKey] = this.normalizeModelFragments(
-            attributeValueInFixture
+            attributeValueInFixture,
           );
         }
 
         if (Object.prototype.hasOwnProperty.call(fixture, attribute)) {
           attributes[attributeKey] = transformValueFunction(
             fixture[attribute],
-            meta.options
+            meta.options,
           );
         } else if (
           Object.prototype.hasOwnProperty.call(fixture, attributeKey)
         ) {
           attributes[attributeKey] = transformValueFunction(
             fixture[attributeKey],
-            meta.options
+            meta.options,
           );
         }
       }
@@ -233,7 +233,7 @@ export default class FixtureConverter {
     if (Fragment && attributeValueInFixture instanceof Fragment) {
       return this.store.normalize(
         attributeValueInFixture.constructor.modelName,
-        attributeValueInFixture.serialize()
+        attributeValueInFixture.serialize(),
       ).data.attributes;
     }
     if (FragmentArray && attributeValueInFixture instanceof FragmentArray) {
@@ -242,7 +242,7 @@ export default class FixtureConverter {
         .map(
           (item) =>
             this.store.normalize(attributeValueInFixture.type, item).data
-              .attributes
+              .attributes,
         );
     }
   }
@@ -264,7 +264,7 @@ export default class FixtureConverter {
             fixture,
             relationship,
             modelName,
-            relationships
+            relationships,
           );
         } else if (relationship.kind === 'hasMany') {
           this.extractHasMany(fixture, relationship, modelName, relationships);
@@ -286,7 +286,7 @@ export default class FixtureConverter {
     let belongsToRecord = fixture[relationship.name],
       isEmbedded = this.isEmbeddedRelationship(
         parentModelName,
-        relationship.name
+        relationship.name,
       ),
       relationshipKey = isEmbedded
         ? relationship.name
@@ -295,7 +295,7 @@ export default class FixtureConverter {
     let data = this.extractSingleRecord(
       belongsToRecord,
       relationship,
-      isEmbedded
+      isEmbedded,
     );
     relationships[relationshipKey] = this.assignRelationship(data);
   }
@@ -322,7 +322,7 @@ export default class FixtureConverter {
       relationshipKey = this.transformRelationshipKey(relationship),
       isEmbedded = this.isEmbeddedRelationship(
         parentModelName,
-        relationship.name
+        relationship.name,
       );
 
     if (hasManyRecords && hasManyRecords.isProxy) {
@@ -330,7 +330,7 @@ export default class FixtureConverter {
         hasManyRecords,
         relationship,
         relationships,
-        isEmbedded
+        isEmbedded,
       );
     }
 
@@ -365,7 +365,7 @@ export default class FixtureConverter {
         assert(
           `Polymorphic relationships cannot be specified by id you
           need to supply an object with id and type`,
-          !relationship.options.polymorphic
+          !relationship.options.polymorphic,
         );
         record = { id: record, type: relationship.type };
         data = this.normalizeAssociation(record, relationship);
@@ -393,7 +393,7 @@ export default class FixtureConverter {
       assert(
         `You defined a link url ${link} for the [${relationshipKey}] relationship
         on model [${modelName}] but that relationship does not exist`,
-        relationships.get(relationshipKey)
+        relationships.get(relationshipKey),
       );
     }
   }
@@ -401,7 +401,7 @@ export default class FixtureConverter {
   addData(embeddedFixture, relationship, isEmbedded) {
     let relationshipType = this.getRelationshipType(
         relationship,
-        embeddedFixture
+        embeddedFixture,
       ),
       // find possibly more embedded fixtures
       data = this.convertSingle(relationshipType, embeddedFixture);

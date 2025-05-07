@@ -82,7 +82,7 @@ module('MockAny', function (hooks) {
     assert.deepEqual(
       json,
       whatsUpDoc,
-      'returns json for url matching params #2'
+      'returns json for url matching params #2',
     );
   });
 
@@ -105,7 +105,7 @@ module('MockAny', function (hooks) {
     assert.deepEqual(
       json,
       whatsUpDoc,
-      'returns json for url matching params #2'
+      'returns json for url matching params #2',
     );
   });
 
@@ -149,7 +149,7 @@ module('MockAny', function (hooks) {
     assert.deepEqual(
       json,
       whatsUpDoc,
-      'returns json for url matching params #2'
+      'returns json for url matching params #2',
     );
   });
 
@@ -184,7 +184,7 @@ module('MockAny', function (hooks) {
     assert.deepEqual(
       json,
       whatsUpDoc,
-      'returns json for url matching params #2'
+      'returns json for url matching params #2',
     );
   });
 
@@ -225,12 +225,12 @@ module('MockAny', function (hooks) {
       assert.equal(
         fooMock.timesCalled,
         0,
-        'fooMock#timesCalled is initially 0'
+        'fooMock#timesCalled is initially 0',
       );
       assert.equal(
         barMock.timesCalled,
         0,
-        'barMock#timesCalled is initially 0'
+        'barMock#timesCalled is initially 0',
       );
 
       await fetchJSON({
@@ -241,12 +241,12 @@ module('MockAny', function (hooks) {
       assert.equal(
         fooMock.timesCalled,
         1,
-        'fooMock#timesCalled is called once'
+        'fooMock#timesCalled is called once',
       );
       assert.equal(
         barMock.timesCalled,
         0,
-        'barMock#timesCalled is called once'
+        'barMock#timesCalled is called once',
       );
 
       await fetchJSON({
@@ -257,12 +257,12 @@ module('MockAny', function (hooks) {
       assert.equal(
         fooMock.timesCalled,
         1,
-        'fooMock#timesCalled is called once'
+        'fooMock#timesCalled is called once',
       );
       assert.equal(
         barMock.timesCalled,
         1,
-        'barMock#timesCalled is called once'
+        'barMock#timesCalled is called once',
       );
     });
   }
@@ -284,36 +284,36 @@ module('MockAny', function (hooks) {
       assert.equal(
         fooMock.timesCalled,
         0,
-        'fooMock#timesCalled is initially 0'
+        'fooMock#timesCalled is initially 0',
       );
       assert.equal(
         barMock.timesCalled,
         0,
-        'barMock#timesCalled is initially 0'
+        'barMock#timesCalled is initially 0',
       );
 
       await fetchJSON({ url, params: dataFoo, method });
       assert.equal(
         fooMock.timesCalled,
         1,
-        'fooMock#timesCalled is called once'
+        'fooMock#timesCalled is called once',
       );
       assert.equal(
         barMock.timesCalled,
         0,
-        'barMock#timesCalled is called once'
+        'barMock#timesCalled is called once',
       );
 
       await fetchJSON({ url, params: dataBar, method });
       assert.equal(
         fooMock.timesCalled,
         1,
-        'fooMock#timesCalled is called once'
+        'fooMock#timesCalled is called once',
       );
       assert.equal(
         barMock.timesCalled,
         1,
-        'barMock#timesCalled is called once'
+        'barMock#timesCalled is called once',
       );
     });
   }

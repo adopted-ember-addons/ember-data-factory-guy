@@ -35,7 +35,7 @@ export default class {
     }
     let transformKeyFunction = converter.getTransformKeyFunction(
       modelName,
-      'Attribute'
+      'Attribute',
     );
     return transformKeyFunction(key);
   }
@@ -103,7 +103,7 @@ export default class {
     assert(
       `[ember-data-factory-guy] Your error response must have an errors key. 
       The errors hash format is: {errors: {name: ["name too short"]}}`,
-      errors
+      errors,
     );
 
     for (let key in errors) {

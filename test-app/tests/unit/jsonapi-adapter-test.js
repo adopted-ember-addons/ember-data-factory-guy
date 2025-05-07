@@ -24,31 +24,31 @@ module(serializer, function (hooks) {
 
   SharedAdapterBehaviour.mockFindRecordSideloadingTests(
     serializer,
-    serializerType
+    serializerType,
   );
   SharedAdapterBehaviour.mockFindAllSideloadingTests(
     serializer,
-    serializerType
+    serializerType,
   );
 
   SharedAdapterBehaviour.mockQueryMetaTests(serializer, serializerType);
 
   SharedAdapterBehaviour.mockUpdateWithErrorMessages(
     serializer,
-    serializerType
+    serializerType,
   );
   SharedAdapterBehaviour.mockUpdateReturnsAssociations(
     serializer,
-    serializerType
+    serializerType,
   );
 
   SharedAdapterBehaviour.mockCreateReturnsAssociations(
     serializer,
-    serializerType
+    serializerType,
   );
   SharedAdapterBehaviour.mockCreateFailsWithErrorResponse(
     serializer,
-    serializerType
+    serializerType,
   );
 
   module('#mockFindRecord custom', function () {
@@ -761,7 +761,7 @@ module(serializer, function (hooks) {
 
       let projectJson = build(
         'project',
-        'with_user_having_hats_belonging_to_outfit'
+        'with_user_having_hats_belonging_to_outfit',
       );
       assert.deepEqual(projectJson.data, expectedData.data);
       assert.deepEqual(projectJson.included, expectedData.included);
@@ -853,7 +853,7 @@ module(serializer, function (hooks) {
       assert.equal(
         dog.get('dog-number'),
         'Dog1',
-        'attribute has the primary key value as well'
+        'attribute has the primary key value as well',
       );
     });
 
