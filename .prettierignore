@@ -3,12 +3,12 @@
 /vendor/
 
 # compiled output
-/**/dist/
-/**/tmp/
+dist
+tmp
 
 # dependencies
-/**/bower_components/
-/**/node_modules/
+bower_components
+node_modules
 
 # misc
 /coverage/
