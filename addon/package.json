@@ -11,7 +11,8 @@
   "homepage": "https://github.com/adopted-ember-addons/ember-data-factory-guy",
   "repository": {
     "type": "git",
-    "url": "https://github.com/adopted-ember-addons/ember-data-factory-guy"
+    "url": "git+https://github.com/adopted-ember-addons/ember-data-factory-guy.git",
+    "directory": "addon"
   },
   "license": "MIT",
   "author": "Daniel Sudol <dansudol@yahoo.com>",
