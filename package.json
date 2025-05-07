@@ -20,7 +20,7 @@
     "@babel/eslint-parser": "^7.27.1",
     "@babel/plugin-proposal-decorators": "^7.27.1",
     "@babel/plugin-transform-class-properties": "^7.27.1",
-    "ember-template-lint": "^3.6.0",
+    "ember-template-lint": "^7.6.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-ember": "^10.5.4",

@@ -11,11 +11,14 @@
     {{/each}}
   </ul>
 
-  <label>Project title<Input
-      class='project-title'
-      @type='textbox'
-      @value={{@projectTitle}}
-    /></label>
+  {{#if @setProjectTitle}}
+    <label>Project title<input
+        class='project-title'
+        type='textbox'
+        value={{@projectTitle}}
+        {{on 'change' @setProjectTitle}}
+      /></label>
+  {{/if}}
   {{#if @createProject}}
     <button
       class='add-project'
