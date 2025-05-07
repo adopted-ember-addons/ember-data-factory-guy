@@ -6,11 +6,13 @@ Feel the thrill and enjoyment of testing when using Factories instead of Fixture
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
 **Supports**
+
 - Support for **[ember-data-model-fragment](https://github.com/lytics/ember-data-model-fragments)** usage is baked in since v2.5.0
 - Support for adding [meta data](#using-add-method) to payloads (eg for use with **ember-infinity** ie. => pagination)
 - Support for adding headers to payloads
 
 **Why is FactoryGuy so awesome**
+
 - Since you're using ember data, you don't need to create any ORM like things
 - You don't need to add any files to recreate the relationships in your models
 - Any custom methods like: serialize / serializeAttribute / keyForAttribute etc... in a serializer will be used automatically
@@ -19,98 +21,101 @@ Factories simplify the process of testing, making you more efficient and your te
 - You can push models and their complex relationships directly to the store
 
 ### Questions / Get in Touch
+
 Visit the EmberJS Community [#e-factory-guy](https://embercommunity.slack.com/messages/e-factory-guy/) Slack channel
 
 ### Contents
-  - [How It Works](#how-it-works)
-  - [Installation](#installation)
-  - [Setup](#setup)
-  - [Defining Factories](#defining-factories)
-  - [Using Factories](#using-factories)
-  - [Using in Development, Production or other environments](#using-in-other-environments)
-  - [Ember Data Model Fragments](#ember-data-model-fragments)
-  - [Creating Factories in Addons](#creating-factories-in-addons)
-  - [Custom API formats](#custom-api-formats)
-  - [Testing models, controllers, components](#testing-models-controllers-components)
-  - [Acceptance Tests](#acceptance-tests)
-  - [Pretender](#pretender)
-  - [Tips and Tricks](#tips-and-tricks)
-  - [Upgrading](#upgrading)
+
+- [How It Works](#how-it-works)
+- [Installation](#installation)
+- [Setup](#setup)
+- [Defining Factories](#defining-factories)
+- [Using Factories](#using-factories)
+- [Using in Development, Production or other environments](#using-in-other-environments)
+- [Ember Data Model Fragments](#ember-data-model-fragments)
+- [Creating Factories in Addons](#creating-factories-in-addons)
+- [Custom API formats](#custom-api-formats)
+- [Testing models, controllers, components](#testing-models-controllers-components)
+- [Acceptance Tests](#acceptance-tests)
+- [Pretender](#pretender)
+- [Tips and Tricks](#tips-and-tricks)
+- [Upgrading](#upgrading)
 
 ### How it works
-  - You create factories for your models.
-    - put them in the `tests/factories` directory
-  - Use these factories to create models for your tests
-    - you can make records that persist in the store
-    - or you can build a json payload used for mocking an ajax call's payload
+
+- You create factories for your models.
+  - put them in the `tests/factories` directory
+- Use these factories to create models for your tests
+  - you can make records that persist in the store
+  - or you can build a json payload used for mocking an ajax call's payload
 
 ### Installation
 
- - ```ember install ember-data-factory-guy```
+- `ember install ember-data-factory-guy`
 
 ### Setup
 
 In the following examples, assume the models look like this:
 
 ```javascript
-  // standard models
-  class User extends Model {
-    @attr('string')     name
-    @attr('string')     style
-    @hasMany('project') projects
-    @hasMany('hat', {polymorphic: true})  hats
-  }
+// standard models
+class User extends Model {
+  @attr('string') name;
+  @attr('string') style;
+  @hasMany('project') projects;
+  @hasMany('hat', { polymorphic: true }) hats;
+}
 
-  class Project extends Model {
-    @attr('string')     title
-    @belongsTo('user')  user
-  }
+class Project extends Model {
+  @attr('string') title;
+  @belongsTo('user') user;
+}
 
-  // polymorphic models
-  class Hat extends Model {
-    @attr('string')     type
-    @belongsTo('user')  user
-  }
+// polymorphic models
+class Hat extends Model {
+  @attr('string') type;
+  @belongsTo('user') user;
+}
 
-  class BigHat extends Hat {};
-  class SmallHat extends Hat {};
+class BigHat extends Hat {}
+class SmallHat extends Hat {}
 ```
 
 ### Defining Factories
- - A factory has a name and a set of attributes.
- - The name should match the model type name. So, for the model `User`, the factory name would be `user`
- - Create factory files in the `tests/factories` directory.
- - Can use generators to create the outline of a factory file:
-  ```ember generate factory user``` This will create a factory in a file named `user.js` in the `tests/factories` directory.
 
+- A factory has a name and a set of attributes.
+- The name should match the model type name. So, for the model `User`, the factory name would be `user`
+- Create factory files in the `tests/factories` directory.
+- Can use generators to create the outline of a factory file:
+  `ember generate factory user` This will create a factory in a file named `user.js` in the `tests/factories` directory.
 
 #### Standard models
 
 - Sample full blown factory: [`user.js`](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/test-app/tests/factories/user.js)
 
 - Brief sample of a factory definition:
+
 ```javascript
+// file tests/factories/user.js
+import FactoryGuy from 'ember-data-factory-guy';
 
-  // file tests/factories/user.js
-  import FactoryGuy from 'ember-data-factory-guy';
-
-  FactoryGuy.define('user', {
-    // Put default 'user' attributes in the default section
-    default: {
-      style: 'normal',
-      name: 'Dude'
-    },
-    // Create a named 'user' with custom attributes
-    admin: {
-      style: 'super',
-      name: 'Admin'
-    }
-  });
-
+FactoryGuy.define('user', {
+  // Put default 'user' attributes in the default section
+  default: {
+    style: 'normal',
+    name: 'Dude',
+  },
+  // Create a named 'user' with custom attributes
+  admin: {
+    style: 'super',
+    name: 'Admin',
+  },
+});
 ```
 
 - If you are using an attribute named `type` and this is not a polymorphic model, use the option
-  ```polymorphic: false``` in your definition
+  `polymorphic: false` in your definition
+
 ```javascript
 // file: tests/factories/cat.js
 FactoryGuy.define('cat', {
@@ -119,37 +124,35 @@ FactoryGuy.define('cat', {
     // usually, an attribute named 'type' is for polymorphic models, but the defenition
     // is set as NOT polymorphic, which allows this type to work as attibute
     type: 'Cute',
-    name: (f)=> `Cat ${f.id}`
-  }
+    name: (f) => `Cat ${f.id}`,
+  },
 });
 ```
 
 #### Polymorphic models
 
- - Define each polymorphic model in its own typed definition
- - The attribute named `type` is used to hold the model name
- - May want to extend the parent factory here (see [extending other definitions](iel/ember-data-factory-guy#extending-other-definitions))
+- Define each polymorphic model in its own typed definition
+- The attribute named `type` is used to hold the model name
+- May want to extend the parent factory here (see [extending other definitions](iel/ember-data-factory-guy#extending-other-definitions))
 
 ```javascript
+// file tests/factories/small-hat.js
+import FactoryGuy from 'ember-data-factory-guy';
 
-  // file tests/factories/small-hat.js
-  import FactoryGuy from 'ember-data-factory-guy';
+FactoryGuy.define('small-hat', {
+  default: {
+    type: 'SmallHat',
+  },
+});
 
-  FactoryGuy.define('small-hat', {
-    default: {
-      type: 'SmallHat'
-    }
-  })
+// file tests/factories/big-hat.js
+import FactoryGuy from 'ember-data-factory-guy';
 
-  // file tests/factories/big-hat.js
-  import FactoryGuy from 'ember-data-factory-guy';
-
-  FactoryGuy.define('big-hat', {
-    default: {
-      type: 'BigHat'
-    }
-  })
-
+FactoryGuy.define('big-hat', {
+  default: {
+    type: 'BigHat',
+  },
+});
 ```
 
 In other words, don't do this:
@@ -174,132 +177,118 @@ In other words, don't do this:
 
 - For generating unique attribute values.
 - Can be defined:
-    - In the model definition's `sequences` hash
-    - Inline on the attribute
+  - In the model definition's `sequences` hash
+  - Inline on the attribute
 - Values are generated by calling `FactoryGuy.generate`
 
 ##### Declaring sequences in sequences hash
 
 ```javascript
+FactoryGuy.define('user', {
+  sequences: {
+    userName: (num) => `User${num}`,
+  },
 
-  FactoryGuy.define('user', {
-    sequences: {
-      userName: (num)=> `User${num}`
-    },
+  default: {
+    // use the 'userName' sequence for this attribute
+    name: FactoryGuy.generate('userName'),
+  },
+});
 
-    default: {
-      // use the 'userName' sequence for this attribute
-      name: FactoryGuy.generate('userName')
-    }
-  });
+let first = FactoryGuy.build('user');
+first.get('name'); // => 'User1'
 
-  let first = FactoryGuy.build('user');
-  first.get('name') // => 'User1'
-
-  let second = FactoryGuy.make('user');
-  second.get('name') // => 'User2'
-
+let second = FactoryGuy.make('user');
+second.get('name'); // => 'User2'
 ```
 
 ##### Declaring an inline sequence on attribute
 
 ```javascript
+FactoryGuy.define('project', {
+  special_project: {
+    title: FactoryGuy.generate((num) => `Project #${num}`),
+  },
+});
 
-  FactoryGuy.define('project', {
-    special_project: {
-      title: FactoryGuy.generate((num)=> `Project #${num}`)
-    },
-  });
+let json = FactoryGuy.build('special_project');
+json.get('title'); // => 'Project #1'
 
-  let json = FactoryGuy.build('special_project');
-  json.get('title') // => 'Project #1'
-
-  let project = FactoryGuy.make('special_project');
-  project.get('title') // => 'Project #2'
-
+let project = FactoryGuy.make('special_project');
+project.get('title'); // => 'Project #2'
 ```
-
 
 ### Inline Functions
 
 - Declare a function for an attribute
   - The fixture is passed as parameter so you can reference
-  all other attributes, even id
-
+    all other attributes, even id
 
 ```javascript
-
-  FactoryGuy.define('user', {
-    default: {
-      // Don't need the userName sequence, since the id is almost
-      // always a sequential number, and you can use that.
-      // f is the fixture being built as the moment for this factory
-      // definition, which has the id available
-      name: (f)=> `User${f.id}`
+FactoryGuy.define('user', {
+  default: {
+    // Don't need the userName sequence, since the id is almost
+    // always a sequential number, and you can use that.
+    // f is the fixture being built as the moment for this factory
+    // definition, which has the id available
+    name: (f) => `User${f.id}`,
+  },
+  traits: {
+    boring: {
+      style: (f) => `${f.id} boring`,
     },
-    traits: {
-      boring: {
-        style: (f)=> `${f.id} boring`
-      },
-      funny: {
-        style: (f)=> `funny ${f.name}`
-      }
-    }
-  });
+    funny: {
+      style: (f) => `funny ${f.name}`,
+    },
+  },
+});
 
-  let json = FactoryGuy.build('user', 'funny');
-  json.get('name') // => 'User1'
-  json.get('style') // => 'funny User1'
+let json = FactoryGuy.build('user', 'funny');
+json.get('name'); // => 'User1'
+json.get('style'); // => 'funny User1'
 
-  let user = FactoryGuy.make('user', 'boring');
-  user.get('id') // => 2
-  user.get('style') // => '2 boring'
-
+let user = FactoryGuy.make('user', 'boring');
+user.get('id'); // => 2
+user.get('style'); // => '2 boring'
 ```
 
-*Note the style attribute was built from a function which depends on the name
- and the name is a generated attribute from a sequence function*
-
+_Note the style attribute was built from a function which depends on the name
+and the name is a generated attribute from a sequence function_
 
 ### Traits
+
 - Used with `attributesFor , build/buildList , make/makeList`
 - For grouping attributes together
 - Can use one or more traits
- - Each trait overrides any values defined in traits before it in the argument list
+- Each trait overrides any values defined in traits before it in the argument list
 - traits can be functions ( this is mega powerful )
 
 ```javascript
+FactoryGuy.define('user', {
+  traits: {
+    big: { name: 'Big Guy' },
+    friendly: { style: 'Friendly' },
+    bfg: { name: 'Big Friendly Giant', style: 'Friendly' },
+  },
+});
 
-  FactoryGuy.define('user', {
-    traits: {
-      big: { name: 'Big Guy' },
-      friendly: { style: 'Friendly' },
-      bfg: { name: 'Big Friendly Giant', style: 'Friendly' }
-    }
-  });
+let user = FactoryGuy.make('user', 'big', 'friendly');
+user.get('name'); // => 'Big Guy'
+user.get('style'); // => 'Friendly'
 
-  let user = FactoryGuy.make('user', 'big', 'friendly');
-  user.get('name') // => 'Big Guy'
-  user.get('style') // => 'Friendly'
-
-  let giant = FactoryGuy.make('user', 'big', 'bfg');
-  user.get('name') // => 'Big Friendly Giant' - name defined in the 'bfg' trait overrides the name defined in the 'big' trait
-  user.get('style') // => 'Friendly'
-
-
+let giant = FactoryGuy.make('user', 'big', 'bfg');
+user.get('name'); // => 'Big Friendly Giant' - name defined in the 'bfg' trait overrides the name defined in the 'big' trait
+user.get('style'); // => 'Friendly'
 ```
 
 You can still pass in a hash of options when using traits. This hash of
 attributes will override any trait attributes or default attributes
 
 ```javascript
-
-  let user = FactoryGuy.make('user', 'big', 'friendly', {name: 'Dave'});
-  user.get('name') // => 'Dave'
-  user.get('style') // => 'Friendly'
-
+let user = FactoryGuy.make('user', 'big', 'friendly', { name: 'Dave' });
+user.get('name'); // => 'Dave'
+user.get('style'); // => 'Friendly'
 ```
-
 
 ##### Using traits as functions
 
@@ -330,29 +319,29 @@ FactoryGuy.define("project", {
 });
 ```
 
-So, when you make / build  a project like:
+So, when you make / build a project like:
 
 ```js
-let project =  make('project', 'medium');
+let project = make('project', 'medium');
 project.get('title'); //=> 'Medium Project 1'
 
-let project2 =  build('project', 'goofy');
+let project2 = build('project', 'goofy');
 project2.get('title'); //=> 'Goofy Project 2'
 
-let project3 =  build('project', 'withUser');
+let project3 = build('project', 'withUser');
 project3.get('user.name'); //=> 'User 1'
 ```
 
 Your trait function assigns the title as you described in the function
 
-
 #### Associations
 
 - Can setup belongsTo or hasMany associations in factory definitions
-    - As inline attribute definition
-    - With traits
-    - as links for async relationships
+  - As inline attribute definition
+  - With traits
+  - as links for async relationships
 - Can setup belongsTo or hasMany associations manually
+
   - With `FactoryGuy.build`/`FactoryGuy.buildList` and `FactoryGuy.make`/`FactoryGuy.makeList`
     - Can compose relationships to any level
   - When setting up manually do not mix `build` and `make` - you either `build` JSON in every levels of associations or `make` objects. `build` is taking serializer into account for every model which means that output from `build` might be different than expected input defined in factory in `make`.
@@ -364,111 +353,109 @@ Your trait function assigns the title as you described in the function
 - using traits are the best practice
 
 ```javascript
-  FactoryGuy.define('project', {
+FactoryGuy.define('project', {
+  traits: {
+    withUser: { user: {} },
+    withAdmin: { user: FactoryGuy.belongsTo('user', 'admin') },
+    withManagerLink(f) {
+      // f is the fixture being created
+      f.links = { manager: `/projects/${f.id}/manager` };
+    },
+  },
+});
 
-    traits: {
-      withUser: { user: {} },
-      withAdmin: { user: FactoryGuy.belongsTo('user', 'admin') },
-      withManagerLink(f) { // f is the fixture being created
-        f.links = {manager: `/projects/${f.id}/manager`}
-      }
-    }
-  });
+let user = make('project', 'withUser');
+project.get('user').toJSON({ includeId: true }); // => {id:1, name: 'Dude', style: 'normal'}
 
-  let user = make('project', 'withUser');
-  project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
-
-  user = make('user', 'withManagerLink');
-  user.belongsTo('manager').link(); // => "/projects/1/manager"
-
+user = make('user', 'withManagerLink');
+user.belongsTo('manager').link(); // => "/projects/1/manager"
 ```
 
-
 ##### Setup belongsTo associations manually
+
 See `FactoryGuy.build`/`FactoryGuy.buildList` for more ideas
 
 ```javascript
-  let user = make('user');
-  let project = make('project', {user});
+let user = make('user');
+let project = make('project', { user });
 
-  project.get('user').toJSON({includeId: true}) // => {id:1, name: 'Dude', style: 'normal'}
+project.get('user').toJSON({ includeId: true }); // => {id:1, name: 'Dude', style: 'normal'}
 ```
 
-*Note that though you are setting the 'user' belongsTo association on a project,
+_Note that though you are setting the 'user' belongsTo association on a project,
 the reverse user hasMany 'projects' association is being setup for you on the user
-( for both manual and factory defined belongsTo associations ) as well*
+( for both manual and factory defined belongsTo associations ) as well_
 
 ```javascript
-  user.get('projects.length') // => 1
+user.get('projects.length'); // => 1
 ```
 
 ##### Setup hasMany associations in the Factory Definition
 
- - using traits are the best practice
- - Do not create `hasMany` records via the `default` section of the factory definition. Prefer traits to set up such associations. Creating them via the `default` section is known to cause some undefined behavior when using the `makeNew` API.
+- using traits are the best practice
+- Do not create `hasMany` records via the `default` section of the factory definition. Prefer traits to set up such associations. Creating them via the `default` section is known to cause some undefined behavior when using the `makeNew` API.
 
 ```javascript
+FactoryGuy.define('user', {
+  traits: {
+    withProjects: {
+      projects: FactoryGuy.hasMany('project', 2),
+    },
+    withPropertiesLink(f) {
+      // f is the fixture being created
+      f.links = { properties: `/users/${f.id}/properties` };
+    },
+  },
+});
 
-  FactoryGuy.define('user', {
-    traits: {
-      withProjects: {
-        projects: FactoryGuy.hasMany('project', 2)
-      },
-      withPropertiesLink(f) { // f is the fixture being created
-        f.links = {properties: `/users/${f.id}/properties`}
-      }
-    }
-  });
+let user = make('user', 'withProjects');
+user.get('projects.length'); // => 2
 
-  let user = make('user', 'withProjects');
-  user.get('projects.length') // => 2
-
-  user = make('user', 'withPropertiesLink');
-  user.hasMany('properties').link(); // => "/users/1/properties"
+user = make('user', 'withPropertiesLink');
+user.hasMany('properties').link(); // => "/users/1/properties"
 ```
 
-*You could also setup a custom named user definition:*
+_You could also setup a custom named user definition:_
 
 ```javascript
-  FactoryGuy.define('user', {
+FactoryGuy.define('user', {
+  userWithProjects: { projects: FactoryGuy.hasMany('project', 2) },
+});
 
-    userWithProjects: { projects: FactoryGuy.hasMany('project', 2) }
-
-  });
-
-  let user = make('userWithProjects');
-  user.get('projects.length') // => 2
+let user = make('userWithProjects');
+user.get('projects.length'); // => 2
 ```
 
 ##### Setup hasMany associations manually
+
 See `FactoryGuy.build`/`FactoryGuy.makeList` for more ideas
 
 ```javascript
-  let project1 = make('project');
-  let project2 = make('project');
-  let user = make('user', {projects: [project1, project2]});
-  user.get('projects.length') // => 2
+let project1 = make('project');
+let project2 = make('project');
+let user = make('user', { projects: [project1, project2] });
+user.get('projects.length'); // => 2
 
-  // or
-  let projects = makeList('project', 2);
-  let user = make('user', {projects});
-  user.get('projects.length') // => 2
-
+// or
+let projects = makeList('project', 2);
+let user = make('user', { projects });
+user.get('projects.length'); // => 2
 ```
 
-*Note that though you are setting the 'projects' hasMany association on a user,
+_Note that though you are setting the 'projects' hasMany association on a user,
 the reverse 'user' belongsTo association is being setup for you on the project
-( for both manual and factory defined hasMany associations ) as well*
+( for both manual and factory defined hasMany associations ) as well_
 
 ```javascript
-  projects.get('firstObject.user')  // => user
+projects.get('firstObject.user'); // => user
 ```
 
 ##### Special tips for links
-  - The links syntax changed as of ( v3.2.1 )
-    - What you see below is the new syntax
-  - You can setup data AND links for your async relationship
-  - Need special care with multiple traits setting links
+
+- The links syntax changed as of ( v3.2.1 )
+  - What you see below is the new syntax
+- You can setup data AND links for your async relationship
+- Need special care with multiple traits setting links
 
 ```javascript
 
@@ -501,66 +488,66 @@ the reverse 'user' belongsTo association is being setup for you on the project
 ```
 
 ### Extending Other Definitions
-  - Extending another definition will inherit these sections:
-    - sequences
-    - traits
-    - default attributes
-  - Inheritance is fine grained, so in each section, any attribute that is local
-    will take precedence over an inherited one. So you can override some
-    attributes in the default section ( for example ), and inherit the rest
+
+- Extending another definition will inherit these sections:
+  - sequences
+  - traits
+  - default attributes
+- Inheritance is fine grained, so in each section, any attribute that is local
+  will take precedence over an inherited one. So you can override some
+  attributes in the default section ( for example ), and inherit the rest
 
 There is a sample Factory using inheritance here: [`big-group.js`](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/test-app/tests/factories/big-group.js)
 
-
 ### Transient Attributes
-  - Use transient attributes to build a fixture
-    - Pass in any attribute you like to build a fixture
-    - Usually helps you to build some other attribute
-    - These attributes will be removed when fixture is done building
-  - Can be used in `make`/`makeList`/`build`/`buildList`
+
+- Use transient attributes to build a fixture
+  - Pass in any attribute you like to build a fixture
+  - Usually helps you to build some other attribute
+  - These attributes will be removed when fixture is done building
+- Can be used in `make`/`makeList`/`build`/`buildList`
 
 Let's say you have a model and a factory like this:
 
 ```javascript
+// app/models/dog.js
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
 
-  // app/models/dog.js
-  import Model from 'ember-data/model';
-  import attr from 'ember-data/attr';
+export default class Dog extends Model {
+  @attr('string') dogNumber;
+  @attr('string') sound;
+}
 
-  export default class Dog extends Model{
-    @attr('string') dogNumber
-    @attr('string') sound
-  }
+// tests/factories/dog.js
+import FactoryGuy from 'ember-data-factory-guy';
 
-  // tests/factories/dog.js
-  import FactoryGuy from 'ember-data-factory-guy';
+const defaultVolume = 'Normal';
 
-  const defaultVolume = "Normal";
-
-  FactoryGuy.define('dog', {
-    default: {
-      dogNumber: (f)=> `Dog${f.id}`,
-      sound: (f) => `${f.volume || defaultVolume} Woof`
-    },
-  });
+FactoryGuy.define('dog', {
+  default: {
+    dogNumber: (f) => `Dog${f.id}`,
+    sound: (f) => `${f.volume || defaultVolume} Woof`,
+  },
+});
 ```
 
 Then to build the fixture:
 
 ```javascript
-  let dog2 = build('dog', { volume: 'Soft' });
+let dog2 = build('dog', { volume: 'Soft' });
 
-  dog2.get('sound'); //=> `Soft Woof`
+dog2.get('sound'); //=> `Soft Woof`
 ```
 
-
 ### Callbacks
-  - `afterMake`
-    - Uses transient attributes
-    - Unfortunately the model will fire 'onload' event before this `afterMake` is called.
-      - So all data will not be setup by then if you rely on `afterMake` to finish by the
-     time `onload` is called.
-      - In this case, just use transient attributes without the `afterMake`
+
+- `afterMake`
+  - Uses transient attributes
+  - Unfortunately the model will fire 'onload' event before this `afterMake` is called.
+    - So all data will not be setup by then if you rely on `afterMake` to finish by the
+      time `onload` is called.
+    - In this case, just use transient attributes without the `afterMake`
 
 Assuming the factory-guy model definition defines `afterMake` function:
 
@@ -588,199 +575,197 @@ Assuming the factory-guy model definition defines `afterMake` function:
 You would use this to make models like:
 
 ```javascript
-  let property = FactoryGuy.make('property');
-  property.get('name'); // => 'Silly property(FOR SALE)')
+let property = FactoryGuy.make('property');
+property.get('name'); // => 'Silly property(FOR SALE)')
 
-  let property = FactoryGuy.make('property', {for_sale: false});
-  property.get('name'); // => 'Silly property')
-
+let property = FactoryGuy.make('property', { for_sale: false });
+property.get('name'); // => 'Silly property')
 ```
 
 ### Using Factories
- - [`FactoryGuy.attributesFor`](#factoryguyattributesfor)
-   - returns attributes ( for now no relationship info )
- - [`FactoryGuy.make`](#factoryguymake)
-   - push model instances into store
- - [`FactoryGuy.makeNew`](#factoryguymakenew)
-   - Create a new model instance but doesn't load it to the store
- - [`FactoryGuy.makeList`](#factoryguymakelist)
-   - Loads zero to many model instances into the store
- - [`FactoryGuy.build`](#factoryguybuild)
-   - Builds json in accordance with the adapter's specifications
-     - [RESTAdapter](http://emberjs.com/api/data/classes/DS.RESTAdapter.html)  (*assume this adapter being used in most of the following examples*)
-     - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
-     - [JSONAPIAdapter](http://jsonapi.org/format/)
- - [`FactoryGuy.buildList`](#factoryguybuildlist)
-   - Builds json with a list of zero or more items in accordance with the adapter's specifications
- - Can override default attributes by passing in an object of options
- - Can add attributes or relationships with [traits](#traits)
- - Can compose relationships
-    - By passing in other objects you've made with `build`/`buildList` or `make`/`makeList`
- - Can setup links for async relationships with `build`/`buildList` or `make`/`makeList`
+
+- [`FactoryGuy.attributesFor`](#factoryguyattributesfor)
+  - returns attributes ( for now no relationship info )
+- [`FactoryGuy.make`](#factoryguymake)
+  - push model instances into store
+- [`FactoryGuy.makeNew`](#factoryguymakenew)
+  - Create a new model instance but doesn't load it to the store
+- [`FactoryGuy.makeList`](#factoryguymakelist)
+  - Loads zero to many model instances into the store
+- [`FactoryGuy.build`](#factoryguybuild)
+  - Builds json in accordance with the adapter's specifications
+    - [RESTAdapter](http://emberjs.com/api/data/classes/DS.RESTAdapter.html) (_assume this adapter being used in most of the following examples_)
+    - [ActiveModelAdapter](https://github.com/ember-data/active-model-adapter#json-structure)
+    - [JSONAPIAdapter](http://jsonapi.org/format/)
+- [`FactoryGuy.buildList`](#factoryguybuildlist)
+  - Builds json with a list of zero or more items in accordance with the adapter's specifications
+- Can override default attributes by passing in an object of options
+- Can add attributes or relationships with [traits](#traits)
+- Can compose relationships
+  - By passing in other objects you've made with `build`/`buildList` or `make`/`makeList`
+- Can setup links for async relationships with `build`/`buildList` or `make`/`makeList`
 
 ##### `FactoryGuy.attributesFor`
-  - nice way to get attibutes for a factory without making a model or payload
-  - same arguments as make/build
-  - no id is returned
-  - no relationship info returned ( yet )
+
+- nice way to get attibutes for a factory without making a model or payload
+- same arguments as make/build
+- no id is returned
+- no relationship info returned ( yet )
 
 ```javascript
+import { attributesFor } from 'ember-data-factory-guy';
 
-  import { attributesFor } from 'ember-data-factory-guy';
-
-  // make a user with certain traits and options
-  attributesFor('user', 'silly', {name: 'Fred'}); // => { name: 'Fred', style: 'silly'}
-
+// make a user with certain traits and options
+attributesFor('user', 'silly', { name: 'Fred' }); // => { name: 'Fred', style: 'silly'}
 ```
 
 ##### `FactoryGuy.make`
-  - Loads a model instance into the store
-  - makes a fragment hash ( if it is a model fragment )
-  - can compose relationships with other `FactoryGuy.make`/`FactoryGuy.makeList`
-  - can add relationship links to payload
+
+- Loads a model instance into the store
+- makes a fragment hash ( if it is a model fragment )
+- can compose relationships with other `FactoryGuy.make`/`FactoryGuy.makeList`
+- can add relationship links to payload
 
 ```javascript
+import { make } from 'ember-data-factory-guy';
 
-  import { make } from 'ember-data-factory-guy';
+// make a user with the default attributes in user factory
+let user = make('user');
+user.toJSON({ includeId: true }); // => {id: 1, name: 'User1', style: 'normal'}
 
-  // make a user with the default attributes in user factory
-  let user = make('user');
-  user.toJSON({includeId: true}); // => {id: 1, name: 'User1', style: 'normal'}
+// make a user with the default attributes plus those defined as 'admin' in the user factory
+let user = make('admin');
+user.toJSON({ includeId: true }); // => {id: 2, name: 'Admin', style: 'super'}
 
-  // make a user with the default attributes plus those defined as 'admin' in the user factory
-  let user = make('admin');
-  user.toJSON({includeId: true}); // => {id: 2, name: 'Admin', style: 'super'}
+// make a user with the default attributes plus these extra attributes provided in the optional hash
+let user = make('user', { name: 'Fred' });
+user.toJSON({ includeId: true }); // => {id: 3, name: 'Fred', style: 'normal'}
 
-  // make a user with the default attributes plus these extra attributes provided in the optional hash
-  let user = make('user', {name: 'Fred'});
-  user.toJSON({includeId: true}); // => {id: 3, name: 'Fred', style: 'normal'}
+// make an 'admin' user with these extra attributes
+let user = make('admin', { name: 'Fred' });
+user.toJSON({ includeId: true }); // => {id: 4, name: 'Fred', style: 'super'}
 
-  // make an 'admin' user with these extra attributes
-  let user = make('admin', {name: 'Fred'});
-  user.toJSON({includeId: true}); // => {id: 4, name: 'Fred', style: 'super'}
+// make a user with a trait ('silly') plus these extra attributes provided in the optional hash
+let user = make('user', 'silly', { name: 'Fred' });
+user.toJSON({ includeId: true }); // => {id: 5, name: 'Fred', style: 'silly'}
 
-  // make a user with a trait ('silly') plus these extra attributes provided in the optional hash
-  let user = make('user', 'silly', {name: 'Fred'});
-  user.toJSON({includeId: true}); // => {id: 5, name: 'Fred', style: 'silly'}
+// make a user with a hats relationship ( hasMany ) composed of pre-made hats
+let hat1 = make('big-hat');
+let hat2 = make('big-hat');
+let user = make('user', { hats: [hat1, hat2] });
+user.toJSON({ includeId: true });
+// => {id: 6, name: 'User2', style: 'normal', hats: [{id:1, type:"big_hat"},{id:1, type:"big_hat"}]}
+// note that hats are polymorphic. if they weren't, the hats array would be a list of ids: [1,2]
 
-  // make a user with a hats relationship ( hasMany ) composed of pre-made hats
-  let hat1 = make('big-hat');
-  let hat2 = make('big-hat');
-  let user = make('user', {hats: [hat1, hat2]});
-  user.toJSON({includeId: true})
-  // => {id: 6, name: 'User2', style: 'normal', hats: [{id:1, type:"big_hat"},{id:1, type:"big_hat"}]}
-  // note that hats are polymorphic. if they weren't, the hats array would be a list of ids: [1,2]
+// make a user with a company relationship ( belongsTo ) composed of a pre-made company
+let company = make('company');
+let user = make('user', { company: company });
+user.toJSON({ includeId: true }); // => {id: 7, name: 'User3', style: 'normal', company: 1}
 
-  // make a user with a company relationship ( belongsTo ) composed of a pre-made company
-  let company = make('company');
-  let user = make('user', {company: company});
-  user.toJSON({includeId: true})  // => {id: 7, name: 'User3', style: 'normal', company: 1}
+// make user with links to async hasMany properties
+let user = make('user', { properties: { links: '/users/1/properties' } });
 
-  // make user with links to async hasMany properties
-  let user = make('user', {properties: {links: '/users/1/properties'}});
+// make user with links to async belongsTo company
+let user = make('user', { company: { links: '/users/1/company' } });
 
-  // make user with links to async belongsTo company
-  let user = make('user', {company: {links: '/users/1/company'}});
-
-  // for model fragments you get an object
-  let object = make('name'); // => {firstName: 'Boba', lastName: 'Fett'}
-
+// for model fragments you get an object
+let object = make('name'); // => {firstName: 'Boba', lastName: 'Fett'}
 ```
 
 ##### `FactoryGuy.makeNew`
-  - Same api as `FactoryGuy.make`
-    - except that the model will be a newly created record with no id
+
+- Same api as `FactoryGuy.make`
+  - except that the model will be a newly created record with no id
 
 ##### `FactoryGuy.makeList`
-  - check out [(user factory):](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/test-app/tests/factories/user.js) to see 'bob' user and 'with_car' trait
+
+- check out [(user factory):](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/test-app/tests/factories/user.js) to see 'bob' user and 'with_car' trait
 
 Usage:
 
 ```javascript
+import { make, makeList } from 'ember-data-factory-guy';
 
-  import { make, makeList } from 'ember-data-factory-guy';
+// Let's say bob is a named type in the user factory
+makeList('user', 'bob'); // makes 0 bob's
 
-  // Let's say bob is a named type in the user factory
-  makeList('user', 'bob') // makes 0 bob's
+makeList('user', 'bob', 2); // makes 2 bob's
 
-  makeList('user', 'bob', 2) // makes 2 bob's
+makeList('user', 'bob', 2, 'with_car', { name: 'Dude' });
+// makes 2 bob users with the 'with_car' trait and name of "Dude"
+// In other words, applies the traits and options to every bob made
 
-  makeList('user', 'bob', 2, 'with_car', {name: "Dude"})
-  // makes 2 bob users with the 'with_car' trait and name of "Dude"
-  // In other words, applies the traits and options to every bob made
-
-  makeList('user', 'bob', 'with_car', ['with_car', {name: "Dude"}])
-  // makes 2 users with bob attributes. The first also has the 'with_car' trait and the
-  // second has the 'with_car' trait and name of "Dude", so you get 2 different users
-
-
+makeList('user', 'bob', 'with_car', ['with_car', { name: 'Dude' }]);
+// makes 2 users with bob attributes. The first also has the 'with_car' trait and the
+// second has the 'with_car' trait and name of "Dude", so you get 2 different users
 ```
+
 ##### `FactoryGuy.build`
-  - for building json that you can pass as json payload in [acceptance tests](#acceptance-tests)
-  - takes the same arguments as `FactoryGuy.make`
-  - can compose relationships with other `FactoryGuy.build`/`FactoryGuy.buildList` payloads
-  - can add relationship links to payload
-  - takes serializer for model into consideration
-  - to inspect the json use the `get` method
-  - use the [`add`](#using-add-method) method
-    - to include extra sideloaded data to the payload
-    - to include meta data
-    - REMEMBER, all relationships will be automatically sideloaded,
-      so you don't need to add them with the `add()` method
+
+- for building json that you can pass as json payload in [acceptance tests](#acceptance-tests)
+- takes the same arguments as `FactoryGuy.make`
+- can compose relationships with other `FactoryGuy.build`/`FactoryGuy.buildList` payloads
+- can add relationship links to payload
+- takes serializer for model into consideration
+- to inspect the json use the `get` method
+- use the [`add`](#using-add-method) method
+  - to include extra sideloaded data to the payload
+  - to include meta data
+  - REMEMBER, all relationships will be automatically sideloaded,
+    so you don't need to add them with the `add()` method
 
 Usage:
 
 ```javascript
+import { build, buildList } from 'ember-data-factory-guy';
 
-  import { build, buildList } from 'ember-data-factory-guy';
+// build a basic user with the default attributes from the user factory
+let json = build('user');
+json.get(); // => {id: 1, name: 'User1', style: 'normal'}
 
-  // build a basic user with the default attributes from the user factory
-  let json = build('user');
-  json.get() // => {id: 1, name: 'User1', style: 'normal'}
+// build a user with the default attributes plus those defined as 'admin' in the user factory
+let json = build('admin');
+json.get(); // => {id: 2, name: 'Admin', style: 'super'}
 
-  // build a user with the default attributes plus those defined as 'admin' in the user factory
-  let json = build('admin');
-  json.get() // => {id: 2, name: 'Admin', style: 'super'}
+// build a user with the default attributes with extra attributes
+let json = build('user', { name: 'Fred' });
+json.get(); // => {id: 3, name: 'Fred', style: 'normal'}
 
-  // build a user with the default attributes with extra attributes
-  let json = build('user', {name: 'Fred'});
-  json.get() // => {id: 3, name: 'Fred', style: 'normal'}
+// build the admin defined user with extra attributes
+let json = build('admin', { name: 'Fred' });
+json.get(); // => {id: 4, name: 'Fred', style: 'super'}
 
-  // build the admin defined user with extra attributes
-  let json = build('admin', {name: 'Fred'});
-  json.get() // => {id: 4, name: 'Fred', style: 'super'}
+// build default user with traits and with extra attributes
+let json = build('user', 'silly', { name: 'Fred' });
+json.get(); // => {id: 5, name: 'Fred', style: 'silly'}
 
-  // build default user with traits and with extra attributes
-  let json = build('user', 'silly', {name: 'Fred'});
-  json.get() // => {id: 5, name: 'Fred', style: 'silly'}
+// build user with hats relationship ( hasMany ) composed of a few pre 'built' hats
+let hat1 = build('big-hat');
+let hat2 = build('big-hat');
+let json = build('user', { hats: [hat1, hat2] });
+// note that hats are polymorphic. if they weren't, the hats array would be a list of ids: [1,2]
+json.get(); // => {id: 6, name: 'User2', style: 'normal', hats: [{id:1, type:"big_hat"},{id:1, type:"big_hat"}]}
 
-  // build user with hats relationship ( hasMany ) composed of a few pre 'built' hats
-  let hat1 = build('big-hat');
-  let hat2 = build('big-hat');
-  let json = build('user', {hats: [hat1, hat2]});
-  // note that hats are polymorphic. if they weren't, the hats array would be a list of ids: [1,2]
-  json.get() // => {id: 6, name: 'User2', style: 'normal', hats: [{id:1, type:"big_hat"},{id:1, type:"big_hat"}]}
+// build user with company relationship ( belongsTo ) composed of a pre 'built' company
+let company = build('company');
+let json = build('user', { company });
+json.get(); // => {id: 7, name: 'User3', style: 'normal', company: 1}
 
-  // build user with company relationship ( belongsTo ) composed of a pre 'built' company
-  let company = build('company');
-  let json = build('user', {company});
-  json.get() // => {id: 7, name: 'User3', style: 'normal', company: 1}
+// build and compose relationships to unlimited degree
+let company1 = build('company', { name: 'A Corp' });
+let company2 = build('company', { name: 'B Corp' });
+let owners = buildList('user', { company: company1 }, { company: company2 });
+let buildJson = build('property', { owners });
 
-  // build and compose relationships to unlimited degree
-  let company1 = build('company', {name: 'A Corp'});
-  let company2 = build('company', {name: 'B Corp'});
-  let owners = buildList('user', { company:company1 }, { company:company2 });
-  let buildJson = build('property', { owners });
+// build user with links to async hasMany properties
+let user = build('user', { properties: { links: '/users/1/properties' } });
 
-  // build user with links to async hasMany properties
-  let user = build('user', {properties: {links: '/users/1/properties'}});
-
-  // build user with links to async belongsTo company
-  let user = build('user', {company: {links: '/users/1/company'}});
-
+// build user with links to async belongsTo company
+let user = build('user', { company: { links: '/users/1/company' } });
 ```
+
 - Example of what json payload from build looks like
- - Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters
+- Although the RESTAdapter is being used, this works the same with ActiveModel or JSONAPI adapters
 
 ```javascript
 
@@ -808,67 +793,73 @@ Usage:
 ```
 
 ##### `FactoryGuy.buildList`
-  - for building json that you can pass as json payload in [acceptance tests](#acceptance-tests)
-  - takes the same arguments as `FactoryGuy.makeList`
-  - can compose relationships with other `build`/`buildList` payloads
-  - takes serializer for model into consideration
-  - to inspect the json use the `get()` method
-    - can use `get(index)` to get an individual item from the list
-  - use the [`add`](#using-add-method) method
-    - to add extra sideloaded data to the payload => `.add(payload)`
-    - to add meta data => `.add({meta})`
+
+- for building json that you can pass as json payload in [acceptance tests](#acceptance-tests)
+- takes the same arguments as `FactoryGuy.makeList`
+- can compose relationships with other `build`/`buildList` payloads
+- takes serializer for model into consideration
+- to inspect the json use the `get()` method
+  - can use `get(index)` to get an individual item from the list
+- use the [`add`](#using-add-method) method
+  - to add extra sideloaded data to the payload => `.add(payload)`
+  - to add meta data => `.add({meta})`
 
 Usage:
 
 ```javascript
-  import { build, buildList } from 'ember-data-factory-guy';
+import { build, buildList } from 'ember-data-factory-guy';
 
-  let bobs = buildList('bob', 2);  // builds 2 Bob's
+let bobs = buildList('bob', 2); // builds 2 Bob's
 
-  let bobs = buildList('bob', 2, {name: 'Rob'}); // builds 2 Bob's with name of 'Rob'
+let bobs = buildList('bob', 2, { name: 'Rob' }); // builds 2 Bob's with name of 'Rob'
 
-  // builds 2 users, one with name 'Bob' , the next with name 'Rob'
-  let users = buildList('user', { name:'Bob' }, { name:'Rob' });
+// builds 2 users, one with name 'Bob' , the next with name 'Rob'
+let users = buildList('user', { name: 'Bob' }, { name: 'Rob' });
 
-  // builds 2 users, one with 'boblike' and the next with name 'adminlike' features
-  // NOTE: you don't say how many to make, because each trait is making new user
-  let users = buildList('user', 'boblike', 'adminlike');
+// builds 2 users, one with 'boblike' and the next with name 'adminlike' features
+// NOTE: you don't say how many to make, because each trait is making new user
+let users = buildList('user', 'boblike', 'adminlike');
 
-  // builds 2 users:
-  // one 'boblike' with stoner style
-  // and the next 'adminlike' with square style
-  // NOTE: how you are grouping traits and attributes for each one by wrapping them in array
-  let users = buildList('user', ['boblike', { style: 'stoner' }], ['adminlike', {style: 'square'}]);
+// builds 2 users:
+// one 'boblike' with stoner style
+// and the next 'adminlike' with square style
+// NOTE: how you are grouping traits and attributes for each one by wrapping them in array
+let users = buildList(
+  'user',
+  ['boblike', { style: 'stoner' }],
+  ['adminlike', { style: 'square' }],
+);
 ```
 
 ##### Using `add()` method
- - when you need to add more json to a payload
-   - will be sideloaded
-     - only JSONAPI, and REST based serializers can do sideloading
-     - so DRFSerializer and JSONSerializer users can not use this feature
-   - you dont need to use json key as in: ```build('user').add({json: batMan})```
-   - you can just add the payload directly as: ```build('user').add(batMan)```
+
+- when you need to add more json to a payload
+  - will be sideloaded
+    - only JSONAPI, and REST based serializers can do sideloading
+    - so DRFSerializer and JSONSerializer users can not use this feature
+  - you dont need to use json key as in: `build('user').add({json: batMan})`
+  - you can just add the payload directly as: `build('user').add(batMan)`
 
 Usage:
 
 ```javascript
-  let batMan = build('bat_man');
-  let userPayload = build('user').add(batMan);
+let batMan = build('bat_man');
+let userPayload = build('user').add(batMan);
 
-  userPayload = {
-    user: {
+userPayload = {
+  user: {
+    id: 1,
+    name: 'User1',
+    style: 'normal',
+  },
+  'super-heros': [
+    {
       id: 1,
-      name: 'User1',
-      style: "normal"
+      name: 'BatMan',
+      type: 'SuperHero',
     },
-    'super-heros': [
-      {
-        id: 1,
-        name: "BatMan",
-        type: "SuperHero"
-      }
-    ]
-  };
+  ],
+};
 ```
 
 - when you want to add meta data to payload
@@ -890,60 +881,57 @@ Usage:
 ```
 
 ##### Using `get()` method
-  - for inspecting contents of json payload
-    - `get()` returns all attributes of top level model
-    - `get(attribute)` gives you an attribute from the top level model
-    - `get(index)` gives you the info for a hasMany relationship at that index
-    - `get(relationships)` gives you just the id or type ( if polymorphic )
-      - better to compose the build relationships by hand if you need more info
-  - check out [user factory:](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/test-app/tests/factories/user.js) to see 'boblike' and 'adminlike' user traits
+
+- for inspecting contents of json payload
+  - `get()` returns all attributes of top level model
+  - `get(attribute)` gives you an attribute from the top level model
+  - `get(index)` gives you the info for a hasMany relationship at that index
+  - `get(relationships)` gives you just the id or type ( if polymorphic )
+    - better to compose the build relationships by hand if you need more info
+- check out [user factory:](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/test-app/tests/factories/user.js) to see 'boblike' and 'adminlike' user traits
 
 ```javascript
-  let json = build('user');
-  json.get() //=> {id: 1, name: 'User1', style: 'normal'}
-  json.get('id') // => 1
+let json = build('user');
+json.get(); //=> {id: 1, name: 'User1', style: 'normal'}
+json.get('id'); // => 1
 
-  let json = buildList('user', 2);
-  json.get(0) //=> {id: 1, name: 'User1', style: 'normal'}
-  json.get(1) //=> {id: 2, name: 'User2', style: 'normal'}
+let json = buildList('user', 2);
+json.get(0); //=> {id: 1, name: 'User1', style: 'normal'}
+json.get(1); //=> {id: 2, name: 'User2', style: 'normal'}
 
-  let json = buildList('user', 'boblike', 'adminlike');
-  json.get(0) //=> {id: 1, name: 'Bob', style: 'boblike'}
-  json.get(1) //=> {id: 2, name: 'Admin', style: 'super'}
+let json = buildList('user', 'boblike', 'adminlike');
+json.get(0); //=> {id: 1, name: 'Bob', style: 'boblike'}
+json.get(1); //=> {id: 2, name: 'Admin', style: 'super'}
 ```
 
-* building relationships inline
+- building relationships inline
 
 ```javascript
+let json = build('user', 'with_company', 'with_hats');
+json.get(); //=> {id: 1, name: 'User1', style: 'normal'}
 
-  let json = build('user', 'with_company', 'with_hats');
-  json.get() //=> {id: 1, name: 'User1', style: 'normal'}
+// to get hats (hasMany relationship) info
+json.get('hats'); //=> [{id: 1, type: "big_hat"},{id: 1, type: "big_hat"}]
 
-  // to get hats (hasMany relationship) info
-  json.get('hats') //=> [{id: 1, type: "big_hat"},{id: 1, type: "big_hat"}]
-
-  // to get company ( belongsTo relationship ) info
-  json.get('company') //=> {id: 1, type: "company"}
-
+// to get company ( belongsTo relationship ) info
+json.get('company'); //=> {id: 1, type: "company"}
 ```
 
-* by composing the relationships you can get the full attributes of those associations
+- by composing the relationships you can get the full attributes of those associations
 
 ```javascript
+let company = build('company');
+let hats = buildList('big-hats');
 
-  let company = build('company');
-  let hats = buildList('big-hats');
+let user = build('user', { company, hats });
+user.get(); //=> {id: 1, name: 'User1', style: 'normal'}
 
-  let user = build('user', {company , hats});
-  user.get() //=> {id: 1, name: 'User1', style: 'normal'}
+// to get hats info from hats json
+hats.get(0); //=> {id: 1, type: "BigHat", plus .. any other attributes}
+hats.get(1); //=> {id: 2, type: "BigHat", plus .. any other attributes}
 
-  // to get hats info from hats json
-  hats.get(0) //=> {id: 1, type: "BigHat", plus .. any other attributes}
-  hats.get(1) //=> {id: 2, type: "BigHat", plus .. any other attributes}
-
-  // to get company info
-  company.get() //=> {id: 1, type: "Company", name: "Silly corp"}
-
+// to get company info
+company.get(); //=> {id: 1, type: "Company", name: "Silly corp"}
 ```
 
 ### Scenarios
@@ -951,6 +939,7 @@ Usage:
 - You can define shared/common functionality by creating scenarios.
 
 - Create a scenario file
+
   - Ensure it extends from `Scenario` class.
   - A scenario class should declare a run method where you do things like:
     - include other scenarios
@@ -959,41 +948,42 @@ Usage:
       - these methods are all built into scenario classes so you don't have to import them
 
   ```javascript
-    // file: app/scenarios/main.js
-    import {Scenario} from 'ember-data-factory-guy';
-    import Users from './users';
+  // file: app/scenarios/main.js
+  import { Scenario } from 'ember-data-factory-guy';
+  import Users from './users';
 
-    // Just for fun, set the log level ( to 1 ) and see all FactoryGuy response info in console
-    Scenario.settings({
-      logLevel: 1, // 1 is the max for now, default is 0
-    });
+  // Just for fun, set the log level ( to 1 ) and see all FactoryGuy response info in console
+  Scenario.settings({
+    logLevel: 1, // 1 is the max for now, default is 0
+  });
 
-    export default class extends Scenario {
-      run() {
-         this.include([Users]);   // include other scenarios
-         this.mockFindAll('products', 3);  // mock some finds
-         this.mock({
-           type: 'POST',
-           url: '/api/v1/users/sign_in',
-           responseText: { token:"0123456789-ab" }
-         });  // mock a custom endpoint
-      }
+  export default class extends Scenario {
+    run() {
+      this.include([Users]); // include other scenarios
+      this.mockFindAll('products', 3); // mock some finds
+      this.mock({
+        type: 'POST',
+        url: '/api/v1/users/sign_in',
+        responseText: { token: '0123456789-ab' },
+      }); // mock a custom endpoint
     }
+  }
   ```
 
   ```javascript
-    // file: app/scenarios/users.js
-    import {Scenario} from 'ember-data-factory-guy';
+  // file: app/scenarios/users.js
+  import { Scenario } from 'ember-data-factory-guy';
 
-    export default class extends Scenario {
-      run() {
-        this.mockFindAll('user', 'boblike', 'normal');
-        this.mockDelete('user');
-      }
+  export default class extends Scenario {
+    run() {
+      this.mockFindAll('user', 'boblike', 'normal');
+      this.mockDelete('user');
     }
+  }
   ```
 
 - Run the scenario
+
   - Import the scenario and call the `run()` function where you want to.
 
   ```js
@@ -1013,13 +1003,14 @@ Usage:
   ```
 
 ### Ember Data Model Fragments
+
 As of 2.5.2 you can create factories which contain [ember-data-model-fragments](https://github.com/lytics/ember-data-model-fragments). Setting up your fragments is easy and follows the same process as setting up regular factories. The mapping between fragment types and their associations are like so:
 
-Fragment Type | Association
---- | ---
-`fragment` | `FactoryGuy.belongsTo`
-`fragmentArray` | `FactoryGuy.hasMany`
-`array` | `[]`
+| Fragment Type   | Association            |
+| --------------- | ---------------------- |
+| `fragment`      | `FactoryGuy.belongsTo` |
+| `fragmentArray` | `FactoryGuy.hasMany`   |
+| `array`         | `[]`                   |
 
 For example, say we have the following `Employee` model which makes use of the `fragment`, `fragmentArray` and `array` fragment types.
 
@@ -1051,8 +1042,8 @@ A factory for this model and its fragments would look like so:
 FactoryGuy.define('employee', {
   default: {
     name: FactoryGuy.belongsTo('name'), //fragment
-    phoneNumbers: FactoryGuy.hasMany('phone-number') //fragmentArray
-  }
+    phoneNumbers: FactoryGuy.hasMany('phone-number'), //fragmentArray
+  },
 });
 
 // Name fragment factory
@@ -1060,16 +1051,16 @@ FactoryGuy.define('name', {
   default: {
     titles: ['Mr.', 'Dr.'], //array
     firstName: 'Jon',
-    lastName: 'Snow'
-  }
+    lastName: 'Snow',
+  },
 });
 
 // Phone number fragment factory
 FactoryGuy.define('phone-number', {
   default: {
     number: '123-456-789',
-    type: 'home'
-  }
+    type: 'home',
+  },
 });
 ```
 
@@ -1086,10 +1077,12 @@ let employee = build('employee', { phoneNumbers }).get();
 ```
 
 For a more detailed example of setting up fragments have a look at:
-  - model test [employee test](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/unit/models/employee-test.js).
-  - acceptance test [employee-view-test](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/employee-view-test.js).
+
+- model test [employee test](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/unit/models/employee-test.js).
+- acceptance test [employee-view-test](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/employee-view-test.js).
 
 ### Creating Factories in Addons
+
 If you are making an addon with factories and you want the factories available to Ember apps using your addon, place the factories in `test-support/factories` instead of `tests/factories`. They should be available both within your addon and in Ember apps that use your addon.
 
 ### Custom API formats
@@ -1097,24 +1090,26 @@ If you are making an addon with factories and you want the factories available t
 FactoryGuy handles JSON-API / RESTSerializer / JSONSerializer out of the box.
 
 In case your API doesn't follow any of these conventions, you can still make a custom fixture builder
- or modify the `FixtureConverters` and `JSONPayload` classes that exist.
- - before I launch into the details, let me know if you need this hookup and I
-   can guide you to a solution, since the use cases will be rare and varied.
+or modify the `FixtureConverters` and `JSONPayload` classes that exist.
 
+- before I launch into the details, let me know if you need this hookup and I
+  can guide you to a solution, since the use cases will be rare and varied.
 
 #### `FactoryGuy.cacheOnlyMode`
-  - Allows you to setup the adapters to prevent them from fetching data with ajax calls
-    - for single models ( `findRecord` ) you have to put something in the store
-    - for collections ( `findAll` ) you don't have to put anything in the store
-  - Takes `except` parameter as a list of models you don't want to cache
-    - These model requests will go to the server with ajax calls and will need to be mocked
+
+- Allows you to setup the adapters to prevent them from fetching data with ajax calls
+  - for single models ( `findRecord` ) you have to put something in the store
+  - for collections ( `findAll` ) you don't have to put anything in the store
+- Takes `except` parameter as a list of models you don't want to cache
+  - These model requests will go to the server with ajax calls and will need to be mocked
 
 This is helpful, when:
-  - you want to set up the test data with `make`/`makeList`, and then prevent
-    calls like `store.findRecord` or `store.findAll` from fetching more data, since you have
-    already setup the store with `make`/`makeList` data.
-  - you have an application that starts up and loads data that is not relevant
-    to the test page you are working on.
+
+- you want to set up the test data with `make`/`makeList`, and then prevent
+  calls like `store.findRecord` or `store.findAll` from fetching more data, since you have
+  already setup the store with `make`/`makeList` data.
+- you have an application that starts up and loads data that is not relevant
+  to the test page you are working on.
 
 Usage:
 
@@ -1124,29 +1119,29 @@ import moduleForAcceptance from '../helpers/module-for-acceptance';
 
 moduleForAcceptance('Acceptance | Profiles View');
 
-test("Using FactoryGuy.cacheOnlyMode", async function() {
+test('Using FactoryGuy.cacheOnlyMode', async function () {
   FactoryGuy.cacheOnlyMode();
   // the store.findRecord call for the user will go out unless there is a user
   // in the store
-  make('user', {name: 'current'});
+  make('user', { name: 'current' });
   // the application starts up and makes calls to findAll a few things, but
   // those can be ignored because of the cacheOnlyMode
 
   // for this test I care about just testing profiles
-  makeList("profile", 2);
+  makeList('profile', 2);
 
   await visit('/profiles');
 
   // test stuff
 });
 
-test("Using FactoryGuy.cacheOnlyMode with except", async function() {
-  FactoryGuy.cacheOnlyMode({except: ['profile']});
+test('Using FactoryGuy.cacheOnlyMode with except', async function () {
+  FactoryGuy.cacheOnlyMode({ except: ['profile'] });
 
-  make('user', {name: 'current'});
+  make('user', { name: 'current' });
 
   // this time I want to allow the ajax call so I can return built json payload
-  mockFindAll("profile", 2);
+  mockFindAll('profile', 2);
 
   await visit('/profiles');
 
@@ -1159,6 +1154,7 @@ test("Using FactoryGuy.cacheOnlyMode with except", async function() {
 - FactoryGuy needs the factories defined before the tests run. This can be done by importing the factories, which register themselves with FactoryGuy.
 
 A clean way to do this is to create a file that imports them all
+
 ```js
 // tests/factories/factories.js
 
@@ -1181,43 +1177,51 @@ import 'my-app/tests/factories';
 
 - FactoryGuy also needs to run some setup/teardown code before/after each test, use the setupFactoryGuy(hooks) method in your qunit tests to do this.
 
-    - Sample usage: (works the same in any type of test)
-    ```js
-    import { setupFactoryGuy } from "ember-data-factory-guy";
-    
-    module('Acceptance | User View', function(hooks) {
-      setupApplicationTest(hooks);
-      setupFactoryGuy(hooks);
+  - Sample usage: (works the same in any type of test)
 
-      test("blah blah", async function(assert) {
-         await visit('work');
-         assert.ok('bah was spoken');
-      });
+  ```js
+  import { setupFactoryGuy } from 'ember-data-factory-guy';
+
+  module('Acceptance | User View', function (hooks) {
+    setupApplicationTest(hooks);
+    setupFactoryGuy(hooks);
+
+    test('blah blah', async function (assert) {
+      await visit('work');
+      assert.ok('bah was spoken');
     });
-    ```
+  });
+  ```
+
 - Sample model test: [profile-test.js](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/unit/models/profile-test.js)
+
   - Use `moduleForModel` ( ember-qunit ), or `describeModel` ( ember-mocha ) test helper
   - manually set up FactoryGuy
 
 - Sample component test: [single-user-test.js](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/components/single-user-test.js)
+
   - Using `moduleForComponent` ( ember-qunit ), or `describeComponent` ( ember-mocha ) helper
   - manually sets up FactoryGuy
 
   ```javascript
-  import { make, manualSetup }  from 'ember-data-factory-guy';
+  import { make, manualSetup } from 'ember-data-factory-guy';
   import hbs from 'htmlbars-inline-precompile';
   import { test, moduleForComponent } from 'ember-qunit';
 
-  moduleForComponent('single-user', 'Integration | Component | single-user (manual setup)', {
-    integration: true,
+  moduleForComponent(
+    'single-user',
+    'Integration | Component | single-user (manual setup)',
+    {
+      integration: true,
 
-    beforeEach: function () {
-      manualSetup(this);
-    }
-  });
+      beforeEach: function () {
+        manualSetup(this);
+      },
+    },
+  );
 
-  test("shows user information", function () {
-    let user = make('user', {name: 'Rob'});
+  test('shows user information', function () {
+    let user = make('user', { name: 'Rob' });
 
     this.render(hbs`{{single-user user=user}}`);
     this.set('user', user);
@@ -1245,6 +1249,7 @@ import 'my-app/tests/factories';
       ```javascript
         let mock = mockFindAll('user').returns({headers: {'X-Man': "Wolverine"});
         mock.returns({headers: {'X-Weapon': "Claws"}});
+      ```
   - these mocks are are reusable
     - so you can simulate making the same ajax call ( url ) and return a different payload
 - http POST/PUT/DELETE
@@ -1252,135 +1257,169 @@ import 'my-app/tests/factories';
   - [mockUpdate](#mockupdate)
   - [mockDelete](#mockdelete)
 - Custom mocks (http GET/POST/PUT/DELETE)
+
   - [mock](#mock)
 
 - Use method `fails()` to simulate failure
 - Use method `succeeds()` to simulate success
-  - Only used if the mock was set to fail with ```fails()```  and you want to set the
+
+  - Only used if the mock was set to fail with `fails()` and you want to set the
     mock to succeed to simulate a successful retry
 
-- Use property ```timesCalled``` to verify how many times the ajax call was mocked
+- Use property `timesCalled` to verify how many times the ajax call was mocked
+
   - works when you are using `mockQuery`, `mockQueryRecord`, `mockFindAll`, `mockReload`, or `mockUpdate`
   - `mockFindRecord` will always be at most 1 since it will only make ajax call
     the first time, and then the store will use cache the second time
   - Example:
-  ```javascript
-    const mock = mockQueryRecord('company', {}).returns({ json: build('company') });
 
-    FactoryGuy.store.queryRecord('company', {}).then(()=> {
-      FactoryGuy.store.queryRecord('company', {}).then(()=> {
-        mock.timesCalled //=> 2
-      });
+  ```javascript
+  const mock = mockQueryRecord('company', {}).returns({
+    json: build('company'),
+  });
+
+  FactoryGuy.store.queryRecord('company', {}).then(() => {
+    FactoryGuy.store.queryRecord('company', {}).then(() => {
+      mock.timesCalled; //=> 2
     });
+  });
   ```
 
 - Use method `disable()` to temporarily disable the mock. You can re-enable
-the disabled mock using `enable()`.
+  the disabled mock using `enable()`.
 
 - Use method `destroy()` to completely remove the mock handler for the mock.
-The `isDestroyed` property is set to `true` when the mock is destroyed.
-
+  The `isDestroyed` property is set to `true` when the mock is destroyed.
 
 ##### Settings
-  - Use FactoryGuy.settings to set:
-    - logLevel ( 0 - off , 1 - on ) for seeing the FactoryGuy responses
-    - responseTime ( in millis )  for simulating slower responses
-    - Example:
-    ```javascript
-      FactoryGuy.settings({logLevel: 1, responseTime: 1000});
-    ```
 
-##### Using fails method
-  - Usable on all mocks
-  - Use optional object arguments status and response and convertErrors to customize
-    - status : must be number in the range of 3XX, 4XX, or 5XX ( default is 500 )
-    - response : must be object with errors key ( default is null )
-    - convertErrors : set to false and object will be left untouched ( default is true )
-      - errors must be in particular format for ember-data to accept them
-        - FactoryGuy allows you to use a simple style: ```{errors: {name: "Name too short"}}```
-        - Behind the scenes converts to another format for ember-data to consume
-
-  - Examples:
+- Use FactoryGuy.settings to set:
+  - logLevel ( 0 - off , 1 - on ) for seeing the FactoryGuy responses
+  - responseTime ( in millis ) for simulating slower responses
+  - Example:
   ```javascript
-    let errors401 = {errors: {description: "Unauthorized"}};
-    let mock = mockFindAll('user').fails({status: 401, response: errors401});
-
-    let errors422 = {errors: {name: "Name too short"}};
-    let mock = mockFindRecord('profile').fails({status: 422, response: errors422});
-
-    let errorsMine = {errors: [{detail: "Name too short", title: "I am short"}]};
-    let mock = mockFindRecord('profile').fails({status: 422, response: errorsMine, convertErrors: false});
+  FactoryGuy.settings({ logLevel: 1, responseTime: 1000 });
   ```
 
+##### Using fails method
+
+- Usable on all mocks
+- Use optional object arguments status and response and convertErrors to customize
+
+  - status : must be number in the range of 3XX, 4XX, or 5XX ( default is 500 )
+  - response : must be object with errors key ( default is null )
+  - convertErrors : set to false and object will be left untouched ( default is true )
+    - errors must be in particular format for ember-data to accept them
+      - FactoryGuy allows you to use a simple style: `{errors: {name: "Name too short"}}`
+      - Behind the scenes converts to another format for ember-data to consume
+
+- Examples:
+
+```javascript
+let errors401 = { errors: { description: 'Unauthorized' } };
+let mock = mockFindAll('user').fails({ status: 401, response: errors401 });
+
+let errors422 = { errors: { name: 'Name too short' } };
+let mock = mockFindRecord('profile').fails({
+  status: 422,
+  response: errors422,
+});
+
+let errorsMine = {
+  errors: [{ detail: 'Name too short', title: 'I am short' }],
+};
+let mock = mockFindRecord('profile').fails({
+  status: 422,
+  response: errorsMine,
+  convertErrors: false,
+});
+```
 
 ##### `mockFindRecord`
-  - For dealing with finding one record of a model type => `store.findRecord('modelType', id)`
-  - Can pass in arguments just like you would for [`make`](#factoryguymake) or [`build`](#factoryguybuild)
-    - `mockFindRecord`( fixture or model name, optional traits, optional attributes object)
-  - Takes modifier method `returns()` for controlling the response payload
-    - returns( model / json / id )
-  - Takes modifier method `adapterOptions()` for setting adapterOptions ( get passed to urlForFindRecord )
-  - Sample acceptance tests using `mockFindRecord`: [user-view-test.js:](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
+
+- For dealing with finding one record of a model type => `store.findRecord('modelType', id)`
+- Can pass in arguments just like you would for [`make`](#factoryguymake) or [`build`](#factoryguybuild)
+  - `mockFindRecord`( fixture or model name, optional traits, optional attributes object)
+- Takes modifier method `returns()` for controlling the response payload
+  - returns( model / json / id )
+- Takes modifier method `adapterOptions()` for setting adapterOptions ( get passed to urlForFindRecord )
+- Sample acceptance tests using `mockFindRecord`: [user-view-test.js:](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
 
 Usage:
-```javascript
-   import { build, make, mockFindRecord } from 'ember-data-factory-guy';
-```
-- To return default factory model type ( 'user' in this case )
-```javascript
-   // mockFindRecord automatically returns json for the modelType ( in this case 'user' )
-   let mock = mockFindRecord('user');
-   let userId = mock.get('id');
-```
-- Using `returns({json})` to return json object
-```javascript
-   let user = build('user', 'whacky', {isDude: true});
-   let mock = mockFindRecord('user').returns({ json: user });
-   // user.get('id') => 1
-   // user.get('style') => 'whacky'
 
-   // or to acccomplish the same thing with less code
-   let mock = mockFindRecord('user', 'whacky', {isDude: true});
-   // mock.get('id') => 1
-   // mock.get('style') => 'whacky'
-   let user = mock.get();
-   // user.id => 1
-   // user.style => 'whacky'
+```javascript
+import { build, make, mockFindRecord } from 'ember-data-factory-guy';
 ```
+
+- To return default factory model type ( 'user' in this case )
+
+```javascript
+// mockFindRecord automatically returns json for the modelType ( in this case 'user' )
+let mock = mockFindRecord('user');
+let userId = mock.get('id');
+```
+
+- Using `returns({json})` to return json object
+
+```javascript
+let user = build('user', 'whacky', { isDude: true });
+let mock = mockFindRecord('user').returns({ json: user });
+// user.get('id') => 1
+// user.get('style') => 'whacky'
+
+// or to acccomplish the same thing with less code
+let mock = mockFindRecord('user', 'whacky', { isDude: true });
+// mock.get('id') => 1
+// mock.get('style') => 'whacky'
+let user = mock.get();
+// user.id => 1
+// user.style => 'whacky'
+```
+
 - Using `returns({model})` to return model instance
+
 ```javascript
-   let user = make('user', 'whacky', {isDude: false});
-   let mock = mockFindRecord('user').returns({ model: user });
-   // user.get('id') => 1
-   // you can now also user.get('any-computed-property')
-   // since you have a real model instance
+let user = make('user', 'whacky', { isDude: false });
+let mock = mockFindRecord('user').returns({ model: user });
+// user.get('id') => 1
+// you can now also user.get('any-computed-property')
+// since you have a real model instance
 ```
+
 - Simper way to return a model instance
+
 ```javascript
-   let user = make('user', 'whacky', {isDude: false});
-   let mock = mockFindRecord(user);
-   // user.get('id') === mock.get('id')
-   // basically a shortcut to the above .returns({ model: user })
-   // as this sets up the returns for you
+let user = make('user', 'whacky', { isDude: false });
+let mock = mockFindRecord(user);
+// user.get('id') === mock.get('id')
+// basically a shortcut to the above .returns({ model: user })
+// as this sets up the returns for you
 ```
 
 - To reuse the mock
+
 ```javascript
-   let user2 = build('user', {style: "boring"});
-   mock.returns({ json: user2 });
-   // mock.get('id') => 2
+let user2 = build('user', { style: 'boring' });
+mock.returns({ json: user2 });
+// mock.get('id') => 2
 ```
+
 - To mock failure case use `fails` method
+
 ```javascript
-   mockFindRecord('user').fails();
+mockFindRecord('user').fails();
 ```
+
 - To mock failure when you have a model already
+
 ```javascript
-  let profile = make('profile');
-  mockFindRecord(profile).fails();
-  // mock.get('id') === profile.id
+let profile = make('profile');
+mockFindRecord(profile).fails();
+// mock.get('id') === profile.id
 ```
+
 - To use adapterOptions
+
 ```javascript
   let mock = mockFindRecord('user').adapterOptions({friendly: true});
   // used when urlForFindRecord (defined in adapter) uses them
@@ -1392,81 +1431,99 @@ Usage:
     // ... blah blah
   }
 ```
+
 ##### `mockFindAll`
-  - For dealing with finding all records for a model type => `store.findAll(modelType)`
-  - Takes same parameters as [makeList](#factoryguymakelist)
-    - `mockFindAll`( fixture or model name, optional number, optional traits, optional attributes object)
-  - Takes modifier method `returns()` for controlling the response payload
-    - returns( models / json / ids )
-  - Takes modifier method `adapterOptions()` for setting adapterOptions ( get passed to urlForFindAll )
-    - used just as in mockFindRecord ( see example there )
-  - Sample acceptance tests using `mockFindAll`: [users-view-test.js](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
+
+- For dealing with finding all records for a model type => `store.findAll(modelType)`
+- Takes same parameters as [makeList](#factoryguymakelist)
+  - `mockFindAll`( fixture or model name, optional number, optional traits, optional attributes object)
+- Takes modifier method `returns()` for controlling the response payload
+  - returns( models / json / ids )
+- Takes modifier method `adapterOptions()` for setting adapterOptions ( get passed to urlForFindAll )
+  - used just as in mockFindRecord ( see example there )
+- Sample acceptance tests using `mockFindAll`: [users-view-test.js](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/users-view-test.js)
 
 Usage:
 
 ```javascript
-   import { buildList, makeList, mockFindAll } from 'ember-data-factory-guy';
+import { buildList, makeList, mockFindAll } from 'ember-data-factory-guy';
 ```
-- To mock and return no results
-```javascript
-   let mock = mockFindAll('user');
-```
-- Using `returns({json})` to return json object
-```javascript
-   // that has 2 different users:
-   let users = buildList('user', 'whacky', 'silly');
-   let mock = mockFindAll('user').returns({ json: users });
-   let user1 = users.get(0);
-   let user2 = users.get(1);
-   // user1.style => 'whacky'
-   // user2.style => 'silly'
 
-   // or to acccomplish the same thing with less code
-   let mock = mockFindAll('user', 'whacky', 'silly');
-   let user1 = mock.get(0);
-   let user2 = mock.get(1);
-   // user1.style => 'whacky'
-   // user2.style => 'silly'
-```
- - Using `returns({models})` to return model instances
+- To mock and return no results
+
 ```javascript
-    let users = makeList('user', 'whacky', 'silly');
-    let mock = mockFindAll('user').returns({ models: users });
-    let user1 = users[0];
-    // you can now also user1.get('any-computed-property')
-    // since you have a real model instance
+let mock = mockFindAll('user');
 ```
+
+- Using `returns({json})` to return json object
+
+```javascript
+// that has 2 different users:
+let users = buildList('user', 'whacky', 'silly');
+let mock = mockFindAll('user').returns({ json: users });
+let user1 = users.get(0);
+let user2 = users.get(1);
+// user1.style => 'whacky'
+// user2.style => 'silly'
+
+// or to acccomplish the same thing with less code
+let mock = mockFindAll('user', 'whacky', 'silly');
+let user1 = mock.get(0);
+let user2 = mock.get(1);
+// user1.style => 'whacky'
+// user2.style => 'silly'
+```
+
+- Using `returns({models})` to return model instances
+
+```javascript
+let users = makeList('user', 'whacky', 'silly');
+let mock = mockFindAll('user').returns({ models: users });
+let user1 = users[0];
+// you can now also user1.get('any-computed-property')
+// since you have a real model instance
+```
+
 - To reuse the mock and return different payload
+
 ```javascript
-   let users2 = buildList('user', 3);
-   mock.returns({ json: user2 });
+let users2 = buildList('user', 3);
+mock.returns({ json: user2 });
 ```
+
 - To mock failure case use `fails()` method
+
 ```javascript
-   mockFindAll('user').fails();
+mockFindAll('user').fails();
 ```
 
 ##### `mockReload`
-  - To handle reloading a model
-    - Pass in a record ( or a typeName and id )
+
+- To handle reloading a model
+  - Pass in a record ( or a typeName and id )
 
 Usage:
 
 - Passing in a record / model instance
-```javascript
-  let profile = make('profile');
-  mockReload(profile);
 
-  // will stub a call to reload that profile
-  profile.reload()
-```
-- Using `returns({attrs})` to return new attributes
 ```javascript
-  let profile = make('profile', { description: "whatever" });
-  mockReload(profile).returns({ attrs: { description: "moo" } });
-  profile.reload(); // description is now "moo"
+let profile = make('profile');
+mockReload(profile);
+
+// will stub a call to reload that profile
+profile.reload();
 ```
+
+- Using `returns({attrs})` to return new attributes
+
+```javascript
+let profile = make('profile', { description: 'whatever' });
+mockReload(profile).returns({ attrs: { description: 'moo' } });
+profile.reload(); // description is now "moo"
+```
+
 - Using `returns({json})` to return all new attributes
+
 ```javascript
   let profile = make('profile', { description: "tomatoes" });
   // all new values EXCEPT the profile id ( you should keep that id the same )
@@ -1474,19 +1531,22 @@ Usage:
   mockReload(profile).returns({ json: profileAllNew });
   profile.reload(); // description = "potatoes"
 ```
+
 - Mocking a failed reload
+
 ```javascript
-  mockReload('profile', 1).fails();
+mockReload('profile', 1).fails();
 ```
 
 ##### `mockQuery`
-  - For dealing with querying for all records for a model type => `store.query(modelType, params)`
-    - Takes modifier method `returns()` for controlling the response payload
-      - returns( models / json / ids )
-   - Takes modifier methods for matching the query params
-    - `withParams( object )`
-    - `withSomeParams( object )`
-  - Sample acceptance tests using `mockQuery`: [user-search-test.js](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/user-search-test.js)
+
+- For dealing with querying for all records for a model type => `store.query(modelType, params)`
+  - Takes modifier method `returns()` for controlling the response payload
+    - returns( models / json / ids )
+- Takes modifier methods for matching the query params
+- `withParams( object )`
+- `withSomeParams( object )`
+- Sample acceptance tests using `mockQuery`: [user-search-test.js](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/user-search-test.js)
 
 Usage:
 
@@ -1502,7 +1562,8 @@ Usage:
   })
 ```
 
-  - with returns( models )
+- with returns( models )
+
 ```javascript
   // Create model instances
   let users = makeList('user', 2, 'with_hats');
@@ -1514,8 +1575,9 @@ Usage:
   });
 ```
 
-  - with returns ( json )
-``` js
+- with returns ( json )
+
+```js
   // Create json with buildList
   let users = buildList('user', 2, 'with_hats');
 
@@ -1526,7 +1588,8 @@ Usage:
   });
 ```
 
-  - with returns( ids )
+- with returns( ids )
+
 ```javascript
   // Create list of models
   let users = buildList('user', 2, 'with_hats');
@@ -1540,7 +1603,8 @@ Usage:
 
 ```
 
-  - withParams() / withSomeParams()
+- withParams() / withSomeParams()
+
 ```javascript
   // Create list of models
   let users = buildList('user', 2, 'with_hats');
@@ -1568,11 +1632,12 @@ Usage:
 ```
 
 ##### `mockQueryRecord`
-  - For dealing with querying for one record for a model type => `store.queryRecord(modelType, params)`
-    - takes modifier method `returns()` for controlling the response payload
-      - returns( model / json / id )
-   - takes modifier methods for matching the query params
-    - withParams( object )
+
+- For dealing with querying for one record for a model type => `store.queryRecord(modelType, params)`
+  - takes modifier method `returns()` for controlling the response payload
+    - returns( model / json / id )
+- takes modifier methods for matching the query params
+- withParams( object )
 
 Usage:
 
@@ -1588,7 +1653,8 @@ Usage:
   })
 ```
 
-  - with returns( models )
+- with returns( models )
+
 ```javascript
   // Create model instances
   let user = make('user');
@@ -1600,8 +1666,9 @@ Usage:
   });
 ```
 
-  - with returns( json )
-``` js
+- with returns( json )
+
+```js
   // Create json with buildList
   let user = build('user');
 
@@ -1612,7 +1679,7 @@ Usage:
   });
 ```
 
-  - with returns( ids )
+- with returns( ids )
 
 ```javascript
   // Create list of models
@@ -1628,21 +1695,21 @@ Usage:
 
 ##### `mockCreate`
 
-  - Use chainable methods to build the response
-    - match: takes a hash with attributes or a matching function
-      1. attributes that must be in request json
-        - These will be added to the response json automatically, so
-          you don't need to include them in the returns hash.
-        - If you match on a `belongsTo` association, you don't have to include that in
-          the returns hash either ( same idea )
-      1. a function that can be used to perform an arbitrary match against the request
-          json, returning `true` if there is a match, `false` otherwise.
-    - returns
-      - attributes ( including relationships ) to include in response json
-  - Need to import `run` from `@ember/runloop` and wrap tests using `mockCreate` with: `run(function() { 'your test' })`
+- Use chainable methods to build the response
+  - match: takes a hash with attributes or a matching function
+    1. attributes that must be in request json
+    - These will be added to the response json automatically, so
+      you don't need to include them in the returns hash.
+    - If you match on a `belongsTo` association, you don't have to include that in
+      the returns hash either ( same idea )
+    1. a function that can be used to perform an arbitrary match against the request
+       json, returning `true` if there is a match, `false` otherwise.
+  - returns
+    - attributes ( including relationships ) to include in response json
+- Need to import `run` from `@ember/runloop` and wrap tests using `mockCreate` with: `run(function() { 'your test' })`
 
 Realistically, you will have code in a view action or controller action that will
- create the record, and setup any associations.
+create the record, and setup any associations.
 
 ```javascript
 
@@ -1663,247 +1730,251 @@ chainable methods.
 Usage:
 
 ```javascript
-  import { makeNew, mockCreate } from 'ember-data-factory-guy';
+import { makeNew, mockCreate } from 'ember-data-factory-guy';
 
-  // Simplest case
-  // Don't care about a match just handle createRecord for any project
-  mockCreate('project');
+// Simplest case
+// Don't care about a match just handle createRecord for any project
+mockCreate('project');
 
-  // use a model you created already from store.createRecord or makeNew
-  // need to use this style if you need the model in the urlForCreateRecord snapshot
-  let project = makeNew('project');
-  mockCreate(project);
+// use a model you created already from store.createRecord or makeNew
+// need to use this style if you need the model in the urlForCreateRecord snapshot
+let project = makeNew('project');
+mockCreate(project);
 
-  // Matching some attributes
-  mockCreate('project').match({name: "Moo"});
+// Matching some attributes
+mockCreate('project').match({ name: 'Moo' });
 
-  // Match all attributes
-  mockCreate('project').match({name: "Moo", user: user});
+// Match all attributes
+mockCreate('project').match({ name: 'Moo', user: user });
 
-  // Match using a function that checks that the request's top level attribute "name" equals 'Moo'
-  mockCreate('project').match(requestData => requestData.name === 'Moo');
+// Match using a function that checks that the request's top level attribute "name" equals 'Moo'
+mockCreate('project').match((requestData) => requestData.name === 'Moo');
 
-  // Exactly matching attributes, and returning extra attributes
-  mockCreate('project')
-    .match({name: "Moo", user: user})
-    .returns({created_at: new Date()});
+// Exactly matching attributes, and returning extra attributes
+mockCreate('project')
+  .match({ name: 'Moo', user: user })
+  .returns({ created_at: new Date() });
 
-  // Returning belongsTo relationship. Assume outfit belongsTo 'person'
-  let person = build('super-hero'); // it's polymorphic
-  mockCreate('outfit').returns({attrs: { person }});
+// Returning belongsTo relationship. Assume outfit belongsTo 'person'
+let person = build('super-hero'); // it's polymorphic
+mockCreate('outfit').returns({ attrs: { person } });
 
-  // Returning hasMany relationship. Assume super-hero hasMany 'outfits'
-  let outfits = buildList('outfit', 2);
-  mockCreate('super-hero').returns({attrs: { outfits }});
-
+// Returning hasMany relationship. Assume super-hero hasMany 'outfits'
+let outfits = buildList('outfit', 2);
+mockCreate('super-hero').returns({ attrs: { outfits } });
 ```
 
-  - mocking a failed create
+- mocking a failed create
 
 ```javascript
+// Mocking failure case is easy with chainable methods, just use #fails
+mockCreate('project').match({ name: 'Moo' }).fails();
 
-  // Mocking failure case is easy with chainable methods, just use #fails
-  mockCreate('project').match({name: "Moo"}).fails();
+// Can optionally add a status code and/or errors to the response
+mockCreate('project').fails({
+  status: 422,
+  response: { errors: { name: ['Moo bad, Bahh better'] } },
+});
 
-  // Can optionally add a status code and/or errors to the response
-  mockCreate('project').fails({status: 422, response: {errors: {name: ['Moo bad, Bahh better']}}});
-
-  store.createRecord('project', {name: "Moo"}).save(); //=> fails
+store.createRecord('project', { name: 'Moo' }).save(); //=> fails
 ```
-
 
 ##### `mockUpdate`
 
-  - `mockUpdate(model)`
-    - Single argument ( the model instance that will be updated )
-  - `mockUpdate(modelType, id)`
-    - Two arguments: modelType ( like 'profile' ) , and the profile id that will updated
-  - Use chainable methods to help build response:
-    - `match`: takes a hash with attributes or a matching function
-      1. attributes with values that must be present on the model you are updating
-      1. a function that can be used to perform an arbitrary match against the request
-        json, returning `true` if there is a match, `false` otherwise.
-    - returns
-      - attributes ( including relationships ) to include in response json
-  - Need to import `run` from `@ember/runloop` and wrap tests using `mockUpdate` with: `run(function() { 'your test' })`
+- `mockUpdate(model)`
+  - Single argument ( the model instance that will be updated )
+- `mockUpdate(modelType, id)`
+  - Two arguments: modelType ( like 'profile' ) , and the profile id that will updated
+- Use chainable methods to help build response:
+  - `match`: takes a hash with attributes or a matching function
+    1. attributes with values that must be present on the model you are updating
+    1. a function that can be used to perform an arbitrary match against the request
+       json, returning `true` if there is a match, `false` otherwise.
+  - returns
+    - attributes ( including relationships ) to include in response json
+- Need to import `run` from `@ember/runloop` and wrap tests using `mockUpdate` with: `run(function() { 'your test' })`
 
 Usage:
 
 ```javascript
-  import { make, mockUpdate } from 'ember-data-factory-guy';
+import { make, mockUpdate } from 'ember-data-factory-guy';
 
-  let profile = make('profile');
+let profile = make('profile');
 
-  // Pass in the model that will be updated ( if you have it available )
-  mockUpdate(profile);
+// Pass in the model that will be updated ( if you have it available )
+mockUpdate(profile);
 
-  // If the model is not available, pass in the modelType and the id of
-  // the model that will be updated
-  mockUpdate('profile', 1);
+// If the model is not available, pass in the modelType and the id of
+// the model that will be updated
+mockUpdate('profile', 1);
 
-  profile.set('description', 'good value');
-  profile.save() //=> will succeed
+profile.set('description', 'good value');
+profile.save(); //=> will succeed
 
-  // Returning belongsTo relationship. Assume outfit belongsTo 'person'
-  let outfit = make('outfit');
-  let person = build('super-hero'); // it's polymorphic
-  outfit.set('name','outrageous');
-  mockUpdate(outfit).returns({attrs: { person }});
-  outfit.save(); //=> saves and returns superhero
+// Returning belongsTo relationship. Assume outfit belongsTo 'person'
+let outfit = make('outfit');
+let person = build('super-hero'); // it's polymorphic
+outfit.set('name', 'outrageous');
+mockUpdate(outfit).returns({ attrs: { person } });
+outfit.save(); //=> saves and returns superhero
 
-  // Returning hasMany relationship. Assume super-hero hasMany 'outfits'
-  let superHero = make('super-hero');
-  let outfits = buildList('outfit', 2, {name:'bell bottoms'});
-  superHero.set('style','laid back');
-  mockUpdate(superHero).returns({attrs: { outfits }});
-  superHero.save(); // => saves and returns outfits
+// Returning hasMany relationship. Assume super-hero hasMany 'outfits'
+let superHero = make('super-hero');
+let outfits = buildList('outfit', 2, { name: 'bell bottoms' });
+superHero.set('style', 'laid back');
+mockUpdate(superHero).returns({ attrs: { outfits } });
+superHero.save(); // => saves and returns outfits
 
-  // using match() method to specify attribute values
-  let profile = make('profile');
-  profile.set('name', "woo");
-  let mock = mockUpdate(profile).match({name: "moo"});
-  profile.save();  // will not be mocked since the mock you set says the name must be "woo"
+// using match() method to specify attribute values
+let profile = make('profile');
+profile.set('name', 'woo');
+let mock = mockUpdate(profile).match({ name: 'moo' });
+profile.save(); // will not be mocked since the mock you set says the name must be "woo"
 
-  // using match() method to specify a matching function
-  let profile = make('profile');
-  profile.set('name', "woo");
-  let mock = mockUpdate(profile).match((requestBody) => {
-    // this example uses a JSONAPI Adapter
-    return requestBody.data.attributes.name === "moo"
-  });
-  profile.save();  // will not be mocked since the mock you set requires the request's top level attribute "name" to equal "moo"
+// using match() method to specify a matching function
+let profile = make('profile');
+profile.set('name', 'woo');
+let mock = mockUpdate(profile).match((requestBody) => {
+  // this example uses a JSONAPI Adapter
+  return requestBody.data.attributes.name === 'moo';
+});
+profile.save(); // will not be mocked since the mock you set requires the request's top level attribute "name" to equal "moo"
 
-  // either set the name to "moo" which will now be mocked correctly
-  profile.set('name', "moo");
-  profile.save(); // succeeds
+// either set the name to "moo" which will now be mocked correctly
+profile.set('name', 'moo');
+profile.save(); // succeeds
 
-  // or
+// or
 
-  // keep the profile name as "woo"
-  // but change the mock to match the name "woo"
-  mock.match({name: "woo"});
-  profile.save();  // succeeds
-````
+// keep the profile name as "woo"
+// but change the mock to match the name "woo"
+mock.match({ name: 'woo' });
+profile.save(); // succeeds
+```
 
- - mocking a failed update
-
-```javascript
-  let profile = make('profile');
-
-  // set the succeed flag to 'false'
-  mockUpdate('profile', profile.id).fails({status: 422, response: 'Invalid data'});
-  // or
-  mockUpdate(profile).fails({status: 422, response: 'Invalid data'});
-
-  profile.set('description', 'bad value');
-  profile.save() //=> will fail
-````
-
-*mocking a failed update and retry with success*
+- mocking a failed update
 
 ```javascript
-  let profile = make('profile');
+let profile = make('profile');
 
-  let mockUpdate = mockUpdate(profile);
+// set the succeed flag to 'false'
+mockUpdate('profile', profile.id).fails({
+  status: 422,
+  response: 'Invalid data',
+});
+// or
+mockUpdate(profile).fails({ status: 422, response: 'Invalid data' });
 
-  mockUpdate.fails({status: 422, response: 'Invalid data'});
+profile.set('description', 'bad value');
+profile.save(); //=> will fail
+```
 
-  profile.set('description', 'bad value');
-  profile.save() //=> will fail
+_mocking a failed update and retry with success_
 
-  // After setting valid value
-  profile.set('description', 'good value');
+```javascript
+let profile = make('profile');
 
-  // Now expecting success
-  mockUpdate.succeeds();
+let mockUpdate = mockUpdate(profile);
 
-  // Try that update again
-  profile.save() //=> will succeed!
-````
+mockUpdate.fails({ status: 422, response: 'Invalid data' });
 
+profile.set('description', 'bad value');
+profile.save(); //=> will fail
+
+// After setting valid value
+profile.set('description', 'good value');
+
+// Now expecting success
+mockUpdate.succeeds();
+
+// Try that update again
+profile.save(); //=> will succeed!
+```
 
 ##### `mockDelete`
-  - Need to import `run` from `@ember/runloop` and wrap tests using `mockDelete` with: `run(function() { 'your test' })`
-  - To handle deleting a model
-    - Pass in a record ( or a typeName and id )
+
+- Need to import `run` from `@ember/runloop` and wrap tests using `mockDelete` with: `run(function() { 'your test' })`
+- To handle deleting a model
+  - Pass in a record ( or a typeName and id )
 
 Usage:
 
 - Passing in a record / model instance
 
 ```javascript
-  import { make, mockDelete } from 'ember-data-factory-guy';
+import { make, mockDelete } from 'ember-data-factory-guy';
 
-  let profile = make('profile');
-  mockDelete(profile);
+let profile = make('profile');
+mockDelete(profile);
 
-  profile.destroyRecord() // => will succeed
+profile.destroyRecord(); // => will succeed
 ```
 
 - Passing in a model typeName and id
 
 ```javascript
-  import { make, mockDelete } from 'ember-data-factory-guy';
+import { make, mockDelete } from 'ember-data-factory-guy';
 
-  let profile = make('profile');
-  mockDelete('profile', profile.id);
+let profile = make('profile');
+mockDelete('profile', profile.id);
 
-  profile.destroyRecord() // => will succeed
+profile.destroyRecord(); // => will succeed
 ```
 
 - Passing in a model typeName
 
 ```javascript
-  import { make, mockDelete } from 'ember-data-factory-guy';
+import { make, mockDelete } from 'ember-data-factory-guy';
 
-  let profile1 = make('profile');
-  let profile2 = make('profile');
-  mockDelete('profile');
+let profile1 = make('profile');
+let profile2 = make('profile');
+mockDelete('profile');
 
-  profile1.destroyRecord() // => will succeed
-  profile2.destroyRecord() // => will succeed
+profile1.destroyRecord(); // => will succeed
+profile2.destroyRecord(); // => will succeed
 ```
 
 - Mocking a failed delete
 
 ```javascript
-    mockDelete(profile).fails();
+mockDelete(profile).fails();
 ```
 
 ##### `mock`
-  Well, you have read about all the other `mock*` methods, but what if you have
-  endpoints that do not use Ember Data? Well, `mock` is for you.
 
-  - mock({type, url, responseText, status})
-    - type: The HTTP verb (`GET`, `POST`, etc.) Defaults to `GET`
-    - url: The endpoint URL you are trying to mock
-    - responseText: This can be whatever you want to return, even a JavaScript object
-    - status: The status code of the response. Defaults to `200`
+Well, you have read about all the other `mock*` methods, but what if you have
+endpoints that do not use Ember Data? Well, `mock` is for you.
+
+- mock({type, url, responseText, status})
+  - type: The HTTP verb (`GET`, `POST`, etc.) Defaults to `GET`
+  - url: The endpoint URL you are trying to mock
+  - responseText: This can be whatever you want to return, even a JavaScript object
+  - status: The status code of the response. Defaults to `200`
 
 Usage:
 
 - Simple case
 
 ```javascript
-  import { mock } from 'ember-data-factory-guy';
+import { mock } from 'ember-data-factory-guy';
 
-  this.mock({ url: '/users' });
+this.mock({ url: '/users' });
 ```
 
 - Returning a JavaScript object
 
 ```javascript
-  import { mock } from 'ember-data-factory-guy';
+import { mock } from 'ember-data-factory-guy';
 
-  this.mock({
-    type: 'POST',
-    url: '/users/sign_in',
-    responseText: { token: "0123456789-ab" }
-  });
-
+this.mock({
+  type: 'POST',
+  url: '/users/sign_in',
+  responseText: { token: '0123456789-ab' },
+});
 ```
 
 ### Pretender
+
 The addon uses [Pretender](https://github.com/pretenderjs/pretender) to mock the requests. It exposes the functions `getPretender` and `setPretender` to respectively get the Pretender server for the current test or set it. For instance, you can use pretender's [passthrough](https://github.com/pretenderjs/pretender#pass-through) feature to ignore data URLs:
 
 ```javascript
@@ -1916,41 +1987,43 @@ getPretender().get('data:*', getPretender().passthrough);
 ### Tips and Tricks
 
 #### Tip 1: Fun with `makeList`/`buildList` and traits
-  - This is probably the funnest thing in FactoryGuy, if you're not using this
+
+- This is probably the funnest thing in FactoryGuy, if you're not using this
   syntax yet, you're missing out.
 
-  ```javascript
-   let json    = buildList('widget', 'square', 'round', ['round','broken']);
-   let widgets = makeList('widget', 'square', 'round', ['round','broken']);
-   let [squareWidget, roundWidget, roundBrokenWidget] = widgets;
-  ```
+```javascript
+let json = buildList('widget', 'square', 'round', ['round', 'broken']);
+let widgets = makeList('widget', 'square', 'round', ['round', 'broken']);
+let [squareWidget, roundWidget, roundBrokenWidget] = widgets;
+```
+
     - you just built/made 3 different widgets from traits ('square', 'round', 'broken')
     - the first will have the square trait
     - the second will have the round trait
     - the third will have both round and broken trait
 
-  - Check out [makeList](#factoryguymakelist) and [buildList](#factoryguybuildlist) for more ideas
+- Check out [makeList](#factoryguymakelist) and [buildList](#factoryguybuildlist) for more ideas
 
 #### Tip 2: Building static / fixture like data into the factories.
 
- - States are the classic case. There is a state model, and there are 50 US states.
- - You could use a strategy to get them with traits like this:
+- States are the classic case. There is a state model, and there are 50 US states.
+- You could use a strategy to get them with traits like this:
 
 ```javascript
-  import FactoryGuy from 'ember-data-factory-guy';
+import FactoryGuy from 'ember-data-factory-guy';
 
-  FactoryGuy.define('state', {
+FactoryGuy.define('state', {
+  traits: {
+    NY: { name: 'New York', id: 'NY' },
+    NJ: { name: 'New Jersey', id: 'NJ' },
+    CT: { name: 'Connecticut', id: 'CT' },
+  },
+});
 
-    traits: {
-      NY: { name: "New York", id: "NY" },
-      NJ: { name: "New Jersey", id: "NJ" },
-      CT: { name: "Connecticut", id: "CT" }
-    }
-  });
-
-  // then in your tests you would do
-  let [ny, nj, ct] = makeList('state', 'ny', 'nj', 'ct');
+// then in your tests you would do
+let [ny, nj, ct] = makeList('state', 'ny', 'nj', 'ct');
 ```
+
 - Or you could use a strategy to get them like this:
 
 ```javascript
@@ -1976,20 +2049,20 @@ getPretender().get('data:*', getPretender().passthrough);
 ```
 
 #### Tip 3: Using Scenario class in tests
-  - encapsulate data interaction in a scenario class
-    - sets up data
-    - has helper methods to retrieve data
-  - similar to how page objects abstract away the interaction with a page/component
+
+- encapsulate data interaction in a scenario class
+  - sets up data
+  - has helper methods to retrieve data
+- similar to how page objects abstract away the interaction with a page/component
 
 Example:
 
 ```javascript
 // file: tests/scenarios/admin.js
 import Ember from 'ember';
-import {Scenario}  from 'ember-data-factory-guy';
+import { Scenario } from 'ember-data-factory-guy';
 
 export default class extends Scenario {
-
   run() {
     this.createGroups();
   }
@@ -2007,20 +2080,20 @@ export default class extends Scenario {
 import page from '../pages/admin';
 import Scenario from '../scenarios/admin';
 
-describe('Admin View', function() {
+describe('Admin View', function () {
   let scenario;
 
-  beforeEach(function() {
+  beforeEach(function () {
     scenario = new Scenario();
     scenario.run();
   });
 
-  describe('group', function() {
-    beforeEach(function() {
+  describe('group', function () {
+    beforeEach(function () {
       page.visitGroups();
     });
 
-    it('shows all groups', function() {
+    it('shows all groups', function () {
       expect(page.groups.names).to.arrayEqual(scenario.groupNames());
     });
   });
@@ -2028,45 +2101,44 @@ describe('Admin View', function() {
 ```
 
 #### Tip 4: Testing model's custom `serialize()` method
-  - The fact that you can match on attributes in `mockUpdate` and `mockCreate` means
-   that you can test a custom `serialize()` method in a model serializer
+
+- The fact that you can match on attributes in `mockUpdate` and `mockCreate` means
+  that you can test a custom `serialize()` method in a model serializer
 
 ```javascript
+// app/serializers/person.js
+export default class PersonSerializer extends RESTSerializer {
+  // let's say you're modifying all names to be Japanese honorific style
+  serialize(snapshot, options) {
+    var json = this._super(snapshot, options);
 
-  // app/serializers/person.js
-  export default class PersonSerializer extends RESTSerializer {
+    let honorificName = [snapshot.record.get('name'), 'san'].join('-');
+    json.name = honorificName;
 
-    // let's say you're modifying all names to be Japanese honorific style
-    serialize(snapshot, options) {
-      var json = this._super(snapshot, options);
-
-      let honorificName = [snapshot.record.get('name'), 'san'].join('-');
-      json.name = honorificName;
-
-      return json;
-    }
+    return json;
   }
+}
 
-  // somewhere in your tests
-  let person = make('person', {name: "Daniel"});
-  mockUpdate(person).match({name: "Daniel-san"});
-  person.save(); // will succeed
-  // and voila, you have just tested the serializer is converting the name properly
+// somewhere in your tests
+let person = make('person', { name: 'Daniel' });
+mockUpdate(person).match({ name: 'Daniel-san' });
+person.save(); // will succeed
+// and voila, you have just tested the serializer is converting the name properly
 ```
 
-- You could also test ```serialize()``` method in a simpler way by doing this:
+- You could also test `serialize()` method in a simpler way by doing this:
 
 ```javascript
-  let person = make('person', {name: "Daniel"});
-  let json = person.serialize();
-  assert.equal(json.name, 'Daniel-san');
+let person = make('person', { name: 'Daniel' });
+let json = person.serialize();
+assert.equal(json.name, 'Daniel-san');
 ```
 
 ### Upgrading
 
 #### v4 -> v5
 
-Users of `ember-django-adapter` will need to remain on v4. The addon is quite old and under-maintained, it required a fix to move factory guy forward which was unlikely to be merged. 
+Users of `ember-django-adapter` will need to remain on v4. The addon is quite old and under-maintained, it required a fix to move factory guy forward which was unlikely to be merged.
 
 Additionally, support for node versions before 16 has been dropped. Only 18, 20, 22+ are supported - ensure you are using one of these versions.
 
@@ -2083,21 +2155,25 @@ For this release, the addon has been converted to a "v2 addon", a number of peer
 The addon no longer uses `require()` to import and register your factory guy Factories and "main" Scenario. This means you need to import them yourself;
 
 Factories
+
 - Add a `tests/factories.js` file that imports all your factories
   - example https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/ed50331e5bd414f6ffa2b5a1e52966ff55e5116d/test-app/tests/factories.js#L1-L33
 - Add `import 'my-app/tests/factories';` to your `tests/test-helper.js` file
   - example https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/ed50331e5bd414f6ffa2b5a1e52966ff55e5116d/test-app/tests/test-helper.js#L8
 
 Scenario
+
 - If you specified `useScenarios` in your config for factory guy so that it would run your "main" scenario located at `scenarios/main.js` - you'll instead want to import and run it anywhere you want to use it. This makes it just like any other scenario you might have defined.
+
 ```ts
 import MainScenario from 'my-app/tests/scenarios/main';
 MainScenario.run();
 ```
+
 - If you didn't specify `useScenarios` config or have no idea what the main scenario is, you don't need to do anything.
 
 `ENV.factoryGuy = {...};` config/environment object no longer does anything, you can remove it if you specified it. This includes both `enabled` and `useScenarios` options.
 
 Explicit code to only include factory guy in test/development builds has been removed. We are now relying on tree-shaking - assuming you only use factory guy code in tests, then it will only be included when tests are (which should only be test/development builds). If this is you, you should not need to change anything regarding this.
-- If you have more complex requirements than this, like using factory guy in your app code, make sure you wrap your usages of factory guy in `@embroider/macros` `importSync()` and with other conditional macros so that it is only included when you want it to be.
 
+- If you have more complex requirements than this, like using factory guy in your app code, make sure you wrap your usages of factory guy in `@embroider/macros` `importSync()` and with other conditional macros so that it is only included when you want it to be.

@@ -13,7 +13,7 @@ class MockGetRequest extends MockStoreRequest {
     this.queryParams = queryParams;
     if (defaultResponse !== undefined) {
       this.setResponseJson(
-        this.fixtureBuilder.convertForBuild(modelName, defaultResponse)
+        this.fixtureBuilder.convertForBuild(modelName, defaultResponse),
       );
     }
     this.validReturnsKeys = [];
@@ -52,7 +52,7 @@ class MockGetRequest extends MockStoreRequest {
     assert(
       `[ember-data-factory-guy] You can pass one key to 'returns',
                 you passed these keys: ${responseKeys}`,
-      responseKeys.length === 1
+      responseKeys.length === 1,
     );
 
     const [responseKey] = responseKeys;
@@ -60,7 +60,7 @@ class MockGetRequest extends MockStoreRequest {
     assert(
       `[ember-data-factory-guy] You passed an invalid keys for 'returns' function.
       Valid keys are ${this.validReturnsKeys}. You used this invalid key: ${responseKey}`,
-      this.validReturnsKeys.includes(responseKey)
+      this.validReturnsKeys.includes(responseKey),
     );
 
     return responseKey;
@@ -86,7 +86,7 @@ class MockGetRequest extends MockStoreRequest {
         json = { id: options.id };
         this.idSearch = true;
         this.setResponseJson(
-          this.fixtureBuilder.convertForBuild(modelName, json)
+          this.fixtureBuilder.convertForBuild(modelName, json),
         );
         break;
 
@@ -96,12 +96,12 @@ class MockGetRequest extends MockStoreRequest {
         assert(
           `[ember-data-factory-guy] argument ( model ) must be a Model instance - found type:'
           ${typeOf(model)}`,
-          model instanceof Model
+          model instanceof Model,
         );
 
         json = { id: model.id };
         this.setResponseJson(
-          this.fixtureBuilder.convertForBuild(modelName, json)
+          this.fixtureBuilder.convertForBuild(modelName, json),
         );
         break;
 
@@ -116,7 +116,7 @@ class MockGetRequest extends MockStoreRequest {
         assert(
           `[ember-data-factory-guy] argument ( models ) must be an array - found type:'
           ${typeOf(models)}`,
-          isArray(models)
+          isArray(models),
         );
 
         json = models.map((model) => ({ id: model.id }));

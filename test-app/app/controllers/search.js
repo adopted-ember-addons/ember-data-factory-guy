@@ -1,11 +1,17 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
-import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class SearchController extends Controller {
   @service router;
-  @action
-  userSearch(name) {
-    this.router.transitionTo('search.results', name);
-  }
+
+  @tracked userName = '';
+
+  userSearch = () => {
+    this.router.transitionTo('search.results', this.userName);
+  };
+
+  setUserName = (event) => {
+    this.userName = event.target.value;
+  };
 }

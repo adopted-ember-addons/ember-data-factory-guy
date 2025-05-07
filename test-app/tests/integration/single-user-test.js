@@ -15,11 +15,11 @@ module(
 
       this.setProperties({ user, createProject: () => {} });
       await render(
-        hbs`<SingleUser @user={{this.user}} @createProject={{this.createProject}} />`
+        hbs`<SingleUser @user={{this.user}} @createProject={{this.createProject}} />`,
       );
 
       assert.dom('.name').containsText(user.get('name'));
       assert.dom('.funny-name').containsText(user.get('funnyName'));
     });
-  }
+  },
 );

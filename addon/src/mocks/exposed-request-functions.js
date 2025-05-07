@@ -24,7 +24,7 @@ export function mockLinks(model, relationshipKey) {
   assert(
     '[ember-data-factory-guy] mockLinks requires at least model and relationshipKey',
     model,
-    relationshipKey
+    relationshipKey,
   );
 
   return new MockLinksRequest(model, relationshipKey);
@@ -71,7 +71,7 @@ export function mockFindRecord(...args) {
   assert(
     `[ember-data-factory-guy] mockFindRecord requires at least a model
      name as first parameter`,
-    args.length > 0
+    args.length > 0,
   );
 
   if (args[0] instanceof Model) {
@@ -118,7 +118,7 @@ export function mockReload(...args) {
 
   assert(
     '[ember-data-factory-guy] mockReload arguments are a model instance or a model type name and an id',
-    modelName && id
+    modelName && id,
   );
 
   let json = FactoryGuy.fixtureBuilder(modelName).convertForBuild(modelName, {
@@ -157,7 +157,7 @@ export function mockFindAll(...args) {
   assert(
     `[ember-data-factory-guy] mockFindAll requires at least a model
      name as first parameter`,
-    args.length > 0
+    args.length > 0,
   );
 
   let mock = new MockFindAllRequest(modelName);
@@ -206,7 +206,7 @@ export function mockFindAll(...args) {
 export function mockQuery(modelName, queryParams = {}) {
   assert(
     '[ember-data-factory-guy] The second argument ( queryParams ) must be an object',
-    typeOf(queryParams) === 'object'
+    typeOf(queryParams) === 'object',
   );
 
   return new MockQueryRequest(modelName, queryParams);
@@ -262,7 +262,7 @@ export function mockQueryRecord(modelName, queryParams) {
   if (queryParams) {
     assert(
       'The second argument ( queryParams ) must be an object',
-      typeOf(queryParams) === 'object'
+      typeOf(queryParams) === 'object',
     );
   }
 
@@ -322,7 +322,7 @@ export function mockCreate(...args) {
 
   assert(
     `[ember-data-factory-guy] To mockUpdate pass in a model instance or a modelName`,
-    modelName
+    modelName,
   );
 
   return new MockCreateRequest(modelName, { model });
@@ -366,7 +366,7 @@ export function mockUpdate(...args) {
 
   assert(
     '[ember-data-factory-guy] To mockUpdate pass in a model instance or a modelName and an id or just a modelName',
-    modelName
+    modelName,
   );
 
   return new MockUpdateRequest(modelName, { id, model });
@@ -392,7 +392,7 @@ export function mockDelete(...args) {
 
   assert(
     `[ember-data-factory-guy] mockDelete requires at least a model type name`,
-    modelName
+    modelName,
   );
 
   return new MockDeleteRequest(modelName, { id, model });

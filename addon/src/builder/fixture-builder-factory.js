@@ -14,7 +14,7 @@ import {
 let ActiveModelSerializer;
 if (macroCondition(dependencySatisfies('active-model-adapter', '*'))) {
   ActiveModelSerializer = importSync(
-    'active-model-adapter'
+    'active-model-adapter',
   ).ActiveModelSerializer;
 }
 

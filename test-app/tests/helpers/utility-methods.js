@@ -16,7 +16,7 @@ export function fetchJSON({ url, params, method = 'GET' } = {}) {
     body = JSON.stringify(params);
   }
   return fetch(url, { body, method }).then((r) =>
-    r._bodyText ? r.json() : null
+    r._bodyText ? r.json() : null,
   );
 }
 
@@ -142,7 +142,7 @@ export function containerSetup(application, serializerType) {
       let originalSerializer = findSerializer(modelName);
       if (
         modelName.match(
-          /(name|department|address|department-employment|manager)/
+          /(name|department|address|department-employment|manager)/,
         )
       ) {
         return originalSerializer;

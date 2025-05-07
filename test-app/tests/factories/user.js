@@ -64,7 +64,7 @@ FactoryGuy.define('user', {
     propertiesLink: (f) => {
       f.links = Object.assign(
         { properties: `/users/${f.id}/properties` },
-        f.links
+        f.links,
       );
     },
   },

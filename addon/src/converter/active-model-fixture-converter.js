@@ -15,7 +15,7 @@ export default class AMSFixtureConverter extends RESTFixtureConverter {
     if (this.serializeMode) {
       let transformFn = this.getTransformKeyFunction(
         relationship.type,
-        'Relationship'
+        'Relationship',
       );
       return transformFn(relationship.name, relationship.kind);
     } else {

@@ -44,14 +44,14 @@ module(serializer, function (hooks) {
       let profile = run(() =>
         FactoryGuy.store.createRecord('profile', {
           camel_case_description: 'description',
-        })
+        }),
       );
 
       await run(async () => profile.save());
 
       assert.strictEqual(
         profile.get('camelCaseDescription'),
-        customDescription
+        customDescription,
       );
     });
   });

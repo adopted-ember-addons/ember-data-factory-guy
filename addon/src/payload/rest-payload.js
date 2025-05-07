@@ -11,7 +11,7 @@ export default class extends BasePayload {
 
   includeKeys() {
     let keys = A(Object.keys(this.json)).reject(
-      (key) => this.payloadKey === key
+      (key) => this.payloadKey === key,
     );
     return A(keys).reject((key) => A(this.proxyMethods).includes(key)) || [];
   }

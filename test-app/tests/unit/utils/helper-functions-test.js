@@ -56,23 +56,23 @@ module('Unit | Helper Functions', function (hooks) {
 
     assert.notOk(
       isEquivalent(1, 2),
-      'Non-equivalent numbers should return false'
+      'Non-equivalent numbers should return false',
     );
     assert.notOk(
       isEquivalent(1, '1'),
-      'Non-equivalent values should return false'
+      'Non-equivalent values should return false',
     );
   });
 
   test('#isEquivalent with strings', function (assert) {
     assert.ok(
       isEquivalent(tomster.name, 'Tomster'),
-      'Equivalent strings should return true'
+      'Equivalent strings should return true',
     );
 
     assert.notOk(
       isEquivalent(zoey.name, 'Tomster'),
-      'Non-equivalent strings should return false'
+      'Non-equivalent strings should return false',
     );
   });
 
@@ -88,26 +88,26 @@ module('Unit | Helper Functions', function (hooks) {
   test('#isEquivalent with arrays', function (assert) {
     assert.ok(
       isEquivalent(tomster.friends, daniel.friends),
-      'arrays with equivalent contents in the same order return true'
+      'arrays with equivalent contents in the same order return true',
     );
 
     assert.notOk(
       isEquivalent(tomster.friends, zoey.friends),
-      'arrays with non-equivalent contents return false'
+      'arrays with non-equivalent contents return false',
     );
     assert.notOk(
       isEquivalent(tomster.friends, ['Zoey', 'Tom', 'Yahuda']),
-      'arrays with equivalent contents but in a different order return false'
+      'arrays with equivalent contents but in a different order return false',
     );
 
     assert.ok(
       isEquivalent([1, ['a', [true]]], [1, ['a', [true]]]),
-      'matches equivalence on deeply nested arrays'
+      'matches equivalence on deeply nested arrays',
     );
 
     assert.notOk(
       isEquivalent([1, ['a', [true]]], [1, ['b', [true]]]),
-      'filters equivalence on deeply nested arrays'
+      'filters equivalence on deeply nested arrays',
     );
   });
 
@@ -117,12 +117,12 @@ module('Unit | Helper Functions', function (hooks) {
         name: 'Tomster',
         friends: ['Zoey', 'Yahuda', 'Tom'],
       }),
-      'returns true if object key-value pairs are equivalent'
+      'returns true if object key-value pairs are equivalent',
     );
 
     assert.notOk(
       isEquivalent(tomster, zoey),
-      'returns false if object key-value pairs are not equivalent'
+      'returns false if object key-value pairs are not equivalent',
     );
 
     assert.notOk(
@@ -130,7 +130,7 @@ module('Unit | Helper Functions', function (hooks) {
         name: 'Tomster',
         friends: ['Zoey', 'Daniel', 'Tom'],
       }),
-      'returns false if object key-value pairs are not equivalent'
+      'returns false if object key-value pairs are not equivalent',
     );
   });
 
@@ -153,34 +153,34 @@ module('Unit | Helper Functions', function (hooks) {
         name: tomster.name,
         friends: [zoey, daniel],
       }),
-      'returns true if object key-value pairs are equivalent'
+      'returns true if object key-value pairs are equivalent',
     );
 
     assert.notOk(
       isEquivalent(nestedZoey, nestedTomster),
-      'returns false if object key-value pairs are not equivalent'
+      'returns false if object key-value pairs are not equivalent',
     );
   });
 
   test('#isPartOf', function (assert) {
     assert.ok(
       isPartOf(tomster, { name: 'Tomster' }),
-      'returns true if the first object contains all key-value pairs from the second object'
+      'returns true if the first object contains all key-value pairs from the second object',
     );
 
     assert.ok(
       isPartOf(tomster, tomster),
-      'returns true if the first object is the same as the second object'
+      'returns true if the first object is the same as the second object',
     );
 
     assert.ok(
       isPartOf(tomster, {}),
-      'returns true if the second object is empty'
+      'returns true if the second object is empty',
     );
 
     assert.notOk(
       isPartOf(tomster, { name: 'Tomster', number: 1 }),
-      'returns false if the first object does not contains key-value pairs from the second object'
+      'returns false if the first object does not contains key-value pairs from the second object',
     );
   });
 
@@ -201,12 +201,12 @@ module('Unit | Helper Functions', function (hooks) {
       assert.equal(
         actualUrl,
         expectedUrl,
-        `${actualUrl} expect url => ${expectedUrl}`
+        `${actualUrl} expect url => ${expectedUrl}`,
       );
       assert.deepEqual(
         actualParams,
         expectedParams,
-        `${actualParams} expect params => ${expectedParams}`
+        `${actualParams} expect params => ${expectedParams}`,
       );
     }
   });

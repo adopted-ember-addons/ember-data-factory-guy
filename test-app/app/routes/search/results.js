@@ -7,7 +7,7 @@ export default class extends Route {
 
   model(params) {
     return waitForPromise(
-      this.store.query('user', { name: params.name }).catch((e) => e)
+      this.store.query('user', { name: params.name }).catch((e) => e),
     );
   }
 }

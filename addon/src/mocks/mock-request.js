@@ -63,7 +63,7 @@ export default class {
   fails(opts = {}) {
     let convertErrors = Object.prototype.hasOwnProperty.call(
         opts,
-        'convertErrors'
+        'convertErrors',
       )
         ? opts.convertErrors
         : true,
@@ -72,7 +72,7 @@ export default class {
     assert(
       `[ember-data-factory-guy] 'fails' method status code must be 3XX, 4XX or 5XX,
         you are using: ${status}`,
-      this.isErrorStatus(status)
+      this.isErrorStatus(status),
     );
 
     this.status = status;
@@ -81,7 +81,7 @@ export default class {
     if (response && convertErrors) {
       let errors = this.fixtureBuilder.convertResponseErrors(
         response,
-        this.status
+        this.status,
       );
       this.errorResponse = errors;
     }
@@ -143,13 +143,13 @@ export default class {
     if (!isEmptyObject(this.someQueryParams)) {
       return isPartOf(
         toParams(request.queryParams),
-        toParams(this.someQueryParams)
+        toParams(this.someQueryParams),
       );
     }
     if (!isEmptyObject(this.queryParams)) {
       return isEquivalent(
         toParams(request.queryParams),
-        toParams(this.queryParams)
+        toParams(this.queryParams),
       );
     }
     return true;

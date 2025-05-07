@@ -217,7 +217,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
       let mockFindProfile = mockFindRecord(
         'profile',
         'with_company',
-        'with_bat_man'
+        'with_bat_man',
       );
       let profileId = mockFindProfile.get('id');
 
@@ -273,7 +273,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
       assert.equal(
         FactoryGuy.store.peekAll('profile').get('content').length,
         1,
-        'does not make another profile'
+        'does not make another profile',
       );
     });
   });
@@ -286,7 +286,7 @@ SharedBehavior.mockFindRecordEmbeddedTests = function () {
 
       const comic = await FactoryGuy.store.findRecord(
         'comic-book',
-        mock.get('id')
+        mock.get('id'),
       );
       assert.ok(comic.get('name') === 'Comic Times #1');
       assert.ok(comic.get('company.name') === 'Marvel Comics');
@@ -297,12 +297,12 @@ SharedBehavior.mockFindRecordEmbeddedTests = function () {
 
       const comic = await FactoryGuy.store.findRecord(
         'comic-book',
-        mock.get('id')
+        mock.get('id'),
       );
       assert.ok(comic.get('name') === 'Comic Times #1');
       assert.ok(
         comic.get('characters').mapBy('name') + '' ===
-          ['BadGuy#1', 'BadGuy#2'] + ''
+          ['BadGuy#1', 'BadGuy#2'] + '',
       );
     });
   });
@@ -333,7 +333,7 @@ SharedBehavior.mockReloadTests = function () {
     assert.ok(reloaded.get('description') === 'moo', 'attribute changed');
     assert.ok(
       reloaded.get('camelCaseDescription') === 'noodles',
-      'other attributes are same'
+      'other attributes are same',
     );
   });
 
@@ -354,11 +354,11 @@ SharedBehavior.mockReloadTests = function () {
     assert.ok(reloaded.id === profile.id, 'does not change id');
     assert.ok(
       reloaded.get('description') === 'potatoes',
-      'description changed'
+      'description changed',
     );
     assert.ok(
       reloaded.get('camelCaseDescription') === 'poodles',
-      'camelCaseDescription changes'
+      'camelCaseDescription changes',
     );
   });
 
@@ -386,10 +386,10 @@ SharedBehavior.mockFindAllCommonTests = function () {
 
     let profiles = await FactoryGuy.store.findAll('profile');
     assert.ok(
-      profiles.get('firstObject.camelCaseDescription') === 'textGoesHere'
+      profiles.get('firstObject.camelCaseDescription') === 'textGoesHere',
     );
     assert.ok(
-      profiles.get('firstObject.snake_case_description') === 'text_goes_here'
+      profiles.get('firstObject.snake_case_description') === 'text_goes_here',
     );
   });
 
@@ -444,10 +444,10 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
       assert.ok(users.get('length') === 2);
       assert.ok(
         A(users.get('lastObject.hats')).mapBy('type') + '' ===
-          ['BigHat', 'BigHat'] + ''
+          ['BigHat', 'BigHat'] + '',
       );
       assert.ok(
-        A(users.get('lastObject.hats')).mapBy('id') + '' === [3, 4] + ''
+        A(users.get('lastObject.hats')).mapBy('id') + '' === [3, 4] + '',
       );
     });
 
@@ -486,7 +486,7 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
       assert.equal(
         FactoryGuy.store.peekAll('profile').get('content').length,
         2,
-        'does not make new profiles'
+        'does not make new profiles',
       );
     });
 
@@ -508,11 +508,11 @@ SharedBehavior.mockFindAllEmbeddedTests = function () {
 
       const comics = await FactoryGuy.store.findAll('comic-book');
       assert.ok(
-        comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + ''
+        comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + '',
       );
       assert.ok(
         comics.mapBy('company.name') + '' ===
-          ['Marvel Comics', 'Marvel Comics'] + ''
+          ['Marvel Comics', 'Marvel Comics'] + '',
       );
     });
 
@@ -521,15 +521,15 @@ SharedBehavior.mockFindAllEmbeddedTests = function () {
 
       const comics = await FactoryGuy.store.findAll('comic-book');
       assert.ok(
-        comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + ''
+        comics.mapBy('name') + '' === ['Comic Times #1', 'Comic Times #2'] + '',
       );
       assert.ok(
         comics.get('firstObject.characters').mapBy('name') + '' ===
-          ['BadGuy#1', 'BadGuy#2'] + ''
+          ['BadGuy#1', 'BadGuy#2'] + '',
       );
       assert.ok(
         comics.get('lastObject.characters').mapBy('name') + '' ===
-          ['BadGuy#3', 'BadGuy#4'] + ''
+          ['BadGuy#3', 'BadGuy#4'] + '',
       );
     });
   });
@@ -589,7 +589,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.equal(
       FactoryGuy.store.peekAll('user').get('content').length,
       1,
-      'does not make another user'
+      'does not make another user',
     );
   });
 
@@ -600,7 +600,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.equal(
       FactoryGuy.store.peekAll('user').get('content.length'),
       2,
-      'start out with 2 instances'
+      'start out with 2 instances',
     );
 
     let users = await FactoryGuy.store.query('user', { name: 'Bob' });
@@ -611,7 +611,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.equal(
       FactoryGuy.store.peekAll('user').get('content.length'),
       2,
-      'no new instances created'
+      'no new instances created',
     );
   });
 
@@ -622,7 +622,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.equal(
       FactoryGuy.store.peekAll('company').get('content.length'),
       2,
-      'start out with 2 instances'
+      'start out with 2 instances',
     );
 
     const companies = await FactoryGuy.store.query('company', {
@@ -636,7 +636,7 @@ SharedBehavior.mockQueryTests = function () {
     assert.equal(
       FactoryGuy.store.peekAll('company').get('content.length'),
       2,
-      'no new instances created'
+      'no new instances created',
     );
   });
 
@@ -704,7 +704,7 @@ SharedBehavior.mockQueryTests = function () {
     });
     assert.equal(
       A(companies).mapBy('id') + '',
-      A(returnedCompanies).mapBy('id') + ''
+      A(returnedCompanies).mapBy('id') + '',
     );
 
     mockQuery('company', { type: 'Small', name: 'Dude' }).returns({
@@ -717,7 +717,7 @@ SharedBehavior.mockQueryTests = function () {
     });
     assert.equal(
       A(companies).mapBy('id') + '',
-      A(returnedCompanies).mapBy('id') + ''
+      A(returnedCompanies).mapBy('id') + '',
     );
   });
 
@@ -779,7 +779,7 @@ SharedBehavior.mockQueryMetaTests = function () {
         isEquivalent(profiles.get('meta'), {
           previous: '/profiles?page=1',
           next: '/profiles?page=3',
-        })
+        }),
       );
 
       let profiles2 = await FactoryGuy.store.query('profile', { page: 3 });
@@ -788,7 +788,7 @@ SharedBehavior.mockQueryMetaTests = function () {
         isEquivalent(profiles2.get('meta'), {
           previous: '/profiles?page=2',
           next: '/profiles?page=4',
-        })
+        }),
       );
     });
   });
@@ -833,7 +833,7 @@ SharedBehavior.mockQueryRecordTests = function () {
     assert.equal(
       FactoryGuy.store.peekAll('user').get('content').length,
       1,
-      'does not create a new model'
+      'does not create a new model',
     );
   });
 
@@ -846,7 +846,7 @@ SharedBehavior.mockQueryRecordTests = function () {
     assert.equal(
       FactoryGuy.store.peekAll('user').get('content').length,
       1,
-      'does not create a new model'
+      'does not create a new model',
     );
   });
 
@@ -903,12 +903,12 @@ SharedBehavior.mockCreateTests = function () {
 
     assert.ok(
       FactoryGuy.store.peekAll('profile').get('content.length') === 1,
-      'No extra records created'
+      'No extra records created',
     );
     assert.ok(profile instanceof Profile, 'Creates the correct type of record');
     assert.ok(
       profile.get('description') === customDescription,
-      'Passes along the match attributes'
+      'Passes along the match attributes',
     );
   });
 
@@ -924,7 +924,7 @@ SharedBehavior.mockCreateTests = function () {
     assert.deepEqual(
       profile.getProperties(['description', 'camelCaseDescription']),
       { camelCaseDescription, description },
-      'correct model attributes present'
+      'correct model attributes present',
     );
   });
 
@@ -934,7 +934,7 @@ SharedBehavior.mockCreateTests = function () {
     mockCreate('super-hero').match({ name: customName });
 
     assert.ok(
-      FactoryGuy.store.peekAll('super-hero').get('content.length') === 0
+      FactoryGuy.store.peekAll('super-hero').get('content.length') === 0,
     );
 
     let hero = FactoryGuy.store.createRecord('super-hero', {
@@ -944,12 +944,12 @@ SharedBehavior.mockCreateTests = function () {
 
     assert.ok(
       FactoryGuy.store.peekAll('super-hero').get('content.length') === 1,
-      'No extra records created'
+      'No extra records created',
     );
     assert.ok(hero instanceof SuperHero, 'Creates the correct type of record');
     assert.ok(
       hero.get('name') === customName,
-      'Passes along the match attributes'
+      'Passes along the match attributes',
     );
   });
 
@@ -1257,7 +1257,7 @@ SharedBehavior.mockCreateReturnsEmbeddedAssociations = function () {
       assert.equal(comitBook.get('company.id'), company.get('id').toString());
       assert.equal(
         comitBook.get('company.name'),
-        company.get('name').toString()
+        company.get('name').toString(),
       );
     });
   });
@@ -1399,7 +1399,7 @@ SharedBehavior.mockUpdateTests = function () {
     assert.ok(!profile.get('saving'), 'Saved model');
     assert.ok(
       profile.get('description') === 'new desc',
-      'Description was updated.'
+      'Description was updated.',
     );
   });
 
@@ -1414,7 +1414,7 @@ SharedBehavior.mockUpdateTests = function () {
       let url = adapter.urlForUpdateRecord(
         snapshot.id,
         type.modelName,
-        snapshot
+        snapshot,
       );
       let httpMethod = FactoryGuy.updateHTTPMethod(type.modelName);
 
@@ -1430,7 +1430,7 @@ SharedBehavior.mockUpdateTests = function () {
     updateMock.match(function (requestBody) {
       assert.ok(
         requestBody instanceof FormData,
-        'matching function is called when request body is FormData'
+        'matching function is called when request body is FormData',
       );
       return true;
     });
@@ -1670,7 +1670,7 @@ SharedBehavior.mockUpdateWithErrorMessages = function () {
           errors[0].detail,
           // errors.description,
           'invalid data',
-          'custom description shows up in errors'
+          'custom description shows up in errors',
         );
       });
     });
@@ -1743,7 +1743,7 @@ SharedBehavior.mockUpdateReturnsEmbeddedAssociations = function () {
       assert.equal(comicBook.get('company.id'), company.get('id').toString());
       assert.equal(
         comicBook.get('company.name'),
-        company.get('name').toString()
+        company.get('name').toString(),
       );
     });
   });

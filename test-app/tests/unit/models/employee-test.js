@@ -92,7 +92,7 @@ module(`Unit | Model | ${modelType}`, function (hooks) {
 
     run(() => {
       let names = run(() =>
-        employee.get('name').getProperties(['firstName', 'lastName'])
+        employee.get('name').getProperties(['firstName', 'lastName']),
       );
       assert.deepEqual(names, { firstName, lastName });
     });
@@ -107,7 +107,7 @@ module(`Unit | Model | ${modelType}`, function (hooks) {
 
     run(() => {
       let names = run(() =>
-        employee.get('name').getProperties(['firstName', 'lastName'])
+        employee.get('name').getProperties(['firstName', 'lastName']),
       );
       assert.deepEqual(names, { firstName, lastName });
     });
@@ -132,10 +132,10 @@ module(`Unit | Model | ${modelType}`, function (hooks) {
     mockFindRecord('employee').returns({ json: employee });
 
     let model = await run(async () =>
-      FactoryGuy.store.findRecord('employee', employee.get('id'))
+      FactoryGuy.store.findRecord('employee', employee.get('id')),
     );
     let names = run(() =>
-      model.get('name').getProperties(['firstName', 'lastName'])
+      model.get('name').getProperties(['firstName', 'lastName']),
     );
     assert.deepEqual(names, { firstName, lastName });
   });
@@ -157,7 +157,7 @@ module(`Unit | Model | ${modelType}`, function (hooks) {
     run(() => {
       assert.equal(employee.get('departmentEmployments.length'), 2);
       let department1 = employee.get(
-        'departmentEmployments.firstObject.department'
+        'departmentEmployments.firstObject.department',
       );
       let department2 = employee
         .get('departmentEmployments')

@@ -2,7 +2,7 @@ import MockStoreRequest from './mock-store-request';
 import MaybeIdUrlMatch from './maybe-id-url-match';
 
 export default class MockDeleteRequest extends MaybeIdUrlMatch(
-  MockStoreRequest
+  MockStoreRequest,
 ) {
   constructor(modelName, { id, model } = {}) {
     super(modelName, 'deleteRecord');

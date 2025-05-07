@@ -2,7 +2,7 @@
 
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
@@ -19,15 +19,21 @@ module.exports = {
   env: {
     browser: true,
   },
+  rules: {
+    'ember/no-runloop': 'warn',
+  },
   overrides: [
     // node files
     {
       files: [
         './.eslintrc.js',
         './.prettierrc.js',
-        './addon-main.js',
-        './blueprints/*/index.js',
-        './config/**/*.js',
+        './.template-lintrc.js',
+        './**/config/**/*.js',
+        './addon/addon-main.js',
+        './addon/blueprints/*/index.js',
+        './test-app/ember-cli-build.js',
+        './test-app/testem.js',
       ],
       parserOptions: {
         sourceType: 'script',
@@ -38,6 +44,15 @@ module.exports = {
       },
       plugins: ['n'],
       extends: ['plugin:n/recommended'],
+    },
+    {
+      // Test files:
+      files: ['test-app/tests/**/*-test.{js,ts}'],
+      extends: ['plugin:qunit/recommended'],
+      rules: {
+        'qunit/no-assert-equal': 'warn',
+        'qunit/require-expect': 'off',
+      },
     },
   ],
 };

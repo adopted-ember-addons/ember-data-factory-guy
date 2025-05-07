@@ -1,14 +1,20 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
-import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import { waitForPromise } from '@ember/test-waiters';
 
 export default class UserController extends Controller {
   @service store;
-  @action
-  createProject(user, title) {
+
+  @tracked projectTitle = '';
+
+  createProject = (user, title) => {
     return waitForPromise(
-      this.store.createRecord('project', { title: title, user: user }).save()
+      this.store.createRecord('project', { title: title, user: user }).save(),
     );
-  }
+  };
+
+  setProjectTitle = (event) => {
+    this.projectTitle = event.target.value;
+  };
 }

@@ -36,7 +36,7 @@ export default class extends MockRequest {
       this.get('id'),
       this.makeFakeSnapshot(),
       this.requestType,
-      this.queryParams
+      this.queryParams,
     );
   }
 

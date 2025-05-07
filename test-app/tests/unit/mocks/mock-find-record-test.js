@@ -42,7 +42,7 @@ module('MockFindRecord', function (hooks) {
     assert.deepEqual(
       consoleStub.getCall(0).args,
       expectedArgs,
-      'without query params'
+      'without query params',
     );
 
     const queryParams = { include: 'company' };
@@ -53,7 +53,7 @@ module('MockFindRecord', function (hooks) {
     assert.deepEqual(
       consoleStub.getCall(1).args,
       expectedArgs,
-      'with query params'
+      'with query params',
     );
 
     console.log.restore();
@@ -77,7 +77,7 @@ module('MockFindRecord', function (hooks) {
       assert.equal(
         mock.getUrl(),
         '/users/1',
-        'default ember-data findRecord url'
+        'default ember-data findRecord url',
       );
 
       let adapter = FactoryGuy.store.adapterFor('user');
@@ -88,12 +88,12 @@ module('MockFindRecord', function (hooks) {
       assert.equal(
         mock.getUrl(),
         '/dude/1',
-        'factory guy uses urlForFindRecord from adapter'
+        'factory guy uses urlForFindRecord from adapter',
       );
       assert.ok(findRecordStub.calledOnce);
       assert.ok(
         findRecordStub.calledWith(1, 'user'),
-        'correct parameters passed to urlForFindRecord'
+        'correct parameters passed to urlForFindRecord',
       );
 
       adapter.urlForFindRecord.restore();
@@ -115,7 +115,7 @@ module('MockFindRecord', function (hooks) {
           adapterOptions: options,
           record: user,
         }),
-        'adapterOptions passed to urlForFindRecord'
+        'adapterOptions passed to urlForFindRecord',
       );
 
       adapter.urlForFindRecord.restore();
