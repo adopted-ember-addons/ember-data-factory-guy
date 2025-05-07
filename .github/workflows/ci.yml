@@ -19,21 +19,16 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: pnpm/action-setup@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '${{ env.NODE_VERSION }}'
-        cache: pnpm
-    - name: Install Dependencies
-      run: pnpm i --frozen-lockfile
-    - name: Lint Addon
-      run: pnpm lint
-      working-directory: addon
-    - name: Lint Test app
-      run: pnpm lint
-      working-directory: test-app
-
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '${{ env.NODE_VERSION }}'
+          cache: pnpm
+      - name: Install Dependencies
+        run: pnpm i --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
 
   test:
     name: Tests
@@ -46,20 +41,20 @@ jobs:
         browser: [chrome]
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: pnpm/action-setup@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '${{ env.NODE_VERSION }}'
-        cache: pnpm
-    - name: Install Dependencies
-      run: pnpm install --frozen-lockfile
-    - name: Build
-      run: pnpm build
-      working-directory: addon
-    - name: Test
-      run: pnpm test:ember --launch chrome
-      working-directory: test-app
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '${{ env.NODE_VERSION }}'
+          cache: pnpm
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build
+        run: pnpm build
+        working-directory: addon
+      - name: Test
+        run: pnpm test:ember --launch chrome
+        working-directory: test-app
 
   try-scenarios:
     name: Tests - ${{ matrix.ember-try-scenario }}
@@ -71,44 +66,44 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        ember-try-scenario: [
-          ember-lts-4.12,
-          ember-default-with-jquery,
-          ember-classic,
-          embroider-safe,
-          embroider-optimized,
-        ]
+        ember-try-scenario:
+          [
+            ember-lts-4.12,
+            ember-default-with-jquery,
+            ember-classic,
+            embroider-safe,
+            embroider-optimized,
+          ]
         allow-failure: [false]
         include:
           - ember-try-scenario: ember-release
             allow-failure: true
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: pnpm/action-setup@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '${{ env.NODE_VERSION }}'
-        cache: pnpm
-    - name: Install Dependencies
-      run: pnpm install --frozen-lockfile
-    - name: Build
-      run: pnpm build
-      working-directory: addon
-    - name: Test
-      id: test
-      env:
-        EMBER_TRY_SCENARIO: ${{ matrix.ember-try-scenario }}
-      run: pnpm ember try:one $EMBER_TRY_SCENARIO
-      working-directory: test-app
-      continue-on-error: ${{ matrix.allow-failure }}
-    - uses: mainmatter/continue-on-error-comment@v1
-      if: ${{ matrix.allow-failure }}
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        outcome: ${{ steps.test.outcome }}
-        test-id: ${{ matrix.ember-try-scenario }}
-
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '${{ env.NODE_VERSION }}'
+          cache: pnpm
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build
+        run: pnpm build
+        working-directory: addon
+      - name: Test
+        id: test
+        env:
+          EMBER_TRY_SCENARIO: ${{ matrix.ember-try-scenario }}
+        run: pnpm ember try:one $EMBER_TRY_SCENARIO
+        working-directory: test-app
+        continue-on-error: ${{ matrix.allow-failure }}
+      - uses: mainmatter/continue-on-error-comment@v1
+        if: ${{ matrix.allow-failure }}
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          outcome: ${{ steps.test.outcome }}
+          test-id: ${{ matrix.ember-try-scenario }}
 
   floating-dependencies:
     name: Floating Dependencies
@@ -116,17 +111,17 @@ jobs:
     needs: lint
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: pnpm/action-setup@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '${{ env.NODE_VERSION }}'
-        cache: pnpm
-    - name: Install Dependencies
-      run: pnpm install --no-lockfile
-    - name: Build
-      run: pnpm build
-      working-directory: addon
-    - name: Test
-      run: pnpm run test:ember --launch chrome
-      working-directory: test-app
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '${{ env.NODE_VERSION }}'
+          cache: pnpm
+      - name: Install Dependencies
+        run: pnpm install --no-lockfile
+      - name: Build
+        run: pnpm build
+        working-directory: addon
+      - name: Test
+        run: pnpm run test:ember --launch chrome
+        working-directory: test-app

@@ -3,12 +3,12 @@
 /vendor/
 
 # compiled output
-/dist/
-/tmp/
+/**/dist/
+/**/tmp/
 
 # dependencies
-/bower_components/
-/node_modules/
+/**/bower_components/
+/**/node_modules/
 
 # misc
 /coverage/
@@ -20,3 +20,6 @@
 /.node_modules.ember-try/
 /bower.json.ember-try
 /package.json.ember-try
+
+CHANGELOG.md
+pnpm-lock.yaml

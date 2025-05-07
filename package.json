@@ -9,8 +9,24 @@
     "addon",
     "test-app"
   ],
+  "scripts": {
+    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
+    "lint:js": "eslint .",
+    "lint:js:fix": "eslint . --fix",
+    "lint:hbs": "ember-template-lint ."
+  },
   "devDependencies": {
-    "release-plan": "^0.16.0"
+    "babel-eslint": "^10.1.0",
+    "ember-template-lint": "^3.6.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-ember": "^10.5.4",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-prettier": "^3.4.1",
+    "eslint-plugin-qunit": "^6.2.0",
+    "prettier": "^2.3.2",
+    "release-plan": "^0.16.0",
+    "npm-run-all": "^4.1.5"
   },
   "packageManager": "pnpm@7.33.7+sha512.7afe2410642b39c698df46da4ce5c7231a5cce360698d69f8cf8f42257d40b3e43f231053b07b8de849fd4ffbf4a71ff57b835137777a352388f3d3da747200e"
 }
