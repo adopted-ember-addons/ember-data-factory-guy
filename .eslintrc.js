@@ -20,7 +20,12 @@ module.exports = {
     browser: true,
   },
   rules: {
-    'ember/no-runloop': 'warn',
+    'ember/no-runloop': [
+      'error',
+      {
+        allowList: ['join'],
+      },
+    ],
   },
   overrides: [
     // node files
