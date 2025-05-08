@@ -91,7 +91,7 @@ module(`Unit | Model | ${modelType}`, function (hooks) {
   test('default employee and titles', function (assert) {
     let employee = make('employee');
     assert.strictEqual(employee.get('titles.length'), 2);
-    assert.deepEqual(employee.get('titles.content'), ['Mr.', 'Dr.']);
+    assert.deepEqual(employee.get('titles').toArray(), ['Mr.', 'Dr.']);
   });
 
   test('build json payload by manually setting up employee name and retrieve model from store.findRecord', async function (assert) {

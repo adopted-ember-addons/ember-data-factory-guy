@@ -49,7 +49,7 @@
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-data": "~3.28.13",
     "ember-data-factory-guy": "workspace:*",
-    "ember-data-model-fragments": "^5.0.0-beta.2",
+    "ember-data-model-fragments": "^6.0.10",
     "ember-inflector": "^6.0.0",
     "ember-load-initializers": "^2.1.2",
     "ember-qunit": "^5.1.4",

@@ -232,7 +232,8 @@ export default class FixtureConverter {
   normalizeModelFragments(attributeValueInFixture) {
     if (Fragment && attributeValueInFixture instanceof Fragment) {
       return this.store.normalize(
-        attributeValueInFixture.constructor.modelName,
+        attributeValueInFixture.constructor.modelName ||
+          attributeValueInFixture.modelName,
         attributeValueInFixture.serialize(),
       ).data.attributes;
     }
@@ -241,8 +242,10 @@ export default class FixtureConverter {
         .serialize()
         .map(
           (item) =>
-            this.store.normalize(attributeValueInFixture.type, item).data
-              .attributes,
+            this.store.normalize(
+              attributeValueInFixture.type || attributeValueInFixture.modelName,
+              item,
+            ).data.attributes,
         );
     }
   }

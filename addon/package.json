@@ -55,9 +55,10 @@
     "@embroider/addon-dev": "^8.0.1",
     "@rollup/plugin-babel": "^6.0.4",
     "active-model-adapter": "^3.0.1",
-    "ember-data-model-fragments": "^5.0.0-beta.2",
+    "ember-data-model-fragments": "^6.0.10",
     "ember-inflector": "4.0.1",
-    "rollup": "^4.40.1"
+    "rollup": "^4.40.1",
+    "webpack": "^5.96.1"
   },
   "peerDependencies": {
     "@ember-data/model": ">= 3.28",
@@ -66,7 +67,7 @@
     "@ember/string": ">= 3.0.0",
     "@ember/test-helpers": ">= 2.4.2",
     "active-model-adapter": "*",
-    "ember-data-model-fragments": "*",
+    "ember-data-model-fragments": "^5.0.0 || ^6.0.10",
     "ember-inflector": ">= 4.0.1"
   },
   "peerDependenciesMeta": {
