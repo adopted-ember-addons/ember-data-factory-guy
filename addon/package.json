@@ -55,7 +55,7 @@
     "@embroider/addon-dev": "^8.0.1",
     "@rollup/plugin-babel": "^6.0.4",
     "active-model-adapter": "^3.0.1",
-    "ember-data-model-fragments": "^5.0.0-beta.2",
+    "ember-data-model-fragments": "^5.0.0",
     "ember-inflector": "4.0.1",
     "rollup": "^4.40.1"
   },
