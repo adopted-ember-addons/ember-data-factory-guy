@@ -1,10 +1,10 @@
-import RESTFixtureBuilder from './fixture-builder';
+import FixtureBuilder from './fixture-builder';
 import ActiveModelFixtureConverter from '../converter/active-model-fixture-converter';
 import RESTPayload from '../payload/rest-payload';
 /**
  Fixture Builder for ActiveModelSerializer
  */
-export default class ActiveModelFixtureBuilder extends RESTFixtureBuilder {
+export default class ActiveModelFixtureBuilder extends FixtureBuilder {
   constructor(store) {
     super(store, ActiveModelFixtureConverter, RESTPayload);
   }

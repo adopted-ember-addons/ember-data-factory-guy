@@ -20,7 +20,12 @@ module.exports = {
     browser: true,
   },
   rules: {
-    'ember/no-runloop': 'warn',
+    'ember/no-runloop': [
+      'error',
+      {
+        allowList: ['join'],
+      },
+    ],
   },
   overrides: [
     // node files
@@ -50,8 +55,7 @@ module.exports = {
       files: ['test-app/tests/**/*-test.{js,ts}'],
       extends: ['plugin:qunit/recommended'],
       rules: {
-        'qunit/no-assert-equal': 'warn',
-        'qunit/require-expect': 'off',
+        'qunit/require-expect': ['error', 'except-simple'],
       },
     },
   ],

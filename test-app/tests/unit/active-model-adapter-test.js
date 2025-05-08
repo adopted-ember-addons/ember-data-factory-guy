@@ -1,5 +1,4 @@
 import { dasherize } from '@ember/string';
-import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
@@ -41,13 +40,11 @@ module(serializer, function (hooks) {
         attrs: { camel_case_description: customDescription },
       });
 
-      let profile = run(() =>
-        FactoryGuy.store.createRecord('profile', {
-          camel_case_description: 'description',
-        }),
-      );
+      let profile = FactoryGuy.store.createRecord('profile', {
+        camel_case_description: 'description',
+      });
 
-      await run(async () => profile.save());
+      await profile.save();
 
       assert.strictEqual(
         profile.get('camelCaseDescription'),
@@ -59,8 +56,8 @@ module(serializer, function (hooks) {
   module('FactoryGuy#build custom', function () {
     test('uses the correct key when overridden in the serializer', async function (assert) {
       let buildJson = build('dog', 'withOwner');
-      assert.equal(buildJson.get('owner_id'), undefined);
-      assert.equal(buildJson.get('humanId'), 1);
+      assert.strictEqual(buildJson.get('owner_id'), undefined);
+      assert.strictEqual(buildJson.get('humanId'), 1);
     });
 
     test('embeds hasMany record when serializer attrs => embedded: always ', function (assert) {

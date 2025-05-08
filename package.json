@@ -13,7 +13,9 @@
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
     "lint:js": "eslint .",
     "lint:js:fix": "eslint . --fix",
-    "lint:hbs": "ember-template-lint ."
+    "lint:hbs": "ember-template-lint .",
+    "lint:prettier": "prettier -c .",
+    "lint:prettier:fix": "prettier -w ."
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",

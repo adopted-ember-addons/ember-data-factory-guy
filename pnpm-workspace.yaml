@@ -1,3 +1,6 @@
 packages:
-  - 'addon'
-  - 'test-app'
+  - addon
+  - test-app
+onlyBuiltDependencies:
+  - core-js
+  - fsevents

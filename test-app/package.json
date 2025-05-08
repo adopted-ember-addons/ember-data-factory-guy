@@ -25,7 +25,11 @@
     "build": "ember build --environment=production",
     "test": "ember test",
     "test:ember": "ember test",
-    "test:ember-compatibility": "ember try:each"
+    "test:ember-compatibility": "ember try:each",
+    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
+    "lint:js": "pnpm -w eslint ./test-app",
+    "lint:js:fix": "pnpm -w eslint ./test-app --fix",
+    "lint:hbs": "pnpm -w ember-template-lint ./test-app"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",

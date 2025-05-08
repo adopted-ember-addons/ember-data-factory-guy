@@ -1,5 +1,4 @@
 import Store from '@ember-data/store';
-import { run } from '@ember/runloop';
 import { A } from '@ember/array';
 import { module, test, skip } from 'qunit';
 import { setupTest } from 'ember-qunit';
@@ -31,10 +30,10 @@ module('FactoryGuy', function (hooks) {
     FactoryGuy.settings({ responseTime: 0 });
 
     FactoryGuy.settings({ logLevel: 1 });
-    assert.equal(FactoryGuy.logLevel, 1);
+    assert.strictEqual(FactoryGuy.logLevel, 1);
 
     FactoryGuy.settings({ responseTime: 10 });
-    assert.equal(RequestManager.settings().responseTime, 10);
+    assert.strictEqual(RequestManager.settings().responseTime, 10);
   });
 
   test('exposes make method which is shortcut for FactoryGuy.make', function (assert) {
@@ -43,10 +42,13 @@ module('FactoryGuy', function (hooks) {
 
   test('exposes makeList method which is shortcut for FactoryGuy.makeList', function (assert) {
     let users = makeList('user', 2);
-    assert.equal(users.length, 2);
+    assert.strictEqual(users.length, 2);
     assert.ok(users[0] instanceof User);
     assert.ok(users[1] instanceof User);
-    assert.equal(FactoryGuy.store.peekAll('user').get('content').length, 2);
+    assert.strictEqual(
+      FactoryGuy.store.peekAll('user').get('content').length,
+      2,
+    );
   });
 
   test('exposes build method which is shortcut for FactoryGuy.build', function (assert) {
@@ -61,27 +63,26 @@ module('FactoryGuy', function (hooks) {
 
   test('#resetDefinitions resets the model definition', function (assert) {
     assert.expect(33);
-    run(function () {
-      let project = make('project');
-      make('user', { projects: [project] });
 
-      let model,
-        definition,
-        definitions = FactoryGuy.getModelDefinitions();
+    let project = make('project');
+    make('user', { projects: [project] });
 
-      for (model in definitions) {
-        definition = definitions[model];
-        sinon.spy(definition, 'reset');
-      }
+    let model,
+      definition,
+      definitions = FactoryGuy.getModelDefinitions();
 
-      FactoryGuy.resetDefinitions();
+    for (model in definitions) {
+      definition = definitions[model];
+      sinon.spy(definition, 'reset');
+    }
 
-      for (model in definitions) {
-        definition = definitions[model];
-        assert.ok(definition.reset.calledOnce);
-        definition.reset.restore();
-      }
-    });
+    FactoryGuy.resetDefinitions();
+
+    for (model in definitions) {
+      definition = definitions[model];
+      assert.ok(definition.reset.calledOnce);
+      definition.reset.restore();
+    }
   });
 
   module('FactoryGuy#attributesFor', function () {
@@ -158,7 +159,11 @@ module('FactoryGuy', function (hooks) {
     test('returns a fragment for model fragment', function (assert) {
       let name = FactoryGuy.make('name');
       assert.ok(name instanceof Name, 'The fragment is a Name fragment');
-      assert.equal(name.get('firstName'), 'Tyrion', 'The firstName is correct');
+      assert.strictEqual(
+        name.get('firstName'),
+        'Tyrion',
+        'The firstName is correct',
+      );
     });
   });
 
@@ -203,7 +208,7 @@ module('FactoryGuy', function (hooks) {
     inlineSetup(hooks, '-rest');
 
     test('without namespace', function (assert) {
-      assert.equal(
+      assert.strictEqual(
         FactoryGuy.buildURL('project'),
         '/projects',
         'has no namespace by default',
@@ -217,7 +222,7 @@ module('FactoryGuy', function (hooks) {
         namespace: 'api/v1',
       });
 
-      assert.equal(
+      assert.strictEqual(
         FactoryGuy.buildURL('project'),
         'https://dude.com/api/v1/projects',
       );
@@ -247,7 +252,7 @@ module('FactoryGuy', function (hooks) {
       let user = build('user', { hats: hats });
 
       assert.ok(user['user']);
-      assert.equal(user['big-hats'].length, 2);
+      assert.strictEqual(user['big-hats'].length, 2);
     });
 
     test('when hasMany relationship is null', function (assert) {
@@ -259,12 +264,16 @@ module('FactoryGuy', function (hooks) {
 
     test('can use non model attributes to help setup attributes', function (assert) {
       let dog1 = build('dog');
-      assert.equal(dog1.get('sound'), 'Normal Woof', 'no extra attribute');
+      assert.strictEqual(
+        dog1.get('sound'),
+        'Normal Woof',
+        'no extra attribute',
+      );
 
       let volume = 'Soft';
       let dog2 = build('dog', { volume });
 
-      assert.equal(
+      assert.strictEqual(
         dog2.get('sound'),
         `${volume} Woof`,
         'uses your extra attribute',
@@ -330,7 +339,7 @@ module('FactoryGuy', function (hooks) {
 
     test('without a number returns a empty json payload', function (assert) {
       let users = buildList('user');
-      assert.equal(users.get().length, 0);
+      assert.strictEqual(users.get().length, 0);
     });
 
     test('without a number but with options returns array with diverse attributes', function (assert) {
@@ -340,7 +349,7 @@ module('FactoryGuy', function (hooks) {
         ['with_company', { description: 'Noodles' }],
         'with_bat_man',
       );
-      assert.equal(profiles.get().length, 3);
+      assert.strictEqual(profiles.get().length, 3);
       assert.strictEqual(profiles.get(0).description, 'goofy');
       assert.strictEqual(profiles.get(0).description, 'goofy');
       assert.strictEqual(profiles.get(1).description, 'Noodles');
@@ -349,9 +358,9 @@ module('FactoryGuy', function (hooks) {
 
     test('with a number and extra options', function (assert) {
       let heros = buildList('super-hero', 2, { name: 'Bob' });
-      assert.equal(heros.get().length, 2);
-      assert.equal(heros.get(0).name, 'Bob');
-      assert.equal(heros.get(1).name, 'Bob');
+      assert.strictEqual(heros.get().length, 2);
+      assert.strictEqual(heros.get(0).name, 'Bob');
+      assert.strictEqual(heros.get(1).name, 'Bob');
     });
   });
 
@@ -374,9 +383,9 @@ module('FactoryGuy', function (hooks) {
     test('creates record but does not save to store', function (assert) {
       let user = makeNew('user', 'silly', { name: 'Bozo' });
       assert.ok(user instanceof User, 'creates record');
-      assert.equal(user.get('style'), 'silly', 'uses trait attributes');
-      assert.equal(user.get('name'), 'Bozo', 'uses optional attributes');
-      assert.equal(user.id, null, 'no id');
+      assert.strictEqual(user.get('style'), 'silly', 'uses trait attributes');
+      assert.strictEqual(user.get('name'), 'Bozo', 'uses optional attributes');
+      assert.strictEqual(user.id, null, 'no id');
       assert.ok(user.get('isNew'), 'is in isNew state');
     });
 
@@ -385,12 +394,12 @@ module('FactoryGuy', function (hooks) {
         camelCaseDescription: 'camelMan',
         snake_case_description: 'snakeMan',
       });
-      assert.equal(
+      assert.strictEqual(
         profile.get('camelCaseDescription'),
         'camelMan',
         'camel case',
       );
-      assert.equal(
+      assert.strictEqual(
         profile.get('snake_case_description'),
         'snakeMan',
         'snake case',
@@ -444,25 +453,25 @@ module('FactoryGuy', function (hooks) {
     test('with number returns that many model instances', function (assert) {
       // important to test on model with NO traits
       let users = makeList('outfit', 2);
-      assert.equal(users.length, 2);
+      assert.strictEqual(users.length, 2);
     });
 
     test('with a number and a trait', function (assert) {
       let users = makeList('user', 2, 'with_hats');
-      assert.equal(users.length, 2);
+      assert.strictEqual(users.length, 2);
     });
 
     test('with number as 0 returns an empty array of model instances', function (assert) {
       let users = makeList('user', 0);
-      assert.equal(users.length, 0, 'without traits or options');
+      assert.strictEqual(users.length, 0, 'without traits or options');
 
       users = makeList('user', 0, 'with_hats', { name: 'Pat' });
-      assert.equal(users.length, 0, 'with traits and options');
+      assert.strictEqual(users.length, 0, 'with traits and options');
     });
 
     test('without a number returns an array of 0 model instances', function (assert) {
       let users = makeList('user');
-      assert.equal(users.length, 0);
+      assert.strictEqual(users.length, 0);
     });
 
     test('without a number but with options returns array of models', function (assert) {
@@ -472,7 +481,7 @@ module('FactoryGuy', function (hooks) {
         ['with_company', { description: 'Noodles' }],
         'with_bat_man',
       );
-      assert.equal(profiles.length, 3);
+      assert.strictEqual(profiles.length, 3);
       assert.strictEqual(A(profiles).objectAt(0).get('description'), 'goofy');
       assert.strictEqual(
         A(profiles).objectAt(1).get('company.name'),
@@ -483,7 +492,7 @@ module('FactoryGuy', function (hooks) {
         A(profiles).objectAt(2).get('superHero.name'),
         'BatMan',
       );
-      assert.equal(
+      assert.strictEqual(
         FactoryGuy.store.peekAll('profile').get('content').length,
         3,
       );
@@ -529,41 +538,41 @@ module('FactoryGuy', function (hooks) {
       let json;
 
       json = FactoryGuy.build('person');
-      assert.equal(json.get('name'), 'person #1');
+      assert.strictEqual(json.get('name'), 'person #1');
 
       json = FactoryGuy.build('philosopher');
       // since the sequence ( personName ) that was inherited from person is owned by stoner,
       // the person # starts at 1 again, and is not person #2
-      assert.equal(
+      assert.strictEqual(
         json.get('name'),
         'person #1',
         'inherits parent default attribute functions and sequences',
       );
-      assert.equal(
+      assert.strictEqual(
         json.get('style'),
         'thinker',
         'local attributes override parent attributes',
       );
 
       json = FactoryGuy.build('stoner');
-      assert.equal(
+      assert.strictEqual(
         json.get('name'),
         'stoner #1',
         'uses local sequence and parent default attribute function with one level of inheritance ',
       );
-      assert.equal(
+      assert.strictEqual(
         json.get('style'),
         'chill',
         'uses local default attribute with one level of inheritance',
       );
 
       json = FactoryGuy.build('cool-stoner');
-      assert.equal(
+      assert.strictEqual(
         json.get('name'),
         'cool stoner #1',
         'uses local sequence and parent default attribute function with two levels of inheritance',
       );
-      assert.equal(
+      assert.strictEqual(
         json.get('style'),
         'chill',
         'uses inherited default attribute with two levels of inheritance',
@@ -584,8 +593,8 @@ module('FactoryGuy', function (hooks) {
     test('using polymorphic:false to use a type attribute name on non polymorphic model', function (assert) {
       let cat = build('cat', { type: 'fluffy' });
 
-      assert.equal(cat.data.type, 'cat');
-      assert.equal(cat.get('type'), 'fluffy');
+      assert.strictEqual(cat.data.type, 'cat');
+      assert.strictEqual(cat.get('type'), 'fluffy');
     });
 
     test('traits are inherited', function (assert) {
@@ -605,12 +614,12 @@ module('FactoryGuy', function (hooks) {
       let json;
 
       json = FactoryGuy.build('stoner', 'real_name', 'lazy_style').data;
-      assert.equal(
+      assert.strictEqual(
         json.attributes.style,
         'Super Lazy',
         'inherits parent traits',
       );
-      assert.equal(
+      assert.strictEqual(
         json.attributes.name,
         'Stoned Guy',
         'local traits are available',
@@ -639,10 +648,10 @@ module('FactoryGuy', function (hooks) {
       let json;
 
       json = FactoryGuy.build('bif').data;
-      assert.equal(json.attributes.name, 'Bif');
+      assert.strictEqual(json.attributes.name, 'Bif');
 
       let definition = FactoryGuy.findModelDefinition('stoner');
-      assert.equal(definition.matchesName('dude'), undefined);
+      assert.strictEqual(definition.matchesName('dude'), undefined);
     });
 
     test('id can be a function in default attributes', function (assert) {
@@ -657,7 +666,7 @@ module('FactoryGuy', function (hooks) {
       });
 
       let json = FactoryGuy.build('stoner').data;
-      assert.equal(json.id, 'stoner-1');
+      assert.strictEqual(json.id, 'stoner-1');
     });
 
     test('id can be a function in named attributes', function (assert) {
@@ -673,7 +682,7 @@ module('FactoryGuy', function (hooks) {
       });
 
       let json = FactoryGuy.build('bif').data;
-      assert.equal(json.id, 'stoner-1');
+      assert.strictEqual(json.id, 'stoner-1');
     });
   });
 
@@ -1073,7 +1082,7 @@ module('FactoryGuy', function (hooks) {
   module('FactoryGuy and JSONAPI', function () {
     test('#updateHTTPMethod with JSON-API Serializer', function (assert) {
       const method = FactoryGuy.updateHTTPMethod('application');
-      assert.equal(method, 'PATCH');
+      assert.strictEqual(method, 'PATCH');
     });
   });
 
@@ -1081,7 +1090,7 @@ module('FactoryGuy', function (hooks) {
     inlineSetup(hooks, '-rest');
     test('#updateHTTPMethod with REST Serializer', function (assert) {
       const method = FactoryGuy.updateHTTPMethod('application');
-      assert.equal(method, 'PUT');
+      assert.strictEqual(method, 'PUT');
     });
   });
 });

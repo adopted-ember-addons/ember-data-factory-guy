@@ -21,6 +21,6 @@ module(`Unit | Model | ${modelType}`, function (hooks) {
 
   test('uses customized transformFor', function (assert) {
     let profile = make('profile', { foo: 'bar' });
-    assert.equal(profile.get('foo'), 'bar');
+    assert.strictEqual(profile.get('foo'), 'bar');
   });
 });

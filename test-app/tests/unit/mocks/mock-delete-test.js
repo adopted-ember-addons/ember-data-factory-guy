@@ -1,4 +1,3 @@
-import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, { make, mockDelete } from 'ember-data-factory-guy';
@@ -35,7 +34,7 @@ module('MockDelete', function (hooks) {
     const consoleStub = sinon.spy(console, 'log'),
       mock = mockDelete(profile);
 
-    await run(async () => profile.destroyRecord());
+    await profile.destroyRecord();
 
     let response = JSON.parse(mock.actualResponseJson()),
       expectedArgs = [
@@ -54,12 +53,12 @@ module('MockDelete', function (hooks) {
 
   test('#getUrl uses urlForDeleteRecord if it is set on the adapter', function (assert) {
     let mock1 = mockDelete('user', '2');
-    assert.equal(mock1.getUrl(), '/users/2');
+    assert.strictEqual(mock1.getUrl(), '/users/2');
 
     let adapter = FactoryGuy.store.adapterFor('user');
     sinon.stub(adapter, 'urlForDeleteRecord').returns('/deleteMyZombie/2');
 
-    assert.equal(mock1.getUrl(), '/deleteMyZombie/2');
+    assert.strictEqual(mock1.getUrl(), '/deleteMyZombie/2');
     adapter.urlForDeleteRecord.restore();
   });
 

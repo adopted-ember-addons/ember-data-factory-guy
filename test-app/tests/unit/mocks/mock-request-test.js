@@ -73,7 +73,7 @@ module('MockRequest', function (hooks) {
 
       await FactoryGuy.store.queryRecord('company', {});
       await FactoryGuy.store.queryRecord('company', {});
-      assert.equal(mock.timesCalled, 2);
+      assert.strictEqual(mock.timesCalled, 2);
     });
 
     test('can verify how many times a findAll call was mocked', async function (assert) {
@@ -81,7 +81,7 @@ module('MockRequest', function (hooks) {
 
       await FactoryGuy.store.findAll('company');
       await FactoryGuy.store.findAll('company');
-      assert.equal(mock.timesCalled, 2);
+      assert.strictEqual(mock.timesCalled, 2);
     });
 
     test('can verify how many times an update call was mocked', async function (assert) {
@@ -94,7 +94,7 @@ module('MockRequest', function (hooks) {
       company.set('name', 'TWO');
       await company.save();
 
-      assert.equal(mock.timesCalled, 2);
+      assert.strictEqual(mock.timesCalled, 2);
     });
   });
 
@@ -112,7 +112,7 @@ module('MockRequest', function (hooks) {
     await FactoryGuy.store.queryRecord('company', queryParams);
 
     const response = await window.fetch.getCall(0).returnValue;
-    assert.equal(response.headers.get('X-Testing'), 'absolutely');
+    assert.strictEqual(response.headers.get('X-Testing'), 'absolutely');
 
     window.fetch.restore();
   });
@@ -128,25 +128,25 @@ module('MockRequest', function (hooks) {
       assert.notOk(mock1.isDestroyed, 'isDestroyed is false initially');
 
       let data = await FactoryGuy.store.queryRecord('user', { id: 1 });
-      assert.equal(
+      assert.strictEqual(
         data.get('id'),
-        json1.get('id'),
+        json1.get('id').toString(),
         'the first mock works initially',
       );
 
       mock1.disable();
       data = await FactoryGuy.store.queryRecord('user', { id: 1 });
-      assert.equal(
+      assert.strictEqual(
         data.get('id'),
-        json2.get('id'),
+        json2.get('id').toString(),
         "the first mock doesn't work once it's disabled",
       );
 
       mock1.enable();
       data = await FactoryGuy.store.queryRecord('user', { id: 1 });
-      assert.equal(
+      assert.strictEqual(
         data.get('id'),
-        json1.get('id'),
+        json1.get('id').toString(),
         'the first mock works again after enabling',
       );
 
@@ -156,9 +156,9 @@ module('MockRequest', function (hooks) {
         'isDestroyed is set to true once the mock is destroyed',
       );
       data = await FactoryGuy.store.queryRecord('user', { id: 1 });
-      assert.equal(
+      assert.strictEqual(
         data.get('id'),
-        json2.get('id'),
+        json2.get('id').toString(),
         "the destroyed first mock doesn't work",
       );
     });

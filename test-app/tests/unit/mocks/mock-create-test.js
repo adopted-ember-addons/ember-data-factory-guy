@@ -2,7 +2,6 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Model from '@ember-data/model';
 import FactoryGuy, { build, makeNew, mockCreate } from 'ember-data-factory-guy';
-import { run } from '@ember/runloop';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
@@ -31,7 +30,7 @@ module('MockCreate', function (hooks) {
       profile = makeNew('profile'),
       mock = mockCreate(profile).returns({ attrs: { id: 2 } });
 
-    await run(async () => profile.save());
+    await profile.save();
 
     let response = JSON.parse(mock.getResponse().responseText),
       expectedArgs = [
@@ -49,7 +48,6 @@ module('MockCreate', function (hooks) {
   });
 
   test('#singleUse', async function (assert) {
-    assert.expect(2);
     let user1 = build('user');
     let user2 = build('user');
 
@@ -60,21 +58,21 @@ module('MockCreate', function (hooks) {
 
     let model1 = FactoryGuy.store.createRecord('user', user1.get());
     await model1.save();
-    assert.equal(model1.id, user1.get('id'));
+    assert.strictEqual(model1.id, user1.get('id').toString());
 
     let model2 = FactoryGuy.store.createRecord('user', user2.get());
     await model2.save();
-    assert.equal(model2.id, user2.get('id'));
+    assert.strictEqual(model2.id, user2.get('id').toString());
   });
 
   test('#getUrl uses customized adapter#urlForCreateRecord', function (assert) {
     let mock1 = mockCreate('user');
-    assert.equal(mock1.getUrl(), '/users');
+    assert.strictEqual(mock1.getUrl(), '/users');
 
     let adapter = FactoryGuy.store.adapterFor('user');
     sinon.stub(adapter, 'urlForCreateRecord').returns('/makeMeAZombie');
 
-    assert.equal(mock1.getUrl(), '/makeMeAZombie');
+    assert.strictEqual(mock1.getUrl(), '/makeMeAZombie');
     adapter.urlForCreateRecord.restore();
   });
 
@@ -93,9 +91,7 @@ module('MockCreate', function (hooks) {
 
     sinon.stub(adapter, 'urlForCreateRecord').callsFake(fakeUrlForCreateRecord);
 
-    await run(() => {
-      return FactoryGuy.store.createRecord('user').save({ adapterOptions });
-    });
+    await FactoryGuy.store.createRecord('user').save({ adapterOptions });
 
     adapter.urlForCreateRecord.restore();
   });

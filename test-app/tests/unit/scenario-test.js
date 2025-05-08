@@ -22,24 +22,24 @@ import {
 module('scenario', function () {
   test('proxies all build/make methods', function (assert) {
     let scenario = new Scenario();
-    assert.equal(scenario.make, make);
-    assert.equal(scenario.makeNew, makeNew);
-    assert.equal(scenario.makeList, makeList);
-    assert.equal(scenario.build, build);
-    assert.equal(scenario.buildList, buildList);
+    assert.strictEqual(scenario.make, make);
+    assert.strictEqual(scenario.makeNew, makeNew);
+    assert.strictEqual(scenario.makeList, makeList);
+    assert.strictEqual(scenario.build, build);
+    assert.strictEqual(scenario.buildList, buildList);
   });
 
   test('proxies all mock request methods', function (assert) {
     let scenario = new Scenario();
-    assert.equal(scenario.mockFindRecord, mockFindRecord);
-    assert.equal(scenario.mockFindAll, mockFindAll);
-    assert.equal(scenario.mockReload, mockReload);
-    assert.equal(scenario.mockQuery, mockQuery);
-    assert.equal(scenario.mockQueryRecord, mockQueryRecord);
-    assert.equal(scenario.mockCreate, mockCreate);
-    assert.equal(scenario.mockUpdate, mockUpdate);
-    assert.equal(scenario.mockDelete, mockDelete);
-    assert.equal(scenario.mock, mock);
-    assert.equal(scenario.attributesFor, attributesFor);
+    assert.strictEqual(scenario.mockFindRecord, mockFindRecord);
+    assert.strictEqual(scenario.mockFindAll, mockFindAll);
+    assert.strictEqual(scenario.mockReload, mockReload);
+    assert.strictEqual(scenario.mockQuery, mockQuery);
+    assert.strictEqual(scenario.mockQueryRecord, mockQueryRecord);
+    assert.strictEqual(scenario.mockCreate, mockCreate);
+    assert.strictEqual(scenario.mockUpdate, mockUpdate);
+    assert.strictEqual(scenario.mockDelete, mockDelete);
+    assert.strictEqual(scenario.mock, mock);
+    assert.strictEqual(scenario.attributesFor, attributesFor);
   });
 });

@@ -1,4 +1,3 @@
-import { run } from '@ember/runloop';
 import { module, test, skip } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
@@ -29,22 +28,15 @@ module(serializer, function (hooks) {
   SharedAdapterBehaviour.mockCreateFailsWithErrorResponse();
 
   module('#mockFindRecord custom', function () {
-    test('when returns json (plain) is used', function (assert) {
-      assert.expect(2);
-      run(() => {
-        let done = assert.async(),
-          json = { id: 1, description: 'the desc' },
-          mock = mockFindRecord('profile').returns({ json }),
-          profileId = mock.get('id');
+    test('when returns json (plain) is used', async function (assert) {
+      let json = { id: 1, description: 'the desc' },
+        mock = mockFindRecord('profile').returns({ json }),
+        profileId = mock.get('id');
 
-        FactoryGuy.store
-          .findRecord('profile', profileId)
-          .then(function (profile) {
-            assert.equal(profile.get('id'), profileId);
-            assert.equal(profile.get('description'), json.get('description'));
-            done();
-          });
-      });
+      const profile = await FactoryGuy.store.findRecord('profile', profileId);
+
+      assert.strictEqual(profile.get('id'), profileId.toString());
+      assert.strictEqual(profile.get('description'), json.get('description'));
     });
   });
 
@@ -52,14 +44,14 @@ module(serializer, function (hooks) {
     test('returns all attributes with no key', function (assert) {
       let user = build('user');
       assert.deepEqual(user.get(), { id: 1, name: 'User1', style: 'normal' });
-      assert.equal(user.get().id, 1);
-      assert.equal(user.get().name, 'User1');
+      assert.strictEqual(user.get().id, 1);
+      assert.strictEqual(user.get().name, 'User1');
     });
 
     test('returns an attribute with a key', function (assert) {
       let user = build('user');
-      assert.equal(user.get('id'), 1);
-      assert.equal(user.get('name'), 'User1');
+      assert.strictEqual(user.get('id'), 1);
+      assert.strictEqual(user.get('name'), 'User1');
     });
   });
 
@@ -75,9 +67,9 @@ module(serializer, function (hooks) {
     test('returns an attribute with a key', function (assert) {
       let users = buildList('user', 2);
       assert.deepEqual(users.get(0), { id: 1, name: 'User1', style: 'normal' });
-      assert.equal(users.get(0).id, 1);
+      assert.strictEqual(users.get(0).id, 1);
       assert.deepEqual(users.get(1), { id: 2, name: 'User2', style: 'normal' });
-      assert.equal(users.get(1).name, 'User2');
+      assert.strictEqual(users.get(1).name, 'User2');
     });
   });
 
@@ -289,8 +281,8 @@ module(serializer, function (hooks) {
     // the override for primaryKey is in the helpers/utilityMethods.js
     test('serializer primaryKey override', function (assert) {
       let json = build('cat');
-      assert.equal(json.get('catId'), 1);
-      assert.equal(json.get('id'), 1);
+      assert.strictEqual(json.get('catId'), 1);
+      assert.strictEqual(json.get('id'), 1);
     });
 
     test('serializes attributes with custom type', function (assert) {
