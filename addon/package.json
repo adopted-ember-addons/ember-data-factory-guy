@@ -24,7 +24,10 @@
   "scripts": {
     "build": "rollup --config",
     "prepublishOnly": "rollup --config",
-    "start": "rollup --config --watch"
+    "start": "rollup --config --watch",
+    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
+    "lint:js": "pnpm -w eslint ./addon",
+    "lint:js:fix": "pnpm -w eslint ./addon --fix"
   },
   "exports": {
     ".": "./dist/index.js",
