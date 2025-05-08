@@ -1,5 +1,4 @@
 import FactoryGuy from 'ember-data-factory-guy';
-import { sound as mooSound } from '../helpers/moo';
 
 const defaultVolume = 'Normal';
 
@@ -13,7 +12,7 @@ FactoryGuy.define('dog', {
   },
 
   traits: {
-    cowDog: { sound: mooSound },
+    cowDog: { sound: 'mooooooooo' },
     withOwner: { owner: FactoryGuy.belongsTo('employee') },
   },
 });

@@ -1115,9 +1115,6 @@ Usage:
 
 ```javascript
 import FactoryGuy, { makeList } from 'ember-data-factory-guy';
-import moduleForAcceptance from '../helpers/module-for-acceptance';
-
-moduleForAcceptance('Acceptance | Profiles View');
 
 test('Using FactoryGuy.cacheOnlyMode', async function () {
   FactoryGuy.cacheOnlyMode();
