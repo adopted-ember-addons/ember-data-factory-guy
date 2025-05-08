@@ -41,7 +41,6 @@ class FactoryGuy {
     );
     this.store = aStore;
     this.fixtureBuilderFactory = new FixtureBuilderFactory(this.store);
-    this.afterDestroyStore(aStore);
   }
 
   fixtureBuilder(modelName) {
@@ -489,6 +488,8 @@ class FactoryGuy {
   }
 
   reset() {
+    this.store = null;
+    this.fixtureBuilderFactory = null;
     this.resetDefinitions();
     this.resetMockAjax();
   }
@@ -508,23 +509,6 @@ class FactoryGuy {
       let definition = modelDefinitions[model];
       definition.reset();
     }
-  }
-
-  /**
-   Hook into store willDestroy to cleanup variables in Factory Guy and
-   reset definitions/mock ajax setup.
-
-   @param store
-   */
-  afterDestroyStore(store) {
-    const self = this;
-    const originalWillDestroy = store.willDestroy.bind(store);
-    store.willDestroy = function () {
-      originalWillDestroy();
-      self.store = null;
-      self.fixtureBuilderFactory = null;
-      self.reset();
-    };
   }
 
   /**
