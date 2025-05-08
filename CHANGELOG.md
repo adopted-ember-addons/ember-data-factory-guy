@@ -1,5 +1,26 @@
 # Changelog
 
+## Release (2025-05-08)
+
+* ember-data-factory-guy 5.1.0 (minor)
+
+#### :rocket: Enhancement
+* `ember-data-factory-guy`
+  * [#523](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/523) feat: support ember-data-model-fragments v6 ([@Techn1x](https://github.com/Techn1x))
+  * [#522](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/522) refactor: deal with using Store EmberObject function deprecations ([@Techn1x](https://github.com/Techn1x))
+
+#### :house: Internal
+* Other
+  * [#524](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/524) chore: ember-try v4 ([@Techn1x](https://github.com/Techn1x))
+  * [#520](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/520) chore: pnpm 10, add pnpm config ([@Techn1x](https://github.com/Techn1x))
+* `ember-data-factory-guy`
+  * [#521](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/521) test: replace runloop usage, use assert.strictEqual ([@Techn1x](https://github.com/Techn1x))
+  * [#519](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/519) chore: less config, update and move prettier/eslint to root ([@Techn1x](https://github.com/Techn1x))
+  * [#517](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/517) chore: add repository keys to package.json to help release changelogs ([@Techn1x](https://github.com/Techn1x))
+
+#### Committers: 1
+- Brad Overton ([@Techn1x](https://github.com/Techn1x))
+
 ## Release (2025-05-06)
 
 * ember-data-factory-guy 5.0.0 (major)
