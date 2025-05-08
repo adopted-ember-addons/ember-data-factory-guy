@@ -102,6 +102,9 @@ importers:
       rollup:
         specifier: ^4.40.1
         version: 4.40.2
+      webpack:
+        specifier: ^5.96.1
+        version: 5.99.8
 
   test-app:
     devDependencies:

@@ -57,7 +57,8 @@
     "active-model-adapter": "^3.0.1",
     "ember-data-model-fragments": "^6.0.10",
     "ember-inflector": "4.0.1",
-    "rollup": "^4.40.1"
+    "rollup": "^4.40.1",
+    "webpack": "^5.96.1"
   },
   "peerDependencies": {
     "@ember-data/model": ">= 3.28",
