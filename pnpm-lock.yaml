@@ -94,8 +94,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       ember-data-model-fragments:
-        specifier: ^5.0.0
-        version: 5.0.0(@babel/core@7.27.1)
+        specifier: ^6.0.10
+        version: 6.0.10(@babel/core@7.27.1)(ember-source@3.28.12(@babel/core@7.27.1))
       ember-inflector:
         specifier: 4.0.1
         version: 4.0.1
@@ -157,8 +157,8 @@ importers:
         specifier: workspace:*
         version: link:../addon
       ember-data-model-fragments:
-        specifier: ^5.0.0
-        version: 5.0.0(@babel/core@7.27.1)
+        specifier: ^6.0.10
+        version: 6.0.10(@babel/core@7.27.1)(ember-source@3.28.12(@babel/core@7.27.1))
       ember-inflector:
         specifier: ^6.0.0
         version: 6.0.0(@babel/core@7.27.1)
@@ -3046,9 +3046,11 @@ packages:
     resolution: {integrity: sha512-N/XFvZszrzyyX4IcNoeK4mJvIItNuONumhPLqi64T8NDjJkxBj4Pq61rvMkJx/9eZ8alzE4I8vYKOLxT0FvRuQ==}
     engines: {node: 10.* || >= 12}
 
-  ember-data-model-fragments@5.0.0:
-    resolution: {integrity: sha512-QqHaUWYVmS/f91wqnS3favkBCH0mZblLmJ8ePqKeEK+1rcbuASmIj56HHiMz3ySy6YfzrCNTKPxDhBdA3lXi/w==}
-    engines: {node: 10.* || >= 12}
+  ember-data-model-fragments@6.0.10:
+    resolution: {integrity: sha512-i0pk3AXnORC3NUTRH/y38UliIVwr07HQGpEKF7TgYHeQ90orOKLNxhgxw9vjUemAHkJ6VjVny4oKIsoUWkJbNw==}
+    engines: {node: 14.* || 16.* || >= 18}
+    peerDependencies:
+      ember-source: ^3.28.0 || ^4.0.0
 
   ember-data@3.28.13:
     resolution: {integrity: sha512-j1YjPl2JNHxQwQW6Bgfis44XSr4WCtdwMXr/SPpLsF1oVeTWIn3kwefcDnbuCI8Spmt1B9ab3ZLKzf2KkGN/7g==}
@@ -11032,7 +11034,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-data-model-fragments@5.0.0(@babel/core@7.27.1):
+  ember-data-model-fragments@6.0.10(@babel/core@7.27.1)(ember-source@3.28.12(@babel/core@7.27.1)):
     dependencies:
       broccoli-file-creator: 2.1.1
       broccoli-merge-trees: 3.0.2
@@ -11040,6 +11042,7 @@ snapshots:
       ember-cli-babel: 7.26.11
       ember-compatibility-helpers: 1.2.7(@babel/core@7.27.1)
       ember-copy: 2.0.1
+      ember-source: 3.28.12(@babel/core@7.27.1)
       git-repo-info: 2.1.1
       npm-git-info: 1.0.3
     transitivePeerDependencies:
