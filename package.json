@@ -33,5 +33,12 @@
     "prettier": "^3.5.3",
     "release-plan": "^0.16.0"
   },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "webpack"
+      ]
+    }
+  },
   "packageManager": "pnpm@10.10.0"
 }
