@@ -1,4 +1,3 @@
-import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, { make, mockDelete } from 'ember-data-factory-guy';
@@ -35,7 +34,7 @@ module('MockDelete', function (hooks) {
     const consoleStub = sinon.spy(console, 'log'),
       mock = mockDelete(profile);
 
-    await run(async () => profile.destroyRecord());
+    await profile.destroyRecord();
 
     let response = JSON.parse(mock.actualResponseJson()),
       expectedArgs = [

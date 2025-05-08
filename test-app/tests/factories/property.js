@@ -1,5 +1,4 @@
 import FactoryGuy from 'ember-data-factory-guy';
-import { run } from '@ember/runloop';
 
 FactoryGuy.define('property', {
   default: {
@@ -15,7 +14,7 @@ FactoryGuy.define('property', {
   },
   afterMake: function (model, attributes) {
     if (attributes.for_sale) {
-      run(() => model.set('name', model.get('name') + '(FOR SALE)'));
+      model.set('name', model.get('name') + '(FOR SALE)');
     }
   },
 });

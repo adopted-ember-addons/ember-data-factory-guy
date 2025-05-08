@@ -1,4 +1,3 @@
-import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
@@ -39,61 +38,40 @@ module(serializer, function (hooks) {
   SharedAdapterBehavior.mockCreateFailsWithErrorResponse();
 
   module(`#mockFindRecord custom`, function () {
-    test('when returns json (plain) is used', function (assert) {
-      assert.expect(2);
-      run(() => {
-        let done = assert.async(),
-          json = { profile: { id: 1, description: 'the desc' } },
-          mock = mockFindRecord('profile').returns({ json }),
-          profileId = mock.get('id');
+    test('when returns json (plain) is used', async function (assert) {
+      let json = { profile: { id: 1, description: 'the desc' } },
+        mock = mockFindRecord('profile').returns({ json }),
+        profileId = mock.get('id');
 
-        FactoryGuy.store
-          .findRecord('profile', profileId)
-          .then(function (profile) {
-            assert.equal(profile.get('id'), profileId);
-            assert.equal(profile.get('description'), json.get('description'));
-            done();
-          });
-      });
+      const profile = await FactoryGuy.store.findRecord('profile', profileId);
+
+      assert.equal(profile.get('id'), profileId);
+      assert.equal(profile.get('description'), json.get('description'));
     });
   });
 
   module(`#mockCreate custom`, function () {
-    test('match belongsTo with custom payloadKeyFromModelName function', function (assert) {
-      assert.expect(1);
-      run(() => {
-        let done = assert.async();
+    test('match belongsTo with custom payloadKeyFromModelName function', async function (assert) {
+      let entryType = make('entry-type');
+      mockCreate('entry').match({ entryType: entryType });
 
-        let entryType = make('entry-type');
-        mockCreate('entry').match({ entryType: entryType });
+      const entry = await FactoryGuy.store
+        .createRecord('entry', { entryType: entryType })
+        .save();
 
-        FactoryGuy.store
-          .createRecord('entry', { entryType: entryType })
-          .save()
-          .then((entry) => {
-            assert.equal(entry.get('entryType.id'), entryType.id);
-            done();
-          });
-      });
+      assert.equal(entry.get('entryType.id'), entryType.id);
     });
 
-    test('match hasMany with custom payloadKeyFromModelName function', function (assert) {
-      assert.expect(1);
-      run(() => {
-        let done = assert.async();
+    test('match hasMany with custom payloadKeyFromModelName function', async function (assert) {
+      let entry = make('entry');
+      mockCreate('entry-type').match({ entries: [entry] });
 
-        let entry = make('entry');
-        mockCreate('entry-type').match({ entries: [entry] });
+      const entryType = await FactoryGuy.store
+        .createRecord('entry-type', { entries: [entry] })
+        .save();
 
-        FactoryGuy.store
-          .createRecord('entry-type', { entries: [entry] })
-          .save()
-          .then((entryType) => {
-            let entries = entryType.get('entries');
-            assert.deepEqual(entries.mapBy('id'), [entry.id]);
-            done();
-          });
-      });
+      let entries = entryType.get('entries');
+      assert.deepEqual(entries.mapBy('id'), [entry.id]);
     });
   });
   module(`FactoryGuy#build get`, function () {

@@ -1,4 +1,3 @@
-import { run } from '@ember/runloop';
 import { test } from 'qunit';
 import FactoryGuy, {
   buildList,
@@ -103,18 +102,13 @@ SharedBehavior.makeTests = function () {
     assert.ok(project.get('user') === user);
   });
 
-  test('when hasMany ( asnyc ) associations assigned, belongTo parent is assigned', function (assert) {
-    run(function () {
-      let done = assert.async();
+  test('when hasMany ( asnyc ) associations assigned, belongTo parent is assigned', async function (assert) {
+    let user = make('user');
+    let company = make('company', { users: [user] });
 
-      let user = make('user');
-      let company = make('company', { users: [user] });
+    const c = await user.get('company');
 
-      user.get('company').then(function (c) {
-        assert.ok(c === company);
-        done();
-      });
-    });
+    assert.ok(c === company);
   });
 
   test('when hasMany ( polymorphic ) associations are assigned, belongTo parent is assigned', function (assert) {
@@ -178,33 +172,23 @@ SharedBehavior.makeTests = function () {
   });
 
   test('when hasMany ( async ) relationship is assigned, model relationship is synced on both sides', function (assert) {
-    run(function () {
-      let done = assert.async();
+    let property = make('property');
+    let user1 = make('user', { properties: [property] });
+    let user2 = make('user', { properties: [property] });
 
-      let property = make('property');
-      let user1 = make('user', { properties: [property] });
-      let user2 = make('user', { properties: [property] });
-
-      assert.equal(property.get('owners.length'), 2);
-      assert.ok(property.get('owners.firstObject') === user1);
-      assert.ok(property.get('owners.lastObject') === user2);
-      done();
-    });
+    assert.equal(property.get('owners.length'), 2);
+    assert.ok(property.get('owners.firstObject') === user1);
+    assert.ok(property.get('owners.lastObject') === user2);
   });
 
   test('when belongsTo ( async ) parent is assigned, parent adds to hasMany records', function (assert) {
-    run(function () {
-      let done = assert.async();
+    let company = make('company');
+    let user1 = make('user', { company: company });
+    let user2 = make('user', { company: company });
 
-      let company = make('company');
-      let user1 = make('user', { company: company });
-      let user2 = make('user', { company: company });
-
-      assert.equal(company.get('users.length'), 2);
-      assert.ok(company.get('users.firstObject') === user1);
-      assert.ok(company.get('users.lastObject') === user2);
-      done();
-    });
+    assert.equal(company.get('users.length'), 2);
+    assert.ok(company.get('users.firstObject') === user1);
+    assert.ok(company.get('users.lastObject') === user2);
   });
 
   test('when belongTo parent is assigned, parent adds to hasMany record using inverse', function (assert) {
@@ -336,17 +320,13 @@ SharedBehavior.makeTests = function () {
   });
 
   test('using afterMake with transient attributes in definition', function (assert) {
-    run(function () {
-      let property = FactoryGuy.make('property');
-      assert.ok(property.get('name') === 'Silly property(FOR SALE)');
-    });
+    let property = FactoryGuy.make('property');
+    assert.ok(property.get('name') === 'Silly property(FOR SALE)');
   });
 
   test('using afterMake with transient attributes in options', function (assert) {
-    run(function () {
-      let property = FactoryGuy.make('property', { for_sale: false });
-      assert.ok(property.get('name') === 'Silly property');
-    });
+    let property = FactoryGuy.make('property', { for_sale: false });
+    assert.ok(property.get('name') === 'Silly property');
   });
 
   test('hasMany associations assigned with ids', function (assert) {

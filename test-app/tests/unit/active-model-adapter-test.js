@@ -1,5 +1,4 @@
 import { dasherize } from '@ember/string';
-import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
@@ -41,13 +40,11 @@ module(serializer, function (hooks) {
         attrs: { camel_case_description: customDescription },
       });
 
-      let profile = run(() =>
-        FactoryGuy.store.createRecord('profile', {
-          camel_case_description: 'description',
-        }),
-      );
+      let profile = FactoryGuy.store.createRecord('profile', {
+        camel_case_description: 'description',
+      });
 
-      await run(async () => profile.save());
+      await profile.save();
 
       assert.strictEqual(
         profile.get('camelCaseDescription'),

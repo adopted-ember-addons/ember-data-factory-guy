@@ -1703,7 +1703,6 @@ Usage:
        json, returning `true` if there is a match, `false` otherwise.
   - returns
     - attributes ( including relationships ) to include in response json
-- Need to import `run` from `@ember/runloop` and wrap tests using `mockCreate` with: `run(function() { 'your test' })`
 
 Realistically, you will have code in a view action or controller action that will
 create the record, and setup any associations.
@@ -1789,7 +1788,6 @@ store.createRecord('project', { name: 'Moo' }).save(); //=> fails
        json, returning `true` if there is a match, `false` otherwise.
   - returns
     - attributes ( including relationships ) to include in response json
-- Need to import `run` from `@ember/runloop` and wrap tests using `mockUpdate` with: `run(function() { 'your test' })`
 
 Usage:
 
@@ -1890,7 +1888,6 @@ profile.save(); //=> will succeed!
 
 ##### `mockDelete`
 
-- Need to import `run` from `@ember/runloop` and wrap tests using `mockDelete` with: `run(function() { 'your test' })`
 - To handle deleting a model
   - Pass in a record ( or a typeName and id )
 

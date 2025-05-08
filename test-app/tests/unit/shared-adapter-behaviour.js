@@ -1,6 +1,5 @@
 import { all } from 'rsvp';
 import { A } from '@ember/array';
-import { run } from '@ember/runloop';
 import { module, test } from 'qunit';
 import { isEquivalent } from 'ember-data-factory-guy/-private';
 
@@ -81,28 +80,6 @@ SharedBehavior.mockFindRecordCommonTests = function () {
       assert.equal(reason.errors[0].status, '404');
     });
   });
-
-  //    test("returns model succeeds", async function(assert) {
-  //        let cat = make('cat', { type: 'Cutest' });
-  //        let mock = mockFindRecord(cat);//.returns({ model: cat });
-  //
-  //        FactoryGuy.store.findRecord('cat', mock.get('id'), { reload: true }).then(function(catA) {
-  //          assert.equal(catA.get('type'), 'Cutest');
-  //        });
-  //      });
-
-  //  test("with model that has attribute named type, is not polymorphic, and returns model", function(assert) {
-  //    run(() => {
-  //      let done = assert.async();
-  //      let cat = make('cat', { type: 'Cutest' });
-  //      let mock = mockFindRecord(cat);//.returns({ model: cat });
-  //      console.log(mock.index, cat.get('id'));
-  //      FactoryGuy.store.findRecord('cat', mock.get('id'), { reload: true }).then(function(catA) {
-  //        assert.equal(catA.get('type'), 'Cutest');
-  //        done();
-  //      });
-  //    });
-  //  });
 
   test('returns model that has attribute named type, but is not polymorphic', async function (assert) {
     let cat = make('cat', { type: 'Cutest' });
@@ -1110,7 +1087,7 @@ SharedBehavior.mockCreateTests = function () {
 
     mockCreate('profile').returns({ attrs: { id: id } });
 
-    let profile = run(() => FactoryGuy.store.createRecord('profile'));
+    const profile = FactoryGuy.store.createRecord('profile');
     await profile.save();
 
     assert.equal(profile.get('id'), id);
@@ -1347,8 +1324,8 @@ SharedBehavior.mockUpdateTests = function () {
 
     mockUpdate(employee);
 
-    assert.ok(!employee.get('hasDirtyAttributes'));
-    run(() => employee.set('name.firstName', 'Jamie'));
+    assert.false(employee.get('hasDirtyAttributes'));
+    employee.set('name.firstName', 'Jamie');
 
     assert.ok(employee.get('name.firstName') === 'Jamie');
     assert.ok(employee.get('name.lastName') === 'Lannister');

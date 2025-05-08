@@ -2,7 +2,6 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Model from '@ember-data/model';
 import FactoryGuy, { build, makeNew, mockCreate } from 'ember-data-factory-guy';
-import { run } from '@ember/runloop';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
@@ -31,7 +30,7 @@ module('MockCreate', function (hooks) {
       profile = makeNew('profile'),
       mock = mockCreate(profile).returns({ attrs: { id: 2 } });
 
-    await run(async () => profile.save());
+    await profile.save();
 
     let response = JSON.parse(mock.getResponse().responseText),
       expectedArgs = [
@@ -93,9 +92,7 @@ module('MockCreate', function (hooks) {
 
     sinon.stub(adapter, 'urlForCreateRecord').callsFake(fakeUrlForCreateRecord);
 
-    await run(() => {
-      return FactoryGuy.store.createRecord('user').save({ adapterOptions });
-    });
+    await FactoryGuy.store.createRecord('user').save({ adapterOptions });
 
     adapter.urlForCreateRecord.restore();
   });
