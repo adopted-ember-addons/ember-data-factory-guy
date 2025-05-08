@@ -56,8 +56,8 @@ module(serializer, function (hooks) {
   module('FactoryGuy#build custom', function () {
     test('uses the correct key when overridden in the serializer', async function (assert) {
       let buildJson = build('dog', 'withOwner');
-      assert.equal(buildJson.get('owner_id'), undefined);
-      assert.equal(buildJson.get('humanId'), 1);
+      assert.strictEqual(buildJson.get('owner_id'), undefined);
+      assert.strictEqual(buildJson.get('humanId'), 1);
     });
 
     test('embeds hasMany record when serializer attrs => embedded: always ', function (assert) {

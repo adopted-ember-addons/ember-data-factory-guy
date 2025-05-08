@@ -53,12 +53,12 @@ module('MockDelete', function (hooks) {
 
   test('#getUrl uses urlForDeleteRecord if it is set on the adapter', function (assert) {
     let mock1 = mockDelete('user', '2');
-    assert.equal(mock1.getUrl(), '/users/2');
+    assert.strictEqual(mock1.getUrl(), '/users/2');
 
     let adapter = FactoryGuy.store.adapterFor('user');
     sinon.stub(adapter, 'urlForDeleteRecord').returns('/deleteMyZombie/2');
 
-    assert.equal(mock1.getUrl(), '/deleteMyZombie/2');
+    assert.strictEqual(mock1.getUrl(), '/deleteMyZombie/2');
     adapter.urlForDeleteRecord.restore();
   });
 

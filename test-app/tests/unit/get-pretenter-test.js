@@ -8,20 +8,19 @@ module('Unit | getPretender', function (hooks) {
   setupFactoryGuy(hooks);
 
   test('getPretender basic usage', function (assert) {
-    assert.expect(3);
     let pretender = getPretender();
 
     assert.ok(
       pretender instanceof Pretender,
       'getPretender returns an instance of Pretender',
     );
-    assert.equal(
+    assert.strictEqual(
       pretender.handlers.length,
       0,
       'the handlers array is initially empty',
     );
     mock({ url: '/api/whatever' });
-    assert.equal(
+    assert.strictEqual(
       pretender.handlers.length,
       1,
       'the created mock is added to the handlers',

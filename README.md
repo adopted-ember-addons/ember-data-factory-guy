@@ -2125,7 +2125,7 @@ person.save(); // will succeed
 ```javascript
 let person = make('person', { name: 'Daniel' });
 let json = person.serialize();
-assert.equal(json.name, 'Daniel-san');
+assert.strictEqual(json.name, 'Daniel-san');
 ```
 
 ### Upgrading

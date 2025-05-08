@@ -55,7 +55,6 @@ module.exports = {
       files: ['test-app/tests/**/*-test.{js,ts}'],
       extends: ['plugin:qunit/recommended'],
       rules: {
-        'qunit/no-assert-equal': 'warn',
         'qunit/require-expect': ['error', 'except-simple'],
       },
     },

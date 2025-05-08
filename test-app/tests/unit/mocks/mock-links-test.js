@@ -26,8 +26,8 @@ module('MockLinks', function (hooks) {
       user = make('user', { links: { company: companyLink } }),
       mockCompany = mockLinks(user, 'company');
 
-    assert.equal(mockCompany.getUrl(), companyLink);
-    assert.equal(mockCompany.status, '200');
+    assert.strictEqual(mockCompany.getUrl(), companyLink);
+    assert.strictEqual(mockCompany.status, 200);
   });
 
   test('getUrl and status for hasMany links', function (assert) {
@@ -35,8 +35,8 @@ module('MockLinks', function (hooks) {
       user = make('user', { links: { properties: propertiesLink } }),
       mockProperties = mockLinks(user, 'properties');
 
-    assert.equal(mockProperties.getUrl(), propertiesLink);
-    assert.equal(mockProperties.status, '200');
+    assert.strictEqual(mockProperties.getUrl(), propertiesLink);
+    assert.strictEqual(mockProperties.status, 200);
   });
 
   test('handles links url with query parameters', async function (assert) {
@@ -45,11 +45,11 @@ module('MockLinks', function (hooks) {
       json = buildList('property', 1),
       mockProperties = mockLinks(user, 'properties').returns({ json });
 
-    assert.equal(mockProperties.getUrl(), '/users/1/properties');
+    assert.strictEqual(mockProperties.getUrl(), '/users/1/properties');
     assert.deepEqual(mockProperties.queryParams, { dudes: '2' });
 
     await user.properties.toArray();
-    assert.equal(mockProperties.timesCalled, 1);
+    assert.strictEqual(mockProperties.timesCalled, 1);
   });
 
   test('hasMany links returns buildList payload', async function (assert) {

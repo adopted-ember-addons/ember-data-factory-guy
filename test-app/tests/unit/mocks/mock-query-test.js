@@ -99,7 +99,7 @@ module('MockQuery', function (hooks) {
   test('#getUrl uses urlForQuery if it is set on the adapter', function (assert) {
     let queryParams = { zip: 'it' };
     let mock1 = mockQuery('user', queryParams);
-    assert.equal(mock1.getUrl(), '/users');
+    assert.strictEqual(mock1.getUrl(), '/users');
 
     let adapter = FactoryGuy.store.adapterFor('user');
     sinon
@@ -107,7 +107,7 @@ module('MockQuery', function (hooks) {
       .withArgs(queryParams, 'user')
       .returns('/dudes');
 
-    assert.equal(mock1.getUrl(), '/dudes');
+    assert.strictEqual(mock1.getUrl(), '/dudes');
     adapter.urlForQuery.restore();
   });
 
@@ -116,7 +116,7 @@ module('MockQuery', function (hooks) {
       mock = mockQuery('profile').withParams(queryParams);
 
     await FactoryGuy.store.query('profile', queryParams);
-    assert.equal(mock.timesCalled, 1);
+    assert.strictEqual(mock.timesCalled, 1);
   });
 
   test('#withSomeParams supports arrays in query params', async function (assert) {
@@ -128,6 +128,6 @@ module('MockQuery', function (hooks) {
       include: ['company1', 'company2'],
       exclude: ['company3'],
     });
-    assert.equal(mock.timesCalled, 1);
+    assert.strictEqual(mock.timesCalled, 1);
   });
 });

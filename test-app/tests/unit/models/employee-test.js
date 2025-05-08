@@ -115,13 +115,13 @@ module(`Unit | Model | ${modelType}`, function (hooks) {
   test('employee hasMany departmentEmployments setup manually', function (assert) {
     let departmentEmployments = buildList('department-employment', 2).get();
     let employee = make('employee', { departmentEmployments });
-    assert.equal(employee.get('departmentEmployments.length'), 2);
+    assert.strictEqual(employee.get('departmentEmployments.length'), 2);
   });
 
   test('employee hasMany department employments (fragment arrays) setup in fixture', function (assert) {
     let employee = make('employee', 'with_department_employments');
 
-    assert.equal(employee.get('departmentEmployments.length'), 2);
+    assert.strictEqual(employee.get('departmentEmployments.length'), 2);
     let department1 = employee.get(
       'departmentEmployments.firstObject.department',
     );

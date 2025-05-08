@@ -18,8 +18,8 @@ module('MockAny', function (hooks) {
   test('defaults values for type, status', function (assert) {
     let mockAny = mock({ url: '/meep-meep' });
 
-    assert.equal(mockAny.getType(), 'GET');
-    assert.equal(mockAny.status, '200');
+    assert.strictEqual(mockAny.getType(), 'GET');
+    assert.strictEqual(mockAny.status, 200);
   });
 
   test('status option', async function (assert) {
@@ -34,7 +34,7 @@ module('MockAny', function (hooks) {
       status: status,
     });
 
-    assert.equal(mockAny.status, status);
+    assert.strictEqual(mockAny.status, status);
     const json = await fetchJSON({ url, method });
 
     assert.deepEqual(json, responseText);
@@ -193,10 +193,18 @@ module('MockAny', function (hooks) {
       url = '/api/post-stuff';
 
     let theMock = mock({ url, type: method });
-    assert.equal(theMock.timesCalled, 0, 'mock#timesCalled is initially 0');
+    assert.strictEqual(
+      theMock.timesCalled,
+      0,
+      'mock#timesCalled is initially 0',
+    );
 
     await fetchJSON({ url, method });
-    assert.equal(theMock.timesCalled, 1, 'mock#timesCalled is called once');
+    assert.strictEqual(
+      theMock.timesCalled,
+      1,
+      'mock#timesCalled is called once',
+    );
   });
 
   test('Star segments work', async function (assert) {
@@ -204,10 +212,18 @@ module('MockAny', function (hooks) {
       url = '/api/post/some-stuff';
 
     let theMock = mock({ url: '/api/*/some-stuff', type: method });
-    assert.equal(theMock.timesCalled, 0, 'mock#timesCalled is initially 0');
+    assert.strictEqual(
+      theMock.timesCalled,
+      0,
+      'mock#timesCalled is initially 0',
+    );
 
     await fetchJSON({ url, method });
-    assert.equal(theMock.timesCalled, 1, 'mock#timesCalled is called once');
+    assert.strictEqual(
+      theMock.timesCalled,
+      1,
+      'mock#timesCalled is called once',
+    );
   });
 
   function testWithSomeParamsForMethod(method) {
@@ -222,12 +238,12 @@ module('MockAny', function (hooks) {
 
       let fooMock = mock({ url, type: method }).withSomeParams(dataFoo);
       let barMock = mock({ url, type: method }).withSomeParams(dataBar);
-      assert.equal(
+      assert.strictEqual(
         fooMock.timesCalled,
         0,
         'fooMock#timesCalled is initially 0',
       );
-      assert.equal(
+      assert.strictEqual(
         barMock.timesCalled,
         0,
         'barMock#timesCalled is initially 0',
@@ -238,12 +254,12 @@ module('MockAny', function (hooks) {
         method,
         params: Object.assign({ extra: 123 }, dataFoo),
       });
-      assert.equal(
+      assert.strictEqual(
         fooMock.timesCalled,
         1,
         'fooMock#timesCalled is called once',
       );
-      assert.equal(
+      assert.strictEqual(
         barMock.timesCalled,
         0,
         'barMock#timesCalled is called once',
@@ -254,12 +270,12 @@ module('MockAny', function (hooks) {
         method,
         params: Object.assign({ extra: 123 }, dataBar),
       });
-      assert.equal(
+      assert.strictEqual(
         fooMock.timesCalled,
         1,
         'fooMock#timesCalled is called once',
       );
-      assert.equal(
+      assert.strictEqual(
         barMock.timesCalled,
         1,
         'barMock#timesCalled is called once',
@@ -281,36 +297,36 @@ module('MockAny', function (hooks) {
 
       let fooMock = mock({ url, type: method }).withParams(dataFoo);
       let barMock = mock({ url, type: method }).withParams(dataBar);
-      assert.equal(
+      assert.strictEqual(
         fooMock.timesCalled,
         0,
         'fooMock#timesCalled is initially 0',
       );
-      assert.equal(
+      assert.strictEqual(
         barMock.timesCalled,
         0,
         'barMock#timesCalled is initially 0',
       );
 
       await fetchJSON({ url, params: dataFoo, method });
-      assert.equal(
+      assert.strictEqual(
         fooMock.timesCalled,
         1,
         'fooMock#timesCalled is called once',
       );
-      assert.equal(
+      assert.strictEqual(
         barMock.timesCalled,
         0,
         'barMock#timesCalled is called once',
       );
 
       await fetchJSON({ url, params: dataBar, method });
-      assert.equal(
+      assert.strictEqual(
         fooMock.timesCalled,
         1,
         'fooMock#timesCalled is called once',
       );
-      assert.equal(
+      assert.strictEqual(
         barMock.timesCalled,
         1,
         'barMock#timesCalled is called once',
