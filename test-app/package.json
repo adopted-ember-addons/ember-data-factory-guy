@@ -57,7 +57,7 @@
     "ember-sinon": "5.0.0",
     "ember-source": "~3.28.0",
     "ember-source-channel-url": "^3.0.0",
-    "ember-try": "^3.0.0",
+    "ember-try": "^4.0.0",
     "loader.js": "4.7.0",
     "pretender": "^3.4.7",
     "qunit": "^2.16.0",
