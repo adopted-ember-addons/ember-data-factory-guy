@@ -61,7 +61,7 @@ module('MockFindAll', function (hooks) {
 
     const queryParams = { include: 'company' };
     mock.withParams(queryParams);
-    await FactoryGuy.store.findAll('profile', queryParams);
+    await FactoryGuy.store.findAll('profile', { ...queryParams, reload: true });
     expectedArgs[4] = `/profiles?${param(queryParams)}`;
 
     assert.deepEqual(
@@ -77,14 +77,14 @@ module('MockFindAll', function (hooks) {
   test('returns({models}) for non polymorphic type does does not alter type attribute', async function (assert) {
     let cat = make('cat', { type: 'Cuddly' });
     mockFindAll('cat').returns({ models: [cat] });
-    await FactoryGuy.store.findAll('cat');
+    await FactoryGuy.store.findAll('cat', { reload: true });
     assert.strictEqual(cat.get('type'), 'Cuddly');
   });
 
   test('returns({models}) for polymorphic type does does not alter type attribute', async function (assert) {
     let hat = make('big-hat');
     mockFindAll('big-hat').returns({ models: [hat] });
-    await FactoryGuy.store.findAll('big-hat');
+    await FactoryGuy.store.findAll('big-hat', { reload: true });
     assert.strictEqual(hat.get('type'), 'BigHat'); // default type value
   });
 

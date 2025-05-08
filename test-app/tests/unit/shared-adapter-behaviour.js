@@ -56,7 +56,9 @@ SharedBehavior.mockFindRecordCommonTests = function () {
 
     mockFindRecord('profile').returns({ id: newProfile.id });
 
-    let foundRecord = await store.findRecord('profile', newProfile.id);
+    let foundRecord = await store.findRecord('profile', newProfile.id, {
+      reload: true,
+    });
 
     assert.deepEqual(foundRecord, newProfile);
   });
@@ -67,7 +69,9 @@ SharedBehavior.mockFindRecordCommonTests = function () {
 
     mockFindRecord('profile').returns({ id: existingProfile.get('id') });
 
-    let profile = await store.findRecord('profile', existingProfile.get('id'));
+    let profile = await store.findRecord('profile', existingProfile.get('id'), {
+      reload: true,
+    });
 
     assert.strictEqual(profile.get('id'), existingProfile.get('id'));
   });
@@ -457,7 +461,9 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
       let models = makeList('profile', 'with_company', 'with_bat_man');
       mockFindAll('profile').returns({ models });
 
-      const profiles = await FactoryGuy.store.findAll('profile');
+      const profiles = await FactoryGuy.store.findAll('profile', {
+        reload: true,
+      });
       assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
       assert.ok(profiles.get('lastObject.superHero.name') === 'BatMan');
       assert.strictEqual(
@@ -466,15 +472,6 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
         'does not make new profiles',
       );
     });
-
-    // TODO: need to put included models into included section of json
-    //    test("handles include params", async function(assert) {
-    //      let json = buildList('profile', 'with_company');
-    //      mockFindAll('profile').withParams({include: 'company'}).returns({json});
-    //
-    //      const profiles = FactoryGuy.store.findAll('profile', {include: 'company'});
-    //      assert.ok(profiles.get('firstObject.company.name') === 'Silly corp');
-    //    });
   });
 };
 
@@ -801,7 +798,7 @@ SharedBehavior.mockQueryRecordTests = function () {
   test('when returning no result', async function (assert) {
     mockQueryRecord('user');
 
-    FactoryGuy.store.queryRecord('user', {});
+    await FactoryGuy.store.queryRecord('user', {});
 
     assert.ok(true);
   });
@@ -1255,7 +1252,10 @@ SharedBehavior.mockCreateReturnsEmbeddedAssociations = function () {
   module('#mockCreate | returns embedded association', function () {
     test('belongsTo', async function (assert) {
       let company = build('company'),
-        comitBook = FactoryGuy.store.createRecord('comic-book');
+        comitBook = FactoryGuy.store.createRecord('comic-book', {
+          characters: [],
+          includedVillains: [],
+        });
 
       mockCreate('comic-book').returns({ attrs: { company } });
 
@@ -1744,7 +1744,10 @@ SharedBehavior.mockUpdateReturnsEmbeddedAssociations = function () {
   module('#mockUpdate | returns embedded association', function () {
     test('belongsTo', async function (assert) {
       let newValue = 'new name',
-        comicBook = make('comic-book', { characters: [] });
+        comicBook = make('comic-book', {
+          characters: [],
+          includedVillains: [],
+        });
       comicBook.set('name', newValue);
 
       let company = build('company');
