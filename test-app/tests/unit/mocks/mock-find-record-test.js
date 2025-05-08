@@ -47,7 +47,10 @@ module('MockFindRecord', function (hooks) {
 
     const queryParams = { include: 'company' };
     mock.withParams(queryParams);
-    await FactoryGuy.store.findRecord('profile', 1, queryParams);
+    await FactoryGuy.store.findRecord('profile', 1, {
+      ...queryParams,
+      reload: true,
+    });
     expectedArgs[4] = `/profiles/1?${param(queryParams)}`;
 
     assert.deepEqual(
