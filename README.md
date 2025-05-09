@@ -1217,10 +1217,10 @@ import 'my-app/tests/factories';
     },
   );
 
-  test('shows user information', function () {
+  test('shows user information', async function () {
     let user = make('user', { name: 'Rob' });
 
-    this.render(hbs`{{single-user user=user}}`);
+    await render(hbs`{{single-user user=user}}`);
     this.set('user', user);
 
     ok(this.$('.name').text().match(user.get('name')));

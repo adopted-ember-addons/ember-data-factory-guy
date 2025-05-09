@@ -69,8 +69,6 @@ module('MockFindAll', function (hooks) {
       expectedArgs,
       'with query params',
     );
-
-    console.log.restore();
   });
 
   // fixes bug for issue #318
@@ -180,8 +178,6 @@ module('MockFindAll', function (hooks) {
         findAllStub.calledWith('user'),
         'correct parameters passed to urlForFindAll',
       );
-
-      adapter.urlForFindAll.restore();
     });
 
     test('passes adapterOptions to urlForFindAll', function (assert) {
@@ -200,8 +196,6 @@ module('MockFindAll', function (hooks) {
         }),
         'adapterOptions passed to urlForFindAll',
       );
-
-      adapter.urlForFindAll.restore();
     });
   });
 });
