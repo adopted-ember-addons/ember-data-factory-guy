@@ -113,8 +113,6 @@ module('MockRequest', function (hooks) {
 
     const response = await window.fetch.getCall(0).returnValue;
     assert.strictEqual(response.headers.get('X-Testing'), 'absolutely');
-
-    window.fetch.restore();
   });
 
   module('#disable, #enable, and #destroy', function () {

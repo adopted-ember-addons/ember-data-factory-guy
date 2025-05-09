@@ -47,8 +47,6 @@ module('MockDelete', function (hooks) {
       ];
 
     assert.deepEqual(consoleStub.getCall(0).args, expectedArgs);
-
-    console.log.restore();
   });
 
   test('#getUrl uses urlForDeleteRecord if it is set on the adapter', function (assert) {
@@ -59,7 +57,6 @@ module('MockDelete', function (hooks) {
     sinon.stub(adapter, 'urlForDeleteRecord').returns('/deleteMyZombie/2');
 
     assert.strictEqual(mock1.getUrl(), '/deleteMyZombie/2');
-    adapter.urlForDeleteRecord.restore();
   });
 
   test('#makeFakeSnapshot', function (assert) {

@@ -43,8 +43,6 @@ module('MockCreate', function (hooks) {
       ];
 
     assert.deepEqual(consoleStub.getCall(0).args, expectedArgs);
-
-    console.log.restore();
   });
 
   test('#singleUse', async function (assert) {
@@ -73,7 +71,6 @@ module('MockCreate', function (hooks) {
     sinon.stub(adapter, 'urlForCreateRecord').returns('/makeMeAZombie');
 
     assert.strictEqual(mock1.getUrl(), '/makeMeAZombie');
-    adapter.urlForCreateRecord.restore();
   });
 
   test('snapshot has record and adapterOptions in adapter#urlForCreateRecord', async function (assert) {
@@ -92,8 +89,6 @@ module('MockCreate', function (hooks) {
     sinon.stub(adapter, 'urlForCreateRecord').callsFake(fakeUrlForCreateRecord);
 
     await FactoryGuy.store.createRecord('user').save({ adapterOptions });
-
-    adapter.urlForCreateRecord.restore();
   });
 
   test('#makeFakeSnapshot', function (assert) {

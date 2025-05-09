@@ -47,8 +47,6 @@ module('MockUpdate', function (hooks) {
       ];
 
     assert.deepEqual(consoleStub.getCall(0).args, expectedArgs);
-
-    console.log.restore();
   });
 
   test('#makeFakeSnapshot', function (assert) {
@@ -101,6 +99,5 @@ module('MockUpdate', function (hooks) {
     sinon.stub(adapter, 'urlForUpdateRecord').returns('/dudes/1');
 
     assert.strictEqual(mock1.getUrl(), '/dudes/1');
-    adapter.urlForUpdateRecord.restore();
   });
 });

@@ -58,8 +58,6 @@ module('MockFindRecord', function (hooks) {
       expectedArgs,
       'with query params',
     );
-
-    console.log.restore();
   });
 
   module('#getUrl', function () {
@@ -98,8 +96,6 @@ module('MockFindRecord', function (hooks) {
         findRecordStub.calledWith(1, 'user'),
         'correct parameters passed to urlForFindRecord',
       );
-
-      adapter.urlForFindRecord.restore();
     });
 
     test('passes adapterOptions to urlForFindRecord', function (assert) {
@@ -120,8 +116,6 @@ module('MockFindRecord', function (hooks) {
         }),
         'adapterOptions passed to urlForFindRecord',
       );
-
-      adapter.urlForFindRecord.restore();
     });
   });
 

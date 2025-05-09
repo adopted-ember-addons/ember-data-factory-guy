@@ -81,7 +81,6 @@ module('FactoryGuy', function (hooks) {
     for (model in definitions) {
       definition = definitions[model];
       assert.ok(definition.reset.calledOnce);
-      definition.reset.restore();
     }
   });
 

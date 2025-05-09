@@ -37,8 +37,6 @@ module('MockQuery', function (hooks) {
       ];
 
     assert.deepEqual(consoleStub.getCall(0).args, expectedArgs);
-
-    console.log.restore();
   });
 
   test('json payload argument should be an object', function (assert) {
@@ -108,7 +106,6 @@ module('MockQuery', function (hooks) {
       .returns('/dudes');
 
     assert.strictEqual(mock1.getUrl(), '/dudes');
-    adapter.urlForQuery.restore();
   });
 
   test('#withParams supports arrays in query params', async function (assert) {

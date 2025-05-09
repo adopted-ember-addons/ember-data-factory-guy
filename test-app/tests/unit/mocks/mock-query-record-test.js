@@ -42,8 +42,6 @@ module('MockQueryRecord', function (hooks) {
       ];
 
     assert.deepEqual(consoleStub.getCall(0).args, expectedArgs);
-
-    console.log.restore();
   });
 
   test('returns() method accepts only id, model, json or header as keys', function (assert) {
