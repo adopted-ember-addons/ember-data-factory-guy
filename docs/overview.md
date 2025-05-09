@@ -7,7 +7,7 @@ Factories simplify the process of testing, making you more efficient and your te
 
 ## Features
 
-- 🚀 Easily push models to the Store, even complex relationships
+- 🚀 Easily push models to the Store, even the most complex relationships
 - ⚡️️ Simple, Powerful, & Intuitive API
 - ⭐ Works out of the box with your existing customized serializers and adapters
 - 💎 Multiple build strategies
@@ -16,15 +16,7 @@ Factories simplify the process of testing, making you more efficient and your te
 
 ## Getting Started
 
-- [Overview](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/overview)
-- [Quick Start](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/quick-start)
-- [Assumptions](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/assumptions)
-- [Defining factories](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/defining-factories)
-- [Using factories](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/using-factories)
-- [Mocking the store](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/using-mock-methods)
-- [Advanced](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/advanced)
-- [Upgrading](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading)
-  - [v4 -> v5](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading?id=v4-gt-v5)
+Check out the [Quick Start](quick-start.md) documentation to get started.
 
 ## Questions / Get in Touch
 
@@ -32,7 +24,7 @@ Visit the EmberJS Community on [Discord](https://discord.com/channels/4804627597
 
 ## Contributing
 
-see [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`RELEASE.md`](RELEASE.md)
+see [`CONTRIBUTING.md`](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/CONTRIBUTING.md) and [`RELEASE.md`](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/RELEASE.md)
 
 ## License
 
