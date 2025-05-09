@@ -174,9 +174,6 @@ importers:
       ember-resolver:
         specifier: ^8.1.0
         version: 8.1.0(@babel/core@7.27.1)
-      ember-sinon-qunit:
-        specifier: ^7.5.0
-        version: 7.5.0(@babel/core@7.27.1)(ember-source@3.28.12(@babel/core@7.27.1))(qunit@2.24.1)(sinon@20.0.0)
       ember-source:
         specifier: ~3.28.0
         version: 3.28.12(@babel/core@7.27.1)
@@ -1450,12 +1447,6 @@ packages:
 
   '@types/serve-static@1.15.7':
     resolution: {integrity: sha512-W8Ym+h8nhuRwaKPaDw34QUkwsGi6Rc4yYqvKFo5rm2FUEhCFbzVWrxXUxuKK8TASjWsysJY0nsmNCGhCOIsrOw==}
-
-  '@types/sinon@17.0.4':
-    resolution: {integrity: sha512-RHnIrhfPO3+tJT0s7cFaXGZvsL4bbR3/k7z3P312qMS4JaS2Tk+KiwiLx1S0rQ56ERj00u1/BtdyVd0FY+Pdew==}
-
-  '@types/sinonjs__fake-timers@8.1.5':
-    resolution: {integrity: sha512-mQkU2jY8jJEF7YHjHvsQO8+3ughTL1mcnn96igfhONmR+fUPSKIkefQYpSe8bsly2Ep7oQbn/6VG5/9/0qcArQ==}
 
   '@types/symlink-or-copy@1.2.2':
     resolution: {integrity: sha512-MQ1AnmTLOncwEf9IVU+B2e4Hchrku5N67NkgcAHW0p3sdzPe0FNMANxEm6OJUzPniEQGkeT3OROLlCwZJLWFZA==}
@@ -2903,13 +2894,6 @@ packages:
   ember-router-generator@2.0.0:
     resolution: {integrity: sha512-89oVHVJwmLDvGvAUWgS87KpBoRhy3aZ6U0Ql6HOmU4TrPkyaa8pM0W81wj9cIwjYprcQtN9EwzZMHnq46+oUyw==}
     engines: {node: 8.* || 10.* || >= 12}
-
-  ember-sinon-qunit@7.5.0:
-    resolution: {integrity: sha512-wSoRqBbiytUtDFIE6DLPDZFYhoS4FH+kgHhr707HJMF5tUYpKPIruBusF9kWezj/yOrJLyLqoWFoaAJ2aG2FQw==}
-    peerDependencies:
-      ember-source: '>=3.28.0'
-      qunit: ^2.0.0
-      sinon: '>=15.0.3'
 
   ember-source-channel-url@3.0.0:
     resolution: {integrity: sha512-vF/8BraOc66ZxIDo3VuNP7iiDrnXEINclJgSJmqwAAEpg84Zb1DHPI22XTXSDA+E8fW5btPUxu65c3ZXi8AQFA==}
@@ -8266,12 +8250,6 @@ snapshots:
       '@types/node': 22.15.14
       '@types/send': 0.17.4
 
-  '@types/sinon@17.0.4':
-    dependencies:
-      '@types/sinonjs__fake-timers': 8.1.5
-
-  '@types/sinonjs__fake-timers@8.1.5': {}
-
   '@types/symlink-or-copy@1.2.2': {}
 
   '@ungap/structured-clone@1.3.0': {}
@@ -10269,18 +10247,6 @@ snapshots:
       '@babel/traverse': 7.27.1
       recast: 0.18.10
     transitivePeerDependencies:
-      - supports-color
-
-  ember-sinon-qunit@7.5.0(@babel/core@7.27.1)(ember-source@3.28.12(@babel/core@7.27.1))(qunit@2.24.1)(sinon@20.0.0):
-    dependencies:
-      '@embroider/addon-shim': 1.10.0
-      '@types/sinon': 17.0.4
-      decorator-transforms: 2.3.0(@babel/core@7.27.1)
-      ember-source: 3.28.12(@babel/core@7.27.1)
-      qunit: 2.24.1
-      sinon: 20.0.0
-    transitivePeerDependencies:
-      - '@babel/core'
       - supports-color
 
   ember-source-channel-url@3.0.0(encoding@0.1.13):
