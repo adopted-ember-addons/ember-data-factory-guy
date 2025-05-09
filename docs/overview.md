@@ -24,7 +24,7 @@ Visit the EmberJS Community on [Discord](https://discord.com/channels/4804627597
 
 ## Contributing
 
-see [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`RELEASE.md`](RELEASE.md)
+see [`CONTRIBUTING.md`](../CONTRIBUTING.md) and [`RELEASE.md`](../RELEASE.md)
 
 ## License
 

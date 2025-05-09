@@ -6,3 +6,4 @@
   - [Using factories](using-factories.md)
   - [Mocking the store](using-mock-methods.md)
   - [Advanced](advanced.md)
+  - [Upgrading](upgrading.md)

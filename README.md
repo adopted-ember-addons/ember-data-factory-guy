@@ -24,7 +24,7 @@ Factories simplify the process of testing, making you more efficient and your te
 - [Mocking the store](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/using-mock-methods)
 - [Advanced](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/advanced)
 - [Upgrading](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading)
-  - [v4 -> v5](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading?id=v4->v5)
+  - [v4 -> v5](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading?id=v4-gt-v5)
 
 ## Questions / Get in Touch
 
@@ -32,7 +32,7 @@ Visit the EmberJS Community on [Discord](https://discord.com/channels/4804627597
 
 ## Contributing
 
-see [`CONTRIBUTING.md`](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/CONTRIBUTING.md) and [`RELEASE.md`](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/RELEASE.md)
+see [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`RELEASE.md`](RELEASE.md)
 
 ## License
 
