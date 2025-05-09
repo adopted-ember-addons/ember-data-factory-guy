@@ -76,6 +76,10 @@ jobs:
           ]
         allow-failure: [false]
         include:
+          - ember-try-scenario: ember-lts-5.12
+            allow-failure: true
+          - ember-try-scenario: ember-6.4
+            allow-failure: true
           - ember-try-scenario: ember-release
             allow-failure: true
 
