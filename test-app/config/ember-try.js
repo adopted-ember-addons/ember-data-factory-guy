@@ -12,7 +12,7 @@ module.exports = async function () {
         npm: {
           devDependencies: {
             'ember-source': '~4.12',
-            'ember-qunit': '^7 || ^8 || ^9.0.2', // ember-qunit v6 is last release supporting ember-source < 4
+            'ember-qunit': '^7 || ^8', // ember-qunit v6 is last release supporting ember-source < 4
             '@ember/test-helpers': '^3.0.3', // req of ember-qunit 7
             'ember-resolver': '^9 || ^10 || ^11 || ^12 || ^13',
           },
@@ -23,7 +23,7 @@ module.exports = async function () {
         npm: {
           devDependencies: {
             'ember-source': '~5.12',
-            'ember-qunit': '^7 || ^8 || ^9.0.2',
+            'ember-qunit': '^7 || ^8',
             '@ember/test-helpers': '^3.0.3',
             'ember-resolver': '^10.1.1 || ^11 || ^12 || ^13', // v10.1.1 first to support ember 5+
             'ember-load-initializers': '^3.0.0', // v3 needed for ember 5+
@@ -39,7 +39,7 @@ module.exports = async function () {
         npm: {
           devDependencies: {
             'ember-source': '~6.4',
-            'ember-qunit': '^7 || ^8 || ^9.0.2',
+            'ember-qunit': '^7 || ^8',
             '@ember/test-helpers': '^3.0.3',
             'ember-resolver': '^10.1.1 || ^11 || ^12 || ^13',
             'ember-load-initializers': '^3.0.0',
@@ -55,7 +55,7 @@ module.exports = async function () {
         npm: {
           devDependencies: {
             'ember-source': await getChannelURL('release'),
-            'ember-qunit': '^7 || ^8 || ^9.0.2',
+            'ember-qunit': '^7 || ^8',
             '@ember/test-helpers': '^3.0.3',
             'ember-resolver': '^10.1.1 || ^11 || ^12 || ^13',
             'ember-load-initializers': '^3.0.0',
