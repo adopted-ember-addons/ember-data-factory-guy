@@ -1,7 +1,7 @@
 - Getting started
   - [Overview](overview.md)
   - [Quick Start](quick-start.md)
-  - [Setup](setup.md)
+  - [Assumptions](assumptions.md)
   - [Defining factories](defining-factories.md)
   - [Using factories](using-factories.md)
   - [Mocking the store](using-mock-methods.md)

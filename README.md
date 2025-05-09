@@ -18,7 +18,7 @@ Factories simplify the process of testing, making you more efficient and your te
 
 - [Overview](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/overview)
 - [Quick Start](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/quick-start)
-- [Setup](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/setup)
+- [Assumptions](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/assumptions)
 - [Defining factories](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/defining-factories)
 - [Using factories](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/using-factories)
 - [Mocking the store](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/using-mock-methods)

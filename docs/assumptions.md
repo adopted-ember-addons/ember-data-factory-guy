@@ -1,4 +1,4 @@
-# Setup
+# Assumptions
 
 Throughout this documentation, we assume some example models that look like this:
 
