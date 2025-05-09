@@ -36,7 +36,7 @@ for mocking an HTTP request's payload.
 
 ### Import Factories
 
-Factory Guy needs to be made aware of any factory files you define (see [Defining Factories](./defining-factories.md)). This can be done by importing the factory files, which register themselves with FactoryGuy.
+Factory Guy needs to be made aware of any factory files you define (see [Defining Factories](defining-factories.md)). This can be done by importing the factory files, which register themselves with FactoryGuy.
 
 A clean way to do this is to create a `factories.js` file that imports them all
 

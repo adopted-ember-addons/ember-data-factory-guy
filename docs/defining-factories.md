@@ -22,7 +22,7 @@ FactoryGuy.define('<factory_name>', {
 });
 ```
 
-💡 _Make sure to import any factories you define, see [Requirements](./quick-start.md#requirements)_
+💡 _Make sure to import any factories you define, see [Requirements](quick-start.md#requirements)_
 
 ## Attributes
 
