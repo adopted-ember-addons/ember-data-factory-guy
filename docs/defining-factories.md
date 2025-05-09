@@ -43,9 +43,10 @@ FactoryGuy.define('user', {
     name: 'Admin',
   },
 });
-```
 
-Attributes can also be defined using **traits**, on which we will go through later in this documentation.
+FactoryGuy.make('user').get('name'); // => Dude;
+FactoryGuy.make('admin').get('name'); // => Admin;
+```
 
 > Disabling polymorphism
 >
@@ -62,7 +63,78 @@ FactoryGuy.define('cat', {
 });
 ```
 
-## Using sequences
+## Traits
+
+Traits allow you to group attributes together and then apply them to any factory. There power also resides in that you
+can compose your factory by applying multiple traits to it. Traits are declared in the factory's `traits` object.
+
+**Each trait overrides any values defined in traits before it in the argument list.**
+
+```javascript
+FactoryGuy.define('user', {
+  traits: {
+    big: { name: 'Big Guy' },
+    friendly: { style: 'Friendly' },
+    bfg: { name: 'Big Friendly Giant', style: 'Friendly' },
+  },
+});
+
+const user = FactoryGuy.make('user', 'big', 'friendly');
+const giant = FactoryGuy.make('user', 'big', 'bfg');
+
+user.get('name'); // => 'Big Guy'
+user.get('style'); // => 'Friendly'
+giant.get('name'); // => 'Big Friendly Giant' - name defined in the 'bfg' trait overrides the name defined in the 'big' trait
+giant.get('style'); // => 'Friendly'
+```
+
+You can still pass in a hash of attributes when using traits and it will override any trait attributes or default
+attributes.
+
+```javascript
+let user = FactoryGuy.make('user', 'big', 'friendly', { name: 'Dave' });
+user.get('name'); // => 'Dave'
+user.get('style'); // => 'Friendly'
+```
+
+### Using traits as functions
+
+Alike attributes, traits can be defined using functions too. This is super powerful as it allows you to make your traits
+even more dynamic.
+
+```javascript
+import FactoryGuy from 'ember-data-factory-guy';
+
+FactoryGuy.define('project', {
+  default: {
+    title: (f) => `Project ${f.id}`,
+  },
+  traits: {
+    medium: (f) => {
+      f.title = `Medium Project ${f.id}`;
+    },
+    goofy: (f) => {
+      f.title = `Goofy ${f.title}`;
+    },
+    withUser: (f) => {
+      // NOTE: In traits, relationships are directly created instead of just declared using FactoryGuy.belongsTo as you
+      // would normally in a factory definition.
+      f.user = FactoryGuy.make('user');
+    },
+  },
+});
+
+const project = make('project', 'medium');
+const project2 = build('project', 'goofy');
+const project3 = build('project', 'withUser');
+
+project.get('title'); //=> 'Medium Project 1'
+project2.get('title'); //=> 'Goofy Project 2'
+project3.get('title'); //=> 'Project #3'
+project3.get('user.name'); //=> 'User 1'
+```
+
+## Sequences
 
 Sequences helps you generate unique attribute values either by declaring them first (useful if you need to use the
 sequence for multiple attributes), or by declaring them inline where needed. In both cases, the values are generated
@@ -134,7 +206,7 @@ user.get('id'); // => 1
 user.get('name'); // => 'User #1'
 ```
 
-## Defining relationships
+## Relationships
 
 Just like with models, you can define relationships in your factories using the `FactoryGuy.belongsTo` and
 `FactoryGuy.hasMany` functions. Alike attributes, they can be defined using inline definitions, with traits, but
@@ -259,77 +331,6 @@ user.belongsTo('company').reload() // would use that link "/users/1/company" to 
 
 // you can also set traits with your build/buildList/make/makeList options
 user = make('user', {links: {properties: '/users/1/properties'}});
-```
-
-## Traits
-
-Traits allow you to group attributes together and then apply them to any factory. There power also resides in that you
-can compose your factory by applying multiple traits to it. Traits are declared in the factory's `traits` object.
-
-**Each trait overrides any values defined in traits before it in the argument list.**
-
-```javascript
-FactoryGuy.define('user', {
-  traits: {
-    big: { name: 'Big Guy' },
-    friendly: { style: 'Friendly' },
-    bfg: { name: 'Big Friendly Giant', style: 'Friendly' },
-  },
-});
-
-const user = FactoryGuy.make('user', 'big', 'friendly');
-const giant = FactoryGuy.make('user', 'big', 'bfg');
-
-user.get('name'); // => 'Big Guy'
-user.get('style'); // => 'Friendly'
-giant.get('name'); // => 'Big Friendly Giant' - name defined in the 'bfg' trait overrides the name defined in the 'big' trait
-giant.get('style'); // => 'Friendly'
-```
-
-You can still pass in a hash of attributes when using traits and it will override any trait attributes or default
-attributes.
-
-```javascript
-let user = FactoryGuy.make('user', 'big', 'friendly', { name: 'Dave' });
-user.get('name'); // => 'Dave'
-user.get('style'); // => 'Friendly'
-```
-
-### Using traits as functions
-
-Alike attributes, traits can be defined using functions too. This is super powerful as it allows you to make your traits
-even more dynamic.
-
-```javascript
-import FactoryGuy from 'ember-data-factory-guy';
-
-FactoryGuy.define('project', {
-  default: {
-    title: (f) => `Project ${f.id}`,
-  },
-  traits: {
-    medium: (f) => {
-      f.title = `Medium Project ${f.id}`;
-    },
-    goofy: (f) => {
-      f.title = `Goofy ${f.title}`;
-    },
-    withUser: (f) => {
-      // NOTE: In traits, relationships are directly created instead of just declared using FactoryGuy.belongsTo as you
-      // would normally in a factory definition.
-      f.user = FactoryGuy.make('user');
-    },
-  },
-});
-
-const project = make('project', 'medium');
-const project2 = build('project', 'goofy');
-const project3 = build('project', 'withUser');
-
-project.get('title'); //=> 'Medium Project 1'
-project2.get('title'); //=> 'Goofy Project 2'
-project3.get('title'); //=> 'Project #3'
-project3.get('user.name'); //=> 'User 1'
 ```
 
 ### Extending Other Definitions
