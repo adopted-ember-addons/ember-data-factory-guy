@@ -184,17 +184,17 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0(encoding@0.1.13)
       loader.js:
-        specifier: 4.7.0
+        specifier: ^4.7.0
         version: 4.7.0
       pretender:
         specifier: ^3.4.7
         version: 3.4.7
       qunit:
-        specifier: ^2.16.0
+        specifier: ^2.24.1
         version: 2.24.1
       qunit-dom:
-        specifier: ^1.6.0
-        version: 1.6.0
+        specifier: ^3.4.0
+        version: 3.4.0
       sinon:
         specifier: ^20.0.0
         version: 20.0.0
@@ -2705,6 +2705,9 @@ packages:
   doctrine@3.0.0:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
     engines: {node: '>=6.0.0'}
+
+  dom-element-descriptors@0.5.1:
+    resolution: {integrity: sha512-DLayMRQ+yJaziF4JJX1FMjwjdr7wdTr1y9XvZ+NfHELfOMcYDnCHneAYXAS4FT1gLILh4V0juMZohhH1N5FsoQ==}
 
   dot-case@3.0.4:
     resolution: {integrity: sha512-Kv5nKlh6yRrdrGvxeJ2e5y2eRUpkUosIW4A2AS38zwSz27zu7ufDwQPi5Jhs3XAlGNetl3bmnGhQsMtkKJnj3w==}
@@ -5301,9 +5304,8 @@ packages:
   quick-temp@0.1.8:
     resolution: {integrity: sha512-YsmIFfD9j2zaFwJkzI6eMG7y0lQP7YeWzgtFgNl38pGWZBSXJooZbOWwkcRot7Vt0Fg9L23pX0tqWU3VvLDsiA==}
 
-  qunit-dom@1.6.0:
-    resolution: {integrity: sha512-YwSqcLjQcRI0fUFpaSWwU10KIJPFW5Qh+d3cT5DOgx81dypRuUSiPkKFmBY/CDs/R1KdHRadthkcXg2rqAon8Q==}
-    engines: {node: 10.* || >= 12.*}
+  qunit-dom@3.4.0:
+    resolution: {integrity: sha512-N5PYbJ20RD3JZN4whINdl7dDfxScUy7eNuO8IwUtBWC7d6SH+BqtBqVZdRn9evxLQVzuask6OGvMy4gdpiCceg==}
 
   qunit@2.24.1:
     resolution: {integrity: sha512-Eu0k/5JDjx0QnqxsE1WavnDNDgL1zgMZKsMw/AoAxnsl9p4RgyLODyo2N7abZY7CEAnvl5YUqFZdkImzbgXzSg==}
@@ -9646,6 +9648,8 @@ snapshots:
     dependencies:
       esutils: 2.0.3
 
+  dom-element-descriptors@0.5.1: {}
+
   dot-case@3.0.4:
     dependencies:
       no-case: 3.0.4
@@ -13046,14 +13050,9 @@ snapshots:
       rimraf: 2.7.1
       underscore.string: 3.3.6
 
-  qunit-dom@1.6.0:
+  qunit-dom@3.4.0:
     dependencies:
-      broccoli-funnel: 3.0.8
-      broccoli-merge-trees: 4.2.0
-      ember-cli-babel: 7.26.11
-      ember-cli-version-checker: 5.1.2
-    transitivePeerDependencies:
-      - supports-color
+      dom-element-descriptors: 0.5.1
 
   qunit@2.24.1:
     dependencies:
