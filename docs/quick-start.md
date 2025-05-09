@@ -31,3 +31,77 @@ Factory Guy works by:
 
 The build strategies allow you to either create new records, persisted ones, or just build a JSON payload for your model
 for mocking an HTTP request's payload.
+
+## Requirements
+
+### Import Factories
+
+Factory Guy needs to be made aware of any factory files you define (see [Defining Factories](./defining-factories.md)). This can be done by importing the factory files, which register themselves with FactoryGuy.
+
+A clean way to do this is to create a `factories.js` file that imports them all
+
+```js
+// tests/factories/factories.js
+
+import 'my-app/tests/factories/big-group';
+import 'my-app/tests/factories/big-hat';
+import 'my-app/tests/factories/project';
+import 'my-app/tests/factories/user';
+...
+```
+
+And import that file before your tests run - for example, in your test-helper file.
+
+```js
+// tests/test-helper.js
+import Application from 'my-app/app';
+import config from 'my-app/config/environment';
+import { setApplication } from '@ember/test-helpers';
+import { start } from 'ember-qunit';
+
+import 'my-app/tests/factories'; // this line here
+
+/* existing test-helper.js setup code */
+setApplication(Application.create(config.APP));
+start();
+```
+
+### Test Setup
+
+FactoryGuy also needs to run some setup/teardown code before/after each test, use the `setupFactoryGuy(hooks)` method in your qunit tests to do this. This will allow you to use factories, mocks, and anything else from factory guy in tests,
+
+```js
+import { setupFactoryGuy, make } from 'ember-data-factory-guy';
+
+module('Acceptance | User View', function (hooks) {
+  setupApplicationTest(hooks);
+  setupFactoryGuy(hooks);
+
+  test('blah blah', async function (assert) {
+    make('user');
+
+    await visit('work');
+
+    assert.ok(true);
+  });
+});
+```
+
+And then in your tests you can use your factories (whether thats acceptance, integration or unit tests).
+
+```js
+import { setupFactoryGuy, make } from 'ember-data-factory-guy';
+
+module('Acceptance | User View', function (hooks) {
+  setupRenderingTest(hooks);
+  setupFactoryGuy(hooks);
+
+  test('blah blah', async function (assert) {
+    this.user = make('user');
+
+    await render(hbs`<SingleUser @user={{this.user}}>`);
+
+    assert.ok(true);
+  });
+});
+```

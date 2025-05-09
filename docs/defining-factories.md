@@ -16,9 +16,15 @@ This will create a file with the following path: `tests/factories/<factory_name>
 import FactoryGuy from 'ember-data-factory-guy';
 
 FactoryGuy.define('<factory_name>', {
-  default: {},
+  default: {
+    /* default attributes go here */
+  },
 });
 ```
+
+💡 _Make sure to import any factories you define, see [Requirements](./quick-start.md#requirements)_
+
+## Attributes
 
 Additionally to the `default` object, a factory's attributes can be defined by defining "named" attribute groups as
 shortcuts to passing the attributes manually when creating the factory.
