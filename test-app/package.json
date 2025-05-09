@@ -54,7 +54,7 @@
     "ember-load-initializers": "^2.1.2",
     "ember-qunit": "^6.2.0",
     "ember-resolver": "^8.1.0",
-    "ember-sinon": "5.0.0",
+    "ember-sinon-qunit": "^7.5.0",
     "ember-source": "~3.28.0",
     "ember-source-channel-url": "^3.0.0",
     "ember-try": "^4.0.0",
@@ -62,6 +62,7 @@
     "pretender": "^3.4.7",
     "qunit": "^2.16.0",
     "qunit-dom": "^1.6.0",
+    "sinon": "^20.0.0",
     "webpack": "^5.96.1"
   },
   "engines": {
