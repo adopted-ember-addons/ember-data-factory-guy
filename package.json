@@ -1,10 +1,5 @@
 {
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/adopted-ember-addons/ember-data-factory-guy.git",
-    "directory": "addon"
-  },
   "workspaces": [
     "addon",
     "test-app"
