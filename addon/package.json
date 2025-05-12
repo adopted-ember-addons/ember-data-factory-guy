@@ -41,8 +41,7 @@
   ],
   "dependencies": {
     "@embroider/addon-shim": "^1.10.0",
-    "pretender": "^3.4.3",
-    "uuid": "^11.0.0"
+    "pretender": "^3.4.3"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",

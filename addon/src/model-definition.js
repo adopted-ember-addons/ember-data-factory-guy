@@ -5,14 +5,13 @@ import { isEmptyObject, mergeDeep } from './utils/helper-functions';
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 import { useStringIdsOnly, verifyId } from './own-config';
-import { v4 as uuid } from 'uuid';
 
 /**
  * A wrapper around generated ids to help with handling them, regardless of string vs int id type.
  * Keeps track of next id to use for a model definition when creating a new record.
  */
 class IdGenerator {
-  newId = useStringIdsOnly ? uuid() : 1; // should always be an unused id ready for use
+  newId = useStringIdsOnly ? '1' : 1; // should always be an unused id ready for use
 
   /**
    * An unused id is requested. Return the unused id, and cycle it to make a new one. For strings, we can just return a
@@ -21,7 +20,10 @@ class IdGenerator {
    */
   nextId() {
     const { newId } = this;
-    this.newId = typeof newId === 'string' ? uuid() : newId + 1;
+    this.newId =
+      typeof newId === 'string'
+        ? (parseInt(newId, 10) + 1).toString()
+        : newId + 1;
     return newId;
   }
 }
