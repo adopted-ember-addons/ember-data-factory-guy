@@ -12,15 +12,17 @@ import { v4 as uuid } from 'uuid';
  * Keeps track of next id to use for a model definition when creating a new record.
  */
 class IdGenerator {
-  id = useStringIdsOnly ? uuid() : 1;
+  newId = useStringIdsOnly ? uuid() : 1; // should always be an unused id ready for use
 
   /**
-   * An unused id is requested. For strings, we can just return a unique uuid. For ints, we have to increment to the
-   * next id, as the only way to ensure it is somewhat-unique for each record created.
+   * An unused id is requested. Return the unused id, and cycle it to make a new one. For strings, we can just return a
+   * unique uuid. For ints, we have to increment to the next id, as the only way to ensure it is somewhat-unique for
+   * each record created.
    */
   nextId() {
-    this.id = typeof this.id === 'string' ? uuid() : this.id + 1;
-    return this.id;
+    const { newId } = this;
+    this.newId = typeof newId === 'string' ? uuid() : newId + 1;
+    return newId;
   }
 }
 
