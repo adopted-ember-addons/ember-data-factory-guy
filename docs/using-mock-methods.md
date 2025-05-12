@@ -519,7 +519,7 @@ mockCreate('project').match((requestData) => requestData.name === 'Moo');
 // Exactly matching attributes, and returning extra attributes
 mockCreate('project')
   .match({ name: 'Moo', user: user })
-  .returns({ created_at: new Date() });
+  .returns({ attrs: { created_at: new Date() } });
 
 // Returning belongsTo relationship. Assume outfit belongsTo 'person'
 let person = build('super-hero'); // it's polymorphic
