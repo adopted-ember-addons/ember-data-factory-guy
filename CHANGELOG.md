@@ -1,6 +1,6 @@
 # Changelog
 
-## Release (2025-05-12)
+## v5.2.0 (2025-05-12)
 
 * ember-data-factory-guy 5.2.0 (minor)
 
@@ -9,7 +9,7 @@
   * [#530](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/530) feat: added useStringIdsOnly config option to avoid deprecated behaviour ([@Techn1x](https://github.com/Techn1x))
 
 #### :memo: Documentation
-* [#528](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/528) docs: update documentation, apply docsify ([@Techn1x](https://github.com/Techn1x))
+* [#528](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/528) docs: update documentation, apply docsify ([@Techn1x](https://github.com/Techn1x)) ([@phndiaye](https://github.com/phndiaye))
 
 #### :house: Internal
 * `ember-data-factory-guy`
@@ -18,6 +18,7 @@
 
 #### Committers: 1
 - Brad Overton ([@Techn1x](https://github.com/Techn1x))
+- Philippe Ndiaye ([@phndiaye](https://github.com/phndiaye))
 
 ## v5.1.0 (2025-05-08)
 
