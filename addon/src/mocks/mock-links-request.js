@@ -5,6 +5,7 @@ import MockRequest from './mock-request';
 import FactoryGuy from '../factory-guy';
 import Model from '@ember-data/model';
 import { parseUrl } from '../utils/helper-functions';
+import { verifyId } from '../own-config';
 
 export default class MockLinksRequest extends MockRequest {
   constructor(model, relationshipKey) {
@@ -75,6 +76,8 @@ export default class MockLinksRequest extends MockRequest {
       Valid keys are ${this.validReturnsKeys}. You used this invalid key: ${responseKey}`,
       this.validReturnsKeys.includes(responseKey),
     );
+
+    if (responseKey === 'id' && options.id) verifyId(options.id);
 
     return responseKey;
   }

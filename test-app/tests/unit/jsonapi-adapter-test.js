@@ -54,7 +54,7 @@ module(serializer, function (hooks) {
     test('when returns json (plain) is used', async function (assert) {
       let json = {
           data: {
-            id: 1,
+            id: '1',
             type: 'profile',
             attributes: { description: 'the desc' },
           },
@@ -97,20 +97,20 @@ module(serializer, function (hooks) {
   module('FactoryGuy#build get', function () {
     test('returns all attributes with no key', function (assert) {
       let user = build('user');
-      assert.deepEqual(user.get(), { id: 1, name: 'User1', style: 'normal' });
-      assert.strictEqual(user.get().id, 1);
+      assert.deepEqual(user.get(), { id: '1', name: 'User1', style: 'normal' });
+      assert.strictEqual(user.get().id, '1');
       assert.strictEqual(user.get().name, 'User1');
     });
 
     test('returns an attribute with a key', function (assert) {
       let user = build('user');
-      assert.strictEqual(user.get('id'), 1);
+      assert.strictEqual(user.get('id'), '1');
       assert.strictEqual(user.get('name'), 'User1');
     });
 
     test('returns a relationship with a key', function (assert) {
       let user = build('user', 'with_company');
-      assert.deepEqual(user.get('company'), { id: 1, type: 'company' });
+      assert.deepEqual(user.get('company'), { id: '1', type: 'company' });
     });
   });
 
@@ -118,22 +118,30 @@ module(serializer, function (hooks) {
     test('returns array of all attributes with no key', function (assert) {
       let users = buildList('user', 2);
       assert.deepEqual(users.get(), [
-        { id: 1, name: 'User1', style: 'normal' },
-        { id: 2, name: 'User2', style: 'normal' },
+        { id: '1', name: 'User1', style: 'normal' },
+        { id: '2', name: 'User2', style: 'normal' },
       ]);
     });
 
     test('returns an attribute with an index and key', function (assert) {
       let users = buildList('user', 2);
-      assert.deepEqual(users.get(0), { id: 1, name: 'User1', style: 'normal' });
-      assert.strictEqual(users.get(0).id, 1);
-      assert.deepEqual(users.get(1), { id: 2, name: 'User2', style: 'normal' });
+      assert.deepEqual(users.get(0), {
+        id: '1',
+        name: 'User1',
+        style: 'normal',
+      });
+      assert.strictEqual(users.get(0).id, '1');
+      assert.deepEqual(users.get(1), {
+        id: '2',
+        name: 'User2',
+        style: 'normal',
+      });
       assert.strictEqual(users.get(1).name, 'User2');
     });
 
     test('returns a relationship with an index and key', function (assert) {
       let user = buildList('user', 2, 'with_company');
-      assert.deepEqual(user.get(1).company, { id: 2, type: 'company' });
+      assert.deepEqual(user.get(1).company, { id: '2', type: 'company' });
     });
   });
 
@@ -150,7 +158,7 @@ module(serializer, function (hooks) {
     test('with traits defining model attributes', function (assert) {
       let json = build('project', 'big').data;
       assert.deepEqual(json, {
-        id: 1,
+        id: '1',
         type: 'project',
         attributes: {
           title: 'Big Project',
@@ -163,20 +171,20 @@ module(serializer, function (hooks) {
       json.unwrap();
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'project',
           attributes: {
             title: 'Project1',
           },
           relationships: {
             user: {
-              data: { id: 1, type: 'user' },
+              data: { id: '1', type: 'user' },
             },
           },
         },
         included: [
           {
-            id: 1,
+            id: '1',
             type: 'user',
             attributes: {
               name: 'User1',
@@ -194,20 +202,20 @@ module(serializer, function (hooks) {
 
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'project',
           attributes: {
             title: 'Project1',
           },
           relationships: {
             user: {
-              data: { id: 1, type: 'user' },
+              data: { id: '1', type: 'user' },
             },
           },
         },
         included: [
           {
-            id: 1,
+            id: '1',
             type: 'user',
             attributes: {
               name: 'User1',
@@ -223,20 +231,20 @@ module(serializer, function (hooks) {
       json.unwrap();
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'project',
           attributes: {
             title: 'Big Project',
           },
           relationships: {
             user: {
-              data: { id: 1, type: 'user' },
+              data: { id: '1', type: 'user' },
             },
           },
         },
         included: [
           {
-            id: 1,
+            id: '1',
             type: 'user',
             attributes: {
               name: 'User1',
@@ -254,20 +262,20 @@ module(serializer, function (hooks) {
       json.unwrap();
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'project',
           attributes: {
             title: 'Crazy Project',
           },
           relationships: {
             user: {
-              data: { id: 1, type: 'user' },
+              data: { id: '1', type: 'user' },
             },
           },
         },
         included: [
           {
-            id: 1,
+            id: '1',
             type: 'user',
             attributes: {
               name: 'User1',
@@ -283,20 +291,20 @@ module(serializer, function (hooks) {
       json.unwrap();
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'project',
           attributes: {
             title: 'Big Project',
           },
           relationships: {
             user: {
-              data: { id: 1, type: 'user' },
+              data: { id: '1', type: 'user' },
             },
           },
         },
         included: [
           {
-            id: 1,
+            id: '1',
             type: 'user',
             attributes: {
               name: 'Dude',
@@ -312,20 +320,20 @@ module(serializer, function (hooks) {
       json.unwrap();
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'project',
           attributes: {
             title: 'Project1',
           },
           relationships: {
             user: {
-              data: { id: 1, type: 'user' },
+              data: { id: '1', type: 'user' },
             },
           },
         },
         included: [
           {
-            id: 1,
+            id: '1',
             type: 'user',
             attributes: {
               name: 'Admin',
@@ -342,7 +350,7 @@ module(serializer, function (hooks) {
 
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'project',
           attributes: {
             title: 'Project1',
@@ -357,7 +365,7 @@ module(serializer, function (hooks) {
 
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'user',
           attributes: {
             name: 'User1',
@@ -366,22 +374,22 @@ module(serializer, function (hooks) {
           relationships: {
             projects: {
               data: [
-                { id: 1, type: 'project' },
-                { id: 2, type: 'project' },
+                { id: '1', type: 'project' },
+                { id: '2', type: 'project' },
               ],
             },
           },
         },
         included: [
           {
-            id: 1,
+            id: '1',
             type: 'project',
             attributes: {
               title: 'Project1',
             },
           },
           {
-            id: 2,
+            id: '2',
             type: 'project',
             attributes: {
               title: 'Project2',
@@ -398,7 +406,7 @@ module(serializer, function (hooks) {
 
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'user',
           attributes: {
             name: 'User1',
@@ -407,22 +415,22 @@ module(serializer, function (hooks) {
           relationships: {
             projects: {
               data: [
-                { id: 1, type: 'project' },
-                { id: 2, type: 'project' },
+                { id: '1', type: 'project' },
+                { id: '2', type: 'project' },
               ],
             },
           },
         },
         included: [
           {
-            id: 1,
+            id: '1',
             type: 'project',
             attributes: {
               title: 'Project1',
             },
           },
           {
-            id: 2,
+            id: '2',
             type: 'project',
             attributes: {
               title: 'Project2',
@@ -440,7 +448,7 @@ module(serializer, function (hooks) {
 
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'user',
           attributes: {
             name: 'User1',
@@ -449,22 +457,22 @@ module(serializer, function (hooks) {
           relationships: {
             projects: {
               data: [
-                { id: 1, type: 'project' },
-                { id: 2, type: 'project' },
+                { id: '1', type: 'project' },
+                { id: '2', type: 'project' },
               ],
             },
           },
         },
         included: [
           {
-            id: 1,
+            id: '1',
             type: 'project',
             attributes: {
               title: 'Project1',
             },
           },
           {
-            id: 2,
+            id: '2',
             type: 'project',
             attributes: {
               title: 'Project2',
@@ -480,7 +488,7 @@ module(serializer, function (hooks) {
 
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'user',
           attributes: {
             name: 'User1',
@@ -496,7 +504,7 @@ module(serializer, function (hooks) {
 
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'user',
           attributes: {
             name: 'bob',
@@ -512,7 +520,7 @@ module(serializer, function (hooks) {
 
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'user',
           attributes: {
             name: 'Admin',
@@ -528,7 +536,7 @@ module(serializer, function (hooks) {
 
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'user',
           attributes: {
             name: 'AdminGuy',
@@ -544,7 +552,7 @@ module(serializer, function (hooks) {
 
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'property',
           attributes: {
             name: 'Silly property',
@@ -557,9 +565,9 @@ module(serializer, function (hooks) {
       let user1 = build('user');
       let user2 = build('user');
       let project = build('project');
-      assert.strictEqual(user1.data.id, 1);
-      assert.strictEqual(user2.data.id, 2);
-      assert.strictEqual(project.data.id, 1);
+      assert.strictEqual(user1.data.id, '1');
+      assert.strictEqual(user2.data.id, '2');
+      assert.strictEqual(project.data.id, '1');
     });
 
     test('when no custom serialize keys functions exist, dasherizes attributes and relationship keys', function (assert) {
@@ -568,7 +576,7 @@ module(serializer, function (hooks) {
 
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'profile',
           attributes: {
             description: 'Text goes here',
@@ -578,13 +586,13 @@ module(serializer, function (hooks) {
           },
           relationships: {
             'super-hero': {
-              data: { id: 1, type: 'super-hero' },
+              data: { id: '1', type: 'super-hero' },
             },
           },
         },
         included: [
           {
-            id: 1,
+            id: '1',
             type: 'super-hero',
             attributes: {
               name: 'BatMan',
@@ -608,7 +616,7 @@ module(serializer, function (hooks) {
 
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'profile',
           attributes: {
             description: 'Text goes here',
@@ -618,13 +626,13 @@ module(serializer, function (hooks) {
           },
           relationships: {
             super_hero: {
-              data: { id: 1, type: 'super-hero' },
+              data: { id: '1', type: 'super-hero' },
             },
           },
         },
         included: [
           {
-            id: 1,
+            id: '1',
             type: 'super-hero',
             attributes: {
               name: 'BatMan',
@@ -654,7 +662,7 @@ module(serializer, function (hooks) {
 
       assert.deepEqual(json, {
         data: {
-          id: 1,
+          id: '1',
           type: 'user',
           attributes: {
             name: 'User1',
@@ -669,58 +677,58 @@ module(serializer, function (hooks) {
       let expectedData = {
         data: {
           type: 'project',
-          id: 1,
+          id: '1',
           attributes: {
             title: 'Project1',
           },
           relationships: {
             user: {
-              data: { id: 1, type: 'user' },
+              data: { id: '1', type: 'user' },
             },
           },
         },
         included: [
           {
             type: 'outfit',
-            id: 1,
+            id: '1',
             attributes: {
               name: 'Outfit-1',
             },
           },
           {
             type: 'big-hat',
-            id: 1,
+            id: '1',
             attributes: {
               type: 'BigHat',
             },
             relationships: {
               outfit: {
-                data: { id: 1, type: 'outfit' },
+                data: { id: '1', type: 'outfit' },
               },
             },
           },
           {
             type: 'outfit',
-            id: 2,
+            id: '2',
             attributes: {
               name: 'Outfit-2',
             },
           },
           {
             type: 'big-hat',
-            id: 2,
+            id: '2',
             attributes: {
               type: 'BigHat',
             },
             relationships: {
               outfit: {
-                data: { id: 2, type: 'outfit' },
+                data: { id: '2', type: 'outfit' },
               },
             },
           },
           {
             type: 'user',
-            id: 1,
+            id: '1',
             attributes: {
               name: 'User1',
               style: 'normal',
@@ -728,8 +736,8 @@ module(serializer, function (hooks) {
             relationships: {
               hats: {
                 data: [
-                  { type: 'big-hat', id: 1 },
-                  { type: 'big-hat', id: 2 },
+                  { type: 'big-hat', id: '1' },
+                  { type: 'big-hat', id: '2' },
                 ],
               },
             },
@@ -752,7 +760,7 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         data: {
-          id: 1,
+          id: '1',
           type: 'user',
           attributes: {
             name: 'User1',
@@ -761,7 +769,7 @@ module(serializer, function (hooks) {
         },
         included: [
           {
-            id: 1,
+            id: '1',
             type: 'super-hero',
             attributes: {
               name: 'BatMan',
@@ -781,7 +789,7 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         data: {
-          id: 1,
+          id: '1',
           type: 'user',
           attributes: {
             name: 'User1',
@@ -790,7 +798,7 @@ module(serializer, function (hooks) {
         },
         included: [
           {
-            id: 1,
+            id: '1',
             type: 'super-hero',
             attributes: {
               name: 'BatMan',
@@ -798,7 +806,7 @@ module(serializer, function (hooks) {
             },
           },
           {
-            id: 2,
+            id: '2',
             type: 'super-hero',
             attributes: {
               name: 'BatMan',
@@ -815,7 +823,7 @@ module(serializer, function (hooks) {
     test('with model that has primaryKey defined in serializer ( FactoryGuy sets primaryKey value )', function (assert) {
       let cat = build('cat');
 
-      assert.strictEqual(cat.get('id'), 1);
+      assert.strictEqual(cat.get('id'), '1');
     });
 
     test('with model that has primaryKey defined in serializer ( user sets primaryKey value )', function (assert) {
@@ -847,7 +855,7 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         data: {
-          id: 1,
+          id: '1',
           type: 'user',
           attributes: {
             name: 'User1',
@@ -872,7 +880,7 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         data: {
-          id: 1,
+          id: '1',
           type: 'user',
           attributes: {
             name: 'User1',

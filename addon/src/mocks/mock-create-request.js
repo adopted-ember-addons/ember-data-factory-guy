@@ -40,7 +40,7 @@ export default class MockCreateRequest extends AttributeMatcher(
       return returnArgs['id'];
     } else {
       let definition = FactoryGuy.findModelDefinition(this.modelName);
-      return definition.nextId();
+      return definition.idGenerator.nextId();
     }
   }
 

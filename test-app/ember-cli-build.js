@@ -7,6 +7,13 @@ module.exports = function (defaults) {
         DEPRECATE_STORE_EXTENDS_EMBER_OBJECT: false, // error if using store emberobject methods
       },
     },
+    '@embroider/macros': {
+      setConfig: {
+        'ember-data-factory-guy': {
+          useStringIdsOnly: true,
+        },
+      },
+    },
   });
 
   return app.toTree();

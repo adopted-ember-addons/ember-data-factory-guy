@@ -13,7 +13,7 @@ module('FixtureConverter', function (hooks) {
 
     let expectedJson = {
       manager: {
-        id: 1,
+        id: '1',
         name: {
           first_name: 'Tyrion',
           last_name: 'Lannister',
@@ -30,7 +30,7 @@ module('FixtureConverter', function (hooks) {
 
     let expectedJson = {
       rod: {
-        id: 1,
+        id: '1',
         element: 'C',
       },
     };

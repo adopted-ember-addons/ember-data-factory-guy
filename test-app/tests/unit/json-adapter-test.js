@@ -29,7 +29,7 @@ module(serializer, function (hooks) {
 
   module('#mockFindRecord custom', function () {
     test('when returns json (plain) is used', async function (assert) {
-      let json = { id: 1, description: 'the desc' },
+      let json = { id: '1', description: 'the desc' },
         mock = mockFindRecord('profile').returns({ json }),
         profileId = mock.get('id');
 
@@ -43,14 +43,14 @@ module(serializer, function (hooks) {
   module('FactoryGuy#build get`', function () {
     test('returns all attributes with no key', function (assert) {
       let user = build('user');
-      assert.deepEqual(user.get(), { id: 1, name: 'User1', style: 'normal' });
-      assert.strictEqual(user.get().id, 1);
+      assert.deepEqual(user.get(), { id: '1', name: 'User1', style: 'normal' });
+      assert.strictEqual(user.get().id, '1');
       assert.strictEqual(user.get().name, 'User1');
     });
 
     test('returns an attribute with a key', function (assert) {
       let user = build('user');
-      assert.strictEqual(user.get('id'), 1);
+      assert.strictEqual(user.get('id'), '1');
       assert.strictEqual(user.get('name'), 'User1');
     });
   });
@@ -59,16 +59,24 @@ module(serializer, function (hooks) {
     test('returns array of all attributes with no key', function (assert) {
       let users = buildList('user', 2);
       assert.deepEqual(users.get(), [
-        { id: 1, name: 'User1', style: 'normal' },
-        { id: 2, name: 'User2', style: 'normal' },
+        { id: '1', name: 'User1', style: 'normal' },
+        { id: '2', name: 'User2', style: 'normal' },
       ]);
     });
 
     test('returns an attribute with a key', function (assert) {
       let users = buildList('user', 2);
-      assert.deepEqual(users.get(0), { id: 1, name: 'User1', style: 'normal' });
-      assert.strictEqual(users.get(0).id, 1);
-      assert.deepEqual(users.get(1), { id: 2, name: 'User2', style: 'normal' });
+      assert.deepEqual(users.get(0), {
+        id: '1',
+        name: 'User1',
+        style: 'normal',
+      });
+      assert.strictEqual(users.get(0).id, '1');
+      assert.deepEqual(users.get(1), {
+        id: '2',
+        name: 'User2',
+        style: 'normal',
+      });
       assert.strictEqual(users.get(1).name, 'User2');
     });
   });
@@ -80,9 +88,9 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: 'Silly property',
-        company: 1,
+        company: '1',
       };
 
       assert.deepEqual(buildJson, expectedJson);
@@ -94,9 +102,9 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: 'Silly property',
-        owners: [1, 2],
+        owners: ['1', '2'],
       };
 
       assert.deepEqual(buildJson, expectedJson);
@@ -107,9 +115,9 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: 'Comic Times #1',
-        company: { id: 1, type: 'Company', name: 'Marvel Comics' },
+        company: { id: '1', type: 'Company', name: 'Marvel Comics' },
       };
 
       assert.deepEqual(buildJson, expectedJson);
@@ -121,9 +129,9 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: 'Comic Times #1',
-        company: { id: 1, type: 'Company', name: 'Marvel Comics' },
+        company: { id: '1', type: 'Company', name: 'Marvel Comics' },
       };
 
       assert.deepEqual(buildJson, expectedJson);
@@ -134,11 +142,11 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: 'Comic Times #1',
         includedVillains: [
-          { id: 1, type: 'Villain', name: 'BadGuy#1' },
-          { id: 2, type: 'Villain', name: 'BadGuy#2' },
+          { id: '1', type: 'Villain', name: 'BadGuy#1' },
+          { id: '2', type: 'Villain', name: 'BadGuy#2' },
         ],
       };
 
@@ -150,11 +158,11 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: 'Comic Times #1',
         characters: [
-          { id: 1, type: 'Villain', name: 'BadGuy#1' },
-          { id: 2, type: 'Villain', name: 'BadGuy#2' },
+          { id: '1', type: 'Villain', name: 'BadGuy#1' },
+          { id: '2', type: 'Villain', name: 'BadGuy#2' },
         ],
       };
 
@@ -167,11 +175,11 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: 'Comic Times #1',
         characters: [
-          { id: 1, type: 'Villain', name: 'BadGuy#1' },
-          { id: 2, type: 'Villain', name: 'BadGuy#2' },
+          { id: '1', type: 'Villain', name: 'BadGuy#1' },
+          { id: '2', type: 'Villain', name: 'BadGuy#2' },
         ],
       };
 
@@ -187,13 +195,13 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: {
           firstName: 'Tyrion',
           lastName: 'Lannister',
         },
         salary: {
-          id: 1,
+          id: '1',
           income: 90000,
           benefits: ['health', 'company car', 'dental'],
         },
@@ -208,13 +216,13 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: {
           firstName: 'Tyrion',
           lastName: 'Lannister',
         },
         salary: {
-          id: 1,
+          id: '1',
           income: 90000,
           benefits: ['health', 'company car', 'dental'],
         },
@@ -228,19 +236,19 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: {
           firstName: 'Tyrion',
           lastName: 'Lannister',
         },
         reviews: [
           {
-            id: 1,
+            id: '1',
             rating: 1,
             date: '2015-05-01T00:00:00.000Z',
           },
           {
-            id: 2,
+            id: '2',
             rating: 2,
             date: '2015-05-01T00:00:00.000Z',
           },
@@ -256,19 +264,19 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: {
           firstName: 'Tyrion',
           lastName: 'Lannister',
         },
         reviews: [
           {
-            id: 1,
+            id: '1',
             rating: 1,
             date: '2015-05-01T00:00:00.000Z',
           },
           {
-            id: 2,
+            id: '2',
             rating: 2,
             date: '2015-05-01T00:00:00.000Z',
           },
@@ -281,8 +289,8 @@ module(serializer, function (hooks) {
     // the override for primaryKey is in the helpers/utilityMethods.js
     test('serializer primaryKey override', function (assert) {
       let json = build('cat');
-      assert.strictEqual(json.get('catId'), 1);
-      assert.strictEqual(json.get('id'), 1);
+      assert.strictEqual(json.get('catId'), '1');
+      assert.strictEqual(json.get('id'), '1');
     });
 
     test('serializes attributes with custom type', function (assert) {
@@ -291,7 +299,7 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: 'User1',
         style: 'normal',
         info: '{"first":1}',
@@ -307,7 +315,7 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: 'User1',
         style: 'normal',
         links: { company: companyLink },
@@ -323,7 +331,7 @@ module(serializer, function (hooks) {
       buildJson.unwrap();
 
       let expectedJson = {
-        id: 1,
+        id: '1',
         name: 'User1',
         style: 'normal',
         links: { properties: propertyLink },

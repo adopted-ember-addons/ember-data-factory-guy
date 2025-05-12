@@ -23,7 +23,7 @@ module('MockUpdate', function (hooks) {
   });
 
   test('mockId', function (assert) {
-    let mock = mockUpdate('user', 1);
+    let mock = mockUpdate('user', '1');
     assert.deepEqual(mock.mockId, { type: 'PATCH', url: '/users/1', num: 0 });
   });
 

@@ -119,13 +119,13 @@ module('MockRequest', function (hooks) {
     test('can enable, disable, and destroy mock', async function (assert) {
       let json1 = build('user'),
         json2 = build('user'),
-        mock1 = mockQueryRecord('user', { id: 1 }).returns({ json: json1 });
+        mock1 = mockQueryRecord('user', { id: '1' }).returns({ json: json1 });
 
       mockQueryRecord('user', {}).returns({ json: json2 });
 
       assert.notOk(mock1.isDestroyed, 'isDestroyed is false initially');
 
-      let data = await FactoryGuy.store.queryRecord('user', { id: 1 });
+      let data = await FactoryGuy.store.queryRecord('user', { id: '1' });
       assert.strictEqual(
         data.get('id'),
         json1.get('id').toString(),
@@ -133,7 +133,7 @@ module('MockRequest', function (hooks) {
       );
 
       mock1.disable();
-      data = await FactoryGuy.store.queryRecord('user', { id: 1 });
+      data = await FactoryGuy.store.queryRecord('user', { id: '1' });
       assert.strictEqual(
         data.get('id'),
         json2.get('id').toString(),
@@ -141,7 +141,7 @@ module('MockRequest', function (hooks) {
       );
 
       mock1.enable();
-      data = await FactoryGuy.store.queryRecord('user', { id: 1 });
+      data = await FactoryGuy.store.queryRecord('user', { id: '1' });
       assert.strictEqual(
         data.get('id'),
         json1.get('id').toString(),
@@ -153,7 +153,7 @@ module('MockRequest', function (hooks) {
         mock1.isDestroyed,
         'isDestroyed is set to true once the mock is destroyed',
       );
-      data = await FactoryGuy.store.queryRecord('user', { id: 1 });
+      data = await FactoryGuy.store.queryRecord('user', { id: '1' });
       assert.strictEqual(
         data.get('id'),
         json2.get('id').toString(),
