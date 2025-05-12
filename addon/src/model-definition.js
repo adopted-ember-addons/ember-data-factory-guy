@@ -14,9 +14,7 @@ class IdGenerator {
   newId = useStringIdsOnly ? '1' : 1; // should always be an unused id ready for use
 
   /**
-   * An unused id is requested. Return the unused id, and cycle it to make a new one. For strings, we can just return a
-   * unique uuid. For ints, we have to increment to the next id, as the only way to ensure it is somewhat-unique for
-   * each record created.
+   * An unused id is requested. Return the unused id, and cycle it to make a new one.
    */
   nextId() {
     const { newId } = this;
