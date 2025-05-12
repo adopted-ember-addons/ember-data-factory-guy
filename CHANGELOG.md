@@ -1,6 +1,6 @@
 # Changelog
 
-## Release (2025-05-08)
+## v5.1.0 (2025-05-08)
 
 * ember-data-factory-guy 5.1.0 (minor)
 
@@ -21,7 +21,7 @@
 #### Committers: 1
 - Brad Overton ([@Techn1x](https://github.com/Techn1x))
 
-## Release (2025-05-06)
+## v5.0.0 (2025-05-06)
 
 * ember-data-factory-guy 5.0.0 (major)
 
@@ -49,7 +49,7 @@ See [Upgrade Guide](https://github.com/adopted-ember-addons/ember-data-factory-g
 #### Committers: 1
 - Brad Overton ([@Techn1x](https://github.com/Techn1x))
 
-## Release (2025-03-21)
+## v4.0.0 (2025-03-21)
 
 ember-data-factory-guy 4.0.0 (minor)
 
@@ -60,7 +60,7 @@ ember-data-factory-guy 4.0.0 (minor)
 #### Committers: 1
 - Chris Manson ([@mansona](https://github.com/mansona))
 
-## Release (2025-03-21)
+## v4.0.0-alpha.4 (2025-03-21)
 
 ember-data-factory-guy 4.0.0-alpha.4 (patch)
 
@@ -71,7 +71,7 @@ ember-data-factory-guy 4.0.0-alpha.4 (patch)
 #### Committers: 1
 - Nick Schot ([@nickschot](https://github.com/nickschot))
 
-## Release (2024-11-13)
+## v4.0.0-alpha.3 (2024-11-13)
 
 ember-data-factory-guy 4.0.0-alpha.3 (major)
 
