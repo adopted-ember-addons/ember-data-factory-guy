@@ -726,11 +726,11 @@ module('FactoryGuy', function (hooks) {
       );
 
       json = FactoryGuy.buildRaw({ name: 'dude_inline' });
-      expected = { id: 3, name: 'person #3', type: 'Dude #1' };
+      expected = { id: 4, name: 'person #3', type: 'Dude #1' };
       assert.deepEqual(json, expected, 'as inline sequence function #1');
 
       json = FactoryGuy.buildRaw({ name: 'dude_inline' });
-      expected = { id: 4, name: 'person #4', type: 'Dude #2' };
+      expected = { id: 5, name: 'person #4', type: 'Dude #2' };
       assert.deepEqual(json, expected, 'as inline sequence function #2');
     });
 
