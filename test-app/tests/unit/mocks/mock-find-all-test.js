@@ -88,7 +88,7 @@ module('MockFindAll', function (hooks) {
 
   test('#get method to access payload', function (assert) {
     let mock = mockFindAll('user', 2);
-    assert.deepEqual(mock.get(0), { id: 1, name: 'User1', style: 'normal' });
+    assert.deepEqual(mock.get(0), { id: '1', name: 'User1', style: 'normal' });
   });
 
   test('RequestManager creates wrapper with one mockFindAll mock', function (assert) {

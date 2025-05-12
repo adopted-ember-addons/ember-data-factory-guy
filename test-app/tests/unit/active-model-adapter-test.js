@@ -57,7 +57,7 @@ module(serializer, function (hooks) {
     test('uses the correct key when overridden in the serializer', async function (assert) {
       let buildJson = build('dog', 'withOwner');
       assert.strictEqual(buildJson.get('owner_id'), undefined);
-      assert.strictEqual(buildJson.get('humanId'), 1);
+      assert.strictEqual(buildJson.get('humanId'), '1');
     });
 
     test('embeds hasMany record when serializer attrs => embedded: always ', function (assert) {
@@ -66,11 +66,11 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         comic_book: {
-          id: 1,
+          id: '1',
           name: 'Comic Times #1',
           included_villains: [
-            { id: 1, type: 'Villain', name: 'BadGuy#1' },
-            { id: 2, type: 'Villain', name: 'BadGuy#2' },
+            { id: '1', type: 'Villain', name: 'BadGuy#1' },
+            { id: '2', type: 'Villain', name: 'BadGuy#2' },
           ],
         },
       };
@@ -84,11 +84,11 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         comic_book: {
-          id: 1,
+          id: '1',
           name: 'Comic Times #1',
           characters: [
-            { id: 1, type: 'Villain', name: 'BadGuy#1' },
-            { id: 2, type: 'Villain', name: 'BadGuy#2' },
+            { id: '1', type: 'Villain', name: 'BadGuy#1' },
+            { id: '2', type: 'Villain', name: 'BadGuy#2' },
           ],
         },
       };
@@ -102,9 +102,9 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         comic_book: {
-          id: 1,
+          id: '1',
           name: 'Comic Times #1',
-          company: { id: 1, type: 'Company', name: 'Marvel Comics' },
+          company: { id: '1', type: 'Company', name: 'Marvel Comics' },
         },
       };
 
@@ -117,16 +117,16 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         profile: {
-          id: 1,
+          id: '1',
           description: 'Text goes here',
           camel_case_description: 'textGoesHere',
           snake_case_description: 'text_goes_here',
           a_boolean_field: false,
-          super_hero_id: 1,
+          super_hero_id: '1',
         },
         'super-heros': [
           {
-            id: 1,
+            id: '1',
             name: 'BatMan',
             type: 'SuperHero',
           },
@@ -143,16 +143,16 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         profile: {
-          id: 1,
+          id: '1',
           description: 'Text goes here',
           camel_case_description: 'textGoesHere',
           snake_case_description: 'text_goes_here',
           a_boolean_field: false,
-          super_hero_id: 1,
+          super_hero_id: '1',
         },
         'super-heros': [
           {
-            id: 1,
+            id: '1',
             name: 'BatMan',
             type: 'SuperHero',
           },
@@ -168,17 +168,17 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         user: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
           hats: [
-            { type: 'big-hat', id: 1 },
-            { type: 'big-hat', id: 2 },
+            { type: 'big-hat', id: '1' },
+            { type: 'big-hat', id: '2' },
           ],
         },
         'big-hats': [
-          { id: 1, type: 'BigHat' },
-          { id: 2, type: 'BigHat' },
+          { id: '1', type: 'BigHat' },
+          { id: '2', type: 'BigHat' },
         ],
       };
 
@@ -192,17 +192,17 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         user: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
           hats: [
-            { type: 'big-hat', id: 1 },
-            { type: 'big-hat', id: 2 },
+            { type: 'big-hat', id: '1' },
+            { type: 'big-hat', id: '2' },
           ],
         },
         'big-hats': [
-          { id: 1, type: 'BigHat' },
-          { id: 2, type: 'BigHat' },
+          { id: '1', type: 'BigHat' },
+          { id: '2', type: 'BigHat' },
         ],
       };
 
@@ -217,17 +217,17 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         user: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
           hats: [
-            { type: 'big-hat', id: 1 },
-            { type: 'big-hat', id: 2 },
+            { type: 'big-hat', id: '1' },
+            { type: 'big-hat', id: '2' },
           ],
         },
         'big-hats': [
-          { id: 1, type: 'BigHat' },
-          { id: 2, type: 'BigHat' },
+          { id: '1', type: 'BigHat' },
+          { id: '2', type: 'BigHat' },
         ],
       };
 
@@ -247,16 +247,16 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         profile: {
-          id: 1,
+          id: '1',
           description: 'Text goes here',
           'camel-case-description': 'textGoesHere',
           'snake-case-description': 'text_goes_here',
           'a-boolean-field': false,
-          'super-hero': 1,
+          'super-hero': '1',
         },
         'super-heros': [
           {
-            id: 1,
+            id: '1',
             name: 'BatMan',
             type: 'SuperHero',
           },
@@ -276,7 +276,7 @@ module(serializer, function (hooks) {
 
       let expectedJson = {
         user: {
-          id: 1,
+          id: '1',
           name: 'User1',
           style: 'normal',
           info: '{"first":1}',

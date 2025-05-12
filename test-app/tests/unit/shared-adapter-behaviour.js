@@ -46,7 +46,7 @@ SharedBehavior.mockFindRecordCommonTests = function () {
   });
 
   test('returns id succeeds and returns model when id for model type found in store after createRecord', async function (assert) {
-    let profileId = 1,
+    let profileId = '1',
       { store } = FactoryGuy;
 
     mockCreate('profile').returns({ attrs: { id: profileId } });
@@ -77,7 +77,7 @@ SharedBehavior.mockFindRecordCommonTests = function () {
   });
 
   test('returns id fails with 404 if record for id and model type not found in store', async function (assert) {
-    let profileId = 1;
+    let profileId = '1';
     mockFindRecord('profile').returns({ id: profileId });
 
     await FactoryGuy.store.findRecord('profile', profileId).catch((reason) => {
@@ -344,7 +344,7 @@ SharedBehavior.mockReloadTests = function () {
   });
 
   test('failure with fails method', async function (assert) {
-    let mock = mockReload('profile', 1).fails();
+    let mock = mockReload('profile', '1').fails();
 
     await FactoryGuy.store.findRecord('profile', 1).catch(() => {
       assert.strictEqual(mock.timesCalled, 1);
@@ -1107,7 +1107,7 @@ SharedBehavior.mockCreateTests = function () {
   });
 
   test('using returns method with user-supplied model id', async function (assert) {
-    let id = 42;
+    let id = '42';
 
     mockCreate('profile').returns({ attrs: { id: id } });
 
