@@ -105,3 +105,28 @@ module('Acceptance | User View', function (hooks) {
   });
 });
 ```
+
+## Configuration
+
+Later versions of ember-data (5+) require strings for ids, else it will throw deprecations.
+https://deprecations.emberjs.com/ember-data/v5.x/#toc_ember-data-deprecate-non-strict-id
+
+Recommended to set `useStringIdsOnly` config to have Factory Guy also only use string ids internally. This can be
+acheived with `@embroider/macros` (make sure to add it as a devDependency)
+https://github.com/embroider-build/embroider/tree/main/packages/macros#setting-configuration-from-an-ember-app
+
+If enabled, this will also trigger assert() calls to ensure that any ids you provide to Factory Guy via functions like
+`make*()`, `build*()`, `mock*()` etc are strings as well.
+
+```ts
+// ember-cli-build.js
+let app = new EmberApp(defaults, {
+  '@embroider/macros': {
+    setConfig: {
+      'ember-data-factory-guy': {
+        useStringIdsOnly: true,
+      },
+    },
+  },
+});
+```
