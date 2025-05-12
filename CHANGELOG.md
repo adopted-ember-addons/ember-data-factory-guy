@@ -1,5 +1,24 @@
 # Changelog
 
+## Release (2025-05-12)
+
+* ember-data-factory-guy 5.2.0 (minor)
+
+#### :rocket: Enhancement
+* `ember-data-factory-guy`
+  * [#530](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/530) feat: added useStringIdsOnly config option to avoid deprecated behaviour ([@Techn1x](https://github.com/Techn1x))
+
+#### :memo: Documentation
+* [#528](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/528) docs: update documentation, apply docsify ([@Techn1x](https://github.com/Techn1x))
+
+#### :house: Internal
+* `ember-data-factory-guy`
+  * [#527](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/527) chore: bump test-app devdeps, drop ember-sinon ([@Techn1x](https://github.com/Techn1x))
+  * [#525](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/525) chore: more ember-try scenarios, min ember/test-helpers now 2.9.3+ ([@Techn1x](https://github.com/Techn1x))
+
+#### Committers: 1
+- Brad Overton ([@Techn1x](https://github.com/Techn1x))
+
 ## v5.1.0 (2025-05-08)
 
 * ember-data-factory-guy 5.1.0 (minor)
