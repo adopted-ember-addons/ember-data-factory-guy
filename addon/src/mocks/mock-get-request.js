@@ -6,6 +6,7 @@ import { isArray } from '@ember/array';
 import FactoryGuy from '../factory-guy';
 import Model from '@ember-data/model';
 import MockStoreRequest from './mock-store-request';
+import { verifyId } from '../own-config';
 
 class MockGetRequest extends MockStoreRequest {
   constructor(modelName, requestType, { defaultResponse, queryParams } = {}) {
@@ -62,6 +63,9 @@ class MockGetRequest extends MockStoreRequest {
       Valid keys are ${this.validReturnsKeys}. You used this invalid key: ${responseKey}`,
       this.validReturnsKeys.includes(responseKey),
     );
+
+    if (responseKey === 'id' && options.id) verifyId(options.id);
+    if (responseKey === 'json' && options.json.id) verifyId(options.json.id);
 
     return responseKey;
   }

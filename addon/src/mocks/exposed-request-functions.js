@@ -13,6 +13,7 @@ import MockDeleteRequest from './mock-delete-request';
 import MockAnyRequest from './mock-any-request';
 import MockLinksRequest from './mock-links-request';
 import RequestManager from './request-manager';
+import { verifyId } from '../own-config';
 
 export function mock({ type = 'GET', url, responseText, status } = {}) {
   assert('[ember-data-factory-guy] mock requires at least a url', url);
@@ -120,6 +121,8 @@ export function mockReload(...args) {
     '[ember-data-factory-guy] mockReload arguments are a model instance or a model type name and an id',
     modelName && id,
   );
+
+  verifyId(id);
 
   let json = FactoryGuy.fixtureBuilder(modelName).convertForBuild(modelName, {
     id: id,
@@ -369,6 +372,8 @@ export function mockUpdate(...args) {
     modelName,
   );
 
+  if (id) verifyId(id);
+
   return new MockUpdateRequest(modelName, { id, model });
 }
 
@@ -394,6 +399,8 @@ export function mockDelete(...args) {
     `[ember-data-factory-guy] mockDelete requires at least a model type name`,
     modelName,
   );
+
+  if (id) verifyId(id);
 
   return new MockDeleteRequest(modelName, { id, model });
 }

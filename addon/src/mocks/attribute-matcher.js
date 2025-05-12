@@ -2,6 +2,7 @@ import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 import FactoryGuy from '../factory-guy';
 import { isEmptyObject, isEquivalent } from '../utils/helper-functions';
+import { verifyId } from '../own-config';
 
 /**
  This is tricky, but the main idea here is:
@@ -87,6 +88,8 @@ const AttributeMatcher = (superclass) =>
       Valid keys are ${validReturnsKeys}. You used these invalid keys: ${invalidKeys}`,
         invalidKeys.length === 0,
       );
+
+      if (options.attrs?.id) verifyId(options.attrs.id);
 
       return responseKeys;
     }

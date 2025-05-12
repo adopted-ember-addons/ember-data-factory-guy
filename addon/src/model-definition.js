@@ -4,6 +4,25 @@ import MissingSequenceError from './missing-sequence-error';
 import { isEmptyObject, mergeDeep } from './utils/helper-functions';
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
+import { useStringIdsOnly, verifyId } from './own-config';
+import { v4 as uuid } from 'uuid';
+
+/**
+ * A wrapper around generated ids to help with handling them, regardless of string vs int id type.
+ * Keeps track of next id to use for a model definition when creating a new record.
+ */
+class IdGenerator {
+  id = useStringIdsOnly ? uuid() : 1;
+
+  /**
+   * An unused id is requested. For strings, we can just return a unique uuid. For ints, we have to increment to the
+   * next id, as the only way to ensure it is somewhat-unique for each record created.
+   */
+  nextId() {
+    this.id = typeof this.id === 'string' ? uuid() : this.id + 1;
+    return this.id;
+  }
+}
 
 /**
  A ModelDefinition encapsulates a model's definition
@@ -15,7 +34,7 @@ import { typeOf } from '@ember/utils';
 class ModelDefinition {
   constructor(model, config) {
     this.modelName = model;
-    this.modelId = 1;
+    this.idGenerator = new IdGenerator();
     this.originalConfig = mergeDeep({}, config);
     this.parseConfig(Object.assign({}, config));
   }
@@ -76,16 +95,6 @@ class ModelDefinition {
     return this.modelName === name || this.namedModels[name];
   }
 
-  // Increment id
-  nextId() {
-    return this.modelId++;
-  }
-
-  // Decrement id
-  backId() {
-    return this.modelId--;
-  }
-
   /**
    Call the next method on the named sequence function. If the name
    is a function, create the sequence with that function
@@ -127,10 +136,7 @@ class ModelDefinition {
 
     // set the id, unless it was already set in opts
     if (!fixture.id && !opts.id) {
-      // Setting a flag to indicate that this is a generated an id,
-      // so it can be rolled back if the fixture throws an error.
-      fixture._generatedId = true;
-      fixture.id = this.nextId();
+      fixture.id = this.idGenerator.nextId();
     }
 
     if (this.notPolymorphic !== undefined) {
@@ -152,27 +158,21 @@ class ModelDefinition {
 
     Object.assign(fixture, opts);
 
-    try {
-      // deal with attributes that are functions or objects
-      for (let attribute in fixture) {
-        let attributeType = typeOf(fixture[attribute]);
-        if (attributeType === 'function') {
-          this.addFunctionAttribute(fixture, attribute, buildType);
-        } else if (attributeType === 'object') {
-          this.addObjectAttribute(fixture, attribute, buildType);
-        }
+    for (let attribute in fixture) {
+      let attributeType = typeOf(fixture[attribute]);
+      if (attributeType === 'function') {
+        this.addFunctionAttribute(fixture, attribute, buildType);
+      } else if (attributeType === 'object') {
+        this.addObjectAttribute(fixture, attribute, buildType);
       }
-    } catch (e) {
-      if (fixture._generatedId) {
-        this.backId();
-      }
-      throw e;
     }
+
+    verifyId(fixture.id);
 
     if (FactoryGuy.isModelAFragment(this.modelName)) {
       delete fixture.id;
     }
-    delete fixture._generatedId;
+
     return fixture;
   }
 
@@ -227,9 +227,9 @@ class ModelDefinition {
       .map(() => this.build(name, opts, traits, buildType));
   }
 
-  // Set the modelId back to 1, and reset the sequences
+  // Reset the id sequence, and reset the sequences
   reset() {
-    this.modelId = 1;
+    this.idGenerator = new IdGenerator();
     for (let name in this.sequences) {
       this.sequences[name].reset();
     }
