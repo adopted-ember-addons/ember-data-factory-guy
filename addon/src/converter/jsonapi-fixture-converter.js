@@ -13,9 +13,10 @@ import { entries } from '../utils/helper-functions';
 export default class JSONAPIFixtureConverter extends FixtureConverter {
   constructor(store, { transformKeys = true, serializeMode = false } = {}) {
     super(store, { transformKeys, serializeMode });
-    this.typeTransformFn = this.serializeMode
-      ? this.typeTransformViaSerializer
-      : dasherize;
+    // this.typeTransformFn = this.serializeMode
+    //   ? this.typeTransformViaSerializer
+    //   : dasherize;
+    this.typeTransformFn = this.typeTransformViaSerializer;
     this.defaultKeyTransformFn = dasherize;
     this.polymorphicTypeTransformFn = dasherize;
     this.included = [];
