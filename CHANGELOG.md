@@ -1,5 +1,20 @@
 # Changelog
 
+## Release (2025-05-13)
+
+* ember-data-factory-guy 6.0.0 (major)
+
+#### :boom: Breaking Change
+* `ember-data-factory-guy`
+  * [#532](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/532) chore: drop ember-source 3.28 support (min v4.12+), bump active-model-adapter (min v4+), bump ember-data-model-fragments (min v6+) ([@Techn1x](https://github.com/Techn1x))
+
+#### :house: Internal
+* `ember-data-factory-guy`
+  * [#533](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/533) refactor: no need for `join()` runloop usage ([@Techn1x](https://github.com/Techn1x))
+
+#### Committers: 1
+- Brad Overton ([@Techn1x](https://github.com/Techn1x))
+
 ## v5.2.0 (2025-05-12)
 
 * ember-data-factory-guy 5.2.0 (minor)
