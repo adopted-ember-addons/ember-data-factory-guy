@@ -39,7 +39,7 @@
     "@ember/test-waiters": "^4.1.0",
     "@embroider/macros": "^1.17.2",
     "@embroider/test-setup": "^4.0.0",
-    "@glimmer/component": "^1.1.2 || ^2.0.0",
+    "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
     "active-model-adapter": "^4.0.0",
     "ember-auto-import": "^2.10.0",
