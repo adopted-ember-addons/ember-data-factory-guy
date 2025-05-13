@@ -19,14 +19,6 @@ module.exports = {
   env: {
     browser: true,
   },
-  rules: {
-    'ember/no-runloop': [
-      'error',
-      {
-        allowList: ['join'],
-      },
-    ],
-  },
   overrides: [
     // node files
     {
