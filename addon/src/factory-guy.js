@@ -1,7 +1,6 @@
 import Store from '@ember-data/store';
 import { assert } from '@ember/debug';
 import { isPresent, typeOf } from '@ember/utils';
-import { join } from '@ember/runloop';
 import { A } from '@ember/array';
 import ModelDefinition from './model-definition';
 import FixtureBuilderFactory from './builder/fixture-builder-factory';
@@ -387,14 +386,14 @@ class FactoryGuy {
       fixture = this.buildRaw(Object.assign(args, { buildType: 'make' }));
 
     if (this.isModelAFragment(modelName)) {
-      return join(() => this.store.createFragment(modelName, fixture));
+      return this.store.createFragment(modelName, fixture);
     }
 
     let data = this.fixtureBuilder(modelName).convertForMake(
         modelName,
         fixture,
       ),
-      model = join(() => this.store.push(data));
+      model = this.store.push(data);
 
     if (definition.hasAfterMake()) {
       definition.applyAfterMake(model, args.opts);
@@ -419,7 +418,7 @@ class FactoryGuy {
 
     delete fixture.id;
 
-    return join(() => this.store.createRecord(modelName, fixture));
+    return this.store.createRecord(modelName, fixture);
   }
 
   /**
