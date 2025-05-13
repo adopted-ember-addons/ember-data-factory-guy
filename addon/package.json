@@ -1,6 +1,6 @@
 {
   "name": "ember-data-factory-guy",
-  "version": "5.2.0",
+  "version": "6.0.0",
   "description": "Factories for testing Ember applications using EmberData",
   "keywords": [
     "ember-addon",

@@ -1,14 +1,14 @@
 {
   "solution": {
     "ember-data-factory-guy": {
-      "impact": "minor",
-      "oldVersion": "5.1.0",
-      "newVersion": "5.2.0",
+      "impact": "major",
+      "oldVersion": "5.2.0",
+      "newVersion": "6.0.0",
       "tagName": "latest",
       "constraints": [
         {
-          "impact": "minor",
-          "reason": "Appears in changelog section :rocket: Enhancement"
+          "impact": "major",
+          "reason": "Appears in changelog section :boom: Breaking Change"
         },
         {
           "impact": "patch",
@@ -18,5 +18,5 @@
       "pkgJSONPath": "./addon/package.json"
     }
   },
-  "description": "## Release (2025-05-12)\n\n* ember-data-factory-guy 5.2.0 (minor)\n\n#### :rocket: Enhancement\n* `ember-data-factory-guy`\n  * [#530](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/530) feat: added useStringIdsOnly config option to avoid deprecated behaviour ([@Techn1x](https://github.com/Techn1x))\n\n#### :memo: Documentation\n* [#528](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/528) docs: update documentation, apply docsify ([@Techn1x](https://github.com/Techn1x))\n\n#### :house: Internal\n* `ember-data-factory-guy`\n  * [#527](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/527) chore: bump test-app devdeps, drop ember-sinon ([@Techn1x](https://github.com/Techn1x))\n  * [#525](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/525) chore: more ember-try scenarios, min ember/test-helpers now 2.9.3+ ([@Techn1x](https://github.com/Techn1x))\n\n#### Committers: 1\n- Brad Overton ([@Techn1x](https://github.com/Techn1x))\n"
+  "description": "## Release (2025-05-13)\n\n* ember-data-factory-guy 6.0.0 (major)\n\n#### :boom: Breaking Change\n* `ember-data-factory-guy`\n  * [#532](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/532) chore: drop ember-source 3.28 support (min v4.12+), bump active-model-adapter (min v4+), bump ember-data-model-fragments (min v6+) ([@Techn1x](https://github.com/Techn1x))\n\n#### :house: Internal\n* `ember-data-factory-guy`\n  * [#533](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/533) refactor: no need for `join()` runloop usage ([@Techn1x](https://github.com/Techn1x))\n\n#### Committers: 1\n- Brad Overton ([@Techn1x](https://github.com/Techn1x))\n"
 }
