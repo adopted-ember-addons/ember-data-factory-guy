@@ -1,6 +1,6 @@
 # Changelog
 
-## Release (2025-05-13)
+## v6.0.0 (2025-05-13)
 
 * ember-data-factory-guy 6.0.0 (major)
 
