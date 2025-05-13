@@ -68,7 +68,6 @@ jobs:
       matrix:
         ember-try-scenario:
           [
-            ember-lts-4.12,
             ember-default-with-jquery,
             ember-classic,
             embroider-safe,

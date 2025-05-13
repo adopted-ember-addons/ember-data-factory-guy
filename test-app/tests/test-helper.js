@@ -14,6 +14,8 @@ setApplication(Application.create(config.APP));
 
 setup(QUnit.assert);
 
+// TODO add loadTests() call - see ember-qunit v9
+
 start({
   setupTestIsolationValidation: true,
 });
