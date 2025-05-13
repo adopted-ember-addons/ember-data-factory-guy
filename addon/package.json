@@ -54,7 +54,7 @@
     "@ember/test-helpers": "^2.9.3",
     "@embroider/addon-dev": "^8.0.1",
     "@rollup/plugin-babel": "^6.0.4",
-    "active-model-adapter": "^3.0.1",
+    "active-model-adapter": "^4.0.0",
     "ember-data-model-fragments": "^6.0.10",
     "ember-inflector": "^4.0.1",
     "rollup": "^4.40.1",
@@ -65,9 +65,9 @@
     "@ember-data/serializer": ">= 3.28",
     "@ember-data/store": ">= 3.28",
     "@ember/string": ">= 3.0.0",
-    "@ember/test-helpers": "^2.9.3 || >= 3",
-    "active-model-adapter": "^3.0.1 || ^4.0.0",
-    "ember-data-model-fragments": "^5.0.0 || ^6.0.10",
+    "@ember/test-helpers": ">= 3",
+    "active-model-adapter": "^4.0.0",
+    "ember-data-model-fragments": "^6.0.10",
     "ember-inflector": ">= 4.0.1"
   },
   "peerDependenciesMeta": {
