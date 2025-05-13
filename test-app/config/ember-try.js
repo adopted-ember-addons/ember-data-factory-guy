@@ -6,6 +6,7 @@ const { embroiderSafe, embroiderOptimized } = require('@embroider/test-setup');
 module.exports = async function () {
   return {
     packageManager: 'pnpm',
+    npmOptions: ['--config.strict-peer-dependencies=false'],
     scenarios: [
       {
         name: 'ember-lts-5.12',
