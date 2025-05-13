@@ -41,7 +41,7 @@
     "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
-    "active-model-adapter": "^3.0.1",
+    "active-model-adapter": "^4.0.0",
     "ember-auto-import": "^2.10.0",
     "ember-cli": "~4.12.3",
     "ember-cli-babel": "^8.2.0",

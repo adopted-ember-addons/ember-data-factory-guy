@@ -16,7 +16,6 @@ module.exports = async function () {
             'ember-data': '~5.3', // couldnt get earlier versions to work with ember-source 5.12
             'ember-data-model-fragments': null, // does not support ED > 4.6
             'ember-inflector': '^6.0.0', // higher ED version needs this
-            'active-model-adapter': '^4.0.0', // higher ED version needs this
           },
         },
       },
@@ -29,7 +28,6 @@ module.exports = async function () {
             'ember-data': '~5.3', // earliest version that supports ember 6
             'ember-data-model-fragments': null,
             'ember-inflector': '^6.0.0',
-            'active-model-adapter': '^4.0.0',
           },
         },
       },
@@ -42,7 +40,6 @@ module.exports = async function () {
             'ember-data': '~5.3',
             'ember-data-model-fragments': null,
             'ember-inflector': '^6.0.0',
-            'active-model-adapter': '^4.0.0',
           },
         },
       },

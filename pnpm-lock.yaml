@@ -91,8 +91,8 @@ importers:
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.27.1)(rollup@4.40.2)
       active-model-adapter:
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^4.0.0
+        version: 4.0.1(webpack@5.99.8)
       ember-data-model-fragments:
         specifier: ^6.0.10
         version: 6.0.10(@babel/core@7.27.1)(ember-source@4.12.4(@babel/core@7.27.1)(@glimmer/component@1.1.2(@babel/core@7.27.1))(webpack@5.99.8))
@@ -136,8 +136,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       active-model-adapter:
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^4.0.0
+        version: 4.0.1(webpack@5.99.8)
       ember-auto-import:
         specifier: ^2.10.0
         version: 2.10.0(webpack@5.99.8)
@@ -1523,9 +1523,9 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  active-model-adapter@3.0.1:
-    resolution: {integrity: sha512-4FV4LoEG1VnmWeTotSwRVh91XGPk01SFPT+YDuZBFyv/Xrjc7sV5f0p2M8I/hdysoN9ajhkZw8CP6sS1Sn4Z5w==}
-    engines: {node: 12.* || >= 14}
+  active-model-adapter@4.0.1:
+    resolution: {integrity: sha512-PGME1jcyJwYIFaVkE4vdDEQBPHRpXvzlHFL2AoRWO5fa2hohWEuxTF/HPzkZgjclnNdlfth00J910SlNQ5s1qA==}
+    engines: {node: 12.* || 14.* || >= 16}
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -8357,14 +8357,17 @@ snapshots:
 
   acorn@8.14.1: {}
 
-  active-model-adapter@3.0.1:
+  active-model-adapter@4.0.1(webpack@5.99.8):
     dependencies:
+      ember-auto-import: 2.10.0(webpack@5.99.8)
       ember-cli-babel: 7.26.11
       ember-cli-htmlbars: 5.7.2
       ember-cli-typescript: 4.2.1
       ember-inflector: 4.0.1
     transitivePeerDependencies:
+      - '@glint/template'
       - supports-color
+      - webpack
 
   agent-base@6.0.2:
     dependencies:
