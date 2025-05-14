@@ -1,5 +1,16 @@
 # Changelog
 
+## Release (2025-05-14)
+
+* ember-data-factory-guy 6.1.0 (minor)
+
+#### :rocket: Enhancement
+* `ember-data-factory-guy`
+  * [#536](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/536) feat: allow `match()` on any mock request ([@Techn1x](https://github.com/Techn1x))
+
+#### Committers: 1
+- Brad Overton ([@Techn1x](https://github.com/Techn1x))
+
 ## v6.0.0 (2025-05-13)
 
 * ember-data-factory-guy 6.0.0 (major)

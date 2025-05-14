@@ -1,22 +1,18 @@
 {
   "solution": {
     "ember-data-factory-guy": {
-      "impact": "major",
-      "oldVersion": "5.2.0",
-      "newVersion": "6.0.0",
+      "impact": "minor",
+      "oldVersion": "6.0.0",
+      "newVersion": "6.1.0",
       "tagName": "latest",
       "constraints": [
         {
-          "impact": "major",
-          "reason": "Appears in changelog section :boom: Breaking Change"
-        },
-        {
-          "impact": "patch",
-          "reason": "Appears in changelog section :house: Internal"
+          "impact": "minor",
+          "reason": "Appears in changelog section :rocket: Enhancement"
         }
       ],
       "pkgJSONPath": "./addon/package.json"
     }
   },
-  "description": "## Release (2025-05-13)\n\n* ember-data-factory-guy 6.0.0 (major)\n\n#### :boom: Breaking Change\n* `ember-data-factory-guy`\n  * [#532](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/532) chore: drop ember-source 3.28 support (min v4.12+), bump active-model-adapter (min v4+), bump ember-data-model-fragments (min v6+) ([@Techn1x](https://github.com/Techn1x))\n\n#### :house: Internal\n* `ember-data-factory-guy`\n  * [#533](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/533) refactor: no need for `join()` runloop usage ([@Techn1x](https://github.com/Techn1x))\n\n#### Committers: 1\n- Brad Overton ([@Techn1x](https://github.com/Techn1x))\n"
+  "description": "## Release (2025-05-14)\n\n* ember-data-factory-guy 6.1.0 (minor)\n\n#### :rocket: Enhancement\n* `ember-data-factory-guy`\n  * [#536](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/536) feat: allow `match()` on any mock request ([@Techn1x](https://github.com/Techn1x))\n\n#### Committers: 1\n- Brad Overton ([@Techn1x](https://github.com/Techn1x))\n"
 }
