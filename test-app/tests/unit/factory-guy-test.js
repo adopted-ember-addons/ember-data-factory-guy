@@ -61,7 +61,7 @@ module('FactoryGuy', function (hooks) {
   });
 
   test('#resetDefinitions resets the model definition', function (assert) {
-    assert.expect(33);
+    assert.expect(27);
 
     let project = make('project');
     make('user', { projects: [project] });
