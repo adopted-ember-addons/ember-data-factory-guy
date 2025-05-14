@@ -10,12 +10,9 @@ import SharedCommonBehavior from './shared-common-behaviour';
 import SharedAdapterBehaviour from './shared-adapter-behaviour';
 import { inlineSetup } from '../helpers/utility-methods';
 
-let serializer = 'DS.ActiveModelSerializer';
-let serializerType = '-active-model';
-
-module(serializer, function (hooks) {
+module('DS.ActiveModelSerializer', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, serializerType);
+  inlineSetup(hooks, '-active-model');
 
   SharedCommonBehavior.all();
 

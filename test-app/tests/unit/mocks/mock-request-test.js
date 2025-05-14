@@ -11,11 +11,9 @@ import { inlineSetup } from '../../helpers/utility-methods';
 import { MockStoreRequest } from 'ember-data-factory-guy/-private';
 import sinon from 'sinon';
 
-const serializerType = '-json-api';
-
 module('MockRequest', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, serializerType);
+  inlineSetup(hooks, '-json-api');
 
   module('#fails', function () {
     test('status must be 3XX, 4XX or 5XX', function (assert) {

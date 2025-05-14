@@ -3,11 +3,9 @@ import { setupTest } from 'ember-qunit';
 import { buildList, make, makeList, mockLinks } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 
-const serializerType = '-json-api';
-
 module('MockLinks', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, serializerType);
+  inlineSetup(hooks, '-json-api');
 
   test('with no parameters', function (assert) {
     assert.throws(function () {

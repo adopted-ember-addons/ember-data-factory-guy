@@ -12,12 +12,9 @@ import SharedCommonBehavior from './shared-common-behaviour';
 import SharedAdapterBehavior from './shared-adapter-behaviour';
 import { inlineSetup } from '../helpers/utility-methods';
 
-let serializer = 'DS.RESTSerializer';
-let serializerType = '-rest';
-
-module(serializer, function (hooks) {
+module('DS.RESTSerializer', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, serializerType);
+  inlineSetup(hooks, '-rest');
 
   SharedCommonBehavior.all();
 

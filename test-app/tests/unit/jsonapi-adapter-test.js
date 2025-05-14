@@ -12,43 +12,22 @@ import SharedCommonBehavior from './shared-common-behaviour';
 import SharedAdapterBehaviour from './shared-adapter-behaviour';
 import { inlineSetup } from '../helpers/utility-methods';
 
-let serializer = 'DS.JSONAPISerializer';
-let serializerType = '-json-api';
-
-module(serializer, function (hooks) {
+module('DS.JSONAPISerializer', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, serializerType);
+  inlineSetup(hooks, '-json-api');
 
-  SharedCommonBehavior.all(serializer, serializerType);
+  SharedCommonBehavior.all();
 
-  SharedAdapterBehaviour.mockFindRecordSideloadingTests(
-    serializer,
-    serializerType,
-  );
-  SharedAdapterBehaviour.mockFindAllSideloadingTests(
-    serializer,
-    serializerType,
-  );
+  SharedAdapterBehaviour.mockFindRecordSideloadingTests();
+  SharedAdapterBehaviour.mockFindAllSideloadingTests();
 
-  SharedAdapterBehaviour.mockQueryMetaTests(serializer, serializerType);
+  SharedAdapterBehaviour.mockQueryMetaTests();
 
-  SharedAdapterBehaviour.mockUpdateWithErrorMessages(
-    serializer,
-    serializerType,
-  );
-  SharedAdapterBehaviour.mockUpdateReturnsAssociations(
-    serializer,
-    serializerType,
-  );
+  SharedAdapterBehaviour.mockUpdateWithErrorMessages();
+  SharedAdapterBehaviour.mockUpdateReturnsAssociations();
 
-  SharedAdapterBehaviour.mockCreateReturnsAssociations(
-    serializer,
-    serializerType,
-  );
-  SharedAdapterBehaviour.mockCreateFailsWithErrorResponse(
-    serializer,
-    serializerType,
-  );
+  SharedAdapterBehaviour.mockCreateReturnsAssociations();
+  SharedAdapterBehaviour.mockCreateFailsWithErrorResponse();
 
   module('#mockFindRecord custom', function () {
     test('when returns json (plain) is used', async function (assert) {

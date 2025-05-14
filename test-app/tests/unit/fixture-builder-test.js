@@ -13,14 +13,13 @@ import {
 import { FixtureBuilderFactory } from 'ember-data-factory-guy/-private';
 import { inlineSetup } from '../helpers/utility-methods';
 
-let factory, store;
 module('FixtureBuilderFactory', function (hooks) {
   setupTest(hooks);
   inlineSetup(hooks, '-json-api');
 
   hooks.beforeEach(function () {
-    store = this.owner.lookup('service:store');
-    factory = new FixtureBuilderFactory(store);
+    this.store = this.owner.lookup('service:store');
+    this.factory = new FixtureBuilderFactory(this.store);
   });
 
   test('returns the correct fixtureBuilder for serializer type of modelName', function (assert) {
@@ -35,13 +34,13 @@ module('FixtureBuilderFactory', function (hooks) {
     ];
 
     let serializer;
-    store.serializerFor = () => serializer;
+    this.store.serializerFor = () => serializer;
     let modelName = 'application';
 
     for (let test of tests) {
       let [serializerType, expectedFixtureBuilder] = test;
       serializer = serializerType && serializerType.create();
-      let fixtureBuilder = factory.fixtureBuilder(modelName);
+      let fixtureBuilder = this.factory.fixtureBuilder(modelName);
       assert.ok(
         fixtureBuilder instanceof expectedFixtureBuilder,
         `${serializerType} returns ${expectedFixtureBuilder.name}`,

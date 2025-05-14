@@ -3,11 +3,9 @@ import { setupTest } from 'ember-qunit';
 import { mock } from 'ember-data-factory-guy';
 import { fetchJSON, inlineSetup } from '../../helpers/utility-methods';
 
-const serializerType = '-json-api';
-
 module('MockAny', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, serializerType);
+  inlineSetup(hooks, '-json-api');
 
   test('with incorrect parameters', function (assert) {
     assert.throws(function () {
