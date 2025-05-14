@@ -1,5 +1,4 @@
 import { all } from 'rsvp';
-import { A } from '@ember/array';
 import { module, test } from 'qunit';
 import { isEquivalent } from 'ember-data-factory-guy/-private';
 
