@@ -1,17 +1,14 @@
 import { assert } from '@ember/debug';
 import FactoryGuy from '../factory-guy';
 import MockStoreRequest from './mock-store-request';
-import AttributeMatcher from './attribute-matcher';
+import { verifyId } from '../own-config';
 
-export default class MockUpdateRequest extends AttributeMatcher(
-  MockStoreRequest,
-) {
+export default class MockUpdateRequest extends MockStoreRequest {
   constructor(modelName, { id, model } = {}) {
     super(modelName, 'updateRecord');
     this.id = id;
     this.model = model;
     this.returnArgs = {};
-    this.matchArgs = {};
     this.setupHandler();
   }
 
@@ -42,6 +39,30 @@ export default class MockUpdateRequest extends AttributeMatcher(
     this.returnArgs = returns.attrs;
     this.add = returns.add;
     return this;
+  }
+
+  /**
+     Update and Create mocks can accept 2 return keys 'attrs' and 'add'
+  
+      @param options
+      @returns {Array}
+      */
+  validateReturnsOptions(options) {
+    const responseKeys = Object.keys(options),
+      validReturnsKeys = ['attrs', 'add'],
+      invalidKeys = responseKeys.filter(
+        (key) => !validReturnsKeys.includes(key),
+      );
+
+    assert(
+      `[ember-data-factory-guy] You passed invalid keys for 'returns' function.
+          Valid keys are ${validReturnsKeys}. You used these invalid keys: ${invalidKeys}`,
+      invalidKeys.length === 0,
+    );
+
+    if (options.attrs?.id) verifyId(options.attrs.id);
+
+    return responseKeys;
   }
 
   /**

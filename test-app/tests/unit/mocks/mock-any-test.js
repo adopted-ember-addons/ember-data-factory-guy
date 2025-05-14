@@ -188,6 +188,34 @@ module('MockAny', function (hooks) {
     );
   });
 
+  test('match the request body', async function (assert) {
+    const method = 'POST',
+      url = '/api/post-stuff',
+      whatsUp = { whats: 'up' };
+
+    const theMock = mock({ url, type: method }).match(whatsUp);
+
+    await fetchJSON({ url, params: whatsUp, method });
+    assert.strictEqual(theMock.timesCalled, 1, 'exact match');
+
+    await fetchJSON({ url, params: { whats: 'up', foo: 'bar' }, method });
+    assert.strictEqual(theMock.timesCalled, 2, 'partial match');
+  });
+
+  test('match a function', async function (assert) {
+    assert.expect(1);
+    const method = 'POST',
+      url = '/api/post-stuff',
+      whatsUp = { whats: 'up' };
+
+    mock({ url, type: method }).match(function (requestData) {
+      assert.deepEqual(requestData, whatsUp);
+      return true;
+    });
+
+    await fetchJSON({ url, params: whatsUp, method });
+  });
+
   test('mock#timesCalled works as expected', async function (assert) {
     const method = 'POST',
       url = '/api/post-stuff';
