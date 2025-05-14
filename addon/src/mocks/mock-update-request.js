@@ -2,10 +2,9 @@ import { assert } from '@ember/debug';
 import FactoryGuy from '../factory-guy';
 import MockStoreRequest from './mock-store-request';
 import AttributeMatcher from './attribute-matcher';
-import MaybeIdUrlMatch from './maybe-id-url-match';
 
-export default class MockUpdateRequest extends MaybeIdUrlMatch(
-  AttributeMatcher(MockStoreRequest),
+export default class MockUpdateRequest extends AttributeMatcher(
+  MockStoreRequest,
 ) {
   constructor(modelName, { id, model } = {}) {
     super(modelName, 'updateRecord');
@@ -64,5 +63,17 @@ export default class MockUpdateRequest extends MaybeIdUrlMatch(
       );
     }
     return super.getResponse();
+  }
+
+  /**
+   *
+   * @returns {String} url
+   */
+  getUrl() {
+    let url = super.getUrl();
+    if (!this.id) {
+      url = `${url}/:id`;
+    }
+    return url;
   }
 }
