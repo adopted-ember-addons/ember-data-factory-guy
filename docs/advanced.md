@@ -70,6 +70,9 @@
 
 ## Ember Data Model Fragments
 
+LEGACY DOCUMENTATION. Support removed from v7. If you need fragments support, you'll need to remain on v6, or consider
+replacing fragments with a later version of ember-data that provides fragment-like features.
+
 As of 2.5.2 you can create factories which contain [ember-data-model-fragments](https://github.com/lytics/ember-data-model-fragments). Setting up your fragments is easy and follows the same process as setting up regular factories. The mapping between fragment types and their associations are like so:
 
 | Fragment Type   | Association            |

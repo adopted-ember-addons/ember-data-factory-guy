@@ -333,7 +333,6 @@ class FactoryGuy {
 
   /**
    Make new model and save to store.
-   If the model type is a fragment, return the raw fixture
 
    @param {String} name  fixture name
    @param {String} trait  optional trait names ( one or more )

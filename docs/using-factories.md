@@ -40,7 +40,6 @@ attributesFor('user', 'silly', { name: 'Fred' }); // => { name: 'Fred', style: '
 ### `FactoryGuy.make`
 
 - Loads a model instance into the store
-- makes a fragment hash ( if it is a model fragment )
 - can compose relationships with other `FactoryGuy.make`/`FactoryGuy.makeList`
 - can add relationship links to payload
 
@@ -85,9 +84,6 @@ let user = make('user', { properties: { links: '/users/1/properties' } });
 
 // make user with links to async belongsTo company
 let user = make('user', { company: { links: '/users/1/company' } });
-
-// for model fragments you get an object
-let object = make('name'); // => {firstName: 'Boba', lastName: 'Fett'}
 ```
 
 ### `FactoryGuy.makeNew`
