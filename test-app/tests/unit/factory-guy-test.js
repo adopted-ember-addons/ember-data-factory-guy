@@ -44,10 +44,7 @@ module('FactoryGuy', function (hooks) {
     assert.strictEqual(users.length, 2);
     assert.ok(users[0] instanceof User);
     assert.ok(users[1] instanceof User);
-    assert.strictEqual(
-      FactoryGuy.store.peekAll('user').get('content').length,
-      2,
-    );
+    assert.strictEqual(FactoryGuy.store.peekAll('user').length, 2);
   });
 
   test('exposes build method which is shortcut for FactoryGuy.build', function (assert) {
@@ -471,10 +468,7 @@ module('FactoryGuy', function (hooks) {
         A(profiles).objectAt(2).get('superHero.name'),
         'BatMan',
       );
-      assert.strictEqual(
-        FactoryGuy.store.peekAll('profile').get('content').length,
-        3,
-      );
+      assert.strictEqual(FactoryGuy.store.peekAll('profile').length, 3);
     });
   });
 

@@ -46,7 +46,7 @@ module('MockLinks', function (hooks) {
     assert.strictEqual(mockProperties.getUrl(), '/users/1/properties');
     assert.deepEqual(mockProperties.queryParams, { dudes: '2' });
 
-    await user.properties.toArray();
+    await user.properties;
     assert.strictEqual(mockProperties.timesCalled, 1);
   });
 
@@ -55,9 +55,9 @@ module('MockLinks', function (hooks) {
       properties = buildList('property', 1);
 
     mockLinks(user, 'properties').returns({ json: properties });
-    let userProperties = await user.get('properties');
+    let userProperties = await user.properties;
     assert.deepEqual(
-      userProperties.mapBy('id'),
+      userProperties.map((p) => p.id),
       properties.get().map((f) => String(f.id)),
     );
   });
@@ -68,6 +68,6 @@ module('MockLinks', function (hooks) {
 
     mockLinks(user, 'properties').returns({ models: properties });
     let userProperties = await user.get('properties');
-    assert.deepEqual(userProperties.toArray(), properties);
+    assert.deepEqual(userProperties.slice(), properties);
   });
 });
