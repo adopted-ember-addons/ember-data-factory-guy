@@ -1,4 +1,5 @@
 import { assert } from '@ember/debug';
+import { typeOf } from '@ember/utils';
 import {
   isEmptyObject,
   isEquivalent,
@@ -155,7 +156,25 @@ export default class {
     return true;
   }
 
+  attributesMatch(requestBody, matchParams) {
+    if (isEmptyObject(matchParams)) {
+      return true;
+    }
+    return isPartOf(toParams(requestBody), toParams(matchParams));
+  }
+
   extraRequestMatches(request) {
+    if (this.matchArgs) {
+      let requestBody = request.requestBody;
+      if (typeOf(requestBody) === 'string') {
+        requestBody = JSON.parse(requestBody);
+      }
+      if (typeOf(this.matchArgs) === 'function') {
+        return this.matchArgs(requestBody);
+      } else {
+        return this.attributesMatch(requestBody, this.matchArgs);
+      }
+    }
     return this.paramsMatch(request);
   }
 
@@ -176,6 +195,11 @@ export default class {
     }
 
     return true;
+  }
+
+  match(matches) {
+    this.matchArgs = matches;
+    return this;
   }
 
   // mockId holds the url for this mock request

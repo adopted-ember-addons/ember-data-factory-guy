@@ -107,7 +107,8 @@ let mock = mockFindRecord('profile').fails({
 - For dealing with finding one record of a model type => `store.findRecord('modelType', id)`
 - Can pass in arguments just like you would for [`make`](#factoryguymake) or [`build`](#factoryguybuild)
   - `mockFindRecord`( fixture or model name, optional traits, optional attributes object)
-- Takes modifier method `returns()` for controlling the response payload
+- Takes modifier `match()` with a hash of attributes or a matching function
+- Takes modifier `returns()` for controlling the response payload
   - returns( model / json / id )
 - Takes modifier method `adapterOptions()` for setting adapterOptions ( get passed to urlForFindRecord )
 - Sample acceptance tests using `mockFindRecord`: [user-view-test.js:](https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/master/tests/acceptance/user-view-test.js)
@@ -204,7 +205,8 @@ mockFindRecord(profile).fails();
 - For dealing with finding all records for a model type => `store.findAll(modelType)`
 - Takes same parameters as [makeList](#factoryguymakelist)
   - `mockFindAll`( fixture or model name, optional number, optional traits, optional attributes object)
-- Takes modifier method `returns()` for controlling the response payload
+- Takes modifier `match()` with a hash of attributes or a matching function
+- Takes modifier `returns()` for controlling the response payload
   - returns( models / json / ids )
 - Takes modifier method `adapterOptions()` for setting adapterOptions ( get passed to urlForFindAll )
   - used just as in mockFindRecord ( see example there )
@@ -308,6 +310,7 @@ mockReload('profile', 1).fails();
 ## `mockQuery`
 
 - For dealing with querying for all records for a model type => `store.query(modelType, params)`
+  - takes modifier `match()` with a hash of attributes or a matching function
   - Takes modifier method `returns()` for controlling the response payload
     - returns( models / json / ids )
 - Takes modifier methods for matching the query params
@@ -401,7 +404,8 @@ Usage:
 ## `mockQueryRecord`
 
 - For dealing with querying for one record for a model type => `store.queryRecord(modelType, params)`
-  - takes modifier method `returns()` for controlling the response payload
+  - takes modifier `match()` with a hash of attributes or a matching function
+  - takes modifier `returns()` for controlling the response payload
     - returns( model / json / id )
 - takes modifier methods for matching the query params
 - withParams( object )
