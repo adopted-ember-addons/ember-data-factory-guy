@@ -1,15 +1,16 @@
 # Changelog
 
-## Release (2025-05-14)
+## v6.1.0 (2025-05-14)
 
 * ember-data-factory-guy 6.1.0 (minor)
 
 #### :rocket: Enhancement
 * `ember-data-factory-guy`
-  * [#536](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/536) feat: allow `match()` on any mock request ([@Techn1x](https://github.com/Techn1x))
+  * [#536](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/536) feat: allow `match()` on any mock request ([@Techn1x](https://github.com/Techn1x)) ([@dwickern](https://github.com/dwickern))
 
-#### Committers: 1
+#### Committers: 2
 - Brad Overton ([@Techn1x](https://github.com/Techn1x))
+- ([@dwickern](https://github.com/dwickern))
 
 ## v6.0.0 (2025-05-13)
 
@@ -42,7 +43,7 @@
   * [#527](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/527) chore: bump test-app devdeps, drop ember-sinon ([@Techn1x](https://github.com/Techn1x))
   * [#525](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/525) chore: more ember-try scenarios, min ember/test-helpers now 2.9.3+ ([@Techn1x](https://github.com/Techn1x))
 
-#### Committers: 1
+#### Committers: 2
 - Brad Overton ([@Techn1x](https://github.com/Techn1x))
 - Philippe Ndiaye ([@phndiaye](https://github.com/phndiaye))
 
