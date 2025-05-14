@@ -5,18 +5,8 @@ import { A } from '@ember/array';
 import ModelDefinition from './model-definition';
 import FixtureBuilderFactory from './builder/fixture-builder-factory';
 import RequestManager from './mocks/request-manager';
-import {
-  importSync,
-  macroCondition,
-  dependencySatisfies,
-} from '@embroider/macros';
 
 let modelDefinitions = {};
-
-let Fragment;
-if (macroCondition(dependencySatisfies('ember-data-model-fragments', '*'))) {
-  Fragment = importSync('ember-data-model-fragments').default.Fragment;
-}
 
 class FactoryGuy {
   /**
@@ -48,19 +38,6 @@ class FactoryGuy {
 
   updateHTTPMethod(modelName) {
     return this.fixtureBuilder(modelName).updateHTTPMethod || 'PUT';
-  }
-
-  /**
-   Is this model a fragment type
-
-   @returns {Boolean} true if it's a model fragment
-   */
-  isModelAFragment(modelName) {
-    if (Fragment) {
-      let type = this.store.modelFor(modelName);
-      return Fragment.detect(type);
-    }
-    return false;
   }
 
   /**
@@ -184,13 +161,8 @@ class FactoryGuy {
    */
   belongsTo(...originalArgs) {
     let args = FactoryGuy.extractArguments(...originalArgs);
-    return (fixture, buildType) => {
-      let modelName = FactoryGuy.lookupModelForFixtureName(args.name, true);
-      if (this.isModelAFragment(modelName) && buildType === 'build') {
-        return this.build(...originalArgs).get();
-      }
-      return this.buildRaw(Object.assign(args, { buildType }));
-    };
+    return (_fixture, buildType) =>
+      this.buildRaw(Object.assign(args, { buildType }));
   }
 
   /**
@@ -224,13 +196,8 @@ class FactoryGuy {
    */
   hasMany(...originalArgs) {
     let args = FactoryGuy.extractListArguments(...originalArgs);
-    return (fixture, buildType) => {
-      let modelName = FactoryGuy.lookupModelForFixtureName(args.name, true);
-      if (this.isModelAFragment(modelName) && buildType === 'build') {
-        return this.buildList(...originalArgs).get();
-      }
-      return this.buildRawList(Object.assign(args, { buildType }));
-    };
+    return (_fixture, buildType) =>
+      this.buildRawList(Object.assign(args, { buildType }));
   }
 
   /**
@@ -356,10 +323,6 @@ class FactoryGuy {
       { modelName } = definition,
       fixture = this.buildRaw(Object.assign(args, { buildType: 'make' }));
 
-    if (this.isModelAFragment(modelName)) {
-      return fixture;
-    }
-
     let data = this.fixtureBuilder(modelName).convertForMake(
       modelName,
       fixture,
@@ -384,10 +347,6 @@ class FactoryGuy {
       definition = FactoryGuy.lookupDefinitionForFixtureName(args.name, true),
       { modelName } = definition,
       fixture = this.buildRaw(Object.assign(args, { buildType: 'make' }));
-
-    if (this.isModelAFragment(modelName)) {
-      return this.store.createFragment(modelName, fixture);
-    }
 
     let data = this.fixtureBuilder(modelName).convertForMake(
         modelName,
