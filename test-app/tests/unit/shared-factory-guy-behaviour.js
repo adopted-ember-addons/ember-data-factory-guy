@@ -24,8 +24,8 @@ SharedBehavior.makeNewTests = function () {
     let projects = makeList('project', 1),
       user = makeNew('user', { projects });
     assert.deepEqual(
-      user.get('projects').toArray(),
-      projects.toArray(),
+      user.get('projects').slice(),
+      projects.slice(),
       'hasMany projects',
     );
   });
