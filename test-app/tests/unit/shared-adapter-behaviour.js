@@ -212,8 +212,8 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
 
       let user = await FactoryGuy.store.findRecord('user', userId);
 
-      assert.strictEqual(user.get('hats.length'), 2);
-      assert.strictEqual(user.get('hats.firstObject.type'), 'BigHat');
+      assert.strictEqual(user.hats.length, 2);
+      assert.strictEqual(user.hats[0].type, 'BigHat');
     });
 
     test('using returns with json', async function (assert) {
@@ -236,8 +236,8 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
       mockFindRecord('user').returns({ json });
 
       const user = await FactoryGuy.store.findRecord('user', json.get('id'));
-      assert.ok(user.get('hats.firstObject.id') === hat1.get('id') + '');
-      assert.ok(user.get('hats.lastObject.id') === hat2.get('id') + '');
+      assert.ok(user.hats[0].id === hat1.get('id') + '');
+      assert.ok(user.hats[user.hats.length - 1].id === hat2.get('id') + '');
     });
 
     test('using returns with model', async function (assert) {
@@ -580,9 +580,9 @@ SharedBehavior.mockQueryTests = function () {
 
     let users = await FactoryGuy.store.query('user', { name: 'Bob' });
     assert.strictEqual(users.length, 2);
-    assert.strictEqual(users.get('firstObject.name'), 'User1');
-    assert.strictEqual(users.get('firstObject.hats.length'), 2);
-    assert.strictEqual(users.get('lastObject.name'), 'User2');
+    assert.strictEqual(users[0].name, 'User1');
+    assert.strictEqual(users[0].hats.length, 2);
+    assert.strictEqual(users[users.length - 1].name, 'User2');
     assert.strictEqual(
       FactoryGuy.store.peekAll('user').length,
       2,
