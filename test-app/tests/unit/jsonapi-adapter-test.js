@@ -11,6 +11,7 @@ import FactoryGuy, {
 import SharedCommonBehavior from './shared-common-behaviour';
 import SharedAdapterBehaviour from './shared-adapter-behaviour';
 import { inlineSetup } from '../helpers/utility-methods';
+import JSONAPISerializer from '@ember-data/serializer/json-api';
 
 module('DS.JSONAPISerializer', function (hooks) {
   setupTest(hooks);
@@ -588,10 +589,14 @@ module('DS.JSONAPISerializer', function (hooks) {
     // Don't have to duplicate this test on all adapters since it's the same basic idea and not
     // adapter dependent
     test('using custom serialize keys function for transforming attributes and relationship keys', function (assert) {
-      let serializer = FactoryGuy.store.serializerFor('profile');
-
-      serializer.keyForAttribute = underscore;
-      serializer.keyForRelationship = underscore;
+      class TestProfileSerializer extends JSONAPISerializer {
+        keyForAttribute = underscore;
+      }
+      class TestSuperHeroSerializer extends JSONAPISerializer {
+        keyForRelationship = underscore;
+      }
+      this.owner.register('serializer:profile', TestProfileSerializer);
+      this.owner.register('serializer:super-hero', TestSuperHeroSerializer);
 
       let json = build('profile', 'with_bat_man');
       json.unwrap();
