@@ -141,7 +141,7 @@ module('DS.RESTSerializer', function (hooks) {
     });
 
     test('uses serializers payloadKeyFromModelName function', function (assert) {
-      let serializer = FactoryGuy.store.serializerFor('application');
+      let serializer = FactoryGuy.store.serializerFor('user');
       let savedPayloadKeyFromModelNameFn = serializer.payloadKeyFromModelName;
       serializer.payloadKeyFromModelName = function () {
         return 'dude';

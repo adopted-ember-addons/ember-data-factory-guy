@@ -232,7 +232,7 @@ module('DS.ActiveModelSerializer', function (hooks) {
     });
 
     test('using custom serialize keys function for transforming attributes and relationship keys', function (assert) {
-      let serializer = FactoryGuy.store.serializerFor('application');
+      let serializer = FactoryGuy.store.serializerFor('profile');
 
       let savedKeyForAttributeFn = serializer.keyForAttribute;
       serializer.keyForAttribute = dasherize;
