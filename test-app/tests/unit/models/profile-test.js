@@ -2,9 +2,7 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { setupFactoryGuy, make } from 'ember-data-factory-guy';
 
-const modelType = 'profile';
-
-module(`Unit | Model | ${modelType}`, function (hooks) {
+module(`Unit | Model | profile`, function (hooks) {
   setupTest(hooks);
   setupFactoryGuy(hooks);
 

@@ -6,9 +6,7 @@ import FactoryGuy, {
   mockFindRecord,
 } from 'ember-data-factory-guy';
 
-const modelType = 'user';
-
-module(`Unit | Model | ${modelType}`, function (hooks) {
+module(`Unit | Model | user`, function (hooks) {
   setupTest(hooks);
   setupFactoryGuy(hooks);
 

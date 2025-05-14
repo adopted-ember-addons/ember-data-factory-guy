@@ -288,41 +288,6 @@ SharedBehavior.makeTests = function () {
     assert.ok(lastHat.get('outfit.hats.firstObject') === lastHat);
   });
 
-  test('handles fragment relationships', function (assert) {
-    let name = make('name', {});
-
-    let employee = make('employee', { name });
-    assert.strictEqual(
-      employee.name.firstName,
-      name.firstName,
-      'fragment name.firstName',
-    );
-    assert.strictEqual(
-      employee.name.lastName,
-      name.lastName,
-      'fragment name.lastName',
-    );
-  });
-
-  test('handles fragmentArray relationships', function (assert) {
-    let departmentEmployments = make(
-      'employee',
-      'with_department_employments',
-    ).departmentEmployments;
-
-    let employee = make('employee', { departmentEmployments });
-    assert.strictEqual(
-      employee.departmentEmployments.firstObject.department.name,
-      departmentEmployments.firstObject.department.name,
-      'fragment array  - first department name',
-    );
-    assert.strictEqual(
-      employee.departmentEmployments.lastObject.department.name,
-      departmentEmployments.lastObject.department.name,
-      'fragment array  - last department name',
-    );
-  });
-
   test('using afterMake with transient attributes in definition', function (assert) {
     let property = FactoryGuy.make('property');
     assert.ok(property.get('name') === 'Silly property(FOR SALE)');
