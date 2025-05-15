@@ -5,11 +5,9 @@ import FactoryGuy, { make, buildList, mockQuery } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
-const serializerType = '-json-api';
-
 module('MockQuery', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, serializerType);
+  inlineSetup(hooks, '-json-api');
 
   test('#get method to access payload', function (assert) {
     let json = buildList('user', 2);

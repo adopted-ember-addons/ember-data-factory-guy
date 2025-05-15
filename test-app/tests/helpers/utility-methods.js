@@ -1,7 +1,11 @@
 import { EmbeddedRecordsMixin } from '@ember-data/serializer/rest';
-import { typeOf } from '@ember/utils';
+import { assert } from '@ember/debug';
 import FactoryGuy, { setupFactoryGuy } from 'ember-data-factory-guy';
 import RESTAdapter from '@ember-data/adapter/rest';
+import RESTSerializer from '@ember-data/serializer/rest';
+import JSONSerializer from '@ember-data/serializer/json';
+import JSONAPIAdapter from '@ember-data/adapter/json-api';
+import JSONAPISerializer from '@ember-data/serializer/json-api';
 import ActiveModelAdapter, {
   ActiveModelSerializer,
 } from 'active-model-adapter';
@@ -20,139 +24,144 @@ export function fetchJSON({ url, params, method = 'GET' } = {}) {
   );
 }
 
-//// custom adapter options for the various models
-//// which are applied to the currently testing model's adapter ( JSONAPI, REST, ActiveModel, etc )
-//const adapterOptions = {
-//  employee: {
-//    buildURL(modelName, id, snapshot, requestType, query)  {
-//      const url = this._super(modelName, id, snapshot, requestType, query);
-//      const delimiter = (url.indexOf('?') !== -1) ? '&' : '?';
-//      return `${url}${delimiter}company_id=12345`;
-//    },
-//    urlForFindRecord(id, modelName, snapshot) {
-//      if (id === 'self') {
-//        return '/user';
-//      } else {
-//        return this._super(id, modelName, snapshot);
-//      }
-//    }
-//  }
-//};
-
-// custom serializer options for the various models
-// which are applied to the currently testing  model's serializer ( JSONAPI, REST, ActiveModel, etc )
-const serializerOptions = {
-  'entry-type': {
-    attrs: {
-      entries: { serialize: true },
-    },
-    // don't pluralize the payload key.
-    payloadKeyFromModelName(modelName) {
-      return modelName;
-    },
-  },
-  entry: {
-    // don't pluralize the payload key.
-    payloadKeyFromModelName(modelName) {
-      return modelName;
-    },
-  },
-  dog: {
-    primaryKey: 'dogNumber',
-    attrs: {
-      owner: { key: 'humanId' },
-    },
-  },
-  cat: {
-    primaryKey: 'catId',
-    attrs: {
-      name: { key: 'catName' },
-      friend: 'catFriend',
-    },
-  },
-  'comic-book': [
-    EmbeddedRecordsMixin,
-    {
-      attrs: {
-        includedVillains: { embedded: 'always' },
-        company: { embedded: 'always' },
-        characters: { embedded: 'always' },
-      },
-    },
-  ],
-};
-
-//function setupCustomAdapter(container, adapterType, options) {
-//  let store = container.lookup('service:store');
-//  let modelAdapter = container.lookup('adapter:' + adapterType);
-//  if (typeOf(options) === 'array') {
-//    modelAdapter.reopen.apply(modelAdapter, options);
-//  } else {
-//    modelAdapter.reopen(options);
-//  }
-//  modelAdapter.store = store;
-//  return modelAdapter;
-//}
-
-function setupCustomSerializer(container, serializerType, options) {
-  let store = container.lookup('service:store');
-  let modelSerializer = container.lookup('serializer:' + serializerType);
-  if (typeOf(options) === 'array') {
-    modelSerializer.reopen.apply(modelSerializer, options);
-  } else {
-    modelSerializer.reopen(options);
+function baseAdapterFor(serializerType) {
+  switch (serializerType) {
+    case '-active-model':
+      return ActiveModelAdapter;
+    case '-rest':
+      return RESTAdapter;
+    case '-json':
+      return RESTAdapter;
+    case '-json-api':
+      return JSONAPIAdapter;
   }
-  modelSerializer.store = store;
-  return modelSerializer;
+}
+function baseSerializerFor(serializerType) {
+  switch (serializerType) {
+    case '-active-model':
+      return ActiveModelSerializer;
+    case '-rest':
+      return RESTSerializer;
+    case '-json':
+      return JSONSerializer;
+    case '-json-api':
+      return JSONAPISerializer;
+  }
+}
+function getBaseFor(serializerType) {
+  return {
+    adapter: baseAdapterFor(serializerType),
+    serializer: baseSerializerFor(serializerType),
+  };
+}
+function modelSerializerFor(modelName, SerializerClass) {
+  switch (modelName) {
+    case 'entry-type':
+      return class EntryTypeSerializer extends SerializerClass {
+        attrs = {
+          entries: { serialize: true },
+        };
+        // don't pluralize the payload key.
+        payloadKeyFromModelName(modelName) {
+          return modelName;
+        }
+      };
+    case 'entry':
+      return class EntrySerializer extends SerializerClass {
+        // don't pluralize the payload key.
+        payloadKeyFromModelName(modelName) {
+          return modelName;
+        }
+      };
+    case 'dog':
+      return class DogSerializer extends SerializerClass {
+        primaryKey = 'dogNumber';
+        attrs = {
+          owner: { key: 'humanId' },
+        };
+      };
+    case 'cat':
+      return class CatSerializer extends SerializerClass {
+        primaryKey = 'catId';
+        attrs = {
+          name: { key: 'catName' },
+          friend: 'catFriend',
+        };
+      };
+    case 'comic-book':
+      return class ComicBookSerializer extends SerializerClass.extend(
+        EmbeddedRecordsMixin,
+      ) {
+        attrs = {
+          includedVillains: { embedded: 'always' },
+          company: { embedded: 'always' },
+          characters: { embedded: 'always' },
+        };
+      };
+    default:
+      return SerializerClass;
+  }
 }
 
 // serializerType like -rest or -active-model, -json-api, -json
 export function containerSetup(application, serializerType) {
-  // brute force setting the adapter/serializer on the store.
-  if (serializerType) {
-    application.register('adapter:-active-model', ActiveModelAdapter, {
-      singleton: false,
-    });
-    application.register('serializer:-active-model', ActiveModelSerializer, {
-      singleton: false,
-    });
+  assert(
+    'unexpected serializerType for test setup',
+    ['-rest', '-active-model', '-json-api', '-json'].includes(serializerType),
+  );
 
-    let store = application.lookup('service:store');
+  const modelNames = [
+    'big-group',
+    'big-hat',
+    'cat',
+    'comic-book',
+    'company',
+    'cool-stoner',
+    'dog',
+    'employee',
+    'entry-type',
+    'entry',
+    'fluffy-material',
+    'group',
+    'hat',
+    'manager',
+    'material',
+    'outfit',
+    'person',
+    'philosopher',
+    'profile',
+    'project',
+    'property',
+    'review',
+    'rod',
+    'salary',
+    'small-company',
+    'small-group',
+    'small-hat',
+    'soft-material',
+    'stoner',
+    'super-hero',
+    'user',
+    'villain',
+  ];
 
-    let adapterType = serializerType === '-json' ? '-rest' : serializerType;
-    let adapter;
-    if (serializerType === '-json' || serializerType === '-rest') {
-      application.register(`adapter:-rest`, RESTAdapter, {
-        singleton: false,
-      });
-    }
-    adapter = application.lookup('adapter:' + adapterType);
-    adapter = adapter.reopen();
+  const { adapter, serializer } = getBaseFor(serializerType);
+  application.register(`adapter:application`, adapter);
+  application.register(`serializer:application`, serializer);
+  application.register(`adapter:${serializerType}`, adapter);
+  application.register(`serializer:${serializerType}`, serializer);
 
-    serializerType = serializerType === '-json' ? '-default' : serializerType;
-    let serializer = application.lookup('serializer:' + serializerType);
+  modelNames.forEach((modelName) => {
+    application.register(`adapter:${modelName}`, adapter);
 
-    store.adapterFor = () => adapter;
+    // manager is always rest serializer, see real file
+    if (modelName === 'manager') return;
 
-    let findSerializer = store.serializerFor.bind(store);
-
-    store.serializerFor = function (modelName) {
-      // manager is always REST serializer ( used in rest tests )
-      let originalSerializer = findSerializer(modelName);
-      if (modelName.match(/(manager)/)) {
-        return originalSerializer;
-      }
-      if (modelName.match(/(entry|entry-type|comic-book|^cat$|^dog$)/)) {
-        let options = serializerOptions[modelName];
-        return setupCustomSerializer(application, serializerType, options);
-      }
-      return serializer;
-    };
-
-    // this is cheesy .. but it works
-    serializer.store = store;
-    adapter.store = store;
-  }
+    application.register(
+      `serializer:${modelName}`,
+      modelSerializerFor(modelName, serializer),
+    );
+  });
 }
 
 export function inlineSetup(hooks, serializerType) {

@@ -195,7 +195,7 @@ module('FactoryGuy', function (hooks) {
     });
 
     test('with namespace and host', function (assert) {
-      let adapter = FactoryGuy.store.adapterFor('application');
+      let adapter = FactoryGuy.store.adapterFor('project');
       adapter.setProperties({
         host: 'https://dude.com',
         namespace: 'api/v1',

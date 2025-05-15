@@ -10,11 +10,9 @@ import FactoryGuy, {
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
-const serializerType = '-json-api';
-
 module('MockQueryRecord', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, serializerType);
+  inlineSetup(hooks, '-json-api');
 
   test('#get method to access payload', function (assert) {
     let json = build('user');

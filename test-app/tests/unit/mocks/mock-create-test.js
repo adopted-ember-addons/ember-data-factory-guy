@@ -5,11 +5,9 @@ import FactoryGuy, { build, makeNew, mockCreate } from 'ember-data-factory-guy';
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
-const serializerType = '-json-api';
-
 module('MockCreate', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, serializerType);
+  inlineSetup(hooks, '-json-api');
 
   test('with incorrect parameters', function (assert) {
     assert.throws(function () {

@@ -9,12 +9,9 @@ import SharedCommonBehavior from './shared-common-behaviour';
 import SharedAdapterBehaviour from './shared-adapter-behaviour';
 import { inlineSetup } from '../helpers/utility-methods';
 
-let serializer = 'DS.RESTAdapter/JSONSerializer';
-let serializerType = '-json';
-
-module(serializer, function (hooks) {
+module('DS.RESTAdapter/JSONSerializer', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, serializerType);
+  inlineSetup(hooks, '-json');
 
   SharedCommonBehavior.all();
 

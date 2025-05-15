@@ -10,11 +10,9 @@ import FactoryGuy, {
 import { inlineSetup } from '../../helpers/utility-methods';
 import sinon from 'sinon';
 
-const serializerType = '-json-api';
-
 module('MockFindAll', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, serializerType);
+  inlineSetup(hooks, '-json-api');
 
   test('mockId', function (assert) {
     let mock = mockFindAll('user');
