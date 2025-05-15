@@ -1,2 +1,2 @@
-import { StringTransform } from '@ember-data/serializer/transform'
-export default StringTransform
+import { StringTransform } from '@ember-data/serializer/transform';
+export default StringTransform;
