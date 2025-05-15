@@ -52,6 +52,9 @@ importers:
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
+      prettier-plugin-ember-template-tag:
+        specifier: ^2.0.5
+        version: 2.0.5(prettier@3.5.3)
       release-plan:
         specifier: ^0.16.0
         version: 0.16.0
@@ -137,6 +140,9 @@ importers:
       '@glimmer/tracking':
         specifier: ^1.1.2
         version: 1.1.2
+      '@warp-drive/build-config':
+        specifier: ^5.5.0
+        version: 5.5.0
       active-model-adapter:
         specifier: ^4.0.0
         version: 4.0.1(patch_hash=170b0de00020ac233193286cea95b0d5133c0cf67c3246df6e03bce4fd89bb9e)(webpack@5.99.8)
@@ -173,12 +179,18 @@ importers:
       ember-resolver:
         specifier: ^13.1.0
         version: 13.1.0(ember-source@4.12.4(@babel/core@7.27.1)(@glimmer/component@1.1.2(@babel/core@7.27.1))(webpack@5.99.8))
+      ember-route-template:
+        specifier: ^1.0.3
+        version: 1.0.3
       ember-source:
         specifier: ~4.12.0
         version: 4.12.4(@babel/core@7.27.1)(@glimmer/component@1.1.2(@babel/core@7.27.1))(webpack@5.99.8)
       ember-source-channel-url:
         specifier: ^3.0.0
         version: 3.0.0(encoding@0.1.13)
+      ember-template-imports:
+        specifier: ^4.3.0
+        version: 4.3.0
       ember-try:
         specifier: ^4.0.0
         version: 4.0.0(encoding@0.1.13)
@@ -1576,6 +1588,10 @@ packages:
     resolution: {integrity: sha512-cvaZE2tF73o+DvXkKmu7WU65tDffAZKQgRh3HWnVWksWs7B4rn86zGg3uUh6edKnpZ76o7xQ0cBaqdQkoDJ5Ng==}
     engines: {node: '>= 18.20.8'}
 
+  '@warp-drive/build-config@5.5.0':
+    resolution: {integrity: sha512-l0ZyDsalwcgb9nw02GC8H62fo9E9US42p+5fVQsNOj2oleCb9f3DmLNqcbJG0w22kxJol+GU0YppO8hSqNHL2w==}
+    engines: {node: '>= 18.20.8'}
+
   '@warp-drive/core-types@0.0.3':
     resolution: {integrity: sha512-8dJY4CIekQSndEL5ORvWoYOLBL1u7YREth3jPmZQTpMGmUFc23f1WzgBKNesXV1cXGl7AUum+wvavOtvyUFzzg==}
     engines: {node: '>= 18.20.8'}
@@ -2962,6 +2978,9 @@ packages:
   ember-rfc176-data@0.3.18:
     resolution: {integrity: sha512-JtuLoYGSjay1W3MQAxt3eINWXNYYQliK90tLwtb8aeCuQK8zKGCRbBodVIrkcTqshULMnRuTOS6t1P7oQk3g6Q==}
 
+  ember-route-template@1.0.3:
+    resolution: {integrity: sha512-p//Nk4g4Wu9F8cZdjB69rKxTRi6RRW32a8K5sYsi5cofTcJtPBXRWUXWpQEjJX6qcucgxooQwEm9+7MOy4lwNw==}
+
   ember-router-generator@2.0.0:
     resolution: {integrity: sha512-89oVHVJwmLDvGvAUWgS87KpBoRhy3aZ6U0Ql6HOmU4TrPkyaa8pM0W81wj9cIwjYprcQtN9EwzZMHnq46+oUyw==}
     engines: {node: 8.* || 10.* || >= 12}
@@ -2976,6 +2995,10 @@ packages:
     engines: {node: '>= 14.*'}
     peerDependencies:
       '@glimmer/component': ^1.1.2
+
+  ember-template-imports@4.3.0:
+    resolution: {integrity: sha512-jZ5D6KLKU8up/AynZltmKh4lkXBPgTGSPgomprI/55XvIVqn42UNUpEz7ra/mO3QiGODDZOUesbggPe49i38sQ==}
+    engines: {node: 16.* || >= 18}
 
   ember-template-lint@7.6.0:
     resolution: {integrity: sha512-FqSPRB4w16Yy1fIwXPJgekSYcNFkvRvTePsgEc1C8o1gd/8bE0LgmkTXjf6pgGdIG477wMR1NyOm7oDCQNleVA==}
@@ -5221,6 +5244,12 @@ packages:
   prettier-linter-helpers@1.0.0:
     resolution: {integrity: sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==}
     engines: {node: '>=6.0.0'}
+
+  prettier-plugin-ember-template-tag@2.0.5:
+    resolution: {integrity: sha512-G9lbK3wmryIBSzqBKKoy254v7hIjqzqYpqWxi9NvOxcxNtwLyrC1u9NLJJFm+x9blzqHQOzKGOseVnbLtEwEbg==}
+    engines: {node: 18.* || >= 20}
+    peerDependencies:
+      prettier: '>= 3.0.0'
 
   prettier@2.8.8:
     resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
@@ -8390,6 +8419,16 @@ snapshots:
       - '@glint/template'
       - supports-color
 
+  '@warp-drive/build-config@5.5.0':
+    dependencies:
+      '@embroider/addon-shim': 1.10.0
+      '@embroider/macros': 1.17.2
+      babel-import-util: 2.1.1
+      semver: 7.7.1
+    transitivePeerDependencies:
+      - '@glint/template'
+      - supports-color
+
   '@warp-drive/core-types@0.0.3':
     dependencies:
       '@embroider/macros': 1.17.2
@@ -10259,6 +10298,12 @@ snapshots:
 
   ember-rfc176-data@0.3.18: {}
 
+  ember-route-template@1.0.3:
+    dependencies:
+      '@embroider/addon-shim': 1.10.0
+    transitivePeerDependencies:
+      - supports-color
+
   ember-router-generator@2.0.0:
     dependencies:
       '@babel/parser': 7.27.2
@@ -10308,6 +10353,14 @@ snapshots:
       - '@glint/template'
       - supports-color
       - webpack
+
+  ember-template-imports@4.3.0:
+    dependencies:
+      broccoli-stew: 3.0.0
+      content-tag: 3.1.3
+      ember-cli-version-checker: 5.1.2
+    transitivePeerDependencies:
+      - supports-color
 
   ember-template-lint@7.6.0(@babel/core@7.27.1):
     dependencies:
@@ -12909,6 +12962,14 @@ snapshots:
   prettier-linter-helpers@1.0.0:
     dependencies:
       fast-diff: 1.3.0
+
+  prettier-plugin-ember-template-tag@2.0.5(prettier@3.5.3):
+    dependencies:
+      '@babel/core': 7.27.1
+      content-tag: 3.1.3
+      prettier: 3.5.3
+    transitivePeerDependencies:
+      - supports-color
 
   prettier@2.8.8: {}
 

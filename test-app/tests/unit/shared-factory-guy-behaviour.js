@@ -305,7 +305,7 @@ SharedBehavior.makeTests = function () {
   test('hasMany associations assigned with ids', function (assert) {
     let project1 = make('project', { id: '1', title: 'Project One' });
     let project2 = make('project', { id: '2', title: 'Project Two' });
-    let user = make('user', { projects: [1, 2] });
+    let user = make('user', { projects: ['1', '2'] });
     assert.strictEqual(project2.get('user'), user);
     assert.strictEqual(user.projects[0], project1);
     assert.strictEqual(user.projects[1].title, 'Project Two');
@@ -313,7 +313,7 @@ SharedBehavior.makeTests = function () {
 
   test('belongsTo association assigned by id', function (assert) {
     let user = make('user', { id: '1' });
-    let project = make('project', { title: 'The Project', user: 1 });
+    let project = make('project', { title: 'The Project', user: '1' });
     assert.strictEqual(project.user, user);
     assert.strictEqual(user.projects[0], project);
     assert.strictEqual(user.projects[0].title, 'The Project');
