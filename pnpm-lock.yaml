@@ -140,6 +140,9 @@ importers:
       '@glimmer/tracking':
         specifier: ^1.1.2
         version: 1.1.2
+      '@warp-drive/build-config':
+        specifier: ^5.5.0
+        version: 5.5.0
       active-model-adapter:
         specifier: ^4.0.0
         version: 4.0.1(patch_hash=170b0de00020ac233193286cea95b0d5133c0cf67c3246df6e03bce4fd89bb9e)(webpack@5.99.8)
@@ -1583,6 +1586,10 @@ packages:
 
   '@warp-drive/build-config@0.0.3':
     resolution: {integrity: sha512-cvaZE2tF73o+DvXkKmu7WU65tDffAZKQgRh3HWnVWksWs7B4rn86zGg3uUh6edKnpZ76o7xQ0cBaqdQkoDJ5Ng==}
+    engines: {node: '>= 18.20.8'}
+
+  '@warp-drive/build-config@5.5.0':
+    resolution: {integrity: sha512-l0ZyDsalwcgb9nw02GC8H62fo9E9US42p+5fVQsNOj2oleCb9f3DmLNqcbJG0w22kxJol+GU0YppO8hSqNHL2w==}
     engines: {node: '>= 18.20.8'}
 
   '@warp-drive/core-types@0.0.3':
@@ -8403,6 +8410,16 @@ snapshots:
   '@ungap/structured-clone@1.3.0': {}
 
   '@warp-drive/build-config@0.0.3':
+    dependencies:
+      '@embroider/addon-shim': 1.10.0
+      '@embroider/macros': 1.17.2
+      babel-import-util: 2.1.1
+      semver: 7.7.1
+    transitivePeerDependencies:
+      - '@glint/template'
+      - supports-color
+
+  '@warp-drive/build-config@5.5.0':
     dependencies:
       '@embroider/addon-shim': 1.10.0
       '@embroider/macros': 1.17.2
