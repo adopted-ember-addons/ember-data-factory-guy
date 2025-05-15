@@ -2,7 +2,7 @@
 
 ## v7.0.0 (2025-05-15)
 
-See [Upgrade Guide](https://github.com/adopted-ember-addons/ember-data-factory-guy?tab=readme-ov-file#upgrading) for more details
+See [Upgrade Guide](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading) for more details
 
 * ember-data-factory-guy 7.0.0 (major)
 
@@ -40,7 +40,7 @@ See [Upgrade Guide](https://github.com/adopted-ember-addons/ember-data-factory-g
 
 ## v6.0.0 (2025-05-13)
 
-See [Upgrade Guide](https://github.com/adopted-ember-addons/ember-data-factory-guy?tab=readme-ov-file#upgrading) for more details
+See [Upgrade Guide](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading) for more details
 
 * ember-data-factory-guy 6.0.0 (major)
 
@@ -100,7 +100,7 @@ See [Upgrade Guide](https://github.com/adopted-ember-addons/ember-data-factory-g
 
 * ember-data-factory-guy 5.0.0 (major)
 
-See [Upgrade Guide](https://github.com/adopted-ember-addons/ember-data-factory-guy?tab=readme-ov-file#upgrading) for more details
+See [Upgrade Guide](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading) for more details
 
 #### :boom: Breaking Change
 * `ember-data-factory-guy`
