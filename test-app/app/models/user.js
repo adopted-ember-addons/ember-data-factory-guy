@@ -12,12 +12,7 @@ export default class extends Model {
   company;
   @hasMany('property', { async: true, inverse: 'owners' }) properties;
   @hasMany('project', { async: false, inverse: 'user' }) projects;
-  @hasMany('hat', {
-    // as: 'hat',
-    async: false,
-    polymorphic: true,
-    inverse: 'user',
-  })
+  @hasMany('hat', { async: false, polymorphic: true, inverse: 'user' })
   hats;
 
   get funnyName() {
