@@ -31,7 +31,7 @@ export default class {
       relationshipsByName = model.relationshipsByName,
       relationship = relationshipsByName.get(key);
     if (relationship) {
-      return converter.transformRelationshipKey(relationship);
+      return converter.transformRelationshipKey(relationship, modelName);
     }
     let transformKeyFunction = converter.getTransformKeyFunction(
       modelName,
