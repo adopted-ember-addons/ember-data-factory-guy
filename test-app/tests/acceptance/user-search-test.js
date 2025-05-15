@@ -1,17 +1,12 @@
 import { module, test } from 'qunit';
-import {
-  buildList,
-  make,
-  makeList,
-  mockQuery,
-  setupFactoryGuy,
-} from 'ember-data-factory-guy';
+import { buildList, make, makeList, mockQuery } from 'ember-data-factory-guy';
 import { setupApplicationTest } from 'ember-qunit';
 import { click, fillIn, visit } from '@ember/test-helpers';
+import { inlineSetup } from '../helpers/utility-methods';
 
 module('Acceptance | User Search', function (hooks) {
   setupApplicationTest(hooks);
-  setupFactoryGuy(hooks);
+  inlineSetup(hooks, '-json-api');
 
   var search = async function (name) {
     await fillIn('input.user-name', name);

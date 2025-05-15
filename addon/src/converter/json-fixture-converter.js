@@ -67,8 +67,11 @@ export default class JSONFixtureConverter extends FixtureConverter {
     return data;
   }
 
-  transformRelationshipKey(relationship) {
-    let transformedKey = super.transformRelationshipKey(relationship);
+  transformRelationshipKey(relationship, parentModelName) {
+    let transformedKey = super.transformRelationshipKey(
+      relationship,
+      parentModelName,
+    );
     if (relationship.options.polymorphic) {
       transformedKey = transformedKey.replace('_id', '');
     }

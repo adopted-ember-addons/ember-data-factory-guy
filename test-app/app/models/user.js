@@ -11,8 +11,9 @@ export default class extends Model {
   })
   company;
   @hasMany('property', { async: true, inverse: 'owners' }) properties;
-  @hasMany('project', { async: false }) projects;
-  @hasMany('hat', { async: false, polymorphic: true }) hats;
+  @hasMany('project', { async: false, inverse: 'user' }) projects;
+  @hasMany('hat', { async: false, polymorphic: true, inverse: 'user' })
+  hats;
 
   get funnyName() {
     return 'funny ' + this.name;

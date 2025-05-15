@@ -1,16 +1,12 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import {
-  buildList,
-  makeList,
-  mockFindAll,
-  setupFactoryGuy,
-} from 'ember-data-factory-guy';
+import { buildList, makeList, mockFindAll } from 'ember-data-factory-guy';
 import { visit } from '@ember/test-helpers';
+import { inlineSetup } from '../helpers/utility-methods';
 
 module('Acceptance | Users View', function (hooks) {
   setupApplicationTest(hooks);
-  setupFactoryGuy(hooks);
+  inlineSetup(hooks, '-json-api');
 
   test('Show users by using mockFindAll to create default users', async function (assert) {
     mockFindAll('user', 3);
