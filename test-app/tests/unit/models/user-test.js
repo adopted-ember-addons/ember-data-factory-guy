@@ -1,14 +1,11 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import FactoryGuy, {
-  make,
-  setupFactoryGuy,
-  mockFindRecord,
-} from 'ember-data-factory-guy';
+import FactoryGuy, { make, mockFindRecord } from 'ember-data-factory-guy';
+import { inlineSetup } from '../../helpers/utility-methods';
 
 module(`Unit | Model | user`, function (hooks) {
   setupTest(hooks);
-  setupFactoryGuy(hooks);
+  inlineSetup(hooks, '-json-api');
 
   test('has funny name', function (assert) {
     let user = make('user', { name: 'Dude' });
@@ -24,14 +21,6 @@ module(`Unit | Model | user`, function (hooks) {
     let mock = mockFindRecord('user');
     let userId = mock.get('id');
     let user = await FactoryGuy.store.findRecord('user', userId);
-    assert.strictEqual(user.get('name'), mock.get('name'));
-  });
-
-  test('sample async unit test with assert.async()', async function (assert) {
-    let mock = mockFindRecord('user');
-    let userId = mock.get('id');
-    const user = await FactoryGuy.store.findRecord('user', userId);
-
     assert.strictEqual(user.get('name'), mock.get('name'));
   });
 });

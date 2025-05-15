@@ -96,11 +96,13 @@ export default class FixtureConverter {
     }
   }
 
-  transformRelationshipKey(relationship) {
-    let { parentModelName, parentType } = relationship,
-      type =
+  transformRelationshipKey(relationship, parentModelName) {
+    const type =
+        /* parentModelName and parentType are not present on relationship schema in ember-data 5+, but these are here for backwards compat */
+        relationship.parentModelName ||
+        relationship.parentType?.modelName ||
+        /**/
         parentModelName ||
-        (parentType && parentType.modelName) ||
         relationship.type,
       transformFn = this.getTransformKeyFunction(type, 'Relationship');
     return transformFn(relationship.name, relationship.kind);
@@ -246,7 +248,7 @@ export default class FixtureConverter {
       ),
       relationshipKey = isEmbedded
         ? relationship.name
-        : this.transformRelationshipKey(relationship);
+        : this.transformRelationshipKey(relationship, parentModelName);
 
     let data = this.extractSingleRecord(
       belongsToRecord,
@@ -275,7 +277,10 @@ export default class FixtureConverter {
 
   extractHasMany(fixture, relationship, parentModelName, relationships) {
     let hasManyRecords = fixture[relationship.name],
-      relationshipKey = this.transformRelationshipKey(relationship),
+      relationshipKey = this.transformRelationshipKey(
+        relationship,
+        parentModelName,
+      ),
       isEmbedded = this.isEmbeddedRelationship(
         parentModelName,
         relationship.name,
@@ -287,6 +292,7 @@ export default class FixtureConverter {
         relationship,
         relationships,
         isEmbedded,
+        parentModelName,
       );
     }
 
@@ -382,8 +388,17 @@ export default class FixtureConverter {
   }
 
   // listProxy data is data that was build with FactoryGuy.buildList method
-  addListProxyData(jsonProxy, relationship, relationships, isEmbedded) {
-    let relationshipKey = this.transformRelationshipKey(relationship);
+  addListProxyData(
+    jsonProxy,
+    relationship,
+    relationships,
+    isEmbedded,
+    parentModelName,
+  ) {
+    let relationshipKey = this.transformRelationshipKey(
+      relationship,
+      parentModelName,
+    );
 
     let records = jsonProxy.getModelPayload().map((data) => {
       if (isEmbedded) {

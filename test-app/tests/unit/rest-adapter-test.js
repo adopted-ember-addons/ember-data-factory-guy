@@ -67,8 +67,11 @@ module('DS.RESTSerializer', function (hooks) {
         .createRecord('entry-type', { entries: [entry] })
         .save();
 
-      let entries = entryType.get('entries');
-      assert.deepEqual(entries.mapBy('id'), [entry.id]);
+      let entries = await entryType.entries;
+      assert.deepEqual(
+        entries.map((e) => e.id),
+        [entry.id],
+      );
     });
   });
   module(`FactoryGuy#build get`, function () {

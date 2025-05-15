@@ -14,8 +14,6 @@ module.exports = async function () {
           devDependencies: {
             'ember-source': '~5.12',
             'ember-load-initializers': '^3.0.0', // v3 needed for ember 5+
-            'ember-data': '~5.3', // couldnt get earlier versions to work with ember-source 5.12
-            'ember-inflector': '^6.0.0', // higher ED version needs this
           },
         },
       },
@@ -25,8 +23,6 @@ module.exports = async function () {
           devDependencies: {
             'ember-source': '~6.4',
             'ember-load-initializers': '^3.0.0',
-            'ember-data': '~5.3', // earliest version that supports ember 6
-            'ember-inflector': '^6.0.0',
           },
         },
       },
@@ -36,8 +32,6 @@ module.exports = async function () {
           devDependencies: {
             'ember-source': await getChannelURL('release'),
             'ember-load-initializers': '^3.0.0',
-            'ember-data': '~5.3',
-            'ember-inflector': '^6.0.0',
           },
         },
       },

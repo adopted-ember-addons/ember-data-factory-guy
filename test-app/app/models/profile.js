@@ -7,8 +7,8 @@ export default class extends Model {
   @attr('string') snake_case_description;
   @attr('boolean') aBooleanField;
   @attr('just-a-string') foo;
-  @belongsTo('super-hero', { async: false }) superHero;
-  @belongsTo('company', { async: false }) company;
+  @belongsTo('super-hero', { async: false, inverse: null }) superHero;
+  @belongsTo('company', { async: false, inverse: 'profile' }) company;
   @belongsTo('group', {
     async: false,
     polymorphic: true,
