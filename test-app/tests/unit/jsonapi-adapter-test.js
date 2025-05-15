@@ -591,12 +591,9 @@ module('DS.JSONAPISerializer', function (hooks) {
     test('using custom serialize keys function for transforming attributes and relationship keys', function (assert) {
       class TestProfileSerializer extends JSONAPISerializer {
         keyForAttribute = underscore;
-      }
-      class TestSuperHeroSerializer extends JSONAPISerializer {
         keyForRelationship = underscore;
       }
       this.owner.register('serializer:profile', TestProfileSerializer);
-      this.owner.register('serializer:super-hero', TestSuperHeroSerializer);
 
       let json = build('profile', 'with_bat_man');
       json.unwrap();

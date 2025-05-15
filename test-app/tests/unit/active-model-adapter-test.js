@@ -235,12 +235,9 @@ module('DS.ActiveModelSerializer', function (hooks) {
     test('using custom serialize keys function for transforming attributes and relationship keys', function (assert) {
       class TestProfileSerializer extends ActiveModelSerializer {
         keyForAttribute = dasherize;
-      }
-      class TestSuperHeroSerializer extends ActiveModelSerializer {
         keyForRelationship = dasherize;
       }
       this.owner.register('serializer:profile', TestProfileSerializer);
-      this.owner.register('serializer:super-hero', TestSuperHeroSerializer);
 
       let buildJson = build('profile', 'with_bat_man');
       buildJson.unwrap();
