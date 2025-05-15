@@ -45,6 +45,14 @@ module.exports = async function () {
           },
         },
       },
+      {
+        name: 'ember-data-5.5',
+        npm: {
+          devDependencies: {
+            'ember-data': '~5.5',
+          },
+        },
+      },
     ],
   };
 };
