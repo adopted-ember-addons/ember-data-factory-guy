@@ -2,5 +2,5 @@ import Model, { attr, belongsTo } from '@ember-data/model';
 
 export default class extends Model {
   @attr('string') name;
-  @belongsTo('entry-type') entryType;
+  @belongsTo('entry-type', { async: true, inverse: 'entries' }) entryType;
 }

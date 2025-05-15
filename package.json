@@ -38,6 +38,9 @@
       "ignoreMissing": [
         "webpack"
       ]
+    },
+    "patchedDependencies": {
+      "active-model-adapter": "patches/active-model-adapter.patch"
     }
   },
   "packageManager": "pnpm@10.10.0"

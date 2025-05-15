@@ -67,13 +67,15 @@ jobs:
       fail-fast: true
       matrix:
         ember-try-scenario:
-          [ember-default-with-jquery, embroider-safe, embroider-optimized]
+          [
+            ember-lts-5.12,
+            ember-6.4,
+            ember-default-with-jquery,
+            embroider-safe,
+            embroider-optimized,
+          ]
         allow-failure: [false]
         include:
-          - ember-try-scenario: ember-lts-5.12
-            allow-failure: true
-          - ember-try-scenario: ember-6.4
-            allow-failure: true
           - ember-try-scenario: ember-release
             allow-failure: true
 

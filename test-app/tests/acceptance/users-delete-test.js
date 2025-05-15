@@ -1,16 +1,12 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import {
-  makeList,
-  mockDelete,
-  mockFindAll,
-  setupFactoryGuy,
-} from 'ember-data-factory-guy';
+import { makeList, mockDelete, mockFindAll } from 'ember-data-factory-guy';
 import { visit, click } from '@ember/test-helpers';
+import { inlineSetup } from '../helpers/utility-methods';
 
 module('Acceptance | Users Delete', function (hooks) {
   setupApplicationTest(hooks);
-  setupFactoryGuy(hooks);
+  inlineSetup(hooks, '-json-api');
 
   test('Deleting any user with modelName', async function (assert) {
     mockFindAll('user', 2);

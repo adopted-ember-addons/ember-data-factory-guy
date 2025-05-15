@@ -1,0 +1,67 @@
+diff --git a/addon/active-model-adapter.ts b/addon/active-model-adapter.ts
+index 8d90a844c16ca465aad5113bbfc6e58f98b5124e..017869863a882a46e3449209654c81ca65ef9f55 100644
+--- a/addon/active-model-adapter.ts
++++ b/addon/active-model-adapter.ts
+@@ -1,8 +1,5 @@
+ import RESTAdapter from '@ember-data/adapter/rest';
+-import AdapterError, {
+-  InvalidError,
+-  errorsHashToArray,
+-} from '@ember-data/adapter/error';
++import AdapterError, { InvalidError } from '@ember-data/adapter/error';
+ import { pluralize } from 'ember-inflector';
+ import { AnyObject } from 'active-model-adapter';
+ import { decamelize, underscore } from '@ember/string';
+@@ -162,3 +159,52 @@ export default class ActiveModelAdapter extends RESTAdapter {
+     }
+   }
+ }
++
++/**
++ * Adding errorsHashToArray() func until next version of active-model-adapter is released, this function is removed in
++ * ember-data 5+
++ *
++ * https://github.com/adopted-ember-addons/active-model-adapter/issues/191
++ * https://github.com/adopted-ember-addons/active-model-adapter/pull/192
++ */
++
++const PRIMARY_ATTRIBUTE_KEY = 'base';
++
++interface ErrorObject {
++  title: string;
++  detail: string;
++  source: {
++    pointer: string;
++  };
++}
++
++function errorsHashToArray(errors: AnyObject) {
++  const out: ErrorObject[] = [];
++
++  if (errors) {
++    Object.keys(errors).forEach((key) => {
++      const messages = makeArray(errors[key]);
++      for (let i = 0; i < messages.length; i++) {
++        let title = 'Invalid Attribute';
++        let pointer = `/data/attributes/${key}`;
++        if (key === PRIMARY_ATTRIBUTE_KEY) {
++          title = 'Invalid Document';
++          pointer = `/data`;
++        }
++        out.push({
++          title: title,
++          detail: messages[i],
++          source: {
++            pointer: pointer,
++          },
++        });
++      }
++    });
++  }
++
++  return out;
++}
++
++function makeArray(value: unknown) {
++  return Array.isArray(value) ? value : [value];
++}

@@ -11,7 +11,7 @@ export default class AMSFixtureConverter extends RESTFixtureConverter {
    * @param relationship
    * @returns {*}
    */
-  transformRelationshipKey(relationship) {
+  transformRelationshipKey(relationship, parentModelName) {
     if (this.serializeMode) {
       let transformFn = this.getTransformKeyFunction(
         relationship.type,
@@ -19,7 +19,7 @@ export default class AMSFixtureConverter extends RESTFixtureConverter {
       );
       return transformFn(relationship.name, relationship.kind);
     } else {
-      return super.transformRelationshipKey(relationship);
+      return super.transformRelationshipKey(relationship, parentModelName);
     }
   }
 }

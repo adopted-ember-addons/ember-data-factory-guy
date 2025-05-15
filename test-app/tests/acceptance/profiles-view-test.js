@@ -1,15 +1,12 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import FactoryGuy, {
-  makeList,
-  mockFindAll,
-  setupFactoryGuy,
-} from 'ember-data-factory-guy';
+import FactoryGuy, { makeList, mockFindAll } from 'ember-data-factory-guy';
 import { visit } from '@ember/test-helpers';
+import { inlineSetup } from '../helpers/utility-methods';
 
 module('Acceptance | Profiles View', function (hooks) {
   setupApplicationTest(hooks);
-  setupFactoryGuy(hooks);
+  inlineSetup(hooks, '-json-api');
 
   test('Handles differently cased attributes', async function (assert) {
     let description = 'mylittlepony',

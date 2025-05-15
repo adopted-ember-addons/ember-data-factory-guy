@@ -9,6 +9,7 @@ import FactoryGuy, {
 import SharedCommonBehavior from './shared-common-behaviour';
 import SharedAdapterBehaviour from './shared-adapter-behaviour';
 import { inlineSetup } from '../helpers/utility-methods';
+import { ActiveModelSerializer } from 'active-model-adapter';
 
 module('DS.ActiveModelSerializer', function (hooks) {
   setupTest(hooks);
@@ -232,12 +233,11 @@ module('DS.ActiveModelSerializer', function (hooks) {
     });
 
     test('using custom serialize keys function for transforming attributes and relationship keys', function (assert) {
-      let serializer = FactoryGuy.store.serializerFor('profile');
-
-      let savedKeyForAttributeFn = serializer.keyForAttribute;
-      serializer.keyForAttribute = dasherize;
-      let savedKeyForRelationshipFn = serializer.keyForRelationship;
-      serializer.keyForRelationship = dasherize;
+      class TestProfileSerializer extends ActiveModelSerializer {
+        keyForAttribute = dasherize;
+        keyForRelationship = dasherize;
+      }
+      this.owner.register('serializer:profile', TestProfileSerializer);
 
       let buildJson = build('profile', 'with_bat_man');
       buildJson.unwrap();
@@ -261,9 +261,6 @@ module('DS.ActiveModelSerializer', function (hooks) {
       };
 
       assert.deepEqual(buildJson, expectedJson);
-
-      serializer.keyForAttribute = savedKeyForAttributeFn;
-      serializer.keyForRelationship = savedKeyForRelationshipFn;
     });
 
     test('serializes attributes with custom type', function (assert) {
