@@ -1,6 +1,29 @@
 # Upgrading
 
-## v4 -> v5
+## to v7
+
+No longer supporting `ember-data-model-fragments`. Given that package is not being maintained, and is locked to < ember-data 4.6, I cannot see how support for it can be expected to be kept in other addons either, if those addons want to move forward with supporting later versions of ember-data and ember-source.
+
+If you use `ember-data-model-fragments` with factory guy, you'll want to stick with factory guy v6 or earlier.
+
+The silver lining, is this has unblocked us to explicitly upgrade the tests to run against ember-data 5.3 and ember-source 5.12 and 6.4.
+
+TLDR; Now explicitly supporting;
+
+- `ember-source` 4.12, 5.12, 6.4
+- `ember-data` 5.3+
+
+You can still likely run earlier versions of ember-data with factory guy, we're just not explicitly testing for that.
+
+## to v6
+
+Dropping dependencies for unsupported versions - shouldn't be any changes needed from your application, except for ensuring you're on;
+
+- `ember-source` 4.12+
+- `active-model-adapter` 4+ (if you use it)
+- `ember-data-model-fragments` 6+ (if you use it)
+
+## to v5
 
 Users of `ember-django-adapter` will need to remain on v4. The addon is quite old and under-maintained, it required a fix to move factory guy forward which was unlikely to be merged.
 
