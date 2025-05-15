@@ -1,5 +1,29 @@
 # Changelog
 
+## Release (2025-05-15)
+
+* ember-data-factory-guy 7.0.0 (major)
+
+#### :boom: Breaking Change
+* `ember-data-factory-guy`
+  * [#538](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/538) refactor: drop ember-data-model-fragments, no longer supported ([@Techn1x](https://github.com/Techn1x))
+
+#### :rocket: Enhancement
+* `ember-data-factory-guy`
+  * [#542](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/542) chore: run tests against ember-data 5.3, explicitly support ember 4.12, 5.12, 6.4 ([@Techn1x](https://github.com/Techn1x))
+
+#### :memo: Documentation
+* [#541](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/541) docs: update the upgrade docs ([@Techn1x](https://github.com/Techn1x))
+
+#### :house: Internal
+* Other
+  * [#543](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/543) test: GJS for the test templates and components ([@Techn1x](https://github.com/Techn1x))
+* `ember-data-factory-guy`
+  * [#539](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/539) test: rewrite test setup without .reopen() usage ([@Techn1x](https://github.com/Techn1x))
+
+#### Committers: 1
+- Brad Overton ([@Techn1x](https://github.com/Techn1x))
+
 ## v6.1.0 (2025-05-14)
 
 * ember-data-factory-guy 6.1.0 (minor)
