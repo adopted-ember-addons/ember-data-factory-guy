@@ -1,6 +1,6 @@
 import Store from '@ember-data/store';
 import { A } from '@ember/array';
-import { module, test, skip } from 'qunit';
+import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
   attributesFor,
@@ -14,7 +14,6 @@ import { MissingSequenceError } from 'ember-data-factory-guy';
 import sinon from 'sinon';
 import { inlineSetup } from '../helpers/utility-methods';
 import User from 'test-app/models/user';
-import Name from 'test-app/models/name';
 import { RequestManager } from 'ember-data-factory-guy/-private';
 
 module('FactoryGuy', function (hooks) {
@@ -62,7 +61,7 @@ module('FactoryGuy', function (hooks) {
   });
 
   test('#resetDefinitions resets the model definition', function (assert) {
-    assert.expect(33);
+    assert.expect(27);
 
     let project = make('project');
     make('user', { projects: [project] });
@@ -154,51 +153,32 @@ module('FactoryGuy', function (hooks) {
       let user = FactoryGuy.make('user');
       assert.ok(user instanceof User);
     });
-
-    test('returns a fragment for model fragment', function (assert) {
-      let name = FactoryGuy.make('name');
-      assert.ok(name instanceof Name, 'The fragment is a Name fragment');
-      assert.strictEqual(
-        name.get('firstName'),
-        'Tyrion',
-        'The firstName is correct',
-      );
-    });
   });
 
   module('FactoryGuy#hasMany', function (hooks) {
     inlineSetup(hooks, '-rest');
 
-    skip("with model and buildType 'make'", function (assert) {
+    test("with model and buildType 'make'", function (assert) {
       let hasMany = FactoryGuy.hasMany('employee', 1),
         json = hasMany({}, 'make'),
         [employee] = json;
 
-      assert.deepEqual(employee.name, {
-        firstName: 'Tyrion',
-        lastName: 'Lannister',
+      assert.deepEqual(employee, {
+        id: '1',
+        gender: 'Male',
+        birthDate: new Date('2016-05-01'),
       });
     });
 
-    test("with model with model fragment and buildType 'make'", function (assert) {
-      let hasMany = FactoryGuy.hasMany('employee', 1),
-        json = hasMany({}, 'make'),
-        [employee] = json;
-
-      assert.deepEqual(employee.name, {
-        firstName: 'Tyrion',
-        lastName: 'Lannister',
-      });
-    });
-
-    test("with model with model fragment and buildType 'build'", function (assert) {
+    test("with model and buildType 'build'", function (assert) {
       let hasMany = FactoryGuy.hasMany('employee', 1),
         json = hasMany({}, 'build'),
         [employee] = json;
 
-      assert.deepEqual(employee.name, {
-        first_name: 'Tyrion',
-        last_name: 'Lannister',
+      assert.deepEqual(employee, {
+        id: '1',
+        gender: 'Male',
+        birthDate: new Date('2016-05-01'),
       });
     });
   });
@@ -975,20 +955,6 @@ module('FactoryGuy', function (hooks) {
       let json = FactoryGuy.buildRaw({ name: 'property' });
       let expected = { id: '1', name: 'Silly property' };
       assert.deepEqual(json, expected);
-    });
-
-    test('removes id for model fragment attribute', function (assert) {
-      let json = FactoryGuy.buildRaw({ name: 'manager' });
-      assert.deepEqual(json.name.id, undefined);
-    });
-
-    test('removes id for model fragmentArray attribute', function (assert) {
-      let json = FactoryGuy.buildRaw({
-        name: 'employee',
-        traits: ['with_department_employments'],
-      });
-      let ids = A(json.departmentEmployments.map((obj) => obj.id)).compact();
-      assert.deepEqual(ids, []);
     });
   });
 

@@ -1,4 +1,4 @@
-import { module, test, skip } from 'qunit';
+import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import FactoryGuy, {
   build,
@@ -180,106 +180,6 @@ module(serializer, function (hooks) {
         characters: [
           { id: '1', type: 'Villain', name: 'BadGuy#1' },
           { id: '2', type: 'Villain', name: 'BadGuy#2' },
-        ],
-      };
-
-      assert.deepEqual(buildJson, expectedJson);
-    });
-
-    // Nov 4 2016 => not sure why these tests for manager model are here because this
-    // model is  REST model using EmbeddedRecordsMixin which is not compatible with JSONSerializer
-    // so what did I put tests for that here ?? can't remember
-
-    skip("embeds belongsTo record when serializer attrs => deserialize: 'records' ", function (assert) {
-      let buildJson = build('manager', 'withSalary');
-      buildJson.unwrap();
-
-      let expectedJson = {
-        id: '1',
-        name: {
-          firstName: 'Tyrion',
-          lastName: 'Lannister',
-        },
-        salary: {
-          id: '1',
-          income: 90000,
-          benefits: ['health', 'company car', 'dental'],
-        },
-      };
-
-      assert.deepEqual(buildJson, expectedJson);
-    });
-
-    skip("embeds belongsTo record passed as prebuilt ( build ) json when serializer attrs => deserialize: 'records' ", function (assert) {
-      let salary = build('salary');
-      let buildJson = build('manager', { salary: salary });
-      buildJson.unwrap();
-
-      let expectedJson = {
-        id: '1',
-        name: {
-          firstName: 'Tyrion',
-          lastName: 'Lannister',
-        },
-        salary: {
-          id: '1',
-          income: 90000,
-          benefits: ['health', 'company car', 'dental'],
-        },
-      };
-
-      assert.deepEqual(buildJson, expectedJson);
-    });
-
-    skip("embeds hasMany records when serializer attrs => deserialize: 'records'", function (assert) {
-      let buildJson = build('manager', 'with_reviews');
-      buildJson.unwrap();
-
-      let expectedJson = {
-        id: '1',
-        name: {
-          firstName: 'Tyrion',
-          lastName: 'Lannister',
-        },
-        reviews: [
-          {
-            id: '1',
-            rating: 1,
-            date: '2015-05-01T00:00:00.000Z',
-          },
-          {
-            id: '2',
-            rating: 2,
-            date: '2015-05-01T00:00:00.000Z',
-          },
-        ],
-      };
-
-      assert.deepEqual(buildJson, expectedJson);
-    });
-
-    skip("embeds hasMany records passed as prebuilt ( buildList ) json when serializer attrs => deserialize: 'records'", function (assert) {
-      let reviews = buildList('review', 2);
-      let buildJson = build('manager', { reviews: reviews });
-      buildJson.unwrap();
-
-      let expectedJson = {
-        id: '1',
-        name: {
-          firstName: 'Tyrion',
-          lastName: 'Lannister',
-        },
-        reviews: [
-          {
-            id: '1',
-            rating: 1,
-            date: '2015-05-01T00:00:00.000Z',
-          },
-          {
-            id: '2',
-            rating: 2,
-            date: '2015-05-01T00:00:00.000Z',
-          },
         ],
       };
 

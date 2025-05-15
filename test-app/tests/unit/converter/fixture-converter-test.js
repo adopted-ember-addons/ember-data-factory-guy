@@ -8,15 +8,15 @@ module('FixtureConverter', function (hooks) {
   inlineSetup(hooks, '-rest');
 
   test('#getTransformKeyFunction with custom serializer keyForAttribute function', function (assert) {
-    let buildJson = build('manager');
+    let buildJson = build('manager', 'withSalary');
     buildJson.unwrap();
 
     let expectedJson = {
       manager: {
         id: '1',
-        name: {
-          first_name: 'Tyrion',
-          last_name: 'Lannister',
+        salary: {
+          id: '1',
+          income: 90000,
         },
       },
     };

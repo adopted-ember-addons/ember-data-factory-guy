@@ -1,7 +1,7 @@
 import FactoryGuy from './factory-guy';
 import Sequence from './sequence';
 import MissingSequenceError from './missing-sequence-error';
-import { isEmptyObject, mergeDeep } from './utils/helper-functions';
+import { mergeDeep } from './utils/helper-functions';
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 import { useStringIdsOnly, verifyId } from './own-config';
@@ -51,41 +51,6 @@ class ModelDefinition {
     let modelClass = FactoryGuy.store.modelFor(this.modelName);
     let relationship = modelClass.relationshipsByName.get(field);
     return relationship || null;
-  }
-
-  /**
-   Get model fragment info ( if it exists )
-
-   @param attribute
-   @returns {Object} or null if no fragment info
-   */
-  modelFragmentInfo(attribute) {
-    let modelClass = FactoryGuy.store.modelFor(this.modelName);
-    return modelClass.attributes.get(attribute);
-  }
-
-  /**
-   Is this attribute a model fragment type
-
-   @param {String} attribute  attribute you want to check
-   @returns {Boolean} true if it's a model fragment
-   */
-  isModelFragmentAttribute(attribute) {
-    let info = this.modelFragmentInfo(attribute);
-    return !!(info && info.type && info.type.match('mf-fragment'));
-  }
-
-  /**
-   Get actual model fragment type, in case the attribute name is different
-   than the fragment type
-
-   @param {String} attribute attribute name for which you want fragment type
-   @returns {String} fragment type
-   */
-  fragmentType(attribute) {
-    let info = this.modelFragmentInfo(attribute);
-    let match = info.type.match('mf-fragment\\$(.*)');
-    return match[1];
   }
 
   /**
@@ -171,10 +136,6 @@ class ModelDefinition {
 
     verifyId(fixture.id);
 
-    if (FactoryGuy.isModelAFragment(this.modelName)) {
-      delete fixture.id;
-    }
-
     return fixture;
   }
 
@@ -188,20 +149,6 @@ class ModelDefinition {
     // for the association and replace the attribute with that json
     let relationship = this.getRelationship(attribute);
 
-    if (this.isModelFragmentAttribute(attribute)) {
-      let payload = fixture[attribute];
-      if (isEmptyObject(payload)) {
-        // make a payload, but make sure it's the correct fragment type
-        let actualType = this.fragmentType(attribute);
-        payload = FactoryGuy.buildRaw({
-          name: actualType,
-          opts: {},
-          buildType,
-        });
-      }
-      // use the payload you have been given
-      fixture[attribute] = payload;
-    }
     if (relationship) {
       let payload = fixture[attribute];
       if (!payload.isProxy && !payload.links) {
