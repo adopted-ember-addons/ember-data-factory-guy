@@ -1184,16 +1184,23 @@ SharedBehavior.mockCreateTests = function () {
 SharedBehavior.mockCreateFailsWithErrorResponse = function () {
   module('#mockCreate | fails with error response;', function () {
     test('failure with status code 422 and errors in response with fails method', async function (assert) {
+      assert.expect(2);
+
       let errors = { errors: { dog: ['bad dog'], dude: ['bad dude'] } };
-      let mock = mockCreate('profile').fails({ status: 422, response: errors });
+      let mock = mockCreate('profile').fails({
+        status: 422,
+        response: errors,
+      });
 
       let profile = FactoryGuy.store.createRecord('profile');
-      await profile.save().catch(() => {
-        let errorMessages = profile.get('errors.messages');
+
+      try {
+        await profile.save();
+      } catch (e) {
+        let errorMessages = profile.errors.messages;
         assert.deepEqual(errorMessages, ['bad dog', 'bad dude']);
         assert.strictEqual(mock.timesCalled, 1);
-        assert.ok(true);
-      });
+      }
     });
   });
 };
