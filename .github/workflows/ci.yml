@@ -73,6 +73,7 @@ jobs:
             ember-default-with-jquery,
             embroider-safe,
             embroider-optimized,
+            ember-data-5.5,
           ]
         allow-failure: [false]
         include:
