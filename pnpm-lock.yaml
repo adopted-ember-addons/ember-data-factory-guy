@@ -185,9 +185,6 @@ importers:
       ember-source:
         specifier: ~4.12.0
         version: 4.12.4(@babel/core@7.27.1)(@glimmer/component@1.1.2(@babel/core@7.27.1))(webpack@5.99.8)
-      ember-source-channel-url:
-        specifier: ^3.0.0
-        version: 3.0.0(encoding@0.1.13)
       ember-template-imports:
         specifier: ^4.3.0
         version: 4.3.0
