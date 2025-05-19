@@ -4,3 +4,7 @@ packages:
 onlyBuiltDependencies:
   - core-js
   - fsevents
+# Be a good citizen of the ecosystem. If a dep is not declared, we want an error
+autoInstallPeers: false
+strictPeerDependencies: true
+resolvePeersFromWorkspaceRoot: false
