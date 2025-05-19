@@ -1,5 +1,16 @@
 # Changelog
 
+## Release (2025-05-19)
+
+
+
+#### :house: Internal
+* [#546](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/546) chore: improve pnpm config, fix ember-release try scenario ([@Techn1x](https://github.com/Techn1x))
+* [#545](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/545) chore: pnpm 10.11, enable ED 5.5 try scenario ([@Techn1x](https://github.com/Techn1x))
+
+#### Committers: 1
+- Brad Overton ([@Techn1x](https://github.com/Techn1x))
+
 ## v7.0.0 (2025-05-15)
 
 See [Upgrade Guide](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading) for more details
