@@ -43,10 +43,9 @@ The addon no longer uses `require()` to import and register your factory guy Fac
 
 Factories
 
-- Add a `tests/factories.js` file that imports all your factories
-  - example https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/ed50331e5bd414f6ffa2b5a1e52966ff55e5116d/test-app/tests/factories.js#L1-L33
-- Add `import 'my-app/tests/factories';` to your `tests/test-helper.js` file
-  - example https://github.com/adopted-ember-addons/ember-data-factory-guy/blob/ed50331e5bd414f6ffa2b5a1e52966ff55e5116d/test-app/tests/test-helper.js#L8
+See [Requirements](quick-start.md#requirements)
+
+- Add `import.meta.glob('./factories/**/*.{js,ts}')` to your `tests/test-helper.js` file. Failing that, import your factories there.
 
 Scenario
 
