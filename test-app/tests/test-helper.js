@@ -7,7 +7,7 @@ import { loadTests } from 'ember-qunit/test-loader';
 import { start, setupEmberOnerrorValidation } from 'ember-qunit';
 import { installSinon } from 'test-app/tests/helpers/install-sinon';
 
-import.meta.glob('./factories/**/*.{js,ts}');
+import 'test-app/tests/factories';
 
 installSinon(QUnit);
 

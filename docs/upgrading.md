@@ -45,7 +45,7 @@ Factories
 
 See [Requirements](quick-start.md#requirements)
 
-- Add `import.meta.glob('./factories/**/*.{js,ts}')` to your `tests/test-helper.js` file
+- Add `import.meta.glob('./factories/**/*.{js,ts}')` to your `tests/test-helper.js` file. Failing that, import your factories there.
 
 Scenario
 
