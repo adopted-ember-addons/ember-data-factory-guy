@@ -1,0 +1,6 @@
+# Unlabeled Changes
+
+* [#547](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/547) docs: use import glob ([@Techn1x](https://github.com/Techn1x))
+
+
+*Cannot plan release until the above changes are labeled*.
