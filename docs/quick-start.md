@@ -38,19 +38,7 @@ for mocking an HTTP request's payload.
 
 Factory Guy needs to be made aware of any factory files you define (see [Defining Factories](defining-factories.md)). This can be done by importing the factory files, which register themselves with FactoryGuy.
 
-A clean way to do this is to create a `factories.js` file that imports them all
-
-```js
-// tests/factories/factories.js
-
-import 'my-app/tests/factories/big-group';
-import 'my-app/tests/factories/big-hat';
-import 'my-app/tests/factories/project';
-import 'my-app/tests/factories/user';
-...
-```
-
-And import that file before your tests run - for example, in your test-helper file.
+A clean way to do this is to use an import glob before your tests run, in your test-helper file, to import them all.
 
 ```js
 // tests/test-helper.js
@@ -59,12 +47,15 @@ import config from 'my-app/config/environment';
 import { setApplication } from '@ember/test-helpers';
 import { start } from 'ember-qunit';
 
-import 'my-app/tests/factories'; // this line here
+import.meta.glob('./factories/**/*.{js,ts}'); // this line here
 
 /* existing test-helper.js setup code */
 setApplication(Application.create(config.APP));
 start();
 ```
+
+`import.meta.glob()` should be accesible in embroider or vite, or via this polyfill package https://github.com/NullVoxPopuli/ember-classic-import-meta-glob
+If those options don't work for you, you can import the factories individually with regular import statements in the test-helper.js file.
 
 ### Test Setup
 
