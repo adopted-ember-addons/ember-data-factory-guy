@@ -61,7 +61,7 @@ export async function start() {
 If those options don't work for you, you can import the factories individually with regular import statements in the test-helper.js file.
 
 ```js
-// tests/factories/factories.js
+// tests/factories.js
 
 import 'my-app/tests/factories/big-group';
 import 'my-app/tests/factories/big-hat';
