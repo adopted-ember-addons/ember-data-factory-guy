@@ -25,6 +25,9 @@ importers:
       '@babel/plugin-transform-class-properties':
         specifier: ^7.27.1
         version: 7.27.1(@babel/core@7.27.1)
+      ember-eslint-parser:
+        specifier: ^0.5.9
+        version: 0.5.9(@babel/core@7.27.1)(eslint@8.57.1)
       ember-template-lint:
         specifier: ^7.6.0
         version: 7.6.0(@babel/core@7.27.1)
