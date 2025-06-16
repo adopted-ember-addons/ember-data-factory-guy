@@ -40,8 +40,7 @@
     "dist"
   ],
   "dependencies": {
-    "@embroider/addon-shim": "^1.10.0",
-    "pretender": "^3.4.3"
+    "@embroider/addon-shim": "^1.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
@@ -66,10 +65,18 @@
     "@ember/string": ">= 3.0.0",
     "@ember/test-helpers": ">= 3",
     "active-model-adapter": "^4.0.0",
-    "ember-inflector": ">= 4.0.1"
+    "ember-inflector": ">= 4.0.1",
+    "pretender": "^3.4.3",
+    "msw": "^2.10.2"
   },
   "peerDependenciesMeta": {
     "active-model-adapter": {
+      "optional": true
+    },
+    "pretender": {
+      "optional": true
+    },
+    "msw": {
       "optional": true
     }
   },

@@ -43,7 +43,12 @@
     },
     "patchedDependencies": {
       "active-model-adapter": "patches/active-model-adapter.patch"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "core-js",
+      "fsevents",
+      "msw"
+    ]
   },
   "packageManager": "pnpm@10.11.0"
 }
