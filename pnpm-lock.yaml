@@ -107,6 +107,12 @@ importers:
       ember-inflector:
         specifier: ^4.0.1
         version: 4.0.1
+      msw:
+        specifier: ^2.10.2
+        version: 2.10.2(@types/node@22.15.14)(typescript@5.8.3)
+      pretender:
+        specifier: ^3.4.3
+        version: 3.4.7
       rollup:
         specifier: ^4.40.1
         version: 4.40.2
