@@ -9,6 +9,14 @@ module.exports = async function () {
     // npmOptions: ['--config.strict-peer-dependencies=false'],
     scenarios: [
       {
+        name: 'msw-only',
+        npm: {
+          devDependencies: {
+            pretender: null,
+          },
+        },
+      },
+      {
         name: 'pretender-only',
         npm: {
           devDependencies: {

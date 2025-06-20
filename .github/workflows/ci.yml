@@ -69,6 +69,7 @@ jobs:
         ember-try-scenario:
           [
             pretender-only,
+            msw-only,
             ember-lts-5.12,
             ember-6.4,
             ember-default-with-jquery,
