@@ -12,15 +12,12 @@ class FactoryGuy {
   /**
    * Setting for FactoryGuy.
    *
-   * responseTime: 0 is fastest
    * logLevel: 0 is off, 1 is on
    *
    * @param logLevel [0/1]
    */
-  settings({ logLevel = 0, responseTime = null } = {}) {
-    RequestManager.settings({ responseTime });
+  settings({ logLevel = 0 } = {}) {
     this.logLevel = logLevel;
-    return RequestManager.settings();
   }
 
   setStore(aStore) {
