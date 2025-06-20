@@ -10,10 +10,10 @@ module.exports = async function () {
     scenarios: [
       {
         name: 'msw-only',
+        env: {
+          INTERCEPTOR: 'msw',
+        },
         npm: {
-          env: {
-            INTERCEPTOR: 'msw',
-          },
           devDependencies: {
             pretender: null,
           },
@@ -21,10 +21,10 @@ module.exports = async function () {
       },
       {
         name: 'pretender-only',
+        env: {
+          INTERCEPTOR: 'pretender',
+        },
         npm: {
-          env: {
-            INTERCEPTOR: 'pretender',
-          },
           devDependencies: {
             msw: null,
           },
