@@ -8,7 +8,6 @@ import {
   toParams,
 } from '../utils/helper-functions';
 import FactoryGuy from '../factory-guy';
-import RequestManager from './request-manager';
 
 export default class {
   constructor() {
@@ -213,9 +212,9 @@ export default class {
 
   setupHandler() {
     if (!this.mockId) {
-      RequestManager.addHandler(this);
+      FactoryGuy.requestManager.addHandler(this);
     } else if (this.changedUrl()) {
-      RequestManager.replaceHandler(this);
+      FactoryGuy.requestManager.replaceHandler(this);
     }
   }
 
@@ -235,7 +234,7 @@ export default class {
   }
 
   destroy() {
-    RequestManager.removeHandler(this);
+    FactoryGuy.requestManager.removeHandler(this);
     this.isDestroyed = true;
   }
 }

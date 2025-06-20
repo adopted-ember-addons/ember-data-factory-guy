@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { RequestManager, param } from 'ember-data-factory-guy/-private';
+import { param } from 'ember-data-factory-guy/-private';
 import FactoryGuy, {
   make,
   buildList,
@@ -91,7 +91,7 @@ module('MockFindAll', function (hooks) {
 
   test('RequestManager creates wrapper with one mockFindAll mock', function (assert) {
     let mock = mockFindAll('user', 2);
-    let wrapper = RequestManager.findWrapper({ handler: mock });
+    let wrapper = this.requestManager.findWrapper({ handler: mock });
     let ids = wrapper.getHandlers().map((h) => h.mockId);
     assert.deepEqual(ids, [{ type: 'GET', url: '/users', num: 0 }]);
   });
@@ -99,7 +99,10 @@ module('MockFindAll', function (hooks) {
   test('RequestManager creates wrapper with two mockFindAll mocks', function (assert) {
     mockFindAll('user', 2), mockFindAll('user', 1);
 
-    let wrapper = RequestManager.findWrapper({ type: 'GET', url: '/users' });
+    let wrapper = this.requestManager.findWrapper({
+      type: 'GET',
+      url: '/users',
+    });
     let ids = wrapper.getHandlers().map((h) => h.mockId);
     assert.deepEqual(ids, [
       { type: 'GET', url: '/users', num: 0 },

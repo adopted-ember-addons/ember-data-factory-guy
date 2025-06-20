@@ -14,73 +14,72 @@ import { MissingSequenceError } from 'ember-data-factory-guy';
 import sinon from 'sinon';
 import { inlineSetup } from '../helpers/utility-methods';
 import User from 'test-app/models/user';
-import { RequestManager } from 'ember-data-factory-guy/-private';
 
 module('FactoryGuy', function (hooks) {
   setupTest(hooks);
-  inlineSetup(hooks, '-json-api');
 
-  test('has store set in initializer', function (assert) {
-    assert.ok(FactoryGuy.store instanceof Store);
+  module('basic', function (subHooks) {
+    inlineSetup(subHooks, '-json-api');
+
+    test('has store set in initializer', function (assert) {
+      assert.ok(FactoryGuy.store instanceof Store);
+    });
+
+    test('#settings', function (assert) {
+      FactoryGuy.logLevel = 0;
+
+      FactoryGuy.settings({ logLevel: 1 });
+      assert.strictEqual(FactoryGuy.logLevel, 1);
+    });
+
+    test('exposes make method which is shortcut for FactoryGuy.make', function (assert) {
+      assert.ok(make('user') instanceof User);
+    });
+
+    test('exposes makeList method which is shortcut for FactoryGuy.makeList', function (assert) {
+      let users = makeList('user', 2);
+      assert.strictEqual(users.length, 2);
+      assert.ok(users[0] instanceof User);
+      assert.ok(users[1] instanceof User);
+      assert.strictEqual(FactoryGuy.store.peekAll('user').length, 2);
+    });
+
+    test('exposes build method which is shortcut for FactoryGuy.build', function (assert) {
+      let json = build('user');
+      assert.ok(json);
+    });
+
+    test('exposes buildList method which is shortcut for FactoryGuy.buildList', function (assert) {
+      let userList = buildList('user', 2);
+      assert.strictEqual(userList.data.length, 2);
+    });
+
+    test('#resetDefinitions resets the model definition', function (assert) {
+      assert.expect(27);
+
+      let project = make('project');
+      make('user', { projects: [project] });
+
+      let model,
+        definition,
+        definitions = FactoryGuy.getModelDefinitions();
+
+      for (model in definitions) {
+        definition = definitions[model];
+        sinon.spy(definition, 'reset');
+      }
+
+      FactoryGuy.resetDefinitions();
+
+      for (model in definitions) {
+        definition = definitions[model];
+        assert.ok(definition.reset.calledOnce);
+      }
+    });
   });
 
-  test('#settings', function (assert) {
-    FactoryGuy.logLevel = 0;
-    FactoryGuy.settings({ responseTime: 0 });
-
-    FactoryGuy.settings({ logLevel: 1 });
-    assert.strictEqual(FactoryGuy.logLevel, 1);
-
-    FactoryGuy.settings({ responseTime: 10 });
-    assert.strictEqual(RequestManager.settings().responseTime, 10);
-  });
-
-  test('exposes make method which is shortcut for FactoryGuy.make', function (assert) {
-    assert.ok(make('user') instanceof User);
-  });
-
-  test('exposes makeList method which is shortcut for FactoryGuy.makeList', function (assert) {
-    let users = makeList('user', 2);
-    assert.strictEqual(users.length, 2);
-    assert.ok(users[0] instanceof User);
-    assert.ok(users[1] instanceof User);
-    assert.strictEqual(FactoryGuy.store.peekAll('user').length, 2);
-  });
-
-  test('exposes build method which is shortcut for FactoryGuy.build', function (assert) {
-    let json = build('user');
-    assert.ok(json);
-  });
-
-  test('exposes buildList method which is shortcut for FactoryGuy.buildList', function (assert) {
-    let userList = buildList('user', 2);
-    assert.strictEqual(userList.data.length, 2);
-  });
-
-  test('#resetDefinitions resets the model definition', function (assert) {
-    assert.expect(27);
-
-    let project = make('project');
-    make('user', { projects: [project] });
-
-    let model,
-      definition,
-      definitions = FactoryGuy.getModelDefinitions();
-
-    for (model in definitions) {
-      definition = definitions[model];
-      sinon.spy(definition, 'reset');
-    }
-
-    FactoryGuy.resetDefinitions();
-
-    for (model in definitions) {
-      definition = definitions[model];
-      assert.ok(definition.reset.calledOnce);
-    }
-  });
-
-  module('FactoryGuy#attributesFor', function () {
+  module('FactoryGuy#attributesFor', function (subHooks) {
+    inlineSetup(subHooks, '-json-api');
     test('just modelName', function (assert) {
       let attrs = attributesFor('user');
 
@@ -115,8 +114,8 @@ module('FactoryGuy', function (hooks) {
     });
   });
 
-  module('FactoryGuy#make', function (hooks) {
-    inlineSetup(hooks, '-rest');
+  module('FactoryGuy#make', function (subHooks) {
+    inlineSetup(subHooks, '-rest');
     test('throws exception if there is NO store setup', function (assert) {
       FactoryGuy.store = null;
       assert.throws(
@@ -152,8 +151,8 @@ module('FactoryGuy', function (hooks) {
     });
   });
 
-  module('FactoryGuy#hasMany', function (hooks) {
-    inlineSetup(hooks, '-rest');
+  module('FactoryGuy#hasMany', function (subHooks) {
+    inlineSetup(subHooks, '-rest');
 
     test("with model and buildType 'make'", function (assert) {
       let hasMany = FactoryGuy.hasMany('employee', 1),
@@ -180,8 +179,8 @@ module('FactoryGuy', function (hooks) {
     });
   });
 
-  module('FactoryGuy#buildURL', function (hooks) {
-    inlineSetup(hooks, '-rest');
+  module('FactoryGuy#buildURL', function (subHooks) {
+    inlineSetup(subHooks, '-rest');
 
     test('without namespace', function (assert) {
       assert.strictEqual(
@@ -205,8 +204,8 @@ module('FactoryGuy', function (hooks) {
     });
   });
 
-  module('FactoryGuy#build', function (hooks) {
-    inlineSetup(hooks, '-rest');
+  module('FactoryGuy#build', function (subHooks) {
+    inlineSetup(subHooks, '-rest');
 
     test('throws exception if model name is not found', function (assert) {
       assert.throws(
@@ -280,8 +279,8 @@ module('FactoryGuy', function (hooks) {
     });
   });
 
-  module('FactoryGuy#buildList', function (hooks) {
-    inlineSetup(hooks, '-rest');
+  module('FactoryGuy#buildList', function (subHooks) {
+    inlineSetup(subHooks, '-rest');
 
     test('throws exception if arguments are missing the model name', function (assert) {
       assert.throws(
@@ -340,7 +339,8 @@ module('FactoryGuy', function (hooks) {
     });
   });
 
-  module('FactoryGuy#makeNew', function () {
+  module('FactoryGuy#makeNew', function (subHooks) {
+    inlineSetup(subHooks, '-json-api');
     test('throws exception if model name is not found', function (assert) {
       assert.throws(
         function () {
@@ -383,7 +383,8 @@ module('FactoryGuy', function (hooks) {
     });
   });
 
-  module('FactoryGuy#makeList', function () {
+  module('FactoryGuy#makeList', function (subHooks) {
+    inlineSetup(subHooks, '-json-api');
     test('throws exception if there is NO store setup', function (assert) {
       FactoryGuy.store = null;
       assert.throws(
@@ -472,7 +473,8 @@ module('FactoryGuy', function (hooks) {
     });
   });
 
-  module('FactoryGuy#define', function () {
+  module('FactoryGuy#define', function (subHooks) {
+    inlineSetup(subHooks, '-json-api');
     test('default values and sequences are inherited', function (assert) {
       FactoryGuy.define('person', {
         sequences: {
@@ -659,7 +661,8 @@ module('FactoryGuy', function (hooks) {
     });
   });
 
-  module('FactoryGuy#buildRaw', function () {
+  module('FactoryGuy#buildRaw', function (subHooks) {
+    inlineSetup(subHooks, '-json-api');
     test('Using sequences', function (assert) {
       FactoryGuy.define('person', {
         sequences: {
@@ -952,7 +955,8 @@ module('FactoryGuy', function (hooks) {
     });
   });
 
-  module('FactoryGuy#buildRawList', function () {
+  module('FactoryGuy#buildRawList', function (subHooks) {
+    inlineSetup(subHooks, '-json-api');
     test('basic', function (assert) {
       let userList = FactoryGuy.buildRawList({
         name: 'user',
@@ -1038,15 +1042,16 @@ module('FactoryGuy', function (hooks) {
     });
   });
 
-  module('FactoryGuy and JSONAPI', function () {
+  module('FactoryGuy and JSONAPI', function (subHooks) {
+    inlineSetup(subHooks, '-json-api');
     test('#updateHTTPMethod with JSON-API Serializer', function (assert) {
       const method = FactoryGuy.updateHTTPMethod('application');
       assert.strictEqual(method, 'PATCH');
     });
   });
 
-  module('FactoryGuy and REST', function (hooks) {
-    inlineSetup(hooks, '-rest');
+  module('FactoryGuy and REST', function (subHooks) {
+    inlineSetup(subHooks, '-rest');
     test('#updateHTTPMethod with REST Serializer', function (assert) {
       const method = FactoryGuy.updateHTTPMethod('application');
       assert.strictEqual(method, 'PUT');

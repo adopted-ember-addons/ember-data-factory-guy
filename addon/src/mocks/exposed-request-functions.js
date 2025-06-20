@@ -12,7 +12,6 @@ import MockFindAllRequest from './mock-find-all-request';
 import MockDeleteRequest from './mock-delete-request';
 import MockAnyRequest from './mock-any-request';
 import MockLinksRequest from './mock-links-request';
-import RequestManager from './request-manager';
 import { verifyId } from '../own-config';
 
 export function mock({ type = 'GET', url, responseText, status } = {}) {
@@ -403,11 +402,4 @@ export function mockDelete(...args) {
   if (id) verifyId(id);
 
   return new MockDeleteRequest(modelName, { id, model });
-}
-
-/**
- Returns the Pretender instance used for the mocks.
- */
-export function getPretender() {
-  return RequestManager.getPretender();
 }

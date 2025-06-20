@@ -9,6 +9,14 @@ module.exports = async function () {
     // npmOptions: ['--config.strict-peer-dependencies=false'],
     scenarios: [
       {
+        name: 'pretender-only',
+        npm: {
+          devDependencies: {
+            msw: null,
+          },
+        },
+      },
+      {
         name: 'ember-lts-5.12',
         npm: {
           devDependencies: {
