@@ -61,7 +61,7 @@ export default class {
 
     if (!wrapper) {
       wrapper = new RequestWrapper();
-      this.getPretender()[type.toLowerCase()].call(
+      this._getPretender()[type.toLowerCase()].call(
         pretender,
         url,
         wrapper,
@@ -122,7 +122,7 @@ export default class {
     delay = 0;
   }
 
-  static getPretender() {
+  static _getPretender() {
     if (!pretender) {
       pretender = new Pretender();
     }

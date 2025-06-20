@@ -19,7 +19,6 @@ import {
   mockDelete,
   mock,
   mockLinks,
-  getPretender,
 } from './mocks/exposed-request-functions';
 
 import JSONAPIFixtureBuilder from './builder/jsonapi-fixture-builder';
@@ -45,7 +44,6 @@ export {
   mockDelete,
   mock,
   mockLinks,
-  getPretender,
 };
 
 export {
