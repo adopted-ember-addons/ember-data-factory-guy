@@ -1,4 +1,5 @@
 import { getContext } from '@ember/test-helpers';
+import { interceptor } from './own-config';
 import FactoryGuy, {
   make,
   makeNew,
@@ -30,6 +31,7 @@ import Scenario from './scenario';
 import MissingSequenceError from './missing-sequence-error';
 
 import RequestManagerPretender from './mocks/request-manager-pretender';
+import RequestManagerMSW from './mocks/request-manager-msw';
 
 export default FactoryGuy;
 
@@ -65,7 +67,14 @@ export function setupFactoryGuy(hooks, requestManager) {
     const { owner } = getContext();
     FactoryGuy.setStore(owner.lookup('service:store'));
 
-    const rm = requestManager ? requestManager : new RequestManagerPretender();
+    let DefaultRequestManager;
+    if (interceptor === 'pretender') {
+      DefaultRequestManager = RequestManagerPretender;
+    } else if (interceptor === 'msw') {
+      DefaultRequestManager = RequestManagerMSW;
+    }
+
+    const rm = requestManager ? requestManager : new DefaultRequestManager();
     FactoryGuy.setRequestManager(rm);
 
     this.requestManager = rm;
