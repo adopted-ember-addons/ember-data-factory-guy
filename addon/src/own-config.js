@@ -1,12 +1,18 @@
 import { getOwnConfig, macroCondition } from '@embroider/macros';
 import { assert } from '@ember/debug';
 
-let stringsOnly = false;
+let _stringsOnly = false;
+let _interceptor = 'pretender';
 
 if (macroCondition(getOwnConfig()?.useStringIdsOnly)) {
-  stringsOnly = true;
+  _stringsOnly = true;
 } else {
-  stringsOnly = false;
+  _stringsOnly = false;
+}
+if (macroCondition(getOwnConfig()?.interceptor === 'msw')) {
+  _interceptor = 'msw';
+} else if (macroCondition(getOwnConfig()?.interceptor === 'pretender')) {
+  _interceptor = 'pretender';
 }
 
 /**
@@ -21,4 +27,5 @@ export function verifyId(id) {
   );
 }
 
-export const useStringIdsOnly = stringsOnly;
+export const useStringIdsOnly = _stringsOnly;
+export const interceptor = _interceptor;

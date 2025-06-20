@@ -6,6 +6,7 @@ module.exports = async function (defaults) {
       setConfig: {
         'ember-data-factory-guy': {
           useStringIdsOnly: true,
+          interceptor: process.env.INTERCEPTOR || 'pretender',
         },
       },
     },

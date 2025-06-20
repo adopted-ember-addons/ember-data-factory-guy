@@ -11,6 +11,9 @@ module.exports = async function () {
       {
         name: 'msw-only',
         npm: {
+          env: {
+            INTERCEPTOR: 'msw',
+          },
           devDependencies: {
             pretender: null,
           },
@@ -19,6 +22,9 @@ module.exports = async function () {
       {
         name: 'pretender-only',
         npm: {
+          env: {
+            INTERCEPTOR: 'pretender',
+          },
           devDependencies: {
             msw: null,
           },
