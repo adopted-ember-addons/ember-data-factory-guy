@@ -183,13 +183,19 @@ export default class {
       let requestBody;
       try {
         requestBody = await request.clone().text();
-      } catch (e) {}
+      } catch (e) {
+        // continue
+      }
       try {
         requestBody = await request.clone().json();
-      } catch (e) {}
+      } catch (e) {
+        // continue
+      }
       try {
         requestBody = await request.formData();
-      } catch (e) {}
+      } catch (e) {
+        // continue
+      }
       if (typeof this.matchArgs === 'function') {
         return this.matchArgs(requestBody);
       } else {

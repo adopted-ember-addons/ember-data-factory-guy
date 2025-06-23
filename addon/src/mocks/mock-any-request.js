@@ -37,13 +37,19 @@ export default class MockAnyRequest extends MockRequest {
       let requestBody;
       try {
         requestBody = await request.clone().text();
-      } catch (e) {}
+      } catch (e) {
+        // continue
+      }
       try {
         requestBody = await request.clone().json();
-      } catch (e) {}
+      } catch (e) {
+        // continue
+      }
       try {
         requestBody = await request.formData();
-      } catch (e) {}
+      } catch (e) {
+        // continue
+      }
 
       return super.attributesMatch(
         requestBody,
