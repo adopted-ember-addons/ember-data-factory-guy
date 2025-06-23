@@ -30,7 +30,7 @@ module('MockCreate', function (hooks) {
 
     await profile.save();
 
-    let response = JSON.parse(mock.getResponse().responseText),
+    let response = JSON.parse(await mock.getResponse().clone().text()),
       expectedArgs = [
         '[factory-guy]',
         'MockCreate',

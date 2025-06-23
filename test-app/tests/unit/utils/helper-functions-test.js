@@ -2,34 +2,12 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import {
   isEmptyObject,
-  param,
   isEquivalent,
-  isPartOf,
   parseUrl,
-  paramsFromRequestBody,
 } from 'ember-data-factory-guy/-private';
 
 module('Unit | Helper Functions', function (hooks) {
   setupTest(hooks);
-
-  test('#paramsFromRequestBody', function (assert) {
-    assert.expect(3);
-    const data = { a: '1', b: 'l d r' };
-
-    let tests = [
-      [param(data)], // a=1&b=l+d+r
-      [JSON.stringify(data)], // {"a":"1","b":"l d r"}
-      [data],
-    ];
-
-    for (let test of tests) {
-      let [object] = test;
-      assert.deepEqual(paramsFromRequestBody(object), data, [
-        'with object',
-        object,
-      ]);
-    }
-  });
 
   test('#isEmptyObject', function (assert) {
     assert.expect(5);
@@ -159,28 +137,6 @@ module('Unit | Helper Functions', function (hooks) {
     assert.notOk(
       isEquivalent(nestedZoey, nestedTomster),
       'returns false if object key-value pairs are not equivalent',
-    );
-  });
-
-  test('#isPartOf', function (assert) {
-    assert.ok(
-      isPartOf(tomster, { name: 'Tomster' }),
-      'returns true if the first object contains all key-value pairs from the second object',
-    );
-
-    assert.ok(
-      isPartOf(tomster, tomster),
-      'returns true if the first object is the same as the second object',
-    );
-
-    assert.ok(
-      isPartOf(tomster, {}),
-      'returns true if the second object is empty',
-    );
-
-    assert.notOk(
-      isPartOf(tomster, { name: 'Tomster', number: 1 }),
-      'returns false if the first object does not contains key-value pairs from the second object',
     );
   });
 

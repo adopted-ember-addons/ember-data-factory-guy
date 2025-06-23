@@ -1,11 +1,4 @@
 import MockRequest from './mock-request';
-import {
-  isEmptyObject,
-  isEquivalent,
-  isPartOf,
-  paramsFromRequestBody,
-  toParams,
-} from '../utils/helper-functions';
 
 export default class MockAnyRequest extends MockRequest {
   constructor({ type = 'GET', url, responseText, status = 200 }) {
@@ -37,24 +30,27 @@ export default class MockAnyRequest extends MockRequest {
     return this;
   }
 
-  paramsMatch(request) {
-    if (!isEmptyObject(this.someQueryParams)) {
-      return this._tryMatchParams(request, this.someQueryParams, isPartOf);
-    }
-
-    if (!isEmptyObject(this.queryParams)) {
-      return this._tryMatchParams(request, this.queryParams, isEquivalent);
-    }
-
-    return true;
-  }
-
-  _tryMatchParams(request, handlerParams, comparisonFunction) {
-    let requestParams = request.queryParams;
-
+  async paramsMatch({ request, params }) {
     if (/POST|PUT|PATCH/.test(this.type)) {
-      requestParams = paramsFromRequestBody(request.requestBody);
+      // compare to request body instead
+
+      let requestBody;
+      try {
+        requestBody = await request.clone().text();
+      } catch (e) {}
+      try {
+        requestBody = await request.clone().json();
+      } catch (e) {}
+      try {
+        requestBody = await request.formData();
+      } catch (e) {}
+
+      return super.attributesMatch(
+        requestBody,
+        this.someQueryParams ?? this.queryParams ?? {},
+      );
+    } else {
+      return super.paramsMatch({ request, params });
     }
-    return comparisonFunction(toParams(requestParams), toParams(handlerParams));
   }
 }

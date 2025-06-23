@@ -52,7 +52,37 @@ export default class RequestManagerPretender extends RequestManager {
       this.pretender[type.toLowerCase()].call(
         this.pretender,
         url,
-        wrapper,
+        async (fakeRequest) => {
+          // Turn pretenders fake request object into a Request instance
+          const body =
+            fakeRequest.method !== 'GET' && fakeRequest.method !== 'HEAD'
+              ? { body: fakeRequest.requestBody }
+              : {};
+          // Pretender also stubs window.Request so this isn't native either, but it's closer.
+          const request = new Request(fakeRequest.url, {
+            method: fakeRequest.method,
+            ...body,
+          });
+          // Pretenders' Request doesn't support calling request.formData(), just stub it. This won't survive a clone.
+          request.formData = async () => {
+            return fakeRequest.requestBody instanceof FormData
+              ? Promise.resolve(fakeRequest.requestBody)
+              : fakeRequest.formData();
+          };
+
+          const response = await wrapper({
+            request,
+            params: fakeRequest.params,
+          });
+          if (!response) return;
+
+          // Turn Response into the response array that pretender expects
+          const responseHeaders = {};
+          response.headers.forEach(
+            (value, key) => (responseHeaders[key] = value),
+          );
+          return [response.status, responseHeaders, await response.text()];
+        },
         this._settings.delay,
       );
       this.wrappers[key] = wrapper;

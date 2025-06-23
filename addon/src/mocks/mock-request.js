@@ -1,13 +1,8 @@
 import { assert } from '@ember/debug';
-import { typeOf } from '@ember/utils';
-import {
-  isEmptyObject,
-  isEquivalent,
-  isPartOf,
-  param,
-  toParams,
-} from '../utils/helper-functions';
+import { isEmptyObject, param } from '../utils/helper-functions';
 import FactoryGuy from '../factory-guy';
+import isMatch from 'lodash.ismatch';
+import isEqual from 'lodash.isEqual';
 
 export default class {
   constructor() {
@@ -99,16 +94,15 @@ export default class {
   }
 
   getResponse() {
-    return {
-      responseText: this.actualResponseJson(),
-      headers: this.responseHeaders,
+    return new Response(this.actualResponseJson(), {
       status: this.status,
-    };
+      headers: this.responseHeaders,
+    });
   }
 
-  logInfo() {
+  async logInfo() {
     if (FactoryGuy.logLevel > 0) {
-      const json = JSON.parse(this.getResponse().responseText),
+      const json = JSON.parse(await this.getResponse().clone().text()),
         name = this.constructor.name.replace('Request', ''),
         type = this.getType(),
         status = `[${this.status}]`,
@@ -139,55 +133,84 @@ export default class {
     return this;
   }
 
-  paramsMatch(request) {
+  // eslint-disable-next-line no-unused-vars
+  paramsMatch({ request, params }) {
+    const requestUrl = new URL(request.url, window.location.origin);
     if (!isEmptyObject(this.someQueryParams)) {
-      return isPartOf(
-        toParams(request.queryParams),
-        toParams(this.someQueryParams),
-      );
+      // request must have every specified item in someQueryParams, but can have more.
+      const someQueryParams = new URLSearchParams(param(this.someQueryParams)); // convert json -> URLSearchParams
+      return someQueryParams
+        .keys()
+        .every((key) =>
+          isEqual(
+            someQueryParams.getAll(key),
+            requestUrl.searchParams.getAll(key),
+          ),
+        );
     }
     if (!isEmptyObject(this.queryParams)) {
-      return isEquivalent(
-        toParams(request.queryParams),
-        toParams(this.queryParams),
+      // request must have exactly specified queryParams, no more no less.
+      const queryParams = new URLSearchParams(param(this.queryParams));
+      return (
+        queryParams
+          .keys()
+          .every((key) =>
+            isEqual(
+              queryParams.getAll(key),
+              requestUrl.searchParams.getAll(key),
+            ),
+          ) &&
+        requestUrl.searchParams
+          .keys()
+          .every((key) =>
+            isEqual(
+              queryParams.getAll(key),
+              requestUrl.searchParams.getAll(key),
+            ),
+          )
       );
     }
     return true;
   }
 
   attributesMatch(requestBody, matchParams) {
-    if (isEmptyObject(matchParams)) {
-      return true;
-    }
-    return isPartOf(toParams(requestBody), toParams(matchParams));
+    return isMatch(requestBody, matchParams);
   }
 
-  extraRequestMatches(request) {
+  async extraRequestMatches({ request, params }) {
     if (this.matchArgs) {
-      let requestBody = request.requestBody;
-      if (typeOf(requestBody) === 'string') {
-        requestBody = JSON.parse(requestBody);
-      }
-      if (typeOf(this.matchArgs) === 'function') {
+      // Try to figure out request body type without relying on request headers
+      let requestBody;
+      try {
+        requestBody = await request.clone().text();
+      } catch (e) {}
+      try {
+        requestBody = await request.clone().json();
+      } catch (e) {}
+      try {
+        requestBody = await request.formData();
+      } catch (e) {}
+      if (typeof this.matchArgs === 'function') {
         return this.matchArgs(requestBody);
       } else {
         return this.attributesMatch(requestBody, this.matchArgs);
       }
     }
-    return this.paramsMatch(request);
+    return await this.paramsMatch({ request, params });
   }
 
-  matches(request) {
+  async matches({ request, params }) {
     if (this.isDisabled) {
       return false;
     }
 
-    if (!this.extraRequestMatches(request)) {
+    const isMatch = await this.extraRequestMatches({ request, params });
+    if (!isMatch) {
       return false;
     }
 
     this.timesCalled++;
-    this.logInfo();
+    await this.logInfo();
 
     if (this.useOnce) {
       this.disable();

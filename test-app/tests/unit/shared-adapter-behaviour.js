@@ -1149,19 +1149,18 @@ SharedBehavior.mockCreateTests = function () {
       });
   });
 
-  test('fails when match args not present in createRecord attributes', async function (assert) {
-    let mock = mockCreate('profile').match({
+  test('does not call mock when match args not present in createRecord attributes', async function (assert) {
+    const baseMock = mockCreate('profile');
+    let otherMock = mockCreate('profile').match({
       description: 'correct description',
     });
 
     await FactoryGuy.store
       .createRecord('profile', { description: 'wrong description' })
-      .save()
-      .catch(() => {
-        assert.ok(true);
-        // our mock was NOT called
-        assert.strictEqual(mock.timesCalled, 0);
-      });
+      .save();
+
+    assert.strictEqual(baseMock.timesCalled, 1);
+    assert.strictEqual(otherMock.timesCalled, 0);
   });
 
   test('match but still fail with fails method', async function (assert) {
@@ -1580,17 +1579,19 @@ SharedBehavior.mockUpdateTests = function () {
   });
 
   test('fails when match args not present', async function (assert) {
-    let profile = make('profile');
+    const profile = make('profile');
 
-    let mock = mockUpdate('profile', profile.id).match({
+    const baseMock = mockUpdate('profile', profile.id);
+    const missedMock = mockUpdate('profile', profile.id).match({
       description: 'correct description',
     });
 
     profile.set('description', 'wrong description');
-    profile.save().catch(() => {
-      assert.ok(true);
-      assert.strictEqual(mock.timesCalled, 0);
-    });
+
+    await profile.save();
+
+    assert.strictEqual(baseMock.timesCalled, 1);
+    assert.strictEqual(missedMock.timesCalled, 0);
   });
 
   test('succeeds then fails when match args not present with only modelType', async function (assert) {
@@ -1598,16 +1599,18 @@ SharedBehavior.mockUpdateTests = function () {
     let profile = make('profile', { description: customDescription });
     let profile2 = make('profile');
 
-    let mock = mockUpdate('profile').match({ description: customDescription });
+    const baseMock = mockUpdate('profile');
+    const descriptionMock = mockUpdate('profile').match({
+      description: customDescription,
+    });
 
     await profile.save();
-    assert.ok(true);
-    assert.strictEqual(mock.timesCalled, 1);
+    assert.strictEqual(baseMock.timesCalled, 0);
+    assert.strictEqual(descriptionMock.timesCalled, 1);
 
-    await profile2.save().catch(() => {
-      assert.ok(true);
-      assert.strictEqual(mock.timesCalled, 1);
-    });
+    await profile2.save();
+    assert.strictEqual(baseMock.timesCalled, 1);
+    assert.strictEqual(descriptionMock.timesCalled, 1);
   });
 
   test('match but still fail with fails method', async function (assert) {

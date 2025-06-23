@@ -1,31 +1,5 @@
 import { typeOf } from '@ember/utils';
 
-const plusRegex = new RegExp('\\+', 'g');
-
-export function paramsFromRequestBody(body) {
-  let params = {};
-
-  if (typeof body === 'string') {
-    if (body.match(/=/)) {
-      body = decodeURIComponent(body).replace(plusRegex, ' ');
-
-      (body.split('&') || []).map((param) => {
-        const [key, value] = param.split('=');
-        params[key] = value;
-      });
-    } else if (body.match(/:/)) {
-      params = JSON.parse(body);
-    }
-    return params;
-  }
-
-  return body;
-}
-
-export function toParams(obj) {
-  return parseParms(decodeURIComponent(param(obj)));
-}
-
 /**
  * Iterator for object key, values
  *
@@ -43,7 +17,7 @@ export function param(obj, prefix) {
     p;
   for (p in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, p)) {
-      var k = prefix ? prefix + '[' + p + ']' : p,
+      var k = prefix ? prefix + '[' + (isNaN(p) ? p : '') + ']' : p,
         v = obj[p];
       str.push(
         v !== null && typeof v === 'object'
@@ -55,43 +29,6 @@ export function param(obj, prefix) {
   return str.join('&');
 }
 
-function parseParms(str) {
-  let pieces = str.split('&'),
-    data = {},
-    i,
-    parts,
-    key,
-    value;
-
-  // Process each query pair
-  for (i = 0; i < pieces.length; i++) {
-    parts = pieces[i].split('=');
-
-    // No value, only key
-    if (parts.length < 2) {
-      parts.push('');
-    }
-
-    key = decodeURIComponent(parts[0]);
-    value = decodeURIComponent(parts[1]);
-
-    // Key is an array
-    if (key.indexOf('[]') !== -1) {
-      key = key.substring(0, key.indexOf('[]'));
-
-      // Check already there
-      if ('undefined' === typeof data[key]) {
-        data[key] = [];
-      }
-
-      data[key].push(value);
-    } else {
-      data[key] = value;
-    }
-  }
-  return data;
-}
-
 export function isEmptyObject(obj) {
   return !isObject(obj) || Object.keys(obj).length === 0;
 }
@@ -101,7 +38,7 @@ export function isEmptyObject(obj) {
  * @param item
  * @returns {boolean}
  */
-export function isObject(item) {
+function isObject(item) {
   return item && typeof item === 'object' && !Array.isArray(item);
 }
 
@@ -145,12 +82,6 @@ export function isEquivalent(a, b) {
     default:
       return a === b;
   }
-}
-
-export function isPartOf(object, part) {
-  return Object.keys(part).every(function (key) {
-    return isEquivalent(object[key], part[key]);
-  });
 }
 
 function arrayIsEquivalent(arrayA, arrayB) {

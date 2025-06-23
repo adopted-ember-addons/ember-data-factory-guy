@@ -49,12 +49,13 @@ export default class RequestWrapper {
   }
 
   /**
-   * Sort the handlers by those with query params first
-   *
+   * Sort the handlers by those with queryParams first, then matchArgs second, then anything else
    */
   getHandlers() {
-    return this.handlers.sort(
-      (a, b) => b.hasQueryParams() - a.hasQueryParams(),
+    return [...this.handlers].sort(
+      (a, b) =>
+        b.hasQueryParams() - a.hasQueryParams() ||
+        Boolean(b.matchArgs) - Boolean(a.matchArgs),
     );
   }
 
@@ -68,37 +69,16 @@ export default class RequestWrapper {
   }
 
   /**
-   * This is the method that pretender will call to handle the request.
-   *
    * Flip though the list of handlers to find one that matches and return
    * the response if one is found.
    *
-   * Special handling for mock that use query params because they should take precedance over
-   * a non query param mock find type since they share the same type / url.
-   *
-   * So, let's say you have mocked like this:
-   *  ```
-   *    let mockF = mockFindAll('user', 2);
-   *    let mockQ = mockQuery('user', { name: 'Sleepy' });
-   *  ```
-   *  If your code does a query like this:
-   *
-   *   ```
-   *    store.query('user', { name: 'Sleepy' });
-   *   ```
-   *
-   *  Even thought the mockFindAll was declared first, the query handler will be used
-   *
-   * @param {FakeRequest} request pretenders object
-   * @returns {[null,null,null]}
+   * @param request request instance/object from request manager
    */
-  handleRequest(request) {
-    let handler = this.getHandlers(request).find((handler) =>
-      handler.matches(request),
-    );
-    if (handler) {
-      let { status, headers, responseText } = handler.getResponse();
-      return [status, headers, responseText];
+  async handleRequest({ request, params }) {
+    for (const handler of this.getHandlers()) {
+      if (await handler.matches({ request, params })) {
+        return handler.getResponse();
+      }
     }
   }
 }
