@@ -6,7 +6,7 @@ import { isMatch, isEqual } from 'lodash';
 export default class {
   constructor() {
     this.status = 200;
-    this.responseHeaders = {};
+    this.responseHeaders = new Headers();
     this.responseJson = null;
     this.errorResponse = null;
     this.isDisabled = false;
@@ -40,8 +40,16 @@ export default class {
 
   returns(/*options = {}*/) {}
 
+  /**
+   * headers arg can be a Headers() instance, or an object like { a: 1, b: 2 }
+   */
   addResponseHeaders(headers) {
-    Object.assign(this.responseHeaders, headers);
+    this.responseHeaders = new Headers([
+      ...this.responseHeaders.entries(),
+      ...(headers instanceof Headers
+        ? headers.entries()
+        : Object.entries(headers)),
+    ]);
   }
 
   succeeds(opts = {}) {
