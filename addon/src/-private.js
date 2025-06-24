@@ -7,9 +7,7 @@ import {
   isEmptyObject,
   param,
   isEquivalent,
-  isPartOf,
   parseUrl,
-  paramsFromRequestBody,
 } from './utils/helper-functions';
 
 export {
@@ -18,7 +16,5 @@ export {
   isEmptyObject,
   param,
   isEquivalent,
-  isPartOf,
   parseUrl,
-  paramsFromRequestBody,
 };

@@ -9,20 +9,7 @@ import JSONAPISerializer from '@ember-data/serializer/json-api';
 import ActiveModelAdapter, {
   ActiveModelSerializer,
 } from 'active-model-adapter';
-import { param } from 'ember-data-factory-guy/-private';
 import { getContext } from '@ember/test-helpers';
-
-export function fetchJSON({ url, params, method = 'GET' } = {}) {
-  let body = '';
-  if (method === 'GET') {
-    url = [url, param(params)].join('?');
-  } else {
-    body = JSON.stringify(params);
-  }
-  return fetch(url, { body, method }).then((r) =>
-    r._bodyText ? r.json() : null,
-  );
-}
 
 function baseAdapterFor(serializerType) {
   switch (serializerType) {

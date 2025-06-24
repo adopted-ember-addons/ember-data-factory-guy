@@ -1,5 +1,4 @@
 import { assert } from '@ember/debug';
-import { entries } from '../utils/helper-functions';
 import { typeOf } from '@ember/utils';
 import { getOwner } from '@ember/application';
 import { camelize } from '@ember/string';
@@ -351,7 +350,7 @@ export default class FixtureConverter {
     const modelClass = this.store.modelFor(modelName),
       relationships = modelClass.relationshipsByName;
 
-    for (let [relationshipKey, link] of entries(links)) {
+    for (let [relationshipKey, link] of Object.entries(links)) {
       assert(
         `You defined a link url ${link} for the [${relationshipKey}] relationship
         on model [${modelName}] but that relationship does not exist`,

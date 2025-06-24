@@ -40,7 +40,8 @@
     "dist"
   ],
   "dependencies": {
-    "@embroider/addon-shim": "^1.10.0"
+    "@embroider/addon-shim": "^1.10.0",
+    "lodash": ">= 4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",

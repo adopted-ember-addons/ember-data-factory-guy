@@ -29,20 +29,21 @@ module('MockUpdate', function (hooks) {
     FactoryGuy.settings({ logLevel: 1 });
 
     const consoleStub = sinon.spy(console, 'log'),
-      profile = make('profile'),
-      mock = mockUpdate(profile);
+      profile = make('profile');
+
+    mockUpdate(profile);
 
     await profile.save();
 
-    let response = JSON.parse(mock.getResponse().responseText),
-      expectedArgs = [
-        '[factory-guy]',
-        'MockUpdate',
-        'PATCH',
-        '[200]',
-        `/profiles/1`,
-        response,
-      ];
+    const response = '';
+    const expectedArgs = [
+      '[factory-guy]',
+      'MockUpdate',
+      'PATCH',
+      '[204]',
+      `/profiles/1`,
+      response,
+    ];
 
     assert.deepEqual(consoleStub.getCall(0).args, expectedArgs);
   });

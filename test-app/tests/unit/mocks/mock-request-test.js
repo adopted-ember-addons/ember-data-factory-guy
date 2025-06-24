@@ -103,7 +103,7 @@ module('MockRequest', function (hooks) {
     handler.returns({ headers: { 'X-Testing': 'absolutely' } });
 
     let { headers } = handler.getResponse();
-    assert.deepEqual(headers, { 'X-Testing': 'absolutely' });
+    assert.strictEqual(headers.get('X-Testing'), 'absolutely');
 
     sinon.spy(window, 'fetch');
 
