@@ -195,7 +195,6 @@ export default class {
     } catch (e) {
       // continue
     }
-    // DONT PROCEED IF JSON WORKS
     try {
       return await request.clone().formData();
     } catch (e) {

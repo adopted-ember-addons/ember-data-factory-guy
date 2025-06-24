@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { mock } from 'ember-data-factory-guy';
-import { fetchJSON, inlineSetup } from '../../helpers/utility-methods';
+import { inlineSetup } from '../../helpers/utility-methods';
 
 module('MockAny', function (hooks) {
   setupTest(hooks);
@@ -293,48 +293,42 @@ module('MockAny', function (hooks) {
 
       let fooMock = mock({ url, type: method }).withSomeParams(dataFoo);
       let barMock = mock({ url, type: method }).withSomeParams(dataBar);
-      assert.strictEqual(
-        fooMock.timesCalled,
-        0,
-        'fooMock#timesCalled is initially 0',
-      );
-      assert.strictEqual(
-        barMock.timesCalled,
-        0,
-        'barMock#timesCalled is initially 0',
-      );
+      assert.strictEqual(fooMock.timesCalled, 0);
+      assert.strictEqual(barMock.timesCalled, 0);
 
-      await fetchJSON({
-        url,
-        method,
-        params: Object.assign({ extra: 123 }, dataFoo),
-      });
-      assert.strictEqual(
-        fooMock.timesCalled,
-        1,
-        'fooMock#timesCalled is called once',
-      );
-      assert.strictEqual(
-        barMock.timesCalled,
-        0,
-        'barMock#timesCalled is called once',
-      );
+      if (method === 'GET') {
+        const dataFooSearchParams = new URLSearchParams();
+        dataFooSearchParams.append('foo', 'foo');
+        dataFooSearchParams.append('array[]', 'a');
+        dataFooSearchParams.append('array[][b]', '123');
+        dataFooSearchParams.append('array[]', 'c');
+        dataFooSearchParams.append('obj[a]', '321');
+        await fetch(`${url}?${dataFooSearchParams}`, { method });
+      } else {
+        await fetch(url, {
+          method,
+          body: JSON.stringify({ extra: 123, ...dataFoo }),
+        });
+      }
+      assert.strictEqual(fooMock.timesCalled, 1);
+      assert.strictEqual(barMock.timesCalled, 0);
 
-      await fetchJSON({
-        url,
-        method,
-        params: Object.assign({ extra: 123 }, dataBar),
-      });
-      assert.strictEqual(
-        fooMock.timesCalled,
-        1,
-        'fooMock#timesCalled is called once',
-      );
-      assert.strictEqual(
-        barMock.timesCalled,
-        1,
-        'barMock#timesCalled is called once',
-      );
+      if (method === 'GET') {
+        const dataBarSearchParams = new URLSearchParams();
+        dataBarSearchParams.append('bar', 'bar');
+        dataBarSearchParams.append('array[]', '1');
+        dataBarSearchParams.append('array[][x]', '2');
+        dataBarSearchParams.append('array[]', '3');
+        dataBarSearchParams.append('obj[x]', '321');
+        await fetch(`${url}?${dataBarSearchParams}`, { method });
+      } else {
+        await fetch(url, {
+          method,
+          body: JSON.stringify({ extra: 123, ...dataBar }),
+        });
+      }
+      assert.strictEqual(fooMock.timesCalled, 1);
+      assert.strictEqual(barMock.timesCalled, 1);
     });
   }
 
@@ -352,40 +346,42 @@ module('MockAny', function (hooks) {
 
       let fooMock = mock({ url, type: method }).withParams(dataFoo);
       let barMock = mock({ url, type: method }).withParams(dataBar);
-      assert.strictEqual(
-        fooMock.timesCalled,
-        0,
-        'fooMock#timesCalled is initially 0',
-      );
-      assert.strictEqual(
-        barMock.timesCalled,
-        0,
-        'barMock#timesCalled is initially 0',
-      );
+      assert.strictEqual(fooMock.timesCalled, 0);
+      assert.strictEqual(barMock.timesCalled, 0);
 
-      await fetchJSON({ url, params: dataFoo, method });
-      assert.strictEqual(
-        fooMock.timesCalled,
-        1,
-        'fooMock#timesCalled is called once',
-      );
-      assert.strictEqual(
-        barMock.timesCalled,
-        0,
-        'barMock#timesCalled is called once',
-      );
+      if (method === 'GET') {
+        const dataFooSearchParams = new URLSearchParams();
+        dataFooSearchParams.append('foo', 'foo');
+        dataFooSearchParams.append('array[]', 'a');
+        dataFooSearchParams.append('array[][b]', '123');
+        dataFooSearchParams.append('array[]', 'c');
+        dataFooSearchParams.append('obj[a]', '321');
+        await fetch(`${url}?${dataFooSearchParams}`, { method });
+      } else {
+        await fetch(url, {
+          method,
+          body: JSON.stringify(dataFoo),
+        });
+      }
+      assert.strictEqual(fooMock.timesCalled, 1);
+      assert.strictEqual(barMock.timesCalled, 0);
 
-      await fetchJSON({ url, params: dataBar, method });
-      assert.strictEqual(
-        fooMock.timesCalled,
-        1,
-        'fooMock#timesCalled is called once',
-      );
-      assert.strictEqual(
-        barMock.timesCalled,
-        1,
-        'barMock#timesCalled is called once',
-      );
+      if (method === 'GET') {
+        const dataBarSearchParams = new URLSearchParams();
+        dataBarSearchParams.append('bar', 'bar');
+        dataBarSearchParams.append('array[]', '1');
+        dataBarSearchParams.append('array[][x]', '2');
+        dataBarSearchParams.append('array[]', '3');
+        dataBarSearchParams.append('obj[x]', '321');
+        await fetch(`${url}?${dataBarSearchParams}`, { method });
+      } else {
+        await fetch(url, {
+          method,
+          body: JSON.stringify(dataBar),
+        });
+      }
+      assert.strictEqual(fooMock.timesCalled, 1);
+      assert.strictEqual(barMock.timesCalled, 1);
     });
   }
 
