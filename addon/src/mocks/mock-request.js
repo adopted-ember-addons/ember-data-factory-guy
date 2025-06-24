@@ -102,8 +102,19 @@ export default class {
 
   async logInfo() {
     if (FactoryGuy.logLevel > 0) {
-      const json = JSON.parse(await this.getResponse().clone().text()),
-        name = this.constructor.name.replace('Request', ''),
+      let responseBody = null;
+      try {
+        responseBody = await this.getResponse().clone().text();
+      } catch (e) {
+        // continue
+      }
+      try {
+        responseBody = await this.getResponse().clone().json();
+      } catch (e) {
+        // continue
+      }
+
+      const name = this.constructor.name.replace('Request', ''),
         type = this.getType(),
         status = `[${this.status}]`,
         url = this.getUrl();
@@ -113,7 +124,7 @@ export default class {
         fullUrl = [url, '?', param(this.queryParams)].join('');
       }
 
-      const info = ['[factory-guy]', name, type, status, fullUrl, json];
+      const info = ['[factory-guy]', name, type, status, fullUrl, responseBody];
 
       console.log(...info);
     }

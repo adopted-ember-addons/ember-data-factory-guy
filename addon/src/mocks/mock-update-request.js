@@ -76,7 +76,7 @@ export default class MockUpdateRequest extends MockStoreRequest {
       );
     }
     // handles cases where no id given for mock, eg mockUpdate('user'); - in these cases we can return 204 No Content
-    if (!this.responseJson) this.status = 204;
+    if (this.status === 200 && !this.responseJson) this.status = 204;
     return super.getResponse();
   }
 
