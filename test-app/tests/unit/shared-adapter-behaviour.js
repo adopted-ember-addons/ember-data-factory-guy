@@ -1405,10 +1405,17 @@ SharedBehavior.mockUpdateTests = function () {
     assert.expect(2);
     let customDescription = 'special description',
       profile = make('profile'),
-      updateMock = mockUpdate(profile),
       adapter = FactoryGuy.store.adapterFor('profile');
 
-    adapter.updateRecord = (store, type, snapshot) => {
+    const updateMock = mockUpdate(profile).match(function (requestBody) {
+      assert.ok(
+        requestBody instanceof FormData,
+        'matching function is called when request body is FormData',
+      );
+      return true;
+    });
+
+    adapter.updateRecord = async (store, type, snapshot) => {
       let url = adapter.urlForUpdateRecord(
         snapshot.id,
         type.modelName,
@@ -1418,20 +1425,9 @@ SharedBehavior.mockUpdateTests = function () {
 
       let fd = new FormData();
       fd.append('description', snapshot.attr('description'));
-      adapter.ajax(url, httpMethod, {
-        data: fd,
-        processData: false,
-        contentType: false,
-      });
+      const f = await fetch(url, { method: httpMethod, body: fd });
+      return f.text();
     };
-
-    updateMock.match(function (requestBody) {
-      assert.ok(
-        requestBody instanceof FormData,
-        'matching function is called when request body is FormData',
-      );
-      return true;
-    });
 
     profile.set('description', customDescription);
     await profile.save();
