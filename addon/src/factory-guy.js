@@ -12,15 +12,20 @@ class FactoryGuy {
   /**
    * Setting for FactoryGuy.
    *
-   * responseTime: 0 is fastest
    * logLevel: 0 is off, 1 is on
    *
    * @param logLevel [0/1]
    */
-  settings({ logLevel = 0, responseTime = null } = {}) {
-    RequestManager.settings({ responseTime });
+  settings({ logLevel = 0 } = {}) {
     this.logLevel = logLevel;
-    return RequestManager.settings();
+  }
+
+  setRequestManager(aRequestManager) {
+    assert(
+      `[ember-data-factory-guy] FactoryGuy#setRequestManager needs a valid request manager instance. You passed in [${aRequestManager}]`,
+      aRequestManager instanceof RequestManager,
+    );
+    this.requestManager = aRequestManager;
   }
 
   setStore(aStore) {
@@ -446,16 +451,10 @@ class FactoryGuy {
 
   reset() {
     this.store = null;
+    this.requestManager?.stop();
+    this.requestManager = null;
     this.fixtureBuilderFactory = null;
     this.resetDefinitions();
-    this.resetMockAjax();
-  }
-
-  /**
-   Reset all mock ajax calls
-   */
-  resetMockAjax() {
-    RequestManager.reset();
   }
 
   /**

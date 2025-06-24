@@ -4,7 +4,6 @@ import Users from './users';
 //import UsersB from './usersB';
 
 Scenario.settings({
-  mockjaxLogLevel: 1,
   logLevel: 1,
 });
 

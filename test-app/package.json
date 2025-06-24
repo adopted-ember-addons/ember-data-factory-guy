@@ -60,6 +60,7 @@
     "ember-try": "^4.0.0",
     "loader.js": "^4.7.0",
     "pretender": "^3.4.7",
+    "msw": "^2.10.2",
     "qunit": "^2.24.1",
     "qunit-dom": "^3.4.0",
     "sinon": "^20.0.0",
@@ -73,5 +74,10 @@
   },
   "ember": {
     "edition": "octane"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

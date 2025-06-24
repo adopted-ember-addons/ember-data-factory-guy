@@ -168,7 +168,7 @@ export function inlineSetup(hooks, serializerType) {
   setupFactoryGuy(hooks);
   hooks.beforeEach(function () {
     containerSetup(getContext().owner, serializerType);
-    FactoryGuy.settings({ responseTime: 0, logLevel: 0 });
+    FactoryGuy.settings({ logLevel: 0 });
   });
 }
 

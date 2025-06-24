@@ -41,11 +41,10 @@ export default class RequestWrapper {
    * @returns {function(this:T)}
    */
   generateRequestHandler() {
-    let requestHandler = this.handleRequest.bind(this),
-      methods = ['getHandlers', 'addHandler', 'removeHandler'];
-    methods.forEach(
-      (method) => (requestHandler[method] = this[method].bind(this)),
-    );
+    const requestHandler = this.handleRequest.bind(this);
+    requestHandler.getHandlers = this.getHandlers.bind(this);
+    requestHandler.addHandler = this.addHandler.bind(this);
+    requestHandler.removeHandler = this.removeHandler.bind(this);
     return requestHandler;
   }
 
