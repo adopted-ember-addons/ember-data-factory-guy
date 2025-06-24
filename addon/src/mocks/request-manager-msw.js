@@ -11,6 +11,11 @@ import RequestManager, {
 } from './request-manager';
 
 export default class RequestManagerMSW extends RequestManager {
+  _settings = {
+    delay: 0,
+    quiet: true, // quiet by default makes tests a lot faster
+  };
+
   constructor(msw) {
     super();
     if (msw) {
@@ -57,7 +62,7 @@ export default class RequestManagerMSW extends RequestManager {
   }
 
   async start() {
-    await this.msw.start();
+    await this.msw.start({ quiet: this._settings.quiet });
   }
   stop() {
     this.msw.stop();
