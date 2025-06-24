@@ -188,25 +188,30 @@ export default class {
     return isMatch(requestBody, matchParams);
   }
 
+  async getRequestBody(request) {
+    // Try to figure out request body type without relying on request headers
+    try {
+      return await request.clone().json();
+    } catch (e) {
+      // continue
+    }
+    // DONT PROCEED IF JSON WORKS
+    try {
+      return await request.clone().formData();
+    } catch (e) {
+      // continue
+    }
+    try {
+      return await request.clone().text();
+    } catch (e) {
+      // continue
+    }
+  }
+
   async extraRequestMatches({ request, params }) {
     if (this.matchArgs) {
-      // Try to figure out request body type without relying on request headers
-      let requestBody;
-      try {
-        requestBody = await request.clone().text();
-      } catch (e) {
-        // continue
-      }
-      try {
-        requestBody = await request.clone().json();
-      } catch (e) {
-        // continue
-      }
-      try {
-        requestBody = await request.formData();
-      } catch (e) {
-        // continue
-      }
+      const requestBody = await this.getRequestBody(request);
+
       if (typeof this.matchArgs === 'function') {
         return this.matchArgs(requestBody);
       } else {

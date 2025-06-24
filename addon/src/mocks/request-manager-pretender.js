@@ -59,19 +59,25 @@ export default class RequestManagerPretender extends RequestManager {
               ? { body: fakeRequest.requestBody }
               : {};
           // Pretender also stubs window.Request so this isn't native either, but it's closer.
-          const request = new Request(fakeRequest.url, {
+          const theRequest = new Request(fakeRequest.url, {
             method: fakeRequest.method,
             ...body,
           });
-          // Pretenders' Request doesn't support calling request.formData(), just stub it. This won't survive a clone.
-          request.formData = async () => {
-            return fakeRequest.requestBody instanceof FormData
-              ? Promise.resolve(fakeRequest.requestBody)
-              : fakeRequest.formData();
+          // Pretenders' Request doesn't support calling request.formData(), just stub it. And make it survive a clone.
+          const request = theRequest.clone();
+          request.clone = () => {
+            const cl = theRequest.clone();
+            cl.clone = request.clone;
+            cl.formData = async () => {
+              return fakeRequest.requestBody instanceof FormData
+                ? Promise.resolve(fakeRequest.requestBody)
+                : fakeRequest.formData();
+            };
+            return cl;
           };
 
           const response = await wrapper({
-            request,
+            request: request.clone(),
             params: fakeRequest.params,
           });
           if (!response) return;

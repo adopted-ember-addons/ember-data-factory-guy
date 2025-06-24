@@ -33,23 +33,7 @@ export default class MockAnyRequest extends MockRequest {
   async paramsMatch({ request, params }) {
     if (/POST|PUT|PATCH/.test(this.type)) {
       // compare to request body instead
-
-      let requestBody;
-      try {
-        requestBody = await request.clone().text();
-      } catch (e) {
-        // continue
-      }
-      try {
-        requestBody = await request.clone().json();
-      } catch (e) {
-        // continue
-      }
-      try {
-        requestBody = await request.formData();
-      } catch (e) {
-        // continue
-      }
+      const requestBody = await this.getRequestBody(request);
 
       return super.attributesMatch(
         requestBody,
