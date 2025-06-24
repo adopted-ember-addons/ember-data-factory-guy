@@ -1,8 +1,7 @@
 import { assert } from '@ember/debug';
 import { isEmptyObject, param } from '../utils/helper-functions';
 import FactoryGuy from '../factory-guy';
-import isMatch from 'lodash.ismatch';
-import isEqual from 'lodash.isequal';
+import { isMatch, isEqual } from 'lodash';
 
 export default class {
   constructor() {
