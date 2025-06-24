@@ -65,16 +65,8 @@ export default class MockUpdateRequest extends MockStoreRequest {
     return responseKeys;
   }
 
-  /**
-   Adapters freak out if update payload is non empty and there is no id.
-
-   So, if you use mockUpdate like this:
-   mockUpdate('user'); ( no id specified ) this mock will return null
-
-   @returns {*}
-   */
   getResponse() {
-    this.responseJson = null;
+    this.responseJson = undefined;
     if (Object.keys(this.returnArgs).length) {
       let args = Object.assign({}, this.matchArgs, this.returnArgs),
         json = Object.assign({}, args, { id: this.id });
@@ -83,6 +75,8 @@ export default class MockUpdateRequest extends MockStoreRequest {
         json,
       );
     }
+    // handles cases where no id given for mock, eg mockUpdate('user'); - in these cases we can return 204 No Content
+    if (!this.responseJson) this.status = 204;
     return super.getResponse();
   }
 
