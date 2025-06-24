@@ -2,7 +2,6 @@ import { isEmpty, typeOf } from '@ember/utils';
 import { dasherize } from '@ember/string';
 import { A } from '@ember/array';
 import FixtureConverter from './fixture-converter';
-import { entries } from '../utils/helper-functions';
 
 /**
  * Using `serializeMode` to create a payload the way ember-data would serialize types
@@ -158,7 +157,7 @@ export default class JSONAPIFixtureConverter extends FixtureConverter {
    * @param links
    */
   assignLinks(relationshipData, links) {
-    for (let [relationshipKey, link] of entries(links || {})) {
+    for (let [relationshipKey, link] of Object.entries(links || {})) {
       let data = relationshipData[relationshipKey];
       data = Object.assign({ links: { related: link } }, data);
       relationshipData[relationshipKey] = data;
