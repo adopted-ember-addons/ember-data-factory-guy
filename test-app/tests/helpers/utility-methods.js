@@ -164,7 +164,7 @@ export function containerSetup(application, serializerType) {
   });
 }
 
-export async function inlineSetup(hooks, serializerType) {
+export function inlineSetup(hooks, serializerType) {
   setupFactoryGuy(hooks);
   hooks.beforeEach(function () {
     containerSetup(getContext().owner, serializerType);
