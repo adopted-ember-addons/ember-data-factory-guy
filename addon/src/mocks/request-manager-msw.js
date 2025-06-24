@@ -31,7 +31,7 @@ export default class RequestManagerMSW extends RequestManager {
     return this.msw.listHandlers();
   }
 
-  static addHandler(handler) {
+  addHandler(handler) {
     const { http, delay } = importSync('msw');
 
     let { type, url } = getTypeUrl(handler),
