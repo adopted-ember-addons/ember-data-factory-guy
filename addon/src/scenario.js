@@ -44,7 +44,10 @@ export default class {
     FactoryGuy.settings(opts);
   }
 
-  run() {}
+  // requestManager is only set during test runs, so we need to apply this in run().
+  run() {
+    this.requestManager = FactoryGuy.requestManager;
+  }
 
   include(scenarios) {
     (scenarios || []).forEach((Scenario) => new Scenario().run());
