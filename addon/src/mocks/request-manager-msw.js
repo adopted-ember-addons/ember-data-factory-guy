@@ -16,24 +16,24 @@ export default class RequestManagerMSW extends RequestManager {
     quiet: true, // quiet by default makes tests a lot faster
   };
 
-  constructor(msw) {
+  constructor(worker) {
     super();
-    if (msw) {
-      this.msw = msw;
+    if (worker) {
+      this.worker = worker;
       return;
     }
 
     if (macroCondition(dependencySatisfies('msw', '*'))) {
       const { setupWorker } = importSync('msw/browser');
-      msw = new setupWorker();
-      this.msw = msw;
+      worker = new setupWorker();
+      this.worker = worker;
     } else {
       throw new Error('RequestManagerMSW needs msw dependency');
     }
   }
 
   get handlers() {
-    return this.msw.listHandlers();
+    return this.worker.listHandlers();
   }
 
   addHandler(handler) {
@@ -45,15 +45,14 @@ export default class RequestManagerMSW extends RequestManager {
 
     if (!wrapper) {
       wrapper = new RequestWrapper(); // this generates & returns the handler function
-      const mswHandler = http[type.toLowerCase()].call(
-        this.msw,
+      const mswHandler = http[type.toLowerCase()](
         url,
         async ({ request, params }) => {
           await delay(this._settings.delay);
           return await wrapper({ request: request.clone(), params });
         },
       );
-      this.msw.use(mswHandler);
+      this.worker.use(mswHandler);
       this.wrappers[key] = wrapper;
     }
 
@@ -62,9 +61,9 @@ export default class RequestManagerMSW extends RequestManager {
   }
 
   async start() {
-    await this.msw.start({ quiet: this._settings.quiet });
+    await this.worker.start({ quiet: this._settings.quiet });
   }
   stop() {
-    this.msw.stop();
+    this.worker.stop();
   }
 }
