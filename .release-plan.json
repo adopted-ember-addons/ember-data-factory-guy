@@ -2,8 +2,8 @@
   "solution": {
     "ember-data-factory-guy": {
       "impact": "major",
-      "oldVersion": "6.1.0",
-      "newVersion": "7.0.0",
+      "oldVersion": "7.0.0",
+      "newVersion": "8.0.0",
       "tagName": "latest",
       "constraints": [
         {
@@ -13,14 +13,10 @@
         {
           "impact": "minor",
           "reason": "Appears in changelog section :rocket: Enhancement"
-        },
-        {
-          "impact": "patch",
-          "reason": "Appears in changelog section :house: Internal"
         }
       ],
       "pkgJSONPath": "./addon/package.json"
     }
   },
-  "description": "## Release (2025-05-15)\n\n* ember-data-factory-guy 7.0.0 (major)\n\n#### :boom: Breaking Change\n* `ember-data-factory-guy`\n  * [#538](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/538) refactor: drop ember-data-model-fragments, no longer supported ([@Techn1x](https://github.com/Techn1x))\n\n#### :rocket: Enhancement\n* `ember-data-factory-guy`\n  * [#542](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/542) chore: run tests against ember-data 5.3, explicitly support ember 4.12, 5.12, 6.4 ([@Techn1x](https://github.com/Techn1x))\n\n#### :memo: Documentation\n* [#541](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/541) docs: update the upgrade docs ([@Techn1x](https://github.com/Techn1x))\n\n#### :house: Internal\n* Other\n  * [#543](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/543) test: GJS for the test templates and components ([@Techn1x](https://github.com/Techn1x))\n* `ember-data-factory-guy`\n  * [#539](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/539) test: rewrite test setup without .reopen() usage ([@Techn1x](https://github.com/Techn1x))\n\n#### Committers: 1\n- Brad Overton ([@Techn1x](https://github.com/Techn1x))\n"
+  "description": "## Release (2025-06-25)\n\n* ember-data-factory-guy 8.0.0 (major)\n\n#### :boom: Breaking Change\n* `ember-data-factory-guy`\n  * [#548](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/548) feat: allow for different RequestManager ([@Techn1x](https://github.com/Techn1x))\n\n#### :rocket: Enhancement\n* `ember-data-factory-guy`\n  * [#551](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/551) feat: export RequestManagerPretender, RequestManagerMSW ([@Techn1x](https://github.com/Techn1x))\n  * [#549](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/549) feat: init RequestManagerMSW, use native Request, Response, Headers ([@Techn1x](https://github.com/Techn1x))\n\n#### :memo: Documentation\n* [#550](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/550) docs: add docs for RequestManager usage, and upgrading to v8 ([@Techn1x](https://github.com/Techn1x))\n* [#547](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/547) docs: use import glob ([@Techn1x](https://github.com/Techn1x))\n\n#### :house: Internal\n* [#552](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/552) test: use msw for baseline addon tests, much faster. ([@Techn1x](https://github.com/Techn1x))\n* [#546](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/546) chore: improve pnpm config, fix ember-release try scenario ([@Techn1x](https://github.com/Techn1x))\n* [#545](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/545) chore: pnpm 10.11, enable ED 5.5 try scenario ([@Techn1x](https://github.com/Techn1x))\n\n#### Committers: 1\n- Brad Overton ([@Techn1x](https://github.com/Techn1x))\n"
 }

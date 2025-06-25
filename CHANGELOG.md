@@ -1,5 +1,32 @@
 # Changelog
 
+## v8.0.0 (2025-06-25)
+
+See [Upgrade Guide](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading) for more details
+
+* ember-data-factory-guy 8.0.0 (major)
+
+#### :boom: Breaking Change
+* `ember-data-factory-guy`
+  * [#548](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/548) feat: allow for different RequestManager ([@Techn1x](https://github.com/Techn1x))
+
+#### :rocket: Enhancement
+* `ember-data-factory-guy`
+  * [#551](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/551) feat: export RequestManagerPretender, RequestManagerMSW ([@Techn1x](https://github.com/Techn1x))
+  * [#549](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/549) feat: init RequestManagerMSW, use native Request, Response, Headers ([@Techn1x](https://github.com/Techn1x))
+
+#### :memo: Documentation
+* [#550](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/550) docs: add docs for RequestManager usage, and upgrading to v8 ([@Techn1x](https://github.com/Techn1x))
+* [#547](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/547) docs: use import glob ([@Techn1x](https://github.com/Techn1x))
+
+#### :house: Internal
+* [#552](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/552) test: use msw for baseline addon tests, much faster. ([@Techn1x](https://github.com/Techn1x))
+* [#546](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/546) chore: improve pnpm config, fix ember-release try scenario ([@Techn1x](https://github.com/Techn1x))
+* [#545](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/545) chore: pnpm 10.11, enable ED 5.5 try scenario ([@Techn1x](https://github.com/Techn1x))
+
+#### Committers: 1
+- Brad Overton ([@Techn1x](https://github.com/Techn1x))
+
 ## v7.0.0 (2025-05-15)
 
 See [Upgrade Guide](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading) for more details
