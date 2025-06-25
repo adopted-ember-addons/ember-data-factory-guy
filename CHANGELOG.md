@@ -1,5 +1,16 @@
 # Changelog
 
+## Release (2025-06-25)
+
+* ember-data-factory-guy 8.0.1 (patch)
+
+#### :bug: Bug Fix
+* `ember-data-factory-guy`
+  * [#553](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/553) fix: set request manager in scenario ([@Techn1x](https://github.com/Techn1x))
+
+#### Committers: 1
+- Brad Overton ([@Techn1x](https://github.com/Techn1x))
+
 ## v8.0.0 (2025-06-25)
 
 See [Upgrade Guide](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading) for more details
