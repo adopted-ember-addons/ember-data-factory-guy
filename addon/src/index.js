@@ -59,6 +59,8 @@ export {
 
 export { Scenario, MissingSequenceError };
 
+export { RequestManagerPretender, RequestManagerMSW };
+
 /**
  * Setup and teardown code, intended to be called with qunit hooks so that it can run code before & after each test.
  */

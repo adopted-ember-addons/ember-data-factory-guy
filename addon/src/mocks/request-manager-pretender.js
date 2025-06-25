@@ -49,8 +49,7 @@ export default class RequestManagerPretender extends RequestManager {
 
     if (!wrapper) {
       wrapper = new RequestWrapper();
-      this.pretender[type.toLowerCase()].call(
-        this.pretender,
+      this.pretender[type.toLowerCase()](
         url,
         async (fakeRequest) => {
           // Turn pretenders fake request object into a Request instance
