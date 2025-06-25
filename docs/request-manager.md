@@ -1,6 +1,6 @@
 # Request Manager
 
-Provides the ability to choose whether you want Pretender or MockServiceWorker (MSW) to intercept requests. This is handled via a RequestManager. If you call `setupFactoryGuy(hooks)` in your module, `this.requestManager` will be set, giving you access to the RequestManager being used for the test, where you can directly access the interceptor or change settings.
+Provides the ability to choose whether you want Pretender or MockServiceWorker (MSW) to intercept requests. This is handled via a RequestManager. If you call `setupFactoryGuy(hooks)` in your module, `this.requestManager` will be set, giving you access to the RequestManager being used for the test, where you can directly access the interceptor or change settings. It's also available via `FactoryGuy.requestManager` if you cannot access the `this` test context, but it will only be set during test runs.
 
 Pretender is currently the default request manager.
 

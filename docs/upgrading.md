@@ -10,7 +10,9 @@ Noteworthy breaking changes;
 
 - `pretender` is no longer a dependency, it is now an optional peer dependency (similarly, `msw` is added as a new optional peer dep).
   - you will need to add `pretender` to your applications' dev dependencies (or `msw` if you use that instead)
-- removed `getPretender()`, replace with `this.requestManager.pretender`, to get the pretender instance
+- removed `getPretender()`
+  - replace with `this.requestManager.pretender`, to get the pretender instance
+  - if you don't have access to the `this` test context, `FactoryGuy.requestManager.pretender` should also work, but it still needs to be during a test run.
 - `FactoryGuy.settings()` now only accepts `logLevel` setting. Settings specific to the requests (like `responseTime`/`delay`) should be set on the request manager `this.requestManager.settings({ delay: 100 })`. This will also give you more control per test.
 
 How to use the new features?
