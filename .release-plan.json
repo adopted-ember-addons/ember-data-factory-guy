@@ -1,18 +1,8 @@
 {
   "solution": {
     "ember-data-factory-guy": {
-      "impact": "patch",
-      "oldVersion": "8.0.0",
-      "newVersion": "8.0.1",
-      "tagName": "latest",
-      "constraints": [
-        {
-          "impact": "patch",
-          "reason": "Appears in changelog section :bug: Bug Fix"
-        }
-      ],
-      "pkgJSONPath": "./addon/package.json"
+      "oldVersion": "8.0.1"
     }
   },
-  "description": "## Release (2025-06-25)\n\n* ember-data-factory-guy 8.0.1 (patch)\n\n#### :bug: Bug Fix\n* `ember-data-factory-guy`\n  * [#553](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/553) fix: set request manager in scenario ([@Techn1x](https://github.com/Techn1x))\n\n#### Committers: 1\n- Brad Overton ([@Techn1x](https://github.com/Techn1x))\n"
+  "description": "\n\n\n\n"
 }
