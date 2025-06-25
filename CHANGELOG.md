@@ -1,6 +1,8 @@
 # Changelog
 
-## Release (2025-06-25)
+## v8.0.0 (2025-06-25)
+
+See [Upgrade Guide](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading) for more details
 
 * ember-data-factory-guy 8.0.0 (major)
 
