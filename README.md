@@ -5,6 +5,8 @@
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
+`npm install ember-data-factory-guy`
+
 ## Features
 
 - 🚀 Easily push models to the Store, even complex relationships
@@ -22,8 +24,10 @@ Factories simplify the process of testing, making you more efficient and your te
 - [Defining factories](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/defining-factories)
 - [Using factories](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/using-factories)
 - [Mocking the store](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/using-mock-methods)
+- [Request Manager](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/request-manager)
 - [Advanced](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/advanced)
 - [Upgrading](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading)
+  - [to v8](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading?id=to-v8)
   - [to v7](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading?id=to-v7)
   - [to v6](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading?id=to-v6)
   - [to v5](https://adopted-ember-addons.github.io/ember-data-factory-guy/#/upgrading?id=to-v5)

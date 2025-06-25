@@ -5,5 +5,6 @@
   - [Defining factories](defining-factories.md)
   - [Using factories](using-factories.md)
   - [Mocking the store](using-mock-methods.md)
+  - [Request Manager](request-manager.md)
   - [Advanced](advanced.md)
   - [Upgrading](upgrading.md)

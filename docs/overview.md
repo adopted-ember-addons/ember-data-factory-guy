@@ -5,6 +5,8 @@
 Feel the thrill and enjoyment of testing when using Factories instead of Fixtures.
 Factories simplify the process of testing, making you more efficient and your tests more readable.
 
+`npm install ember-data-factory-guy`
+
 ## Features
 
 - 🚀 Easily push models to the Store, even the most complex relationships

@@ -128,6 +128,25 @@ module('Acceptance | User View', function (hooks) {
 
 ## Configuration
 
+Configuration can be provided to ember-data-factory-guy like this. I believe this also requires that your application
+has `@embroider/macros` installed.
+
+```ts
+// ember-cli-build.js
+let app = new EmberApp(defaults, {
+  '@embroider/macros': {
+    setConfig: {
+      'ember-data-factory-guy': {
+        useStringIdsOnly: true,
+        interceptor: 'msw', // or 'pretender'
+      },
+    },
+  },
+});
+```
+
+- `useStringIdsOnly`
+
 Later versions of ember-data (5+) require strings for ids, else it will throw deprecations.
 https://deprecations.emberjs.com/ember-data/v5.x/#toc_ember-data-deprecate-non-strict-id
 
@@ -138,15 +157,8 @@ https://github.com/embroider-build/embroider/tree/main/packages/macros#setting-c
 If enabled, this will also trigger assert() calls to ensure that any ids you provide to Factory Guy via functions like
 `make*()`, `build*()`, `mock*()` etc are strings as well.
 
-```ts
-// ember-cli-build.js
-let app = new EmberApp(defaults, {
-  '@embroider/macros': {
-    setConfig: {
-      'ember-data-factory-guy': {
-        useStringIdsOnly: true,
-      },
-    },
-  },
-});
-```
+- `interceptor`
+
+Defaults to 'pretender', can be set to 'msw'. Determines which library to use, by default, for intercepting and handling
+requests. Whichever you choose, you will need to have that dependency listed in your application. Can be overridden in
+any test module by providing a request manager of your choice to setupFactoryGuy()
