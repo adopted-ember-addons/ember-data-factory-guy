@@ -1,5 +1,22 @@
 # Upgrading
 
+## to v8
+
+This version introduces the ability to choose whether you want Pretender or MockServiceWorker (MSW) to intercept requests. This is handled via a RequestManager. If you call `setupFactoryGuy(hooks)` in your module, `this.requestManager` will be set, giving you access to the RequestManager being used for the test, where you can directly access the interceptor or change settings.
+
+Pretender remains the default for this version to avoid churn.
+
+Noteworthy breaking changes;
+
+- `pretender` is no longer a dependency, it is now an optional peer dependency (similarly, `msw` is added as a new optional peer dep).
+  - you will need to add `pretender` to your applications' dev dependencies (or `msw` if you use that instead)
+- removed `getPretender()`, replace with `this.requestManager.pretender`, to get the pretender instance
+- `FactoryGuy.settings()` now only accepts `logLevel` setting. Settings specific to the requests (like `responseTime`/`delay`) should be set on the request manager `this.requestManager.settings({ delay: 100 })`. This will also give you more control per test.
+
+How to use the new features?
+
+See [Request Manager](request-manager.md) for details on RequestManagers, showing how to use msw as an interceptor.
+
 ## to v7
 
 No longer supporting `ember-data-model-fragments`. Given that package is not being maintained, and is locked to < ember-data 4.6, I cannot see how support for it can be expected to be kept in other addons either, if those addons want to move forward with supporting later versions of ember-data and ember-source.
