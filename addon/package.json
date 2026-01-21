@@ -41,7 +41,7 @@
   ],
   "dependencies": {
     "@embroider/addon-shim": "^1.10.0",
-    "lodash": ">= 4.0.0"
+    "lodash": ">= 4.17.23"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",

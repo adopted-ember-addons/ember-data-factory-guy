@@ -71,8 +71,8 @@ importers:
         specifier: ^1.10.0
         version: 1.10.0
       lodash:
-        specifier: '>= 4.0.0'
-        version: 4.17.21
+        specifier: '>= 4.17.23'
+        version: 4.17.23
     devDependencies:
       '@babel/core':
         specifier: ^7.27.1
@@ -4558,8 +4558,8 @@ packages:
   lodash.uniq@4.5.0:
     resolution: {integrity: sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==}
 
-  lodash@4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+  lodash@4.17.23:
+    resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
 
   log-symbols@2.2.0:
     resolution: {integrity: sha512-VeIAFslyIerEJLXHziedo2basKbMKtTw3vfn5IzG0XTjhAVEJyNHnL2p7vc+wBDSdQuUpNw3M2u6xb9QsAY5Eg==}
@@ -5470,6 +5470,7 @@ packages:
   raw-body@1.1.7:
     resolution: {integrity: sha512-WmJJU2e9Y6M5UzTOkHaM7xJGAPQD8PNzx3bAd2+uhZAim6wDk6dAZxPVYLF67XhbR4hmKGh33Lpmh4XWrCH5Mg==}
     engines: {node: '>= 0.8.0'}
+    deprecated: No longer maintained. Please upgrade to a stable version.
 
   raw-body@2.5.2:
     resolution: {integrity: sha512-8zGqypfENjCIqGhgXToC8aB2r7YrBX+AQAfIPs/Mlk+BtPTztOvTS01NRW/3Eh60J+a48lt8qsCzirQ6loCVfA==}
@@ -6165,6 +6166,7 @@ packages:
   tar@6.2.1:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   temp-dir@2.0.0:
     resolution: {integrity: sha512-aoBAniQmmwtcKp/7BzsH8Cxzv8OL736p7v1ihGb5e9DJ9kTwGWHrQrVB5+lfVDzfGrdRzXch+ig7LHaY1JTOrg==}
@@ -6569,6 +6571,7 @@ packages:
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-mimetype@4.0.0:
     resolution: {integrity: sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg==}
@@ -7885,7 +7888,7 @@ snapshots:
       handlebars: 4.7.8
       js-string-escape: 1.0.1
       jsdom: 25.0.1
-      lodash: 4.17.21
+      lodash: 4.17.23
       resolve: 1.22.10
       resolve-package-path: 4.0.3
       resolve.exports: 2.0.3
@@ -7906,7 +7909,7 @@ snapshots:
       babel-import-util: 3.0.1
       ember-cli-babel: 7.26.11
       find-up: 5.0.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       resolve: 1.22.10
       semver: 7.7.1
     transitivePeerDependencies:
@@ -7925,7 +7928,7 @@ snapshots:
       fs-extra: 9.1.0
       is-subdir: 1.2.0
       js-string-escape: 1.0.1
-      lodash: 4.17.21
+      lodash: 4.17.23
       minimatch: 3.1.2
       pkg-entry-points: 1.1.1
       resolve-package-path: 4.0.3
@@ -7942,7 +7945,7 @@ snapshots:
       fs-extra: 9.1.0
       is-subdir: 1.2.0
       js-string-escape: 1.0.1
-      lodash: 4.17.21
+      lodash: 4.17.23
       minimatch: 3.1.2
       pkg-entry-points: 1.1.1
       resolve-package-path: 4.0.3
@@ -7954,7 +7957,7 @@ snapshots:
 
   '@embroider/test-setup@4.0.0':
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.17.23
       resolve: 1.22.10
 
   '@embroider/util@1.13.2(ember-source@4.12.4(@babel/core@7.27.1)(@glimmer/component@1.1.2(@babel/core@7.27.1))(webpack@5.99.8))':
@@ -8920,7 +8923,7 @@ snapshots:
 
   async@2.6.4:
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.17.23
 
   async@3.2.6: {}
 
@@ -8973,7 +8976,7 @@ snapshots:
   babel-plugin-filter-imports@4.0.0:
     dependencies:
       '@babel/types': 7.27.1
-      lodash: 4.17.21
+      lodash: 4.17.23
 
   babel-plugin-htmlbars-inline-precompile@5.3.1:
     dependencies:
@@ -9718,12 +9721,12 @@ snapshots:
       ora: 3.4.0
       through2: 3.0.2
 
-  consolidate@0.16.0(handlebars@4.7.8)(lodash@4.17.21)(mustache@4.2.0)(underscore@1.13.7):
+  consolidate@0.16.0(handlebars@4.7.8)(lodash@4.17.23)(mustache@4.2.0)(underscore@1.13.7):
     dependencies:
       bluebird: 3.7.2
     optionalDependencies:
       handlebars: 4.7.8
-      lodash: 4.17.21
+      lodash: 4.17.23
       mustache: 4.2.0
       underscore: 1.13.7
 
@@ -9990,7 +9993,7 @@ snapshots:
       handlebars: 4.7.8
       is-subdir: 1.2.0
       js-string-escape: 1.0.1
-      lodash: 4.17.21
+      lodash: 4.17.23
       mini-css-extract-plugin: 2.9.2(webpack@5.99.8)
       minimatch: 3.1.2
       parse5: 6.0.1
@@ -10299,7 +10302,7 @@ snapshots:
       is-git-url: 1.0.0
       is-language-code: 3.1.0
       isbinaryfile: 5.0.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       markdown-it: 14.1.0
       markdown-it-terminal: 0.4.0(markdown-it@14.1.0)
       minimatch: 7.4.6
@@ -10603,7 +10606,7 @@ snapshots:
   ember-try-config@4.0.0(encoding@0.1.13):
     dependencies:
       ember-source-channel-url: 3.0.0(encoding@0.1.13)
-      lodash: 4.17.21
+      lodash: 4.17.23
       package-json: 6.5.0
       remote-git-tags: 3.0.0
       semver: 7.7.1
@@ -11888,7 +11891,7 @@ snapshots:
       cli-width: 2.2.1
       external-editor: 3.1.0
       figures: 2.0.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       mute-stream: 0.0.7
       run-async: 2.4.1
       rxjs: 6.6.7
@@ -11904,7 +11907,7 @@ snapshots:
       cli-width: 3.0.0
       external-editor: 3.1.0
       figures: 3.2.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       mute-stream: 0.0.8
       run-async: 2.4.1
       rxjs: 6.6.7
@@ -12402,7 +12405,7 @@ snapshots:
 
   lodash.uniq@4.5.0: {}
 
-  lodash@4.17.21: {}
+  lodash@4.17.23: {}
 
   log-symbols@2.2.0:
     dependencies:
@@ -14181,14 +14184,14 @@ snapshots:
       charm: 1.0.2
       commander: 2.20.3
       compression: 1.8.0
-      consolidate: 0.16.0(handlebars@4.7.8)(lodash@4.17.21)(mustache@4.2.0)(underscore@1.13.7)
+      consolidate: 0.16.0(handlebars@4.7.8)(lodash@4.17.23)(mustache@4.2.0)(underscore@1.13.7)
       execa: 1.0.0
       express: 4.21.2
       fireworm: 0.7.2
       glob: 7.2.3
       http-proxy: 1.18.1
       js-yaml: 3.14.1
-      lodash: 4.17.21
+      lodash: 4.17.23
       mkdirp: 3.0.1
       mustache: 4.2.0
       node-notifier: 10.0.1
