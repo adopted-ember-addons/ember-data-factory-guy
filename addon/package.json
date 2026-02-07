@@ -59,7 +59,7 @@
     "pretender": "^3.4.3",
     "msw": "^2.10.2",
     "rollup": "^4.40.1",
-    "webpack": "^5.96.1"
+    "webpack": "^5.104.1"
   },
   "peerDependencies": {
     "@ember-data/model": ">= 3.28",
