@@ -44,12 +44,12 @@ export default class RequestManagerMSW extends RequestManager {
       wrapper = this.wrappers[key];
 
     if (!wrapper) {
-      wrapper = new RequestWrapper(); // this generates & returns the handler function
+      wrapper = new RequestWrapper();
       const mswHandler = http[type.toLowerCase()](
         url,
         async ({ request, params }) => {
           await delay(this._settings.delay);
-          return await wrapper({ request: request.clone(), params });
+          return await wrapper.handleRequest({ request: request.clone(), params });
         },
       );
       this.worker.use(mswHandler);

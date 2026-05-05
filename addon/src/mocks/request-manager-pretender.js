@@ -75,7 +75,7 @@ export default class RequestManagerPretender extends RequestManager {
             return cl;
           };
 
-          const response = await wrapper({
+          const response = await wrapper.handleRequest({
             request: request.clone(),
             params: fakeRequest.params,
           });
