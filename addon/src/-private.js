@@ -2,6 +2,8 @@
 
 import FixtureBuilderFactory from './builder/fixture-builder-factory';
 import MockStoreRequest from './mocks/mock-store-request';
+import RequestWrapper from './mocks/request-wrapper';
+import Sequence from './sequence';
 
 import {
   isEmptyObject,
@@ -13,6 +15,8 @@ import {
 export {
   FixtureBuilderFactory,
   MockStoreRequest,
+  RequestWrapper,
+  Sequence,
   isEmptyObject,
   param,
   isEquivalent,
