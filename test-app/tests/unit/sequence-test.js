@@ -27,7 +27,11 @@ module('Sequence', function () {
       return n;
     });
     seq.next();
-    assert.notStrictEqual(capturedThis, seq, 'fn should not receive Sequence as this');
+    assert.notStrictEqual(
+      capturedThis,
+      seq,
+      'fn should not receive Sequence as this',
+    );
   });
 
   test('reset restarts index at 1', function (assert) {

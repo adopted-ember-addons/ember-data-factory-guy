@@ -1066,10 +1066,18 @@ module('FactoryGuy', function (hooks) {
       const originalAdapterFor = store.adapterFor;
 
       FactoryGuy.cacheOnlyMode();
-      assert.notStrictEqual(store.adapterFor, originalAdapterFor, 'adapterFor is patched');
+      assert.notStrictEqual(
+        store.adapterFor,
+        originalAdapterFor,
+        'adapterFor is patched',
+      );
 
       FactoryGuy.reset();
-      assert.strictEqual(store.adapterFor, originalAdapterFor, 'adapterFor is restored after reset');
+      assert.strictEqual(
+        store.adapterFor,
+        originalAdapterFor,
+        'adapterFor is restored after reset',
+      );
     });
   });
 
@@ -1088,7 +1096,8 @@ module('FactoryGuy', function (hooks) {
     test('throws when name not found and assertItExists is true', function (assert) {
       const FactoryGuyClass = FactoryGuy.constructor;
       assert.throws(
-        () => FactoryGuyClass.lookupDefinitionForFixtureName('NoSuchFactory', true),
+        () =>
+          FactoryGuyClass.lookupDefinitionForFixtureName('NoSuchFactory', true),
         /Can't find that factory named \[ NoSuchFactory \]/,
       );
     });

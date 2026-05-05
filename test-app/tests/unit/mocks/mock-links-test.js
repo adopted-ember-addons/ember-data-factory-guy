@@ -20,12 +20,9 @@ module('MockLinks', function (hooks) {
   });
 
   test('with only model parameter throws the guard assertion message', function (assert) {
-    assert.throws(
-      function () {
-        mockLinks(make('user'));
-      },
-      /mockLinks requires at least model and relationshipKey/,
-    );
+    assert.throws(function () {
+      mockLinks(make('user'));
+    }, /mockLinks requires at least model and relationshipKey/);
   });
 
   test('getUrl and status for belongsTo links', function (assert) {

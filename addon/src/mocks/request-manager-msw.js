@@ -49,7 +49,10 @@ export default class RequestManagerMSW extends RequestManager {
         url,
         async ({ request, params }) => {
           await delay(this._settings.delay);
-          return await wrapper.handleRequest({ request: request.clone(), params });
+          return await wrapper.handleRequest({
+            request: request.clone(),
+            params,
+          });
         },
       );
       this.worker.use(mswHandler);
