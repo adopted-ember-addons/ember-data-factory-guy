@@ -5,3 +5,4 @@ node_modules
 .pnpm-debug.log
 .DS_Store
 .tool-versions
+planning-docs/*

@@ -75,6 +75,31 @@ module.exports = async function () {
           },
         },
       },
+      // Tests compatibility with WarpDrive in legacy mode — i.e., using the explicit
+      // @warp-drive/* and @ember-data/* packages without the ember-data umbrella,
+      // but still using @ember-data/model + adapters/serializers via legacy-compat.
+      // This mirrors the setup of users who have started their WarpDrive migration.
+      {
+        name: 'warp-drive-legacy',
+        npm: {
+          devDependencies: {
+            'ember-data': null, // replaced by explicit packages below
+            'ember-source': '~5.12',
+            'ember-load-initializers': '^3.0.0',
+            '@warp-drive/ember': '5.8.2',
+            '@ember-data/store': '5.8.2',
+            '@ember-data/model': '5.8.2',
+            '@ember-data/adapter': '5.8.2',
+            '@ember-data/serializer': '5.8.2',
+            '@ember-data/legacy-compat': '5.8.2',
+            '@ember-data/json-api': '5.8.2',
+            '@ember-data/request': '5.8.2',
+            '@ember-data/request-utils': '5.8.2',
+            '@ember-data/tracking': '5.8.2',
+            'ember-provide-consume-context': '^0.9.0',
+          },
+        },
+      },
     ],
   };
 };
