@@ -21,7 +21,7 @@ jobs:
       command: ${{ steps.check-release.outputs.command }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           ref: 'master'
@@ -46,16 +46,16 @@ jobs:
     if: (github.event_name == 'push' && needs.check-plan.outputs.command != 'release') || (github.event_name == 'pull_request_target' && github.event.pull_request.merged == true)
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         # We need to download lots of history so that
         # github-changelog can discover what's changed since the last release
         with:
           fetch-depth: 0
           ref: 'master'
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 18
-      - uses: pnpm/action-setup@v4
+          node-version: 24
+      - uses: pnpm/action-setup@v6
       - run: pnpm install --frozen-lockfile
       - name: 'Generate Explanation and Prep Changelogs'
         id: explanation

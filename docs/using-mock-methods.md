@@ -24,17 +24,14 @@
   - [mockUpdate](#mockupdate)
   - [mockDelete](#mockdelete)
 - Custom mocks (http GET/POST/PUT/DELETE)
-
   - [mock](#mock)
 
 - Use method `fails()` to simulate failure
 - Use method `succeeds()` to simulate success
-
   - Only used if the mock was set to fail with `fails()` and you want to set the
     mock to succeed to simulate a successful retry
 
 - Use property `timesCalled` to verify how many times the ajax call was mocked
-
   - works when you are using `mockQuery`, `mockQueryRecord`, `mockFindAll`, `mockReload`, or `mockUpdate`
   - `mockFindRecord` will always be at most 1 since it will only make ajax call
     the first time, and then the store will use cache the second time
@@ -72,7 +69,6 @@
 
 - Usable on all mocks
 - Use optional object arguments status and response and convertErrors to customize
-
   - status : must be number in the range of 3XX, 4XX, or 5XX ( default is 500 )
   - response : must be object with errors key ( default is null )
   - convertErrors : set to false and object will be left untouched ( default is true )

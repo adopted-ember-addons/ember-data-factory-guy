@@ -1,4 +1,3 @@
-import FactoryGuy from './factory-guy';
 import Sequence from './sequence';
 import MissingSequenceError from './missing-sequence-error';
 import { mergeDeep } from './utils/helper-functions';
@@ -34,7 +33,8 @@ class IdGenerator {
  @constructor
  */
 class ModelDefinition {
-  constructor(model, config) {
+  constructor(model, config, factoryGuy) {
+    this.factoryGuy = factoryGuy;
     this.modelName = model;
     this.idGenerator = new IdGenerator();
     this.originalConfig = mergeDeep({}, config);
@@ -48,7 +48,7 @@ class ModelDefinition {
    @returns {DS.Relationship} relationship object if the field is a relationship, null if not
    */
   getRelationship(field) {
-    let modelClass = FactoryGuy.store.modelFor(this.modelName);
+    let modelClass = this.factoryGuy.store.modelFor(this.modelName);
     let relationship = modelClass.relationshipsByName.get(field);
     return relationship || null;
   }
@@ -152,7 +152,7 @@ class ModelDefinition {
     if (relationship) {
       let payload = fixture[attribute];
       if (!payload.isProxy && !payload.links) {
-        fixture[attribute] = FactoryGuy.buildRaw({
+        fixture[attribute] = this.factoryGuy.buildRaw({
           name: relationship.type,
           opts: payload,
           buildType,
@@ -237,7 +237,7 @@ class ModelDefinition {
 
   mergeConfig(config) {
     let extending = config.extends;
-    let definition = FactoryGuy.findModelDefinition(extending);
+    let definition = this.factoryGuy.findModelDefinition(extending);
     assert(
       `[ember-data-factory-guy] You are trying to extend [${this.modelName}] with [ ${extending} ].
       But FactoryGuy can't find that definition [ ${extending} ]

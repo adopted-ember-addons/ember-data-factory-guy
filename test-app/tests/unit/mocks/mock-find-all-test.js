@@ -81,7 +81,7 @@ module('MockFindAll', function (hooks) {
     let hat = make('big-hat');
     mockFindAll('big-hat').returns({ models: [hat] });
     await FactoryGuy.store.findAll('big-hat', { reload: true });
-    assert.strictEqual(hat.get('type'), 'BigHat'); // default type value
+    assert.strictEqual(hat.get('type'), 'big-hat'); // default type value
   });
 
   test('#get method to access payload', function (assert) {
@@ -97,7 +97,8 @@ module('MockFindAll', function (hooks) {
   });
 
   test('RequestManager creates wrapper with two mockFindAll mocks', function (assert) {
-    mockFindAll('user', 2), mockFindAll('user', 1);
+    mockFindAll('user', 2);
+    mockFindAll('user', 1);
 
     let wrapper = this.requestManager.findWrapper({
       type: 'GET',

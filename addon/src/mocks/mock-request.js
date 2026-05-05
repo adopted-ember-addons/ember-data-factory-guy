@@ -112,12 +112,12 @@ export default class {
       let responseBody = null;
       try {
         responseBody = await this.getResponse().clone().text();
-      } catch (e) {
+      } catch {
         // continue
       }
       try {
         responseBody = await this.getResponse().clone().json();
-      } catch (e) {
+      } catch {
         // continue
       }
 
@@ -199,17 +199,17 @@ export default class {
     // Try to figure out request body type without relying on request headers
     try {
       return await request.clone().json();
-    } catch (e) {
+    } catch {
       // continue
     }
     try {
       return await request.clone().formData();
-    } catch (e) {
+    } catch {
       // continue
     }
     try {
       return await request.clone().text();
-    } catch (e) {
+    } catch {
       // continue
     }
   }

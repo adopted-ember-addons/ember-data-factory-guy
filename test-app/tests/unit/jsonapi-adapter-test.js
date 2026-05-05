@@ -683,7 +683,7 @@ module('DS.JSONAPISerializer', function (hooks) {
             type: 'big-hat',
             id: '1',
             attributes: {
-              type: 'BigHat',
+              type: 'big-hat',
             },
             relationships: {
               outfit: {
@@ -702,7 +702,7 @@ module('DS.JSONAPISerializer', function (hooks) {
             type: 'big-hat',
             id: '2',
             attributes: {
-              type: 'BigHat',
+              type: 'big-hat',
             },
             relationships: {
               outfit: {
