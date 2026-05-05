@@ -31,7 +31,7 @@ export default class RequestManagerPretender extends RequestManager {
    * For now, you can only set the response delay.
    */
   settings(settings = {}) {
-    super.setttings({
+    super.settings({
       ...settings,
       delay: settings.responseTime ?? settings.delay ?? 0,
     });
