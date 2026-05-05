@@ -10,6 +10,7 @@
     "test-app"
   ],
   "scripts": {
+    "test": "pnpm --filter ember-data-factory-guy build && pnpm --filter test-app test",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
     "lint:js": "eslint .",
     "lint:js:fix": "eslint . --fix",
