@@ -1,0 +1,8 @@
+# Unlabeled Changes
+
+* `ember-data-factory-guy`
+  * [#563](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/563) Fix bugs and design issues found in audit ([@mfeckie](https://github.com/mfeckie))
+  * [#560](https://github.com/adopted-ember-addons/ember-data-factory-guy/pull/560) Dev/dependency updates ([@mfeckie](https://github.com/mfeckie))
+
+
+*Cannot plan release until the above changes are labeled*.
