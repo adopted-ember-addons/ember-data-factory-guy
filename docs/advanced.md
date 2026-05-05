@@ -5,7 +5,6 @@
 - You can define shared/common functionality by creating scenarios.
 
 - Create a scenario file
-
   - Ensure it extends from `Scenario` class.
   - A scenario class should declare a run method where you do things like:
     - include other scenarios
@@ -49,7 +48,6 @@
   ```
 
 - Run the scenario
-
   - Import the scenario and call the `run()` function where you want to.
 
   ```js
