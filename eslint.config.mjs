@@ -21,6 +21,7 @@ export default [
       'package.json.ember-try',
       'CHANGELOG.md',
       'pnpm-lock.yaml',
+      '**/public/mockServiceWorker.js',
     ],
   },
 

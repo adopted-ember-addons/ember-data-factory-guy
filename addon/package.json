@@ -40,26 +40,26 @@
     "dist"
   ],
   "dependencies": {
-    "@embroider/addon-shim": "^1.10.0",
-    "lodash": ">= 4.0.0"
+    "@embroider/addon-shim": "^1.10.2",
+    "lodash": "^4.18.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.27.1",
-    "@babel/plugin-proposal-decorators": "^7.27.1",
-    "@babel/plugin-transform-class-properties": "^7.27.1",
+    "@babel/core": "^7.29.0",
+    "@babel/plugin-proposal-decorators": "^7.29.0",
+    "@babel/plugin-transform-class-properties": "^7.28.6",
     "@ember-data/model": "^3.28.13",
     "@ember-data/serializer": "^3.28.13",
     "@ember-data/store": "^3.28.13",
     "@ember/string": "^3.1.1",
-    "@ember/test-helpers": "^2.9.3",
+    "@ember/test-helpers": "^2.9.6",
     "@embroider/addon-dev": "^8.0.1",
-    "@rollup/plugin-babel": "^6.0.4",
-    "active-model-adapter": "^4.0.0",
-    "ember-inflector": "^4.0.1",
-    "pretender": "^3.4.3",
-    "msw": "^2.10.2",
-    "rollup": "^4.40.1",
-    "webpack": "^5.96.1"
+    "@rollup/plugin-babel": "^7.0.0",
+    "active-model-adapter": "^4.0.1",
+    "ember-inflector": "^4.0.3",
+    "msw": "^2.14.3",
+    "pretender": "^3.4.7",
+    "rollup": "^4.60.3",
+    "webpack": "^5.106.2"
   },
   "peerDependencies": {
     "@ember-data/model": ">= 3.28",
@@ -69,8 +69,8 @@
     "@ember/test-helpers": ">= 3",
     "active-model-adapter": "^4.0.0",
     "ember-inflector": ">= 4.0.1",
-    "pretender": "^3.4.3",
-    "msw": "^2.10.2"
+    "msw": "^2.10.2",
+    "pretender": "^3.4.3"
   },
   "peerDependenciesMeta": {
     "active-model-adapter": {

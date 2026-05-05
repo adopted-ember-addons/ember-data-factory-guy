@@ -97,7 +97,8 @@ module('MockFindAll', function (hooks) {
   });
 
   test('RequestManager creates wrapper with two mockFindAll mocks', function (assert) {
-    mockFindAll('user', 2), mockFindAll('user', 1);
+    mockFindAll('user', 2);
+    mockFindAll('user', 1);
 
     let wrapper = this.requestManager.findWrapper({
       type: 'GET',
