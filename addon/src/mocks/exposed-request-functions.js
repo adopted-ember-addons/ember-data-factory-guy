@@ -107,10 +107,7 @@ export function mockReload(...args) {
     let record = args[0];
     modelName = record.constructor.modelName;
     id = record.id;
-  } else if (
-    typeof args[0] === 'string' &&
-    typeof parseInt(args[1]) === 'number'
-  ) {
+  } else if (typeof args[0] === 'string' && args[1] != null) {
     modelName = args[0];
     id = args[1];
   }
