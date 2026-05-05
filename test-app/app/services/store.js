@@ -13,15 +13,10 @@ if (macroCondition(dependencySatisfies('@warp-drive/ember', '*'))) {
   const { default: RequestManager } = importSync('@ember-data/request');
   const { default: Fetch } = importSync('@ember-data/request/fetch');
   const { default: JSONAPICache } = importSync('@ember-data/json-api');
-  const {
-    buildSchema,
-    instantiateRecord,
-    modelFor,
-    teardownRecord,
-  } = importSync('@ember-data/model');
+  const { buildSchema, instantiateRecord, modelFor, teardownRecord } =
+    importSync('@ember-data/model');
   const {
     adapterFor,
-    cleanup,
     LegacyNetworkHandler,
     normalize,
     pushPayload,
@@ -59,11 +54,6 @@ if (macroCondition(dependencySatisfies('@warp-drive/ember', '*'))) {
     pushPayload = pushPayload;
     normalize = normalize;
     serializeRecord = serializeRecord;
-
-    destroy() {
-      cleanup.call(this);
-      super.destroy();
-    }
   }
 
   StoreClass = WarpDriveLegacyStore;
