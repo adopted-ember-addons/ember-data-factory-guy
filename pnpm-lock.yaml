@@ -29,6 +29,9 @@ importers:
       '@babel/plugin-transform-class-properties':
         specifier: ^7.28.6
         version: 7.28.6(@babel/core@7.29.0)
+      '@eslint/js':
+        specifier: ^9.39.4
+        version: 9.39.4
       ember-eslint-parser:
         specifier: ^0.5.13
         version: 0.5.13(@babel/core@7.29.0)(eslint@9.39.4)(typescript@5.9.3)

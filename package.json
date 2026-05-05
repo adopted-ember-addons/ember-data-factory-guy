@@ -25,6 +25,7 @@
     "@babel/plugin-transform-class-properties": "^7.28.6",
     "ember-eslint-parser": "^0.5.13",
     "ember-template-lint": "^7.9.3",
+    "@eslint/js": "^9.39.4",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-ember": "^12.7.5",
