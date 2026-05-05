@@ -4,7 +4,7 @@ import FactoryGuy from '../factory-guy';
 import MockRequest from './mock-request';
 import { isEmptyObject, isEquivalent } from '../utils/helper-functions';
 
-export default class extends MockRequest {
+export default class MockStoreRequest extends MockRequest {
   constructor(modelName, requestType) {
     super();
     this.modelName = modelName;
