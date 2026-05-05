@@ -23,8 +23,7 @@ export function mock({ type = 'GET', url, responseText, status } = {}) {
 export function mockLinks(model, relationshipKey) {
   assert(
     '[ember-data-factory-guy] mockLinks requires at least model and relationshipKey',
-    model,
-    relationshipKey,
+    model && relationshipKey,
   );
 
   return new MockLinksRequest(model, relationshipKey);
