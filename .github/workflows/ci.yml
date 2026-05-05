@@ -101,12 +101,6 @@ jobs:
         run: pnpm ember try:one $EMBER_TRY_SCENARIO
         working-directory: test-app
         continue-on-error: ${{ matrix.allow-failure }}
-      - uses: mainmatter/continue-on-error-comment@v1
-        if: ${{ matrix.allow-failure }}
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          outcome: ${{ steps.test.outcome }}
-          test-id: ${{ matrix.ember-try-scenario }}
 
   floating-dependencies:
     name: Floating Dependencies
