@@ -18,7 +18,7 @@ import {
   mock,
 } from './mocks/exposed-request-functions';
 
-export default class {
+export default class Scenario {
   constructor() {
     this.make = make;
     this.makeNew = makeNew;

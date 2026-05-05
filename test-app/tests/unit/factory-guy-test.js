@@ -1057,4 +1057,49 @@ module('FactoryGuy', function (hooks) {
       assert.strictEqual(method, 'PUT');
     });
   });
+
+  module('FactoryGuy#cacheOnlyMode', function (subHooks) {
+    inlineSetup(subHooks, '-json-api');
+
+    test('restores store.adapterFor on reset', function (assert) {
+      const store = FactoryGuy.store;
+      const originalAdapterFor = store.adapterFor;
+
+      FactoryGuy.cacheOnlyMode();
+      assert.notStrictEqual(
+        store.adapterFor,
+        originalAdapterFor,
+        'adapterFor is patched',
+      );
+
+      FactoryGuy.reset();
+      assert.strictEqual(
+        store.adapterFor,
+        originalAdapterFor,
+        'adapterFor is restored after reset',
+      );
+    });
+  });
+
+  module('FactoryGuy.lookupDefinitionForFixtureName', function (subHooks) {
+    inlineSetup(subHooks, '-json-api');
+
+    test('returns undefined without throwing when name not found and assertItExists is false', function (assert) {
+      const FactoryGuyClass = FactoryGuy.constructor;
+      const result = FactoryGuyClass.lookupDefinitionForFixtureName(
+        'NoSuchFactory',
+        false,
+      );
+      assert.strictEqual(result, undefined);
+    });
+
+    test('throws when name not found and assertItExists is true', function (assert) {
+      const FactoryGuyClass = FactoryGuy.constructor;
+      assert.throws(
+        () =>
+          FactoryGuyClass.lookupDefinitionForFixtureName('NoSuchFactory', true),
+        /Can't find that factory named \[ NoSuchFactory \]/,
+      );
+    });
+  });
 });

@@ -3,7 +3,7 @@ import { isEmptyObject, param } from '../utils/helper-functions';
 import FactoryGuy from '../factory-guy';
 import { isMatch, isEqual } from 'lodash';
 
-export default class {
+export default class MockRequest {
   constructor() {
     this.status = 200;
     this.responseHeaders = new Headers();

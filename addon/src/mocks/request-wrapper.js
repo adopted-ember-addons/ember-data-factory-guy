@@ -1,51 +1,12 @@
 /**
- * This request wrapper controls what will be returned by one url / http verb
- * Normally when you set up pretender, you give it one function to handle one url / verb.
- *
- * So, for example, you would:
- *
- *  ```
- *    pretender.get('/users', myfunction )
- *  ```
- *
- *  to mock a [GET /users] call
- *
- *  This wrapper allows that GET /users call to be handled my many functions
- *  instead of just one, since this request handler hold the ability to take
- *  a list of hanlders.
- *
- *  That way you can setup a few mocks like
- *
- *  ```
- *    mockFindAll('user')
- *    mockQuery('user', {name: 'Dude'})
- *  ```
- *
- *  and both of these hanlders will reside in the list for the wrapper that
- *  belongs to [GET /users]
+ * This request wrapper controls what will be returned by one url / http verb.
+ * Holds a list of handlers for a given url/verb pair so multiple mocks (e.g.
+ * mockFindAll and mockQuery) can share the same route.
  */
 export default class RequestWrapper {
   constructor() {
     this.index = 0;
     this.handlers = [];
-    return this.generateRequestHandler();
-  }
-
-  /**
-   * Generating a function that we can hand off to pretender that
-   * will handle the request.
-   *
-   * Before passing back that function, add some other functions
-   * to control the handlers array
-   *
-   * @returns {function(this:T)}
-   */
-  generateRequestHandler() {
-    const requestHandler = this.handleRequest.bind(this);
-    requestHandler.getHandlers = this.getHandlers.bind(this);
-    requestHandler.addHandler = this.addHandler.bind(this);
-    requestHandler.removeHandler = this.removeHandler.bind(this);
-    return requestHandler;
   }
 
   /**

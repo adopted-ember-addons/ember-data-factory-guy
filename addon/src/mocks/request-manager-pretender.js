@@ -31,7 +31,7 @@ export default class RequestManagerPretender extends RequestManager {
    * For now, you can only set the response delay.
    */
   settings(settings = {}) {
-    super.setttings({
+    super.settings({
       ...settings,
       delay: settings.responseTime ?? settings.delay ?? 0,
     });
@@ -75,7 +75,7 @@ export default class RequestManagerPretender extends RequestManager {
             return cl;
           };
 
-          const response = await wrapper({
+          const response = await wrapper.handleRequest({
             request: request.clone(),
             params: fakeRequest.params,
           });

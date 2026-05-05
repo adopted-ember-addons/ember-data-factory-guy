@@ -450,6 +450,10 @@ class FactoryGuy {
   }
 
   reset() {
+    if (this._cacheOnlyOriginalAdapterFor && this.store) {
+      this.store.adapterFor = this._cacheOnlyOriginalAdapterFor;
+      this._cacheOnlyOriginalAdapterFor = null;
+    }
     this.store = null;
     this.requestManager?.stop();
     this.requestManager = null;
@@ -499,6 +503,7 @@ class FactoryGuy {
    */
   cacheOnlyMode({ except = [] } = {}) {
     let store = this.store;
+    this._cacheOnlyOriginalAdapterFor = store.adapterFor;
     let findAdapter = store.adapterFor.bind(store);
 
     store.adapterFor = function (name) {
@@ -592,7 +597,7 @@ class FactoryGuy {
 
     assert(
       `[ember-data-factory-guy] Can't find that factory named [ ${name} ]`,
-      !definition && assertItExists,
+      !assertItExists,
     );
   }
 

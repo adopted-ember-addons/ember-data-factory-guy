@@ -350,6 +350,20 @@ SharedBehavior.mockReloadTests = function () {
       assert.ok(true);
     });
   });
+
+  test('throws with correct message when called with model name but no id', function (assert) {
+    assert.throws(
+      () => mockReload('profile'),
+      /mockReload arguments are a model instance or a model type name and an id/,
+    );
+  });
+
+  test('throws with correct message when called with model name and null id', function (assert) {
+    assert.throws(
+      () => mockReload('profile', null),
+      /mockReload arguments are a model instance or a model type name and an id/,
+    );
+  });
 };
 
 /////// mockFindAll common //////////
@@ -1257,21 +1271,21 @@ SharedBehavior.mockCreateReturnsEmbeddedAssociations = function () {
   module('#mockCreate | returns embedded association', function () {
     test('belongsTo', async function (assert) {
       let company = build('company'),
-        comitBook = FactoryGuy.store.createRecord('comic-book', {
+        commitBook = FactoryGuy.store.createRecord('comic-book', {
           characters: [],
           includedVillains: [],
         });
 
       mockCreate('comic-book').returns({ attrs: { company } });
 
-      await comitBook.save();
+      await commitBook.save();
 
       assert.strictEqual(
-        comitBook.get('company.id'),
+        commitBook.get('company.id'),
         company.get('id').toString(),
       );
       assert.strictEqual(
-        comitBook.get('company.name'),
+        commitBook.get('company.name'),
         company.get('name').toString(),
       );
     });
