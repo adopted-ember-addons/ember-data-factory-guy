@@ -1,5 +1,5 @@
 /* Disabling the `ember/no-get` lint rule as `MockStoreRequest` and `MockGetRequest` contains a `this.get` method */
-/* eslint-disable ember/no-get */
+
 import { assert } from '@ember/debug';
 import { typeOf } from '@ember/utils';
 import { isArray } from '@ember/array';

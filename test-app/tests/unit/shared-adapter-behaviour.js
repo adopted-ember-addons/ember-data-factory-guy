@@ -1195,7 +1195,7 @@ SharedBehavior.mockCreateFailsWithErrorResponse = function () {
 
       try {
         await profile.save();
-      } catch (e) {
+      } catch {
         let errorMessages = profile.errors.messages;
         assert.deepEqual(errorMessages, ['bad dog', 'bad dude']);
         assert.strictEqual(mock.timesCalled, 1);
