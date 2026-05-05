@@ -1057,4 +1057,25 @@ module('FactoryGuy', function (hooks) {
       assert.strictEqual(method, 'PUT');
     });
   });
+
+  module('FactoryGuy.lookupDefinitionForFixtureName', function (subHooks) {
+    inlineSetup(subHooks, '-json-api');
+
+    test('returns undefined without throwing when name not found and assertItExists is false', function (assert) {
+      const FactoryGuyClass = FactoryGuy.constructor;
+      const result = FactoryGuyClass.lookupDefinitionForFixtureName(
+        'NoSuchFactory',
+        false,
+      );
+      assert.strictEqual(result, undefined);
+    });
+
+    test('throws when name not found and assertItExists is true', function (assert) {
+      const FactoryGuyClass = FactoryGuy.constructor;
+      assert.throws(
+        () => FactoryGuyClass.lookupDefinitionForFixtureName('NoSuchFactory', true),
+        /Can't find that factory named \[ NoSuchFactory \]/,
+      );
+    });
+  });
 });

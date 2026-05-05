@@ -592,7 +592,7 @@ class FactoryGuy {
 
     assert(
       `[ember-data-factory-guy] Can't find that factory named [ ${name} ]`,
-      !definition && assertItExists,
+      !assertItExists,
     );
   }
 
