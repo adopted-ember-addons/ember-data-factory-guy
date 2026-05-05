@@ -213,7 +213,7 @@ SharedBehavior.mockFindRecordSideloadingTests = function () {
       let user = await FactoryGuy.store.findRecord('user', userId);
 
       assert.strictEqual(user.hats.length, 2);
-      assert.strictEqual(user.hats[0].type, 'BigHat');
+      assert.strictEqual(user.hats[0].type, 'big-hat');
     });
 
     test('using returns with json', async function (assert) {
@@ -420,7 +420,7 @@ SharedBehavior.mockFindAllSideloadingTests = function () {
       assert.ok(users.length === 2);
       assert.ok(
         users[users.length - 1].hats.map((h) => h.type) + '' ===
-          ['BigHat', 'BigHat'] + '',
+          ['big-hat', 'big-hat'] + '',
       );
       assert.ok(
         users[users.length - 1].hats.map((h) => h.id) + '' === [3, 4] + '',

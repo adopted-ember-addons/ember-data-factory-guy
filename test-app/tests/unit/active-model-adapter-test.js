@@ -175,8 +175,8 @@ module('DS.ActiveModelSerializer', function (hooks) {
           ],
         },
         'big-hats': [
-          { id: '1', type: 'BigHat' },
-          { id: '2', type: 'BigHat' },
+          { id: '1', type: 'big-hat' },
+          { id: '2', type: 'big-hat' },
         ],
       };
 
@@ -199,8 +199,8 @@ module('DS.ActiveModelSerializer', function (hooks) {
           ],
         },
         'big-hats': [
-          { id: '1', type: 'BigHat' },
-          { id: '2', type: 'BigHat' },
+          { id: '1', type: 'big-hat' },
+          { id: '2', type: 'big-hat' },
         ],
       };
 
@@ -224,8 +224,8 @@ module('DS.ActiveModelSerializer', function (hooks) {
           ],
         },
         'big-hats': [
-          { id: '1', type: 'BigHat' },
-          { id: '2', type: 'BigHat' },
+          { id: '1', type: 'big-hat' },
+          { id: '2', type: 'big-hat' },
         ],
       };
 
