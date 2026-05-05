@@ -84,7 +84,7 @@ class FactoryGuy {
    @param {Object} config your model definition
    */
   define(model, config) {
-    modelDefinitions[model] = new ModelDefinition(model, config);
+    modelDefinitions[model] = new ModelDefinition(model, config, this);
   }
 
   /*
