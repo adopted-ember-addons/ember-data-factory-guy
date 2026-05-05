@@ -5,7 +5,8 @@ export default class Sequence {
   }
 
   next() {
-    return this._fn(this._index++);
+    const fn = this._fn;
+    return fn(this._index++);
   }
 
   reset() {
