@@ -1,9 +1,14 @@
-export default function (fn) {
-  let index = 1;
-  this.next = function () {
-    return fn.call(this, index++);
-  };
-  this.reset = function () {
-    index = 1;
-  };
+export default class Sequence {
+  constructor(fn) {
+    this._fn = fn;
+    this._index = 1;
+  }
+
+  next() {
+    return this._fn(this._index++);
+  }
+
+  reset() {
+    this._index = 1;
+  }
 }
