@@ -1257,21 +1257,21 @@ SharedBehavior.mockCreateReturnsEmbeddedAssociations = function () {
   module('#mockCreate | returns embedded association', function () {
     test('belongsTo', async function (assert) {
       let company = build('company'),
-        comitBook = FactoryGuy.store.createRecord('comic-book', {
+        commitBook = FactoryGuy.store.createRecord('comic-book', {
           characters: [],
           includedVillains: [],
         });
 
       mockCreate('comic-book').returns({ attrs: { company } });
 
-      await comitBook.save();
+      await commitBook.save();
 
       assert.strictEqual(
-        comitBook.get('company.id'),
+        commitBook.get('company.id'),
         company.get('id').toString(),
       );
       assert.strictEqual(
-        comitBook.get('company.name'),
+        commitBook.get('company.name'),
         company.get('name').toString(),
       );
     });
