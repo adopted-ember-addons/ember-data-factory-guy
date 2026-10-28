@@ -32,7 +32,7 @@
     "lint:hbs": "pnpm -w ember-template-lint ./test-app"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
+    "@babel/core": "^7.29.6",
     "@ember/optional-features": "^3.0.0",
     "@ember/string": "^3.1.1",
     "@ember/test-helpers": "^5.4.2",

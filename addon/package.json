@@ -44,7 +44,7 @@
     "lodash": "^4.18.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
+    "@babel/core": "^7.29.6",
     "@babel/plugin-proposal-decorators": "^7.29.0",
     "@babel/plugin-transform-class-properties": "^7.28.6",
     "@ember-data/model": "^3.28.13",
